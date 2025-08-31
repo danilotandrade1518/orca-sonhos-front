@@ -9,6 +9,7 @@ Este documento descreve a arquitetura do frontend do projeto OrçaSonhos. O apli
 - Alinhamento com o backend (DDD, CQRS e estilo de endpoints orientado a comando)
 
 Arquitetura selecionada (combinação):
+
 - Monólito Modular em Camadas no Front (Domain, Application, Infra, UI)
 - Design System com Web Components vanilla (com wrappers finos para Angular quando necessário)
 
@@ -22,7 +23,7 @@ Estrutura proposta (evolutiva), mantendo o projeto Angular atual e adicionando c
 
 ```
 /src
-  /domain                 # Regras de negócio puras (TS), entities, value objects, policies
+  /models                 # Regras de negócio puras (TS), entities/models, value objects, policies
   /application            # Use cases (orquestração), queries, DTOs, mapeadores
   /infra                  # Adapters (HTTP, storage, auth), implementação de ports
   /app                    # Angular UI (componentes, páginas, rotas, DI)
@@ -35,7 +36,8 @@ Estrutura proposta (evolutiva), mantendo o projeto Angular atual e adicionando c
 ```
 
 Observações:
-- `domain` e `application` não importam Angular. `infra` não importa `app`.
+
+- `models` e `application` não importam Angular. `infra` não importa `app`.
 - `app` depende de `application` via interfaces (ports) e injeta adapters de `infra`.
 - O Design System (DS) vive em `/packages/design-system` e expõe Custom Elements. Wrappers Angular (quando necessários) ficam em `/packages/ui-angular`.
 
@@ -43,20 +45,24 @@ Observações:
 
 ## 3. Responsabilidades das Camadas
 
-- Domain (puro TS)
-  - Entities, Value Objects, políticas e validações.
+- Models (puro TS)
+
+  - Models/Entities, Value Objects, políticas e validações.
   - Sem dependências externas (frameworks, runtime web). Fácil de testar.
 
 - Application (puro TS)
+
   - Use Cases (commands) e Query Handlers (reads) do front.
   - Define Ports (interfaces) para serviços externos (ex.: `IBudgetServicePort`, `ITransactionServicePort`).
   - Não conhece Angular nem detalhes de HTTP.
 
 - Infra
+
   - Adapters concretos para Ports (HTTP via fetch/HttpClient, storage, auth token provider).
   - Mapeia DTOs de/para o backend (alinhado ao contrato de API).
 
 - UI (Angular)
+
   - Componentes, páginas e roteamento. Consome Application via serviços injetados.
   - Estado local via Angular Signals. Evitar store global até necessidade comprovada.
   - Usa componentes do DS (Custom Elements) com ou sem wrappers Angular.
@@ -112,45 +118,30 @@ Observações:
   - Anexar `Authorization: Bearer <token>` em requisições autenticadas.
   - Mapear erros para tipos conhecidos (ex.: `AuthMissing`, `AuthInvalid`).
 
----
+Notas práticas do projeto:
 
-## 6. Autenticação (SPA PKCE)
-
-- Fluxo Authorization Code + PKCE direto com o IdP (ex.: Azure AD B2C, conforme back Seção 15).
-- Armazenamento de tokens: somente em memória (serviço Angular singleton), evitando `localStorage`.
-- Renovação: tentativa de silent auth ou refresh rotativo se política permitir. Se falhar → redirecionar para login.
-- UI deve lidar com estados: `authenticated`, `unauthenticated`, `refreshing`.
-- Guardas de rota baseados em sinal de auth. Interceptor injeta Bearer token.
-
-Trade-offs: recarregar a página perde tokens (por design). OK para MVP; reavaliar caso seja necessário persistir sessão.
+- Valores monetários trafegam em centavos (inteiro). No front, usar o VO `Money` e mapeadores (`MoneyMapper`) para converter de/para API.
+- Exemplo de consulta vigente: `GET /envelope/list` via adapter HTTP conectado a um Port de Query.
 
 ---
 
-### 6.1. Wiring Frontend (Azure AD B2C)
+## 6. Autenticação (Firebase Auth)
 
-- Discovery/Config (env):
-  - `VITE_B2C_TENANT`, `VITE_B2C_POLICY` (User Flow/Custom Policy), `VITE_B2C_CLIENT_ID`, `VITE_B2C_AUTHORITY` (ex.: `https://{tenant}.b2clogin.com/{tenant}.onmicrosoft.com/{policy}`), `VITE_B2C_SCOPES` (API scopes), `VITE_B2C_REDIRECT_URI`, `VITE_B2C_LOGOUT_REDIRECT_URI`.
-  - Usar `/.well-known/openid-configuration` do B2C para descobrir `authorization_endpoint` e `token_endpoint`.
+- Provedor: Firebase Authentication (Google; fluxo por redirect).
+- Tokens somente em memória: recuperar ID Token via listener (`onIdTokenChanged`) e fornecer sob demanda para o HttpClient custom (injeção de `getAccessToken`).
+- Persistência: sessão (`browserSessionPersistence`) para evitar loops; sem `localStorage`.
+- Estados esperados na UI: `authenticated`, `unauthenticated`, `redirecting`.
+- Guardas de rota usam um sinal de auth; bypass controlado por feature flag de desenvolvimento.
+- Interceptor/HttpClient: anexa `Authorization: Bearer <id_token>` quando disponível.
 
-- Serviço de Auth (Angular): responsabilidades
-  - Gerar `code_verifier`/`code_challenge` (S256) e iniciar `authorize` (redirect/popup).
-  - Trocar `code` por tokens no `token_endpoint` (frontend → B2C) e manter `access_token` apenas em memória.
-  - Expor sinais/computed: `isAuthenticated`, `accessToken`, `user` (claims básicas).
-  - Renovação: tentar silent auth (prompt=none) ou refresh rotativo se política permitir; senão, reautenticar.
+Trade-offs: recarregar a página limpa o token. OK para MVP; reavaliar mais tarde se persistência for necessária.
 
-- Interceptor HTTP:
-  - Anexar `Authorization: Bearer <access_token>` quando disponível.
-  - Em `401/403` por expiração: tentar 1 renovação e reenviar; falhando, iniciar login.
+### 6.1. Configuração Firebase
 
-- Guardas de rota:
-  - Bloquear rotas protegidas quando `isAuthenticated` for falso; encaminhar para login.
-
-- Logout:
-  - Limpar tokens em memória e redirecionar para `end_session_endpoint` com `post_logout_redirect_uri`.
-
-- Operacional e segurança:
-  - Config por ambiente (DEV/QA/PRD) via variáveis. Nunca persistir tokens em `localStorage`/`sessionStorage`.
-  - Tratar estados de carregamento e erros de handshake; logs mínimos sem dados sensíveis.
+- Config (env): `firebaseConfig` (apiKey, authDomain, projectId, appId, etc.).
+- Provedor Google habilitado no console; domínio do app adicionado em Authorized Domains.
+- Fluxo: `signInWithRedirect` (sem popup por restrições de COOP), `getRedirectResult` opcional; estado final por `onIdTokenChanged`.
+- Feature flag DEV: `AUTH_DISABLED` para desativar auth temporariamente e injetar um token fake, destravando o desenvolvimento.
 
 ---
 
@@ -193,7 +184,7 @@ Nota: caso, no futuro, a equipe precise de ergonomia adicional (templates, reati
 
 - Código em Inglês.
 - Classes: PascalCase (`CreateTransactionUseCase`)
-- Arquivos: kebab-case para UI Angular (`create-transaction.page.ts`), PascalCase para Domain/Application (`CreateTransactionUseCase.ts`).
+- Arquivos: kebab-case para UI Angular (`create-transaction.page.ts`), PascalCase para Models/Application (`CreateTransactionUseCase.ts`).
 - Interfaces: prefixo `I` para Ports (`ITransactionServicePort`).
 - Pastas: kebab-case (`use-cases`, `queries`, `adapters`, `features`).
 - Web Components: prefixo `os-`.
@@ -202,27 +193,29 @@ Nota: caso, no futuro, a equipe precise de ergonomia adicional (templates, reati
 
 ## 10. Regras de Dependência (Boundaries)
 
-- `domain`: depende de nada interno.
-- `application`: depende de `domain` e tipos utilitários. Define Ports.
+- `models`: depende de nada interno.
+- `application`: depende de `models` e tipos utilitários. Define Ports.
 - `infra`: depende de `application` (para implementar Ports) e utilitários.
 - `app` (Angular): depende de `application` e eventualmente de `infra` via injeção (providers); nunca o inverso.
 - `packages/design-system`: independente de Angular. `ui-angular` pode depender do DS.
 
 Ferramentas:
-- ESLint com regras de import para impedir violações (ex.: `domain` não pode importar `infra`/`app`).
-- TypeScript path aliases para clareza entre camadas.
+
+- ESLint com regras de import para impedir violações (ex.: `models` não pode importar `infra`/`app`).
+- TypeScript path aliases para clareza entre camadas (`@models`, `@application`, `@infra`, `@app`).
 
 ---
 
 ## 11. Testes
 
-- Unitários (Domain/Application): Jest/Vitest, próximos aos arquivos (`*.spec.ts`).
-- Componentes Angular: Testing Library + Jest (ou runner padrão do Angular), foco em comportamento.
-- Web Components (DS): @web/test-runner ou Jest com JSDOM.
-- Integração (Infra + Adapters): testes contra mocks de HTTP.
-- E2E: Playwright (recomendado) para fluxos críticos.
+- Unitários (Models/Application/Infra): Jasmine + Karma (ChromeHeadless), próximos aos arquivos (`*.spec.ts`).
+- Cobertura: thresholds globais mínimos de 80% (statements, branches, functions, lines) com relatório HTML + sumário.
+- Componentes Angular: TestBed + Signals; foco em comportamento observável.
+- Web Components (DS): @web/test-runner ou Jasmine/Karma com JSDOM quando aplicável.
+- Integração (Infra + Adapters): testes com mocks de HTTP.
+- E2E: Playwright recomendado para fluxos críticos.
 
-Estrutura espelha a de produção (testes próximos aos arquivos).
+Estrutura espelha a de produção (testes próximos aos arquivos). Script CI: `npm run test:ci`.
 
 ---
 
@@ -231,6 +224,18 @@ Estrutura espelha a de produção (testes próximos aos arquivos).
 - Angular com rotas lazy e divisão de chunks por feature.
 - DS com bundle ESM e CSS escopado; carregamento por import dinâmico quando aplicável.
 - Preferir signals e detecção de mudanças por padrão (evitar estados globais pesados).
+
+Padrões Angular do projeto:
+
+- Componentes standalone por padrão; evitar NgModules.
+- Não declarar `standalone: true` no decorator (padrão assumido).
+- `ChangeDetectionStrategy.OnPush` em todos os componentes.
+- Usar `input()`/`output()` functions ao invés de decorators.
+- Usar `computed()` para estado derivado; `update`/`set` para mutações (evitar `mutate`).
+- Control flow nativo em templates (`@if`, `@for`, `@switch`).
+- Evitar `ngClass`/`ngStyle`; preferir bindings de `class`/`style`.
+- Serviços com `providedIn: 'root'` e `inject()` ao invés de injeção por construtor.
+- `NgOptimizedImage` para imagens estáticas (exceto base64 inline).
 
 ---
 
