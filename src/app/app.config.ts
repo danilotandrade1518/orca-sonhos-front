@@ -10,11 +10,13 @@ import { provideRouter } from '@angular/router';
 import { HttpEnvelopeMutationsPort } from '@infra/http/envelope/HttpEnvelopeMutationsPort';
 import { HttpEnvelopeQueriesPort } from '@infra/http/envelope/HttpEnvelopeQueriesPort';
 import { HttpClient } from '@infra/http/HttpClient';
+import { HttpBudgetMutationsPort } from '@infra/http/budget/HttpBudgetMutationsPort';
 
 import { routes } from './app.routes';
 import { AuthService } from './auth/auth.service';
 import { ENV } from './env';
 import { ENVELOPE_MUTATIONS, ENVELOPE_QUERIES } from './tokens/envelope.tokens';
+import { BUDGET_MUTATIONS } from './tokens/budget.tokens';
 import { HTTP_CLIENT } from './tokens/http-client.tokens';
 
 export const appConfig: ApplicationConfig = {
@@ -34,6 +36,11 @@ export const appConfig: ApplicationConfig = {
           baseUrl: ENV.API_BASE_URL,
           getAccessToken: () => auth.getAccessToken(),
         }),
+    },
+    {
+      provide: BUDGET_MUTATIONS,
+      deps: [HTTP_CLIENT],
+      useFactory: (http: HttpClient) => new HttpBudgetMutationsPort(http),
     },
     {
       provide: ENVELOPE_MUTATIONS,
