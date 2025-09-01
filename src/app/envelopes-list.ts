@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { IEnvelopeQueriesPort } from '@application/ports/envelope/IEnvelopeQueriesPort';
 import { Uuid } from '@models/shared/value-objects/Uuid';
 
-import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
+import { ENVELOPE_QUERIES } from './tokens/envelope.tokens';
 
 @Component({
   selector: 'app-envelopes-list',
@@ -42,7 +42,7 @@ import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnvelopesListComponent {
-  private readonly query = inject<IEnvelopeQueriesPort>(ENVELOPE_QUERY);
+  private readonly query = inject<IEnvelopeQueriesPort>(ENVELOPE_QUERIES);
 
   readonly budgetId = signal<string>('00000000-0000-0000-0000-000000000000');
   readonly userId = signal<string>('00000000-0000-0000-0000-000000000000');

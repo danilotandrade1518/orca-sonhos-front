@@ -15,7 +15,7 @@ import { routes } from './app.routes';
 import { AuthService } from './auth/auth.service';
 import { ENV } from './env';
 import { ENVELOPE_MUTATIONS, ENVELOPE_QUERIES } from './tokens/envelope.tokens';
-import { HTTP_CLIENT } from './tokens/http-client.token';
+import { HTTP_CLIENT } from './tokens/http-client.tokens';
 
 export const appConfig: ApplicationConfig = {
   providers: [
