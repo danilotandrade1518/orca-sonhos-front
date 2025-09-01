@@ -14,8 +14,7 @@ import { HttpClient } from '@infra/http/HttpClient';
 import { routes } from './app.routes';
 import { AuthService } from './auth/auth.service';
 import { ENV } from './env';
-import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
-import { ENVELOPE_SERVICE } from './tokens/envelope.token';
+import { ENVELOPE_MUTATIONS, ENVELOPE_QUERIES } from './tokens/envelope.tokens';
 import { HTTP_CLIENT } from './tokens/http-client.token';
 
 export const appConfig: ApplicationConfig = {
@@ -37,12 +36,12 @@ export const appConfig: ApplicationConfig = {
         }),
     },
     {
-      provide: ENVELOPE_SERVICE,
+      provide: ENVELOPE_MUTATIONS,
       deps: [HTTP_CLIENT],
       useFactory: (http: HttpClient) => new HttpEnvelopeMutationsPort(http),
     },
     {
-      provide: ENVELOPE_QUERY,
+      provide: ENVELOPE_QUERIES,
       deps: [HTTP_CLIENT],
       useFactory: (http: HttpClient) => new HttpEnvelopeQueriesPort(http),
     },
