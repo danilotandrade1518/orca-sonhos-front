@@ -23,6 +23,23 @@ describe('Transaction', () => {
     expect(t).toBeTruthy();
   });
 
+  it('markLate without date keeps previous date but sets isLate', () => {
+    const t = Transaction.create({
+      id,
+      budgetId,
+      accountId,
+      categoryId,
+      description: 'Rent',
+      amount: Money.fromCents(9999),
+      type: 'debit',
+      transactionDate: new Date('2025-03-01'),
+    });
+    const prev = (t as any).props.transactionDate;
+    t.markLate(undefined as unknown as Date);
+    expect((t as any).props.isLate).toBeTrue();
+    expect((t as any).props.transactionDate).toEqual(prev);
+  });
+
   it('rejects empty description', () => {
     expect(() =>
       Transaction.create({

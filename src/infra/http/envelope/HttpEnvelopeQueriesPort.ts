@@ -1,12 +1,12 @@
 import {
   EnvelopeView,
-  IEnvelopeQueryPort,
+  IEnvelopeQueriesPort,
   ListEnvelopesQuery,
-} from '@application/ports/envelope/IEnvelopeQueryPort';
+} from '@application/ports/envelope/IEnvelopeQueriesPort';
 
 import { HttpClient } from '../HttpClient';
 
-export class HttpEnvelopeQueryAdapter implements IEnvelopeQueryPort {
+export class HttpEnvelopeQueriesPort implements IEnvelopeQueriesPort {
   constructor(private readonly http: HttpClient) {}
 
   async listEnvelopes(q: ListEnvelopesQuery): Promise<EnvelopeView[]> {

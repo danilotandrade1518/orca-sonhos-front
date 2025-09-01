@@ -1,16 +1,17 @@
-import { HttpClient } from '../HttpClient';
-import { MoneyMapper } from '@models/shared/mappers/MoneyMapper';
 import {
   AddAmountEnvelopeDTO,
   CreateEnvelopeDTO,
   DeleteEnvelopeDTO,
-  IEnvelopeServicePort,
+  IEnvelopeMutationsPort,
   RemoveAmountEnvelopeDTO,
   TransferBetweenEnvelopesDTO,
   UpdateEnvelopeDTO,
-} from '@application/ports/envelope/IEnvelopeServicePort';
+} from '@application/ports/envelope/IEnvelopeMutationsPort';
+import { MoneyMapper } from '@models/shared/mappers/MoneyMapper';
 
-export class HttpEnvelopeServiceAdapter implements IEnvelopeServicePort {
+import { HttpClient } from '../HttpClient';
+
+export class HttpEnvelopeMutationsPort implements IEnvelopeMutationsPort {
   constructor(private readonly http: HttpClient) {}
 
   async createEnvelope(dto: CreateEnvelopeDTO): Promise<void> {

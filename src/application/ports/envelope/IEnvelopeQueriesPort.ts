@@ -14,6 +14,6 @@ export interface ListEnvelopesQuery {
   budgetId: Uuid;
 }
 
-export interface IEnvelopeQueryPort {
+export interface IEnvelopeQueriesPort {
   listEnvelopes(q: ListEnvelopesQuery): Promise<EnvelopeView[]>;
 }

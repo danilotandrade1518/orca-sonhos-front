@@ -24,6 +24,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "mockServiceWorker.js",
+                "input": "node_modules/msw/browser",
+                "output": "/"
               }
             ],
             "styles": ["src/styles.scss"]
@@ -74,13 +79,18 @@
             "karmaConfig": "karma.conf.js",
             "codeCoverage": true,
             "inlineStyleLanguage": "scss",
+            "polyfills": ["src/test-setup.ts"],
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "mockServiceWorker.js",
+                "input": "node_modules/msw/browser",
+                "output": "/"
               }
-            ],
-            "styles": ["src/styles.scss"]
+            ]
           }
         }
       }

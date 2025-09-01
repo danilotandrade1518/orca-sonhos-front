@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { IEnvelopeQueryPort } from '@application/ports/envelope/IEnvelopeQueryPort';
+import { IEnvelopeQueriesPort } from '@application/ports/envelope/IEnvelopeQueriesPort';
 import { Uuid } from '@models/shared/value-objects/Uuid';
 
 import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
@@ -42,7 +42,7 @@ import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnvelopesListComponent {
-  private readonly query = inject<IEnvelopeQueryPort>(ENVELOPE_QUERY);
+  private readonly query = inject<IEnvelopeQueriesPort>(ENVELOPE_QUERY);
 
   readonly budgetId = signal<string>('00000000-0000-0000-0000-000000000000');
   readonly userId = signal<string>('00000000-0000-0000-0000-000000000000');

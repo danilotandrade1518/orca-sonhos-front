@@ -1,5 +1,5 @@
-import { Uuid } from '@models/shared/value-objects/Uuid';
 import { Money } from '@models/shared/value-objects/Money';
+import { Uuid } from '@models/shared/value-objects/Uuid';
 
 export interface CreateEnvelopeDTO {
   name: string;
@@ -45,7 +45,7 @@ export interface TransferBetweenEnvelopesDTO {
   amount: Money;
 }
 
-export interface IEnvelopeServicePort {
+export interface IEnvelopeMutationsPort {
   createEnvelope(dto: CreateEnvelopeDTO): Promise<void>;
   updateEnvelope(dto: UpdateEnvelopeDTO): Promise<void>;
   deleteEnvelope(dto: DeleteEnvelopeDTO): Promise<void>;

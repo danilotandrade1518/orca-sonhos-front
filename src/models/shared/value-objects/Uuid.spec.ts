@@ -10,4 +10,8 @@ describe('Uuid', () => {
   it('rejects invalid values', () => {
     expect(() => Uuid.create('not-a-uuid')).toThrow();
   });
+
+  it('isValid returns false for non-string input', () => {
+    expect(Uuid.isValid(123 as unknown as string)).toBeFalse();
+  });
 });

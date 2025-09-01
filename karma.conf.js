@@ -9,13 +9,19 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-coverage'),
     ],
+    files: [],
     client: {
       clearContext: false,
     },
     reporters: ['progress', 'kjhtml', 'coverage'],
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage'),
-      reporters: [{ type: 'html' }, { type: 'text-summary' }],
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' },
+        { type: 'text' },
+        { type: 'json-summary', subdir: '.', file: 'coverage-summary.json' },
+      ],
       check: {
         global: { statements: 80, branches: 80, functions: 80, lines: 80 },
       },

@@ -4,6 +4,7 @@
 export const ENV = {
   // Feature flags
   AUTH_DISABLED: true,
+  MSW_ENABLED: true,
 
   // Backend API base. Prefer a relative "/api" with dev proxy, or set absolute URL.
   API_BASE_URL: '/api',

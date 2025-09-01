@@ -1,3 +1,4 @@
+import { FetchHttpClient } from '@adapters/http/FetchHttpClient';
 import {
   ApplicationConfig,
   inject,
@@ -6,8 +7,8 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HttpEnvelopeQueryAdapter } from '@infra/http/envelope/HttpEnvelopeQueryAdapter';
-import { HttpEnvelopeServiceAdapter } from '@infra/http/envelope/HttpEnvelopeServiceAdapter';
+import { HttpEnvelopeMutationsPort } from '@infra/http/envelope/HttpEnvelopeMutationsPort';
+import { HttpEnvelopeQueriesPort } from '@infra/http/envelope/HttpEnvelopeQueriesPort';
 import { HttpClient } from '@infra/http/HttpClient';
 
 import { routes } from './app.routes';
@@ -15,37 +16,35 @@ import { AuthService } from './auth/auth.service';
 import { ENV } from './env';
 import { ENVELOPE_QUERY } from './tokens/envelope.query.token';
 import { ENVELOPE_SERVICE } from './tokens/envelope.token';
+import { HTTP_CLIENT } from './tokens/http-client.token';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    // Init Firebase Auth on app bootstrap
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       return authService.init().catch(() => undefined);
     }),
-    // Provide a shared HttpClient configured with API base and token getter
     {
-      provide: HttpClient,
+      provide: HTTP_CLIENT,
       deps: [AuthService],
       useFactory: (auth: AuthService) =>
-        new HttpClient({
+        new FetchHttpClient({
           baseUrl: ENV.API_BASE_URL,
           getAccessToken: () => auth.getAccessToken(),
         }),
     },
-    // Example: bind envelope port to HTTP adapter using factory (no reflection needed)
     {
       provide: ENVELOPE_SERVICE,
-      deps: [HttpClient],
-      useFactory: (http: HttpClient) => new HttpEnvelopeServiceAdapter(http),
+      deps: [HTTP_CLIENT],
+      useFactory: (http: HttpClient) => new HttpEnvelopeMutationsPort(http),
     },
     {
       provide: ENVELOPE_QUERY,
-      deps: [HttpClient],
-      useFactory: (http: HttpClient) => new HttpEnvelopeQueryAdapter(http),
+      deps: [HTTP_CLIENT],
+      useFactory: (http: HttpClient) => new HttpEnvelopeQueriesPort(http),
     },
   ],
 };

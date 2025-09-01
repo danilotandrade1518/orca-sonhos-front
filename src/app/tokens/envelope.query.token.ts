@@ -1,4 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import { IEnvelopeQueryPort } from '@application/ports/envelope/IEnvelopeQueryPort';
+import { IEnvelopeQueriesPort } from '@application/ports/envelope/IEnvelopeQueriesPort';
 
-export const ENVELOPE_QUERY = new InjectionToken<IEnvelopeQueryPort>('ENVELOPE_QUERY');
+export const ENVELOPE_QUERY = new InjectionToken<IEnvelopeQueriesPort>('ENVELOPE_QUERY');
