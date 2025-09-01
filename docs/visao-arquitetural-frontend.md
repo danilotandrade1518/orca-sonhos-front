@@ -15,6 +15,8 @@ Arquitetura selecionada (combinação):
 
 Escopo inicial: CSR (client-side rendering). SSR/SEO poderá ser reavaliado futuramente.
 
+Mock de API em desenvolvimento e testes: MSW (Mock Service Worker) com handlers por contexto e inicialização controlada por flag de ambiente.
+
 ---
 
 ## 2. Organização dos Diretórios
@@ -30,6 +32,10 @@ Estrutura proposta (evolutiva), mantendo o projeto Angular atual e adicionando c
     /features             # Páginas/fluxos por contexto de negócio (lazy-loaded)
     /shared               # Wrappers Angular para DS, pipes, directives, guards, layouts
 
+  /mocks                  # MSW: worker setup e handlers por contexto (ex.: envelopeHandlers)
+    /context              # Handlers organizados por contexto de negócio
+  test-setup.ts           # Bootstrap do MSW no ambiente de testes (Karma)
+
 /packages
   /design-system          # Web Components (vanilla), tokens de design, estilos
   /ui-angular             # (opcional) Wrappers Angular finos para componentes do DS
@@ -40,6 +46,7 @@ Observações:
 - `models` e `application` não importam Angular. `infra` não importa `app`.
 - `app` depende de `application` via interfaces (ports) e injeta adapters de `infra`.
 - O Design System (DS) vive em `/packages/design-system` e expõe Custom Elements. Wrappers Angular (quando necessários) ficam em `/packages/ui-angular`.
+- Assets do MSW: o script do service worker reside em `public/mockServiceWorker.js` e é servido junto com o app e com o ambiente de testes.
 
 ---
 
@@ -114,14 +121,21 @@ Observações:
   - `IBudgetServicePort`, `ITransactionServicePort`, `IAccountServicePort`, `ICreditCardServicePort`, `ICreditCardBillServicePort`.
 - Adapters exemplo (Infra):
   - `HttpBudgetServiceAdapter`, `HttpTransactionServiceAdapter`, etc.
-- Interceptores HTTP (app):
-  - Anexar `Authorization: Bearer <token>` em requisições autenticadas.
-  - Mapear erros para tipos conhecidos (ex.: `AuthMissing`, `AuthInvalid`).
+- HttpClient custom (Infra):
+  - Implementação atual: `FetchHttpClient` (em `src/adapters/FetchHttpClient.ts`).
+  - Anexa `Authorization: Bearer <token>` quando há token disponível (fornecido por função `getAccessToken`).
+  - Lança erro em respostas não OK; trata `204 No Content` como `void` e lida com corpo vazio de `200 OK` sem quebrar (retorna `undefined`).
+  - Base de API padrão: `/api`.
 
 Notas práticas do projeto:
 
 - Valores monetários trafegam em centavos (inteiro). No front, usar o VO `Money` e mapeadores (`MoneyMapper`) para converter de/para API.
 - Exemplo de consulta vigente: `GET /envelope/list` via adapter HTTP conectado a um Port de Query.
+
+Status atual de contratos implementados (Frontend):
+
+- Ports de Envelopes: `IEnvelopeQueriesPort` e `IEnvelopeMutationsPort` implementados via `HttpEnvelopeQueriesPort` e `HttpEnvelopeMutationsPort`.
+- Estilo de comandos: `POST /envelope/<action>` (create/update/delete/add/remove/transfer) conforme CQRS.
 
 ---
 
@@ -209,7 +223,8 @@ Ferramentas:
 ## 11. Testes
 
 - Unitários (Models/Application/Infra): Jasmine + Karma (ChromeHeadless), próximos aos arquivos (`*.spec.ts`).
-- Cobertura: thresholds globais mínimos de 80% (statements, branches, functions, lines) com relatório HTML + sumário.
+- Mocks de API: MSW intercepta `fetch` no browser de testes; worker inicializado em `src/test-setup.ts` e servido a partir de `public/mockServiceWorker.js`.
+- Cobertura: thresholds globais mínimos de 80% (statements, branches, functions, lines) com relatórios `html`, `text`, `text-summary` e `json-summary`.
 - Componentes Angular: TestBed + Signals; foco em comportamento observável.
 - Web Components (DS): @web/test-runner ou Jasmine/Karma com JSDOM quando aplicável.
 - Integração (Infra + Adapters): testes com mocks de HTTP.
@@ -367,3 +382,23 @@ Padrões Angular do projeto:
 Ativo. Implementação incremental a partir do esqueleto atual do projeto.
 
 > Este documento deve ser atualizado conforme a arquitetura evoluir, mantendo alinhamento com as decisões do backend.
+
+---
+
+## 19. MSW (Mock Service Worker)
+
+- Objetivo: mockar a API de forma realista (nível de rede) tanto em desenvolvimento quanto em testes.
+- Organização: handlers por contexto em `src/mocks/context` (ex.: `envelopeHandlers.ts`), agregados em `src/mocks/handlers.ts`.
+- Inicialização:
+  - App: bootstrap condicional em `main.ts` via flag `MSW_ENABLED` para registrar o worker (`/mockServiceWorker.js`).
+  - Testes (Karma): `src/test-setup.ts` inicia o worker antes dos specs.
+- Asset do worker: `public/mockServiceWorker.js` (gerado via `msw init`).
+- Convenções:
+  - Base de API `/api` em toda a suíte.
+  - Handlers retornam payloads alinhados aos DTOs do domínio e aos mapeadores (ex.: valores monetários em centavos).
+
+## 20. Variáveis de Ambiente e Flags
+
+- `API_BASE_URL`: string (padrão `/api`). Usada pelo `FetchHttpClient` para compor URLs.
+- `AUTH_DISABLED`: boolean (DEV). Quando verdadeiro, a UI ignora o fluxo de Firebase Auth e pode usar um token simulado.
+- `MSW_ENABLED`: boolean (DEV). Habilita o registro do service worker do MSW no app para desenvolvimento.
