@@ -10,7 +10,7 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "cem": "cem analyze --globs 'src/ds/**/*.ts' --outdir . --litelement false"
+    "cem": "cem analyze --globs 'src/app/ds/**/*.ts' --outdir . --litelement false"
   },
   "prettier": {
     "printWidth": 100,
