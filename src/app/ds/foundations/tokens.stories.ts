@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 const meta: Meta = {
-  title: 'Foundations/Tokens'
+  title: 'Foundations/Tokens',
 };
 export default meta;
 
@@ -32,16 +32,16 @@ export const Colors: StoryObj = {
     grid.style.gridTemplateColumns = 'repeat(5, 120px)';
     grid.style.gap = '16px';
     [
-      ['--os-color-bg','Background'],
-      ['--os-color-surface','Surface'],
-      ['--os-color-elevated','Elevated'],
-      ['--os-color-primary','Primary'],
-      ['--os-color-danger','Danger'],
-      ['--os-color-text','Text'],
-      ['--os-color-text-muted','Text Muted']
-    ].forEach(([name,label]) => grid.appendChild(ColorBox(name as string, label as string)));
+      ['--os-color-bg', 'Background'],
+      ['--os-color-surface', 'Surface'],
+      ['--os-color-elevated', 'Elevated'],
+      ['--os-color-primary', 'Primary'],
+      ['--os-color-danger', 'Danger'],
+      ['--os-color-text', 'Text'],
+      ['--os-color-text-muted', 'Text Muted'],
+    ].forEach(([name, label]) => grid.appendChild(ColorBox(name as string, label as string)));
     return grid;
-  }
+  },
 };
 
 export const Spacing: StoryObj = {
@@ -52,7 +52,14 @@ export const Spacing: StoryObj = {
     row.style.alignItems = 'flex-end';
     row.style.fontFamily = 'var(--os-font-sans)';
     row.style.color = 'var(--os-color-text)';
-    ['--os-space-1','--os-space-2','--os-space-3','--os-space-4','--os-space-6','--os-space-8'].forEach((s) => {
+    [
+      '--os-space-1',
+      '--os-space-2',
+      '--os-space-3',
+      '--os-space-4',
+      '--os-space-6',
+      '--os-space-8',
+    ].forEach((s) => {
       const col = document.createElement('div');
       const bar = document.createElement('div');
       bar.style.width = '40px';
@@ -68,5 +75,5 @@ export const Spacing: StoryObj = {
       row.append(col);
     });
     return row;
-  }
+  },
 };

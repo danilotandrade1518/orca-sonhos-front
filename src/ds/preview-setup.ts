@@ -1,2 +1,1 @@
-// Global DS styles for Storybook
-import './foundations/tokens.css';
+// DS migrated to src/app/ds. This file is obsolete.
