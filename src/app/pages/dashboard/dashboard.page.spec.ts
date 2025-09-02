@@ -9,7 +9,7 @@ describe('DashboardPage', () => {
       providers: [provideZonelessChangeDetection()],
     }).createComponent(DashboardPage);
     const comp = fixture.componentInstance;
-    comp['overview'].set({ totalBalance: 1234.56 });
+    comp['overview'].set({ totalBalance: 1234.56, monthIncome: 0, monthExpense: 0, netMonth: 0 });
     fixture.detectChanges();
     expect(comp.totalBalanceLabel()).toContain('R$');
   });

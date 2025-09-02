@@ -10,12 +10,18 @@ template.innerHTML = `
       padding: 0 var(--os-space-3);
       color: var(--os-color-text);
       background: var(--os-color-elevated);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid var(--os-color-border);
       border-radius: var(--os-radius-md);
       outline: none;
     }
+    input:hover {
+      border-color: var(--os-color-secondary-neutral-nuance);
+    }
     input::placeholder { color: var(--os-color-text-muted); }
-    input:focus { border-color: var(--os-color-primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.25); }
+    input:focus {
+      border-color: var(--os-color-primary);
+      box-shadow: 0 0 0 calc(var(--os-focus-ring-width) + var(--os-focus-ring-offset)) var(--os-focus-ring);
+    }
     :host([invalid]) input { border-color: var(--os-color-danger); }
   </style>
   <input part="input" />

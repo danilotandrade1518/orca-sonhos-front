@@ -11,21 +11,31 @@
   </div>
 
   <div class="grid">
-    <os-card>
-      <div slot="header">Saldo total</div>
-      <div class="big">{{ totalBalanceLabel() }}</div>
-      <div slot="footer">Atualizado agora</div>
+    <!-- KPIs -->
+    <os-card flat class="kpi">
+      <os-kpi label="Saldo total" [attr.value]="totalBalanceLabel()" variant="info" size="lg"></os-kpi>
+    </os-card>
+    <os-card flat class="kpi">
+      <os-kpi label="Receitas do mês" [attr.value]="incomeLabel()" variant="positive" size="lg"></os-kpi>
+    </os-card>
+    <os-card flat class="kpi">
+      <os-kpi label="Despesas do mês" [attr.value]="expenseLabel()" variant="negative" size="lg"></os-kpi>
+    </os-card>
+    <os-card flat class="kpi">
+      <os-kpi label="Saldo do mês" [attr.value]="netMonthLabel()" [attr.variant]="netPositive() ? 'positive' : 'negative'" size="lg"></os-kpi>
     </os-card>
 
     <os-card>
       <div slot="header">Metas</div>
       <os-goal-progress name="Reserva" [attr.value]="'350'" [attr.target]="'1000'"></os-goal-progress>
+      <os-divider spaced="sm"></os-divider>
       <os-goal-progress name="Viagem" [attr.value]="'1200'" [attr.target]="'3000'"></os-goal-progress>
       <div slot="footer">Progresso das metas</div>
     </os-card>
 
-    <os-card>
+    <os-card class="wide">
       <div slot="header">Envelopes</div>
+      <os-divider spaced="sm"></os-divider>
       <os-list>
         <os-envelope-item>
           <div slot="name">Alimentação</div>
@@ -41,8 +51,9 @@
       <div slot="footer">Top envelopes</div>
     </os-card>
 
-    <os-card>
+    <os-card class="wide">
       <div slot="header">Transações recentes</div>
+      <os-divider spaced="sm"></os-divider>
       <os-list>
         <os-transaction-item>
           <div slot="title">Supermercado</div>
@@ -59,5 +70,7 @@
     </os-card>
   </div>
 
-  <os-toast *ngIf="toast()" variant="success">{{ toast() }}</os-toast>
+  @if (toast()) {
+  <os-toast variant="success">{{ toast() }}</os-toast>
+  }
 </section>

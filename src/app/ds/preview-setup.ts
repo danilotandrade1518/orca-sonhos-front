@@ -15,3 +15,6 @@ import './components/os-envelope-item/os-envelope-item';
 import './components/os-transaction-item/os-transaction-item';
 import './components/os-sync-status/os-sync-status';
 import './components/os-toast/os-toast';
+import './components/os-kpi/os-kpi';
+import './components/os-divider/os-divider';
+import './components/os-skeleton/os-skeleton';

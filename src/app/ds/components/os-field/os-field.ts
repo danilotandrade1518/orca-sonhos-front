@@ -9,9 +9,9 @@ template.innerHTML = `
       width: 100%;
     }
     .label {
-      font-size: var(--os-font-size-sm);
-      color: var(--os-color-text-muted);
-      font-weight: 500;
+  font-size: var(--os-font-size-sm);
+  color: var(--os-color-text-muted);
+  font-weight: var(--os-font-weight-medium);
     }
     .error {
       color: var(--os-color-danger);
@@ -19,9 +19,9 @@ template.innerHTML = `
       margin-top: 2px;
     }
     ::slotted([slot="label"]) {
-      font-size: var(--os-font-size-sm);
-      color: var(--os-color-text-muted);
-      font-weight: 500;
+  font-size: var(--os-font-size-sm);
+  color: var(--os-color-text-muted);
+  font-weight: var(--os-font-weight-medium);
     }
     ::slotted([slot="error"]) {
       color: var(--os-color-danger);

@@ -7,13 +7,13 @@ template.innerHTML = `
       background: var(--os-color-surface);
       color: var(--os-color-text);
       box-shadow: var(--os-shadow-1);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--os-color-border);
     }
     .bar {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      height: 56px;
+  height: var(--os-appbar-height, 56px);
       padding: 0 var(--os-space-4);
       gap: var(--os-space-4);
     }

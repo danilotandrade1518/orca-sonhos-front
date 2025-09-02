@@ -6,7 +6,10 @@ const meta: Meta = {
   component: 'os-button',
   args: { variant: 'primary', disabled: false },
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'secondary', 'ghost', 'danger'] },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'secondary-neutral', 'ghost', 'danger'],
+    },
     disabled: { control: 'boolean' },
     defaultSlot: { control: 'text', name: 'label' },
   },
@@ -22,6 +25,9 @@ export default meta;
 
 export const Primary: StoryObj = { args: { variant: 'primary', defaultSlot: 'Primary' } };
 export const Secondary: StoryObj = { args: { variant: 'secondary', defaultSlot: 'Secondary' } };
+export const SecondaryNeutral: StoryObj = {
+  args: { variant: 'secondary-neutral', defaultSlot: 'Secondary Neutral' },
+};
 export const Ghost: StoryObj = { args: { variant: 'ghost', defaultSlot: 'Ghost' } };
 export const Danger: StoryObj = { args: { variant: 'danger', defaultSlot: 'Danger' } };
 export const Disabled: StoryObj = { args: { disabled: true, defaultSlot: 'Disabled' } };

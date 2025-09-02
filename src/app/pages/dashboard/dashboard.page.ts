@@ -3,7 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 type BudgetOption = { id: string; name: string; period: string };
-type Overview = { totalBalance: number };
+type Overview = {
+  totalBalance: number;
+  monthIncome: number;
+  monthExpense: number;
+  netMonth: number;
+};
 
 @Component({
   standalone: true,
@@ -21,13 +26,22 @@ export class DashboardPage {
     { id: '2025-03', name: 'Março', period: '2025-03' },
   ]);
   readonly selectedBudgetId = signal<string>('2025-03');
-  readonly overview = signal<Overview>({ totalBalance: 2350.87 });
+  readonly overview = signal<Overview>({
+    totalBalance: 11111.0,
+    monthIncome: 5000.0,
+    monthExpense: 3500.0,
+    netMonth: 1500.0,
+  });
   readonly toast = signal<string | null>(null);
   readonly syncState = signal<'ok' | 'syncing' | 'error'>('ok');
 
   // derived
   readonly budgetsJson = computed(() => JSON.stringify(this.budgets()));
   readonly totalBalanceLabel = computed(() => this.formatBRL(this.overview().totalBalance));
+  readonly incomeLabel = computed(() => this.formatBRL(this.overview().monthIncome));
+  readonly expenseLabel = computed(() => this.formatBRL(this.overview().monthExpense));
+  readonly netMonthLabel = computed(() => this.formatBRL(this.overview().netMonth));
+  readonly netPositive = computed(() => this.overview().netMonth >= 0);
   readonly syncLabel = computed(() => {
     const s = this.syncState();
     if (s === 'syncing') return 'Sincronizando...';

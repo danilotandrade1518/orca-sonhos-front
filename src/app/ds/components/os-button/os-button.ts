@@ -11,10 +11,10 @@ template.innerHTML = `
       height: 40px;
       padding: 0 var(--os-space-4);
       border-radius: var(--os-radius-md);
-      border: none;
+  border: 1px solid transparent;
       cursor: pointer;
       user-select: none;
-      transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
+  transition: transform var(--os-duration-1) var(--os-ease-standard), background var(--os-duration-1) var(--os-ease-standard), box-shadow var(--os-duration-1) var(--os-ease-standard), border-color var(--os-duration-1) var(--os-ease-standard);
     }
     button {
       all: unset;
@@ -28,11 +28,20 @@ template.innerHTML = `
       color: var(--os-color-primary-contrast);
       box-shadow: var(--os-shadow-1);
     }
+    :host([variant="primary"]:hover) {
+      background: var(--os-color-primary-nuance);
+    }
     :host([variant="secondary"]) {
       background: var(--os-color-elevated);
       color: var(--os-color-text);
       box-shadow: var(--os-shadow-1);
-      border: 1px solid rgba(255,255,255,0.06);
+      border-color: var(--os-color-border);
+    }
+    :host([variant="secondary-neutral"]) {
+      background: var(--os-color-elevated);
+      color: var(--os-color-text);
+      box-shadow: var(--os-shadow-1);
+      border-color: var(--os-color-secondary-neutral);
     }
     :host([variant="ghost"]) {
       background: transparent;
@@ -47,6 +56,17 @@ template.innerHTML = `
       pointer-events: none;
     }
     :host(:active) { transform: translateY(1px); }
+    :host(:focus-visible) {
+      outline: none;
+      box-shadow: 0 0 0 var(--os-focus-ring-width) var(--os-focus-ring);
+    }
+    :host([variant="ghost"]:hover) { background: rgba(255,255,255,0.04); }
+    :host([variant="secondary"]:hover) { background: var(--os-color-surface); }
+    :host([variant="secondary-neutral"]:hover) {
+      background: var(--os-color-surface);
+      border-color: var(--os-color-secondary-neutral-nuance);
+    }
+    :host([variant="danger"]:hover) { background: var(--os-color-danger-nuance); }
   </style>
   <button part="button" type="button"><slot></slot></button>
 `;

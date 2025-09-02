@@ -2,9 +2,18 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style>
-    :host { display: block; background: var(--os-color-elevated); color: var(--os-color-text); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--os-radius-md); box-shadow: var(--os-shadow-1); }
+    :host {
+      display: block;
+      background: var(--os-color-elevated);
+      color: var(--os-color-text);
+      border: 1px solid var(--os-color-border);
+      border-radius: var(--os-radius-md);
+      box-shadow: var(--os-shadow-1);
+    }
+    :host([flat]) { box-shadow: none; background: var(--os-color-surface); }
+    :host([outlined]) { box-shadow: none; }
     .card { padding: var(--os-space-4); }
-    .header { margin-bottom: var(--os-space-3); font-weight: 600; }
+    .header { margin-bottom: var(--os-space-3); font-weight: var(--os-font-weight-semibold); font-size: var(--os-font-size-lg); line-height: var(--os-line-height-snug); }
     .footer { margin-top: var(--os-space-3); color: var(--os-color-text-muted); font-size: var(--os-font-size-sm); }
   </style>
   <div class="card">

@@ -19,3 +19,21 @@ export const WithHeaderAndFooter: StoryObj = {
     return card;
   },
 };
+
+export const Flat: StoryObj = {
+  render: () => {
+    const card = document.createElement('os-card');
+    card.setAttribute('flat', '');
+    card.appendChild(document.createTextNode('Card sem sombra (flat).'));
+    return card;
+  },
+};
+
+export const Outlined: StoryObj = {
+  render: () => {
+    const card = document.createElement('os-card');
+    card.setAttribute('outlined', '');
+    card.appendChild(document.createTextNode('Card com borda, sem sombra (outlined).'));
+    return card;
+  },
+};
