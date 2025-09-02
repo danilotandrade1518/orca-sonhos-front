@@ -1,0 +1,63 @@
+<os-appbar>
+  <span slot="center">Dashboard</span>
+  <os-user-avatar slot="end"></os-user-avatar>
+</os-appbar>
+
+<section class="container" role="main" aria-label="Resumo do orçamento">
+  <div class="toolbar">
+    <label class="sr-only" for="budget-picker">Orçamento</label>
+    <os-budget-picker id="budget-picker" [attr.options]="budgetsJson()"></os-budget-picker>
+    <os-sync-status [attr.state]="syncState()">{{ syncLabel() }}</os-sync-status>
+  </div>
+
+  <div class="grid">
+    <os-card>
+      <div slot="header">Saldo total</div>
+      <div class="big">{{ totalBalanceLabel() }}</div>
+      <div slot="footer">Atualizado agora</div>
+    </os-card>
+
+    <os-card>
+      <div slot="header">Metas</div>
+      <os-goal-progress name="Reserva" [attr.value]="'350'" [attr.target]="'1000'"></os-goal-progress>
+      <os-goal-progress name="Viagem" [attr.value]="'1200'" [attr.target]="'3000'"></os-goal-progress>
+      <div slot="footer">Progresso das metas</div>
+    </os-card>
+
+    <os-card>
+      <div slot="header">Envelopes</div>
+      <os-list>
+        <os-envelope-item>
+          <div slot="name">Alimentação</div>
+          <div slot="meta">Restante R$ 120,00 de R$ 500,00</div>
+          <div slot="amount" class="amount positive">R$ 380,00</div>
+        </os-envelope-item>
+        <os-envelope-item>
+          <div slot="name">Transporte</div>
+          <div slot="meta">Restante R$ 40,00 de R$ 200,00</div>
+          <div slot="amount" class="amount positive">R$ 160,00</div>
+        </os-envelope-item>
+      </os-list>
+      <div slot="footer">Top envelopes</div>
+    </os-card>
+
+    <os-card>
+      <div slot="header">Transações recentes</div>
+      <os-list>
+        <os-transaction-item>
+          <div slot="title">Supermercado</div>
+          <div slot="date">12/03/2025</div>
+          <div slot="amount" class="amount negative">- R$ 150,90</div>
+        </os-transaction-item>
+        <os-transaction-item>
+          <div slot="title">Uber</div>
+          <div slot="date">11/03/2025</div>
+          <div slot="amount" class="amount negative">- R$ 23,40</div>
+        </os-transaction-item>
+      </os-list>
+      <div slot="footer">Últimas 20</div>
+    </os-card>
+  </div>
+
+  <os-toast *ngIf="toast()" variant="success">{{ toast() }}</os-toast>
+</section>
