@@ -17,6 +17,11 @@ Escopo inicial: CSR (client-side rendering). SSR/SEO poderá ser reavaliado futu
 
 Mock de API em desenvolvimento e testes: MSW (Mock Service Worker) com handlers por contexto e inicialização controlada por flag de ambiente.
 
+Diretrizes transversais (mandatórias):
+
+- Offline-first: toda a aplicação deve operar sem conexão, com leitura a partir de cache local e fila de comandos para sincronização quando a rede voltar. Ver Seção 16 (Offline First e Sincronização).
+- Mobile-first e totalmente responsiva: a UI deve priorizar experiências em telas pequenas e se adaptar fluentemente a diferentes breakpoints, assegurando responsividade completa. Ver Seção 17 (Mobile First e Responsividade).
+
 ---
 
 ## 2. Organização dos Diretórios

@@ -46,6 +46,15 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
 
+## Cross-cutting directives
+
+- Offline-first by default
+  - Reads: prefer stale-while-revalidate from local cache; Writes: queue commands and sync when online; tokens stay in-memory only.
+  - See `docs/visao-arquitetural-frontend.md` Section 16 for details and edge cases.
+- Mobile-first and fully responsive
+  - Prioritize small screens, use responsive tokens/breakpoints, ensure a11y touch targets and keyboard navigation.
+  - See `docs/visao-arquitetural-frontend.md` Section 17 for guidelines.
+
 ## Documentation
 
 Toda documentação se encontra em docs

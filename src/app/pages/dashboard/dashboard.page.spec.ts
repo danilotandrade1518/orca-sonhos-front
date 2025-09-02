@@ -18,9 +18,7 @@ describe('DashboardPage', () => {
     const fixture = TestBed.configureTestingModule({
       imports: [DashboardPage],
       providers: [provideZonelessChangeDetection()],
-    }).createComponent(
-      DashboardPage
-    );
+    }).createComponent(DashboardPage);
     const comp = fixture.componentInstance;
     comp['syncState'].set('syncing');
     expect(comp.syncLabel()).toContain('Sincronizando');
