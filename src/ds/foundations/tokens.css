@@ -1,0 +1,35 @@
+:root {
+  /* Colors */
+  --os-color-bg: #0b0f14;
+  --os-color-surface: #12171f;
+  --os-color-elevated: #1a2230;
+  --os-color-primary: #4f46e5;
+  --os-color-primary-contrast: #ffffff;
+  --os-color-danger: #dc2626;
+  --os-color-text: #e5e7eb;
+  --os-color-text-muted: #9ca3af;
+
+  /* Spacing */
+  --os-space-0: 0;
+  --os-space-1: 0.25rem;
+  --os-space-2: 0.5rem;
+  --os-space-3: 0.75rem;
+  --os-space-4: 1rem;
+  --os-space-6: 1.5rem;
+  --os-space-8: 2rem;
+
+  /* Radius */
+  --os-radius-sm: 6px;
+  --os-radius-md: 10px;
+  --os-radius-lg: 14px;
+
+  /* Typography */
+  --os-font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  --os-font-size-sm: 0.875rem;
+  --os-font-size-md: 1rem;
+  --os-font-size-lg: 1.125rem;
+
+  /* Shadow */
+  --os-shadow-1: 0 1px 2px rgba(0,0,0,0.2);
+  --os-shadow-2: 0 4px 12px rgba(0,0,0,0.25);
+}
