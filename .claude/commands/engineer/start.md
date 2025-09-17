@@ -11,6 +11,9 @@ Este é o comando para iniciar o desenvolvimento de uma funcionalidade baseada e
 ## Objetivo
 
 Estabelecer o contexto inicial de desenvolvimento, criar documentação de sessão e preparar o ambiente para implementação estruturada.
+<feature_slug> se refere ao identificador único da funcionalidade, usado para organizar arquivos e pastas.
+Você deve buscar a task correspondente no Jira via MCP para obter os detalhes.
+Caso não encontre, páre e informe ao usuário.
 
 ## Processo de Inicialização
 
