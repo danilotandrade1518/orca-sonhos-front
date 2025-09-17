@@ -24,14 +24,16 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "mockServiceWorker.js",
-                "input": "node_modules/msw/browser",
-                "output": "/"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "src/styles.scss"
+            ],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -76,20 +78,15 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "codeCoverage": true,
             "inlineStyleLanguage": "scss",
-            "polyfills": ["src/test-setup.ts"],
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "mockServiceWorker.js",
-                "input": "node_modules/msw/browser",
-                "output": "/"
               }
+            ],
+            "styles": [
+              "src/styles.scss"
             ]
           }
         }

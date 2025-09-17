@@ -7,10 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "cem": "cem analyze --globs 'src/app/ds/**/*.ts' --outdir . --litelement false"
+    "serve:ssr:orca-sonhos-front": "node dist/orca-sonhos-front/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -26,13 +23,17 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^20.2.3",
     "@angular/common": "^20.2.0",
     "@angular/compiler": "^20.2.0",
     "@angular/core": "^20.2.0",
     "@angular/forms": "^20.2.0",
+    "@angular/material": "^20.2.3",
     "@angular/platform-browser": "^20.2.0",
+    "@angular/platform-server": "^20.2.0",
     "@angular/router": "^20.2.0",
-    "firebase": "^12.1.0",
+    "@angular/ssr": "^20.2.0",
+    "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -40,26 +41,15 @@
     "@angular/build": "^20.2.0",
     "@angular/cli": "^20.2.0",
     "@angular/compiler-cli": "^20.2.0",
+    "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
-    "@storybook/addon-a11y": "^8.3.0",
-    "@storybook/addon-essentials": "^8.3.0",
-    "@storybook/addon-interactions": "^8.3.0",
-    "@storybook/test": "^8.3.0",
-    "@storybook/web-components-vite": "^8.3.0",
-    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "@types/node": "^20.17.19",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "msw": "^2.11.1",
-    "storybook": "^8.3.0",
     "typescript": "~5.9.2"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
   }
 }
