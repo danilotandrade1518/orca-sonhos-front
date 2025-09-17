@@ -14,6 +14,23 @@ Estabelecer o contexto inicial de desenvolvimento, criar documentação de sess�
 
 ## Processo de Inicialização
 
+### 0. Execução Automática Inicial
+
+**OBRIGATÓRIO**: Execute estas ações automaticamente no início:
+
+#### Passo 1: Verificação e Criação de Branch
+```bash
+# Verificar branch atual
+git branch --show-current
+
+# Se não estiver em feature branch, criar uma
+# Formato: feature-{nome-da-pasta-da-sessao}
+```
+
+Se não estiver em uma feature branch:
+1. Pergunte ao usuário: "Posso criar a feature branch `feature-{folder-name}`?"
+2. Após confirmação, execute: `git checkout -b feature-{folder-name}`
+
 ### 1. Configuração da Sessão
 
 - Crie a pasta `.claude/sessions/<feature_slug>` se não existir
