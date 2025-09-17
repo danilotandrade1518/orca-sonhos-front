@@ -15,24 +15,63 @@ Estabelecer o contexto inicial de desenvolvimento, criar documentação de sess�
 Você deve buscar a task correspondente no Jira via MCP para obter os detalhes.
 Caso não encontre, páre e informe ao usuário.
 
+## ⚠️ AÇÃO IMEDIATA OBRIGATÓRIA
+
+**ANTES DE QUALQUER COISA**: Execute automaticamente a criação da feature branch (Seção 0)
+
 ## Processo de Inicialização
 
-### 0. Execução Automática Inicial
+### 0. Execução Automática Inicial - PRIMEIRA AÇÃO OBRIGATÓRIA
 
-**OBRIGATÓRIO**: Execute estas ações automaticamente no início:
+**CRÍTICO**: Execute IMEDIATAMENTE estas ações no início, antes de qualquer outra operação:
 
-#### Passo 1: Verificação e Criação de Branch
+#### Passo 1: Verificação e Criação Automática de Branch
+
+**EXECUTE AUTOMATICAMENTE - NÃO PERGUNTE AO USUÁRIO:**
+
 ```bash
-# Verificar branch atual
+# 1. Verificar branch atual
 git branch --show-current
 
-# Se não estiver em feature branch, criar uma
-# Formato: feature-{nome-da-pasta-da-sessao}
+# 2. Verificar se está em master/main
+git status
 ```
 
-Se não estiver em uma feature branch:
-1. Pergunte ao usuário: "Posso criar a feature branch `feature-{folder-name}`?"
-2. Após confirmação, execute: `git checkout -b feature-{folder-name}`
+**REGRA DE CRIAÇÃO DE BRANCH:**
+- Se estiver em `master` ou `main`: **CRIAR AUTOMATICAMENTE** a feature branch
+- Se já estiver em branch com prefixo `feature-`: **CONTINUAR** na branch atual
+- Se estiver em outra branch: **INFORMAR** ao usuário e pedir orientação
+
+**EXECUÇÃO AUTOMÁTICA:**
+```bash
+# Se estiver em master/main, executar AUTOMATICAMENTE:
+git checkout -b feature-<feature_slug>
+```
+
+**FORMATO DA BRANCH:** `feature-<feature_slug>` (onde feature_slug é o argumento da sessão)
+
+**NÃO PERGUNTE** - Execute diretamente. Apenas informe: "Criando feature branch `feature-<feature_slug>`"
+
+#### Exemplos de Execução:
+
+**Cenário 1 - Em master/main:**
+```bash
+# Branch atual: master
+git checkout -b feature-user-authentication
+# Informa: "Criando feature branch `feature-user-authentication`"
+```
+
+**Cenário 2 - Já em feature branch:**
+```bash
+# Branch atual: feature-user-authentication
+# Informa: "Continuando na feature branch `feature-user-authentication`"
+```
+
+**Cenário 3 - Em outra branch:**
+```bash
+# Branch atual: develop ou hotfix-xxx
+# Informa: "Você está na branch `develop`. Deseja continuar aqui ou criar uma feature branch?"
+```
 
 ### 1. Configuração da Sessão
 
