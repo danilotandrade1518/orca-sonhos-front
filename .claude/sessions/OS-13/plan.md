@@ -177,7 +177,7 @@ _Enums devem seguir convenções em inglês e valores alinhados com backend para
 
 ---
 
-## 📅 FASE 4: Entities Core (Budget e Account) [Status: ⏳]
+## 📅 FASE 4: Entities Core (Budget e Account) [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -185,21 +185,21 @@ Implementar os dois agregados mais fundamentais: Budget e Account, estabelecendo
 
 ### 📋 Tarefas
 
-#### Implementar Budget Aggregate [⏳]
+#### Implementar Budget Aggregate [✅]
 
 **Descrição**: Criar classe Budget com propriedades básicas e factory method
 **Arquivos**: `src/models/budget/budget.ts`
 **Dependências**: Value Objects e Either pattern
 **Complexidade**: Alta (aggregate principal do sistema)
 
-#### Implementar Account Aggregate [⏳]
+#### Implementar Account Aggregate [✅]
 
 **Descrição**: Criar classe Account com propriedades básicas e validações
 **Arquivos**: `src/models/account/account.ts`
 **Dependências**: Money, AccountType, Either pattern
 **Validação**: Balance como Money, tipo como AccountType
 
-#### Testar Factory Methods [⏳]
+#### Testar Factory Methods [✅]
 
 **Descrição**: Validar que factory methods funcionam com Either pattern
 **Foco**: Budget.create() e Account.create() com validações básicas
@@ -212,13 +212,26 @@ Implementar os dois agregados mais fundamentais: Budget e Account, estabelecendo
 - Money para balance de Account
 - Uuid para IDs das entities
 
+### 🧪 Critérios de Validação
+
+- [x] Budget com propriedades básicas (name, limit, ownerId, participantIds)
+- [x] Budget com Money para limite e validações robustas
+- [x] Account com Money para balance e AccountType enum
+- [x] Account com métodos auxiliares (hasPositiveBalance, formatBalance, getTypeLabel)
+- [x] Factory methods retornando Either<Error, Entity>
+- [x] Validações básicas para name, limit, balance em factory methods
+- [x] Compilação TypeScript passando sem erros
+- [x] Integração correta com Value Objects e Either pattern
+
 ### 📝 Comentários da Fase
 
 _Estas são as entities mais críticas. Budget é o aggregate root principal e Account é fundamental para transações._
 
+**✅ COMPLETADA**: Budget e Account implementados com sucesso. Factory methods com validações robustas, integração correta com Money e enums, métodos auxiliares implementados. Compilação TypeScript validou corretamente a integração com Either pattern.
+
 ---
 
-## 📅 FASE 5: Entities Transacionais (Transaction e Category) [Status: ⏳]
+## 📅 FASE 5: Entities Transacionais (Transaction e Category) [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -226,21 +239,21 @@ Implementar agregados relacionados às transações financeiras, estabelecendo r
 
 ### 📋 Tarefas
 
-#### Implementar Transaction Aggregate [⏳]
+#### Implementar Transaction Aggregate [✅]
 
 **Descrição**: Criar classe Transaction com propriedades básicas
 **Arquivos**: `src/models/transaction/transaction.ts`
 **Dependências**: Money, TransactionType, Either pattern
 **Complexidade**: Média (relacionamentos com Account e Category)
 
-#### Implementar Category Aggregate [⏳]
+#### Implementar Category Aggregate [✅]
 
 **Descrição**: Criar classe Category com propriedades básicas
 **Arquivos**: `src/models/category/category.ts`
 **Dependências**: CategoryType, Either pattern
 **Validação**: Tipo e status ativo/inativo
 
-#### Validar Relacionamentos via IDs [⏳]
+#### Validar Relacionamentos via IDs [✅]
 
 **Descrição**: Testar que relacionamentos funcionam usando string IDs
 **Foco**: Transaction referencia accountId e categoryId
@@ -248,19 +261,25 @@ Implementar agregados relacionados às transações financeiras, estabelecendo r
 
 ### 🧪 Critérios de Validação
 
-- [ ] Transaction com amount como Money
-- [ ] Transaction com type como TransactionType
-- [ ] Category com type como CategoryType
-- [ ] Relacionamentos via string IDs funcionando
-- [ ] Factory methods retornando Either<Error, Entity>
+- [x] Transaction com amount como Money
+- [x] Transaction com type como TransactionType
+- [x] Category com type como CategoryType
+- [x] Relacionamentos via string IDs funcionando
+- [x] Factory methods retornando Either<Error, Entity>
+- [x] Transaction com helper methods (isIncome, isExpense, formatAmount, getTypeLabel)
+- [x] Category com helper methods (isIncome, isExpense, getTypeLabel, getStatusLabel)
+- [x] Compilação TypeScript passando sem erros
+- [x] Integração correta com Value Objects e Either pattern
 
 ### 📝 Comentários da Fase
 
 _Relacionamentos via IDs string são suficientes para frontend. Validação de existência fica no backend._
 
+**✅ COMPLETADA**: Transaction e Category implementados com sucesso. Relacionamentos via string IDs funcionando corretamente, factory methods com validações robustas, métodos auxiliares implementados. Compilação TypeScript validou corretamente a integração.
+
 ---
 
-## 📅 FASE 6: Entities Avançadas (CreditCard, CreditCardBill, Envelope, Goal) [Status: ⏳]
+## 📅 FASE 6: Entities Avançadas (CreditCard, CreditCardBill, Envelope, Goal) [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -268,28 +287,28 @@ Implementar agregados mais específicos do domínio financeiro, completando o co
 
 ### 📋 Tarefas
 
-#### Implementar CreditCard Aggregate [⏳]
+#### Implementar CreditCard Aggregate [✅]
 
 **Descrição**: Criar classe CreditCard com limite e datas importantes
 **Arquivos**: `src/models/credit-card/credit-card.ts`
 **Dependências**: Money para limite, Either pattern
 **Complexidade**: Média (campos de data e limite)
 
-#### Implementar CreditCardBill Aggregate [⏳]
+#### Implementar CreditCardBill Aggregate [✅]
 
 **Descrição**: Criar classe CreditCardBill para faturas do cartão
 **Arquivos**: `src/models/credit-card-bill/credit-card-bill.ts`
 **Dependências**: Money, relacionamento com CreditCard
 **Validação**: Status da fatura e período
 
-#### Implementar Envelope Aggregate [⏳]
+#### Implementar Envelope Aggregate [✅]
 
 **Descrição**: Criar classe Envelope para envelope budgeting
 **Arquivos**: `src/models/envelope/envelope.ts`
 **Dependências**: Money, relacionamento com Category
 **Foco**: Balance e limite do envelope
 
-#### Implementar Goal Aggregate [⏳]
+#### Implementar Goal Aggregate [✅]
 
 **Descrição**: Criar classe Goal para metas financeiras
 **Arquivos**: `src/models/goal/goal.ts`
@@ -302,13 +321,29 @@ Implementar agregados mais específicos do domínio financeiro, completando o co
 - Money para todos os valores monetários
 - Relacionamentos via string IDs
 
+### 🧪 Critérios de Validação
+
+- [x] CreditCard com Money para limite e validações de datas (closingDay, dueDay)
+- [x] CreditCard com helper methods (formatLimit, getDisplayName, getNextClosingDate, getNextDueDate)
+- [x] CreditCardBill com Money para amounts e enum de status
+- [x] CreditCardBill com helper methods (getRemainingAmount, isPaid, isOverdue, getDaysUntilDue)
+- [x] Envelope com Money para limit/balance e relacionamentos com Category/Budget
+- [x] Envelope com helper methods (getRemainingAmount, getUsagePercentage, isOverLimit, canAllocate)
+- [x] Goal com Money para target/current amounts e enum de status
+- [x] Goal com helper methods (getProgressPercentage, getMonthlyTargetAmount, isCompleted, isOverdue)
+- [x] Factory methods retornando Either<Error, Entity>
+- [x] Compilação TypeScript passando sem erros
+- [x] Integração correta com Value Objects e Either pattern
+
 ### 📝 Comentários da Fase
 
 _Entities mais específicas do domínio. CreditCard e Goal podem ter lógicas de UI mais complexas._
 
+**✅ COMPLETADA**: Todas as 4 entidades avançadas implementadas com sucesso. CreditCard com lógicas de datas, CreditCardBill com status e cálculos, Envelope com envelope budgeting, Goal com metas e progresso. Compilação TypeScript validou corretamente toda integração.
+
 ---
 
-## 📅 FASE 7: Integração Final e Exports [Status: ⏳]
+## 📅 FASE 7: Integração Final e Exports [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -316,20 +351,20 @@ Organizar todos os exports via barrel files e validar que toda a API pública fu
 
 ### 📋 Tarefas
 
-#### Criar Barrel File Principal [⏳]
+#### Criar Barrel File Principal [✅]
 
 **Descrição**: Criar index.ts principal exportando tudo de @models
 **Arquivos**: `src/models/index.ts`
 **Dependências**: Todas as entities implementadas
 **Foco**: API pública limpa e organizada
 
-#### Validar Imports via Path Aliases [⏳]
+#### Validar Imports via Path Aliases [✅]
 
 **Descrição**: Testar que todos os imports funcionam via @models/*
 **Testes Necessários**: Import de cada entity e value object
 **Critério**: Nenhum erro de compilação TypeScript
 
-#### Documentar API Pública [⏳]
+#### Documentar API Pública [✅]
 
 **Descrição**: Documentar principais exports e padrões de uso
 **Foco**: Como usar factory methods e Either pattern
@@ -337,14 +372,18 @@ Organizar todos os exports via barrel files e validar que toda a API pública fu
 
 ### 🏁 Entrega Final
 
-- [ ] Todas as 8 entities implementadas e funcionando
-- [ ] Value Objects com operações básicas
-- [ ] Either pattern integrado em todas as validações
-- [ ] Barrel files organizando exports
-- [ ] Zero dependências externas
-- [ ] Path aliases funcionando
-- [ ] API pública documentada
-- [ ] Pronto para testes unitários futuros
+- [x] Todas as 8 entities implementadas e funcionando
+- [x] Value Objects com operações básicas
+- [x] Either pattern integrado em todas as validações
+- [x] Barrel files organizando exports
+- [x] Zero dependências externas
+- [x] Path aliases funcionando
+- [x] API pública documentada
+- [x] Pronto para testes unitários futuros
+
+### 📝 Comentários da Fase
+
+**✅ COMPLETADA**: Todas as tarefas da Fase 7 concluídas com sucesso. Barrel file principal funcionando, path aliases validados via compilação TypeScript, e documentação abrangente da API pública criada em README.md.
 
 ---
 
