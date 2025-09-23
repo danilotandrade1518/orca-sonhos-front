@@ -1,8 +1,8 @@
-export { ICreateBudgetPort } from './create-budget.port';
-export { IUpdateBudgetPort } from './update-budget.port';
-export { IDeleteBudgetPort } from './delete-budget.port';
-export { IAddParticipantToBudgetPort } from './add-participant-to-budget.port';
-export { IRemoveParticipantFromBudgetPort } from './remove-participant-from-budget.port';
-export { IListBudgetsPort } from './list-budgets.port';
-export { IBudgetOverviewPort } from './budget-overview.port';
-export { IBudgetOfflineStoragePort, ISyncQueuePort } from './budget-offline-storage.port';
+export type { ICreateBudgetPort } from './create-budget.port';
+export type { IUpdateBudgetPort } from './update-budget.port';
+export type { IDeleteBudgetPort } from './delete-budget.port';
+export type { IAddParticipantToBudgetPort } from './add-participant-to-budget.port';
+export type { IRemoveParticipantFromBudgetPort } from './remove-participant-from-budget.port';
+export type { IListBudgetsPort } from './list-budgets.port';
+export type { IBudgetOverviewPort } from './budget-overview.port';
+export type { IBudgetOfflineStoragePort, ISyncQueuePort } from './budget-offline-storage.port';
