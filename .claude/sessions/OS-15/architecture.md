@@ -13,7 +13,7 @@ O projeto possui apenas:
 ### Mudanças Propostas
 
 Criação completa da estrutura `/src/application/` com:
-- **5 Use Cases** para operações de comando com fallback HTTP → offline
+- **5 Use Cases** para operações de comando via HTTP direto
 - **2 Query Handlers** para consultas de Budget (outras entities em fase futura)
 - **Ports por operação** seguindo Interface Segregation Principle
 - **DTOs e Mappers** para conversão entre camadas
@@ -36,11 +36,11 @@ src/application/errors/
 ├── application-error.ts                 # Base error class
 ├── budget-not-found-error.ts           # Specific domain errors
 ├── validation-error.ts                 # Input validation errors
-└── offline-error.ts                    # Offline operation errors
+└── network-error.ts                    # Network operation errors
 
 src/application/types/
 ├── pagination.types.ts                 # Common pagination interfaces
-└── connection-status.types.ts          # Online/offline status types
+└── network-status.types.ts             # Network status types
 ```
 
 #### 2. DTOs Structure
@@ -54,9 +54,6 @@ src/application/dtos/
 │   ├── budget-response.dto.ts          # Budget API response format
 │   ├── budget-list-response.dto.ts     # Paginated budget list response
 │   └── budget-overview-response.dto.ts # Detailed budget overview
-└── internal/
-    ├── budget-storage.dto.ts           # Offline storage format
-    └── sync-operation.dto.ts           # Sync queue operations
 ```
 
 #### 3. Ports (Interfaces)
@@ -68,8 +65,7 @@ src/application/ports/
 ├── add-participant-to-budget.port.ts   # IAddParticipantToBudgetPort
 ├── remove-participant-from-budget.port.ts # IRemoveParticipantFromBudgetPort
 ├── list-budgets.port.ts                # IListBudgetsPort
-├── budget-overview.port.ts             # IBudgetOverviewPort
-└── budget-offline-storage.port.ts      # IBudgetOfflineStoragePort
+└── budget-overview.port.ts             # IBudgetOverviewPort
 ```
 
 #### 4. Mappers
@@ -83,10 +79,6 @@ src/application/mappers/
 │   ├── budget-response-mapper.ts       # Response DTOs ↔ Domain
 │   ├── budget-response-mapper.spec.ts  # Unit tests
 │   └── index.ts                        # Export
-└── budget-storage-mapper/
-    ├── budget-storage-mapper.ts        # Domain ↔ Storage DTOs
-    ├── budget-storage-mapper.spec.ts   # Unit tests
-    └── index.ts                        # Export
 ```
 
 #### 5. Use Cases (Commands)
@@ -119,14 +111,13 @@ src/application/queries/
 
 ```
 src/application/
-├── use-cases/                  # Command operations with fallback
-├── queries/                    # Query operations (Service Worker managed)
+├── use-cases/                  # Command operations via HTTP
+├── queries/                    # Query operations via HTTP
 ├── mappers/                    # Domain ↔ DTO conversions
 ├── ports/                      # Interface definitions per operation
 ├── dtos/                       # Data Transfer Objects
 │   ├── request/               # Input DTOs
-│   ├── response/              # Output DTOs
-│   └── internal/              # Storage DTOs
+│   └── response/              # Output DTOs
 ├── errors/                     # Application-specific errors
 └── types/                      # Common type definitions
 ```
@@ -170,10 +161,10 @@ describe('CreateBudgetUseCase', () => {
 - **Justificativa**: Interface Segregation Principle, máximo 5 métodos por port
 - **Implementação**: ICreateBudgetPort, IUpdateBudgetPort, etc.
 
-#### **Decisão**: Fallback HTTP → Offline nos Use Cases
-- **Alternativas**: Service dedicado para roteamento
-- **Justificativa**: Queries gerenciadas via Service Worker, apenas Commands precisam de lógica específica
-- **Implementação**: try/catch interno com fallback para offline port
+#### **Decisão**: Comunicação HTTP Direta nos Use Cases
+- **Alternativas**: Service dedicado para abstração
+- **Justificativa**: Simplicidade do MVP, comunicação direta mais previsível
+- **Implementação**: Use Cases comunicam diretamente com ports HTTP
 
 #### **Decisão**: Error Hierarchy ServiceError → ApplicationError → DomainError
 - **Alternativas**: Error codes simples
@@ -182,8 +173,8 @@ describe('CreateBudgetUseCase', () => {
 
 #### **Decisão**: DTOs Separados por Contexto
 - **Alternativas**: DTOs únicos para request/response
-- **Justificativa**: Flexibilidade para evolução de API vs Storage, contratos bem definidos
-- **Implementação**: request/, response/, internal/ separados
+- **Justificativa**: Flexibilidade para evolução de API, contratos bem definidos
+- **Implementação**: request/, response/ separados
 
 ## 📦 Dependências e Integrações
 
@@ -232,24 +223,22 @@ export class CreateBudgetComponent {
 [UI Component]
     ↓ (CreateBudgetRequestDto)
 [CreateBudgetUseCase]
-    ↓ (try HTTP port)
-[ICreateBudgetPort] ————— HTTP Fail
-    ↓ (catch → fallback)      ↓
-[IBudgetOfflineStoragePort] ←——
+    ↓ (HTTP port)
+[ICreateBudgetPort]
     ↓ (success/error)
 [Either<ApplicationError, void>]
     ↓ (result)
 [UI Component]
 ```
 
-### Query Flow (Service Worker Managed)
+### Query Flow (HTTP Direct)
 ```
 [UI Component]
     ↓ (BudgetListQuery)
 [ListBudgetsQueryHandler]
-    ↓ (automatic via Service Worker)
+    ↓ (HTTP port)
 [IListBudgetsPort]
-    ↓ (cached/network)
+    ↓ (HTTP response)
 [Either<ApplicationError, BudgetListResponseDto>]
     ↓ (mapped)
 [Budget[] Domain Models]
@@ -265,18 +254,14 @@ export class CreateBudgetComponent {
 ```typescript
 describe('CreateBudgetUseCase', () => {
   let mockHttpPort: jest.Mocked<ICreateBudgetPort>;
-  let mockOfflinePort: jest.Mocked<IBudgetOfflineStoragePort>;
 
   beforeEach(() => {
     mockHttpPort = {
       createBudget: jest.fn()
     };
-    mockOfflinePort = {
-      storeBudget: jest.fn()
-    };
   });
 
-  it('should create budget via HTTP when online', async () => {
+  it('should create budget via HTTP successfully', async () => {
     // Arrange
     mockHttpPort.createBudget.mockResolvedValue(Either.success(undefined));
 
@@ -284,18 +269,16 @@ describe('CreateBudgetUseCase', () => {
     const result = await useCase.execute(validDto);
     expect(result.hasData).toBe(true);
     expect(mockHttpPort.createBudget).toHaveBeenCalled();
-    expect(mockOfflinePort.storeBudget).not.toHaveBeenCalled();
   });
 
-  it('should fallback to offline when HTTP fails', async () => {
+  it('should handle HTTP errors properly', async () => {
     // Arrange
-    mockHttpPort.createBudget.mockRejectedValue(new Error('Network error'));
-    mockOfflinePort.storeBudget.mockResolvedValue(Either.success(undefined));
+    mockHttpPort.createBudget.mockResolvedValue(Either.error(new NetworkError('Connection failed')));
 
     // Act & Assert
     const result = await useCase.execute(validDto);
-    expect(result.hasData).toBe(true);
-    expect(mockOfflinePort.storeBudget).toHaveBeenCalled();
+    expect(result.hasError).toBe(true);
+    expect(result.errors).toContain('Connection failed');
   });
 });
 ```
@@ -343,7 +326,7 @@ export class BudgetTestFactory {
 - **Mitigação**: Organizar em namespaces por contexto, factory patterns
 
 #### **Test Complexity**
-- **Risco**: Mockar comportamento offline pode ser complexo
+- **Risco**: Mockar comportamento HTTP pode ser complexo
 - **Mitigação**: Test factories reutilizáveis, cenários bem definidos
 
 ## 📋 Lista de Implementação
@@ -359,7 +342,7 @@ export class BudgetTestFactory {
 - [ ] Implementar Mappers com testes
 
 ### Fase 3: Use Cases (Commands)
-- [ ] CreateBudgetUseCase com fallback HTTP → offline
+- [ ] CreateBudgetUseCase com comunicação HTTP direta
 - [ ] UpdateBudgetUseCase
 - [ ] DeleteBudgetUseCase
 - [ ] AddParticipantToBudgetUseCase

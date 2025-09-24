@@ -38,11 +38,13 @@ git status
 ```
 
 **REGRA DE CRIAÇÃO DE BRANCH:**
+
 - Se estiver em `master` ou `main`: **CRIAR AUTOMATICAMENTE** a feature branch
 - Se já estiver em branch com prefixo `feature-`: **CONTINUAR** na branch atual
 - Se estiver em outra branch: **INFORMAR** ao usuário e pedir orientação
 
 **EXECUÇÃO AUTOMÁTICA:**
+
 ```bash
 # Se estiver em master/main, executar AUTOMATICAMENTE:
 git checkout -b feature-<feature_slug>
@@ -55,6 +57,7 @@ git checkout -b feature-<feature_slug>
 #### Exemplos de Execução:
 
 **Cenário 1 - Em master/main:**
+
 ```bash
 # Branch atual: master
 git checkout -b feature-user-authentication
@@ -62,12 +65,14 @@ git checkout -b feature-user-authentication
 ```
 
 **Cenário 2 - Já em feature branch:**
+
 ```bash
 # Branch atual: feature-user-authentication
 # Informa: "Continuando na feature branch `feature-user-authentication`"
 ```
 
 **Cenário 3 - Em outra branch:**
+
 ```bash
 # Branch atual: develop ou hotfix-xxx
 # Informa: "Você está na branch `develop`. Deseja continuar aqui ou criar uma feature branch?"
@@ -132,6 +137,8 @@ Após obter esclarecimentos, documente seu entendimento no arquivo `.claude/sess
 
 ```markdown
 # [NOME DA FUNCIONALIDADE] - Contexto de Desenvolvimento
+
+# [JIRA ISSUE/CARD IDENTIFIER]
 
 ## 🎯 Objetivo
 

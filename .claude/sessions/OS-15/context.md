@@ -2,36 +2,36 @@
 
 ## 🎯 Objetivo
 
-Implementar completamente a camada Application para gestão de orçamentos (Budget) seguindo Clean Architecture com padrão Ports & Adapters. Esta camada estabelecerá a base arquitetural para todo o sistema de gestão de orçamentos, desacoplando a UI Angular da comunicação HTTP direta e preparando o terreno para funcionalidade offline-first.
+Implementar completamente a camada Application para gestão de orçamentos (Budget) seguindo Clean Architecture com padrão Ports & Adapters. Esta camada estabelecerá a base arquitetural para todo o sistema de gestão de orçamentos, desacoplando a UI Angular da comunicação HTTP direta com foco no MVP.
 
 ## 📋 Requisitos Funcionais
 
 ### Funcionalidades Principais
 
 #### Use Cases (Commands)
-- **CreateBudgetUseCase**: Criação de novos orçamentos com validação de domínio e fallback offline
+- **CreateBudgetUseCase**: Criação de novos orçamentos com validação de domínio via HTTP
 - **UpdateBudgetUseCase**: Atualização de dados de orçamento existente
 - **DeleteBudgetUseCase**: Remoção de orçamentos com validações apropriadas
 - **AddParticipantToBudgetUseCase**: Adição de participantes a orçamentos compartilhados
 - **RemoveParticipantFromBudgetUseCase**: Remoção de participantes de orçamentos
 
 #### Query Handlers (Queries)
-- **ListBudgetsQueryHandler**: Listagem paginada de orçamentos do usuário (via Service Worker)
+- **ListBudgetsQueryHandler**: Listagem paginada de orçamentos do usuário via HTTP
 - **BudgetOverviewQueryHandler**: Visão geral detalhada de um orçamento específico
 
 **Nota**: Queries de Accounts, Transactions, Envelopes e Goals serão implementadas em fase futura.
 
 ### Comportamentos Esperados
 
-#### Estratégia Online/Offline
-- **Commands (Use Cases)**: Implementam fallback HTTP → Offline dentro de cada Use Case
-- **Queries**: Gerenciadas automaticamente via Service Worker (não precisam de lógica específica)
-- **Error Handling**: Mockar erro do port HTTP para ativar fallback para port Offline em testes
+#### Estratégia HTTP Direta
+- **Commands (Use Cases)**: Comunicação direta com backend via HTTP
+- **Queries**: Comunicação direta com backend via HTTP
+- **Error Handling**: Tratamento de erros de rede e validação usando Either pattern
 
 #### Granularidade de Ports
 - **Por Operação**: `ICreateBudgetPort`, `IUpdateBudgetPort`, `IDeleteBudgetPort`, etc.
 - **Segregação de Interface**: Máximo 5 métodos por port, responsabilidade única
-- **Offline/Online**: Ports separados para backend HTTP e storage offline
+- **HTTP Only**: Ports para comunicação com backend HTTP
 
 ## 🏗️ Considerações Técnicas
 
@@ -96,36 +96,33 @@ Components → Application Layer → [Ports/Interfaces]
 - `ICreateBudgetPort`, `IUpdateBudgetPort`, `IDeleteBudgetPort`
 - `IAddParticipantToBudgetPort`, `IRemoveParticipantFromBudgetPort`
 - `IListBudgetsPort`, `IBudgetOverviewPort`
-- `IBudgetOfflineStoragePort`
 
 **Fase Futura:**
 - HTTP adapters implementando os ports
-- IndexedDB adapters para storage offline
-- Service Worker para queries automáticas
 
 ## 🚧 Restrições e Considerações
 
 ### Limitações Técnicas
 
 - **Escopo Limitado**: Apenas Budget entities nesta fase
-- **Sem Infraestrutura**: Implementação de adapters HTTP/IndexedDB fica para feature futura
+- **Sem Infraestrutura**: Implementação de adapters HTTP fica para feature futura
 - **Framework Agnostic**: Application layer não pode conhecer Angular
 - **Interface Only**: Ports definem apenas contratos, sem implementação
 
 ### Riscos
 
 - **Query Dependencies**: ListBudgets pode precisar de dados de outras entities não implementadas
-- **Test Complexity**: Mockar comportamento offline requer estratégia cuidadosa
+- **Test Complexity**: Mockar comportamento HTTP requer estratégia cuidadosa
 - **Port Proliferation**: Muitos ports pequenos podem aumentar boilerplate
 
 **Mitigações:**
 - Implementar apenas queries essenciais de Budget
-- Factory pattern para mocks reutilizáveis
+- Factory pattern para mocks HTTP reutilizáveis
 - Organizar ports em namespaces por contexto
 
 ## 📚 Referências
 
 - **Issue**: OS-15 - Implementar Camada Application para Budget
 - **Especificação**: PRD e Arquitetura aprovados no Jira
-- **Meta Specs**: Clean Architecture + Offline Strategy
+- **Meta Specs**: Clean Architecture + HTTP Strategy
 - **Dependency Rules**: Application layer boundaries

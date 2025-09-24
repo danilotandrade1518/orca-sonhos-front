@@ -4,13 +4,13 @@
 
 ## 📋 Resumo Executivo
 
-Implementação completa da camada Application para gestão de orçamentos (Budget) seguindo Clean Architecture com padrão Ports & Adapters. Esta implementação estabelecerá a base arquitetural para todo o sistema de gestão de orçamentos, desacoplando a UI Angular da comunicação HTTP direta e preparando o terreno para funcionalidade offline-first.
+Implementação completa da camada Application para gestão de orçamentos (Budget) seguindo Clean Architecture com padrão Ports & Adapters. Esta implementação estabelecerá a base arquitetural para todo o sistema de gestão de orçamentos, desacoplando a UI Angular da comunicação HTTP direta com foco no MVP.
 
 ## 🎯 Objetivos da Implementação
 
 - Implementar camada Application completa com 5 Use Cases e 2 Query Handlers
 - Estabelecer padrão Ports & Adapters com segregação de interfaces por operação
-- Criar sistema de fallback HTTP → offline nos Use Cases (Commands)
+- Criar comunicação HTTP direta nos Use Cases e Query Handlers
 - Alcançar 100% de cobertura de testes unitários
 - Manter framework agnostic (TypeScript puro, sem dependências Angular)
 
@@ -18,7 +18,7 @@ Implementação completa da camada Application para gestão de orçamentos (Budg
 
 - [ ] Todos os Use Cases implementados com interfaces bem definidas
 - [ ] Query Handlers de Budget implementados
-- [ ] Lógica de fallback HTTP → offline funcional nos Use Cases
+- [ ] Comunicação HTTP direta funcional nos Use Cases
 - [ ] Ports definidas por operação (máximo 5 métodos por port)
 - [ ] DTOs criados para Request/Response/Internal
 - [ ] Mappers para conversão Domain ↔ DTOs
@@ -60,7 +60,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 - `src/application/errors/application-error.ts`
 - `src/application/errors/budget-not-found-error.ts`
 - `src/application/errors/validation-error.ts`
-- `src/application/errors/offline-error.ts`
+- `src/application/errors/network-error.ts`
 - `src/application/errors/index.ts`
 
 **Dependências**: Estrutura de diretórios criada
@@ -71,7 +71,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 **Descrição**: Implementar interfaces compartilhadas para paginação e status de conexão
 **Arquivos**:
 - `src/application/types/pagination.types.ts`
-- `src/application/types/connection-status.types.ts`
+- `src/application/types/network-status.types.ts`
 - `src/application/types/index.ts`
 
 **Critério de Conclusão**: Tipos bem definidos e exportados via index, prontos para uso
@@ -89,8 +89,8 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 **Concluída em 2025-09-23**
 - **Decisão**: Path aliases precisaram ser ajustados para paths relativos durante compilação TypeScript
 - **Estrutura**: Criada organização completa seguindo Clean Architecture
-- **Erros**: Implementada hierarchy ApplicationError com classes específicas (BudgetNotFoundError, ValidationError, OfflineError)
-- **Tipos**: PaginationQuery, ConnectionStatus e utilitários implementados
+- **Erros**: Implementada hierarchy ApplicationError com classes específicas (BudgetNotFoundError, ValidationError, NetworkError)
+- **Tipos**: PaginationQuery, NetworkStatus e utilitários implementados
 - **Validação**: TypeScript compilation passou sem erros, exports funcionando via index
 
 ---
@@ -128,15 +128,6 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 **Dependências**: DTOs de Request implementados
 **Critério de Conclusão**: DTOs alinhados com toJSON() do Budget domain model
 
-#### Implementar DTOs Internos [✅]
-
-**Descrição**: Criar DTOs para storage offline e operações de sync
-**Arquivos**:
-- `src/application/dtos/internal/budget-storage.dto.ts`
-- `src/application/dtos/internal/sync-operation.dto.ts`
-- `src/application/dtos/internal/index.ts`
-
-**Foco**: Otimização para IndexedDB e queue de sincronização
 
 #### Definir Ports por Operação [✅]
 
@@ -149,7 +140,6 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 - `src/application/ports/remove-participant-from-budget.port.ts`
 - `src/application/ports/list-budgets.port.ts`
 - `src/application/ports/budget-overview.port.ts`
-- `src/application/ports/budget-offline-storage.port.ts`
 - `src/application/ports/index.ts`
 
 **Complexidade**: Média (requires careful interface design)
@@ -166,8 +156,7 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 **Concluída em 2025-09-23**
 - **DTOs Request**: Implementados alinhados com BudgetProps, incluindo query DTOs para paginação
 - **DTOs Response**: Criados seguindo toJSON() do Budget, com BudgetListResponseDto incluindo summary
-- **DTOs Internal**: Storage e Sync otimizados para IndexedDB com metadata de versionamento
-- **Ports**: Interface segregation aplicada - 8 ports específicos seguindo Single Responsibility
+- **Ports**: Interface segregation aplicada - 6 ports específicos HTTP seguindo Single Responsibility
 - **Decisão**: Imports ajustados para paths relativos devido à compilação TypeScript
 - **Contratos**: Either pattern consistente em todos os ports para error handling
 
@@ -203,15 +192,6 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 **Complexidade**: Média (utiliza toJSON() e fromJSON() do Budget)
 **Validação**: Preserva integridade dos dados durante conversão
 
-#### Implementar Budget Storage Mapper [✅]
-
-**Descrição**: Mapper para conversão Domain Models ↔ Storage DTOs (IndexedDB)
-**Arquivos**:
-- `src/application/mappers/budget-storage-mapper/budget-storage-mapper.ts`
-- `src/application/mappers/budget-storage-mapper/budget-storage-mapper.spec.ts`
-- `src/application/mappers/budget-storage-mapper/index.ts`
-
-**Foco**: Otimização para storage offline, serialização eficiente
 
 ### 🧪 Critérios de Validação
 
@@ -226,19 +206,87 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 **Concluída em 2025-09-23**
 - **Budget Request Mapper**: Implementado com `fromCreateRequestToBudget` retornando Budget model diretamente e usando validação do domain
 - **Budget Response Mapper**: Criado com conversões bidirecionais Budget ↔ DTOs, incluindo list e overview responses
-- **Budget Storage Mapper**: Implementado com otimizações para IndexedDB, sync operations e metadata
-- **Testes**: 100% cobertura com 817 testes passando, incluindo edge cases e error scenarios
-- **Meta Spec Compliance**: Revisado e corrigido conforme Meta Specs, removendo comentários redundantes (102 instâncias AAA)
+- **Testes**: 100% cobertura com testes passando, incluindo edge cases e error scenarios
+- **Meta Spec Compliance**: Revisado e corrigido conforme Meta Specs, removendo comentários redundantes
 - **Decisão**: Arquitetura melhorada - mappers usam Budget.create() para validação adequada do domain
 - **TypeScript**: Resolvidas questões de `isolatedModules` com exports type adequados
 
 ---
 
-## 📅 FASE 4: USE CASES (COMMANDS) [Status: ⏳]
+## 📅 FASE 4: CLEANUP DE CÓDIGO OFFLINE [Status: ⏳]
 
 ### 🎯 Objetivo da Fase
 
-Implementar todos os Use Cases com lógica de fallback HTTP → offline e error handling robusto.
+**ATENÇÃO**: Conforme decisão de produto, funcionalidade offline será adiada para pós-MVP. Esta fase remove código já implementado relacionado ao offline.
+
+### 📋 Tarefas
+
+#### Remover DTOs Offline [⏳]
+
+**Descrição**: Remover DTOs específicos para storage offline
+**Arquivos a Remover**:
+- `src/application/dtos/internal/budget-storage.dto.ts`
+- `src/application/dtos/internal/sync-operation.dto.ts`
+- `src/application/dtos/internal/index.ts` (se vazio)
+
+#### Remover Ports Offline [⏳]
+
+**Descrição**: Remover interfaces para storage offline
+**Arquivos a Remover**:
+- `src/application/ports/budget-offline-storage.port.ts`
+
+#### Remover Mappers Offline [⏳]
+
+**Descrição**: Remover mappers específicos para IndexedDB
+**Arquivos a Remover**:
+- `src/application/mappers/budget-storage-mapper/budget-storage-mapper.ts`
+- `src/application/mappers/budget-storage-mapper/budget-storage-mapper.spec.ts`
+- `src/application/mappers/budget-storage-mapper/index.ts`
+- `src/application/mappers/budget-storage-mapper/` (diretório completo)
+
+#### Atualizar Errors [⏳]
+
+**Descrição**: Renomear offline-error para network-error
+**Arquivos**:
+- Renomear `src/application/errors/offline-error.ts` → `network-error.ts`
+- Atualizar imports em outros arquivos
+
+#### Atualizar Types [⏳]
+
+**Descrição**: Renomear connection-status para network-status
+**Arquivos**:
+- Renomear `src/application/types/connection-status.types.ts` → `network-status.types.ts`
+- Atualizar imports em outros arquivos
+
+#### Limpar Index Files [⏳]
+
+**Descrição**: Remover exports offline dos arquivos de índice
+**Arquivos**:
+- `src/application/dtos/index.ts`
+- `src/application/ports/index.ts`
+- `src/application/mappers/index.ts`
+- `src/application/errors/index.ts`
+- `src/application/types/index.ts`
+
+### 🧪 Critérios de Validação
+
+- [ ] Todos os arquivos offline removidos
+- [ ] Nenhum import quebrado
+- [ ] TypeScript compilation clean
+- [ ] Testes passando (removendo testes offline)
+- [ ] Index files atualizados
+
+### 📝 Comentários da Fase
+
+_[Registrar arquivos removidos, decisões tomadas, impactos na implementação]_
+
+---
+
+## 📅 FASE 5: USE CASES (COMMANDS) [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Implementar todos os Use Cases com comunicação HTTP direta e error handling robusto.
 
 ### 📋 Tarefas
 
@@ -252,7 +300,7 @@ Implementar todos os Use Cases com lógica de fallback HTTP → offline e error 
 
 **Dependências**: Mappers, Ports, DTOs implementados
 **Complexidade**: Alta (lógica de fallback, validation, error handling)
-**Lógica**: Try HTTP port → catch → fallback to offline port
+**Lógica**: Comunicação direta com HTTP port
 
 #### UpdateBudgetUseCase [⏳]
 
@@ -296,11 +344,11 @@ Implementar todos os Use Cases com lógica de fallback HTTP → offline e error 
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os Use Cases implementados com fallback HTTP → offline
+- [ ] Todos os Use Cases implementados com comunicação HTTP direta
 - [ ] 100% cobertura de testes incluindo cenários de falha
 - [ ] Error handling consistente usando Either pattern
 - [ ] Validation de business rules em cada Use Case
-- [ ] Mocks apropriados para ports HTTP e offline
+- [ ] Mocks apropriados para ports HTTP
 
 ### 📝 Comentários da Fase
 
@@ -308,11 +356,11 @@ _[Decisões sobre fallback strategy, performance considerations, edge cases enco
 
 ---
 
-## 📅 FASE 5: QUERY HANDLERS [Status: ⏳]
+## 📅 FASE 6: QUERY HANDLERS [Status: ⏳]
 
 ### 🎯 Objetivo da Fase
 
-Implementar Query Handlers para consultas de Budget (gerenciadas via Service Worker).
+Implementar Query Handlers para consultas de Budget via HTTP direto.
 
 ### 📋 Tarefas
 
@@ -326,7 +374,7 @@ Implementar Query Handlers para consultas de Budget (gerenciadas via Service Wor
 
 **Dependências**: Response Mappers, List Budgets Port
 **Funcionalidades**: Pagination, filtering, sorting
-**Nota**: Service Worker gerencia cache automaticamente
+**Nota**: Comunicação HTTP direta
 
 #### BudgetOverviewQueryHandler [⏳]
 
@@ -347,11 +395,11 @@ Implementar Query Handlers para consultas de Budget (gerenciadas via Service Wor
 
 ### 📝 Comentários da Fase
 
-_[Notas sobre strategy de cache, otimizações de query, integration com Service Worker]_
+_[Notas sobre error handling HTTP, otimizações de query, integration com ports]_
 
 ---
 
-## 📅 FASE 6: TESTING & INTEGRATION [Status: ⏳]
+## 📅 FASE 7: TESTING & INTEGRATION [Status: ⏳]
 
 ### 🎯 Objetivo da Fase
 
@@ -517,23 +565,26 @@ BudgetTestFactory.createOfflinePortMock()
 
 - **Fase 1**: 8 tarefas, ~3 horas estimadas (setup, infrastructure)
 - **Fase 2**: 12 tarefas, ~5 horas estimadas (contracts, interfaces)
-- **Fase 3**: 9 tarefas, ~4 horas estimadas (mappers, conversions)
-- **Fase 4**: 15 tarefas, ~8 horas estimadas (use cases, complex logic)
-- **Fase 5**: 6 tarefas, ~3 horas estimadas (queries, handlers)
-- **Fase 6**: 12 tarefas, ~4 horas estimadas (testing, validation)
+- **Fase 3**: 6 tarefas, ~3 horas estimadas (mappers HTTP, conversions)
+- **Fase 4**: 6 tarefas, ~2 horas estimadas (cleanup offline code)
+- **Fase 5**: 10 tarefas, ~5 horas estimadas (use cases HTTP)
+- **Fase 6**: 4 tarefas, ~2 horas estimadas (queries HTTP)
+- **Fase 7**: 8 tarefas, ~3 horas estimadas (testing, validation)
 
 ### Total
 
-- **Tarefas**: 62 tarefas totais
-- **Tempo Estimado**: ~27 horas total
+- **Tarefas**: 54 tarefas totais (redução de ~13% vs offline)
+- **Tempo Estimado**: ~23 horas total (redução de ~15% vs offline)
 - **Marcos**:
   - Fase 1-2: Foundation ready (~8h)
-  - Fase 3-4: Core functionality (~12h)
-  - Fase 5-6: Complete system (~7h)
+  - Fase 3-4: Cleanup e base HTTP (~5h)
+  - Fase 5-7: Complete HTTP system (~10h)
 
 ### Critérios de Progresso
 
-- **25%**: Infrastructure e DTOs implementados
-- **50%**: Mappers e Use Cases principais funcionais
-- **75%**: Queries implementados, testes em andamento
-- **100%**: Sistema completo, 100% coverage, dependency rules validated
+- **20%**: Infrastructure e DTOs implementados (Fases 1-2)
+- **35%**: Mappers HTTP implementados (Fase 3)
+- **45%**: Cleanup offline concluído (Fase 4)
+- **75%**: Use Cases HTTP funcionais (Fase 5)
+- **85%**: Queries HTTP implementados (Fase 6)
+- **100%**: Sistema completo HTTP, 100% coverage, dependency rules validated (Fase 7)
