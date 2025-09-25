@@ -5,4 +5,3 @@ export type { IAddParticipantToBudgetPort } from './add-participant-to-budget.po
 export type { IRemoveParticipantFromBudgetPort } from './remove-participant-from-budget.port';
 export type { IListBudgetsPort } from './list-budgets.port';
 export type { IBudgetOverviewPort } from './budget-overview.port';
-export type { IBudgetOfflineStoragePort, ISyncQueuePort } from './budget-offline-storage.port';

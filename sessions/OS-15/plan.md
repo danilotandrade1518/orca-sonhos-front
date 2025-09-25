@@ -40,6 +40,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 
 **Descrição**: Criar toda a estrutura de diretórios da camada Application seguindo organização proposta na arquitetura
 **Arquivos**:
+
 - `src/application/` (diretório raiz)
 - `src/application/errors/`
 - `src/application/types/`
@@ -57,6 +58,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 
 **Descrição**: Criar hierarchy de erros ApplicationError → specific domain errors
 **Arquivos**:
+
 - `src/application/errors/application-error.ts`
 - `src/application/errors/budget-not-found-error.ts`
 - `src/application/errors/validation-error.ts`
@@ -70,6 +72,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 
 **Descrição**: Implementar interfaces compartilhadas para paginação e status de conexão
 **Arquivos**:
+
 - `src/application/types/pagination.types.ts`
 - `src/application/types/network-status.types.ts`
 - `src/application/types/index.ts`
@@ -87,6 +90,7 @@ Estabelecer a estrutura fundamental da camada Application com sistema de erros, 
 ### 📝 Comentários da Fase
 
 **Concluída em 2025-09-23**
+
 - **Decisão**: Path aliases precisaram ser ajustados para paths relativos durante compilação TypeScript
 - **Estrutura**: Criada organização completa seguindo Clean Architecture
 - **Erros**: Implementada hierarchy ApplicationError com classes específicas (BudgetNotFoundError, ValidationError, NetworkError)
@@ -107,6 +111,7 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 
 **Descrição**: Criar DTOs para entrada de dados dos Use Cases
 **Arquivos**:
+
 - `src/application/dtos/request/create-budget-request.dto.ts`
 - `src/application/dtos/request/update-budget-request.dto.ts`
 - `src/application/dtos/request/add-participant-request.dto.ts`
@@ -120,6 +125,7 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 
 **Descrição**: Criar DTOs para saída de dados das operações
 **Arquivos**:
+
 - `src/application/dtos/response/budget-response.dto.ts`
 - `src/application/dtos/response/budget-list-response.dto.ts`
 - `src/application/dtos/response/budget-overview-response.dto.ts`
@@ -128,11 +134,11 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 **Dependências**: DTOs de Request implementados
 **Critério de Conclusão**: DTOs alinhados com toJSON() do Budget domain model
 
-
 #### Definir Ports por Operação [✅]
 
 **Descrição**: Implementar interfaces segregadas seguindo padrão 1 port = 1 operação
 **Arquivos**:
+
 - `src/application/ports/create-budget.port.ts`
 - `src/application/ports/update-budget.port.ts`
 - `src/application/ports/delete-budget.port.ts`
@@ -154,6 +160,7 @@ Definir todos os contratos de dados (DTOs) e interfaces (Ports) que estabelecem 
 ### 📝 Comentários da Fase
 
 **Concluída em 2025-09-23**
+
 - **DTOs Request**: Implementados alinhados com BudgetProps, incluindo query DTOs para paginação
 - **DTOs Response**: Criados seguindo toJSON() do Budget, com BudgetListResponseDto incluindo summary
 - **Ports**: Interface segregation aplicada - 6 ports específicos HTTP seguindo Single Responsibility
@@ -174,6 +181,7 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 
 **Descrição**: Mapper para conversão Domain Models ↔ Request DTOs
 **Arquivos**:
+
 - `src/application/mappers/budget-request-mapper/budget-request-mapper.ts`
 - `src/application/mappers/budget-request-mapper/budget-request-mapper.spec.ts`
 - `src/application/mappers/budget-request-mapper/index.ts`
@@ -185,13 +193,13 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 
 **Descrição**: Mapper para conversão Response DTOs ↔ Domain Models
 **Arquivos**:
+
 - `src/application/mappers/budget-response-mapper/budget-response-mapper.ts`
 - `src/application/mappers/budget-response-mapper/budget-response-mapper.spec.ts`
 - `src/application/mappers/budget-response-mapper/index.ts`
 
 **Complexidade**: Média (utiliza toJSON() e fromJSON() do Budget)
 **Validação**: Preserva integridade dos dados durante conversão
-
 
 ### 🧪 Critérios de Validação
 
@@ -204,6 +212,7 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 ### 📝 Comentários da Fase
 
 **Concluída em 2025-09-23**
+
 - **Budget Request Mapper**: Implementado com `fromCreateRequestToBudget` retornando Budget model diretamente e usando validação do domain
 - **Budget Response Mapper**: Criado com conversões bidirecionais Budget ↔ DTOs, incluindo list e overview responses
 - **Testes**: 100% cobertura com testes passando, incluindo edge cases e error scenarios
@@ -213,7 +222,7 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 
 ---
 
-## 📅 FASE 4: CLEANUP DE CÓDIGO OFFLINE [Status: ⏳]
+## 📅 FASE 4: CLEANUP DE CÓDIGO OFFLINE [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -221,47 +230,53 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 
 ### 📋 Tarefas
 
-#### Remover DTOs Offline [⏳]
+#### Remover DTOs Offline [✅]
 
 **Descrição**: Remover DTOs específicos para storage offline
 **Arquivos a Remover**:
+
 - `src/application/dtos/internal/budget-storage.dto.ts`
 - `src/application/dtos/internal/sync-operation.dto.ts`
 - `src/application/dtos/internal/index.ts` (se vazio)
 
-#### Remover Ports Offline [⏳]
+#### Remover Ports Offline [✅]
 
 **Descrição**: Remover interfaces para storage offline
 **Arquivos a Remover**:
+
 - `src/application/ports/budget-offline-storage.port.ts`
 
-#### Remover Mappers Offline [⏳]
+#### Remover Mappers Offline [✅]
 
 **Descrição**: Remover mappers específicos para IndexedDB
 **Arquivos a Remover**:
+
 - `src/application/mappers/budget-storage-mapper/budget-storage-mapper.ts`
 - `src/application/mappers/budget-storage-mapper/budget-storage-mapper.spec.ts`
 - `src/application/mappers/budget-storage-mapper/index.ts`
 - `src/application/mappers/budget-storage-mapper/` (diretório completo)
 
-#### Atualizar Errors [⏳]
+#### Atualizar Errors [✅]
 
 **Descrição**: Renomear offline-error para network-error
 **Arquivos**:
+
 - Renomear `src/application/errors/offline-error.ts` → `network-error.ts`
 - Atualizar imports em outros arquivos
 
-#### Atualizar Types [⏳]
+#### Atualizar Types [✅]
 
 **Descrição**: Renomear connection-status para network-status
 **Arquivos**:
+
 - Renomear `src/application/types/connection-status.types.ts` → `network-status.types.ts`
 - Atualizar imports em outros arquivos
 
-#### Limpar Index Files [⏳]
+#### Limpar Index Files [✅]
 
 **Descrição**: Remover exports offline dos arquivos de índice
 **Arquivos**:
+
 - `src/application/dtos/index.ts`
 - `src/application/ports/index.ts`
 - `src/application/mappers/index.ts`
@@ -270,15 +285,22 @@ Implementar camada de mapeamento entre Domain Models e DTOs com testes abrangent
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os arquivos offline removidos
-- [ ] Nenhum import quebrado
-- [ ] TypeScript compilation clean
-- [ ] Testes passando (removendo testes offline)
-- [ ] Index files atualizados
+- [x] Todos os arquivos offline removidos
+- [x] Nenhum import quebrado
+- [x] TypeScript compilation clean
+- [x] Testes passando (removendo testes offline)
+- [x] Index files atualizados
 
 ### 📝 Comentários da Fase
 
-_[Registrar arquivos removidos, decisões tomadas, impactos na implementação]_
+**Concluída em 2025-09-24**
+
+- **Arquivos Removidos**: DTOs offline (budget-storage.dto.ts, sync-operation.dto.ts), Port offline (budget-offline-storage.port.ts), Mapper offline (budget-storage-mapper/), diretório internal/
+- **Renomeações**: offline-error.ts → network-error.ts, connection-status.types.ts → network-status.types.ts
+- **Atualizações**: Classe OfflineError → NetworkError, mensagens e códigos de erro atualizados
+- **Index Files**: Removidos exports offline de todos os index files
+- **Validação**: TypeScript compilation clean, imports corrigidos
+- **Decisão**: Cleanup completo conforme decisão de produto para adiar funcionalidade offline para pós-MVP
 
 ---
 
@@ -294,6 +316,7 @@ Implementar todos os Use Cases com comunicação HTTP direta e error handling ro
 
 **Descrição**: Implementar criação de orçamentos com fallback automático
 **Arquivos**:
+
 - `src/application/use-cases/create-budget-use-case/create-budget-use-case.ts`
 - `src/application/use-cases/create-budget-use-case/create-budget-use-case.spec.ts`
 - `src/application/use-cases/create-budget-use-case/index.ts`
@@ -306,6 +329,7 @@ Implementar todos os Use Cases com comunicação HTTP direta e error handling ro
 
 **Descrição**: Implementar atualização de orçamentos existentes
 **Arquivos**:
+
 - `src/application/use-cases/update-budget-use-case/update-budget-use-case.ts`
 - `src/application/use-cases/update-budget-use-case/update-budget-use-case.spec.ts`
 - `src/application/use-cases/update-budget-use-case/index.ts`
@@ -316,6 +340,7 @@ Implementar todos os Use Cases com comunicação HTTP direta e error handling ro
 
 **Descrição**: Implementar remoção de orçamentos com validações
 **Arquivos**:
+
 - `src/application/use-cases/delete-budget-use-case/delete-budget-use-case.ts`
 - `src/application/use-cases/delete-budget-use-case/delete-budget-use-case.spec.ts`
 - `src/application/use-cases/delete-budget-use-case/index.ts`
@@ -326,6 +351,7 @@ Implementar todos os Use Cases com comunicação HTTP direta e error handling ro
 
 **Descrição**: Adicionar participantes a orçamentos compartilhados
 **Arquivos**:
+
 - `src/application/use-cases/add-participant-to-budget-use-case/add-participant-to-budget-use-case.ts`
 - `src/application/use-cases/add-participant-to-budget-use-case/add-participant-to-budget-use-case.spec.ts`
 - `src/application/use-cases/add-participant-to-budget-use-case/index.ts`
@@ -336,6 +362,7 @@ Implementar todos os Use Cases com comunicação HTTP direta e error handling ro
 
 **Descrição**: Remover participantes de orçamentos
 **Arquivos**:
+
 - `src/application/use-cases/remove-participant-from-budget-use-case/remove-participant-from-budget-use-case.ts`
 - `src/application/use-cases/remove-participant-from-budget-use-case/remove-participant-from-budget-use-case.spec.ts`
 - `src/application/use-cases/remove-participant-from-budget-use-case/index.ts`
@@ -368,6 +395,7 @@ Implementar Query Handlers para consultas de Budget via HTTP direto.
 
 **Descrição**: Implementar listagem paginada de orçamentos do usuário
 **Arquivos**:
+
 - `src/application/queries/list-budgets-query-handler/list-budgets-query-handler.ts`
 - `src/application/queries/list-budgets-query-handler/list-budgets-query-handler.spec.ts`
 - `src/application/queries/list-budgets-query-handler/index.ts`
@@ -380,6 +408,7 @@ Implementar Query Handlers para consultas de Budget via HTTP direto.
 
 **Descrição**: Visão geral detalhada de um orçamento específico
 **Arquivos**:
+
 - `src/application/queries/budget-overview-query-handler/budget-overview-query-handler.ts`
 - `src/application/queries/budget-overview-query-handler/budget-overview-query-handler.spec.ts`
 - `src/application/queries/budget-overview-query-handler/index.ts`
@@ -411,6 +440,7 @@ Garantir 100% de cobertura de testes, criar test factories reutilizáveis e vali
 
 **Descrição**: Factory pattern para dados de teste reutilizáveis
 **Arquivos**:
+
 - `src/application/__tests__/factories/budget-test-factory.ts`
 - `src/application/__tests__/factories/dto-test-factory.ts`
 - `src/application/__tests__/factories/mock-ports-factory.ts`
@@ -421,6 +451,7 @@ Garantir 100% de cobertura de testes, criar test factories reutilizáveis e vali
 
 **Descrição**: Testes end-to-end da camada Application com Domain Models
 **Arquivos**:
+
 - `src/application/__tests__/integration/budget-application-integration.spec.ts`
 
 **Cobertura**: Use Cases → Mappers → Domain Models flow completo
@@ -430,6 +461,7 @@ Garantir 100% de cobertura de testes, criar test factories reutilizáveis e vali
 
 **Descrição**: Verificar 100% cobertura de testes unitários
 **Testes Necessários**:
+
 - Error scenarios em todos os Use Cases
 - Mapper edge cases
 - Port failure simulations
@@ -438,7 +470,7 @@ Garantir 100% de cobertura de testes, criar test factories reutilizáveis e vali
 #### Validação de Dependency Rules [⏳]
 
 **Descrição**: Garantir que Application layer não conhece Angular/Infra
-**Foco**: Zero imports de @angular/*, zero dependências de bibliotecas externas
+**Foco**: Zero imports de @angular/\*, zero dependências de bibliotecas externas
 **Validação**: TypeScript strict mode, dependency analysis
 
 ### 🏁 Entrega Final
@@ -491,15 +523,17 @@ Garantir 100% de cobertura de testes, criar test factories reutilizáveis e vali
 ### Dados de Teste
 
 #### Test Data Strategy
+
 ```typescript
 // Factory pattern para dados consistentes
-BudgetTestFactory.createValidRequestDto()
-BudgetTestFactory.createBudgetWithParticipants()
-BudgetTestFactory.createHttpPortMock()
-BudgetTestFactory.createOfflinePortMock()
+BudgetTestFactory.createValidRequestDto();
+BudgetTestFactory.createBudgetWithParticipants();
+BudgetTestFactory.createHttpPortMock();
+BudgetTestFactory.createOfflinePortMock();
 ```
 
 #### Mock Strategy
+
 - **HTTP Ports**: Mock com Either returns, simulate network failures
 - **Offline Ports**: Mock IndexedDB operations, simulate storage errors
 - **Domain Models**: Use real Budget.create() for validation accuracy

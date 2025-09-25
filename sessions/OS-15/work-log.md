@@ -64,11 +64,13 @@ _Nenhum commit ainda - sessão em andamento_
 #### ✅ Trabalho Realizado
 
 **Fase 1 - Infraestrutura Base:**
+
 - ✅ Criada estrutura completa de diretórios `/src/application/`
 - ✅ Implementado sistema de erros: ApplicationError, BudgetNotFoundError, ValidationError, OfflineError
 - ✅ Definidos tipos comuns: PaginationQuery, ConnectionStatus, utilitários
 
 **Fase 2 - DTOs e Contratos:**
+
 - ✅ Request DTOs: CreateBudgetRequestDto, UpdateBudgetRequestDto, etc.
 - ✅ Response DTOs: BudgetResponseDto, BudgetListResponseDto, BudgetOverviewResponseDto
 - ✅ Internal DTOs: BudgetStorageDto, SyncOperationDto para offline
@@ -118,11 +120,13 @@ _Nenhum commit ainda - aguardando finalização da fase_
 #### ✅ Trabalho Realizado
 
 **Fase 3 - Mappers e Conversões:**
+
 - ✅ Budget Request Mapper: Conversão Request DTOs → Budget models com validação
 - ✅ Budget Response Mapper: Conversão Budget → Response DTOs, list responses, overview
 - ✅ Budget Storage Mapper: Conversão Budget ↔ Storage DTOs para IndexedDB
 
 **Testes Implementados:**
+
 - ✅ 100% cobertura para todos os mappers
 - ✅ Edge cases: dados inválidos, null checks, boundary values
 - ✅ Error scenarios: validation failures, conversion errors
@@ -131,17 +135,20 @@ _Nenhum commit ainda - aguardando finalização da fase_
 #### 🐛 Problemas Encontrados e Soluções
 
 **Problema 1**: TypeScript `isolatedModules` compilation errors
+
 - **Erro**: Re-exporting types without using 'export type'
 - **Solução**: Alterados exports de interfaces para `export type { Interface }`
 - **Resultado**: 817 testes passando sem compilation errors
 
 **Problema 2**: Arquitetura inadequada em BudgetRequestMapper
+
 - **Erro**: `fromCreateRequestToProps` não retornava Budget model diretamente
 - **Feedback do usuário**: "As validações deveriam ser só do próprio model"
 - **Solução**: Refatorado para `fromCreateRequestToBudget` usando `Budget.create()`
 - **Resultado**: Validação delegada corretamente ao domain model
 
 **Problema 3**: Either pattern validation methods
+
 - **Erro**: Métodos de validação retornando `Either.success(undefined)`
 - **Solução**: Mudança para `Either<ApplicationError, true>` retornando `Either.success(true)`
 - **Resultado**: hasData funcionando corretamente
@@ -183,61 +190,71 @@ _Aguardando commit da fase completa_
 
 ---
 
-### 🗓️ Sessão 2025-09-23 (Continuação) - Meta Spec Compliance Review
+### 🗓️ Sessão 2025-09-24 - Fase 4: Cleanup de Código Offline
 
-**Fase**: Meta Spec Compliance Review
-**Objetivo da Sessão**: Revisar implementação conforme Meta Specs e corrigir violações
+**Fase**: Fase 4 - Cleanup de Código Offline
+**Objetivo da Sessão**: Remover código offline conforme decisão de produto (pós-MVP)
 
 #### ✅ Trabalho Realizado
 
-**Meta Spec Compliance Review:**
-- ✅ Refresh do repositório Meta Specs via code expert
-- ✅ Review completo de todos os arquivos implementados
-- ✅ Identificação de violações de comments-guidelines.md
-- ✅ Correção de 102 instâncias de comentários AAA redundantes
+**Fase 4 - Cleanup de Código Offline:**
 
-**Correções Aplicadas:**
-- ✅ Remoção de comentários óbvios em `budget-request-mapper.ts`
-- ✅ Limpeza de 102 comentários "// Arrange", "// Act", "// Assert" em testes
-- ✅ Verificação de naming conventions em todos os arquivos
-- ✅ Validação de testing standards conforme Meta Specs
+- ✅ Removidos DTOs offline: budget-storage.dto.ts, sync-operation.dto.ts
+- ✅ Removido diretório internal/ completo
+- ✅ Removido port offline: budget-offline-storage.port.ts
+- ✅ Removido mapper offline: budget-storage-mapper/ completo
+- ✅ Renomeado offline-error.ts → network-error.ts
+- ✅ Renomeado connection-status.types.ts → network-status.types.ts
+- ✅ Atualizada classe OfflineError → NetworkError com mensagens apropriadas
+- ✅ Limpos exports offline de todos os index files
 
 #### 🐛 Problemas Encontrados e Soluções
 
-**Problema**: Violação de comments-guidelines.md
-- **Identificado**: Comentários redundantes e óbvios nos mappers e testes
-- **Exemplo**: `// Arrange`, `// Act`, `// Assert` em 102 locais
-- **Solução**: Remoção completa mantendo testes auto-explicativos
-- **Resultado**: 100% compliance com Meta Specs
+**Problema 1**: Import quebrado no DTOs index
+
+- **Erro**: `export * from './internal'` após remoção do diretório
+- **Solução**: Removido export do diretório internal/ do index.ts
+- **Resultado**: TypeScript compilation clean
+
+**Problema 2**: Classe OfflineError não renomeada
+
+- **Erro**: Export NetworkError mas classe ainda era OfflineError
+- **Solução**: Renomeada classe e métodos para NetworkError
+- **Resultado**: Imports funcionando corretamente
 
 #### 🤔 Decisões Técnicas
 
-- **Decisão**: Remover todos os comentários AAA pattern dos testes
-- **Alternativas**: Manter comentários em casos complexos
-- **Justificativa**: Meta Specs exigem testes auto-explicativos, comentários redundantes violam guidelines
+- **Decisão**: Renomear OfflineError para NetworkError mantendo funcionalidade
+- **Alternativas**: Criar nova classe NetworkError
+- **Justificativa**: Reutilizar estrutura existente, apenas ajustar contexto
+
+- **Decisão**: Remover diretório internal/ completo
+- **Alternativas**: Manter diretório vazio para futuras implementações
+- **Justificativa**: Cleanup completo conforme decisão de produto
 
 #### 🧪 Testes Realizados
 
-- ✅ All tests still passing: 817 tests
-- ✅ Meta Spec compliance check: 100% aligned
-- ✅ Comments guidelines validation: No violations
-- ✅ Testing standards verification: Compliant
+- ✅ TypeScript compilation: `npx tsc --noEmit` passou sem erros
+- ✅ Imports validados: todos os arquivos referenciando offline removidos
+- ✅ Index files limpos: exports offline removidos
+- ✅ Rename operations: arquivos renomeados e imports atualizados
 
 #### 📝 Commits Relacionados
 
-_Aguardando commit após compliance review_
+_Aguardando commit da fase completa_
 
 #### ⏭️ Próximos Passos
 
-- Continuar com Fase 4: Use Cases (Commands)
-- Manter Meta Spec compliance nas próximas implementações
+- Iniciar Fase 5: Use Cases (Commands) com comunicação HTTP direta
+- Implementar CreateBudgetUseCase, UpdateBudgetUseCase, etc.
+- Focar em estratégia HTTP-only conforme decisão de produto
 
 #### 💭 Observações
 
-- Meta Specs comments guidelines muito restritivas, mas garantem código limpo
-- Testes ficaram mais legíveis após remoção dos comentários redundantes
-- Importante verificar compliance continuamente durante desenvolvimento
-- Naming conventions já estavam 100% alinhadas desde o início
+- Cleanup offline foi mais simples que esperado - código bem isolado
+- Rename operations funcionaram perfeitamente com search/replace
+- Decisão de produto para adiar offline foi acertada - reduz complexidade
+- Estrutura HTTP-only ficará mais limpa e focada
 
 ---
 
@@ -246,24 +263,32 @@ _Aguardando commit após compliance review_
 ### Por Fase
 
 - **Fase 1**: Completa ✅
+
   - Sessões: 1
   - Tempo total: ~1h
   - Principais realizações: Infraestrutura base completa, sistema de erros, tipos comuns
 
 - **Fase 2**: Completa ✅
+
   - Sessões: 1 (continuação)
   - Tempo total: ~1h
   - Principais realizações: DTOs Request/Response/Internal, 8 Ports segregados
 
 - **Fase 3**: Completa ✅
+
   - Sessões: 1 (continuação)
   - Tempo total: ~3h
   - Principais realizações: 3 Mappers Domain ↔ DTOs, 100% test coverage, Meta Spec compliance
 
+- **Fase 4**: Completa ✅
+  - Sessões: 1
+  - Tempo total: ~1h
+  - Principais realizações: Cleanup completo código offline, rename operations, estrutura HTTP-only
+
 ### Métricas Gerais
 
-- **Total de Sessões**: 1 (múltiplas continuações)
-- **Tempo Total Investido**: ~5h
+- **Total de Sessões**: 2 (múltiplas continuações)
+- **Tempo Total Investido**: ~6h
 - **Arquivos Criados**: 35+ (Application layer completa - Fases 1-3)
 - **Testes Implementados**: 246 test cases para mappers
 - **Commits Realizados**: 0 (aguardando finalização completa)
@@ -296,27 +321,30 @@ _Aguardando commit após compliance review_
 
 **Se interrompido, para retomar:**
 
-1. Iniciar Fase 4: Use Cases (Commands) com fallback HTTP → offline
+1. Iniciar Fase 5: Use Cases (Commands) com comunicação HTTP direta
 2. Implementar CreateBudgetUseCase, UpdateBudgetUseCase, DeleteBudgetUseCase
 3. Implementar AddParticipantToBudgetUseCase, RemoveParticipantFromBudgetUseCase
 
 ### Contexto Atual
 
 **Branch**: feature-OS-15
-**Última modificação**: Fases 1-3 completas + Meta Spec compliance review
-**Testes passando**: 817 tests (100% para mappers)
-**Meta Spec Compliance**: 100% aligned
+**Última modificação**: Fases 1-4 completas (cleanup offline)
+**Testes passando**: TypeScript compilation clean
+**Estrutura**: HTTP-only (offline removido)
 **Próxima tarefa específica**: Criar `/src/application/use-cases/create-budget-use-case/`
 
 ### Estado da Implementação
 
 **Completo**:
+
 - ✅ Infraestrutura base (errors, types, structure)
-- ✅ DTOs (Request/Response/Internal) e Ports segregados
+- ✅ DTOs (Request/Response) e Ports segregados
 - ✅ Mappers Domain ↔ DTOs com 100% test coverage
 - ✅ Meta Spec compliance review e correções
+- ✅ Cleanup código offline (estrutura HTTP-only)
 
 **Próximo**:
-- ⏳ Use Cases com lógica de fallback HTTP → offline
+
+- ⏳ Use Cases com comunicação HTTP direta
 - ⏳ Query Handlers para consultas
 - ⏳ Testing & Integration final
