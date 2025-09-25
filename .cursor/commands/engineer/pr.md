@@ -26,7 +26,7 @@ Criar um Pull Request bem documentado e pronto para revisão humana, seguindo to
 #### Limpeza do Código
 
 - Remova código comentado, debug statements, TODOs temporários
-- Confirme que não há referências a IA ou Claude no código
+- Confirme que não há referências a IA ou Cursor no código
 - Valide que todos os commits são relevantes e bem descritos
 
 ### 2. Preparação dos Commits
@@ -308,7 +308,7 @@ O PR está pronto para:
 - **Task Manager**: Transição automática de status
 - **GitHub Issues**: Linking automático com PR
 - **Linear**: Sincronização de status
-- **Local**: Atualização em `.claude/tasks/`
+- **Local**: Atualização em `tasks/`
 
 ### Ferramentas de Code Review
 
