@@ -333,6 +333,52 @@ _Aguardando commit da fase completa_
 **Estrutura**: HTTP-only (offline removido)
 **Próxima tarefa específica**: Criar `/src/application/use-cases/create-budget-use-case/`
 
+---
+
+### 🗓️ Sessão 2025-01-27 - Fase 5: Use Cases (Commands)
+
+**Fase**: Fase 5 - Use Cases (Commands) com comunicação HTTP direta
+**Objetivo da Sessão**: Implementar todos os Use Cases com comunicação HTTP direta e error handling robusto
+
+#### ✅ Trabalho Realizado
+
+**Setup da Sessão:**
+
+- ✅ Verificação de branch `feature-OS-15` (já estava correta)
+- ✅ Task OS-15 no Jira já estava em "Em andamento"
+- ✅ Análise completa dos documentos da sessão
+- ✅ Identificação da Fase 5 como próxima fase a implementar
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Continuar com estratégia HTTP direta conforme decisão de produto
+- **Alternativas**: Implementar fallback offline (removido na Fase 4)
+- **Justificativa**: Foco no MVP com comunicação HTTP direta, offline adiado para pós-MVP
+
+#### 🧪 Testes Realizados
+
+- ✅ Verificação de branch atual via `git branch --show-current`
+- ✅ Validação de conectividade com Jira Atlassian
+- ✅ Análise de documentos da sessão (context.md, architecture.md, plan.md)
+
+#### 📝 Commits Relacionados
+
+_Nenhum commit ainda - sessão iniciando_
+
+#### ⏭️ Próximos Passos
+
+- Implementar CreateBudgetUseCase com comunicação HTTP direta
+- Implementar UpdateBudgetUseCase, DeleteBudgetUseCase
+- Implementar AddParticipantToBudgetUseCase, RemoveParticipantFromBudgetUseCase
+- Focar em 100% cobertura de testes com mocks HTTP
+
+#### 💭 Observações
+
+- Fases 1-4 já completas com base sólida para Use Cases
+- Estrutura HTTP-only simplificada após cleanup offline
+- Ports e DTOs bem definidos facilitam implementação dos Use Cases
+- Meta Specs compliance já estabelecido nas fases anteriores
+
 ### Estado da Implementação
 
 **Completo**:
