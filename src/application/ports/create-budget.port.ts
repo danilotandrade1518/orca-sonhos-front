@@ -2,6 +2,8 @@ import { Either } from '../../shared/core/either/either';
 import { ApplicationError } from '../errors';
 import { CreateBudgetRequestDto } from '../dtos';
 
+export type BudgetResponse = { id: string };
+
 export interface ICreateBudgetPort {
-  createBudget(request: CreateBudgetRequestDto): Promise<Either<ApplicationError, void>>;
+  createBudget(request: CreateBudgetRequestDto): Promise<Either<ApplicationError, BudgetResponse>>;
 }

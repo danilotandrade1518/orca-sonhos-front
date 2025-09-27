@@ -365,19 +365,38 @@ _Aguardando commit da fase completa_
 
 _Nenhum commit ainda - sessão iniciando_
 
+#### ✅ Trabalho Realizado
+
+**CreateBudgetUseCase Implementado:**
+
+- ✅ Use Case com comunicação HTTP direta via ICreateBudgetPort
+- ✅ Validação usando BudgetRequestMapper.fromCreateRequestToBudget()
+- ✅ Error handling com ValidationError, NetworkError e UnexpectedError
+- ✅ Retorno do objeto do backend (com id) em vez de undefined
+- ✅ Uso de Either.errors() para propagação de múltiplos erros
+- ✅ 100% cobertura de testes (4 testes passando)
+
+**Correções Aplicadas:**
+
+- ✅ Removidos comentários do código conforme orientação
+- ✅ Atualizado ICreateBudgetPort para retornar objeto do backend
+- ✅ Ajustado Use Case para retornar httpResult.data
+- ✅ Testes atualizados para validar retorno do backend
+
 #### ⏭️ Próximos Passos
 
-- Implementar CreateBudgetUseCase com comunicação HTTP direta
-- Implementar UpdateBudgetUseCase, DeleteBudgetUseCase
+- Implementar UpdateBudgetUseCase seguindo mesmo padrão
+- Implementar DeleteBudgetUseCase
 - Implementar AddParticipantToBudgetUseCase, RemoveParticipantFromBudgetUseCase
 - Focar em 100% cobertura de testes com mocks HTTP
 
 #### 💭 Observações
 
-- Fases 1-4 já completas com base sólida para Use Cases
+- CreateBudgetUseCase estabelece padrão para demais Use Cases
+- Retorno do objeto do backend permite acesso ao ID criado
+- Either.errors() permite propagação de múltiplos erros de validação
 - Estrutura HTTP-only simplificada após cleanup offline
-- Ports e DTOs bem definidos facilitam implementação dos Use Cases
-- Meta Specs compliance já estabelecido nas fases anteriores
+- Meta Specs compliance mantido com código limpo
 
 ### Estado da Implementação
 
