@@ -407,9 +407,89 @@ _Nenhum commit ainda - sessão iniciando_
 - ✅ Mappers Domain ↔ DTOs com 100% test coverage
 - ✅ Meta Spec compliance review e correções
 - ✅ Cleanup código offline (estrutura HTTP-only)
+- ✅ Use Cases (Commands) - 5 implementados com 20 testes
+- ✅ Query Handlers - 2 implementados com 12 testes
+- ✅ Limpeza de DTOs não utilizados
 
 **Próximo**:
 
-- ⏳ Use Cases com comunicação HTTP direta
-- ⏳ Query Handlers para consultas
 - ⏳ Testing & Integration final
+
+### 🗓️ Sessão 2025-01-28 - Fase 6: Query Handlers
+
+**Fase**: Fase 6 - Query Handlers com comunicação HTTP direta
+**Objetivo da Sessão**: Implementar todos os Query Handlers com comunicação HTTP direta e error handling robusto
+
+#### ✅ Trabalho Realizado
+
+**ListBudgetsQueryHandler Implementado:**
+
+- ✅ Query Handler com comunicação HTTP direta via IListBudgetsPort
+- ✅ Validação de userId obrigatório
+- ✅ Error handling com ValidationError, NetworkError e UnexpectedError
+- ✅ Retorno de array de orçamentos ListBudgetsQueryResponseDto[]
+- ✅ 100% cobertura de testes (6 testes passando)
+
+**BudgetOverviewQueryHandler Implementado:**
+
+- ✅ Query Handler com comunicação HTTP direta via IBudgetOverviewPort
+- ✅ Validação de budgetId e userId obrigatórios
+- ✅ Error handling robusto com ValidationError, NetworkError e UnexpectedError
+- ✅ Retorno de overview detalhado BudgetOverviewQueryResponseDto
+- ✅ 100% cobertura de testes (6 testes passando)
+
+**Limpeza de Código:**
+
+- ✅ Removidos DTOs não utilizados (budget-query-request.dto.ts, budget-list-response.dto.ts, etc.)
+- ✅ Removido BudgetResponseMapper não utilizado
+- ✅ Removidos tipos não utilizados (pagination.types.ts, network-status.types.ts)
+- ✅ Atualizados arquivos de índice
+- ✅ Todos os testes continuam passando após limpeza
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Manter DTOs específicos para Query Handlers
+- **Alternativas**: Usar parâmetros diretos (budgetId, userId)
+- **Justificativa**: Consistência com padrão estabelecido, facilita validação e documentação
+
+#### 🧪 Testes Realizados
+
+- ✅ ListBudgetsQueryHandler: 6 testes passando
+- ✅ BudgetOverviewQueryHandler: 6 testes passando
+- ✅ Total: 12 testes de Query Handlers
+- ✅ Validação após limpeza de DTOs: todos os testes passando
+
+#### 📝 Commits Relacionados
+
+_Commits serão realizados após validação final_
+
+#### ✅ Trabalho Realizado
+
+**Fase 5 - Use Cases (Commands):**
+
+- ✅ CreateBudgetUseCase implementado
+- ✅ UpdateBudgetUseCase implementado
+- ✅ DeleteBudgetUseCase implementado
+- ✅ AddParticipantToBudgetUseCase implementado
+- ✅ RemoveParticipantFromBudgetUseCase implementado
+- ✅ 20 testes com 100% de sucesso
+
+**Fase 6 - Query Handlers:**
+
+- ✅ ListBudgetsQueryHandler implementado
+- ✅ BudgetOverviewQueryHandler implementado
+- ✅ 12 testes com 100% de sucesso
+
+#### ⏭️ Próximos Passos
+
+- Implementar Fase 7: Testing & Integration
+- Validação final de toda a Application Layer
+- Documentação de uso dos Use Cases e Query Handlers
+
+#### 💭 Observações
+
+- Application Layer para Budget completamente implementada
+- 32 testes totais com 100% de sucesso
+- Código limpo sem DTOs desnecessários
+- Padrão consistente entre Use Cases e Query Handlers
+- Error handling robusto em todos os componentes

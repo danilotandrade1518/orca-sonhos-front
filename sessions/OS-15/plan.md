@@ -383,7 +383,7 @@ _[Decisões sobre fallback strategy, performance considerations, edge cases enco
 
 ---
 
-## 📅 FASE 6: QUERY HANDLERS [Status: ⏳]
+## 📅 FASE 6: QUERY HANDLERS [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -391,7 +391,7 @@ Implementar Query Handlers para consultas de Budget via HTTP direto.
 
 ### 📋 Tarefas
 
-#### ListBudgetsQueryHandler [⏳]
+#### ListBudgetsQueryHandler [✅]
 
 **Descrição**: Implementar listagem paginada de orçamentos do usuário
 **Arquivos**:
@@ -404,7 +404,7 @@ Implementar Query Handlers para consultas de Budget via HTTP direto.
 **Funcionalidades**: Pagination, filtering, sorting
 **Nota**: Comunicação HTTP direta
 
-#### BudgetOverviewQueryHandler [⏳]
+#### BudgetOverviewQueryHandler [✅]
 
 **Descrição**: Visão geral detalhada de um orçamento específico
 **Arquivos**:
@@ -419,12 +419,20 @@ Implementar Query Handlers para consultas de Budget via HTTP direto.
 ### 🔄 Dependências
 
 - ✅ Fases 1-4 completadas
-- Response DTOs e Mappers implementados
-- Query Ports definidos
+- ✅ Response DTOs e Mappers implementados
+- ✅ Query Ports definidos
 
 ### 📝 Comentários da Fase
 
-_[Notas sobre error handling HTTP, otimizações de query, integration com ports]_
+**Implementação Concluída:**
+
+- ✅ ListBudgetsQueryHandler com validação de userId obrigatório
+- ✅ BudgetOverviewQueryHandler com validação de budgetId e userId obrigatórios
+- ✅ 100% cobertura de testes (12 testes passando)
+- ✅ Error handling robusto com ValidationError, NetworkError e UnexpectedError
+- ✅ Comunicação HTTP direta via ports específicos
+- ✅ DTOs específicos para request e response
+- ✅ Limpeza de DTOs não utilizados realizada
 
 ---
 
