@@ -1,7 +1,9 @@
 import { Either } from '../../shared/core/either/either';
 import { ApplicationError } from '../errors';
-import { BudgetOverviewQueryDto, BudgetOverviewResponseDto } from '../dtos';
+import { BudgetOverviewQueryRequestDto, BudgetOverviewQueryResponseDto } from '../dtos';
 
 export interface IBudgetOverviewPort {
-  getBudgetOverview(query: BudgetOverviewQueryDto): Promise<Either<ApplicationError, BudgetOverviewResponseDto>>;
+  getBudgetOverview(
+    request: BudgetOverviewQueryRequestDto
+  ): Promise<Either<ApplicationError, BudgetOverviewQueryResponseDto>>;
 }
