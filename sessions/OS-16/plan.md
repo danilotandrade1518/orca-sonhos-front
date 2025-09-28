@@ -229,7 +229,7 @@ Implementar mappers para conversão entre DTOs e Domain Models para todas as ent
 
 ---
 
-## 📅 FASE 4: Use Cases (Commands) [Status: ⏳]
+## 📅 FASE 4: Use Cases (Commands) [Status: ⏰ Em Progresso]
 
 ### 🎯 Objetivo da Fase
 
@@ -237,7 +237,7 @@ Implementar todos os Use Cases para operações de comando (Create, Update, Dele
 
 ### 📋 Tarefas
 
-#### 4.1 Implementar Use Cases de Account [⏳]
+#### 4.1 Implementar Use Cases de Account [✅ Completada]
 
 **Descrição**: Criar Use Cases para operações de Account
 **Arquivos**:
@@ -330,7 +330,23 @@ Implementar todos os Use Cases para operações de comando (Create, Update, Dele
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre lógica de negócio implementada]_
+**Implementação Concluída com Sucesso - Account**:
+
+- **Total de Use Cases**: 5 Use Cases implementados (Create, Update, Delete, Reconcile, TransferBetweenAccounts)
+- **Estrutura Consistente**: Seguindo exatamente os padrões de Budget
+- **Validações Robustas**: Uso correto dos métodos de validação do AccountRequestMapper
+- **Either Pattern**: Aplicado consistentemente em todas as operações
+- **TypeScript Puro**: Sem dependências Angular na camada Application
+- **Testes Unitários**: 96/96 testes passando com sucesso (incluindo testes de mappers e domain models)
+- **Index Files**: Organizados por entidade e atualizados corretamente
+- **Linting**: Sem erros de linting, formatação consistente
+- **Padrões**: 100% alinhado com implementação de Budget
+
+**Problemas Identificados e Corrigidos**:
+
+- Imports incorretos de DTOs de response (corrigidos para importar diretamente dos diretórios de DTOs)
+- Uso incorreto de métodos do mapper (corrigidos para usar métodos de validação apropriados)
+- Tipos de retorno incorretos (corrigidos para usar os DTOs de response corretos)
 
 ---
 

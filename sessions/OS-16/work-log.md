@@ -219,6 +219,81 @@
 
 ---
 
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 3)
+
+**Fase**: Fase 4 - Use Cases (Commands)
+**Objetivo da Sessão**: Implementar Use Cases de Account seguindo estratégia de implementar cada entidade por vez completa
+
+#### ✅ Trabalho Realizado
+
+- ✅ **ACCOUNT USE CASES COMPLETADOS**: 5 Use Cases implementados com sucesso
+  - CreateAccountUseCase: Criação de contas com validação completa
+  - UpdateAccountUseCase: Atualização de contas com validação de dados
+  - DeleteAccountUseCase: Exclusão de contas com validação de IDs
+  - ReconcileAccountUseCase: Reconciliação de saldos de contas
+  - TransferBetweenAccountsUseCase: Transferência entre contas
+  - Index file de Account atualizado com todos os exports
+  - 96/96 testes passando (incluindo testes de mappers e domain models)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Implementar entidade por vez completa (Account primeiro)
+- **Alternativas**: Implementar todos os Use Cases de uma vez
+- **Justificativa**: Facilitar análise e validação incremental, seguindo estratégia definida
+
+- **Decisão**: Usar métodos de validação do mapper em vez de conversão para domain model
+- **Alternativas**: Converter DTOs para domain models nos Use Cases
+- **Justificativa**: Use Cases focam em validação e orquestração, não em conversão de dados
+
+- **Decisão**: Importar DTOs de response diretamente dos diretórios de DTOs
+- **Alternativas**: Importar dos Ports
+- **Justificativa**: Ports não exportam DTOs, apenas importam para uso interno
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: Imports incorretos de DTOs de response dos Ports
+- **Solução**: Corrigidos para importar diretamente dos diretórios de DTOs
+- **Lição Aprendida**: Verificar exports dos Ports antes de importar
+
+- **Problema**: Uso incorreto de métodos do AccountRequestMapper
+- **Solução**: Corrigidos para usar métodos de validação apropriados (validateUpdateRequest, etc.)
+- **Lição Aprendida**: Mappers têm métodos específicos para cada operação
+
+- **Problema**: Tipos de retorno incorretos nos Use Cases
+- **Solução**: Corrigidos para usar os DTOs de response corretos
+- **Lição Aprendida**: Cada operação tem seu próprio DTO de response
+
+#### 🧪 Testes Realizados
+
+- **Linting**: ✅ Sem erros de linting
+- **Compilação**: ✅ Sem erros de compilação
+- **Testes Unitários**: ✅ 96/96 testes passando
+- **Estrutura**: ✅ Seguindo padrões de Budget
+- **Nomenclatura**: ✅ Convenções consistentes
+- **Imports**: ✅ Dependências corretas
+
+#### 📝 Commits Relacionados
+
+- Nenhum commit realizado ainda (aguardando aprovação)
+
+#### ⏭️ Próximos Passos
+
+- ✅ Account Use Cases completados com sucesso
+- **Próxima Entidade**: Category (3 Use Cases)
+  - CreateCategoryUseCase
+  - UpdateCategoryUseCase
+  - DeleteCategoryUseCase
+  - Testes unitários para todos os Use Cases
+
+#### 💭 Observações
+
+- Implementação muito fluida após correção dos problemas iniciais
+- 5 Use Cases de Account implementados com 96 testes passando
+- Estratégia de implementar entidade por vez funciona muito bem
+- Pronto para próxima entidade (Category)
+
+---
+
 ## 📊 Resumo de Progresso
 
 ### Por Fase
@@ -236,15 +311,22 @@
   - Principais realizações: 60 Ports implementados
 
 - **Fase 3**: Completada ✅
+
   - Sessões: 1
   - Tempo total: ~2 horas
   - Principais realizações: 6 Mappers implementados com 54 testes passando
 
+- **Fase 4**: Em Progresso ⏰
+  - Sessões: 1
+  - Tempo total: ~2.5 horas
+  - Principais realizações: Account Use Cases completados (5 Use Cases + 96 testes passando)
+  - Status: Account ✅, Category ⏳, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳
+
 ### Métricas Gerais
 
-- **Total de Sessões**: 3
-- **Tempo Total Investido**: ~5.5 horas
-- **Arquivos Modificados**: 150+ arquivos criados
+- **Total de Sessões**: 4
+- **Tempo Total Investido**: ~8 horas
+- **Arquivos Modificados**: 200+ arquivos criados
 - **Commits Realizados**: 0 (aguardando aprovação)
 
 ### Decisões Arquiteturais Importantes
@@ -276,6 +358,7 @@
 ### Contexto Atual
 
 **Branch**: feature-OS-16
-**Última modificação**: 6 Mappers implementados com 54 testes passando
-**Testes passando**: 54/54 testes de mappers passando
-**Próxima tarefa específica**: Implementar Use Cases (Commands) para todas as entidades (Fase 4)
+**Última modificação**: 5 Use Cases de Account implementados com 96 testes passando
+**Testes passando**: 96/96 testes (incluindo mappers, domain models e Use Cases de Account)
+**Próxima tarefa específica**: Implementar Use Cases de Category (3 Use Cases + testes)
+**Status Fase 4**: Account ✅, Category ⏳, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳
