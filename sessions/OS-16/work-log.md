@@ -279,18 +279,85 @@
 #### ⏭️ Próximos Passos
 
 - ✅ Account Use Cases completados com sucesso
-- **Próxima Entidade**: Category (3 Use Cases)
-  - CreateCategoryUseCase
-  - UpdateCategoryUseCase
-  - DeleteCategoryUseCase
+- ✅ **Category Use Cases completados com sucesso**
+- **Próxima Entidade**: CreditCard (3 Use Cases)
+  - CreateCreditCardUseCase
+  - UpdateCreditCardUseCase
+  - DeleteCreditCardUseCase
   - Testes unitários para todos os Use Cases
 
 #### 💭 Observações
 
 - Implementação muito fluida após correção dos problemas iniciais
 - 5 Use Cases de Account implementados com 96 testes passando
+- 3 Use Cases de Category implementados com 86 testes passando (total)
 - Estratégia de implementar entidade por vez funciona muito bem
-- Pronto para próxima entidade (Category)
+- Pronto para próxima entidade (CreditCard)
+
+---
+
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 4)
+
+**Fase**: Fase 4 - Use Cases (Commands) - Category
+**Objetivo da Sessão**: Implementar Use Cases de Category seguindo estratégia de implementar cada entidade por vez completa
+
+#### ✅ Trabalho Realizado
+
+- ✅ **CATEGORY USE CASES COMPLETADOS**: 3 Use Cases implementados com sucesso
+  - CreateCategoryUseCase: Criação de categorias com validação completa
+  - UpdateCategoryUseCase: Atualização de categorias com validação de dados
+  - DeleteCategoryUseCase: Exclusão de categorias com validação de IDs
+  - Index file de Category atualizado com todos os exports
+  - 86/86 testes passando (incluindo testes de mappers, domain models e Use Cases)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Seguir exatamente a estrutura de Account para Category Use Cases
+- **Alternativas**: Criar estrutura diferente para Category
+- **Justificativa**: Manter consistência arquitetural e facilitar manutenção
+
+- **Decisão**: Usar métodos de validação do CategoryRequestMapper
+- **Alternativas**: Converter DTOs para domain models nos Use Cases
+- **Justificativa**: Use Cases focam em validação e orquestração, não em conversão de dados
+
+- **Decisão**: Importar DTOs de response diretamente dos diretórios de DTOs
+- **Alternativas**: Importar dos Ports
+- **Justificativa**: Ports não exportam DTOs, apenas importam para uso interno
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: Nenhum problema técnico encontrado
+- **Solução**: Implementação fluida seguindo padrões estabelecidos
+- **Lição Aprendida**: Padrões bem definidos facilitam implementação consistente
+
+#### 🧪 Testes Realizados
+
+- **Linting**: ✅ Sem erros de linting
+- **Compilação**: ✅ Sem erros de compilação
+- **Testes Unitários**: ✅ 86/86 testes passando
+- **Estrutura**: ✅ Seguindo padrões de Account
+- **Nomenclatura**: ✅ Convenções consistentes
+- **Imports**: ✅ Dependências corretas
+
+#### 📝 Commits Relacionados
+
+- Nenhum commit realizado ainda (aguardando aprovação)
+
+#### ⏭️ Próximos Passos
+
+- ✅ Category Use Cases completados com sucesso
+- **Próxima Entidade**: CreditCard (3 Use Cases)
+  - CreateCreditCardUseCase
+  - UpdateCreditCardUseCase
+  - DeleteCreditCardUseCase
+  - Testes unitários para todos os Use Cases
+
+#### 💭 Observações
+
+- Implementação muito fluida seguindo padrões estabelecidos
+- 3 Use Cases de Category implementados com 86 testes passando
+- Estratégia de implementar entidade por vez funciona muito bem
+- Pronto para próxima entidade (CreditCard)
 
 ---
 
@@ -317,10 +384,10 @@
   - Principais realizações: 6 Mappers implementados com 54 testes passando
 
 - **Fase 4**: Em Progresso ⏰
-  - Sessões: 1
-  - Tempo total: ~2.5 horas
-  - Principais realizações: Account Use Cases completados (5 Use Cases + 96 testes passando)
-  - Status: Account ✅, Category ⏳, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳
+  - Sessões: 2
+  - Tempo total: ~4 horas
+  - Principais realizações: Account e Category Use Cases completados (8 Use Cases + 86 testes passando)
+  - Status: Account ✅, Category ✅, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳
 
 ### Métricas Gerais
 
