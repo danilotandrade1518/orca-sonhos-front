@@ -6,6 +6,6 @@ export type BudgetResponse = { id: string };
 
 export interface IAddParticipantToBudgetPort {
   addParticipantToBudget(
-    request: AddParticipantRequestDto
+    request: AddParticipantRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>>;
 }

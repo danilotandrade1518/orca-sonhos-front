@@ -6,6 +6,6 @@ export type BudgetResponse = { id: string };
 
 export interface IRemoveParticipantFromBudgetPort {
   removeParticipantFromBudget(
-    request: RemoveParticipantRequestDto
+    request: RemoveParticipantRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>>;
 }

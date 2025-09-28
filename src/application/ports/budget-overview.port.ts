@@ -4,6 +4,6 @@ import { BudgetOverviewQueryRequestDto, BudgetOverviewQueryResponseDto } from '.
 
 export interface IBudgetOverviewPort {
   getBudgetOverview(
-    request: BudgetOverviewQueryRequestDto
+    request: BudgetOverviewQueryRequestDto,
   ): Promise<Either<ApplicationError, BudgetOverviewQueryResponseDto>>;
 }

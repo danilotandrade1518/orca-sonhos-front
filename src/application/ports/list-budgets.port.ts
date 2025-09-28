@@ -4,6 +4,6 @@ import { ListBudgetsQueryRequestDto, ListBudgetsQueryResponseDto } from '../dtos
 
 export interface IListBudgetsPort {
   listBudgets(
-    request: ListBudgetsQueryRequestDto
+    request: ListBudgetsQueryRequestDto,
   ): Promise<Either<ApplicationError, ListBudgetsQueryResponseDto[]>>;
 }
