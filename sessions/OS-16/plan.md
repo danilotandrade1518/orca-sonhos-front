@@ -440,7 +440,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 ### 📋 Tarefas
 
-#### 5.1 Implementar Query Handlers de Account [⏳]
+#### 5.1 Implementar Query Handlers de Account [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de Account
 **Arquivos**:
@@ -450,7 +450,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 **Critério de Conclusão**: 2 Query Handlers de Account implementados com testes
 
-#### 5.2 Implementar Query Handlers de Category [⏳]
+#### 5.2 Implementar Query Handlers de Category [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de Category
 **Arquivos**:
@@ -459,6 +459,18 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 - `src/application/queries/category/get-category-by-id-query-handler/`
 
 **Critério de Conclusão**: 2 Query Handlers de Category implementados com testes
+
+**Implementação Concluída com Sucesso - Category**:
+
+- **Total de Query Handlers**: 2 Query Handlers implementados (ListCategories, GetCategoryById)
+- **Estrutura Consistente**: Seguindo exatamente os padrões de Account
+- **Validações Robustas**: Validação de budgetId obrigatório para ListCategories e categoryId obrigatório para GetCategoryById
+- **Either Pattern**: Aplicado consistentemente em todas as operações
+- **TypeScript Puro**: Sem dependências Angular na camada Application
+- **Testes Unitários**: 15/15 testes passando com sucesso (8 para ListCategories + 7 para GetCategoryById)
+- **Index Files**: Organizados por entidade e atualizados corretamente
+- **Linting**: Sem erros de linting, formatação consistente
+- **Padrões**: 100% alinhado com implementação de Account
 
 #### 5.3 Implementar Query Handlers de CreditCard [⏳]
 

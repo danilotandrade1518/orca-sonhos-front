@@ -6,7 +6,7 @@
 
 - **Início**: 2024-12-19
 - **Status Atual**: Em progresso
-- **Fase Atual**: Fase 4 - Use Cases
+- **Fase Atual**: Fase 5 - Query Handlers
 - **Última Sessão**: 2024-12-19
 
 ---
@@ -570,6 +570,77 @@
 
 ---
 
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 7)
+
+**Fase**: Fase 5.1 - Query Handlers de Account
+**Objetivo da Sessão**: Implementar Query Handlers de Account (List e GetById) seguindo estratégia de implementar cada entidade por vez completa
+
+#### ✅ Trabalho Realizado
+
+- ✅ **ACCOUNT QUERY HANDLERS COMPLETADOS**: 2 Query Handlers implementados com sucesso
+  - ListAccountsQueryHandler: Listagem de contas com validação de budgetId e userId
+  - GetAccountByIdQueryHandler: Busca de conta por ID com validação de accountId e userId
+  - Index files de Account queries atualizados com todos os exports
+  - 16/16 testes passando (8 testes para cada Query Handler)
+  - Total de testes: 1027/1027 testes passando com sucesso
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Seguir exatamente a estrutura de Budget para Query Handlers de Account
+- **Alternativas**: Criar estrutura diferente para Account
+- **Justificativa**: Manter consistência arquitetural e facilitar manutenção
+
+- **Decisão**: Implementar validações específicas para budgetId e userId nos Query Handlers
+- **Alternativas**: Usar apenas validação básica
+- **Justificativa**: Query Handlers precisam validar parâmetros de entrada antes de chamar os Ports
+
+- **Decisão**: Corrigir estrutura do MoneyDto nos testes (valueInCents, valueInMonetary, formatted)
+- **Alternativas**: Manter estrutura incorreta nos testes
+- **Justificativa**: Garantir que os testes reflitam a realidade dos DTOs de response
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: Estrutura incorreta do MoneyDto nos testes (amount vs. valueInCents)
+- **Solução**: Corrigidos para usar a estrutura correta do MoneyDto (valueInCents, valueInMonetary, formatted)
+- **Lição Aprendida**: Sempre verificar a estrutura real dos DTOs antes de criar mocks nos testes
+
+- **Problema**: Validações específicas para Query Handlers (budgetId, accountId, userId)
+- **Solução**: Implementadas validações específicas para cada tipo de Query Handler
+- **Lição Aprendida**: Query Handlers requerem validações mais específicas que Use Cases
+
+#### 🧪 Testes Realizados
+
+- **Linting**: ✅ Sem erros de linting
+- **Compilação**: ✅ Sem erros de compilação
+- **Testes Unitários Account Query Handlers**: ✅ 16/16 testes passando
+- **Testes Unitários Totais**: ✅ 1027/1027 testes passando
+- **Estrutura**: ✅ Seguindo padrões de Budget
+- **Nomenclatura**: ✅ Convenções consistentes
+- **Imports**: ✅ Dependências corretas
+- **Index Files**: ✅ Todos os exports funcionando corretamente
+
+#### 📝 Commits Relacionados
+
+- Nenhum commit realizado ainda (aguardando aprovação)
+
+#### ⏭️ Próximos Passos
+
+- ✅ Account Query Handlers completados com sucesso
+- **Próxima Entidade**: Category (2 Query Handlers)
+  - ListCategoriesQueryHandler
+  - GetCategoryByIdQueryHandler
+  - Testes unitários para todos os Query Handlers
+
+#### 💭 Observações
+
+- Implementação muito fluida seguindo padrões estabelecidos
+- 2 Query Handlers de Account implementados com 16 testes passando
+- Estratégia de implementar entidade por vez funciona muito bem
+- Query Handlers são mais simples que Use Cases, focando em validação e delegação
+- Pronto para próxima entidade (Category)
+
+---
+
 ## 📊 Resumo de Progresso
 
 ### Por Fase
@@ -593,16 +664,23 @@
   - Principais realizações: 6 Mappers implementados com 54 testes passando
 
 - **Fase 4**: Completada ✅
+
   - Sessões: 4
   - Tempo total: ~8 horas
   - Principais realizações: Account, Category, CreditCard, Envelope, Goal e Transaction Use Cases completados (27 Use Cases + 1011 testes passando)
   - Status: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ✅, Index Files ✅
 
+- **Fase 5**: Em progresso ⏰
+  - Sessões: 1
+  - Tempo total: ~1 hora
+  - Principais realizações: Account Query Handlers completados (2 Query Handlers + 16 testes passando)
+  - Status: Account ✅, Category ⏳, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳
+
 ### Métricas Gerais
 
-- **Total de Sessões**: 6
-- **Tempo Total Investido**: ~12 horas
-- **Arquivos Modificados**: 270+ arquivos criados
+- **Total de Sessões**: 7
+- **Tempo Total Investido**: ~13 horas
+- **Arquivos Modificados**: 280+ arquivos criados
 - **Commits Realizados**: 0 (aguardando aprovação)
 
 ### Decisões Arquiteturais Importantes
@@ -634,7 +712,7 @@
 ### Contexto Atual
 
 **Branch**: feature-OS-16
-**Última modificação**: 27 Use Cases implementados (Account, Category, CreditCard, Envelope, Goal, Transaction) com 1011 testes passando
-**Testes passando**: 1011/1011 testes (incluindo mappers, domain models e Use Cases)
-**Próxima tarefa específica**: Implementar Query Handlers (18 Query Handlers + testes)
-**Status Fase 4**: Completada ✅ (Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ✅, Index Files ✅)
+**Última modificação**: 2 Query Handlers de Account implementados com 1027 testes passando
+**Testes passando**: 1027/1027 testes (incluindo mappers, domain models, Use Cases e Query Handlers)
+**Próxima tarefa específica**: Implementar Query Handlers de Category (2 Query Handlers + testes)
+**Status Fase 5**: Em progresso ⏰ (Account ✅, Category ⏳, CreditCard ⏳, Envelope ⏳, Goal ⏳, Transaction ⏳)
