@@ -3,7 +3,7 @@ import {
   AccountTypeValues,
   AccountTypeLabels,
   isValidAccountType,
-  getAccountTypeLabel
+  getAccountTypeLabel,
 } from './account-type';
 
 describe('AccountType', () => {
@@ -45,7 +45,7 @@ describe('AccountType', () => {
       const enumValues = Object.values(AccountType);
 
       // Act & Assert
-      enumValues.forEach(value => {
+      enumValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -64,7 +64,7 @@ describe('AccountType', () => {
     it('should be an array of strings', () => {
       // Arrange & Act & Assert
       expect(Array.isArray(AccountTypeValues)).toBe(true);
-      AccountTypeValues.forEach(value => {
+      AccountTypeValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -104,7 +104,7 @@ describe('AccountType', () => {
       const enumValues = Object.values(AccountType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         expect(AccountTypeLabels[enumValue]).toBeDefined();
         expect(typeof AccountTypeLabels[enumValue]).toBe('string');
         expect(AccountTypeLabels[enumValue].length).toBeGreaterThan(0);
@@ -209,7 +209,7 @@ describe('AccountType', () => {
       const lowercaseValues = ['checking', 'savings', 'investment', 'cash'];
 
       // Act & Assert
-      lowercaseValues.forEach(value => {
+      lowercaseValues.forEach((value) => {
         expect(isValidAccountType(value)).toBe(false);
       });
     });
@@ -233,7 +233,7 @@ describe('AccountType', () => {
 
     it('should validate all values in AccountTypeValues', () => {
       // Arrange & Act & Assert
-      AccountTypeValues.forEach(value => {
+      AccountTypeValues.forEach((value) => {
         expect(isValidAccountType(value)).toBe(true);
       });
     });
@@ -289,7 +289,7 @@ describe('AccountType', () => {
       const enumValues = Object.values(AccountType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const label = getAccountTypeLabel(enumValue);
         expect(typeof label).toBe('string');
         expect(label.length).toBeGreaterThan(0);
@@ -301,7 +301,7 @@ describe('AccountType', () => {
       const enumValues = Object.values(AccountType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const functionLabel = getAccountTypeLabel(enumValue);
         const directLabel = AccountTypeLabels[enumValue];
         expect(functionLabel).toBe(directLabel);
@@ -376,14 +376,14 @@ describe('AccountType', () => {
       ];
 
       // Act
-      const checkingAccounts = accounts.filter(a => a.type === AccountType.CHECKING);
-      const investmentAccounts = accounts.filter(a => a.type === AccountType.INVESTMENT);
+      const checkingAccounts = accounts.filter((a) => a.type === AccountType.CHECKING);
+      const investmentAccounts = accounts.filter((a) => a.type === AccountType.INVESTMENT);
 
       // Assert
       expect(checkingAccounts.length).toBe(2);
       expect(investmentAccounts.length).toBe(1);
-      expect(checkingAccounts.every(a => a.type === AccountType.CHECKING)).toBe(true);
-      expect(investmentAccounts.every(a => a.type === AccountType.INVESTMENT)).toBe(true);
+      expect(checkingAccounts.every((a) => a.type === AccountType.CHECKING)).toBe(true);
+      expect(investmentAccounts.every((a) => a.type === AccountType.INVESTMENT)).toBe(true);
     });
   });
 
@@ -418,7 +418,7 @@ describe('AccountType', () => {
       // Arrange
       const data = {
         type: AccountType.SAVINGS,
-        balance: 5000
+        balance: 5000,
       };
 
       // Act

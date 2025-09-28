@@ -44,7 +44,7 @@ describe('Either', () => {
         id: '123',
         name: 'Test Entity',
         values: [1, 2, 3],
-        metadata: { created: new Date() }
+        metadata: { created: new Date() },
       };
 
       // Act
@@ -120,7 +120,7 @@ describe('Either', () => {
       const mixedErrors = [
         'String error',
         new Error('Error object'),
-        { code: 'CUSTOM_ERROR', message: 'Custom error object' }
+        { code: 'CUSTOM_ERROR', message: 'Custom error object' },
       ];
 
       // Act
@@ -360,7 +360,10 @@ describe('Either', () => {
 
     it('should accumulate multiple validation errors', () => {
       // Arrange
-      const validateUser = (name: string, age: number): Either<string, { name: string; age: number }> => {
+      const validateUser = (
+        name: string,
+        age: number,
+      ): Either<string, { name: string; age: number }> => {
         const errors: string[] = [];
 
         if (!name || name.trim().length === 0) {
@@ -388,10 +391,7 @@ describe('Either', () => {
 
       // Assert
       expect(result.hasError).toBe(true);
-      expect(result.errors).toEqual([
-        'Name is required',
-        'Age cannot be negative'
-      ]);
+      expect(result.errors).toEqual(['Name is required', 'Age cannot be negative']);
       expect(result.errors.length).toBe(2);
     });
   });
@@ -401,7 +401,7 @@ describe('Either', () => {
       constructor(
         public readonly id: string,
         public readonly name: string,
-        public readonly value: number
+        public readonly value: number,
       ) {}
 
       static create(props: {
@@ -420,9 +420,7 @@ describe('Either', () => {
           return Either.error('Value cannot be negative');
         }
 
-        return Either.success(
-          new TestEntity(props.id.trim(), props.name.trim(), props.value)
-        );
+        return Either.success(new TestEntity(props.id.trim(), props.name.trim(), props.value));
       }
     }
 
@@ -431,7 +429,7 @@ describe('Either', () => {
       const props = {
         id: 'entity-123',
         name: 'Test Entity',
-        value: 100
+        value: 100,
       };
 
       // Act
@@ -450,7 +448,7 @@ describe('Either', () => {
       const props = {
         id: '',
         name: 'Test Entity',
-        value: -10
+        value: -10,
       };
 
       // Act
@@ -467,7 +465,7 @@ describe('Either', () => {
       const props = {
         id: '  entity-123  ',
         name: '  Test Entity  ',
-        value: 100
+        value: 100,
       };
 
       // Act

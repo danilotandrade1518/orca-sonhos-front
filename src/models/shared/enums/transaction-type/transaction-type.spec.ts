@@ -3,7 +3,7 @@ import {
   TransactionTypeValues,
   TransactionTypeLabels,
   isValidTransactionType,
-  getTransactionTypeLabel
+  getTransactionTypeLabel,
 } from './transaction-type';
 
 describe('TransactionType', () => {
@@ -33,7 +33,7 @@ describe('TransactionType', () => {
       const enumValues = Object.values(TransactionType);
 
       // Act & Assert
-      enumValues.forEach(value => {
+      enumValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -50,7 +50,7 @@ describe('TransactionType', () => {
     it('should be an array of strings', () => {
       // Arrange & Act & Assert
       expect(Array.isArray(TransactionTypeValues)).toBe(true);
-      TransactionTypeValues.forEach(value => {
+      TransactionTypeValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -80,7 +80,7 @@ describe('TransactionType', () => {
       const enumValues = Object.values(TransactionType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         expect(TransactionTypeLabels[enumValue]).toBeDefined();
         expect(typeof TransactionTypeLabels[enumValue]).toBe('string');
         expect(TransactionTypeLabels[enumValue].length).toBeGreaterThan(0);
@@ -185,7 +185,7 @@ describe('TransactionType', () => {
 
     it('should validate all values in TransactionTypeValues', () => {
       // Arrange & Act & Assert
-      TransactionTypeValues.forEach(value => {
+      TransactionTypeValues.forEach((value) => {
         expect(isValidTransactionType(value)).toBe(true);
       });
     });
@@ -219,7 +219,7 @@ describe('TransactionType', () => {
       const enumValues = Object.values(TransactionType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const label = getTransactionTypeLabel(enumValue);
         expect(typeof label).toBe('string');
         expect(label.length).toBeGreaterThan(0);
@@ -231,7 +231,7 @@ describe('TransactionType', () => {
       const enumValues = Object.values(TransactionType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const functionLabel = getTransactionTypeLabel(enumValue);
         const directLabel = TransactionTypeLabels[enumValue];
         expect(functionLabel).toBe(directLabel);
@@ -292,14 +292,14 @@ describe('TransactionType', () => {
       ];
 
       // Act
-      const incomes = transactions.filter(t => t.type === TransactionType.INCOME);
-      const expenses = transactions.filter(t => t.type === TransactionType.EXPENSE);
+      const incomes = transactions.filter((t) => t.type === TransactionType.INCOME);
+      const expenses = transactions.filter((t) => t.type === TransactionType.EXPENSE);
 
       // Assert
       expect(incomes.length).toBe(2);
       expect(expenses.length).toBe(2);
-      expect(incomes.every(t => t.type === TransactionType.INCOME)).toBe(true);
-      expect(expenses.every(t => t.type === TransactionType.EXPENSE)).toBe(true);
+      expect(incomes.every((t) => t.type === TransactionType.INCOME)).toBe(true);
+      expect(expenses.every((t) => t.type === TransactionType.EXPENSE)).toBe(true);
     });
   });
 
@@ -332,7 +332,7 @@ describe('TransactionType', () => {
       // Arrange
       const data = {
         type: TransactionType.INCOME,
-        amount: 1000
+        amount: 1000,
       };
 
       // Act

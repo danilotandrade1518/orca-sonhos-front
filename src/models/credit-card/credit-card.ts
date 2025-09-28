@@ -35,7 +35,7 @@ export class CreditCard {
     brand: string = '',
     lastFourDigits: string = '',
     isActive: boolean = true,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._name = name;
@@ -190,7 +190,17 @@ export class CreditCard {
     const isActive = props.isActive !== undefined ? props.isActive : true;
 
     return Either.success(
-      new CreditCard(id, props.name, limit, props.budgetId, props.closingDay, props.dueDay, brand, lastFourDigits, isActive)
+      new CreditCard(
+        id,
+        props.name,
+        limit,
+        props.budgetId,
+        props.closingDay,
+        props.dueDay,
+        brand,
+        lastFourDigits,
+        isActive,
+      ),
     );
   }
 
@@ -256,8 +266,8 @@ export class CreditCard {
         json.brand,
         json.lastFourDigits,
         json.isActive,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

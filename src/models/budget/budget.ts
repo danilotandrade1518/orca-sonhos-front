@@ -29,7 +29,7 @@ export class Budget {
     participantIds: string[] = [],
     description: string = '',
     isActive: boolean = true,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._name = name;
@@ -141,7 +141,7 @@ export class Budget {
     const isActive = props.isActive !== undefined ? props.isActive : true;
 
     return Either.success(
-      new Budget(id, props.name, limit, props.ownerId, participantIds, description, isActive)
+      new Budget(id, props.name, limit, props.ownerId, participantIds, description, isActive),
     );
   }
 
@@ -191,8 +191,8 @@ export class Budget {
         json.participantIds,
         json.description,
         json.isActive,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

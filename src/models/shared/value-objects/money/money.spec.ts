@@ -99,7 +99,7 @@ describe('Money', () => {
   describe('when creating Money from monetary value', () => {
     it('should create Money from valid monetary value', () => {
       // Arrange
-      const monetary = 100.50;
+      const monetary = 100.5;
 
       // Act
       const result = Money.fromMonetary(monetary);
@@ -216,7 +216,7 @@ describe('Money', () => {
   describe('when performing arithmetic operations', () => {
     it('should add two Money instances correctly', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
       const money2 = Money.fromMonetary(200.25).data!;
 
       // Act
@@ -229,7 +229,7 @@ describe('Money', () => {
 
     it('should add zero Money correctly', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const zeroMoney = Money.zero();
 
       // Act
@@ -257,7 +257,7 @@ describe('Money', () => {
 
     it('should return error when subtraction result is negative', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
       const money2 = Money.fromMonetary(200.75).data!;
 
       // Act
@@ -270,8 +270,8 @@ describe('Money', () => {
 
     it('should subtract equal amounts to get zero', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
-      const money2 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
+      const money2 = Money.fromMonetary(100.5).data!;
 
       // Act
       const result = money1.subtract(money2);
@@ -285,7 +285,7 @@ describe('Money', () => {
 
     it('should multiply Money by positive number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const multiplier = 2.5;
 
       // Act
@@ -300,7 +300,7 @@ describe('Money', () => {
 
     it('should multiply Money by zero', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const multiplier = 0;
 
       // Act
@@ -315,7 +315,7 @@ describe('Money', () => {
 
     it('should return error when multiplying by negative number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const negativeMultiplier = -2;
 
       // Act
@@ -328,7 +328,7 @@ describe('Money', () => {
 
     it('should return error when multiplying by non-number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const invalidMultiplier = 'not-a-number' as any;
 
       // Act
@@ -341,7 +341,7 @@ describe('Money', () => {
 
     it('should return error when multiplying by infinite number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const infiniteMultiplier = Infinity;
 
       // Act
@@ -354,7 +354,7 @@ describe('Money', () => {
 
     it('should divide Money by positive number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const divisor = 2;
 
       // Act
@@ -369,7 +369,7 @@ describe('Money', () => {
 
     it('should round division result correctly', () => {
       // Arrange
-      const money = Money.fromMonetary(100.00).data!;
+      const money = Money.fromMonetary(100.0).data!;
       const divisor = 3;
 
       // Act
@@ -383,7 +383,7 @@ describe('Money', () => {
 
     it('should return error when dividing by zero', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const zeroDivisor = 0;
 
       // Act
@@ -396,7 +396,7 @@ describe('Money', () => {
 
     it('should return error when dividing by negative number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const negativeDivisor = -2;
 
       // Act
@@ -409,7 +409,7 @@ describe('Money', () => {
 
     it('should return error when dividing by non-number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const invalidDivisor = 'not-a-number' as any;
 
       // Act
@@ -422,7 +422,7 @@ describe('Money', () => {
 
     it('should return error when dividing by infinite number', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
       const infiniteDivisor = Infinity;
 
       // Act
@@ -437,7 +437,7 @@ describe('Money', () => {
   describe('when comparing Money instances', () => {
     it('should correctly identify when one Money is greater than another', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
       const money2 = Money.fromMonetary(50.25).data!;
 
       // Act & Assert
@@ -448,7 +448,7 @@ describe('Money', () => {
     it('should correctly identify when one Money is less than another', () => {
       // Arrange
       const money1 = Money.fromMonetary(50.25).data!;
-      const money2 = Money.fromMonetary(100.50).data!;
+      const money2 = Money.fromMonetary(100.5).data!;
 
       // Act & Assert
       expect(money1.isLessThan(money2)).toBe(true);
@@ -457,7 +457,7 @@ describe('Money', () => {
 
     it('should correctly identify when two Money instances are equal', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
       const money2 = Money.fromCents(10050).data!;
 
       // Act & Assert
@@ -467,7 +467,7 @@ describe('Money', () => {
 
     it('should correctly identify when Money instances are not equal', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.50).data!;
+      const money1 = Money.fromMonetary(100.5).data!;
       const money2 = Money.fromMonetary(100.51).data!;
 
       // Act & Assert
@@ -487,7 +487,7 @@ describe('Money', () => {
 
     it('should handle edge case comparisons', () => {
       // Arrange
-      const money1 = Money.fromMonetary(100.00).data!;
+      const money1 = Money.fromMonetary(100.0).data!;
       const money2 = Money.fromCents(10000).data!;
       const money3 = Money.fromMonetary(99.99).data!;
 
@@ -523,7 +523,7 @@ describe('Money', () => {
 
     it('should format large Money values correctly', () => {
       // Arrange
-      const largeMoney = Money.fromMonetary(1000000.00).data!;
+      const largeMoney = Money.fromMonetary(1000000.0).data!;
 
       // Act
       const formatted = largeMoney.formatBRL();
@@ -534,7 +534,7 @@ describe('Money', () => {
 
     it('should format Money in cents format', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
 
       // Act
       const formatted = money.formatCents();
@@ -556,7 +556,7 @@ describe('Money', () => {
 
     it('should use BRL format when converting to string', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
 
       // Act
       const stringRepresentation = money.toString();
@@ -569,7 +569,7 @@ describe('Money', () => {
   describe('when serializing Money to JSON', () => {
     it('should serialize Money to complete JSON object', () => {
       // Arrange
-      const money = Money.fromMonetary(100.50).data!;
+      const money = Money.fromMonetary(100.5).data!;
 
       // Act
       const jsonRepresentation = money.toJSON();
@@ -578,7 +578,7 @@ describe('Money', () => {
       expect(jsonRepresentation).toEqual({
         valueInCents: 10050,
         valueInMonetary: 100.5,
-        formatted: 'R$ 100,50'
+        formatted: 'R$ 100,50',
       });
     });
 
@@ -593,7 +593,7 @@ describe('Money', () => {
       expect(jsonRepresentation).toEqual({
         valueInCents: 0,
         valueInMonetary: 0,
-        formatted: 'R$ 0,00'
+        formatted: 'R$ 0,00',
       });
     });
 
@@ -608,7 +608,7 @@ describe('Money', () => {
       expect(jsonRepresentation).toEqual({
         valueInCents: 99999999,
         valueInMonetary: 999999.99,
-        formatted: 'R$ 999.999,99'
+        formatted: 'R$ 999.999,99',
       });
     });
   });
@@ -616,7 +616,7 @@ describe('Money', () => {
   describe('when testing Money immutability', () => {
     it('should not modify original Money when performing add operation', () => {
       // Arrange
-      const originalMoney = Money.fromMonetary(100.50).data!;
+      const originalMoney = Money.fromMonetary(100.5).data!;
       const originalCents = originalMoney.valueInCents;
       const addMoney = Money.fromMonetary(50.25).data!;
 
@@ -631,7 +631,7 @@ describe('Money', () => {
 
     it('should not modify original Money when performing successful subtract operation', () => {
       // Arrange
-      const originalMoney = Money.fromMonetary(100.50).data!;
+      const originalMoney = Money.fromMonetary(100.5).data!;
       const originalCents = originalMoney.valueInCents;
       const subtractMoney = Money.fromMonetary(50.25).data!;
 
@@ -647,7 +647,7 @@ describe('Money', () => {
 
     it('should not modify original Money when performing multiply operation', () => {
       // Arrange
-      const originalMoney = Money.fromMonetary(100.50).data!;
+      const originalMoney = Money.fromMonetary(100.5).data!;
       const originalCents = originalMoney.valueInCents;
 
       // Act
@@ -662,7 +662,7 @@ describe('Money', () => {
 
     it('should not modify original Money when performing divide operation', () => {
       // Arrange
-      const originalMoney = Money.fromMonetary(100.50).data!;
+      const originalMoney = Money.fromMonetary(100.5).data!;
       const originalCents = originalMoney.valueInCents;
 
       // Act
@@ -735,9 +735,9 @@ describe('Money', () => {
 
     it('should handle chaining operations correctly', () => {
       // Arrange
-      const baseMoney = Money.fromMonetary(100.00).data!;
-      const addMoney = Money.fromMonetary(50.00).data!;
-      const subtractMoney = Money.fromMonetary(25.00).data!;
+      const baseMoney = Money.fromMonetary(100.0).data!;
+      const addMoney = Money.fromMonetary(50.0).data!;
+      const subtractMoney = Money.fromMonetary(25.0).data!;
 
       // Act
       const afterAdd = baseMoney.add(addMoney);

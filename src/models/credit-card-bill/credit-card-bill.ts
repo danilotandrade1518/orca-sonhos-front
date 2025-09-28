@@ -39,7 +39,7 @@ export class CreditCardBill {
     dueDate: Date,
     status: CreditCardBillStatus = CreditCardBillStatus.OPEN,
     paidAt: Date | null = null,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._totalAmount = totalAmount;
@@ -98,8 +98,10 @@ export class CreditCardBill {
   }
 
   isOverdue(): boolean {
-    return this._status === CreditCardBillStatus.OVERDUE ||
-           (this._status === CreditCardBillStatus.CLOSED && new Date() > this._dueDate);
+    return (
+      this._status === CreditCardBillStatus.OVERDUE ||
+      (this._status === CreditCardBillStatus.CLOSED && new Date() > this._dueDate)
+    );
   }
 
   isPartiallyPaid(): boolean {
@@ -192,7 +194,16 @@ export class CreditCardBill {
     const paidAt = props.paidAt || null;
 
     return Either.success(
-      new CreditCardBill(id, totalAmount, paidAmount, props.creditCardId, props.closingDate, props.dueDate, status, paidAt)
+      new CreditCardBill(
+        id,
+        totalAmount,
+        paidAmount,
+        props.creditCardId,
+        props.closingDate,
+        props.dueDate,
+        status,
+        paidAt,
+      ),
     );
   }
 
@@ -252,8 +263,8 @@ export class CreditCardBill {
         dueDate,
         json.status,
         paidAt,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

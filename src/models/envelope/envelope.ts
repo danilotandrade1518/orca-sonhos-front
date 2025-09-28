@@ -32,7 +32,7 @@ export class Envelope {
     budgetId: string,
     description: string = '',
     isActive: boolean = true,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._name = name;
@@ -198,7 +198,16 @@ export class Envelope {
     const isActive = props.isActive !== undefined ? props.isActive : true;
 
     return Either.success(
-      new Envelope(id, props.name, limit, currentBalance, props.categoryId, props.budgetId, description, isActive)
+      new Envelope(
+        id,
+        props.name,
+        limit,
+        currentBalance,
+        props.categoryId,
+        props.budgetId,
+        description,
+        isActive,
+      ),
     );
   }
 
@@ -255,8 +264,8 @@ export class Envelope {
         json.budgetId,
         json.description,
         json.isActive,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

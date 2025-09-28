@@ -66,7 +66,7 @@ Refs: [ID da issue/card]
 
 #### Documentação
 
-- Confirme que `.claude/sessions/<feature_slug>/` está completo
+- Confirme que `sessions/<feature_slug>/` está completo
 - Verifique se `plan.md` está totalmente atualizado
 - Adicione notas finais sobre a implementação
 

@@ -9,7 +9,7 @@ describe('CreditCard', () => {
         limitInCents: 500000, // R$ 5000.00
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -22,7 +22,7 @@ describe('CreditCard', () => {
       const creditCard = result.data!;
       expect(creditCard.name).toBe('Visa Gold');
       expect(creditCard.limit.valueInCents).toBe(500000);
-      expect(creditCard.limit.valueInMonetary).toBe(5000.00);
+      expect(creditCard.limit.valueInMonetary).toBe(5000.0);
       expect(creditCard.budgetId).toBe('budget-123');
       expect(creditCard.closingDay).toBe(10);
       expect(creditCard.dueDay).toBe(15);
@@ -43,7 +43,7 @@ describe('CreditCard', () => {
         dueDay: 20,
         brand: 'Mastercard',
         lastFourDigits: '1234',
-        isActive: false
+        isActive: false,
       };
 
       // Act
@@ -71,7 +71,7 @@ describe('CreditCard', () => {
         limitInCents: 0,
         budgetId: 'budget-zero',
         closingDay: 1,
-        dueDay: 31
+        dueDay: 31,
       };
 
       // Act
@@ -89,7 +89,7 @@ describe('CreditCard', () => {
         limitInCents: 100000,
         budgetId: 'budget-max',
         closingDay: 31,
-        dueDay: 31
+        dueDay: 31,
       };
 
       // Act
@@ -110,7 +110,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -129,7 +129,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -148,7 +148,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -167,7 +167,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -186,7 +186,7 @@ describe('CreditCard', () => {
         limitInCents: -100000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -205,7 +205,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: '',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -224,7 +224,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: '   ',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -243,7 +243,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 123,
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -262,7 +262,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 0,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -281,7 +281,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 32,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -300,7 +300,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10.5,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -319,7 +319,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 0
+        dueDay: 0,
       };
 
       // Act
@@ -338,7 +338,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 32
+        dueDay: 32,
       };
 
       // Act
@@ -357,7 +357,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-123',
         closingDay: 10,
-        dueDay: 15.7
+        dueDay: 15.7,
       };
 
       // Act
@@ -377,7 +377,7 @@ describe('CreditCard', () => {
         budgetId: 'budget-123',
         closingDay: 10,
         dueDay: 15,
-        lastFourDigits: '123'
+        lastFourDigits: '123',
       };
 
       // Act
@@ -397,7 +397,7 @@ describe('CreditCard', () => {
         budgetId: 'budget-123',
         closingDay: 10,
         dueDay: 15,
-        lastFourDigits: '12AB'
+        lastFourDigits: '12AB',
       };
 
       // Act
@@ -417,7 +417,7 @@ describe('CreditCard', () => {
         budgetId: 'budget-123',
         closingDay: 10,
         dueDay: 15,
-        lastFourDigits: 1234
+        lastFourDigits: 1234,
       };
 
       // Act
@@ -443,7 +443,7 @@ describe('CreditCard', () => {
         dueDay: 25,
         brand: 'Visa',
         lastFourDigits: '9876',
-        isActive: true
+        isActive: true,
       };
 
       creditCard = CreditCard.create(props).data!;
@@ -472,7 +472,7 @@ describe('CreditCard', () => {
 
       // Assert
       expect(limit.valueInCents).toBe(750000);
-      expect(limit.valueInMonetary).toBe(7500.00);
+      expect(limit.valueInMonetary).toBe(7500.0);
     });
 
     it('should return correct budgetId', () => {
@@ -541,7 +541,7 @@ describe('CreditCard', () => {
         limitInCents: 234567, // R$ 2345.67
         budgetId: 'budget-format',
         closingDay: 15,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -561,7 +561,7 @@ describe('CreditCard', () => {
         closingDay: 10,
         dueDay: 15,
         brand: 'Mastercard',
-        lastFourDigits: '5432'
+        lastFourDigits: '5432',
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -581,7 +581,7 @@ describe('CreditCard', () => {
         closingDay: 10,
         dueDay: 15,
         brand: '',
-        lastFourDigits: '1111'
+        lastFourDigits: '1111',
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -601,7 +601,7 @@ describe('CreditCard', () => {
         closingDay: 10,
         dueDay: 15,
         brand: 'Visa',
-        lastFourDigits: ''
+        lastFourDigits: '',
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -619,7 +619,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-display',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -637,7 +637,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-date',
         closingDay: 20,
-        dueDay: 25
+        dueDay: 25,
       };
       const creditCard = CreditCard.create(props).data!;
       const referenceDate = new Date('2024-01-10T10:00:00Z'); // Before closing day
@@ -662,7 +662,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-date',
         closingDay: 15,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
       const referenceDate = new Date('2024-01-20T10:00:00Z'); // After closing day
@@ -683,7 +683,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-date',
         closingDay: 10,
-        dueDay: 25
+        dueDay: 25,
       };
       const creditCard = CreditCard.create(props).data!;
       const referenceDate = new Date('2024-01-15T10:00:00Z'); // Before due day
@@ -708,7 +708,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-date',
         closingDay: 10,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
       const referenceDate = new Date('2024-01-25T10:00:00Z'); // After due day
@@ -729,7 +729,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-default',
         closingDay: 15,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -748,7 +748,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-default',
         closingDay: 5,
-        dueDay: 25
+        dueDay: 25,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -772,7 +772,7 @@ describe('CreditCard', () => {
         dueDay: 28,
         brand: 'American Express',
         lastFourDigits: '8888',
-        isActive: false
+        isActive: false,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -802,7 +802,7 @@ describe('CreditCard', () => {
         limitInCents: 100000,
         budgetId: 'budget-complete',
         closingDay: 1,
-        dueDay: 31
+        dueDay: 31,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -810,8 +810,19 @@ describe('CreditCard', () => {
       const json = creditCard.toJSON();
 
       // Assert
-      const expectedKeys = ['id', 'name', 'limit', 'budgetId', 'closingDay', 'dueDay', 'brand', 'lastFourDigits', 'isActive', 'createdAt'];
-      expectedKeys.forEach(key => {
+      const expectedKeys = [
+        'id',
+        'name',
+        'limit',
+        'budgetId',
+        'closingDay',
+        'dueDay',
+        'brand',
+        'lastFourDigits',
+        'isActive',
+        'createdAt',
+      ];
+      expectedKeys.forEach((key) => {
         expect(json.hasOwnProperty(key)).toBe(true);
       });
 
@@ -825,7 +836,7 @@ describe('CreditCard', () => {
         limitInCents: 250000,
         budgetId: 'budget-minimal',
         closingDay: 15,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -851,7 +862,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '4321',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -865,7 +876,7 @@ describe('CreditCard', () => {
       expect(creditCard.id).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(creditCard.name).toBe('Restored Card');
       expect(creditCard.limit.valueInCents).toBe(600000);
-      expect(creditCard.limit.valueInMonetary).toBe(6000.00);
+      expect(creditCard.limit.valueInMonetary).toBe(6000.0);
       expect(creditCard.budgetId).toBe('budget-restored');
       expect(creditCard.closingDay).toBe(7);
       expect(creditCard.dueDay).toBe(22);
@@ -887,7 +898,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '1234',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -911,7 +922,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '1234',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -935,7 +946,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '1234',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -959,7 +970,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '1234',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -983,7 +994,7 @@ describe('CreditCard', () => {
         brand: 'Visa',
         lastFourDigits: '12AB',
         isActive: true,
-        createdAt: '2024-03-15T14:30:00.000Z'
+        createdAt: '2024-03-15T14:30:00.000Z',
       };
 
       // Act
@@ -1005,7 +1016,7 @@ describe('CreditCard', () => {
         budgetId: 'budget-active',
         closingDay: 10,
         dueDay: 15,
-        isActive: true
+        isActive: true,
       };
 
       const inactiveProps: CreditCardProps = {
@@ -1014,17 +1025,14 @@ describe('CreditCard', () => {
         budgetId: 'budget-inactive',
         closingDay: 5,
         dueDay: 20,
-        isActive: false
+        isActive: false,
       };
 
-      const cards = [
-        CreditCard.create(activeProps).data!,
-        CreditCard.create(inactiveProps).data!
-      ];
+      const cards = [CreditCard.create(activeProps).data!, CreditCard.create(inactiveProps).data!];
 
       // Act
-      const activeCards = cards.filter(card => card.isActive);
-      const inactiveCards = cards.filter(card => !card.isActive);
+      const activeCards = cards.filter((card) => card.isActive);
+      const inactiveCards = cards.filter((card) => !card.isActive);
 
       // Assert
       expect(activeCards.length).toBe(1);
@@ -1038,15 +1046,15 @@ describe('CreditCard', () => {
       const cardProps = [
         { name: 'Card 1', limitInCents: 100000 },
         { name: 'Card 2', limitInCents: 200000 },
-        { name: 'Card 3', limitInCents: 150000 }
-      ].map(props => ({
+        { name: 'Card 3', limitInCents: 150000 },
+      ].map((props) => ({
         ...props,
         budgetId: 'budget-total',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       }));
 
-      const cards = cardProps.map(props => CreditCard.create(props).data!);
+      const cards = cardProps.map((props) => CreditCard.create(props).data!);
 
       // Act
       const totalLimit = cards.reduce((sum, card) => sum + card.limit.valueInCents, 0);
@@ -1061,18 +1069,18 @@ describe('CreditCard', () => {
       const cardProps = [
         { name: 'Card A', closingDay: 10 }, // Already passed this month
         { name: 'Card B', closingDay: 20 }, // Coming up this month
-        { name: 'Card C', closingDay: 25 }  // Coming up this month
-      ].map(props => ({
+        { name: 'Card C', closingDay: 25 }, // Coming up this month
+      ].map((props) => ({
         ...props,
         limitInCents: 500000,
         budgetId: 'budget-closing',
-        dueDay: 31
+        dueDay: 31,
       }));
 
-      const cards = cardProps.map(props => CreditCard.create(props).data!);
+      const cards = cardProps.map((props) => CreditCard.create(props).data!);
 
       // Act
-      const nextClosingDates = cards.map(card => card.getNextClosingDate(referenceDate));
+      const nextClosingDates = cards.map((card) => card.getNextClosingDate(referenceDate));
 
       // Assert
       expect(nextClosingDates[0].getMonth()).toBe(6); // July (next month)
@@ -1087,7 +1095,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-immutable',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
       const creditCard = CreditCard.create(props).data!;
 
@@ -1111,7 +1119,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-max-name',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -1130,7 +1138,7 @@ describe('CreditCard', () => {
         limitInCents: 999999999, // R$ 9,999,999.99
         budgetId: 'budget-high-limit',
         closingDay: 10,
-        dueDay: 15
+        dueDay: 15,
       };
 
       // Act
@@ -1148,7 +1156,7 @@ describe('CreditCard', () => {
         limitInCents: 500000,
         budgetId: 'budget-year',
         closingDay: 15,
-        dueDay: 20
+        dueDay: 20,
       };
       const creditCard = CreditCard.create(props).data!;
       const referenceDate = new Date('2024-12-25T10:00:00Z'); // End of year after both dates
@@ -1174,7 +1182,7 @@ describe('CreditCard', () => {
         dueDay: 27,
         brand: 'Test Brand',
         lastFourDigits: '9999',
-        isActive: false
+        isActive: false,
       };
       const originalCard = CreditCard.create(originalProps).data!;
 

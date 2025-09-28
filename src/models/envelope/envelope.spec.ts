@@ -10,7 +10,7 @@ describe('Envelope', () => {
         limitInCents: 80000, // R$ 800.00
         currentBalanceInCents: 35000, // R$ 350.00
         categoryId: 'category-food',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -23,9 +23,9 @@ describe('Envelope', () => {
       const envelope = result.data!;
       expect(envelope.name).toBe('Food Budget');
       expect(envelope.limit.valueInCents).toBe(80000);
-      expect(envelope.limit.valueInMonetary).toBe(800.00);
+      expect(envelope.limit.valueInMonetary).toBe(800.0);
       expect(envelope.currentBalance.valueInCents).toBe(35000);
-      expect(envelope.currentBalance.valueInMonetary).toBe(350.00);
+      expect(envelope.currentBalance.valueInMonetary).toBe(350.0);
       expect(envelope.categoryId).toBe('category-food');
       expect(envelope.budgetId).toBe('budget-123');
       expect(envelope.description).toBe('');
@@ -43,7 +43,7 @@ describe('Envelope', () => {
         categoryId: 'category-entertainment',
         budgetId: 'budget-premium',
         description: 'Monthly entertainment allowance',
-        isActive: false
+        isActive: false,
       };
 
       // Act
@@ -70,7 +70,7 @@ describe('Envelope', () => {
         limitInCents: 100000,
         currentBalanceInCents: 0,
         categoryId: 'category-new',
-        budgetId: 'budget-new'
+        budgetId: 'budget-new',
       };
 
       // Act
@@ -88,7 +88,7 @@ describe('Envelope', () => {
         limitInCents: 0,
         currentBalanceInCents: 0,
         categoryId: 'category-unlimited',
-        budgetId: 'budget-unlimited'
+        budgetId: 'budget-unlimited',
       };
 
       // Act
@@ -106,7 +106,7 @@ describe('Envelope', () => {
         limitInCents: 75000,
         currentBalanceInCents: 75000,
         categoryId: 'category-maxed',
-        budgetId: 'budget-maxed'
+        budgetId: 'budget-maxed',
       };
 
       // Act
@@ -114,8 +114,8 @@ describe('Envelope', () => {
 
       // Assert
       expect(result.hasData).toBe(true);
-      expect(result.data!.limit.valueInMonetary).toBe(750.00);
-      expect(result.data!.currentBalance.valueInMonetary).toBe(750.00);
+      expect(result.data!.limit.valueInMonetary).toBe(750.0);
+      expect(result.data!.currentBalance.valueInMonetary).toBe(750.0);
     });
   });
 
@@ -127,7 +127,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -146,7 +146,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -165,7 +165,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -184,7 +184,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -203,7 +203,7 @@ describe('Envelope', () => {
         limitInCents: -50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -222,7 +222,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: -25000,
         categoryId: 'category-123',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -241,7 +241,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: '',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -260,7 +260,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: '   ',
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -279,7 +279,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 123,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -298,7 +298,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: ''
+        budgetId: '',
       };
 
       // Act
@@ -317,7 +317,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: '   '
+        budgetId: '   ',
       };
 
       // Act
@@ -336,7 +336,7 @@ describe('Envelope', () => {
         limitInCents: 50000,
         currentBalanceInCents: 25000,
         categoryId: 'category-123',
-        budgetId: 123
+        budgetId: 123,
       };
 
       // Act
@@ -361,7 +361,7 @@ describe('Envelope', () => {
         categoryId: 'category-travel',
         budgetId: 'budget-travel',
         description: 'Saving for vacation',
-        isActive: true
+        isActive: true,
       };
 
       envelope = Envelope.create(props).data!;
@@ -390,7 +390,7 @@ describe('Envelope', () => {
 
       // Assert
       expect(limit.valueInCents).toBe(150000);
-      expect(limit.valueInMonetary).toBe(1500.00);
+      expect(limit.valueInMonetary).toBe(1500.0);
     });
 
     it('should return correct currentBalance as Money object', () => {
@@ -399,7 +399,7 @@ describe('Envelope', () => {
 
       // Assert
       expect(currentBalance.valueInCents).toBe(87500);
-      expect(currentBalance.valueInMonetary).toBe(875.00);
+      expect(currentBalance.valueInMonetary).toBe(875.0);
     });
 
     it('should return correct categoryId', () => {
@@ -452,7 +452,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 35000, // R$ 350.00
         categoryId: 'category-shopping',
-        budgetId: 'budget-shopping'
+        budgetId: 'budget-shopping',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -461,7 +461,7 @@ describe('Envelope', () => {
 
       // Assert
       expect(remaining.valueInCents).toBe(65000); // R$ 650.00
-      expect(remaining.valueInMonetary).toBe(650.00);
+      expect(remaining.valueInMonetary).toBe(650.0);
     });
 
     it('should return zero remaining amount when balance exceeds limit', () => {
@@ -471,7 +471,7 @@ describe('Envelope', () => {
         limitInCents: 50000, // R$ 500.00
         currentBalanceInCents: 75000, // R$ 750.00
         categoryId: 'category-over',
-        budgetId: 'budget-over'
+        budgetId: 'budget-over',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -490,7 +490,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 25000, // R$ 250.00 (25%)
         categoryId: 'category-test',
-        budgetId: 'budget-test'
+        budgetId: 'budget-test',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -508,7 +508,7 @@ describe('Envelope', () => {
         limitInCents: 0,
         currentBalanceInCents: 50000,
         categoryId: 'category-zero',
-        budgetId: 'budget-zero'
+        budgetId: 'budget-zero',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -526,7 +526,7 @@ describe('Envelope', () => {
         limitInCents: 50000, // R$ 500.00
         currentBalanceInCents: 100000, // R$ 1000.00 (200%)
         categoryId: 'category-over',
-        budgetId: 'budget-over'
+        budgetId: 'budget-over',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -544,7 +544,7 @@ describe('Envelope', () => {
         limitInCents: 75000, // R$ 750.00
         currentBalanceInCents: 80000, // R$ 800.00
         categoryId: 'category-over',
-        budgetId: 'budget-over'
+        budgetId: 'budget-over',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -562,7 +562,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 50000, // R$ 500.00
         categoryId: 'category-within',
-        budgetId: 'budget-within'
+        budgetId: 'budget-within',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -580,7 +580,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 95000, // R$ 950.00 (95%)
         categoryId: 'category-near',
-        budgetId: 'budget-near'
+        budgetId: 'budget-near',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -598,7 +598,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 80000, // R$ 800.00 (80%)
         categoryId: 'category-custom',
-        budgetId: 'budget-custom'
+        budgetId: 'budget-custom',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -616,7 +616,7 @@ describe('Envelope', () => {
         limitInCents: 0,
         currentBalanceInCents: 50000,
         categoryId: 'category-zero',
-        budgetId: 'budget-zero'
+        budgetId: 'budget-zero',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -634,10 +634,10 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 70000, // R$ 700.00
         categoryId: 'category-allocation',
-        budgetId: 'budget-allocation'
+        budgetId: 'budget-allocation',
       };
       const envelope = Envelope.create(props).data!;
-      const allocationAmount = Money.fromMonetary(250.00).data!; // R$ 250.00
+      const allocationAmount = Money.fromMonetary(250.0).data!; // R$ 250.00
 
       // Act
       const canAllocate = envelope.canAllocate(allocationAmount);
@@ -653,10 +653,10 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 70000, // R$ 700.00
         categoryId: 'category-exact',
-        budgetId: 'budget-exact'
+        budgetId: 'budget-exact',
       };
       const envelope = Envelope.create(props).data!;
-      const allocationAmount = Money.fromMonetary(300.00).data!; // R$ 300.00 (total = R$ 1000.00)
+      const allocationAmount = Money.fromMonetary(300.0).data!; // R$ 300.00 (total = R$ 1000.00)
 
       // Act
       const canAllocate = envelope.canAllocate(allocationAmount);
@@ -672,10 +672,10 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 70000, // R$ 700.00
         categoryId: 'category-exceed',
-        budgetId: 'budget-exceed'
+        budgetId: 'budget-exceed',
       };
       const envelope = Envelope.create(props).data!;
-      const allocationAmount = Money.fromMonetary(350.00).data!; // R$ 350.00 (total = R$ 1050.00)
+      const allocationAmount = Money.fromMonetary(350.0).data!; // R$ 350.00 (total = R$ 1050.00)
 
       // Act
       const canAllocate = envelope.canAllocate(allocationAmount);
@@ -691,7 +691,7 @@ describe('Envelope', () => {
         limitInCents: 123456, // R$ 1234.56
         currentBalanceInCents: 50000,
         categoryId: 'category-format',
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -709,7 +709,7 @@ describe('Envelope', () => {
         limitInCents: 100000,
         currentBalanceInCents: 98765, // R$ 987.65
         categoryId: 'category-format',
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -727,7 +727,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 33333, // R$ 333.33
         categoryId: 'category-format',
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -745,7 +745,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 30000, // R$ 300.00 (30%)
         categoryId: 'category-available',
-        budgetId: 'budget-available'
+        budgetId: 'budget-available',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -763,7 +763,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 60000, // R$ 600.00 (60%)
         categoryId: 'category-inuse',
-        budgetId: 'budget-inuse'
+        budgetId: 'budget-inuse',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -781,7 +781,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 92000, // R$ 920.00 (92%)
         categoryId: 'category-near',
-        budgetId: 'budget-near'
+        budgetId: 'budget-near',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -799,7 +799,7 @@ describe('Envelope', () => {
         limitInCents: 100000, // R$ 1000.00
         currentBalanceInCents: 110000, // R$ 1100.00 (110%)
         categoryId: 'category-over',
-        budgetId: 'budget-over'
+        budgetId: 'budget-over',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -821,7 +821,7 @@ describe('Envelope', () => {
         categoryId: 'category-json',
         budgetId: 'budget-json',
         description: 'Testing JSON serialization',
-        isActive: false
+        isActive: false,
       };
       const envelope = Envelope.create(props).data!;
 
@@ -832,10 +832,10 @@ describe('Envelope', () => {
       expect(json.id).toBe(envelope.id);
       expect(json.name).toBe('JSON Test Envelope');
       expect(json.limit.valueInCents).toBe(250000);
-      expect(json.limit.valueInMonetary).toBe(2500.00);
+      expect(json.limit.valueInMonetary).toBe(2500.0);
       expect(json.limit.formatted).toBe('R$\u00a02.500,00');
       expect(json.currentBalance.valueInCents).toBe(175000);
-      expect(json.currentBalance.valueInMonetary).toBe(1750.00);
+      expect(json.currentBalance.valueInMonetary).toBe(1750.0);
       expect(json.currentBalance.formatted).toBe('R$\u00a01.750,00');
       expect(json.categoryId).toBe('category-json');
       expect(json.budgetId).toBe('budget-json');
@@ -852,7 +852,7 @@ describe('Envelope', () => {
         limitInCents: 100000,
         currentBalanceInCents: 50000,
         categoryId: 'category-complete',
-        budgetId: 'budget-complete'
+        budgetId: 'budget-complete',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -860,8 +860,18 @@ describe('Envelope', () => {
       const json = envelope.toJSON();
 
       // Assert
-      const expectedKeys = ['id', 'name', 'limit', 'currentBalance', 'categoryId', 'budgetId', 'description', 'isActive', 'createdAt'];
-      expectedKeys.forEach(key => {
+      const expectedKeys = [
+        'id',
+        'name',
+        'limit',
+        'currentBalance',
+        'categoryId',
+        'budgetId',
+        'description',
+        'isActive',
+        'createdAt',
+      ];
+      expectedKeys.forEach((key) => {
         expect(json.hasOwnProperty(key)).toBe(true);
       });
 
@@ -875,7 +885,7 @@ describe('Envelope', () => {
         limitInCents: 75000,
         currentBalanceInCents: 30000,
         categoryId: 'category-nodesc',
-        budgetId: 'budget-nodesc'
+        budgetId: 'budget-nodesc',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -899,7 +909,7 @@ describe('Envelope', () => {
         budgetId: 'budget-restored',
         description: 'Restored from JSON',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -913,9 +923,9 @@ describe('Envelope', () => {
       expect(envelope.id).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(envelope.name).toBe('Restored Envelope');
       expect(envelope.limit.valueInCents).toBe(300000);
-      expect(envelope.limit.valueInMonetary).toBe(3000.00);
+      expect(envelope.limit.valueInMonetary).toBe(3000.0);
       expect(envelope.currentBalance.valueInCents).toBe(180000);
-      expect(envelope.currentBalance.valueInMonetary).toBe(1800.00);
+      expect(envelope.currentBalance.valueInMonetary).toBe(1800.0);
       expect(envelope.categoryId).toBe('category-restored');
       expect(envelope.budgetId).toBe('budget-restored');
       expect(envelope.description).toBe('Restored from JSON');
@@ -934,7 +944,7 @@ describe('Envelope', () => {
         budgetId: 'budget-test',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -957,7 +967,7 @@ describe('Envelope', () => {
         budgetId: 'budget-test',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -980,7 +990,7 @@ describe('Envelope', () => {
         budgetId: 'budget-test',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -1003,7 +1013,7 @@ describe('Envelope', () => {
         budgetId: 'budget-test',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -1026,7 +1036,7 @@ describe('Envelope', () => {
         budgetId: 'budget-test',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -1049,7 +1059,7 @@ describe('Envelope', () => {
         budgetId: '',
         description: 'Test envelope',
         isActive: true,
-        createdAt: '2024-05-20T12:30:00.000Z'
+        createdAt: '2024-05-20T12:30:00.000Z',
       };
 
       // Act
@@ -1071,7 +1081,7 @@ describe('Envelope', () => {
         currentBalanceInCents: 50000,
         categoryId: 'category-active',
         budgetId: 'budget-active',
-        isActive: true
+        isActive: true,
       };
 
       const inactiveProps: EnvelopeProps = {
@@ -1080,17 +1090,14 @@ describe('Envelope', () => {
         currentBalanceInCents: 30000,
         categoryId: 'category-inactive',
         budgetId: 'budget-inactive',
-        isActive: false
+        isActive: false,
       };
 
-      const envelopes = [
-        Envelope.create(activeProps).data!,
-        Envelope.create(inactiveProps).data!
-      ];
+      const envelopes = [Envelope.create(activeProps).data!, Envelope.create(inactiveProps).data!];
 
       // Act
-      const activeEnvelopes = envelopes.filter(env => env.isActive);
-      const inactiveEnvelopes = envelopes.filter(env => !env.isActive);
+      const activeEnvelopes = envelopes.filter((env) => env.isActive);
+      const inactiveEnvelopes = envelopes.filter((env) => !env.isActive);
 
       // Assert
       expect(activeEnvelopes.length).toBe(1);
@@ -1104,14 +1111,14 @@ describe('Envelope', () => {
       const envelopeProps = [
         { name: 'Food', limitInCents: 80000, currentBalanceInCents: 60000 },
         { name: 'Transport', limitInCents: 50000, currentBalanceInCents: 30000 },
-        { name: 'Entertainment', limitInCents: 30000, currentBalanceInCents: 25000 }
-      ].map(props => ({
+        { name: 'Entertainment', limitInCents: 30000, currentBalanceInCents: 25000 },
+      ].map((props) => ({
         ...props,
         categoryId: 'category-total',
-        budgetId: 'budget-total'
+        budgetId: 'budget-total',
       }));
 
-      const envelopes = envelopeProps.map(props => Envelope.create(props).data!);
+      const envelopes = envelopeProps.map((props) => Envelope.create(props).data!);
 
       // Act
       const totalLimit = envelopes.reduce((sum, env) => sum + env.limit.valueInCents, 0);
@@ -1131,18 +1138,20 @@ describe('Envelope', () => {
         limitInCents: 200000, // R$ 2000.00
         currentBalanceInCents: 120000, // R$ 1200.00
         categoryId: 'category-savings',
-        budgetId: 'budget-savings'
+        budgetId: 'budget-savings',
       };
       const envelope = Envelope.create(props).data!;
 
       const plannedAllocations = [
-        Money.fromMonetary(300.00).data!, // R$ 300.00
-        Money.fromMonetary(400.00).data!, // R$ 400.00
-        Money.fromMonetary(200.00).data!  // R$ 200.00
+        Money.fromMonetary(300.0).data!, // R$ 300.00
+        Money.fromMonetary(400.0).data!, // R$ 400.00
+        Money.fromMonetary(200.0).data!, // R$ 200.00
       ];
 
       // Act
-      const allocationResults = plannedAllocations.map(allocation => envelope.canAllocate(allocation));
+      const allocationResults = plannedAllocations.map((allocation) =>
+        envelope.canAllocate(allocation),
+      );
 
       // Assert
       expect(allocationResults[0]).toBe(true); // R$ 1500.00 total (within limit)
@@ -1157,7 +1166,7 @@ describe('Envelope', () => {
         limitInCents: 100000,
         currentBalanceInCents: 50000,
         categoryId: 'category-immutable',
-        budgetId: 'budget-immutable'
+        budgetId: 'budget-immutable',
       };
       const envelope = Envelope.create(props).data!;
 
@@ -1181,7 +1190,7 @@ describe('Envelope', () => {
         limitInCents: 100000,
         currentBalanceInCents: 50000,
         categoryId: 'category-max-name',
-        budgetId: 'budget-max-name'
+        budgetId: 'budget-max-name',
       };
 
       // Act
@@ -1200,7 +1209,7 @@ describe('Envelope', () => {
         limitInCents: 999999999, // R$ 9,999,999.99
         currentBalanceInCents: 888888888, // R$ 8,888,888.88
         categoryId: 'category-large',
-        budgetId: 'budget-large'
+        budgetId: 'budget-large',
       };
 
       // Act
@@ -1221,7 +1230,7 @@ describe('Envelope', () => {
         categoryId: 'category-roundtrip',
         budgetId: 'budget-roundtrip',
         description: 'Testing round-trip',
-        isActive: false
+        isActive: false,
       };
       const originalEnvelope = Envelope.create(originalProps).data!;
 
@@ -1236,7 +1245,9 @@ describe('Envelope', () => {
       expect(restoredEnvelope.id).toBe(originalEnvelope.id);
       expect(restoredEnvelope.name).toBe(originalEnvelope.name);
       expect(restoredEnvelope.limit.valueInCents).toBe(originalEnvelope.limit.valueInCents);
-      expect(restoredEnvelope.currentBalance.valueInCents).toBe(originalEnvelope.currentBalance.valueInCents);
+      expect(restoredEnvelope.currentBalance.valueInCents).toBe(
+        originalEnvelope.currentBalance.valueInCents,
+      );
       expect(restoredEnvelope.categoryId).toBe(originalEnvelope.categoryId);
       expect(restoredEnvelope.budgetId).toBe(originalEnvelope.budgetId);
       expect(restoredEnvelope.description).toBe(originalEnvelope.description);

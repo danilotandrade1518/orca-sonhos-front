@@ -277,7 +277,9 @@ describe('Uuid', () => {
 
       // Assert
       expect(uuid).toBeInstanceOf(Uuid);
-      expect(uuid.value).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(uuid.value).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should generate different UUIDs on each call', () => {
@@ -373,7 +375,7 @@ describe('Uuid', () => {
 
       // Assert
       expect(json).toEqual({
-        value: uuidString
+        value: uuidString,
       });
     });
 
