@@ -6,7 +6,7 @@
 
 - **Início**: 2024-12-19
 - **Status Atual**: Em progresso
-- **Fase Atual**: Fase 3 - Mappers
+- **Fase Atual**: Fase 4 - Use Cases
 - **Última Sessão**: 2024-12-19
 
 ---
@@ -76,7 +76,84 @@
 
 ---
 
-### 🗓️ Sessão 2024-12-19 - Continuação
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 2)
+
+**Fase**: Fase 3 - Mappers
+**Objetivo da Sessão**: Implementar todos os Mappers para conversão Domain ↔ DTO
+
+#### ✅ Trabalho Realizado
+
+- ✅ **FASE 3 COMPLETADA**: Mappers
+  - 6 Mappers implementados (Account, Category, CreditCard, Envelope, Goal, Transaction)
+  - Validações robustas para todos os DTOs de request
+  - Normalizações para limpeza de dados (trim, etc.)
+  - Testes unitários: 54/54 testes passando
+  - Index files organizados e atualizados
+  - 12 DTOs de Query Request criados (faltavam)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Seguir exatamente a estrutura de Budget para Mappers
+- **Alternativas**: Criar estrutura diferente para as novas entidades
+- **Justificativa**: Manter consistência arquitetural e facilitar manutenção
+
+- **Decisão**: Usar valores padrão corretos dos domain models
+- **Alternativas**: Usar valores arbitrários
+- **Justificativa**: Garantir consistência com as regras de negócio
+
+- **Decisão**: Corrigir propriedades de domain models para usar as corretas
+- **Alternativas**: Manter propriedades incorretas
+- **Justificativa**: Garantir funcionamento correto dos mappers
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: DTOs de Query Request faltando (12 DTOs)
+- **Solução**: Criados todos os DTOs de query request necessários
+- **Lição Aprendida**: Verificar dependências completas antes de implementar
+
+- **Problema**: Enums incorretos nos testes (strings em vez de enums)
+- **Solução**: Corrigidos para usar AccountType.CHECKING, CategoryType.INCOME
+- **Lição Aprendida**: Sempre usar enums tipados em vez de strings
+
+- **Problema**: Propriedades incorretas dos domain models
+- **Solução**: Ajustadas para usar as propriedades corretas (balanceInCents, limitInCents, etc.)
+- **Lição Aprendida**: Verificar interface dos domain models antes de usar
+
+- **Problema**: Valores padrão incorretos (Category icon e color)
+- **Solução**: Corrigidos para usar os valores padrão corretos dos domain models
+- **Lição Aprendida**: Sempre verificar valores padrão dos domain models
+
+#### 🧪 Testes Realizados
+
+- **Linting**: ✅ Sem erros de linting
+- **Compilação**: ✅ Sem erros de compilação
+- **Testes Unitários**: ✅ 54/54 testes passando
+- **Estrutura**: ✅ Seguindo padrões de Budget
+- **Nomenclatura**: ✅ Convenções consistentes
+- **Imports**: ✅ Dependências corretas
+
+#### 📝 Commits Relacionados
+
+- Nenhum commit realizado ainda (aguardando aprovação)
+
+#### ⏭️ Próximos Passos
+
+- ✅ Fase 3 completada com sucesso
+- **Próxima Fase**: Fase 4 - Use Cases (Commands)
+  - Implementar 42 Use Cases para todas as entidades
+  - Testes unitários para todos os Use Cases
+  - Atualizar index files de Use Cases
+
+#### 💭 Observações
+
+- Implementação muito fluida após correção dos problemas iniciais
+- 6 Mappers implementados com 54 testes passando
+- Problemas identificados e corrigidos rapidamente
+- Pronto para próxima fase (Use Cases)
+
+---
+
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 1)
 
 **Fase**: Fase 2 - Ports e Interfaces
 **Objetivo da Sessão**: Implementar todos os Ports (interfaces) para as 6 entidades restantes
@@ -153,15 +230,21 @@
   - Principais realizações: Estrutura base e DTOs implementados
 
 - **Fase 2**: Completada ✅
+
   - Sessões: 1
   - Tempo total: ~1.5 horas
   - Principais realizações: 60 Ports implementados
 
+- **Fase 3**: Completada ✅
+  - Sessões: 1
+  - Tempo total: ~2 horas
+  - Principais realizações: 6 Mappers implementados com 54 testes passando
+
 ### Métricas Gerais
 
-- **Total de Sessões**: 2
-- **Tempo Total Investido**: ~3.5 horas
-- **Arquivos Modificados**: 120+ arquivos criados
+- **Total de Sessões**: 3
+- **Tempo Total Investido**: ~5.5 horas
+- **Arquivos Modificados**: 150+ arquivos criados
 - **Commits Realizados**: 0 (aguardando aprovação)
 
 ### Decisões Arquiteturais Importantes
@@ -188,11 +271,11 @@
 
 1. Verificar se está na branch feature-OS-16
 2. Aguardar chave da task no Jira se ainda não obtida
-3. Continuar com Fase 3: Implementação de Mappers
+3. Continuar com Fase 4: Implementação de Use Cases
 
 ### Contexto Atual
 
 **Branch**: feature-OS-16
-**Última modificação**: 60 Ports implementados e index files atualizados
-**Testes passando**: N/A (ainda não implementados)
-**Próxima tarefa específica**: Implementar Mappers para conversão Domain ↔ DTO (Fase 3)
+**Última modificação**: 6 Mappers implementados com 54 testes passando
+**Testes passando**: 54/54 testes de mappers passando
+**Próxima tarefa específica**: Implementar Use Cases (Commands) para todas as entidades (Fase 4)
