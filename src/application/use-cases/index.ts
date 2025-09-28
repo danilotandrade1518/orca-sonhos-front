@@ -4,3 +4,4 @@ export * from './category';
 export * from './credit-card';
 export * from './envelope';
 export * from './goal';
+export * from './transaction';
