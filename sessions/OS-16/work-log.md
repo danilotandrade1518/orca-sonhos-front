@@ -455,6 +455,7 @@
 #### ✅ Trabalho Realizado
 
 - ✅ **GOAL USE CASES COMPLETADOS**: 5 Use Cases implementados com sucesso
+
   - CreateGoalUseCase: Criação de metas com validação completa
   - UpdateGoalUseCase: Atualização de metas com validação de dados
   - DeleteGoalUseCase: Exclusão de metas com validação de IDs
@@ -462,6 +463,26 @@
   - RemoveAmountFromGoalUseCase: Remoção de valor da meta com validação de amount
   - Index file de Goal atualizado com todos os exports
   - 48/48 testes passando (incluindo testes de mappers, domain models e Use Cases)
+
+- ✅ **TRANSACTION USE CASES COMPLETADOS**: 5 Use Cases implementados com sucesso
+
+  - CreateTransactionUseCase: Criação de transações com validação completa
+  - UpdateTransactionUseCase: Atualização de transações com validação de dados
+  - DeleteTransactionUseCase: Exclusão de transações com validação de IDs
+  - CancelScheduledTransactionUseCase: Cancelamento de transações agendadas
+  - MarkTransactionLateUseCase: Marcação de transações como atrasadas
+  - Index file de Transaction atualizado com todos os exports
+  - 20/20 testes passando (incluindo testes de mappers, domain models e Use Cases)
+
+- ✅ **ITEM 4.7 COMPLETADO**: Atualização de Index Files de Use Cases
+  - 20 arquivos index.ts criados para Use Cases individuais
+  - Account: 5 arquivos (create, update, delete, reconcile, transfer-between-accounts)
+  - CreditCard: 3 arquivos (create, update, delete)
+  - Envelope: 6 arquivos (create, update, delete, add-amount, remove-amount, transfer-between)
+  - Transaction: 5 arquivos (create, update, delete, cancel-scheduled, mark-late)
+  - Goal: 1 arquivo já existia
+  - Index files das entidades atualizados para usar padrão export \* from './use-case-name'
+  - 1011/1011 testes passando com sucesso
 
 #### 🤔 Decisões Técnicas
 
@@ -476,6 +497,14 @@
 - **Decisão**: Corrigir DTOs de response nos testes para usar estruturas corretas (amount, newAccumulatedAmount, progressPercentage)
 - **Alternativas**: Manter DTOs incorretos nos testes
 - **Justificativa**: Garantir que os testes reflitam a realidade dos DTOs de response
+
+- **Decisão**: Criar arquivos index.ts individuais para cada Use Case seguindo padrão do Budget
+- **Alternativas**: Usar apenas index files das entidades
+- **Justificativa**: Manter consistência com implementação de Budget e facilitar imports específicos
+
+- **Decisão**: Atualizar index files das entidades para usar export \* from './use-case-name'
+- **Alternativas**: Manter exportações nomeadas individuais
+- **Justificativa**: Seguir exatamente o padrão estabelecido no Budget
 
 #### 🚧 Problemas Encontrados
 
@@ -499,14 +528,21 @@
 - **Solução**: Criados arquivos index.ts para cada Use Case individual
 - **Lição Aprendida**: Cada diretório de Use Case precisa de seu próprio index.ts
 
+- **Problema**: Inconsistência nos padrões de export entre entidades (export nomeado vs. export \*)
+- **Solução**: Padronizados todos os index files das entidades para usar export \* from './use-case-name'
+- **Lição Aprendida**: Manter consistência de padrões em toda a base de código facilita manutenção
+
 #### 🧪 Testes Realizados
 
 - **Linting**: ✅ Sem erros de linting
 - **Compilação**: ✅ Sem erros de compilação
-- **Testes Unitários**: ✅ 48/48 testes passando
+- **Testes Unitários Goal**: ✅ 48/48 testes passando
+- **Testes Unitários Transaction**: ✅ 20/20 testes passando
+- **Testes Unitários Totais**: ✅ 1011/1011 testes passando
 - **Estrutura**: ✅ Seguindo padrões de Account, Category, CreditCard e Envelope
 - **Nomenclatura**: ✅ Convenções consistentes
 - **Imports**: ✅ Dependências corretas
+- **Index Files**: ✅ Todos os exports funcionando corretamente
 
 #### 📝 Commits Relacionados
 
@@ -515,21 +551,22 @@
 #### ⏭️ Próximos Passos
 
 - ✅ Goal Use Cases completados com sucesso
-- **Próxima Entidade**: Transaction (5 Use Cases)
-  - CreateTransactionUseCase
-  - UpdateTransactionUseCase
-  - DeleteTransactionUseCase
-  - AddAmountToTransactionUseCase
-  - RemoveAmountFromTransactionUseCase
-  - Testes unitários para todos os Use Cases
+- ✅ Transaction Use Cases completados com sucesso
+- ✅ Item 4.7 (Index Files de Use Cases) completado com sucesso
+- **Próxima Fase**: Fase 5 - Query Handlers
+  - Implementar 18 Query Handlers para todas as entidades
+  - Testes unitários para todos os Query Handlers
+  - Atualizar index files de Queries
 
 #### 💭 Observações
 
 - Implementação muito fluida seguindo padrões estabelecidos
 - 5 Use Cases de Goal implementados com 48 testes passando
-- Goal teve operações de amount similares ao Envelope, mas com validações específicas
+- 5 Use Cases de Transaction implementados com 20 testes passando
+- Item 4.7 completado com 20 arquivos index.ts criados e 1011 testes passando
+- Fase 4 (Use Cases) 100% completada com 27 Use Cases implementados
 - Estratégia de implementar entidade por vez funciona muito bem
-- Pronto para próxima entidade (Transaction)
+- Pronto para próxima fase (Query Handlers)
 
 ---
 
@@ -555,17 +592,17 @@
   - Tempo total: ~2 horas
   - Principais realizações: 6 Mappers implementados com 54 testes passando
 
-- **Fase 4**: Em Progresso ⏰
+- **Fase 4**: Completada ✅
   - Sessões: 4
   - Tempo total: ~8 horas
-  - Principais realizações: Account, Category, CreditCard, Envelope e Goal Use Cases completados (22 Use Cases + 227 testes passando)
-  - Status: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ⏳
+  - Principais realizações: Account, Category, CreditCard, Envelope, Goal e Transaction Use Cases completados (27 Use Cases + 1011 testes passando)
+  - Status: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ✅, Index Files ✅
 
 ### Métricas Gerais
 
 - **Total de Sessões**: 6
 - **Tempo Total Investido**: ~12 horas
-- **Arquivos Modificados**: 250+ arquivos criados
+- **Arquivos Modificados**: 270+ arquivos criados
 - **Commits Realizados**: 0 (aguardando aprovação)
 
 ### Decisões Arquiteturais Importantes
@@ -597,7 +634,7 @@
 ### Contexto Atual
 
 **Branch**: feature-OS-16
-**Última modificação**: 22 Use Cases implementados (Account, Category, CreditCard, Envelope, Goal) com 227 testes passando
-**Testes passando**: 227/227 testes (incluindo mappers, domain models e Use Cases)
-**Próxima tarefa específica**: Implementar Use Cases de Transaction (5 Use Cases + testes)
-**Status Fase 4**: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ⏳
+**Última modificação**: 27 Use Cases implementados (Account, Category, CreditCard, Envelope, Goal, Transaction) com 1011 testes passando
+**Testes passando**: 1011/1011 testes (incluindo mappers, domain models e Use Cases)
+**Próxima tarefa específica**: Implementar Query Handlers (18 Query Handlers + testes)
+**Status Fase 4**: Completada ✅ (Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ✅, Index Files ✅)
