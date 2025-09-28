@@ -35,6 +35,8 @@ Se não estiver em uma feature branch:
 
 #### Passo 2: Busca e Atualização do Jira
 
+**_Este passo só deve ser feito se o trabaho ainda não iniciou. Verifique o status do plano para esta informação. Caso o plano já esteja em andamento, ou seja, se alguma fase já iniciou, ignore este passo._**
+
 **Fluxo Automático**:
 
 1. **Buscar Task**: Use `mcp__atlassian__search` com o nome da pasta da sessão
