@@ -9,7 +9,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Family Budget 2024',
         limitInCents: 500000, // R$ 5,000.00
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -37,7 +37,7 @@ describe('Budget', () => {
         ownerId: 'owner-456',
         participantIds: ['user-1', 'user-2', 'user-3'],
         description: 'Monthly business expenses budget',
-        isActive: false
+        isActive: false,
       };
 
       // Act
@@ -60,7 +60,7 @@ describe('Budget', () => {
         name: 'Personal Budget',
         limitInCents: 300000, // R$ 3,000.00
         ownerId: 'owner-personal',
-        participantIds: []
+        participantIds: [],
       };
 
       // Act
@@ -79,7 +79,7 @@ describe('Budget', () => {
         name: 'Couple Budget',
         limitInCents: 800000, // R$ 8,000.00
         ownerId: 'owner-couple',
-        participantIds: ['spouse-123']
+        participantIds: ['spouse-123'],
       };
 
       // Act
@@ -97,7 +97,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Zero Budget',
         limitInCents: 0,
-        ownerId: 'owner-zero'
+        ownerId: 'owner-zero',
       };
 
       // Act
@@ -115,7 +115,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Enterprise Budget',
         limitInCents: 10000000, // R$ 100,000.00
-        ownerId: 'owner-enterprise'
+        ownerId: 'owner-enterprise',
       };
 
       // Act
@@ -134,7 +134,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: '',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -151,7 +151,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: '   ',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -168,7 +168,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: longName,
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -184,7 +184,7 @@ describe('Budget', () => {
       const props = {
         name: 123 as any,
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -200,7 +200,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Valid Budget',
         limitInCents: 500000,
-        ownerId: ''
+        ownerId: '',
       };
 
       // Act
@@ -216,7 +216,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Valid Budget',
         limitInCents: 500000,
-        ownerId: '   '
+        ownerId: '   ',
       };
 
       // Act
@@ -232,7 +232,7 @@ describe('Budget', () => {
       const props = {
         name: 'Valid Budget',
         limitInCents: 500000,
-        ownerId: 123 as any
+        ownerId: 123 as any,
       };
 
       // Act
@@ -248,7 +248,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Valid Budget',
         limitInCents: NaN,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -264,7 +264,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Invalid Budget',
         limitInCents: -100000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
 
       // Act
@@ -281,7 +281,7 @@ describe('Budget', () => {
         name: 'Valid Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: 'not-an-array' as any
+        participantIds: 'not-an-array' as any,
       };
 
       // Act
@@ -298,7 +298,7 @@ describe('Budget', () => {
         name: 'Valid Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', '', 'user-3']
+        participantIds: ['user-1', '', 'user-3'],
       };
 
       // Act
@@ -315,7 +315,7 @@ describe('Budget', () => {
         name: 'Valid Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 123, 'user-3'] as any
+        participantIds: ['user-1', 123, 'user-3'] as any,
       };
 
       // Act
@@ -332,7 +332,7 @@ describe('Budget', () => {
         name: 'Valid Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', '   ', 'user-3']
+        participantIds: ['user-1', '   ', 'user-3'],
       };
 
       // Act
@@ -350,7 +350,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -360,7 +360,9 @@ describe('Budget', () => {
       // Assert
       expect(typeof id).toBe('string');
       expect(id.length).toBeGreaterThan(0);
-      expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should return correct name', () => {
@@ -368,7 +370,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Monthly Household Budget',
         limitInCents: 750000,
-        ownerId: 'owner-456'
+        ownerId: 'owner-456',
       };
       const budget = Budget.create(props).data!;
 
@@ -384,7 +386,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 123456,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -401,7 +403,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'my-owner-uuid-123'
+        ownerId: 'my-owner-uuid-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -419,7 +421,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: originalParticipants
+        participantIds: originalParticipants,
       };
       const budget = Budget.create(props).data!;
 
@@ -440,7 +442,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -458,7 +460,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        description: 'A comprehensive family budget for 2024'
+        description: 'A comprehensive family budget for 2024',
       };
       const budget = Budget.create(props).data!;
 
@@ -474,7 +476,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -491,7 +493,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        isActive: false
+        isActive: false,
       };
       const budget = Budget.create(props).data!;
 
@@ -507,7 +509,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -524,7 +526,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 500000,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
       const afterCreation = new Date();
@@ -551,7 +553,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2']
+        participantIds: ['user-1', 'user-2'],
       };
       const budget = Budget.create(props).data!;
 
@@ -568,7 +570,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2', 'user-3']
+        participantIds: ['user-1', 'user-2', 'user-3'],
       };
       const budget = Budget.create(props).data!;
 
@@ -585,7 +587,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2']
+        participantIds: ['user-1', 'user-2'],
       };
       const budget = Budget.create(props).data!;
 
@@ -602,7 +604,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2']
+        participantIds: ['user-1', 'user-2'],
       };
       const budget = Budget.create(props).data!;
 
@@ -619,7 +621,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2']
+        participantIds: ['user-1', 'user-2'],
       };
       const budget = Budget.create(props).data!;
 
@@ -636,7 +638,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['user-1', 'user-2']
+        participantIds: ['user-1', 'user-2'],
       };
       const budget = Budget.create(props).data!;
 
@@ -654,7 +656,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Solo Budget',
         limitInCents: 500000,
-        ownerId: 'owner-only'
+        ownerId: 'owner-only',
       };
       const budget = Budget.create(props).data!;
 
@@ -671,7 +673,7 @@ describe('Budget', () => {
         name: 'Couple Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['spouse-456']
+        participantIds: ['spouse-456'],
       };
       const budget = Budget.create(props).data!;
 
@@ -688,7 +690,7 @@ describe('Budget', () => {
         name: 'Family Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: ['child-1', 'child-2', 'child-3', 'grandparent-1']
+        participantIds: ['child-1', 'child-2', 'child-3', 'grandparent-1'],
       };
       const budget = Budget.create(props).data!;
 
@@ -705,7 +707,7 @@ describe('Budget', () => {
         name: 'Single Budget',
         limitInCents: 500000,
         ownerId: 'owner-123',
-        participantIds: []
+        participantIds: [],
       };
       const budget = Budget.create(props).data!;
 
@@ -723,7 +725,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Test Budget',
         limitInCents: 123456, // R$ 1,234.56
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -739,7 +741,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Zero Budget',
         limitInCents: 0,
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -755,7 +757,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Large Budget',
         limitInCents: 999999999, // R$ 9,999,999.99
-        ownerId: 'owner-123'
+        ownerId: 'owner-123',
       };
       const budget = Budget.create(props).data!;
 
@@ -776,7 +778,7 @@ describe('Budget', () => {
         ownerId: 'owner-123',
         participantIds: ['user-1', 'user-2'],
         description: 'Test description',
-        isActive: false
+        isActive: false,
       };
       const budget = Budget.create(props).data!;
 
@@ -790,13 +792,13 @@ describe('Budget', () => {
         limit: {
           valueInCents: 123456,
           valueInMonetary: 1234.56,
-          formatted: 'R$\u00a01.234,56'
+          formatted: 'R$\u00a01.234,56',
         },
         ownerId: 'owner-123',
         participantIds: ['user-1', 'user-2'],
         description: 'Test description',
         isActive: false,
-        createdAt: budget.createdAt.toISOString()
+        createdAt: budget.createdAt.toISOString(),
       });
     });
 
@@ -805,7 +807,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Simple Budget',
         limitInCents: 50000,
-        ownerId: 'owner-simple'
+        ownerId: 'owner-simple',
       };
       const budget = Budget.create(props).data!;
 
@@ -830,7 +832,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 50000,
         ownerId: 'owner-test',
-        participantIds: originalParticipants
+        participantIds: originalParticipants,
       };
       const budget = Budget.create(props).data!;
 
@@ -857,7 +859,7 @@ describe('Budget', () => {
         participantIds: ['user-a', 'user-b'],
         description: 'Created from JSON',
         isActive: true,
-        createdAt: createdAt.toISOString()
+        createdAt: createdAt.toISOString(),
       };
 
       // Act
@@ -885,7 +887,7 @@ describe('Budget', () => {
         ownerId: 'owner-roundtrip',
         participantIds: ['user-x', 'user-y', 'user-z'],
         description: 'Round trip test',
-        isActive: false
+        isActive: false,
       };
       const originalBudget = Budget.create(originalProps).data!;
       const json = originalBudget.toJSON();
@@ -916,7 +918,7 @@ describe('Budget', () => {
         participantIds: [],
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -938,7 +940,7 @@ describe('Budget', () => {
         participantIds: [],
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -960,7 +962,7 @@ describe('Budget', () => {
         participantIds: [],
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -982,7 +984,7 @@ describe('Budget', () => {
         participantIds: [],
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -1004,7 +1006,7 @@ describe('Budget', () => {
         participantIds: ['user-1', '', 'user-3'],
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -1023,7 +1025,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: name100chars,
         limitInCents: 100000,
-        ownerId: 'owner-boundary'
+        ownerId: 'owner-boundary',
       };
 
       // Act
@@ -1041,7 +1043,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Large Limit Budget',
         limitInCents: Number.MAX_SAFE_INTEGER,
-        ownerId: 'owner-large'
+        ownerId: 'owner-large',
       };
 
       // Act
@@ -1058,7 +1060,7 @@ describe('Budget', () => {
       const props: BudgetProps = {
         name: 'Budget with special chars: àáâãäç éêë íîï óôõö úûü ñ',
         limitInCents: 100000,
-        ownerId: 'owner-special'
+        ownerId: 'owner-special',
       };
 
       // Act
@@ -1076,7 +1078,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 50000,
         ownerId: 'owner-desc',
-        description: 'Description with emojis 💰💸 and symbols @#$%^&*()'
+        description: 'Description with emojis 💰💸 and symbols @#$%^&*()',
       };
 
       // Act
@@ -1095,7 +1097,7 @@ describe('Budget', () => {
         name: 'Large Group Budget',
         limitInCents: 1000000,
         ownerId: 'owner-large-group',
-        participantIds: largeParticipantList
+        participantIds: largeParticipantList,
       };
 
       // Act
@@ -1113,12 +1115,12 @@ describe('Budget', () => {
       const props1: BudgetProps = {
         name: 'Budget 1',
         limitInCents: 100000,
-        ownerId: 'owner-1'
+        ownerId: 'owner-1',
       };
       const props2: BudgetProps = {
         name: 'Budget 2',
         limitInCents: 200000,
-        ownerId: 'owner-2'
+        ownerId: 'owner-2',
       };
 
       // Act
@@ -1137,7 +1139,7 @@ describe('Budget', () => {
         name: 'Test Budget',
         limitInCents: 100000,
         ownerId: 'owner-123',
-        participantIds: ['user-123', 'user-456']
+        participantIds: ['user-123', 'user-456'],
       };
       const budget = Budget.create(props).data!;
 

@@ -401,7 +401,7 @@ describe('Email', () => {
 
       // Assert
       expect(json).toEqual({
-        value: 'user@example.com'
+        value: 'user@example.com',
       });
     });
 
@@ -415,7 +415,7 @@ describe('Email', () => {
 
       // Assert
       expect(json).toEqual({
-        value: 'user@example.com' // Should be normalized
+        value: 'user@example.com', // Should be normalized
       });
     });
 

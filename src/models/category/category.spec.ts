@@ -9,7 +9,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Food & Dining',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -39,7 +39,7 @@ describe('Category', () => {
         description: 'Monthly salary and bonuses',
         isActive: false,
         color: '#4CAF50',
-        icon: 'money'
+        icon: 'money',
       };
 
       // Act
@@ -62,7 +62,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Freelance Work',
         type: CategoryType.INCOME,
-        budgetId: 'budget-income'
+        budgetId: 'budget-income',
       };
 
       // Act
@@ -81,7 +81,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Transportation',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-expense'
+        budgetId: 'budget-expense',
       };
 
       // Act
@@ -101,7 +101,7 @@ describe('Category', () => {
         name: 'Entertainment',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-ent',
-        color: '#F44'
+        color: '#F44',
       };
 
       // Act
@@ -119,7 +119,7 @@ describe('Category', () => {
         name: 'Healthcare',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-health',
-        color: '#FF5722'
+        color: '#FF5722',
       };
 
       // Act
@@ -137,7 +137,7 @@ describe('Category', () => {
         name: 'Education',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-edu',
-        color: '#2196f3'
+        color: '#2196f3',
       };
 
       // Act
@@ -156,7 +156,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: '',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -173,7 +173,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: '   ',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -190,7 +190,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: longName,
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -206,7 +206,7 @@ describe('Category', () => {
       const props = {
         name: 123 as any,
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -222,7 +222,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Valid Category',
         type: 'INVALID_TYPE' as CategoryType,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -238,7 +238,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
-        budgetId: ''
+        budgetId: '',
       };
 
       // Act
@@ -254,7 +254,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
-        budgetId: '   '
+        budgetId: '   ',
       };
 
       // Act
@@ -270,7 +270,7 @@ describe('Category', () => {
       const props = {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
-        budgetId: 123 as any
+        budgetId: 123 as any,
       };
 
       // Act
@@ -287,7 +287,7 @@ describe('Category', () => {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: 'invalid-color'
+        color: 'invalid-color',
       };
 
       // Act
@@ -304,7 +304,7 @@ describe('Category', () => {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: 'FF5722'
+        color: 'FF5722',
       };
 
       // Act
@@ -321,7 +321,7 @@ describe('Category', () => {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: '#GG5722'
+        color: '#GG5722',
       };
 
       // Act
@@ -338,7 +338,7 @@ describe('Category', () => {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: 123 as any
+        color: 123 as any,
       };
 
       // Act
@@ -355,7 +355,7 @@ describe('Category', () => {
         name: 'Valid Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: '#FF572'
+        color: '#FF572',
       };
 
       // Act
@@ -373,7 +373,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -383,7 +383,9 @@ describe('Category', () => {
       // Assert
       expect(typeof id).toBe('string');
       expect(id.length).toBeGreaterThan(0);
-      expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should return correct name', () => {
@@ -391,7 +393,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Groceries & Food',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-456'
+        budgetId: 'budget-456',
       };
       const category = Category.create(props).data!;
 
@@ -407,7 +409,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Investment Returns',
         type: CategoryType.INCOME,
-        budgetId: 'budget-789'
+        budgetId: 'budget-789',
       };
       const category = Category.create(props).data!;
 
@@ -423,7 +425,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'my-budget-uuid-123'
+        budgetId: 'my-budget-uuid-123',
       };
       const category = Category.create(props).data!;
 
@@ -440,7 +442,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        description: 'Category for miscellaneous expenses'
+        description: 'Category for miscellaneous expenses',
       };
       const category = Category.create(props).data!;
 
@@ -456,7 +458,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -473,7 +475,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        isActive: false
+        isActive: false,
       };
       const category = Category.create(props).data!;
 
@@ -489,7 +491,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -506,7 +508,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        color: '#E91E63'
+        color: '#E91E63',
       };
       const category = Category.create(props).data!;
 
@@ -522,7 +524,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -539,7 +541,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        icon: 'shopping_cart'
+        icon: 'shopping_cart',
       };
       const category = Category.create(props).data!;
 
@@ -555,7 +557,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -572,7 +574,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
       const afterCreation = new Date();
@@ -598,7 +600,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Salary',
         type: CategoryType.INCOME,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -614,7 +616,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Rent',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -630,7 +632,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Utilities',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -646,7 +648,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Bonus',
         type: CategoryType.INCOME,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -664,7 +666,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Freelance',
         type: CategoryType.INCOME,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -680,7 +682,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Food',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-456'
+        budgetId: 'budget-456',
       };
       const category = Category.create(props).data!;
 
@@ -699,7 +701,7 @@ describe('Category', () => {
         name: 'Active Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        isActive: true
+        isActive: true,
       };
       const category = Category.create(props).data!;
 
@@ -716,7 +718,7 @@ describe('Category', () => {
         name: 'Inactive Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-123',
-        isActive: false
+        isActive: false,
       };
       const category = Category.create(props).data!;
 
@@ -732,7 +734,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Default Category',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const category = Category.create(props).data!;
 
@@ -754,7 +756,7 @@ describe('Category', () => {
         description: 'Test description',
         isActive: false,
         color: '#FF5722',
-        icon: 'test_icon'
+        icon: 'test_icon',
       };
       const category = Category.create(props).data!;
 
@@ -771,7 +773,7 @@ describe('Category', () => {
         isActive: false,
         color: '#FF5722',
         icon: 'test_icon',
-        createdAt: category.createdAt.toISOString()
+        createdAt: category.createdAt.toISOString(),
       });
     });
 
@@ -780,7 +782,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Simple Category',
         type: CategoryType.INCOME,
-        budgetId: 'budget-simple'
+        budgetId: 'budget-simple',
       };
       const category = Category.create(props).data!;
 
@@ -814,7 +816,7 @@ describe('Category', () => {
         isActive: true,
         color: '#4CAF50',
         icon: 'money',
-        createdAt: createdAt.toISOString()
+        createdAt: createdAt.toISOString(),
       };
 
       // Act
@@ -844,7 +846,7 @@ describe('Category', () => {
         description: 'Round trip test',
         isActive: false,
         color: '#9C27B0',
-        icon: 'test'
+        icon: 'test',
       };
       const originalCategory = Category.create(originalProps).data!;
       const json = originalCategory.toJSON();
@@ -877,7 +879,7 @@ describe('Category', () => {
         isActive: true,
         color: '#757575',
         icon: 'category',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -900,7 +902,7 @@ describe('Category', () => {
         isActive: true,
         color: '#757575',
         icon: 'category',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -923,7 +925,7 @@ describe('Category', () => {
         isActive: true,
         color: '#757575',
         icon: 'category',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -946,7 +948,7 @@ describe('Category', () => {
         isActive: true,
         color: '#757575',
         icon: 'category',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -969,7 +971,7 @@ describe('Category', () => {
         isActive: true,
         color: 'invalid-color',
         icon: 'category',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -988,7 +990,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: name100chars,
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-boundary'
+        budgetId: 'budget-boundary',
       };
 
       // Act
@@ -1006,7 +1008,7 @@ describe('Category', () => {
       const props: CategoryProps = {
         name: 'Category with special chars: àáâãäç éêë íîï óôõö úûü ñ',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-special'
+        budgetId: 'budget-special',
       };
 
       // Act
@@ -1024,7 +1026,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-desc',
-        description: 'Description with emojis 💰💸 and symbols @#$%^&*()'
+        description: 'Description with emojis 💰💸 and symbols @#$%^&*()',
       };
 
       // Act
@@ -1042,7 +1044,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-empty',
-        description: ''
+        description: '',
       };
 
       // Act
@@ -1060,7 +1062,7 @@ describe('Category', () => {
         name: 'Test Category',
         type: CategoryType.EXPENSE,
         budgetId: 'budget-icon',
-        icon: 'icon_with_underscores_123'
+        icon: 'icon_with_underscores_123',
       };
 
       // Act
@@ -1077,12 +1079,12 @@ describe('Category', () => {
       const props1: CategoryProps = {
         name: 'Category 1',
         type: CategoryType.EXPENSE,
-        budgetId: 'budget-1'
+        budgetId: 'budget-1',
       };
       const props2: CategoryProps = {
         name: 'Category 2',
         type: CategoryType.INCOME,
-        budgetId: 'budget-2'
+        budgetId: 'budget-2',
       };
 
       // Act
@@ -1100,12 +1102,12 @@ describe('Category', () => {
       const validColors = ['#F00', '#ff0000', '#FF0000', '#aB3', '#AbCdEf'];
 
       // Act & Assert
-      validColors.forEach(color => {
+      validColors.forEach((color) => {
         const props: CategoryProps = {
           name: `Category ${color}`,
           type: CategoryType.EXPENSE,
           budgetId: 'budget-color',
-          color: color
+          color: color,
         };
 
         const result = Category.create(props);
@@ -1119,12 +1121,12 @@ describe('Category', () => {
       const invalidColors = ['#GG0', '#12345', '#1234567', 'FF0000', '#', '#XYZ', '#12'];
 
       // Act & Assert
-      invalidColors.forEach(color => {
+      invalidColors.forEach((color) => {
         const props: CategoryProps = {
           name: `Category ${color}`,
           type: CategoryType.EXPENSE,
           budgetId: 'budget-color',
-          color: color
+          color: color,
         };
 
         const result = Category.create(props);

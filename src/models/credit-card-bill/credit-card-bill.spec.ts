@@ -10,7 +10,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 250000, // R$ 2500.00
         creditCardId: 'card-123',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -22,7 +22,7 @@ describe('CreditCardBill', () => {
 
       const bill = result.data!;
       expect(bill.totalAmount.valueInCents).toBe(250000);
-      expect(bill.totalAmount.valueInMonetary).toBe(2500.00);
+      expect(bill.totalAmount.valueInMonetary).toBe(2500.0);
       expect(bill.paidAmount.valueInCents).toBe(0);
       expect(bill.paidAmount.valueInMonetary).toBe(0);
       expect(bill.creditCardId).toBe('card-123');
@@ -46,7 +46,7 @@ describe('CreditCardBill', () => {
         dueDate: dueDate,
         status: CreditCardBillStatus.PAID,
         paidAmountInCents: 180000, // R$ 1800.00
-        paidAt: paidAt
+        paidAt: paidAt,
       };
 
       // Act
@@ -74,7 +74,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 0,
         creditCardId: 'card-zero',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -94,7 +94,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-partial',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 60000 // R$ 600.00
+        paidAmountInCents: 60000, // R$ 600.00
       };
 
       // Act
@@ -102,13 +102,13 @@ describe('CreditCardBill', () => {
 
       // Assert
       expect(result.hasData).toBe(true);
-      expect(result.data!.totalAmount.valueInMonetary).toBe(1000.00);
-      expect(result.data!.paidAmount.valueInMonetary).toBe(600.00);
+      expect(result.data!.totalAmount.valueInMonetary).toBe(1000.0);
+      expect(result.data!.paidAmount.valueInMonetary).toBe(600.0);
     });
 
     it('should create bill with each valid status', () => {
       // Arrange & Act & Assert
-      Object.values(CreditCardBillStatus).forEach(status => {
+      Object.values(CreditCardBillStatus).forEach((status) => {
         const closingDate = new Date('2024-06-10T23:59:59Z');
         const dueDate = new Date('2024-06-25T23:59:59Z');
         const props: CreditCardBillProps = {
@@ -116,7 +116,7 @@ describe('CreditCardBill', () => {
           creditCardId: 'card-status',
           closingDate: closingDate,
           dueDate: dueDate,
-          status: status
+          status: status,
         };
 
         const result = CreditCardBill.create(props);
@@ -136,7 +136,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: -50000,
         creditCardId: 'card-123',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -157,7 +157,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-123',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: -25000
+        paidAmountInCents: -25000,
       };
 
       // Act
@@ -177,7 +177,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: '',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -197,7 +197,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: '   ',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -217,7 +217,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 123,
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -236,7 +236,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-123',
         closingDate: 'invalid-date',
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -255,7 +255,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-123',
         closingDate: closingDate,
-        dueDate: 'invalid-date'
+        dueDate: 'invalid-date',
       };
 
       // Act
@@ -275,7 +275,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-123',
         closingDate: closingDate,
-        dueDate: sameDueDate
+        dueDate: sameDueDate,
       };
 
       // Act
@@ -295,7 +295,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-123',
         closingDate: closingDate,
-        dueDate: beforeDueDate
+        dueDate: beforeDueDate,
       };
 
       // Act
@@ -316,7 +316,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-123',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: 'INVALID_STATUS'
+        status: 'INVALID_STATUS',
       };
 
       // Act
@@ -325,7 +325,9 @@ describe('CreditCardBill', () => {
       // Assert
       expect(result.hasError).toBe(true);
       expect(result.hasData).toBe(false);
-      expect(result.errors).toContain('Invalid status. Must be one of: OPEN, CLOSED, PAID, OVERDUE');
+      expect(result.errors).toContain(
+        'Invalid status. Must be one of: OPEN, CLOSED, PAID, OVERDUE',
+      );
     });
   });
 
@@ -344,7 +346,7 @@ describe('CreditCardBill', () => {
         dueDate: dueDate,
         status: CreditCardBillStatus.PAID,
         paidAmountInCents: 350000, // R$ 3500.00
-        paidAt: paidAt
+        paidAt: paidAt,
       };
 
       bill = CreditCardBill.create(props).data!;
@@ -365,7 +367,7 @@ describe('CreditCardBill', () => {
 
       // Assert
       expect(totalAmount.valueInCents).toBe(350000);
-      expect(totalAmount.valueInMonetary).toBe(3500.00);
+      expect(totalAmount.valueInMonetary).toBe(3500.0);
     });
 
     it('should return correct paidAmount as Money object', () => {
@@ -374,7 +376,7 @@ describe('CreditCardBill', () => {
 
       // Assert
       expect(paidAmount.valueInCents).toBe(350000);
-      expect(paidAmount.valueInMonetary).toBe(3500.00);
+      expect(paidAmount.valueInMonetary).toBe(3500.0);
     });
 
     it('should return correct creditCardId', () => {
@@ -428,7 +430,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-unpaid',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
       const unpaidBill = CreditCardBill.create(props).data!;
 
@@ -459,7 +461,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-partial',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 75000 // R$ 750.00
+        paidAmountInCents: 75000, // R$ 750.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -468,7 +470,7 @@ describe('CreditCardBill', () => {
 
       // Assert
       expect(remaining.valueInCents).toBe(125000); // R$ 1250.00
-      expect(remaining.valueInMonetary).toBe(1250.00);
+      expect(remaining.valueInMonetary).toBe(1250.0);
     });
 
     it('should return zero remaining amount when fully paid', () => {
@@ -480,7 +482,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-paid',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 150000 // R$ 1500.00
+        paidAmountInCents: 150000, // R$ 1500.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -501,7 +503,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-overpaid',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 120000 // R$ 1200.00
+        paidAmountInCents: 120000, // R$ 1200.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -522,7 +524,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-paid',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: CreditCardBillStatus.PAID
+        status: CreditCardBillStatus.PAID,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -542,7 +544,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-open',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: CreditCardBillStatus.OPEN
+        status: CreditCardBillStatus.OPEN,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -562,7 +564,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-overdue',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: CreditCardBillStatus.OVERDUE
+        status: CreditCardBillStatus.OVERDUE,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -582,7 +584,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-past-due',
         closingDate: closingDate,
         dueDate: pastDate,
-        status: CreditCardBillStatus.CLOSED
+        status: CreditCardBillStatus.CLOSED,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -602,7 +604,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-open-past',
         closingDate: closingDate,
         dueDate: pastDate,
-        status: CreditCardBillStatus.OPEN
+        status: CreditCardBillStatus.OPEN,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -622,7 +624,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-partial',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 100000 // R$ 1000.00
+        paidAmountInCents: 100000, // R$ 1000.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -642,7 +644,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-unpaid',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 0
+        paidAmountInCents: 0,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -662,7 +664,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-full',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 200000
+        paidAmountInCents: 200000,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -681,7 +683,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 156789, // R$ 1567.89
         creditCardId: 'card-format',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -701,7 +703,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-format',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 87654 // R$ 876.54
+        paidAmountInCents: 87654, // R$ 876.54
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -721,7 +723,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-format',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 125000 // R$ 1250.00
+        paidAmountInCents: 125000, // R$ 1250.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -738,7 +740,7 @@ describe('CreditCardBill', () => {
         [CreditCardBillStatus.OPEN]: 'Aberta',
         [CreditCardBillStatus.CLOSED]: 'Fechada',
         [CreditCardBillStatus.PAID]: 'Paga',
-        [CreditCardBillStatus.OVERDUE]: 'Vencida'
+        [CreditCardBillStatus.OVERDUE]: 'Vencida',
       };
 
       Object.entries(statusLabels).forEach(([status, expectedLabel]) => {
@@ -749,7 +751,7 @@ describe('CreditCardBill', () => {
           creditCardId: 'card-status',
           closingDate: closingDate,
           dueDate: dueDate,
-          status: status as CreditCardBillStatus
+          status: status as CreditCardBillStatus,
         };
         const bill = CreditCardBill.create(props).data!;
 
@@ -770,7 +772,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-future',
         closingDate: closingDate,
-        dueDate: futureDate
+        dueDate: futureDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -794,7 +796,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-past',
         closingDate: closingDate,
-        dueDate: pastDate
+        dueDate: pastDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -819,7 +821,7 @@ describe('CreditCardBill', () => {
         dueDate: dueDate,
         status: CreditCardBillStatus.PAID,
         paidAmountInCents: 425000, // R$ 4250.00
-        paidAt: paidAt
+        paidAt: paidAt,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -829,10 +831,10 @@ describe('CreditCardBill', () => {
       // Assert
       expect(json.id).toBe(bill.id);
       expect(json.totalAmount.valueInCents).toBe(425000);
-      expect(json.totalAmount.valueInMonetary).toBe(4250.00);
+      expect(json.totalAmount.valueInMonetary).toBe(4250.0);
       expect(json.totalAmount.formatted).toBe('R$\u00a04.250,00');
       expect(json.paidAmount.valueInCents).toBe(425000);
-      expect(json.paidAmount.valueInMonetary).toBe(4250.00);
+      expect(json.paidAmount.valueInMonetary).toBe(4250.0);
       expect(json.paidAmount.formatted).toBe('R$\u00a04.250,00');
       expect(json.creditCardId).toBe('card-json');
       expect(json.closingDate).toBe('2024-09-15T23:59:59.000Z');
@@ -851,7 +853,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 150000,
         creditCardId: 'card-no-payment',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -870,7 +872,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-complete',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -878,8 +880,18 @@ describe('CreditCardBill', () => {
       const json = bill.toJSON();
 
       // Assert
-      const expectedKeys = ['id', 'totalAmount', 'paidAmount', 'creditCardId', 'closingDate', 'dueDate', 'status', 'paidAt', 'createdAt'];
-      expectedKeys.forEach(key => {
+      const expectedKeys = [
+        'id',
+        'totalAmount',
+        'paidAmount',
+        'creditCardId',
+        'closingDate',
+        'dueDate',
+        'status',
+        'paidAt',
+        'createdAt',
+      ];
+      expectedKeys.forEach((key) => {
         expect(json.hasOwnProperty(key)).toBe(true);
       });
 
@@ -899,7 +911,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.CLOSED,
         paidAt: '2024-11-20T14:15:00.000Z',
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -912,9 +924,9 @@ describe('CreditCardBill', () => {
       const bill = result.data!;
       expect(bill.id).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(bill.totalAmount.valueInCents).toBe(275000);
-      expect(bill.totalAmount.valueInMonetary).toBe(2750.00);
+      expect(bill.totalAmount.valueInMonetary).toBe(2750.0);
       expect(bill.paidAmount.valueInCents).toBe(137500);
-      expect(bill.paidAmount.valueInMonetary).toBe(1375.00);
+      expect(bill.paidAmount.valueInMonetary).toBe(1375.0);
       expect(bill.creditCardId).toBe('card-restored');
       expect(bill.closingDate).toEqual(new Date('2024-11-10T23:59:59.000Z'));
       expect(bill.dueDate).toEqual(new Date('2024-11-25T23:59:59.000Z'));
@@ -934,7 +946,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -956,7 +968,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -979,7 +991,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -1002,7 +1014,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -1025,7 +1037,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -1048,7 +1060,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-25T23:59:59.000Z',
         status: 'INVALID_STATUS' as CreditCardBillStatus,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -1057,7 +1069,9 @@ describe('CreditCardBill', () => {
       // Assert
       expect(result.hasError).toBe(true);
       expect(result.hasData).toBe(false);
-      expect(result.errors).toContain('Invalid status. Must be one of: OPEN, CLOSED, PAID, OVERDUE');
+      expect(result.errors).toContain(
+        'Invalid status. Must be one of: OPEN, CLOSED, PAID, OVERDUE',
+      );
     });
 
     it('should return error when JSON has invalid date sequence', () => {
@@ -1071,7 +1085,7 @@ describe('CreditCardBill', () => {
         dueDate: '2024-11-10T23:59:59.000Z', // Before closing date
         status: CreditCardBillStatus.OPEN,
         paidAt: null,
-        createdAt: '2024-11-05T09:00:00.000Z'
+        createdAt: '2024-11-05T09:00:00.000Z',
       };
 
       // Act
@@ -1095,7 +1109,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-open',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: CreditCardBillStatus.OPEN
+        status: CreditCardBillStatus.OPEN,
       };
 
       const paidProps: CreditCardBillProps = {
@@ -1104,7 +1118,7 @@ describe('CreditCardBill', () => {
         closingDate: closingDate,
         dueDate: dueDate,
         status: CreditCardBillStatus.PAID,
-        paidAmountInCents: 150000
+        paidAmountInCents: 150000,
       };
 
       const overdueProps: CreditCardBillProps = {
@@ -1112,18 +1126,18 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-overdue',
         closingDate: closingDate,
         dueDate: dueDate,
-        status: CreditCardBillStatus.OVERDUE
+        status: CreditCardBillStatus.OVERDUE,
       };
 
       const bills = [
         CreditCardBill.create(openProps).data!,
         CreditCardBill.create(paidProps).data!,
-        CreditCardBill.create(overdueProps).data!
+        CreditCardBill.create(overdueProps).data!,
       ];
 
       // Act
-      const unpaidBills = bills.filter(bill => !bill.isPaid());
-      const overdueBills = bills.filter(bill => bill.isOverdue());
+      const unpaidBills = bills.filter((bill) => !bill.isPaid());
+      const overdueBills = bills.filter((bill) => bill.isOverdue());
 
       // Assert
       expect(unpaidBills.length).toBe(2);
@@ -1138,19 +1152,22 @@ describe('CreditCardBill', () => {
 
       const billProps = [
         { totalAmountInCents: 100000, paidAmountInCents: 60000 }, // R$ 400.00 remaining
-        { totalAmountInCents: 200000, paidAmountInCents: 0 },     // R$ 2000.00 remaining
-        { totalAmountInCents: 150000, paidAmountInCents: 150000 } // R$ 0.00 remaining
-      ].map(props => ({
+        { totalAmountInCents: 200000, paidAmountInCents: 0 }, // R$ 2000.00 remaining
+        { totalAmountInCents: 150000, paidAmountInCents: 150000 }, // R$ 0.00 remaining
+      ].map((props) => ({
         ...props,
         creditCardId: 'card-total',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       }));
 
-      const bills = billProps.map(props => CreditCardBill.create(props).data!);
+      const bills = billProps.map((props) => CreditCardBill.create(props).data!);
 
       // Act
-      const totalOutstanding = bills.reduce((sum, bill) => sum + bill.getRemainingAmount().valueInCents, 0);
+      const totalOutstanding = bills.reduce(
+        (sum, bill) => sum + bill.getRemainingAmount().valueInCents,
+        0,
+      );
 
       // Assert
       expect(totalOutstanding).toBe(240000); // R$ 2400.00
@@ -1165,7 +1182,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-payment-tracking',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 180000 // R$ 1800.00
+        paidAmountInCents: 180000, // R$ 1800.00
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -1175,7 +1192,7 @@ describe('CreditCardBill', () => {
       // Assert
       expect(bill.isPartiallyPaid()).toBe(true);
       expect(Math.round(paymentProgress)).toBe(60); // 60% paid
-      expect(bill.getRemainingAmount().valueInMonetary).toBe(1200.00); // R$ 1200.00 remaining
+      expect(bill.getRemainingAmount().valueInMonetary).toBe(1200.0); // R$ 1200.00 remaining
     });
 
     it('should maintain immutability', () => {
@@ -1186,7 +1203,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-immutable',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
       const bill = CreditCardBill.create(props).data!;
 
@@ -1211,7 +1228,7 @@ describe('CreditCardBill', () => {
         creditCardId: 'card-large',
         closingDate: closingDate,
         dueDate: dueDate,
-        paidAmountInCents: 500000000 // R$ 5,000,000.00
+        paidAmountInCents: 500000000, // R$ 5,000,000.00
       };
 
       // Act
@@ -1231,7 +1248,7 @@ describe('CreditCardBill', () => {
         totalAmountInCents: 100000,
         creditCardId: 'card-minimal-diff',
         closingDate: closingDate,
-        dueDate: dueDate
+        dueDate: dueDate,
       };
 
       // Act
@@ -1255,7 +1272,7 @@ describe('CreditCardBill', () => {
         dueDate: dueDate,
         status: CreditCardBillStatus.PAID,
         paidAmountInCents: 777777,
-        paidAt: paidAt
+        paidAt: paidAt,
       };
       const originalBill = CreditCardBill.create(originalProps).data!;
 

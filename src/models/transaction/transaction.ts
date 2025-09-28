@@ -33,7 +33,7 @@ export class Transaction {
     description: string = '',
     executedAt: Date = new Date(),
     isRecurring: boolean = false,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._amount = amount;
@@ -154,7 +154,16 @@ export class Transaction {
     const isRecurring = props.isRecurring !== undefined ? props.isRecurring : false;
 
     return Either.success(
-      new Transaction(id, amount, props.type, props.accountId, props.categoryId, description, executedAt, isRecurring)
+      new Transaction(
+        id,
+        amount,
+        props.type,
+        props.accountId,
+        props.categoryId,
+        description,
+        executedAt,
+        isRecurring,
+      ),
     );
   }
 
@@ -207,8 +216,8 @@ export class Transaction {
         json.description,
         executedAt,
         json.isRecurring,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

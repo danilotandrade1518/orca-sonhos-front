@@ -32,7 +32,7 @@ export class Category {
     isActive: boolean = true,
     color: string = '#757575',
     icon: string = 'category',
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._name = name;
@@ -155,7 +155,7 @@ export class Category {
     const icon = props.icon || 'category';
 
     return Either.success(
-      new Category(id, props.name, props.type, props.budgetId, description, isActive, color, icon)
+      new Category(id, props.name, props.type, props.budgetId, description, isActive, color, icon),
     );
   }
 
@@ -207,8 +207,8 @@ export class Category {
         json.isActive,
         json.color,
         json.icon,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

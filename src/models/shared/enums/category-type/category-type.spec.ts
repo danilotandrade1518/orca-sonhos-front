@@ -3,7 +3,7 @@ import {
   CategoryTypeValues,
   CategoryTypeLabels,
   isValidCategoryType,
-  getCategoryTypeLabel
+  getCategoryTypeLabel,
 } from './category-type';
 
 describe('CategoryType', () => {
@@ -33,7 +33,7 @@ describe('CategoryType', () => {
       const enumValues = Object.values(CategoryType);
 
       // Act & Assert
-      enumValues.forEach(value => {
+      enumValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -50,7 +50,7 @@ describe('CategoryType', () => {
     it('should be an array of strings', () => {
       // Arrange & Act & Assert
       expect(Array.isArray(CategoryTypeValues)).toBe(true);
-      CategoryTypeValues.forEach(value => {
+      CategoryTypeValues.forEach((value) => {
         expect(typeof value).toBe('string');
       });
     });
@@ -80,7 +80,7 @@ describe('CategoryType', () => {
       const enumValues = Object.values(CategoryType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         expect(CategoryTypeLabels[enumValue]).toBeDefined();
         expect(typeof CategoryTypeLabels[enumValue]).toBe('string');
         expect(CategoryTypeLabels[enumValue].length).toBeGreaterThan(0);
@@ -185,7 +185,7 @@ describe('CategoryType', () => {
 
     it('should validate all values in CategoryTypeValues', () => {
       // Arrange & Act & Assert
-      CategoryTypeValues.forEach(value => {
+      CategoryTypeValues.forEach((value) => {
         expect(isValidCategoryType(value)).toBe(true);
       });
     });
@@ -219,7 +219,7 @@ describe('CategoryType', () => {
       const enumValues = Object.values(CategoryType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const label = getCategoryTypeLabel(enumValue);
         expect(typeof label).toBe('string');
         expect(label.length).toBeGreaterThan(0);
@@ -231,7 +231,7 @@ describe('CategoryType', () => {
       const enumValues = Object.values(CategoryType);
 
       // Act & Assert
-      enumValues.forEach(enumValue => {
+      enumValues.forEach((enumValue) => {
         const functionLabel = getCategoryTypeLabel(enumValue);
         const directLabel = CategoryTypeLabels[enumValue];
         expect(functionLabel).toBe(directLabel);
@@ -293,14 +293,14 @@ describe('CategoryType', () => {
       ];
 
       // Act
-      const incomeCategories = categories.filter(c => c.type === CategoryType.INCOME);
-      const expenseCategories = categories.filter(c => c.type === CategoryType.EXPENSE);
+      const incomeCategories = categories.filter((c) => c.type === CategoryType.INCOME);
+      const expenseCategories = categories.filter((c) => c.type === CategoryType.EXPENSE);
 
       // Assert
       expect(incomeCategories.length).toBe(2);
       expect(expenseCategories.length).toBe(3);
-      expect(incomeCategories.every(c => c.type === CategoryType.INCOME)).toBe(true);
-      expect(expenseCategories.every(c => c.type === CategoryType.EXPENSE)).toBe(true);
+      expect(incomeCategories.every((c) => c.type === CategoryType.INCOME)).toBe(true);
+      expect(expenseCategories.every((c) => c.type === CategoryType.EXPENSE)).toBe(true);
     });
   });
 
@@ -362,7 +362,7 @@ describe('CategoryType', () => {
       // Arrange
       const data = {
         type: CategoryType.EXPENSE,
-        name: 'Food Category'
+        name: 'Food Category',
       };
 
       // Act

@@ -9,7 +9,7 @@ describe('Transaction', () => {
         amount: 150.75,
         type: TransactionType.INCOME,
         accountId: 'account-123',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -41,7 +41,7 @@ describe('Transaction', () => {
         categoryId: 'category-101',
         description: 'Monthly subscription payment',
         executedAt: executedAt,
-        isRecurring: true
+        isRecurring: true,
       };
 
       // Act
@@ -67,7 +67,7 @@ describe('Transaction', () => {
         amount: 0,
         type: TransactionType.INCOME,
         accountId: 'account-zero',
-        categoryId: 'category-zero'
+        categoryId: 'category-zero',
       };
 
       // Act
@@ -84,7 +84,7 @@ describe('Transaction', () => {
         amount: 999999.99,
         type: TransactionType.INCOME,
         accountId: 'account-large',
-        categoryId: 'category-large'
+        categoryId: 'category-large',
       };
 
       // Act
@@ -100,10 +100,10 @@ describe('Transaction', () => {
     it('should return error when amount is negative', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: -50.00,
+        amount: -50.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-123',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -118,10 +118,10 @@ describe('Transaction', () => {
     it('should return error when type is invalid', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: 'INVALID_TYPE' as TransactionType,
         accountId: 'account-123',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -136,10 +136,10 @@ describe('Transaction', () => {
     it('should return error when accountId is empty string', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: '',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -154,10 +154,10 @@ describe('Transaction', () => {
     it('should return error when accountId is whitespace only', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: '   ',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -172,10 +172,10 @@ describe('Transaction', () => {
     it('should return error when accountId is not a string', () => {
       // Arrange
       const props: any = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: 123,
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -190,10 +190,10 @@ describe('Transaction', () => {
     it('should return error when categoryId is empty string', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: 'account-123',
-        categoryId: ''
+        categoryId: '',
       };
 
       // Act
@@ -208,10 +208,10 @@ describe('Transaction', () => {
     it('should return error when categoryId is whitespace only', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: 'account-123',
-        categoryId: '   '
+        categoryId: '   ',
       };
 
       // Act
@@ -226,10 +226,10 @@ describe('Transaction', () => {
     it('should return error when categoryId is not a string', () => {
       // Arrange
       const props: any = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: 'account-123',
-        categoryId: 456
+        categoryId: 456,
       };
 
       // Act
@@ -247,7 +247,7 @@ describe('Transaction', () => {
         amount: 'invalid-amount',
         type: TransactionType.INCOME,
         accountId: 'account-123',
-        categoryId: 'category-456'
+        categoryId: 'category-456',
       };
 
       // Act
@@ -267,13 +267,13 @@ describe('Transaction', () => {
       // Arrange
       const executedAt = new Date('2024-03-20T14:45:30Z');
       const props: TransactionProps = {
-        amount: 1250.50,
+        amount: 1250.5,
         type: TransactionType.EXPENSE,
         accountId: 'account-test',
         categoryId: 'category-test',
         description: 'Test transaction description',
         executedAt: executedAt,
-        isRecurring: true
+        isRecurring: true,
       };
 
       transaction = Transaction.create(props).data!;
@@ -293,7 +293,7 @@ describe('Transaction', () => {
       const amount = transaction.amount;
 
       // Assert
-      expect(amount.valueInMonetary).toBe(1250.50);
+      expect(amount.valueInMonetary).toBe(1250.5);
       expect(amount.valueInCents).toBe(125050);
     });
 
@@ -360,10 +360,10 @@ describe('Transaction', () => {
     it('should return true for isIncome when type is INCOME', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 5000.00,
+        amount: 5000.0,
         type: TransactionType.INCOME,
         accountId: 'account-income',
-        categoryId: 'category-salary'
+        categoryId: 'category-salary',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -377,10 +377,10 @@ describe('Transaction', () => {
     it('should return false for isIncome when type is EXPENSE', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 200.00,
+        amount: 200.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-expense',
-        categoryId: 'category-food'
+        categoryId: 'category-food',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -397,7 +397,7 @@ describe('Transaction', () => {
         amount: 150.75,
         type: TransactionType.EXPENSE,
         accountId: 'account-expense',
-        categoryId: 'category-shopping'
+        categoryId: 'category-shopping',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -411,10 +411,10 @@ describe('Transaction', () => {
     it('should return false for isExpense when type is INCOME', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 3000.00,
+        amount: 3000.0,
         type: TransactionType.INCOME,
         accountId: 'account-income',
-        categoryId: 'category-bonus'
+        categoryId: 'category-bonus',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -431,7 +431,7 @@ describe('Transaction', () => {
         amount: 1234.56,
         type: TransactionType.INCOME,
         accountId: 'account-format',
-        categoryId: 'category-format'
+        categoryId: 'category-format',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -445,10 +445,10 @@ describe('Transaction', () => {
     it('should get correct type label for INCOME', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 2500.00,
+        amount: 2500.0,
         type: TransactionType.INCOME,
         accountId: 'account-label',
-        categoryId: 'category-label'
+        categoryId: 'category-label',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -465,7 +465,7 @@ describe('Transaction', () => {
         amount: 890.25,
         type: TransactionType.EXPENSE,
         accountId: 'account-label',
-        categoryId: 'category-label'
+        categoryId: 'category-label',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -482,13 +482,13 @@ describe('Transaction', () => {
       // Arrange
       const executedAt = new Date('2024-05-10T09:15:45Z');
       const props: TransactionProps = {
-        amount: 875.30,
+        amount: 875.3,
         type: TransactionType.EXPENSE,
         accountId: 'account-json',
         categoryId: 'category-json',
         description: 'JSON test transaction',
         executedAt: executedAt,
-        isRecurring: false
+        isRecurring: false,
       };
       const transaction = Transaction.create(props).data!;
 
@@ -498,7 +498,7 @@ describe('Transaction', () => {
       // Assert
       expect(json.id).toBe(transaction.id);
       expect(json.amount.valueInCents).toBe(87530);
-      expect(json.amount.valueInMonetary).toBe(875.30);
+      expect(json.amount.valueInMonetary).toBe(875.3);
       expect(json.amount.formatted).toBe('R$\u00a0875,30');
       expect(json.type).toBe(TransactionType.EXPENSE);
       expect(json.accountId).toBe('account-json');
@@ -516,7 +516,7 @@ describe('Transaction', () => {
         amount: 999.99,
         type: TransactionType.INCOME,
         accountId: 'account-complete',
-        categoryId: 'category-complete'
+        categoryId: 'category-complete',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -524,8 +524,18 @@ describe('Transaction', () => {
       const json = transaction.toJSON();
 
       // Assert
-      const expectedKeys = ['id', 'amount', 'type', 'accountId', 'categoryId', 'description', 'executedAt', 'isRecurring', 'createdAt'];
-      expectedKeys.forEach(key => {
+      const expectedKeys = [
+        'id',
+        'amount',
+        'type',
+        'accountId',
+        'categoryId',
+        'description',
+        'executedAt',
+        'isRecurring',
+        'createdAt',
+      ];
+      expectedKeys.forEach((key) => {
         expect(json.hasOwnProperty(key)).toBe(true);
       });
 
@@ -535,10 +545,10 @@ describe('Transaction', () => {
     it('should handle empty description in JSON', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 500.00,
+        amount: 500.0,
         type: TransactionType.INCOME,
         accountId: 'account-empty-desc',
-        categoryId: 'category-empty-desc'
+        categoryId: 'category-empty-desc',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -562,7 +572,7 @@ describe('Transaction', () => {
         description: 'Restored from JSON',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: true,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -575,7 +585,7 @@ describe('Transaction', () => {
       const transaction = result.data!;
       expect(transaction.id).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(transaction.amount.valueInCents).toBe(123450);
-      expect(transaction.amount.valueInMonetary).toBe(1234.50);
+      expect(transaction.amount.valueInMonetary).toBe(1234.5);
       expect(transaction.type).toBe(TransactionType.INCOME);
       expect(transaction.accountId).toBe('account-from-json');
       expect(transaction.categoryId).toBe('category-from-json');
@@ -596,7 +606,7 @@ describe('Transaction', () => {
         description: 'Invalid ID test',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: false,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -619,7 +629,7 @@ describe('Transaction', () => {
         description: 'Invalid amount test',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: false,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -642,7 +652,7 @@ describe('Transaction', () => {
         description: 'Invalid type test',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: false,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -665,7 +675,7 @@ describe('Transaction', () => {
         description: 'Empty account test',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: false,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -688,7 +698,7 @@ describe('Transaction', () => {
         description: 'Empty category test',
         executedAt: '2024-07-25T16:30:00.000Z',
         isRecurring: false,
-        createdAt: '2024-07-25T16:25:00.000Z'
+        createdAt: '2024-07-25T16:25:00.000Z',
       };
 
       // Act
@@ -705,69 +715,69 @@ describe('Transaction', () => {
     it('should work in collections and filtering', () => {
       // Arrange
       const incomeProps: TransactionProps = {
-        amount: 5000.00,
+        amount: 5000.0,
         type: TransactionType.INCOME,
         accountId: 'account-salary',
-        categoryId: 'category-salary'
+        categoryId: 'category-salary',
       };
 
       const expenseProps1: TransactionProps = {
-        amount: 1200.00,
+        amount: 1200.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-checking',
-        categoryId: 'category-rent'
+        categoryId: 'category-rent',
       };
 
       const expenseProps2: TransactionProps = {
-        amount: 350.50,
+        amount: 350.5,
         type: TransactionType.EXPENSE,
         accountId: 'account-checking',
-        categoryId: 'category-food'
+        categoryId: 'category-food',
       };
 
       const transactions = [
         Transaction.create(incomeProps).data!,
         Transaction.create(expenseProps1).data!,
-        Transaction.create(expenseProps2).data!
+        Transaction.create(expenseProps2).data!,
       ];
 
       // Act
-      const incomes = transactions.filter(t => t.isIncome());
-      const expenses = transactions.filter(t => t.isExpense());
+      const incomes = transactions.filter((t) => t.isIncome());
+      const expenses = transactions.filter((t) => t.isExpense());
 
       // Assert
       expect(incomes.length).toBe(1);
       expect(expenses.length).toBe(2);
-      expect(incomes[0].amount.valueInMonetary).toBe(5000.00);
-      expect(expenses.every(t => t.type === TransactionType.EXPENSE)).toBe(true);
+      expect(incomes[0].amount.valueInMonetary).toBe(5000.0);
+      expect(expenses.every((t) => t.type === TransactionType.EXPENSE)).toBe(true);
     });
 
     it('should calculate total amounts correctly', () => {
       // Arrange
       const transactionProps = [
-        { amount: 100.00, type: TransactionType.INCOME },
-        { amount: 200.50, type: TransactionType.INCOME },
+        { amount: 100.0, type: TransactionType.INCOME },
+        { amount: 200.5, type: TransactionType.INCOME },
         { amount: 75.25, type: TransactionType.EXPENSE },
-        { amount: 150.00, type: TransactionType.EXPENSE }
-      ].map(props => ({
+        { amount: 150.0, type: TransactionType.EXPENSE },
+      ].map((props) => ({
         ...props,
         accountId: 'account-total',
-        categoryId: 'category-total'
+        categoryId: 'category-total',
       }));
 
-      const transactions = transactionProps.map(props => Transaction.create(props).data!);
+      const transactions = transactionProps.map((props) => Transaction.create(props).data!);
 
       // Act
       const totalIncome = transactions
-        .filter(t => t.isIncome())
+        .filter((t) => t.isIncome())
         .reduce((sum, t) => sum + t.amount.valueInMonetary, 0);
 
       const totalExpense = transactions
-        .filter(t => t.isExpense())
+        .filter((t) => t.isExpense())
         .reduce((sum, t) => sum + t.amount.valueInMonetary, 0);
 
       // Assert
-      expect(totalIncome).toBe(300.50);
+      expect(totalIncome).toBe(300.5);
       expect(totalExpense).toBe(225.25);
     });
 
@@ -779,26 +789,26 @@ describe('Transaction', () => {
         accountId: 'account-subscription',
         categoryId: 'category-subscription',
         description: 'Monthly subscription',
-        isRecurring: true
+        isRecurring: true,
       };
 
       const oneTimeProps: TransactionProps = {
-        amount: 250.00,
+        amount: 250.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-onetime',
         categoryId: 'category-onetime',
         description: 'One-time purchase',
-        isRecurring: false
+        isRecurring: false,
       };
 
       const transactions = [
         Transaction.create(recurringProps).data!,
-        Transaction.create(oneTimeProps).data!
+        Transaction.create(oneTimeProps).data!,
       ];
 
       // Act
-      const recurringTransactions = transactions.filter(t => t.isRecurring);
-      const oneTimeTransactions = transactions.filter(t => !t.isRecurring);
+      const recurringTransactions = transactions.filter((t) => t.isRecurring);
+      const oneTimeTransactions = transactions.filter((t) => !t.isRecurring);
 
       // Assert
       expect(recurringTransactions.length).toBe(1);
@@ -810,11 +820,11 @@ describe('Transaction', () => {
     it('should maintain immutability', () => {
       // Arrange
       const props: TransactionProps = {
-        amount: 500.00,
+        amount: 500.0,
         type: TransactionType.INCOME,
         accountId: 'account-immutable',
         categoryId: 'category-immutable',
-        description: 'Immutability test'
+        description: 'Immutability test',
       };
       const transaction = Transaction.create(props).data!;
 
@@ -836,7 +846,7 @@ describe('Transaction', () => {
         amount: 0.01,
         type: TransactionType.INCOME,
         accountId: 'account-min',
-        categoryId: 'category-min'
+        categoryId: 'category-min',
       };
 
       // Act
@@ -854,7 +864,7 @@ describe('Transaction', () => {
         amount: 999999999.99,
         type: TransactionType.INCOME,
         accountId: 'account-max',
-        categoryId: 'category-max'
+        categoryId: 'category-max',
       };
 
       // Act
@@ -869,11 +879,11 @@ describe('Transaction', () => {
       // Arrange
       const longDescription = 'A'.repeat(1000);
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-long-desc',
         categoryId: 'category-long-desc',
-        description: longDescription
+        description: longDescription,
       };
 
       // Act
@@ -889,11 +899,11 @@ describe('Transaction', () => {
       // Arrange
       const futureDate = new Date('2030-12-31T23:59:59Z');
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.INCOME,
         accountId: 'account-future',
         categoryId: 'category-future',
-        executedAt: futureDate
+        executedAt: futureDate,
       };
 
       // Act
@@ -908,11 +918,11 @@ describe('Transaction', () => {
       // Arrange
       const pastDate = new Date('1990-01-01T00:00:00Z');
       const props: TransactionProps = {
-        amount: 100.00,
+        amount: 100.0,
         type: TransactionType.EXPENSE,
         accountId: 'account-past',
         categoryId: 'category-past',
-        executedAt: pastDate
+        executedAt: pastDate,
       };
 
       // Act
@@ -931,7 +941,7 @@ describe('Transaction', () => {
         accountId: 'account-roundtrip',
         categoryId: 'category-roundtrip',
         description: 'Round-trip test',
-        isRecurring: true
+        isRecurring: true,
       };
       const originalTransaction = Transaction.create(originalProps).data!;
 
@@ -944,7 +954,9 @@ describe('Transaction', () => {
       const restoredTransaction = restoredResult.data!;
 
       expect(restoredTransaction.id).toBe(originalTransaction.id);
-      expect(restoredTransaction.amount.valueInMonetary).toBe(originalTransaction.amount.valueInMonetary);
+      expect(restoredTransaction.amount.valueInMonetary).toBe(
+        originalTransaction.amount.valueInMonetary,
+      );
       expect(restoredTransaction.type).toBe(originalTransaction.type);
       expect(restoredTransaction.accountId).toBe(originalTransaction.accountId);
       expect(restoredTransaction.categoryId).toBe(originalTransaction.categoryId);

@@ -39,7 +39,7 @@ export class Goal {
     targetDate: Date | null = null,
     description: string = '',
     status: GoalStatus = GoalStatus.ACTIVE,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this._id = id;
     this._name = name;
@@ -241,8 +241,8 @@ export class Goal {
         props.budgetId,
         targetDate,
         description,
-        status
-      )
+        status,
+      ),
     );
   }
 
@@ -307,8 +307,8 @@ export class Goal {
         targetDate,
         json.description,
         json.status,
-        createdAt
-      )
+        createdAt,
+      ),
     );
   }
 

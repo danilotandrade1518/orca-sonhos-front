@@ -9,7 +9,7 @@ describe('Goal', () => {
         name: 'New Car',
         targetAmountInCents: 5000000, // R$ 50000.00
         currentAmountInCents: 1250000, // R$ 12500.00
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -22,9 +22,9 @@ describe('Goal', () => {
       const goal = result.data!;
       expect(goal.name).toBe('New Car');
       expect(goal.targetAmount.valueInCents).toBe(5000000);
-      expect(goal.targetAmount.valueInMonetary).toBe(50000.00);
+      expect(goal.targetAmount.valueInMonetary).toBe(50000.0);
       expect(goal.currentAmount.valueInCents).toBe(1250000);
-      expect(goal.currentAmount.valueInMonetary).toBe(12500.00);
+      expect(goal.currentAmount.valueInMonetary).toBe(12500.0);
       expect(goal.budgetId).toBe('budget-123');
       expect(goal.targetDate).toBeNull();
       expect(goal.description).toBe('');
@@ -43,7 +43,7 @@ describe('Goal', () => {
         budgetId: 'budget-vacation',
         targetDate: targetDate,
         description: 'Dream vacation to Europe',
-        status: GoalStatus.PAUSED
+        status: GoalStatus.PAUSED,
       };
 
       // Act
@@ -69,7 +69,7 @@ describe('Goal', () => {
         name: 'Emergency Fund',
         targetAmountInCents: 1000000,
         currentAmountInCents: 0,
-        budgetId: 'budget-emergency'
+        budgetId: 'budget-emergency',
       };
 
       // Act
@@ -86,7 +86,7 @@ describe('Goal', () => {
         name: 'Completed Goal',
         targetAmountInCents: 50000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-completed'
+        budgetId: 'budget-completed',
       };
 
       // Act
@@ -94,19 +94,19 @@ describe('Goal', () => {
 
       // Assert
       expect(result.hasData).toBe(true);
-      expect(result.data!.targetAmount.valueInMonetary).toBe(500.00);
-      expect(result.data!.currentAmount.valueInMonetary).toBe(500.00);
+      expect(result.data!.targetAmount.valueInMonetary).toBe(500.0);
+      expect(result.data!.currentAmount.valueInMonetary).toBe(500.0);
     });
 
     it('should create goal with each valid status', () => {
       // Arrange & Act & Assert
-      Object.values(GoalStatus).forEach(status => {
+      Object.values(GoalStatus).forEach((status) => {
         const props: GoalProps = {
           name: `Goal ${status}`,
           targetAmountInCents: 100000,
           currentAmountInCents: 50000,
           budgetId: 'budget-status',
-          status: status
+          status: status,
         };
 
         const result = Goal.create(props);
@@ -124,7 +124,7 @@ describe('Goal', () => {
         name: '',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -142,7 +142,7 @@ describe('Goal', () => {
         name: '   ',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -160,7 +160,7 @@ describe('Goal', () => {
         name: 123,
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -178,7 +178,7 @@ describe('Goal', () => {
         name: 'A'.repeat(101),
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -196,7 +196,7 @@ describe('Goal', () => {
         name: 'Valid Goal',
         targetAmountInCents: -100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -214,7 +214,7 @@ describe('Goal', () => {
         name: 'Valid Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: -50000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -232,7 +232,7 @@ describe('Goal', () => {
         name: 'Valid Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: ''
+        budgetId: '',
       };
 
       // Act
@@ -250,7 +250,7 @@ describe('Goal', () => {
         name: 'Valid Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: '   '
+        budgetId: '   ',
       };
 
       // Act
@@ -268,7 +268,7 @@ describe('Goal', () => {
         name: 'Valid Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 123
+        budgetId: 123,
       };
 
       // Act
@@ -288,7 +288,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-123',
-        targetDate: pastDate
+        targetDate: pastDate,
       };
 
       // Act
@@ -307,7 +307,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-123',
-        targetDate: 'invalid-date'
+        targetDate: 'invalid-date',
       };
 
       // Act
@@ -326,7 +326,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-123',
-        status: 'INVALID_STATUS'
+        status: 'INVALID_STATUS',
       };
 
       // Act
@@ -335,7 +335,9 @@ describe('Goal', () => {
       // Assert
       expect(result.hasError).toBe(true);
       expect(result.hasData).toBe(false);
-      expect(result.errors).toContain('Invalid status. Must be one of: ACTIVE, PAUSED, COMPLETED, CANCELLED');
+      expect(result.errors).toContain(
+        'Invalid status. Must be one of: ACTIVE, PAUSED, COMPLETED, CANCELLED',
+      );
     });
   });
 
@@ -352,7 +354,7 @@ describe('Goal', () => {
         budgetId: 'budget-home',
         targetDate: targetDate,
         description: 'Saving for first home',
-        status: GoalStatus.ACTIVE
+        status: GoalStatus.ACTIVE,
       };
 
       goal = Goal.create(props).data!;
@@ -381,7 +383,7 @@ describe('Goal', () => {
 
       // Assert
       expect(targetAmount.valueInCents).toBe(10000000);
-      expect(targetAmount.valueInMonetary).toBe(100000.00);
+      expect(targetAmount.valueInMonetary).toBe(100000.0);
     });
 
     it('should return correct currentAmount as Money object', () => {
@@ -390,7 +392,7 @@ describe('Goal', () => {
 
       // Assert
       expect(currentAmount.valueInCents).toBe(2750000);
-      expect(currentAmount.valueInMonetary).toBe(27500.00);
+      expect(currentAmount.valueInMonetary).toBe(27500.0);
     });
 
     it('should return correct budgetId', () => {
@@ -416,7 +418,7 @@ describe('Goal', () => {
         name: 'No Date Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-no-date'
+        budgetId: 'budget-no-date',
       };
       const goalWithoutDate = Goal.create(props).data!;
 
@@ -460,7 +462,7 @@ describe('Goal', () => {
         name: 'Laptop Fund',
         targetAmountInCents: 300000, // R$ 3000.00
         currentAmountInCents: 125000, // R$ 1250.00
-        budgetId: 'budget-laptop'
+        budgetId: 'budget-laptop',
       };
       const goal = Goal.create(props).data!;
 
@@ -469,7 +471,7 @@ describe('Goal', () => {
 
       // Assert
       expect(remaining.valueInCents).toBe(175000); // R$ 1750.00
-      expect(remaining.valueInMonetary).toBe(1750.00);
+      expect(remaining.valueInMonetary).toBe(1750.0);
     });
 
     it('should return zero remaining amount when current exceeds target', () => {
@@ -478,7 +480,7 @@ describe('Goal', () => {
         name: 'Exceeded Goal',
         targetAmountInCents: 100000, // R$ 1000.00
         currentAmountInCents: 150000, // R$ 1500.00
-        budgetId: 'budget-exceeded'
+        budgetId: 'budget-exceeded',
       };
       const goal = Goal.create(props).data!;
 
@@ -496,7 +498,7 @@ describe('Goal', () => {
         name: 'Progress Test',
         targetAmountInCents: 200000, // R$ 2000.00
         currentAmountInCents: 50000, // R$ 500.00 (25%)
-        budgetId: 'budget-progress'
+        budgetId: 'budget-progress',
       };
       const goal = Goal.create(props).data!;
 
@@ -513,7 +515,7 @@ describe('Goal', () => {
         name: 'Zero Target',
         targetAmountInCents: 0,
         currentAmountInCents: 50000,
-        budgetId: 'budget-zero'
+        budgetId: 'budget-zero',
       };
       const goal = Goal.create(props).data!;
 
@@ -530,7 +532,7 @@ describe('Goal', () => {
         name: 'Over Progress',
         targetAmountInCents: 100000, // R$ 1000.00
         currentAmountInCents: 250000, // R$ 2500.00 (250%)
-        budgetId: 'budget-over'
+        budgetId: 'budget-over',
       };
       const goal = Goal.create(props).data!;
 
@@ -548,7 +550,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 80000,
         budgetId: 'budget-completed',
-        status: GoalStatus.COMPLETED
+        status: GoalStatus.COMPLETED,
       };
       const goal = Goal.create(props).data!;
 
@@ -565,7 +567,7 @@ describe('Goal', () => {
         name: 'Exactly Reached Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 100000,
-        budgetId: 'budget-exact'
+        budgetId: 'budget-exact',
       };
       const goal = Goal.create(props).data!;
 
@@ -582,7 +584,7 @@ describe('Goal', () => {
         name: 'Exceeded Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 120000,
-        budgetId: 'budget-exceeded'
+        budgetId: 'budget-exceeded',
       };
       const goal = Goal.create(props).data!;
 
@@ -599,7 +601,7 @@ describe('Goal', () => {
         name: 'In Progress Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 80000,
-        budgetId: 'budget-progress'
+        budgetId: 'budget-progress',
       };
       const goal = Goal.create(props).data!;
 
@@ -623,7 +625,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-future',
-        targetDate: nearFutureDate
+        targetDate: nearFutureDate,
       };
       const goal = Goal.create(props).data!;
 
@@ -641,7 +643,7 @@ describe('Goal', () => {
         name: 'No Date Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-no-date'
+        budgetId: 'budget-no-date',
       };
       const goal = Goal.create(props).data!;
 
@@ -662,7 +664,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 100000, // Completed
         budgetId: 'budget-completed',
-        targetDate: futureDate
+        targetDate: futureDate,
       };
       const goal = Goal.create(props).data!;
 
@@ -684,7 +686,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-future',
-        targetDate: futureDate
+        targetDate: futureDate,
       };
       const goal = Goal.create(props).data!;
 
@@ -701,7 +703,7 @@ describe('Goal', () => {
         name: 'No Date Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-no-date'
+        budgetId: 'budget-no-date',
       };
       const goal = Goal.create(props).data!;
 
@@ -722,7 +724,7 @@ describe('Goal', () => {
         targetAmountInCents: 600000, // R$ 6000.00
         currentAmountInCents: 0,
         budgetId: 'budget-monthly',
-        targetDate: futureDate
+        targetDate: futureDate,
       };
       const goal = Goal.create(props).data!;
 
@@ -731,7 +733,7 @@ describe('Goal', () => {
 
       // Assert
       expect(monthlyTarget).not.toBeNull();
-      expect(monthlyTarget!.valueInMonetary).toBe(1000.00); // R$ 1000.00 per month
+      expect(monthlyTarget!.valueInMonetary).toBe(1000.0); // R$ 1000.00 per month
     });
 
     it('should return null monthly target when no target date', () => {
@@ -740,7 +742,7 @@ describe('Goal', () => {
         name: 'No Date Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-no-date'
+        budgetId: 'budget-no-date',
       };
       const goal = Goal.create(props).data!;
 
@@ -757,7 +759,7 @@ describe('Goal', () => {
         name: 'Format Test',
         targetAmountInCents: 567890, // R$ 5678.90
         currentAmountInCents: 123456,
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const goal = Goal.create(props).data!;
 
@@ -774,7 +776,7 @@ describe('Goal', () => {
         name: 'Format Test',
         targetAmountInCents: 500000,
         currentAmountInCents: 234567, // R$ 2345.67
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const goal = Goal.create(props).data!;
 
@@ -791,7 +793,7 @@ describe('Goal', () => {
         name: 'Format Test',
         targetAmountInCents: 1000000, // R$ 10000.00
         currentAmountInCents: 376542, // R$ 3765.42
-        budgetId: 'budget-format'
+        budgetId: 'budget-format',
       };
       const goal = Goal.create(props).data!;
 
@@ -808,7 +810,7 @@ describe('Goal', () => {
         [GoalStatus.ACTIVE]: 'Ativa',
         [GoalStatus.PAUSED]: 'Pausada',
         [GoalStatus.COMPLETED]: 'Concluída',
-        [GoalStatus.CANCELLED]: 'Cancelada'
+        [GoalStatus.CANCELLED]: 'Cancelada',
       };
 
       Object.entries(statusLabels).forEach(([status, expectedLabel]) => {
@@ -817,7 +819,7 @@ describe('Goal', () => {
           targetAmountInCents: 100000,
           currentAmountInCents: 50000,
           budgetId: 'budget-status',
-          status: status as GoalStatus
+          status: status as GoalStatus,
         };
         const goal = Goal.create(props).data!;
 
@@ -837,7 +839,7 @@ describe('Goal', () => {
         budgetId: 'budget-json',
         targetDate: targetDate,
         description: 'Testing JSON serialization',
-        status: GoalStatus.PAUSED
+        status: GoalStatus.PAUSED,
       };
       const goal = Goal.create(props).data!;
 
@@ -848,10 +850,10 @@ describe('Goal', () => {
       expect(json.id).toBe(goal.id);
       expect(json.name).toBe('JSON Test Goal');
       expect(json.targetAmount.valueInCents).toBe(750000);
-      expect(json.targetAmount.valueInMonetary).toBe(7500.00);
+      expect(json.targetAmount.valueInMonetary).toBe(7500.0);
       expect(json.targetAmount.formatted).toBe('R$\u00a07.500,00');
       expect(json.currentAmount.valueInCents).toBe(325000);
-      expect(json.currentAmount.valueInMonetary).toBe(3250.00);
+      expect(json.currentAmount.valueInMonetary).toBe(3250.0);
       expect(json.currentAmount.formatted).toBe('R$\u00a03.250,00');
       expect(json.budgetId).toBe('budget-json');
       expect(json.targetDate).toBe('2026-08-30T15:45:00.000Z');
@@ -867,7 +869,7 @@ describe('Goal', () => {
         name: 'No Date Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-no-date'
+        budgetId: 'budget-no-date',
       };
       const goal = Goal.create(props).data!;
 
@@ -884,7 +886,7 @@ describe('Goal', () => {
         name: 'Complete Goal',
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-complete'
+        budgetId: 'budget-complete',
       };
       const goal = Goal.create(props).data!;
 
@@ -892,8 +894,18 @@ describe('Goal', () => {
       const json = goal.toJSON();
 
       // Assert
-      const expectedKeys = ['id', 'name', 'targetAmount', 'currentAmount', 'budgetId', 'targetDate', 'description', 'status', 'createdAt'];
-      expectedKeys.forEach(key => {
+      const expectedKeys = [
+        'id',
+        'name',
+        'targetAmount',
+        'currentAmount',
+        'budgetId',
+        'targetDate',
+        'description',
+        'status',
+        'createdAt',
+      ];
+      expectedKeys.forEach((key) => {
         expect(json.hasOwnProperty(key)).toBe(true);
       });
 
@@ -906,7 +918,7 @@ describe('Goal', () => {
         name: 'No Description Goal',
         targetAmountInCents: 75000,
         currentAmountInCents: 30000,
-        budgetId: 'budget-nodesc'
+        budgetId: 'budget-nodesc',
       };
       const goal = Goal.create(props).data!;
 
@@ -930,7 +942,7 @@ describe('Goal', () => {
         targetDate: '2026-12-25T10:00:00.000Z',
         description: 'Restored from JSON',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -944,9 +956,9 @@ describe('Goal', () => {
       expect(goal.id).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(goal.name).toBe('Restored Goal');
       expect(goal.targetAmount.valueInCents).toBe(500000);
-      expect(goal.targetAmount.valueInMonetary).toBe(5000.00);
+      expect(goal.targetAmount.valueInMonetary).toBe(5000.0);
       expect(goal.currentAmount.valueInCents).toBe(250000);
-      expect(goal.currentAmount.valueInMonetary).toBe(2500.00);
+      expect(goal.currentAmount.valueInMonetary).toBe(2500.0);
       expect(goal.budgetId).toBe('budget-restored');
       expect(goal.targetDate).toEqual(new Date('2026-12-25T10:00:00.000Z'));
       expect(goal.description).toBe('Restored from JSON');
@@ -965,7 +977,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'No target date',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -987,7 +999,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1010,7 +1022,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1033,7 +1045,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1056,7 +1068,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1079,7 +1091,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: GoalStatus.ACTIVE,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1102,7 +1114,7 @@ describe('Goal', () => {
         targetDate: null,
         description: 'Test goal',
         status: 'INVALID_STATUS' as GoalStatus,
-        createdAt: '2024-07-10T08:30:00.000Z'
+        createdAt: '2024-07-10T08:30:00.000Z',
       };
 
       // Act
@@ -1111,7 +1123,9 @@ describe('Goal', () => {
       // Assert
       expect(result.hasError).toBe(true);
       expect(result.hasData).toBe(false);
-      expect(result.errors).toContain('Invalid status. Must be one of: ACTIVE, PAUSED, COMPLETED, CANCELLED');
+      expect(result.errors).toContain(
+        'Invalid status. Must be one of: ACTIVE, PAUSED, COMPLETED, CANCELLED',
+      );
     });
   });
 
@@ -1123,7 +1137,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-active',
-        status: GoalStatus.ACTIVE
+        status: GoalStatus.ACTIVE,
       };
 
       const pausedProps: GoalProps = {
@@ -1131,7 +1145,7 @@ describe('Goal', () => {
         targetAmountInCents: 75000,
         currentAmountInCents: 75000, // Amount-based completion
         budgetId: 'budget-paused',
-        status: GoalStatus.PAUSED
+        status: GoalStatus.PAUSED,
       };
 
       const completedProps: GoalProps = {
@@ -1139,18 +1153,18 @@ describe('Goal', () => {
         targetAmountInCents: 50000,
         currentAmountInCents: 50000,
         budgetId: 'budget-completed',
-        status: GoalStatus.COMPLETED
+        status: GoalStatus.COMPLETED,
       };
 
       const goals = [
         Goal.create(activeProps).data!,
         Goal.create(pausedProps).data!,
-        Goal.create(completedProps).data!
+        Goal.create(completedProps).data!,
       ];
 
       // Act
-      const activeGoals = goals.filter(goal => goal.status === GoalStatus.ACTIVE);
-      const completedGoals = goals.filter(goal => goal.isCompleted());
+      const activeGoals = goals.filter((goal) => goal.status === GoalStatus.ACTIVE);
+      const completedGoals = goals.filter((goal) => goal.isCompleted());
 
       // Assert
       expect(activeGoals.length).toBe(1);
@@ -1163,13 +1177,13 @@ describe('Goal', () => {
       const goalProps = [
         { name: 'Goal 1', targetAmountInCents: 100000, currentAmountInCents: 75000 },
         { name: 'Goal 2', targetAmountInCents: 200000, currentAmountInCents: 100000 },
-        { name: 'Goal 3', targetAmountInCents: 150000, currentAmountInCents: 50000 }
-      ].map(props => ({
+        { name: 'Goal 3', targetAmountInCents: 150000, currentAmountInCents: 50000 },
+      ].map((props) => ({
         ...props,
-        budgetId: 'budget-total'
+        budgetId: 'budget-total',
       }));
 
-      const goals = goalProps.map(props => Goal.create(props).data!);
+      const goals = goalProps.map((props) => Goal.create(props).data!);
 
       // Act
       const totalTarget = goals.reduce((sum, goal) => sum + goal.targetAmount.valueInCents, 0);
@@ -1197,19 +1211,19 @@ describe('Goal', () => {
           targetAmountInCents: 100000,
           currentAmountInCents: 50000,
           budgetId: 'budget-long',
-          targetDate: futureDate
+          targetDate: futureDate,
         }).data!,
         Goal.create({
           name: 'Urgent Goal',
           targetAmountInCents: 50000,
           currentAmountInCents: 25000,
           budgetId: 'budget-urgent',
-          targetDate: urgentDate
-        }).data!
+          targetDate: urgentDate,
+        }).data!,
       ];
 
       // Act
-      const urgentGoals = goals.filter(goal => {
+      const urgentGoals = goals.filter((goal) => {
         const daysLeft = goal.getDaysUntilTarget();
         return daysLeft !== null && daysLeft <= 14; // 2 weeks or less
       });
@@ -1227,7 +1241,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-immutable',
-        targetDate: targetDate
+        targetDate: targetDate,
       };
       const goal = Goal.create(props).data!;
 
@@ -1250,7 +1264,7 @@ describe('Goal', () => {
         name: maxName,
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
-        budgetId: 'budget-max-name'
+        budgetId: 'budget-max-name',
       };
 
       // Act
@@ -1268,7 +1282,7 @@ describe('Goal', () => {
         name: 'Large Amount Goal',
         targetAmountInCents: 999999999, // R$ 9,999,999.99
         currentAmountInCents: 500000000, // R$ 5,000,000.00
-        budgetId: 'budget-large'
+        budgetId: 'budget-large',
       };
 
       // Act
@@ -1290,7 +1304,7 @@ describe('Goal', () => {
         targetAmountInCents: 100000,
         currentAmountInCents: 50000,
         budgetId: 'budget-today',
-        targetDate: today
+        targetDate: today,
       };
 
       // Act
@@ -1311,7 +1325,7 @@ describe('Goal', () => {
         budgetId: 'budget-roundtrip',
         targetDate: targetDate,
         description: 'Testing round-trip',
-        status: GoalStatus.PAUSED
+        status: GoalStatus.PAUSED,
       };
       const originalGoal = Goal.create(originalProps).data!;
 

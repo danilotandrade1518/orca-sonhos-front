@@ -11,7 +11,7 @@ describe('Account', () => {
         name: 'Main Checking Account',
         type: AccountType.CHECKING,
         balanceInCents: 150000, // R$ 1,500.00
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -39,7 +39,7 @@ describe('Account', () => {
         balanceInCents: 500000, // R$ 5,000.00
         budgetId: 'budget-456',
         description: 'Emergency fund account',
-        isActive: false
+        isActive: false,
       };
 
       // Act
@@ -62,7 +62,7 @@ describe('Account', () => {
         name: 'Investment Portfolio',
         type: AccountType.INVESTMENT,
         balanceInCents: 1000000, // R$ 10,000.00
-        budgetId: 'budget-789'
+        budgetId: 'budget-789',
       };
 
       // Act
@@ -81,7 +81,7 @@ describe('Account', () => {
         name: 'Wallet Cash',
         type: AccountType.CASH,
         balanceInCents: 5000, // R$ 50.00
-        budgetId: 'budget-cash'
+        budgetId: 'budget-cash',
       };
 
       // Act
@@ -100,7 +100,7 @@ describe('Account', () => {
         name: 'New Account',
         type: AccountType.CHECKING,
         balanceInCents: 0,
-        budgetId: 'budget-new'
+        budgetId: 'budget-new',
       };
 
       // Act
@@ -119,7 +119,7 @@ describe('Account', () => {
         name: 'Overdraft Account',
         type: AccountType.CHECKING,
         balanceInCents: -25000, // -R$ 250.00
-        budgetId: 'budget-overdraft'
+        budgetId: 'budget-overdraft',
       };
 
       // Act
@@ -139,7 +139,7 @@ describe('Account', () => {
         name: '',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -157,7 +157,7 @@ describe('Account', () => {
         name: '   ',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -175,7 +175,7 @@ describe('Account', () => {
         name: longName,
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -192,7 +192,7 @@ describe('Account', () => {
         name: 123 as any,
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -209,7 +209,7 @@ describe('Account', () => {
         name: 'Valid Account',
         type: 'INVALID_TYPE' as AccountType,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -226,7 +226,7 @@ describe('Account', () => {
         name: 'Valid Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: ''
+        budgetId: '',
       };
 
       // Act
@@ -243,7 +243,7 @@ describe('Account', () => {
         name: 'Valid Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: '   '
+        budgetId: '   ',
       };
 
       // Act
@@ -260,7 +260,7 @@ describe('Account', () => {
         name: 'Valid Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 123 as any
+        budgetId: 123 as any,
       };
 
       // Act
@@ -277,7 +277,7 @@ describe('Account', () => {
         name: 'Valid Account',
         type: AccountType.CHECKING,
         balanceInCents: NaN,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
 
       // Act
@@ -296,7 +296,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -306,7 +306,9 @@ describe('Account', () => {
       // Assert
       expect(typeof id).toBe('string');
       expect(id.length).toBeGreaterThan(0);
-      expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should return correct name', () => {
@@ -315,7 +317,7 @@ describe('Account', () => {
         name: 'My Savings Account',
         type: AccountType.SAVINGS,
         balanceInCents: 250000,
-        budgetId: 'budget-456'
+        budgetId: 'budget-456',
       };
       const account = Account.create(props).data!;
 
@@ -332,7 +334,7 @@ describe('Account', () => {
         name: 'Investment Account',
         type: AccountType.INVESTMENT,
         balanceInCents: 750000,
-        budgetId: 'budget-789'
+        budgetId: 'budget-789',
       };
       const account = Account.create(props).data!;
 
@@ -349,7 +351,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 123456,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -367,7 +369,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'my-budget-uuid-123'
+        budgetId: 'my-budget-uuid-123',
       };
       const account = Account.create(props).data!;
 
@@ -385,7 +387,7 @@ describe('Account', () => {
         type: AccountType.CHECKING,
         balanceInCents: 100000,
         budgetId: 'budget-123',
-        description: 'My primary checking account'
+        description: 'My primary checking account',
       };
       const account = Account.create(props).data!;
 
@@ -402,7 +404,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -420,7 +422,7 @@ describe('Account', () => {
         type: AccountType.CHECKING,
         balanceInCents: 100000,
         budgetId: 'budget-123',
-        isActive: false
+        isActive: false,
       };
       const account = Account.create(props).data!;
 
@@ -437,7 +439,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -455,7 +457,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
       const afterCreation = new Date();
@@ -482,7 +484,7 @@ describe('Account', () => {
         name: 'Positive Account',
         type: AccountType.CHECKING,
         balanceInCents: 150000, // R$ 1,500.00
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -499,7 +501,7 @@ describe('Account', () => {
         name: 'Zero Account',
         type: AccountType.CHECKING,
         balanceInCents: 0,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -532,7 +534,7 @@ describe('Account', () => {
         name: 'Zero Account',
         type: AccountType.CHECKING,
         balanceInCents: 0,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -549,7 +551,7 @@ describe('Account', () => {
         name: 'Positive Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000, // R$ 1,000.00
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -568,7 +570,7 @@ describe('Account', () => {
         name: 'Test Account',
         type: AccountType.CHECKING,
         balanceInCents: 123456, // R$ 1,234.56
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -585,7 +587,7 @@ describe('Account', () => {
         name: 'Zero Account',
         type: AccountType.CHECKING,
         balanceInCents: 0,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -612,7 +614,7 @@ describe('Account', () => {
         name: 'Checking Account',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-123'
+        budgetId: 'budget-123',
       };
       const account = Account.create(props).data!;
 
@@ -629,7 +631,7 @@ describe('Account', () => {
         name: 'Savings Account',
         type: AccountType.SAVINGS,
         balanceInCents: 250000,
-        budgetId: 'budget-456'
+        budgetId: 'budget-456',
       };
       const account = Account.create(props).data!;
 
@@ -646,7 +648,7 @@ describe('Account', () => {
         name: 'Investment Account',
         type: AccountType.INVESTMENT,
         balanceInCents: 500000,
-        budgetId: 'budget-789'
+        budgetId: 'budget-789',
       };
       const account = Account.create(props).data!;
 
@@ -663,7 +665,7 @@ describe('Account', () => {
         name: 'Cash Account',
         type: AccountType.CASH,
         balanceInCents: 10000,
-        budgetId: 'budget-cash'
+        budgetId: 'budget-cash',
       };
       const account = Account.create(props).data!;
 
@@ -684,7 +686,7 @@ describe('Account', () => {
         balanceInCents: 123456,
         budgetId: 'budget-123',
         description: 'Test description',
-        isActive: false
+        isActive: false,
       };
       const account = Account.create(props).data!;
 
@@ -699,12 +701,12 @@ describe('Account', () => {
         balance: {
           valueInCents: 123456,
           valueInMonetary: 1234.56,
-          formatted: 'R$\u00a01.234,56'
+          formatted: 'R$\u00a01.234,56',
         },
         budgetId: 'budget-123',
         description: 'Test description',
         isActive: false,
-        createdAt: account.createdAt.toISOString()
+        createdAt: account.createdAt.toISOString(),
       });
     });
 
@@ -714,7 +716,7 @@ describe('Account', () => {
         name: 'Simple Account',
         type: AccountType.SAVINGS,
         balanceInCents: 50000,
-        budgetId: 'budget-simple'
+        budgetId: 'budget-simple',
       };
       const account = Account.create(props).data!;
 
@@ -746,7 +748,7 @@ describe('Account', () => {
         budgetId: 'budget-json',
         description: 'Created from JSON',
         isActive: true,
-        createdAt: createdAt.toISOString()
+        createdAt: createdAt.toISOString(),
       };
 
       // Act
@@ -774,7 +776,7 @@ describe('Account', () => {
         balanceInCents: 555555,
         budgetId: 'budget-roundtrip',
         description: 'Round trip test',
-        isActive: false
+        isActive: false,
       };
       const originalAccount = Account.create(originalProps).data!;
       const json = originalAccount.toJSON();
@@ -805,7 +807,7 @@ describe('Account', () => {
         budgetId: 'budget-123',
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -827,7 +829,7 @@ describe('Account', () => {
         budgetId: 'budget-123',
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -849,7 +851,7 @@ describe('Account', () => {
         budgetId: 'budget-123',
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -871,7 +873,7 @@ describe('Account', () => {
         budgetId: 'budget-123',
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -893,7 +895,7 @@ describe('Account', () => {
         budgetId: '',
         description: '',
         isActive: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       // Act
@@ -913,7 +915,7 @@ describe('Account', () => {
         name: name100chars,
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-boundary'
+        budgetId: 'budget-boundary',
       };
 
       // Act
@@ -932,7 +934,7 @@ describe('Account', () => {
         name: 'Large Balance Account',
         type: AccountType.INVESTMENT,
         balanceInCents: Number.MAX_SAFE_INTEGER,
-        budgetId: 'budget-large'
+        budgetId: 'budget-large',
       };
 
       // Act
@@ -950,7 +952,7 @@ describe('Account', () => {
         name: 'Large Negative Account',
         type: AccountType.CHECKING,
         balanceInCents: Number.MIN_SAFE_INTEGER,
-        budgetId: 'budget-negative'
+        budgetId: 'budget-negative',
       };
 
       // Act
@@ -968,7 +970,7 @@ describe('Account', () => {
         name: 'Account with special chars: àáâãäç éêë íîï óôõö úûü ñ',
         type: AccountType.SAVINGS,
         balanceInCents: 100000,
-        budgetId: 'budget-special'
+        budgetId: 'budget-special',
       };
 
       // Act
@@ -987,7 +989,7 @@ describe('Account', () => {
         type: AccountType.CASH,
         balanceInCents: 50000,
         budgetId: 'budget-desc',
-        description: 'Description with emojis 💰💸 and symbols @#$%^&*()'
+        description: 'Description with emojis 💰💸 and symbols @#$%^&*()',
       };
 
       // Act
@@ -1006,7 +1008,7 @@ describe('Account', () => {
         type: AccountType.CHECKING,
         balanceInCents: 100000,
         budgetId: 'budget-empty',
-        description: ''
+        description: '',
       };
 
       // Act
@@ -1024,13 +1026,13 @@ describe('Account', () => {
         name: 'Account 1',
         type: AccountType.CHECKING,
         balanceInCents: 100000,
-        budgetId: 'budget-1'
+        budgetId: 'budget-1',
       };
       const props2: AccountProps = {
         name: 'Account 2',
         type: AccountType.SAVINGS,
         balanceInCents: 200000,
-        budgetId: 'budget-2'
+        budgetId: 'budget-2',
       };
 
       // Act
