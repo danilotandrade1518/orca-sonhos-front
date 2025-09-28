@@ -272,7 +272,7 @@ Implementar todos os Use Cases para operações de comando (Create, Update, Dele
 
 **Critério de Conclusão**: 3 Use Cases de CreditCard implementados com testes
 
-#### 4.4 Implementar Use Cases de Envelope [⏳]
+#### 4.4 Implementar Use Cases de Envelope [✅ Completada]
 
 **Descrição**: Criar Use Cases para operações de Envelope
 **Arquivos**:
@@ -371,6 +371,18 @@ Implementar todos os Use Cases para operações de comando (Create, Update, Dele
 - **Index Files**: Organizados por entidade e atualizados corretamente
 - **Linting**: Sem erros de linting, formatação consistente
 - **Padrões**: 100% alinhado com implementação de Account e Category
+
+**Implementação Concluída com Sucesso - Envelope**:
+
+- **Total de Use Cases**: 6 Use Cases implementados (Create, Update, Delete, AddAmount, RemoveAmount, TransferBetween)
+- **Estrutura Consistente**: Seguindo exatamente os padrões de Account, Category e CreditCard
+- **Validações Robustas**: Uso correto dos métodos de validação do EnvelopeRequestMapper
+- **Either Pattern**: Aplicado consistentemente em todas as operações
+- **TypeScript Puro**: Sem dependências Angular na camada Application
+- **Testes Unitários**: 106/106 testes passando com sucesso (incluindo testes de mappers, domain models e Use Cases)
+- **Index Files**: Organizados por entidade e atualizados corretamente
+- **Linting**: Sem erros de linting, formatação consistente
+- **Padrões**: 100% alinhado com implementação de Account, Category e CreditCard
 
 ---
 
