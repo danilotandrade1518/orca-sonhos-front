@@ -45,7 +45,7 @@ describe('BudgetOverviewQueryHandler', () => {
       };
 
       mockBudgetOverviewPort.getBudgetOverview.and.returnValue(
-        Promise.resolve(Either.success(mockOverview))
+        Promise.resolve(Either.success(mockOverview)),
       );
 
       const result = await queryHandler.execute(validRequest);
@@ -102,7 +102,7 @@ describe('BudgetOverviewQueryHandler', () => {
 
       const networkError = new NetworkError('getBudgetOverview', 'Connection failed');
       mockBudgetOverviewPort.getBudgetOverview.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await queryHandler.execute(validRequest);

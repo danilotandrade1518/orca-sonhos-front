@@ -9,7 +9,7 @@ export class CreateBudgetUseCase {
   constructor(private readonly createBudgetPort: ICreateBudgetPort) {}
 
   async execute(
-    request: CreateBudgetRequestDto
+    request: CreateBudgetRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>> {
     try {
       const budgetResult = BudgetRequestMapper.fromCreateRequestToBudget(request);

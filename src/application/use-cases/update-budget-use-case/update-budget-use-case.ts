@@ -9,7 +9,7 @@ export class UpdateBudgetUseCase {
   constructor(private readonly updateBudgetPort: IUpdateBudgetPort) {}
 
   async execute(
-    request: UpdateBudgetRequestDto
+    request: UpdateBudgetRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>> {
     try {
       const validationResult = BudgetRequestMapper.validateUpdateRequest(request);

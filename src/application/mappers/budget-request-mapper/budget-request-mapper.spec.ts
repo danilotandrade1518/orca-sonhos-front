@@ -5,7 +5,7 @@ import {
   UpdateBudgetRequestDto,
   AddParticipantRequestDto,
   RemoveParticipantRequestDto,
-  DeleteBudgetRequestDto
+  DeleteBudgetRequestDto,
 } from '../../dtos';
 
 describe('BudgetRequestMapper', () => {
@@ -17,7 +17,7 @@ describe('BudgetRequestMapper', () => {
         ownerId: 'user-123',
         participantIds: ['user-456', 'user-789'],
         description: 'Test description',
-        isActive: true
+        isActive: true,
       };
 
       const result = BudgetRequestMapper.fromCreateRequestToBudget(dto);
@@ -35,7 +35,7 @@ describe('BudgetRequestMapper', () => {
       const dto: CreateBudgetRequestDto = {
         name: 'Test Budget',
         limitInCents: 100000,
-        ownerId: 'user-123'
+        ownerId: 'user-123',
       };
 
       const result = BudgetRequestMapper.fromCreateRequestToBudget(dto);
@@ -50,7 +50,7 @@ describe('BudgetRequestMapper', () => {
       const dto: CreateBudgetRequestDto = {
         name: '',
         limitInCents: 100000,
-        ownerId: 'user-123'
+        ownerId: 'user-123',
       };
 
       const result = BudgetRequestMapper.fromCreateRequestToBudget(dto);
@@ -64,7 +64,7 @@ describe('BudgetRequestMapper', () => {
       const dto: CreateBudgetRequestDto = {
         name: 'Test Budget',
         limitInCents: -100,
-        ownerId: 'user-123'
+        ownerId: 'user-123',
       };
 
       const result = BudgetRequestMapper.fromCreateRequestToBudget(dto);
@@ -90,7 +90,7 @@ describe('BudgetRequestMapper', () => {
         name: 'Updated Budget',
         limitInCents: 200000,
         description: 'Updated description',
-        isActive: false
+        isActive: false,
       };
 
       const result = BudgetRequestMapper.validateUpdateRequest(dto);
@@ -101,7 +101,7 @@ describe('BudgetRequestMapper', () => {
     it('should validate partial UpdateBudgetRequestDto', () => {
       const dto: UpdateBudgetRequestDto = {
         budgetId: 'budget-123',
-        name: 'Updated Budget'
+        name: 'Updated Budget',
       };
 
       const result = BudgetRequestMapper.validateUpdateRequest(dto);
@@ -111,7 +111,7 @@ describe('BudgetRequestMapper', () => {
 
     it('should return validation error when budgetId is missing', () => {
       const dto = {
-        name: 'Updated Budget'
+        name: 'Updated Budget',
       } as UpdateBudgetRequestDto;
 
       const result = BudgetRequestMapper.validateUpdateRequest(dto);
@@ -135,7 +135,7 @@ describe('BudgetRequestMapper', () => {
       const dto: AddParticipantRequestDto = {
         budgetId: 'budget-123',
         participantId: 'user-456',
-        requesterId: 'user-123'
+        requesterId: 'user-123',
       };
 
       const result = BudgetRequestMapper.validateParticipantRequest(dto);
@@ -147,7 +147,7 @@ describe('BudgetRequestMapper', () => {
       const dto: RemoveParticipantRequestDto = {
         budgetId: 'budget-123',
         participantId: 'user-456',
-        requesterId: 'user-123'
+        requesterId: 'user-123',
       };
 
       const result = BudgetRequestMapper.validateParticipantRequest(dto);
@@ -159,7 +159,7 @@ describe('BudgetRequestMapper', () => {
       const dto: AddParticipantRequestDto = {
         budgetId: 'budget-123',
         participantId: '   ',
-        requesterId: 'user-123'
+        requesterId: 'user-123',
       };
 
       const result = BudgetRequestMapper.validateParticipantRequest(dto);
@@ -182,7 +182,7 @@ describe('BudgetRequestMapper', () => {
     it('should validate valid DeleteBudgetRequestDto', () => {
       const dto: DeleteBudgetRequestDto = {
         budgetId: 'budget-123',
-        requesterId: 'user-123'
+        requesterId: 'user-123',
       };
 
       const result = BudgetRequestMapper.validateDeleteRequest(dto);
@@ -193,7 +193,7 @@ describe('BudgetRequestMapper', () => {
     it('should return validation error when requesterId is empty', () => {
       const dto: DeleteBudgetRequestDto = {
         budgetId: 'budget-123',
-        requesterId: ''
+        requesterId: '',
       };
 
       const result = BudgetRequestMapper.validateDeleteRequest(dto);
@@ -217,7 +217,7 @@ describe('BudgetRequestMapper', () => {
       const dto: UpdateBudgetRequestDto = {
         budgetId: '  budget-123  ',
         name: '  Updated Budget  ',
-        description: '  Updated description  '
+        description: '  Updated description  ',
       };
 
       const result = BudgetRequestMapper.normalizeUpdateRequest(dto);
@@ -233,7 +233,7 @@ describe('BudgetRequestMapper', () => {
       const dto: AddParticipantRequestDto = {
         budgetId: '  budget-123  ',
         participantId: '  user-456  ',
-        requesterId: '  user-123  '
+        requesterId: '  user-123  ',
       };
 
       const result = BudgetRequestMapper.normalizeParticipantRequest(dto);

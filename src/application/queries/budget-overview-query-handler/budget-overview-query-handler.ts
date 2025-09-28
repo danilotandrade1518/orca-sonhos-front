@@ -10,7 +10,7 @@ export class BudgetOverviewQueryHandler {
   constructor(private readonly budgetOverviewPort: IBudgetOverviewPort) {}
 
   async execute(
-    request: BudgetOverviewQueryRequestDto
+    request: BudgetOverviewQueryRequestDto,
   ): Promise<Either<ApplicationError, BudgetOverviewQueryResponseDto>> {
     try {
       if (!request.budgetId || request.budgetId.trim() === '') {

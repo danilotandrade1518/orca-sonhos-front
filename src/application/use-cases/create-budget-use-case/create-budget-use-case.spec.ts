@@ -35,11 +35,11 @@ describe('CreateBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'fromCreateRequestToBudget').and.returnValue(
-        Either.success(mockBudget as any)
+        Either.success(mockBudget as any),
       );
       const mockBackendResponse = { id: 'budget-123' };
       mockCreateBudgetPort.createBudget.and.returnValue(
-        Promise.resolve(Either.success(mockBackendResponse))
+        Promise.resolve(Either.success(mockBackendResponse)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -59,7 +59,7 @@ describe('CreateBudgetUseCase', () => {
 
       const validationError = new ValidationError('name', 'Name is required');
       spyOn(BudgetRequestMapper, 'fromCreateRequestToBudget').and.returnValue(
-        Either.error(validationError)
+        Either.error(validationError),
       );
 
       const result = await useCase.execute(invalidRequest);
@@ -87,11 +87,11 @@ describe('CreateBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'fromCreateRequestToBudget').and.returnValue(
-        Either.success(mockBudget as any)
+        Either.success(mockBudget as any),
       );
       const networkError = new NetworkError('createBudget', 'Connection failed');
       mockCreateBudgetPort.createBudget.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -108,7 +108,7 @@ describe('CreateBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'fromCreateRequestToBudget').and.throwError(
-        'Unexpected mapper error'
+        'Unexpected mapper error',
       );
 
       const result = await useCase.execute(validRequest);

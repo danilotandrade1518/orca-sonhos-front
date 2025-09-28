@@ -27,7 +27,7 @@ describe('UpdateBudgetUseCase', () => {
       spyOn(BudgetRequestMapper, 'validateUpdateRequest').and.returnValue(Either.success(true));
       const mockBackendResponse = { id: 'budget-123' };
       mockUpdateBudgetPort.updateBudget.and.returnValue(
-        Promise.resolve(Either.success(mockBackendResponse))
+        Promise.resolve(Either.success(mockBackendResponse)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -47,7 +47,7 @@ describe('UpdateBudgetUseCase', () => {
 
       const validationError = new ValidationError('budgetId', 'Budget ID is required');
       spyOn(BudgetRequestMapper, 'validateUpdateRequest').and.returnValue(
-        Either.error(validationError)
+        Either.error(validationError),
       );
 
       const result = await useCase.execute(invalidRequest);
@@ -67,7 +67,7 @@ describe('UpdateBudgetUseCase', () => {
       spyOn(BudgetRequestMapper, 'validateUpdateRequest').and.returnValue(Either.success(true));
       const networkError = new NetworkError('updateBudget', 'Connection failed');
       mockUpdateBudgetPort.updateBudget.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await useCase.execute(validRequest);

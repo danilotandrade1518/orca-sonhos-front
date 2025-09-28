@@ -27,11 +27,11 @@ describe('AddParticipantToBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.success(true)
+        Either.success(true),
       );
       const mockBackendResponse = { id: 'budget-123' };
       mockAddParticipantToBudgetPort.addParticipantToBudget.and.returnValue(
-        Promise.resolve(Either.success(mockBackendResponse))
+        Promise.resolve(Either.success(mockBackendResponse)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -40,7 +40,7 @@ describe('AddParticipantToBudgetUseCase', () => {
       expect(result.data).toEqual(mockBackendResponse);
       expect(BudgetRequestMapper.validateParticipantRequest).toHaveBeenCalledWith(validRequest);
       expect(mockAddParticipantToBudgetPort.addParticipantToBudget).toHaveBeenCalledWith(
-        validRequest
+        validRequest,
       );
     });
 
@@ -53,7 +53,7 @@ describe('AddParticipantToBudgetUseCase', () => {
 
       const validationError = new ValidationError('budgetId', 'Budget ID is required');
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.error(validationError)
+        Either.error(validationError),
       );
 
       const result = await useCase.execute(invalidRequest);
@@ -71,11 +71,11 @@ describe('AddParticipantToBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.success(true)
+        Either.success(true),
       );
       const networkError = new NetworkError('addParticipantToBudget', 'Connection failed');
       mockAddParticipantToBudgetPort.addParticipantToBudget.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -92,7 +92,7 @@ describe('AddParticipantToBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.throwError(
-        'Unexpected mapper error'
+        'Unexpected mapper error',
       );
 
       const result = await useCase.execute(validRequest);

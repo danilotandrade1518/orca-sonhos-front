@@ -12,7 +12,7 @@ export class AddParticipantToBudgetUseCase {
   constructor(private readonly addParticipantToBudgetPort: IAddParticipantToBudgetPort) {}
 
   async execute(
-    request: AddParticipantRequestDto
+    request: AddParticipantRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>> {
     try {
       const validationResult = BudgetRequestMapper.validateParticipantRequest(request);

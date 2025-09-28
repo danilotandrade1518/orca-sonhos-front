@@ -9,7 +9,7 @@ export class DeleteBudgetUseCase {
   constructor(private readonly deleteBudgetPort: IDeleteBudgetPort) {}
 
   async execute(
-    request: DeleteBudgetRequestDto
+    request: DeleteBudgetRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>> {
     try {
       const validationResult = BudgetRequestMapper.validateDeleteRequest(request);

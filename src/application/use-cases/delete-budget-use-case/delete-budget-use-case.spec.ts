@@ -26,7 +26,7 @@ describe('DeleteBudgetUseCase', () => {
       spyOn(BudgetRequestMapper, 'validateDeleteRequest').and.returnValue(Either.success(true));
       const mockBackendResponse = { id: 'budget-123' };
       mockDeleteBudgetPort.deleteBudget.and.returnValue(
-        Promise.resolve(Either.success(mockBackendResponse))
+        Promise.resolve(Either.success(mockBackendResponse)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -45,7 +45,7 @@ describe('DeleteBudgetUseCase', () => {
 
       const validationError = new ValidationError('budgetId', 'Budget ID is required');
       spyOn(BudgetRequestMapper, 'validateDeleteRequest').and.returnValue(
-        Either.error(validationError)
+        Either.error(validationError),
       );
 
       const result = await useCase.execute(invalidRequest);
@@ -64,7 +64,7 @@ describe('DeleteBudgetUseCase', () => {
       spyOn(BudgetRequestMapper, 'validateDeleteRequest').and.returnValue(Either.success(true));
       const networkError = new NetworkError('deleteBudget', 'Connection failed');
       mockDeleteBudgetPort.deleteBudget.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await useCase.execute(validRequest);

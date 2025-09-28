@@ -27,11 +27,11 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.success(true)
+        Either.success(true),
       );
       const mockBackendResponse = { id: 'budget-123' };
       mockRemoveParticipantFromBudgetPort.removeParticipantFromBudget.and.returnValue(
-        Promise.resolve(Either.success(mockBackendResponse))
+        Promise.resolve(Either.success(mockBackendResponse)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -40,7 +40,7 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
       expect(result.data).toEqual(mockBackendResponse);
       expect(BudgetRequestMapper.validateParticipantRequest).toHaveBeenCalledWith(validRequest);
       expect(mockRemoveParticipantFromBudgetPort.removeParticipantFromBudget).toHaveBeenCalledWith(
-        validRequest
+        validRequest,
       );
     });
 
@@ -53,7 +53,7 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
 
       const validationError = new ValidationError('budgetId', 'Budget ID is required');
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.error(validationError)
+        Either.error(validationError),
       );
 
       const result = await useCase.execute(invalidRequest);
@@ -61,7 +61,7 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
       expect(result.hasError).toBe(true);
       expect(result.errors).toContain(validationError);
       expect(
-        mockRemoveParticipantFromBudgetPort.removeParticipantFromBudget
+        mockRemoveParticipantFromBudgetPort.removeParticipantFromBudget,
       ).not.toHaveBeenCalled();
     });
 
@@ -73,11 +73,11 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.returnValue(
-        Either.success(true)
+        Either.success(true),
       );
       const networkError = new NetworkError('removeParticipantFromBudget', 'Connection failed');
       mockRemoveParticipantFromBudgetPort.removeParticipantFromBudget.and.returnValue(
-        Promise.resolve(Either.error(networkError))
+        Promise.resolve(Either.error(networkError)),
       );
 
       const result = await useCase.execute(validRequest);
@@ -94,7 +94,7 @@ describe('RemoveParticipantFromBudgetUseCase', () => {
       };
 
       spyOn(BudgetRequestMapper, 'validateParticipantRequest').and.throwError(
-        'Unexpected mapper error'
+        'Unexpected mapper error',
       );
 
       const result = await useCase.execute(validRequest);

@@ -8,8 +8,8 @@ export abstract class ApplicationError extends Error {
     this.code = code;
     this.details = details;
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
+    if ((Error as any).captureStackTrace) {
+      (Error as any).captureStackTrace(this, this.constructor);
     }
   }
 

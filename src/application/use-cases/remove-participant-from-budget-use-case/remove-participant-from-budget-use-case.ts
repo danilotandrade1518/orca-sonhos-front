@@ -12,7 +12,7 @@ export class RemoveParticipantFromBudgetUseCase {
   constructor(private readonly removeParticipantFromBudgetPort: IRemoveParticipantFromBudgetPort) {}
 
   async execute(
-    request: RemoveParticipantRequestDto
+    request: RemoveParticipantRequestDto,
   ): Promise<Either<ApplicationError, BudgetResponse>> {
     try {
       const validationResult = BudgetRequestMapper.validateParticipantRequest(request);
@@ -21,9 +21,8 @@ export class RemoveParticipantFromBudgetUseCase {
         return Either.errors(validationResult.errors);
       }
 
-      const httpResult = await this.removeParticipantFromBudgetPort.removeParticipantFromBudget(
-        request
-      );
+      const httpResult =
+        await this.removeParticipantFromBudgetPort.removeParticipantFromBudget(request);
 
       if (httpResult.hasError) {
         return Either.errors(httpResult.errors);

@@ -10,7 +10,7 @@ export class ListBudgetsQueryHandler {
   constructor(private readonly listBudgetsPort: IListBudgetsPort) {}
 
   async execute(
-    request: ListBudgetsQueryRequestDto
+    request: ListBudgetsQueryRequestDto,
   ): Promise<Either<ApplicationError, ListBudgetsQueryResponseDto[]>> {
     try {
       if (!request.userId || request.userId.trim() === '') {
