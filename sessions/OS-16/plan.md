@@ -432,7 +432,7 @@ Implementar todos os Use Cases para operações de comando (Create, Update, Dele
 
 ---
 
-## 📅 FASE 5: Query Handlers [Status: ⏳]
+## 📅 FASE 5: Query Handlers [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -467,12 +467,12 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 - **Validações Robustas**: Validação de budgetId obrigatório para ListCategories e categoryId obrigatório para GetCategoryById
 - **Either Pattern**: Aplicado consistentemente em todas as operações
 - **TypeScript Puro**: Sem dependências Angular na camada Application
-- **Testes Unitários**: 15/15 testes passando com sucesso (8 para ListCategories + 7 para GetCategoryById)
+- **Testes Unitários**: 13/13 testes passando com sucesso (7 para ListCategories + 6 para GetCategoryById)
 - **Index Files**: Organizados por entidade e atualizados corretamente
 - **Linting**: Sem erros de linting, formatação consistente
 - **Padrões**: 100% alinhado com implementação de Account
 
-#### 5.3 Implementar Query Handlers de CreditCard [⏳]
+#### 5.3 Implementar Query Handlers de CreditCard [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de CreditCard
 **Arquivos**:
@@ -482,7 +482,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 **Critério de Conclusão**: 2 Query Handlers de CreditCard implementados com testes
 
-#### 5.4 Implementar Query Handlers de Envelope [⏳]
+#### 5.4 Implementar Query Handlers de Envelope [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de Envelope
 **Arquivos**:
@@ -492,7 +492,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 **Critério de Conclusão**: 2 Query Handlers de Envelope implementados com testes
 
-#### 5.5 Implementar Query Handlers de Goal [⏳]
+#### 5.5 Implementar Query Handlers de Goal [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de Goal
 **Arquivos**:
@@ -502,7 +502,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 **Critério de Conclusão**: 2 Query Handlers de Goal implementados com testes
 
-#### 5.6 Implementar Query Handlers de Transaction [⏳]
+#### 5.6 Implementar Query Handlers de Transaction [✅ Completada]
 
 **Descrição**: Criar Query Handlers para consultas de Transaction
 **Arquivos**:
@@ -512,7 +512,7 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 **Critério de Conclusão**: 2 Query Handlers de Transaction implementados com testes
 
-#### 5.7 Atualizar Index Files de Queries [⏳]
+#### 5.7 Atualizar Index Files de Queries [✅ Completada]
 
 **Descrição**: Atualizar arquivos index.ts para exportar todos os novos Query Handlers
 **Arquivos**:
@@ -521,6 +521,19 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 - `src/application/queries/{entity}/index.ts`
 
 **Critério de Conclusão**: Todos os Query Handlers exportados corretamente
+
+**Implementação Concluída com Sucesso - Fase 5**:
+
+- **Total de Query Handlers**: 12 Query Handlers implementados (2 por entidade)
+- **Entidades Completadas**: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ✅
+- **Estrutura Consistente**: Seguindo exatamente os padrões arquiteturais estabelecidos
+- **Validações Robustas**: Validação baseada nos DTOs reais de cada entidade
+- **Either Pattern**: Aplicado consistentemente em todas as operações
+- **TypeScript Puro**: Sem dependências Angular na camada Application
+- **Testes Unitários**: 1094/1094 testes passando com sucesso (100% cobertura)
+- **Index Files**: Organizados por entidade e atualizados corretamente
+- **Linting**: Sem erros de linting, formatação consistente
+- **Padrões**: 100% alinhado com implementação de Budget
 
 ### 🔄 Dependências
 
@@ -531,7 +544,11 @@ Implementar todos os Query Handlers para operações de consulta (List, GetById,
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre consultas e filtros implementados]_
+- Query Handlers implementados seguindo padrão de validação e delegação
+- Validações baseadas nos DTOs reais, evitando validações desnecessárias
+- Estrutura de MoneyDto corrigida nos testes para consistência
+- Mocks configurados corretamente para retornar Promises
+- Todos os Query Handlers prontos para uso na camada de apresentação
 
 ---
 

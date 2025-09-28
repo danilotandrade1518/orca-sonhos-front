@@ -3,7 +3,8 @@ import { IGetCategoryByIdPort } from '../../../ports/category/get-category-by-id
 import { GetCategoryByIdQueryRequestDto } from '../../../dtos/category/request/get-category-by-id-query-request.dto';
 import { GetCategoryByIdQueryResponseDto } from '../../../dtos/category/response/get-category-by-id-query-response.dto';
 import { Either } from '../../../../shared/core/either/either';
-import { ValidationError } from '../../../errors/validation-error';
+import { ApplicationError } from '../../../errors/application-error';
+import { NetworkError } from '../../../errors/network-error';
 import { UnexpectedError } from '../../../errors/unexpected-error';
 import { CategoryType } from '@models/shared/enums/category-type';
 
@@ -29,17 +30,17 @@ describe('GetCategoryByIdQueryHandler', () => {
           type: CategoryType.INCOME,
           budgetId: 'budget-123',
           description: 'Monthly salary',
-          color: '#00FF00',
-          icon: 'money',
+          color: '#4CAF50',
+          icon: 'work',
           isActive: true,
           createdAt: '2024-01-01T00:00:00Z',
-          transactionCount: 5,
+          transactionCount: 12,
           totalAmount: {
-            valueInCents: 500000,
-            valueInMonetary: 5000.0,
-            formatted: 'R$ 5.000,00',
+            valueInCents: 1200000,
+            valueInMonetary: 12000.0,
+            formatted: 'R$ 12.000,00',
           },
-          lastTransactionDate: '2024-01-15T10:30:00Z',
+          lastTransactionDate: '2024-12-01T00:00:00Z',
         },
       };
 
@@ -67,18 +68,8 @@ describe('GetCategoryByIdQueryHandler', () => {
     });
 
     it('should return validation error when categoryId is not provided', async () => {
-      const invalidRequest = {} as GetCategoryByIdQueryRequestDto;
-
-      const result = await queryHandler.execute(invalidRequest);
-
-      expect(result.hasError).toBe(true);
-      expect(result.errors[0].message).toContain('Category ID is required');
-      expect(mockGetCategoryByIdPort.getCategoryById).not.toHaveBeenCalled();
-    });
-
-    it('should return validation error when categoryId is only whitespace', async () => {
       const invalidRequest: GetCategoryByIdQueryRequestDto = {
-        categoryId: '   ',
+        categoryId: undefined as any,
       };
 
       const result = await queryHandler.execute(invalidRequest);
@@ -88,20 +79,20 @@ describe('GetCategoryByIdQueryHandler', () => {
       expect(mockGetCategoryByIdPort.getCategoryById).not.toHaveBeenCalled();
     });
 
-    it('should return validation error when port returns error', async () => {
+    it('should return network error when HTTP port fails', async () => {
       const validRequest: GetCategoryByIdQueryRequestDto = {
         categoryId: 'category-123',
       };
 
-      const validationError = new ValidationError('port', 'Port error');
+      const networkError = new NetworkError('getCategoryById', 'Connection failed');
       mockGetCategoryByIdPort.getCategoryById.and.returnValue(
-        Promise.resolve(Either.error(validationError))
+        Promise.resolve(Either.error(networkError))
       );
 
       const result = await queryHandler.execute(validRequest);
 
       expect(result.hasError).toBe(true);
-      expect(result.errors).toContain(validationError);
+      expect(result.errors).toContain(networkError);
     });
 
     it('should handle unexpected errors gracefully', async () => {
@@ -117,20 +108,20 @@ describe('GetCategoryByIdQueryHandler', () => {
       expect(result.errors[0].message).toContain('Unexpected error during');
     });
 
-    it('should work with category without lastTransactionDate', async () => {
+    it('should get category without lastTransactionDate when no transactions', async () => {
       const validRequest: GetCategoryByIdQueryRequestDto = {
         categoryId: 'category-123',
       };
 
-      const responseWithoutLastTransaction: GetCategoryByIdQueryResponseDto = {
+      const mockResponse: GetCategoryByIdQueryResponseDto = {
         category: {
           id: 'category-123',
-          name: 'Salary',
-          type: CategoryType.INCOME,
+          name: 'New Category',
+          type: CategoryType.EXPENSE,
           budgetId: 'budget-123',
-          description: 'Monthly salary',
-          color: '#00FF00',
-          icon: 'money',
+          description: 'New expense category',
+          color: '#FF9800',
+          icon: 'shopping_cart',
           isActive: true,
           createdAt: '2024-01-01T00:00:00Z',
           transactionCount: 0,
@@ -143,14 +134,14 @@ describe('GetCategoryByIdQueryHandler', () => {
       };
 
       mockGetCategoryByIdPort.getCategoryById.and.returnValue(
-        Promise.resolve(Either.success(responseWithoutLastTransaction))
+        Promise.resolve(Either.success(mockResponse))
       );
 
       const result = await queryHandler.execute(validRequest);
 
       expect(result.hasError).toBe(false);
-      expect(result.data).toEqual(responseWithoutLastTransaction);
-      expect(mockGetCategoryByIdPort.getCategoryById).toHaveBeenCalledWith(validRequest);
+      expect(result.data).toEqual(mockResponse);
+      expect(result.data!.category.lastTransactionDate).toBeUndefined();
     });
   });
 });

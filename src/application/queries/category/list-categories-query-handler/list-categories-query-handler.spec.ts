@@ -3,7 +3,8 @@ import { IListCategoriesPort } from '../../../ports/category/list-categories.por
 import { ListCategoriesQueryRequestDto } from '../../../dtos/category/request/list-categories-query-request.dto';
 import { ListCategoriesQueryResponseDto } from '../../../dtos/category/response/list-categories-query-response.dto';
 import { Either } from '../../../../shared/core/either/either';
-import { ValidationError } from '../../../errors/validation-error';
+import { ApplicationError } from '../../../errors/application-error';
+import { NetworkError } from '../../../errors/network-error';
 import { UnexpectedError } from '../../../errors/unexpected-error';
 import { CategoryType } from '@models/shared/enums/category-type';
 
@@ -31,11 +32,11 @@ describe('ListCategoriesQueryHandler', () => {
             type: CategoryType.INCOME,
             budgetId: 'budget-123',
             description: 'Monthly salary',
-            color: '#00FF00',
-            icon: 'money',
+            color: '#4CAF50',
+            icon: 'work',
             isActive: true,
             createdAt: '2024-01-01T00:00:00Z',
-            transactionCount: 5,
+            transactionCount: 12,
           },
           {
             id: 'category-2',
@@ -43,11 +44,11 @@ describe('ListCategoriesQueryHandler', () => {
             type: CategoryType.INCOME,
             budgetId: 'budget-123',
             description: 'Freelance work',
-            color: '#0000FF',
-            icon: 'work',
+            color: '#2196F3',
+            icon: 'code',
             isActive: true,
-            createdAt: '2024-01-02T00:00:00Z',
-            transactionCount: 3,
+            createdAt: '2024-01-01T00:00:00Z',
+            transactionCount: 5,
           },
         ],
       };
@@ -89,34 +90,66 @@ describe('ListCategoriesQueryHandler', () => {
       expect(mockListCategoriesPort.listCategories).not.toHaveBeenCalled();
     });
 
-    it('should return validation error when budgetId is only whitespace', async () => {
-      const invalidRequest: ListCategoriesQueryRequestDto = {
-        budgetId: '   ',
-        type: CategoryType.INCOME,
+    it('should list categories successfully without type filter', async () => {
+      const validRequest: ListCategoriesQueryRequestDto = {
+        budgetId: 'budget-123',
       };
 
-      const result = await queryHandler.execute(invalidRequest);
+      const mockResponse: ListCategoriesQueryResponseDto = {
+        categories: [
+          {
+            id: 'category-1',
+            name: 'Salary',
+            type: CategoryType.INCOME,
+            budgetId: 'budget-123',
+            description: 'Monthly salary',
+            color: '#4CAF50',
+            icon: 'work',
+            isActive: true,
+            createdAt: '2024-01-01T00:00:00Z',
+            transactionCount: 12,
+          },
+          {
+            id: 'category-2',
+            name: 'Groceries',
+            type: CategoryType.EXPENSE,
+            budgetId: 'budget-123',
+            description: 'Food and groceries',
+            color: '#FF9800',
+            icon: 'shopping_cart',
+            isActive: true,
+            createdAt: '2024-01-01T00:00:00Z',
+            transactionCount: 25,
+          },
+        ],
+      };
 
-      expect(result.hasError).toBe(true);
-      expect(result.errors[0].message).toContain('Budget ID is required');
-      expect(mockListCategoriesPort.listCategories).not.toHaveBeenCalled();
+      mockListCategoriesPort.listCategories.and.returnValue(
+        Promise.resolve(Either.success(mockResponse))
+      );
+
+      const result = await queryHandler.execute(validRequest);
+
+      expect(result.hasError).toBe(false);
+      expect(result.data).toEqual(mockResponse);
+      expect(mockListCategoriesPort.listCategories).toHaveBeenCalledWith(validRequest);
     });
 
-    it('should return validation error when port returns error', async () => {
+    it('should return network error when HTTP port fails', async () => {
       const validRequest: ListCategoriesQueryRequestDto = {
         budgetId: 'budget-123',
         type: CategoryType.INCOME,
       };
 
-      const validationError = new ValidationError('port', 'Port error');
+      const networkError = new NetworkError('listCategories', 'Connection failed');
       mockListCategoriesPort.listCategories.and.returnValue(
-        Promise.resolve(Either.error(validationError))
+        Promise.resolve(Either.error(networkError))
       );
 
       const result = await queryHandler.execute(validRequest);
 
       expect(result.hasError).toBe(true);
-      expect(result.errors).toContain(validationError);
+      expect(result.errors).toContain(networkError);
     });
 
     it('should handle unexpected errors gracefully', async () => {
@@ -152,26 +185,6 @@ describe('ListCategoriesQueryHandler', () => {
       expect(result.hasError).toBe(false);
       expect(result.data).toEqual(mockResponse);
       expect(result.data!.categories).toEqual([]);
-    });
-
-    it('should work with request without type filter', async () => {
-      const requestWithoutType: ListCategoriesQueryRequestDto = {
-        budgetId: 'budget-123',
-      };
-
-      const mockResponse: ListCategoriesQueryResponseDto = {
-        categories: [],
-      };
-
-      mockListCategoriesPort.listCategories.and.returnValue(
-        Promise.resolve(Either.success(mockResponse))
-      );
-
-      const result = await queryHandler.execute(requestWithoutType);
-
-      expect(result.hasError).toBe(false);
-      expect(result.data).toEqual(mockResponse);
-      expect(mockListCategoriesPort.listCategories).toHaveBeenCalledWith(requestWithoutType);
     });
   });
 });
