@@ -447,6 +447,92 @@
 
 ---
 
+### 🗓️ Sessão 2024-12-19 - Continuação (Parte 6)
+
+**Fase**: Fase 4 - Use Cases (Commands) - Goal
+**Objetivo da Sessão**: Implementar Use Cases de Goal seguindo estratégia de implementar cada entidade por vez completa
+
+#### ✅ Trabalho Realizado
+
+- ✅ **GOAL USE CASES COMPLETADOS**: 5 Use Cases implementados com sucesso
+  - CreateGoalUseCase: Criação de metas com validação completa
+  - UpdateGoalUseCase: Atualização de metas com validação de dados
+  - DeleteGoalUseCase: Exclusão de metas com validação de IDs
+  - AddAmountToGoalUseCase: Adição de valor à meta com validação de amount
+  - RemoveAmountFromGoalUseCase: Remoção de valor da meta com validação de amount
+  - Index file de Goal atualizado com todos os exports
+  - 48/48 testes passando (incluindo testes de mappers, domain models e Use Cases)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Seguir exatamente a estrutura de Account, Category, CreditCard e Envelope para Goal Use Cases
+- **Alternativas**: Criar estrutura diferente para Goal
+- **Justificativa**: Manter consistência arquitetural e facilitar manutenção
+
+- **Decisão**: Usar métodos de validação específicos do GoalRequestMapper para operações de amount
+- **Alternativas**: Usar apenas validação básica
+- **Justificativa**: Goal tem operações de add/remove amount que requerem validações específicas
+
+- **Decisão**: Corrigir DTOs de response nos testes para usar estruturas corretas (amount, newAccumulatedAmount, progressPercentage)
+- **Alternativas**: Manter DTOs incorretos nos testes
+- **Justificativa**: Garantir que os testes reflitam a realidade dos DTOs de response
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: DTOs de response incorretos nos testes (currentAmount vs. newAccumulatedAmount)
+- **Solução**: Corrigidos para usar as estruturas corretas dos DTOs de response
+- **Lição Aprendida**: Sempre verificar a estrutura real dos DTOs antes de criar mocks nos testes
+
+- **Problema**: Validações específicas para operações de goal (add/remove amount)
+- **Solução**: Implementadas validações específicas para cada tipo de operação
+- **Lição Aprendida**: Operações de amount requerem validações mais específicas
+
+- **Problema**: Datas no passado causando falhas de validação no domain model
+- **Solução**: Atualizadas datas de teste para o futuro (2025-2026)
+- **Lição Aprendida**: Domain models têm validações de data que devem ser respeitadas nos testes
+
+- **Problema**: Uso incorreto de Jest mocks em projeto Jasmine
+- **Solução**: Substituídos por Jasmine spies (createSpyObj, and.returnValue)
+- **Lição Aprendida**: Verificar framework de testes antes de implementar mocks
+
+- **Problema**: Arquivos index.ts faltando para diretórios individuais de Use Cases
+- **Solução**: Criados arquivos index.ts para cada Use Case individual
+- **Lição Aprendida**: Cada diretório de Use Case precisa de seu próprio index.ts
+
+#### 🧪 Testes Realizados
+
+- **Linting**: ✅ Sem erros de linting
+- **Compilação**: ✅ Sem erros de compilação
+- **Testes Unitários**: ✅ 48/48 testes passando
+- **Estrutura**: ✅ Seguindo padrões de Account, Category, CreditCard e Envelope
+- **Nomenclatura**: ✅ Convenções consistentes
+- **Imports**: ✅ Dependências corretas
+
+#### 📝 Commits Relacionados
+
+- Nenhum commit realizado ainda (aguardando aprovação)
+
+#### ⏭️ Próximos Passos
+
+- ✅ Goal Use Cases completados com sucesso
+- **Próxima Entidade**: Transaction (5 Use Cases)
+  - CreateTransactionUseCase
+  - UpdateTransactionUseCase
+  - DeleteTransactionUseCase
+  - AddAmountToTransactionUseCase
+  - RemoveAmountFromTransactionUseCase
+  - Testes unitários para todos os Use Cases
+
+#### 💭 Observações
+
+- Implementação muito fluida seguindo padrões estabelecidos
+- 5 Use Cases de Goal implementados com 48 testes passando
+- Goal teve operações de amount similares ao Envelope, mas com validações específicas
+- Estratégia de implementar entidade por vez funciona muito bem
+- Pronto para próxima entidade (Transaction)
+
+---
+
 ## 📊 Resumo de Progresso
 
 ### Por Fase
@@ -470,15 +556,15 @@
   - Principais realizações: 6 Mappers implementados com 54 testes passando
 
 - **Fase 4**: Em Progresso ⏰
-  - Sessões: 3
-  - Tempo total: ~6 horas
-  - Principais realizações: Account, Category, CreditCard e Envelope Use Cases completados (17 Use Cases + 179 testes passando)
-  - Status: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ⏳, Transaction ⏳
+  - Sessões: 4
+  - Tempo total: ~8 horas
+  - Principais realizações: Account, Category, CreditCard, Envelope e Goal Use Cases completados (22 Use Cases + 227 testes passando)
+  - Status: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ⏳
 
 ### Métricas Gerais
 
-- **Total de Sessões**: 5
-- **Tempo Total Investido**: ~10 horas
+- **Total de Sessões**: 6
+- **Tempo Total Investido**: ~12 horas
 - **Arquivos Modificados**: 250+ arquivos criados
 - **Commits Realizados**: 0 (aguardando aprovação)
 
@@ -511,7 +597,7 @@
 ### Contexto Atual
 
 **Branch**: feature-OS-16
-**Última modificação**: 17 Use Cases implementados (Account, Category, CreditCard, Envelope) com 179 testes passando
-**Testes passando**: 179/179 testes (incluindo mappers, domain models e Use Cases)
-**Próxima tarefa específica**: Implementar Use Cases de Goal (5 Use Cases + testes)
-**Status Fase 4**: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ⏳, Transaction ⏳
+**Última modificação**: 22 Use Cases implementados (Account, Category, CreditCard, Envelope, Goal) com 227 testes passando
+**Testes passando**: 227/227 testes (incluindo mappers, domain models e Use Cases)
+**Próxima tarefa específica**: Implementar Use Cases de Transaction (5 Use Cases + testes)
+**Status Fase 4**: Account ✅, Category ✅, CreditCard ✅, Envelope ✅, Goal ✅, Transaction ⏳
