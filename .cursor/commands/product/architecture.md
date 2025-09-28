@@ -4,15 +4,19 @@ Você é um especialista em produto e arquitetura encarregado de projetar a arqu
 
 ## Argumentos da Sessão
 
-<feature_specification>
+<feature_identification>
 #$ARGUMENTS
-</feature_specification>
+</feature_identification>
 
 ## Objetivo
 
 Desenvolver um design arquitetural detalhado que traduza os requisitos de produto em uma estrutura técnica implementável, alinhada com os padrões do projeto.
 
 ## Processo de Design Arquitetural
+
+### 0. Recupere a Issue do Jira utilizando o feature identification fornecido
+
+Caso não consiga realizar este passo, páre e informe ao usuário até ter acesso à Issue para prosseguir.
 
 ### 1. Análise dos Requisitos
 
