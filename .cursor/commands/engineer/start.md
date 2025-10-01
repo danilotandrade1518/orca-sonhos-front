@@ -230,7 +230,7 @@ Com o contexto aprovado, proceda ao desenvolvimento da arquitetura técnica deta
 
 #### Consulta às Meta Specs
 
-- Revise diretrizes técnicas em **{META_SPECS_REPOSITORY}**
+- Revise diretrizes técnicas em `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
 - Confirme alinhamento com padrões arquiteturais
 - Identifique convenções obrigatórias
 
