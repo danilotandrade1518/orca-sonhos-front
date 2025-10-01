@@ -20,7 +20,7 @@
 ### Impactos
 
 - **Frontend**: Nova camada de DTOs para comunicação com backend
-- **TypeScript Config**: Adição de path alias @dtos/*
+- **TypeScript Config**: Adição de path alias @dtos/\*
 - **Angular Config**: Reconhecimento do novo alias
 - **Testes**: Estrutura de testes para DTOs
 
@@ -35,6 +35,7 @@
 ### Novos Arquivos a Criar
 
 #### Tipos Compartilhados (9 arquivos)
+
 - `src/dtos/shared/Money.ts`: Tipo para valores monetários
 - `src/dtos/shared/DateString.ts`: Tipo para datas ISO 8601
 - `src/dtos/shared/BaseEntity.ts`: Interface base para entidades
@@ -46,6 +47,7 @@
 - `src/dtos/shared/index.ts`: Re-exports centralizados
 
 #### DTOs de Budget (7 arquivos)
+
 - `src/dtos/budget/request/CreateBudgetRequestDto.ts`
 - `src/dtos/budget/request/UpdateBudgetRequestDto.ts`
 - `src/dtos/budget/request/AddParticipantRequestDto.ts`
@@ -55,6 +57,7 @@
 - `src/dtos/budget/response/BudgetSummaryResponseDto.ts`
 
 #### DTOs de Transaction (8 arquivos)
+
 - `src/dtos/transaction/request/CreateTransactionRequestDto.ts`
 - `src/dtos/transaction/request/UpdateTransactionRequestDto.ts`
 - `src/dtos/transaction/request/DeleteTransactionRequestDto.ts`
@@ -65,6 +68,7 @@
 - `src/dtos/transaction/response/TransactionSummaryResponseDto.ts`
 
 #### DTOs de Account (7 arquivos)
+
 - `src/dtos/account/request/CreateAccountRequestDto.ts`
 - `src/dtos/account/request/UpdateAccountRequestDto.ts`
 - `src/dtos/account/request/DeleteAccountRequestDto.ts`
@@ -74,6 +78,7 @@
 - `src/dtos/account/response/AccountListResponseDto.ts`
 
 #### DTOs de Goal (7 arquivos)
+
 - `src/dtos/goal/request/CreateGoalRequestDto.ts`
 - `src/dtos/goal/request/UpdateGoalRequestDto.ts`
 - `src/dtos/goal/request/DeleteGoalRequestDto.ts`
@@ -83,6 +88,7 @@
 - `src/dtos/goal/response/GoalListResponseDto.ts`
 
 #### DTOs de Category (5 arquivos)
+
 - `src/dtos/category/request/CreateCategoryRequestDto.ts`
 - `src/dtos/category/request/UpdateCategoryRequestDto.ts`
 - `src/dtos/category/request/DeleteCategoryRequestDto.ts`
@@ -90,6 +96,7 @@
 - `src/dtos/category/response/CategoryListResponseDto.ts`
 
 #### DTOs de CreditCard (5 arquivos)
+
 - `src/dtos/credit-card/request/CreateCreditCardRequestDto.ts`
 - `src/dtos/credit-card/request/UpdateCreditCardRequestDto.ts`
 - `src/dtos/credit-card/request/DeleteCreditCardRequestDto.ts`
@@ -97,6 +104,7 @@
 - `src/dtos/credit-card/response/CreditCardListResponseDto.ts`
 
 #### DTOs de CreditCardBill (8 arquivos)
+
 - `src/dtos/credit-card-bill/request/CreateCreditCardBillRequestDto.ts`
 - `src/dtos/credit-card-bill/request/UpdateCreditCardBillRequestDto.ts`
 - `src/dtos/credit-card-bill/request/DeleteCreditCardBillRequestDto.ts`
@@ -106,6 +114,7 @@
 - `src/dtos/credit-card-bill/response/CreditCardBillListResponseDto.ts`
 
 #### DTOs de Envelope (8 arquivos)
+
 - `src/dtos/envelope/request/CreateEnvelopeRequestDto.ts`
 - `src/dtos/envelope/request/UpdateEnvelopeRequestDto.ts`
 - `src/dtos/envelope/request/DeleteEnvelopeRequestDto.ts`
@@ -116,6 +125,7 @@
 - `src/dtos/envelope/response/EnvelopeListResponseDto.ts`
 
 #### Re-exports (9 arquivos)
+
 - `src/dtos/budget/index.ts`
 - `src/dtos/transaction/index.ts`
 - `src/dtos/account/index.ts`
@@ -194,6 +204,747 @@
 - **Alternativas**: Organização por tipo técnico (request/response)
 - **Justificativa**: Facilita manutenção e descoberta de DTOs
 
+## 📋 Detalhamento Completo dos DTOs - Campos e Tipos
+
+### 🎯 Resumo
+
+Mapeamento detalhado de todos os DTOs identificados no backend, incluindo campos, tipos e relacionamentos para implementação no frontend.
+
+### 🔧 Tipos Compartilhados (Shared Types)
+
+#### Money
+
+```typescript
+export type Money = number; // Valores em centavos
+```
+
+#### DateString
+
+```typescript
+export type DateString = string; // Formato ISO 8601
+```
+
+#### BaseEntity
+
+```typescript
+export interface BaseEntityDto {
+  readonly id: string;
+  readonly createdAt: DateString;
+  readonly updatedAt: DateString;
+}
+```
+
+#### Enums
+
+```typescript
+// TransactionType
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
+
+// BudgetType
+export type BudgetType = 'PERSONAL' | 'SHARED';
+
+// CategoryType
+export type CategoryType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
+
+// AccountType (baseado no schema)
+export type AccountType =
+  | 'checking'
+  | 'savings'
+  | 'cash'
+  | 'digital_wallet'
+  | 'credit_card'
+  | 'investment'
+  | 'other';
+
+// GoalStatus (baseado no schema)
+export type GoalStatus = 'active' | 'completed' | 'paused' | 'cancelled';
+
+// TransactionStatus (baseado no schema)
+export type TransactionStatus = 'scheduled' | 'completed' | 'overdue' | 'cancelled';
+```
+
+### 📦 DTOs por Entidade
+
+#### 1. Budget DTOs
+
+**CreateBudgetRequestDto**
+
+```typescript
+export interface CreateBudgetRequestDto {
+  readonly name: string;
+  readonly ownerId: string;
+  readonly participantIds?: string[];
+  readonly type?: BudgetType;
+}
+```
+
+**UpdateBudgetRequestDto**
+
+```typescript
+export interface UpdateBudgetRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly name?: string;
+}
+```
+
+**AddParticipantRequestDto**
+
+```typescript
+export interface AddParticipantRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly participantId: string;
+}
+```
+
+**RemoveParticipantRequestDto**
+
+```typescript
+export interface RemoveParticipantRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly participantId: string;
+}
+```
+
+**DeleteBudgetRequestDto**
+
+```typescript
+export interface DeleteBudgetRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+}
+```
+
+**BudgetResponseDto**
+
+```typescript
+export interface BudgetResponseDto extends BaseEntityDto {
+  readonly name: string;
+  readonly description?: string;
+  readonly type: BudgetType;
+  readonly ownerId: string;
+  readonly participantIds: string[];
+  readonly isActive: boolean;
+}
+```
+
+**BudgetListResponseDto**
+
+```typescript
+export interface BudgetListResponseDto {
+  readonly budgets: BudgetResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+**BudgetSummaryResponseDto**
+
+```typescript
+export interface BudgetSummaryResponseDto {
+  readonly totalBudgets: number;
+  readonly activeBudgets: number;
+  readonly totalParticipants: number;
+  readonly totalTransactions: number;
+}
+```
+
+#### 2. Transaction DTOs
+
+**CreateTransactionRequestDto**
+
+```typescript
+export interface CreateTransactionRequestDto {
+  readonly userId: string;
+  readonly description: string;
+  readonly amount: Money;
+  readonly type: TransactionType;
+  readonly accountId: string;
+  readonly categoryId: string;
+  readonly budgetId: string;
+  readonly transactionDate?: DateString;
+}
+```
+
+**UpdateTransactionRequestDto**
+
+```typescript
+export interface UpdateTransactionRequestDto {
+  readonly userId: string;
+  readonly id: string;
+  readonly description?: string;
+  readonly amount?: Money;
+  readonly type?: TransactionType;
+  readonly accountId?: string;
+  readonly categoryId?: string;
+  readonly transactionDate?: DateString;
+}
+```
+
+**DeleteTransactionRequestDto**
+
+```typescript
+export interface DeleteTransactionRequestDto {
+  readonly id: string;
+  readonly userId: string;
+}
+```
+
+**CancelScheduledTransactionRequestDto**
+
+```typescript
+export interface CancelScheduledTransactionRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly transactionId: string;
+  readonly cancellationReason: string;
+}
+```
+
+**MarkTransactionLateRequestDto**
+
+```typescript
+export interface MarkTransactionLateRequestDto {
+  readonly transactionId: string;
+  readonly lateDate?: DateString;
+}
+```
+
+**TransactionResponseDto**
+
+```typescript
+export interface TransactionResponseDto extends BaseEntityDto {
+  readonly userId: string;
+  readonly description: string;
+  readonly amount: Money;
+  readonly type: TransactionType;
+  readonly accountId: string;
+  readonly categoryId: string;
+  readonly budgetId: string;
+  readonly transactionDate: DateString;
+  readonly status: TransactionStatus;
+  readonly paymentMethod?: string;
+  readonly isRecurring: boolean;
+  readonly recurrencePattern?: string;
+}
+```
+
+**TransactionListResponseDto**
+
+```typescript
+export interface TransactionListResponseDto {
+  readonly transactions: TransactionResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly totalPages: number;
+  readonly filters?: {
+    readonly budgetId?: string;
+    readonly accountId?: string;
+    readonly categoryId?: string;
+    readonly type?: TransactionType;
+    readonly dateFrom?: DateString;
+    readonly dateTo?: DateString;
+  };
+}
+```
+
+#### 3. Account DTOs
+
+**CreateAccountRequestDto**
+
+```typescript
+export interface CreateAccountRequestDto {
+  readonly userId: string;
+  readonly name: string;
+  readonly type: AccountType;
+  readonly budgetId: string;
+  readonly initialBalance?: Money;
+  readonly description?: string;
+}
+```
+
+**UpdateAccountRequestDto**
+
+```typescript
+export interface UpdateAccountRequestDto {
+  readonly id: string;
+  readonly userId: string;
+  readonly name?: string;
+  readonly description?: string;
+  readonly initialBalance?: Money;
+}
+```
+
+**DeleteAccountRequestDto**
+
+```typescript
+export interface DeleteAccountRequestDto {
+  readonly userId: string;
+  readonly accountId: string;
+}
+```
+
+**TransferBetweenAccountsRequestDto**
+
+```typescript
+export interface TransferBetweenAccountsRequestDto {
+  readonly userId: string;
+  readonly fromAccountId: string;
+  readonly toAccountId: string;
+  readonly amount: Money;
+  readonly description?: string;
+}
+```
+
+**ReconcileAccountRequestDto**
+
+```typescript
+export interface ReconcileAccountRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly accountId: string;
+  readonly realBalance: Money;
+}
+```
+
+**AccountResponseDto**
+
+```typescript
+export interface AccountResponseDto extends BaseEntityDto {
+  readonly userId: string;
+  readonly name: string;
+  readonly type: AccountType;
+  readonly budgetId: string;
+  readonly balance: Money;
+  readonly creditLimit?: Money;
+  readonly isActive: boolean;
+  readonly institution?: string;
+  readonly description?: string;
+}
+```
+
+**AccountListResponseDto**
+
+```typescript
+export interface AccountListResponseDto {
+  readonly accounts: AccountResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+#### 4. Goal DTOs
+
+**CreateGoalRequestDto**
+
+```typescript
+export interface CreateGoalRequestDto {
+  readonly name: string;
+  readonly totalAmount: Money;
+  readonly accumulatedAmount?: Money;
+  readonly deadline?: DateString;
+  readonly budgetId: string;
+  readonly sourceAccountId: string;
+}
+```
+
+**UpdateGoalRequestDto**
+
+```typescript
+export interface UpdateGoalRequestDto {
+  readonly id: string;
+  readonly name: string;
+  readonly totalAmount: Money;
+  readonly deadline?: DateString;
+}
+```
+
+**DeleteGoalRequestDto**
+
+```typescript
+export interface DeleteGoalRequestDto {
+  readonly id: string;
+}
+```
+
+**AddAmountToGoalRequestDto**
+
+```typescript
+export interface AddAmountToGoalRequestDto {
+  readonly id: string;
+  readonly amount: Money;
+  readonly userId: string;
+}
+```
+
+**RemoveAmountFromGoalRequestDto**
+
+```typescript
+export interface RemoveAmountFromGoalRequestDto {
+  readonly id: string;
+  readonly amount: Money;
+  readonly userId: string;
+}
+```
+
+**GoalResponseDto**
+
+```typescript
+export interface GoalResponseDto extends BaseEntityDto {
+  readonly name: string;
+  readonly description?: string;
+  readonly totalAmount: Money;
+  readonly currentAmount: Money;
+  readonly deadline: DateString;
+  readonly budgetId: string;
+  readonly sourceAccountId: string;
+  readonly status: GoalStatus;
+  readonly priority: string;
+  readonly category: string;
+  readonly isSmartGoal: boolean;
+  readonly monthlyContribution?: Money;
+}
+```
+
+**GoalListResponseDto**
+
+```typescript
+export interface GoalListResponseDto {
+  readonly goals: GoalResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+#### 5. Category DTOs
+
+**CreateCategoryRequestDto**
+
+```typescript
+export interface CreateCategoryRequestDto {
+  readonly name: string;
+  readonly type: CategoryType;
+  readonly budgetId: string;
+}
+```
+
+**UpdateCategoryRequestDto**
+
+```typescript
+export interface UpdateCategoryRequestDto {
+  readonly id: string;
+  readonly name: string;
+  readonly type: CategoryType;
+}
+```
+
+**DeleteCategoryRequestDto**
+
+```typescript
+export interface DeleteCategoryRequestDto {
+  readonly id: string;
+}
+```
+
+**CategoryResponseDto**
+
+```typescript
+export interface CategoryResponseDto extends BaseEntityDto {
+  readonly name: string;
+  readonly type: CategoryType;
+  readonly budgetId: string;
+  readonly isActive: boolean;
+  readonly transactionCount: number;
+}
+```
+
+**CategoryListResponseDto**
+
+```typescript
+export interface CategoryListResponseDto {
+  readonly categories: CategoryResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+#### 6. CreditCard DTOs
+
+**CreateCreditCardRequestDto**
+
+```typescript
+export interface CreateCreditCardRequestDto {
+  readonly name: string;
+  readonly limit: Money;
+  readonly closingDay: number;
+  readonly dueDay: number;
+  readonly budgetId: string;
+}
+```
+
+**UpdateCreditCardRequestDto**
+
+```typescript
+export interface UpdateCreditCardRequestDto {
+  readonly id: string;
+  readonly name: string;
+  readonly limit: Money;
+  readonly closingDay: number;
+  readonly dueDay: number;
+}
+```
+
+**DeleteCreditCardRequestDto**
+
+```typescript
+export interface DeleteCreditCardRequestDto {
+  readonly id: string;
+}
+```
+
+**CreditCardResponseDto**
+
+```typescript
+export interface CreditCardResponseDto extends BaseEntityDto {
+  readonly name: string;
+  readonly limit: Money;
+  readonly closingDay: number;
+  readonly dueDay: number;
+  readonly budgetId: string;
+  readonly isActive: boolean;
+  readonly currentBalance: Money;
+  readonly availableLimit: Money;
+}
+```
+
+**CreditCardListResponseDto**
+
+```typescript
+export interface CreditCardListResponseDto {
+  readonly creditCards: CreditCardResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+#### 7. CreditCardBill DTOs
+
+**CreateCreditCardBillRequestDto**
+
+```typescript
+export interface CreateCreditCardBillRequestDto {
+  readonly creditCardId: string;
+  readonly closingDate: DateString;
+  readonly dueDate: DateString;
+  readonly amount: Money;
+}
+```
+
+**UpdateCreditCardBillRequestDto**
+
+```typescript
+export interface UpdateCreditCardBillRequestDto {
+  readonly id: string;
+  readonly closingDate: DateString;
+  readonly dueDate: DateString;
+  readonly amount: Money;
+}
+```
+
+**DeleteCreditCardBillRequestDto**
+
+```typescript
+export interface DeleteCreditCardBillRequestDto {
+  readonly id: string;
+}
+```
+
+**PayCreditCardBillRequestDto**
+
+```typescript
+export interface PayCreditCardBillRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly creditCardBillId: string;
+  readonly accountId: string;
+  readonly amount: Money;
+  readonly paymentCategoryId: string;
+  readonly paidAt?: DateString;
+}
+```
+
+**ReopenCreditCardBillRequestDto**
+
+```typescript
+export interface ReopenCreditCardBillRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly creditCardBillId: string;
+  readonly justification: string;
+}
+```
+
+**CreditCardBillResponseDto**
+
+```typescript
+export interface CreditCardBillResponseDto extends BaseEntityDto {
+  readonly creditCardId: string;
+  readonly closingDate: DateString;
+  readonly dueDate: DateString;
+  readonly amount: Money;
+  readonly status: string;
+  readonly paidAmount: Money;
+  readonly remainingAmount: Money;
+  readonly isOverdue: boolean;
+}
+```
+
+**CreditCardBillListResponseDto**
+
+```typescript
+export interface CreditCardBillListResponseDto {
+  readonly bills: CreditCardBillResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+#### 8. Envelope DTOs
+
+**CreateEnvelopeRequestDto**
+
+```typescript
+export interface CreateEnvelopeRequestDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly name: string;
+  readonly monthlyLimit: Money;
+  readonly categoryId: string;
+}
+```
+
+**UpdateEnvelopeRequestDto**
+
+```typescript
+export interface UpdateEnvelopeRequestDto {
+  readonly envelopeId: string;
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly name?: string;
+  readonly monthlyLimit?: Money;
+}
+```
+
+**DeleteEnvelopeRequestDto**
+
+```typescript
+export interface DeleteEnvelopeRequestDto {
+  readonly envelopeId: string;
+  readonly userId: string;
+  readonly budgetId: string;
+}
+```
+
+**AddAmountToEnvelopeRequestDto**
+
+```typescript
+export interface AddAmountToEnvelopeRequestDto {
+  readonly envelopeId: string;
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly amount: Money;
+}
+```
+
+**RemoveAmountFromEnvelopeRequestDto**
+
+```typescript
+export interface RemoveAmountFromEnvelopeRequestDto {
+  readonly envelopeId: string;
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly amount: Money;
+}
+```
+
+**TransferBetweenEnvelopesRequestDto**
+
+```typescript
+export interface TransferBetweenEnvelopesRequestDto {
+  readonly sourceEnvelopeId: string;
+  readonly targetEnvelopeId: string;
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly amount: Money;
+}
+```
+
+**EnvelopeResponseDto**
+
+```typescript
+export interface EnvelopeResponseDto extends BaseEntityDto {
+  readonly userId: string;
+  readonly budgetId: string;
+  readonly name: string;
+  readonly monthlyLimit: Money;
+  readonly categoryId: string;
+  readonly currentAmount: Money;
+  readonly isActive: boolean;
+  readonly usagePercentage: number;
+  readonly remainingAmount: Money;
+}
+```
+
+**EnvelopeListResponseDto**
+
+```typescript
+export interface EnvelopeListResponseDto {
+  readonly envelopes: EnvelopeResponseDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+```
+
+### 📊 Resumo de Contagem
+
+#### DTOs por Categoria
+
+- **Request DTOs**: 32 arquivos
+- **Response DTOs**: 16 arquivos
+- **Total de DTOs**: 48 arquivos
+
+#### Tipos Compartilhados
+
+- **Value Objects**: 2 (Money, DateString)
+- **Base Types**: 1 (BaseEntity)
+- **Enums**: 6 (TransactionType, BudgetType, CategoryType, AccountType, GoalStatus, TransactionStatus)
+
+#### Estrutura de Arquivos
+
+```
+/src/dtos/
+  /shared/ (9 arquivos)
+  /budget/ (7 arquivos)
+  /transaction/ (8 arquivos)
+  /account/ (7 arquivos)
+  /goal/ (7 arquivos)
+  /category/ (5 arquivos)
+  /credit-card/ (5 arquivos)
+  /credit-card-bill/ (8 arquivos)
+  /envelope/ (8 arquivos)
+  - index.ts (1 arquivo)
+```
+
 ## 📦 Dependências e Integrações
 
 ### Dependências Existentes
@@ -215,12 +966,14 @@
 ## 🔄 Fluxo de Dados
 
 ### Request Flow
+
 1. **UI Component** → Cria DTO de request
 2. **Application Service** → Recebe DTO de request
 3. **Infrastructure Adapter** → Serializa DTO para JSON
 4. **HTTP Client** → Envia para backend
 
 ### Response Flow
+
 1. **HTTP Client** → Recebe JSON do backend
 2. **Infrastructure Adapter** → Deserializa JSON para DTO
 3. **Application Service** → Retorna DTO de response
@@ -236,7 +989,7 @@
 
 ### Testes de Integração
 
-- **Path Aliases**: Funcionamento dos @dtos/*
+- **Path Aliases**: Funcionamento dos @dtos/\*
 - **Re-exports**: Funcionamento dos index.ts
 - **Build**: Validação de build sem erros
 
@@ -268,7 +1021,7 @@
 
 ## 📋 Lista de Implementação
 
-- [ ] Configurar path alias @dtos/* no TypeScript
+- [ ] Configurar path alias @dtos/\* no TypeScript
 - [ ] Implementar tipos compartilhados (Money, DateString, BaseEntity, Enums)
 - [ ] Implementar DTOs de Budget (request e response)
 - [ ] Implementar DTOs de Transaction (request e response)
