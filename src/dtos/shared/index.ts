@@ -21,3 +21,6 @@ export { CategoryTypeHelper } from './category-type/CategoryType';
 
 export type { GoalStatus } from './goal-status/GoalStatus';
 export { GoalStatusHelper } from './goal-status/GoalStatus';
+
+export type { BudgetType } from './budget-type/BudgetType';
+export { BudgetTypeHelper } from './budget-type/BudgetType';

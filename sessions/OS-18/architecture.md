@@ -141,39 +141,81 @@
 ```
 /src/dtos/
   /shared/                    # Tipos compartilhados (9 arquivos)
-    - Money.ts
-    - DateString.ts
-    - BaseEntity.ts
-    - TransactionType.ts
-    - BudgetStatus.ts
-    - AccountType.ts
-    - CategoryType.ts
-    - GoalStatus.ts
+    /money/
+      - Money.ts
+      - Money.spec.ts
+    /date-string/
+      - DateString.ts
+      - DateString.spec.ts
+    /base-entity/
+      - BaseEntity.ts
+      - BaseEntity.spec.ts
+    /transaction-type/
+      - TransactionType.ts
+      - TransactionType.spec.ts
+    /budget-status/
+      - BudgetStatus.ts
+      - BudgetStatus.spec.ts
+    /account-type/
+      - AccountType.ts
+      - AccountType.spec.ts
+    /category-type/
+      - CategoryType.ts
+      - CategoryType.spec.ts
+    /goal-status/
+      - GoalStatus.ts
+      - GoalStatus.spec.ts
     - index.ts
-  /budget/                    # Contexto: Budget Management (7 arquivos)
-    /request/
+  /budget/                    # Contexto: Budget Management (7 DTOs)
+    /create-budget-request/
       - CreateBudgetRequestDto.ts
+      - CreateBudgetRequestDto.spec.ts
+    /update-budget-request/
       - UpdateBudgetRequestDto.ts
+      - UpdateBudgetRequestDto.spec.ts
+    /add-participant-request/
       - AddParticipantRequestDto.ts
+      - AddParticipantRequestDto.spec.ts
+    /remove-participant-request/
       - RemoveParticipantRequestDto.ts
-    /response/
+      - RemoveParticipantRequestDto.spec.ts
+    /budget-response/
       - BudgetResponseDto.ts
+      - BudgetResponseDto.spec.ts
+    /budget-list-response/
       - BudgetListResponseDto.ts
+      - BudgetListResponseDto.spec.ts
+    /budget-summary-response/
       - BudgetSummaryResponseDto.ts
+      - BudgetSummaryResponseDto.spec.ts
     - index.ts
-  /transaction/               # Contexto: Transaction Management (8 arquivos)
-    /request/
+  /transaction/               # Contexto: Transaction Management (8 DTOs)
+    /create-transaction-request/
       - CreateTransactionRequestDto.ts
+      - CreateTransactionRequestDto.spec.ts
+    /update-transaction-request/
       - UpdateTransactionRequestDto.ts
+      - UpdateTransactionRequestDto.spec.ts
+    /delete-transaction-request/
       - DeleteTransactionRequestDto.ts
+      - DeleteTransactionRequestDto.spec.ts
+    /cancel-scheduled-transaction-request/
       - CancelScheduledTransactionRequestDto.ts
+      - CancelScheduledTransactionRequestDto.spec.ts
+    /mark-transaction-late-request/
       - MarkTransactionLateRequestDto.ts
-    /response/
+      - MarkTransactionLateRequestDto.spec.ts
+    /transaction-response/
       - TransactionResponseDto.ts
+      - TransactionResponseDto.spec.ts
+    /transaction-list-response/
       - TransactionListResponseDto.ts
+      - TransactionListResponseDto.spec.ts
+    /transaction-summary-response/
       - TransactionSummaryResponseDto.ts
+      - TransactionSummaryResponseDto.spec.ts
     - index.ts
-  # ... outras entidades
+  # ... outras entidades seguem o mesmo padrão
   - index.ts                  # Re-exports globais
 ```
 
@@ -185,6 +227,48 @@
 - **Backend como Fonte da Verdade**: Todas as regras de negócio no backend
 - **Simplicidade sobre Abstração**: Evitar mappers complexos desnecessários
 - **Alinhamento Total com API**: Contratos bem definidos entre frontend e backend
+
+### 🗂️ Padrão de Organização de DTOs
+
+#### Estrutura Individual por DTO
+
+Cada DTO possui seu próprio diretório contendo:
+
+- **Arquivo principal**: `{DtoName}.ts` - Interface e Helper
+- **Arquivo de teste**: `{DtoName}.spec.ts` - Testes unitários
+- **Nomenclatura**: Diretório em kebab-case baseado no nome do DTO
+
+#### Exemplo de Estrutura
+
+```
+/src/dtos/budget/
+  /create-budget-request/
+    - CreateBudgetRequestDto.ts
+    - CreateBudgetRequestDto.spec.ts
+  /update-budget-request/
+    - UpdateBudgetRequestDto.ts
+    - UpdateBudgetRequestDto.spec.ts
+  /budget-response/
+    - BudgetResponseDto.ts
+    - BudgetResponseDto.spec.ts
+  - index.ts
+```
+
+#### Vantagens do Padrão
+
+1. **Isolamento**: Cada DTO é independente e autocontido
+2. **Manutenibilidade**: Fácil localização e modificação de DTOs específicos
+3. **Testabilidade**: Testes sempre próximos ao código que testam
+4. **Escalabilidade**: Estrutura clara para crescimento do projeto
+5. **Colocação**: Princípio de proximidade - código relacionado fica junto
+6. **Imports Limpos**: Imports relativos claros e organizados
+
+#### Convenções de Nomenclatura
+
+- **Diretórios**: kebab-case (ex: `create-budget-request`)
+- **Arquivos**: PascalCase (ex: `CreateBudgetRequestDto.ts`)
+- **Testes**: Sufixo `.spec.ts` (ex: `CreateBudgetRequestDto.spec.ts`)
+- **Imports**: Relativos quando possível, absolutos via `@dtos/*` quando necessário
 
 ### Decisões Arquiteturais
 
@@ -933,17 +1017,19 @@ export interface EnvelopeListResponseDto {
 
 ```
 /src/dtos/
-  /shared/ (9 arquivos)
-  /budget/ (7 arquivos)
-  /transaction/ (8 arquivos)
-  /account/ (7 arquivos)
-  /goal/ (7 arquivos)
-  /category/ (5 arquivos)
-  /credit-card/ (5 arquivos)
-  /credit-card-bill/ (8 arquivos)
-  /envelope/ (8 arquivos)
-  - index.ts (1 arquivo)
+  /shared/ (18 arquivos - 9 DTOs + 9 testes)
+  /budget/ (15 arquivos - 7 DTOs + 7 testes + 1 index)
+  /transaction/ (17 arquivos - 8 DTOs + 8 testes + 1 index)
+  /account/ (15 arquivos - 7 DTOs + 7 testes + 1 index)
+  /goal/ (15 arquivos - 7 DTOs + 7 testes + 1 index)
+  /category/ (11 arquivos - 5 DTOs + 5 testes + 1 index)
+  /credit-card/ (11 arquivos - 5 DTOs + 5 testes + 1 index)
+  /credit-card-bill/ (17 arquivos - 8 DTOs + 8 testes + 1 index)
+  /envelope/ (17 arquivos - 8 DTOs + 8 testes + 1 index)
+  - index.ts (1 arquivo global)
 ```
+
+**Total**: 138 arquivos (69 DTOs + 69 testes + 10 index.ts)
 
 ## 📦 Dependências e Integrações
 
