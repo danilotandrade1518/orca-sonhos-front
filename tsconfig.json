@@ -21,7 +21,6 @@
       "@application/*": ["application/*"],
       "@either": ["shared/core"],
       "@infra/*": ["infra/*"],
-      "@models/*": ["models/*"],
     }
   },
   "angularCompilerOptions": {
