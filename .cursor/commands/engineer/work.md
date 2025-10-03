@@ -11,6 +11,7 @@ Este é o comando para executar o desenvolvimento de uma funcionalidade seguindo
 ## Objetivo
 
 Implementar a funcionalidade seguindo o plano faseado, com foco na qualidade, padrões do projeto e aprovação entre etapas.
+Você possui o MCP angular-cli do Angular que te fornece boas práticas, use ele sempre que for trabalhar.
 
 ## Processo de Desenvolvimento
 
