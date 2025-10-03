@@ -2,6 +2,12 @@
 
 Você é um especialista em produto encarregado de desenvolver uma especificação detalhada (PRD) a partir de requisitos refinados.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Argumentos da Sessão
 
 <requirement>
@@ -26,7 +32,7 @@ Se os requisitos estiverem incompletos, solicite esclarecimentos antes de prosse
 
 ### 2. Verificação das Meta Specs
 
-- Consulte as META SPECS do projeto em https://github.com/danilotandrade1518/orca-sonhos-meta-specs
+- Consulte as META SPECS do projeto em [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 - Identifique regras específicas ou padrões que devem ser seguidos
 - Verifique se a solicitação não viola especificações principais
 - Se houver conflitos, peça esclarecimento antes de prosseguir

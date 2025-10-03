@@ -2,6 +2,12 @@
 
 Este comando analisa o estado atual do fluxo de desenvolvimento e mostra onde você está no processo.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Uso
 
 ```

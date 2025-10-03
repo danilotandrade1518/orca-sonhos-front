@@ -41,4 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# AI Properties (configuração local)
+ai.properties.md
+
 temp

@@ -2,6 +2,12 @@
 
 Este comando executa revisões automatizadas de qualidade antes da criação do Pull Request.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Objetivo
 
 Garantir que o código desenvolvido está alinhado com as especificações, padrões de qualidade e documentação do projeto antes da submissão para revisão humana.
