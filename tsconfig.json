@@ -16,12 +16,8 @@
     "module": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "@adapters/*": ["adapters/*"],
       "@app/*": ["app/*"],
-      "@application/*": ["application/*"],
-      "@dtos/*": ["dtos/*"],
       "@either": ["shared/core"],
-      "@infra/*": ["infra/*"],
     }
   },
   "angularCompilerOptions": {
