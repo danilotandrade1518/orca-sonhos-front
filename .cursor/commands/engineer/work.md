@@ -33,7 +33,71 @@ Se não estiver em uma feature branch:
 1. Pergunte ao usuário: "Posso criar a feature branch `feature-{folder-name}`?"
 2. Após confirmação, execute: `git checkout -b feature-{folder-name}`
 
-#### Passo 2: Busca e Atualização do Jira
+#### Passo 2: Context Loading Inteligente (OBRIGATÓRIO)
+
+**SEMPRE execute este passo no início de cada sessão**:
+
+##### 2.1: Análise de Contexto Automática
+
+**Execute automaticamente**:
+
+1. **Busca Contextual Inteligente**:
+
+   ```typescript
+   // Use codebase_search para encontrar documentos relevantes
+   const contextQuery = `funcionalidade ${folder - name} arquitetura padrões frontend`;
+   const contextResults = await codebase_search({
+     query: contextQuery,
+     target_directories: ['/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs'],
+   });
+   ```
+
+2. **Geração de Context Summary**:
+
+   - Analise os resultados da busca
+   - Identifique documentos mais relevantes
+   - Gere summary automático dos padrões encontrados
+   - Identifique gaps de conhecimento
+
+3. **Cache de Contexto**:
+   - Verifique se contexto similar já foi carregado
+   - Reutilize informações de sessões anteriores quando aplicável
+   - Atualize cache com novas descobertas
+
+##### 2.2: Documentos Obrigatórios
+
+**SEMPRE leia estes documentos**:
+
+1. **index.md** (Meta Specs): Visão geral do projeto
+2. **code-standards**: Padrões de código e boas práticas
+3. **frontend-architecture**: Arquitetura específica do frontend
+
+##### 2.3: Documentos Contextuais
+
+**Baseado na análise automática, leia adicionalmente**:
+
+- Documentos identificados pela busca contextual
+- ADRs relevantes para a funcionalidade específica
+- Especificações de domínio relacionadas
+- Documentação técnica específica do contexto
+
+**Localização**: `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
+
+##### 2.4: Context Summary
+
+**Após carregar contexto, gere automaticamente**:
+
+```markdown
+## 🧠 Context Summary
+
+**Funcionalidade**: [Nome da funcionalidade]
+**Complexidade Estimada**: [Baixa/Média/Alta]
+**Padrões Identificados**: [Lista de padrões relevantes]
+**Arquitetura Aplicável**: [Componentes e estruturas relevantes]
+**Gaps de Conhecimento**: [Áreas que precisam de mais contexto]
+```
+
+#### Passo 3: Busca e Atualização do Jira
 
 **_Este passo só deve ser feito se o trabaho ainda não iniciou. Verifique o status do plano para esta informação. Caso o plano já esteja em andamento, ou seja, se alguma fase já iniciou, ignore este passo._**
 
@@ -88,18 +152,87 @@ if (searchResults.issues?.length > 0) {
 
 #### Análise dos Documentos
 
+**PRIORIDADE MÁXIMA**: Leia os documentos fundamentais das Meta Specs antes de qualquer implementação:
+
+**Documentos Obrigatórios das Meta Specs**:
+
+- **index.md** (Meta Specs): Visão geral do projeto e contexto
+- **code-standards**: Padrões de código e boas práticas
+- **frontend-architecture**: Arquitetura específica do frontend
+
+**Documentos Adicionais das Meta Specs** (conforme necessário):
+
+- Documentação técnica relevante em `/technical/`
+- ADRs (Architecture Decision Records) em `/adr/` se aplicável
+- Especificações de domínio em `/business/` quando relevante
+- Outros arquivos que possam ser necessários para o contexto específico
+
+**Documentos da Sessão**:
+
 Leia todos os arquivos markdown na pasta da sessão:
 
 - **context.md**: Entendimento dos requisitos
 - **architecture.md**: Design técnico detalhado
 - **plan.md**: Plano faseado de implementação
 
-### 2. Identificação da Fase Atual
+### 2. Análise de Complexidade e Estratégia Adaptativa
+
+#### 2.1: Análise Automática de Complexidade
+
+**Execute automaticamente**:
+
+1. **Avaliação de Complexidade**:
+
+   ```typescript
+   // Analise arquivos afetados, dependências e escopo
+   const complexityFactors = {
+     filesAffected: await countFilesInScope(),
+     externalDependencies: await identifyExternalDeps(),
+     architecturalImpact: await assessArchitecturalChanges(),
+     testingRequirements: await estimateTestingScope(),
+   };
+
+   const complexityScore = calculateComplexityScore(complexityFactors);
+   const strategy = selectExecutionStrategy(complexityScore);
+   ```
+
+2. **Classificação de Complexidade**:
+   - **Baixa (0-30)**: Mudanças simples, poucos arquivos, sem impacto arquitetural
+   - **Média (31-70)**: Mudanças moderadas, alguns arquivos, impacto limitado
+   - **Alta (71-100)**: Mudanças complexas, muitos arquivos, impacto arquitetural significativo
+
+#### 2.2: Seleção de Estratégia de Execução
+
+**Baseado na complexidade, escolha automaticamente**:
+
+**Estratégia SIMPLE** (Complexidade Baixa):
+
+- Implementação incremental direta
+- Aprovação automática para mudanças de estilo/formatação
+- Work-log simplificado
+- Testes básicos de caminho feliz
+
+**Estratégia STANDARD** (Complexidade Média):
+
+- Implementação faseada com validações
+- Aprovação por micro-etapas
+- Work-log detalhado
+- Testes de caminho feliz + casos extremos
+
+**Estratégia COMPLEX** (Complexidade Alta):
+
+- Implementação com TDD/BDD
+- Aprovação obrigatória por fase
+- Work-log completo com justificativas
+- Testes abrangentes + validações de segurança
+
+#### 2.3: Identificação da Fase Atual
 
 - Revise o **plan.md** para identificar qual fase está atualmente em progresso
 - Revise o **work-log.md**(caso exista) para entender o que foi feito até agora
 - Se nenhuma fase estiver marcada como \"Em Progresso ⏰\", comece pela primeira fase não iniciada
-- Apresente ao usuário um plano claro para abordar a próxima fase
+- **Aplique a estratégia selecionada** para abordar a próxima fase
+- Apresente ao usuário um plano claro adaptado à complexidade identificada
 
 ### 3. Inicialização do Work Log
 
@@ -216,25 +349,74 @@ Crie o arquivo `sessions/<folder>/work-log.md` se não existir:
 **Próxima tarefa específica**: [Descrição detalhada]
 ```
 
-### 4. Execução por Fases
+### 4. Sistema de Memória Contextual e Execução Inteligente
+
+#### 4.1: Context-Aware Decision Making
+
+**Execute automaticamente antes de cada implementação**:
+
+1. **Análise de Padrões Existentes**:
+
+   ```typescript
+   // Busque implementações similares no codebase
+   const similarImplementations = await codebase_search({
+     query: `funcionalidade similar ${featureType} padrão implementação`,
+     target_directories: ['src/'],
+   });
+
+   // Analise padrões de decisão anteriores
+   const decisionPatterns = await analyzeDecisionHistory();
+   ```
+
+2. **Sugestões Baseadas em Contexto**:
+
+   - Identifique soluções similares já implementadas
+   - Sugira padrões de código consistentes com o projeto
+   - Aplique decisões arquiteturais anteriores quando aplicável
+   - Evite anti-padrões identificados no histórico
+
+3. **Learning from History**:
+   - Consulte work-logs de funcionalidades similares
+   - Aplique lições aprendidas de implementações anteriores
+   - Use padrões de aprovação baseados em histórico de sucesso
+
+#### 4.2: Execução por Fases Adaptativa
 
 Para cada fase do desenvolvimento:
 
-#### Antes de Começar
+##### Antes de Começar
 
+- **Análise Contextual**: Use sistema de memória para entender padrões aplicáveis
 - Marque a fase como \"Em Progresso ⏰\" no plan.md
-- **Inicie nova sessão** no work-log.md com timestamp
+- **Inicie nova sessão** no work-log.md com timestamp e contexto aplicado
 - Revise os critérios de conclusão da fase
+- **Aplique estratégia selecionada** (SIMPLE/STANDARD/COMPLEX)
 - Confirme entendimento das tarefas com o usuário
 
 #### Durante a Implementação
 
+**Sistema de Memória Contextual Ativo:**
+
+1. **Pattern Matching Contínuo**:
+
+   - Compare implementação atual com padrões existentes
+   - Sugira melhorias baseadas em código similar
+   - Identifique inconsistências com padrões do projeto
+   - Aplique decisões arquiteturais comprovadas
+
+2. **Decision Tree Navigation**:
+   - Use histórico de decisões para guiar escolhas técnicas
+   - Aplique soluções testadas para problemas similares
+   - Evite caminhos que levaram a problemas anteriores
+   - Documente novas decisões para futuras referências
+
 **Princípios de Qualidade:**
 
 - **Código Limpo**: Sem comentários ou instruções temporárias no código final
-- **Padrões**: Siga as convenções estabelecidas no projeto
+- **Padrões**: Siga as convenções estabelecidas no projeto (usando memória contextual)
 - **Segurança**: Implemente tratamento adequado de erros e validações
 - **Manutenibilidade**: Código legível e bem estruturado
+- **Consistência**: Aplique padrões identificados em implementações similares
 
 **Processo de Revisão Contínua:**
 Apply continuous code review seguindo as prioridades:
@@ -246,9 +428,25 @@ Apply continuous code review seguindo as prioridades:
 
 #### Após Completar Tarefas da Fase
 
+**Sistema de Memória Contextual - Atualização:**
+
+1. **Documentação de Padrões**:
+
+   - Registre novos padrões identificados durante implementação
+   - Atualize decision tree com novas decisões tomadas
+   - Documente soluções eficazes para futuras referências
+   - Identifique anti-padrões a serem evitados
+
+2. **Learning Update**:
+   - Analise eficácia das decisões tomadas
+   - Atualize scores de confiança para padrões aplicados
+   - Registre lições aprendidas no contexto do projeto
+   - Melhore sugestões baseadas em resultados obtidos
+
 **🛑 PAUSE OBRIGATÓRIA**: Solicite validação do usuário antes de prosseguir
 
 - **Atualize work-log.md** com trabalho realizado na sessão
+- **Atualize sistema de memória** com novos padrões e decisões
 - Apresente o código implementado
 - Aguarde aprovação explícita do usuário
 - Faça ajustes necessários baseados no feedback
@@ -434,11 +632,15 @@ Quando todas as fases estiverem completas:
 
 ## Princípios de Trabalho
 
-1. **🔄 Iterativo**: Trabalhe em pequenas etapas com validação constante
-2. **🎯 Focado**: Siga o plano estabelecido, não se desvie sem discussão
-3. **🤝 Colaborativo**: Sempre busque aprovação antes de prosseguir
-4. **🔍 Qualidade**: Code review contínuo durante desenvolvimento
-5. **📝 Documentado**: Mantenha registros claros de decisões e progresso
+1. **📚 Contexto Inteligente**: Use Context Loading Inteligente para carregar automaticamente documentos relevantes e gerar context summary
+2. **🧠 Memória Contextual**: Aplique sistema de memória contextual para decisões baseadas em padrões existentes e histórico
+3. **⚡ Estratégia Adaptativa**: Use análise de complexidade para selecionar automaticamente a melhor estratégia de execução
+4. **🔄 Iterativo**: Trabalhe em pequenas etapas com validação constante
+5. **🎯 Focado**: Siga o plano estabelecido, não se desvie sem discussão
+6. **🤝 Colaborativo**: Sempre busque aprovação antes de prosseguir
+7. **🔍 Qualidade**: Code review contínuo durante desenvolvimento
+8. **📝 Documentado**: Mantenha registros claros de decisões e progresso
+9. **🎓 Aprendizado Contínuo**: Atualize sistema de memória com cada implementação para melhorar futuras decisões
 
 ## Próximos Passos
 
@@ -454,6 +656,14 @@ Após completar toda implementação:
 **SEMPRE execute a "Execução Automática Inicial" (Seção 0) ANTES de começar qualquer trabalho:**
 
 1. ✅ Verificar/criar feature branch
-2. ✅ Buscar e atualizar task no Jira para "Em Progresso"
+2. ✅ **Context Loading Inteligente** (busca automática + context summary)
+3. ✅ **Análise de Complexidade** (seleção automática de estratégia)
+4. ✅ **Sistema de Memória Contextual** (análise de padrões existentes)
+5. ✅ Buscar e atualizar task no Jira para "Em Progresso"
 
-**NÃO pule estes passos** - eles são essenciais para o fluxo de trabalho adequado.
+**NÃO pule estes passos** - eles são essenciais para o fluxo de trabalho inteligente e garantem:
+
+- Contexto adequado das boas práticas e arquitetura
+- Estratégia de execução otimizada para a complexidade
+- Decisões baseadas em padrões e histórico do projeto
+- Aprendizado contínuo para futuras implementações
