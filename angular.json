@@ -26,10 +26,14 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "outputMode": "static"
+            "styles": ["src/styles.scss"],
+            "outputMode": "static",
+            "fileReplacements": [
+              {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }
+            ]
           },
           "configurations": {
             "production": {
@@ -51,6 +55,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -81,15 +93,20 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": ["angular-eslint"]
   }
 }

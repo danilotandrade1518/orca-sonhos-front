@@ -63,7 +63,7 @@ describe('Either', () => {
       const errorMessage = 'Test error message';
 
       // Act
-      const result = Either.error<string, any>(errorMessage);
+      const result = Either.error<string, unknown>(errorMessage);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -77,7 +77,7 @@ describe('Either', () => {
       const errorObj = new Error('Test error object');
 
       // Act
-      const result = Either.error<Error, any>(errorObj);
+      const result = Either.error<Error, unknown>(errorObj);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -91,7 +91,7 @@ describe('Either', () => {
       const errorList = ['Error 1', 'Error 2', 'Error 3'];
 
       // Act
-      const result = Either.errors<string, any>(errorList);
+      const result = Either.errors<string, unknown>(errorList);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -106,7 +106,7 @@ describe('Either', () => {
       const emptyErrors: string[] = [];
 
       // Act
-      const result = Either.errors<string, any>(emptyErrors);
+      const result = Either.errors<string, unknown>(emptyErrors);
 
       // Assert
       expect(result.hasError).toBe(false); // No errors means no error state
@@ -124,7 +124,7 @@ describe('Either', () => {
       ];
 
       // Act
-      const result = Either.errors<any, any>(mixedErrors);
+      const result = Either.errors<unknown, unknown>(mixedErrors);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -138,7 +138,7 @@ describe('Either', () => {
   describe('when manipulating Either instances', () => {
     it('should add single error to existing Either', () => {
       // Arrange
-      const either = new Either<string, any>();
+      const either = new Either<string, unknown>();
       const errorMessage = 'New error';
 
       // Act
@@ -151,7 +151,7 @@ describe('Either', () => {
 
     it('should add multiple errors to existing Either', () => {
       // Arrange
-      const either = new Either<string, any>();
+      const either = new Either<string, unknown>();
       const newErrors = ['Error 1', 'Error 2'];
 
       // Act
@@ -164,7 +164,7 @@ describe('Either', () => {
 
     it('should add errors to Either that already has errors', () => {
       // Arrange
-      const either = Either.error<string, any>('Initial error');
+      const either = Either.error<string, unknown>('Initial error');
       const additionalErrors = ['Error 2', 'Error 3'];
 
       // Act
@@ -205,7 +205,7 @@ describe('Either', () => {
   describe('when checking Either state', () => {
     it('should return correct hasError state for error Either', () => {
       // Arrange
-      const either = Either.error<string, any>('test error');
+      const either = Either.error<string, unknown>('test error');
 
       // Act & Assert
       expect(either.hasError).toBe(true);
@@ -229,7 +229,7 @@ describe('Either', () => {
 
     it('should return correct hasData state for error Either', () => {
       // Arrange
-      const either = Either.error<string, any>('test error');
+      const either = Either.error<string, unknown>('test error');
 
       // Act & Assert
       expect(either.hasData).toBe(false);
@@ -293,7 +293,7 @@ describe('Either', () => {
     it('should return errors array when Either has errors', () => {
       // Arrange
       const errors = ['Error 1', 'Error 2'];
-      const either = Either.errors<string, any>(errors);
+      const either = Either.errors<string, unknown>(errors);
 
       // Act
       const result = either.errors;
@@ -362,7 +362,7 @@ describe('Either', () => {
       // Arrange
       const validateUser = (
         name: string,
-        age: number,
+        age: number
       ): Either<string, { name: string; age: number }> => {
         const errors: string[] = [];
 
@@ -401,7 +401,7 @@ describe('Either', () => {
       constructor(
         public readonly id: string,
         public readonly name: string,
-        public readonly value: number,
+        public readonly value: number
       ) {}
 
       static create(props: {
@@ -484,7 +484,7 @@ describe('Either', () => {
       const longError = 'A'.repeat(10000);
 
       // Act
-      const result = Either.error<string, any>(longError);
+      const result = Either.error<string, unknown>(longError);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -494,10 +494,10 @@ describe('Either', () => {
 
     it('should handle large number of errors', () => {
       // Arrange
-      const manyErrors = Array.from({ length: 1000 }, (_, i) => `Error ${i + 1}`);
+      const munknownErrors = Array.from({ length: 1000 }, (_, i) => `Error ${i + 1}`);
 
       // Act
-      const result = Either.errors<string, any>(manyErrors);
+      const result = Either.errors<string, unknown>(munknownErrors);
 
       // Assert
       expect(result.hasError).toBe(true);
@@ -507,7 +507,7 @@ describe('Either', () => {
 
     it('should handle circular reference in data', () => {
       // Arrange
-      const circularData: any = { name: 'test' };
+      const circularData: { name: string; self?: unknown } = { name: 'test' };
       circularData.self = circularData;
 
       // Act
@@ -516,7 +516,7 @@ describe('Either', () => {
       // Assert
       expect(result.hasData).toBe(true);
       expect(result.data).toBe(circularData);
-      expect(result.data!.self).toBe(result.data);
+      expect((result.data as typeof circularData).self).toBe(result.data);
     });
 
     it('should handle function as data', () => {
@@ -537,7 +537,7 @@ describe('Either', () => {
       const symbolError = Symbol('test error');
 
       // Act
-      const result = Either.error<symbol, any>(symbolError);
+      const result = Either.error<symbol, unknown>(symbolError);
 
       // Assert
       expect(result.hasError).toBe(true);
