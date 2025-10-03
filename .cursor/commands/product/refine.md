@@ -16,6 +16,7 @@ Transformar uma coleta inicial de requisitos em uma especificação estruturada 
 
 ### 1. Análise Inicial
 
+- Se tiver sido fornecido um issue id, busque no Jira via MCP esta issue
 - Revise o requisito inicial fornecido
 - Identifique gaps de informação ou ambiguidades
 - Prepare perguntas de esclarecimento focadas
