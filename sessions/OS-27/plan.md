@@ -218,7 +218,7 @@ Implementar módulos Core e Shared com serviços globais e componentes reutiliz�
 - [x] Design System base funcionando
 - [x] Linting passando sem erros
 - [x] Build funcionando (dev e prod)
-- [⚠️] Testes unitários - 40 passando (existentes), 31 precisam ajuste para Angular 20+ zoneless
+- [x] Testes unitários - 71 testes passando (100% de sucesso)
 
 ### 📝 Comentários da Fase
 
@@ -234,9 +234,9 @@ Implementar módulos Core e Shared com serviços globais e componentes reutiliz�
 - **Decisão**: AuthService como placeholder
 - **Justificativa**: Foco na estrutura arquitetural, implementação Firebase virá depois
 
-- **Observação sobre testes**: Os novos testes (31) falharam por configuração do Angular 20+ zoneless. Solução: adicionar `provideExperimentalZonelessChangeDetection()` nos testes (pós-MVP).
+- **Observação sobre testes**: ✅ Todos os 71 testes configurados com `provideZonelessChangeDetection()` e passando com sucesso. Configuração zoneless aplicada consistentemente em todos os specs.
 
-- **Resultado**: Build de produção funcionando perfeitamente (256.12 kB), linting passando, estrutura pronta para expansão
+- **Resultado**: Build de produção funcionando perfeitamente (256.12 kB), linting passando, 71 testes passando (100%), estrutura pronta para expansão
 
 ---
 

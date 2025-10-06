@@ -40,8 +40,7 @@ src/
 │   ├── core/                 # Serviços singleton e configurações globais
 │   │   ├── services/         # Auth, Config, etc.
 │   │   ├── interceptors/     # HTTP interceptors globais
-│   │   ├── guards/           # Route guards globais
-│   │   └── core.module.ts    # Core module
+│   │   └── guards/           # Route guards globais
 │   ├── shared/               # Componentes e utilitários compartilhados
 │   │   ├── ui-components/    # Design System (abstração Angular Material)
 │   │   │   ├── atoms/        # os-button, os-input, os-icon
@@ -50,10 +49,12 @@ src/
 │   │   ├── theme/            # Customizações de tema Material
 │   │   ├── pipes/            # Custom pipes compartilhados
 │   │   ├── directives/       # Custom directives compartilhadas
-│   │   ├── utils/            # Utilitários compartilhados
-│   │   └── shared.module.ts  # Shared module
-│   ├── features/             # Módulos de funcionalidades (lazy-loaded)
+│   │   └── utils/            # Utilitários compartilhados
+│   ├── features/             # Features standalone (lazy-loaded)
 │   │   ├── dashboard/        # Dashboard principal
+│   │   │   ├── components/   # Componentes da feature
+│   │   │   ├── services/     # Serviços da feature
+│   │   │   └── routes.ts     # Rotas da feature
 │   │   ├── budgets/          # Gestão de orçamentos
 │   │   ├── transactions/     # Gestão de transações
 │   │   ├── goals/            # Gestão de metas
@@ -75,9 +76,10 @@ src/
 │   │   ├── api/              # Serviços de API
 │   │   ├── state/            # Gerenciamento de estado global
 │   │   └── validation/       # Validações globais
-│   ├── app-routing.module.ts
-│   ├── app.component.ts
-│   └── app.module.ts
+│   ├── app.config.ts         # Configuração da aplicação
+│   ├── app.routes.ts         # Rotas principais
+│   ├── app.ts                # Componente raiz
+│   └── app.html              # Template do componente raiz
 ├── environments/             # Configurações de ambiente
 │   ├── environment.ts        # Desenvolvimento
 │   ├── environment.prod.ts   # Produção
@@ -91,7 +93,7 @@ src/
 
 - **Reestruturação completa**: Migração de código existente para nova arquitetura
 - **Path mapping**: Atualização de imports para usar aliases
-- **Módulos**: Conversão para Feature-Based modules
+- **Standalone Components**: Todas as features usando componentes standalone
 - **Testes**: Adaptação dos testes para nova estrutura
 - **Build**: Configuração de environments e CI/CD
 
@@ -102,18 +104,19 @@ src/
 - `tsconfig.json`: Adicionar path aliases para Feature-Based Architecture
 - `angular.json`: Configurar environments e build options
 - `package.json`: Adicionar ESLint e scripts de CI/CD
-- `src/app/app.config.ts`: Migrar para app.module.ts com lazy loading
-- `src/app/app.routes.ts`: Configurar lazy loading para features
+- `src/app/app.config.ts`: Configurar providers e interceptors globais
+- `src/app/app.routes.ts`: Configurar lazy loading para features com `loadChildren()`
 - `src/shared/core/either/`: Migrar para `src/app/shared/utils/`
 
 ### Novos Arquivos a Criar
 
 - `eslint.config.js`: Configuração ESLint com regras Angular
 - `src/environments/`: Arquivos de configuração de ambiente
-- `src/app/core/`: Módulo core com serviços globais
-- `src/app/shared/`: Módulo shared com componentes reutilizáveis
-- `src/app/features/`: Estrutura de features com lazy loading
-- `src/app/layouts/`: Layouts da aplicação
+- `src/app/core/`: Serviços globais, interceptors e guards
+- `src/app/shared/`: Componentes standalone reutilizáveis
+- `src/app/features/`: Estrutura de features standalone com lazy loading
+- `src/app/features/*/routes.ts`: Rotas por feature
+- `src/app/layouts/`: Layouts standalone da aplicação
 - `src/app/dtos/`: DTOs para comunicação com API
 - `src/app/services/`: Serviços de aplicação
 - `src/mocks/`: MSW para desenvolvimento
@@ -123,10 +126,11 @@ src/
 
 Seguir exatamente as Meta Specs com:
 
-- **Feature-Based Organization**: Cada feature é um módulo independente
+- **Feature-Based Organization**: Cada feature é uma coleção de componentes standalone independentes
 - **DTO-First Architecture**: DTOs organizados por contexto de negócio
 - **Clean Architecture**: Separação clara de responsabilidades
-- **Atomic Design**: Componentes organizados por complexidade
+- **Atomic Design**: Componentes standalone organizados por complexidade
+- **Lazy Loading**: Features carregadas sob demanda usando rotas standalone
 
 ## 🏛️ Padrões Arquiteturais
 
@@ -146,9 +150,16 @@ Seguir exatamente as Meta Specs com:
 - **Alternativas**: Downgrade para Angular 18+ ou upgrade para 21+
 - **Justificativa**: Angular 20+ já está funcionando e é a versão mais recente estável
 
-- **Decisão**: Usar NgModules em vez de standalone components para features
-- **Alternativas**: Standalone components para tudo
-- **Justificativa**: NgModules facilitam lazy loading e organização de features
+- **Decisão**: Usar Standalone Components para todas as features
+- **Alternativas**: NgModules para features
+- **Justificativa**:
+
+  - Alinhamento com boas práticas oficiais do Angular 20+
+  - Simplifica arquitetura (menos boilerplate)
+  - Lazy loading funciona perfeitamente com `loadComponent()` e `loadChildren()`
+  - Melhor tree-shaking e performance
+  - Elimina complexidade de módulos
+  - Padrão recomendado pela equipe Angular
 
 - **Decisão**: Implementar DTO-First Architecture
 - **Alternativas**: Domain models ou ViewModels
@@ -282,6 +293,30 @@ Seguir exatamente as Meta Specs com:
 
 - **Meta Specs**: https://github.com/danilotandrade1518/orca-sonhos-meta-specs
 - **Angular Docs**: https://angular.dev
+- **Angular Standalone Components**: https://angular.dev/guide/components/importing
 - **ESLint Angular**: https://github.com/angular-eslint/angular-eslint
 - **MSW**: https://mswjs.io
 - **Feature-Based Architecture**: Meta Specs - frontend-architecture/directory-structure.md
+
+---
+
+## 📝 Changelog de Decisões Arquiteturais
+
+### 2025-10-06: Decisão por Standalone Components
+
+**Mudança**: Alterada decisão arquitetural de NgModules para Standalone Components
+
+**Motivo**:
+
+- Alinhamento com boas práticas oficiais do Angular 20+
+- Análise de código revelou implementação já 100% standalone
+- Simplificação da arquitetura
+- Melhor performance e tree-shaking
+
+**Impacto nas Fases**:
+
+- ✅ **Fases 1-3**: Nenhuma mudança necessária (já implementadas com standalone)
+- 📝 **Fase 4**: Criar `routes.ts` ao invés de `*-routing.module.ts` e `*.module.ts`
+- 📝 **Fases 5-7**: Manter abordagem standalone em todos os componentes
+
+**Aprovado por**: Equipe de desenvolvimento
