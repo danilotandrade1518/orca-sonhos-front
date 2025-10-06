@@ -24,7 +24,7 @@
       "@dtos/*": ["app/dtos/*"],
       "@services/*": ["app/services/*"],
       "@mocks/*": ["mocks/*"],
-      "@either": ["shared/core"]
+      "@environments/*": ["environments/*"]
     }
   },
   "angularCompilerOptions": {

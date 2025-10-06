@@ -3,8 +3,8 @@ export const environment = {
   apiUrl: 'http://localhost:3000/api',
   appName: 'Orça Sonhos',
   version: '1.0.0',
-  enableLogging: true,
-  enableMockServiceWorker: true,
+  enableDebugLogs: true,
+  enableMSW: true,
   firebase: {
     apiKey: 'your-api-key',
     authDomain: 'your-project.firebaseapp.com',

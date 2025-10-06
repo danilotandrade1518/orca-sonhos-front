@@ -126,3 +126,4 @@ src/
 - Arquitetura: Meta Specs - https://github.com/danilotandrade1518/orca-sonhos-meta-specs
 - Angular Docs: https://angular.dev
 - ESLint Angular: https://github.com/angular-eslint/angular-eslint
+

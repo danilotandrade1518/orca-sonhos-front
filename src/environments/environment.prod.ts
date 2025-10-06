@@ -3,8 +3,8 @@ export const environment = {
   apiUrl: 'https://api.orcasonhos.com/api',
   appName: 'Orça Sonhos',
   version: '1.0.0',
-  enableLogging: false,
-  enableMockServiceWorker: false,
+  enableDebugLogs: false,
+  enableMSW: false,
   firebase: {
     apiKey: 'your-production-api-key',
     authDomain: 'your-project.firebaseapp.com',
