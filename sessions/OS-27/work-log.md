@@ -688,4 +688,157 @@
 **Build funcionando**: Sim - dev e prod funcionando perfeitamente (285.49 kB inicial + lazy chunks)
 **Linting**: Passando sem erros
 **Lazy Loading**: Implementado com 10 chunks separados
-**Próxima tarefa específica**: Implementar Fase 5 - DTOs e Services (Command/Query pattern)
+**Próxima tarefa específica**: Implementar Fase 6 - Testing e MSW
+
+---
+
+### 🗓️ Sessão 2025-10-06 - Fase 5 Completada
+
+**Fase**: Fase 5 - DTOs e Services
+**Objetivo da Sessão**: Implementar DTOs para comunicação com API e Command/Query pattern
+
+#### ✅ Trabalho Realizado
+
+**DTOs Implementados:**
+
+- ✅ **Common DTOs**: BaseDto, BaseRequestDto, BaseResponseDto, PaginationDto, ErrorResponseDto
+- ✅ **Budget DTOs**: CreateBudgetRequestDto, UpdateBudgetRequestDto, BudgetResponseDto, BudgetListResponseDto, BudgetSummaryResponseDto
+- ✅ **Transaction DTOs**: CreateTransactionRequestDto, UpdateTransactionRequestDto, TransactionResponseDto, TransactionListResponseDto, TransactionSummaryResponseDto
+- ✅ **Goal DTOs**: CreateGoalRequestDto, UpdateGoalRequestDto, GoalResponseDto, GoalListResponseDto, GoalSummaryResponseDto
+- ✅ **Account DTOs**: CreateAccountRequestDto, UpdateAccountRequestDto, AccountResponseDto, AccountListResponseDto, AccountSummaryResponseDto
+- ✅ **Credit Card DTOs**: CreateCreditCardRequestDto, UpdateCreditCardRequestDto, CreditCardResponseDto, CreditCardListResponseDto, CreditCardSummaryResponseDto
+
+**Command/Query Pattern:**
+
+- ✅ **BudgetApiService**: CRUD operations + summary
+- ✅ **TransactionApiService**: CRUD operations + summary
+- ✅ **GoalApiService**: CRUD operations + summary
+- ✅ **AccountApiService**: CRUD operations + summary
+- ✅ **CreditCardApiService**: CRUD operations + summary
+
+**Serviços de Aplicação:**
+
+- ✅ **StateService**: Gerenciamento de estado global com Angular Signals
+- ✅ **ValidationService**: Validação de DTOs e regras de negócio
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Usar imports relativos ao invés de path aliases temporariamente
+- **Alternativas**: Configurar path aliases corretamente
+- **Justificativa**: Resolver problemas de compilação rapidamente, path aliases podem ser configurados posteriormente
+
+- **Decisão**: Adicionar propriedades `_type` nas interfaces para evitar erros de linting
+- **Alternativas**: Desabilitar regra de linting ou usar type aliases
+- **Justificativa**: Manter consistência e evitar warnings de interfaces vazias
+
+- **Decisão**: Usar Angular Signals para gerenciamento de estado
+- **Alternativas**: RxJS BehaviorSubject ou NgRx
+- **Justificativa**: Alinhamento com Angular 20+ moderno, melhor performance e simplicidade
+
+#### 🧪 Testes Realizados
+
+- ✅ **Testes Unitários**: 98 testes passando (100% sucesso)
+- ✅ **Build Dev**: Funcionando perfeitamente
+- ✅ **Build Prod**: 285.49 kB inicial + lazy chunks (inalterado)
+- ✅ **Linting**: Passando sem erros
+- ✅ **TypeScript**: Compilação sem erros
+
+#### 📊 Métricas
+
+- **DTOs Criados**: 25 interfaces (5 contextos × 5 tipos cada)
+- **Services Criados**: 7 serviços (5 API + 1 State + 1 Validation)
+- **Arquivos Criados**: 32 arquivos
+- **Testes Passando**: 98/98 ✅ (100% SUCCESS)
+- **Build Size**: 285.49 kB (inalterado)
+- **Linting**: 0 erros
+
+#### 📝 Arquivos Criados
+
+**DTOs (25 arquivos):**
+
+- Common: `base.dto.ts`, `index.ts`
+- Budget: 5 DTOs (request/response/list/summary) + index
+- Transaction: 5 DTOs + index
+- Goal: 5 DTOs + index
+- Account: 5 DTOs + index
+- Credit Card: 5 DTOs + index
+- Main index: `dtos/index.ts`
+
+**Services (7 arquivos):**
+
+- API Services: 5 serviços (budget, transaction, goal, account, credit-card)
+- State Service: 1 serviço de gerenciamento de estado
+- Validation Service: 1 serviço de validação
+- Index files: 3 arquivos de barrel exports
+
+#### 🐛 Problemas Encontrados e Soluções
+
+**Problema 1**: Path alias `@dtos` não reconhecido pelo TypeScript
+
+- **Sintoma**: `TS2307: Cannot find module '@dtos'`
+- **Solução**: Usar imports relativos temporariamente
+- **Arquivos afetados**: Todos os services
+
+**Problema 2**: Interfaces vazias causando erros de linting
+
+- **Sintoma**: `@typescript-eslint/no-empty-object-type`
+- **Solução**: Adicionar propriedades `_type` para identificar tipos
+- **Arquivos afetados**: List response DTOs
+
+**Problema 3**: Getters conflitando com propriedades privadas
+
+- **Sintoma**: `TS2300: Duplicate identifier`
+- **Solução**: Renomear getters para `*Signal` para evitar conflitos
+- **Arquivo afetado**: `state.service.ts`
+
+#### 📚 Lições Aprendidas
+
+1. **DTO-First Architecture**: Estrutura clara e organizada facilita manutenção
+2. **Command/Query Pattern**: Separação clara entre operações de leitura e escrita
+3. **Angular Signals**: Mais simples e performático que RxJS para estado
+4. **Validation Service**: Centralizar validações facilita reutilização
+5. **Path Aliases**: Podem ter problemas de reconhecimento, imports relativos são mais confiáveis
+6. **Linting**: Interfaces vazias precisam de propriedades para evitar warnings
+
+## 2025-10-06 13:35 - Limpeza de Código ✅
+
+### ✅ **Limpeza de Comentários** (Completada)
+
+**Objetivo**: Remover comentários desnecessários do código
+
+**Implementações Realizadas**:
+
+1. **API Services**:
+
+   - ✅ **BudgetApiService**: Comentários removidos
+   - ✅ **TransactionApiService**: Comentários removidos
+   - ✅ **GoalApiService**: Comentários removidos
+   - ✅ **AccountApiService**: Comentários removidos
+   - ✅ **CreditCardApiService**: Comentários removidos
+
+2. **Application Services**:
+
+   - ✅ **StateService**: Comentários removidos
+   - ✅ **ValidationService**: Comentários removidos
+
+3. **Correções**:
+   - ✅ **Goal DTOs**: Corrigido `name` para `title` nos métodos de validação
+   - ✅ **Compilação**: Todos os erros de TypeScript resolvidos
+
+**Resultados**:
+
+- ✅ **Compilação**: 100% sucesso
+- ✅ **Linting**: 0 erros
+- ✅ **Testes**: 98/98 passando (100% sucesso)
+- ✅ **Código Limpo**: Sem comentários desnecessários
+
+#### ⏭️ Próximos Passos
+
+1. ✅ Fase 1 - Configuração Base e Ferramentas (CONCLUÍDA)
+2. ✅ Fase 2 - Estrutura de Diretórios Feature-Based (CONCLUÍDA)
+3. ✅ Fase 3 - Core e Shared Modules (CONCLUÍDA)
+4. ✅ Fase 4 - Features e Lazy Loading (CONCLUÍDA)
+5. ✅ **Fase 5 - DTOs e Services (CONCLUÍDA)**
+6. ⏭️ **Fase 6 - Testing e MSW** (Próxima)
+
+---
