@@ -2,6 +2,12 @@
 
 Este é o comando para executar o desenvolvimento de uma funcionalidade seguindo o planejamento estabelecido.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Argumentos da Sessão
 
 <folder>
@@ -11,6 +17,7 @@ Este é o comando para executar o desenvolvimento de uma funcionalidade seguindo
 ## Objetivo
 
 Implementar a funcionalidade seguindo o plano faseado, com foco na qualidade, padrões do projeto e aprovação entre etapas.
+Você possui o MCP angular-cli do Angular que te fornece boas práticas, use ele sempre que for trabalhar.
 
 ## Processo de Desenvolvimento
 
@@ -48,7 +55,7 @@ Se não estiver em uma feature branch:
    const contextQuery = `funcionalidade ${folder - name} arquitetura padrões frontend`;
    const contextResults = await codebase_search({
      query: contextQuery,
-     target_directories: ['/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs'],
+     target_directories: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs' se não configurado],
    });
    ```
 
@@ -81,7 +88,7 @@ Se não estiver em uma feature branch:
 - Especificações de domínio relacionadas
 - Documentação técnica específica do contexto
 
-**Localização**: `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
+**Localização**: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
 ##### 2.4: Context Summary
 

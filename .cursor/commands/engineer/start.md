@@ -2,6 +2,12 @@
 
 Este é o comando para iniciar o desenvolvimento de uma funcionalidade baseada em especificações e arquitetura aprovadas.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Argumentos da Sessão
 
 <feature_slug>
@@ -230,7 +236,7 @@ Com o contexto aprovado, proceda ao desenvolvimento da arquitetura técnica deta
 
 #### Consulta às Meta Specs
 
-- Revise diretrizes técnicas em `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
+- Revise diretrizes técnicas em [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 - Confirme alinhamento com padrões arquiteturais
 - Identifique convenções obrigatórias
 
@@ -338,7 +344,7 @@ Crie o arquivo `sessions/<feature_slug>/architecture.md`:
 
 ## 📚 Referências
 
-- [Meta Specs]: [Links relevantes]
+- [Meta Specs]: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 - [Documentação]: [APIs, bibliotecas]
 - [Exemplos]: [Código similar no projeto]
 ```

@@ -2,6 +2,12 @@
 
 Você é um especialista em produto e arquitetura encarregado de projetar a arquitetura de uma funcionalidade baseada em especificações aprovadas.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Argumentos da Sessão
 
 <feature_identification>
@@ -89,7 +95,7 @@ Se a discussão revelar novos insights:
 
 #### 5.2. Revisão das Meta Specs Técnicas
 
-- Consulte https://github.com/danilotandrade1518/orca-sonhos-meta-specs para diretrizes arquiteturais
+- Consulte [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado] para diretrizes arquiteturais
 - Garanta alinhamento com a visão técnica do projeto
 - Identifique padrões obrigatórios
 

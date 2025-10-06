@@ -2,6 +2,12 @@
 
 Você é um especialista em produto encarregado de validar requisitos, especificações e arquiteturas contra as **Meta Specs** do projeto.
 
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
 ## Argumentos da Sessão
 
 <arguments>
@@ -34,7 +40,7 @@ Funcionam como a "Constituição" do projeto, garantindo consistência e alinham
 
 ### 2. Consulta às Meta Specs
 
-- Acesse o repositório: https://github.com/danilotandrade1518/orca-sonhos-meta-specs
+- Acesse o repositório: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 - Revise os documentos relevantes para esta funcionalidade
 - Identifique specs específicas que se aplicam
 

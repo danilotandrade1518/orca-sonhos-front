@@ -1,7 +1,14 @@
 # Product Warm-up
 
 Para se preparar para esta sessão de trabalho de produto, execute os seguintes passos:
-Meta Specs estão no repositório: https://github.com/danilotandrade1518/orca-sonhos-meta-specs
+
+## Configuração de IA
+
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
+Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitHub.
+
+Meta Specs estão no repositório: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
 ## 0. Faça o refresh das Meta Specs usando o MCP code expert
 
