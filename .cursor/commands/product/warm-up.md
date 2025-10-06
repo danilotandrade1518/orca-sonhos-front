@@ -10,8 +10,6 @@ Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitH
 
 Meta Specs estão no repositório: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
-## 0. Faça o refresh das Meta Specs usando o MCP code expert
-
 ## 1. Revisão das Meta Specs
 
 - Acesse e revise o **index.md** das META SPECS deste projeto
