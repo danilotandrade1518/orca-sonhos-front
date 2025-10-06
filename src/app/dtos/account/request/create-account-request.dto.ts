@@ -1,13 +1,10 @@
 import { BaseRequestDto } from '@dtos/common';
 
-/**
- * DTO for creating a new account
- */
 export interface CreateAccountRequestDto extends BaseRequestDto {
+  userId: string;
   name: string;
-  type: 'checking' | 'savings' | 'investment' | 'credit' | 'cash';
-  balance: number;
-  currency: string;
+  type: string;
+  budgetId: string;
+  initialBalance?: number;
   description?: string;
-  isActive: boolean;
 }

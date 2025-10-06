@@ -4,44 +4,47 @@ import { Observable } from 'rxjs';
 import {
   CreateBudgetRequestDto,
   UpdateBudgetRequestDto,
+  DeleteBudgetRequestDto,
+  AddParticipantRequestDto,
+  RemoveParticipantRequestDto,
   BudgetResponseDto,
   BudgetListResponseDto,
-  BudgetSummaryResponseDto,
+  BudgetOverviewResponseDto,
 } from '../../dtos/budget';
-import { PaginationDto } from '../../dtos/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/budgets';
 
+  // Commands (POST endpoints)
   createBudget(request: CreateBudgetRequestDto): Observable<BudgetResponseDto> {
-    return this.http.post<BudgetResponseDto>(this.baseUrl, request);
+    return this.http.post<BudgetResponseDto>('/budget/create-budget', request);
   }
 
-  getBudget(id: string): Observable<BudgetResponseDto> {
-    return this.http.get<BudgetResponseDto>(`${this.baseUrl}/${id}`);
+  updateBudget(request: UpdateBudgetRequestDto): Observable<BudgetResponseDto> {
+    return this.http.post<BudgetResponseDto>('/budget/update-budget', request);
   }
 
-  updateBudget(id: string, request: UpdateBudgetRequestDto): Observable<BudgetResponseDto> {
-    return this.http.put<BudgetResponseDto>(`${this.baseUrl}/${id}`, request);
+  deleteBudget(request: DeleteBudgetRequestDto): Observable<void> {
+    return this.http.post<void>('/budget/delete-budget', request);
   }
 
-  deleteBudget(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  addParticipant(request: AddParticipantRequestDto): Observable<void> {
+    return this.http.post<void>('/budget/add-participant', request);
   }
 
-  getBudgets(pagination: PaginationDto): Observable<BudgetListResponseDto> {
-    const params = {
-      page: pagination.page.toString(),
-      limit: pagination.limit.toString(),
-    };
-    return this.http.get<BudgetListResponseDto>(this.baseUrl, { params });
+  removeParticipant(request: RemoveParticipantRequestDto): Observable<void> {
+    return this.http.post<void>('/budget/remove-participant', request);
   }
 
-  getBudgetSummary(): Observable<BudgetSummaryResponseDto> {
-    return this.http.get<BudgetSummaryResponseDto>(`${this.baseUrl}/summary`);
+  // Queries (GET endpoints)
+  getBudgetOverview(budgetId: string): Observable<BudgetOverviewResponseDto> {
+    return this.http.get<BudgetOverviewResponseDto>(`/budget/budget-overview?budgetId=${budgetId}`);
+  }
+
+  listBudgets(userId: string): Observable<BudgetListResponseDto> {
+    return this.http.get<BudgetListResponseDto>(`/budget/list-budgets?userId=${userId}`);
   }
 }

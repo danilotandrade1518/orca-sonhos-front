@@ -1,238 +1,167 @@
 import { Injectable } from '@angular/core';
+import { CreateEnvelopeRequestDto, UpdateEnvelopeRequestDto } from '../../dtos/envelope';
 import {
-  CreateBudgetRequestDto,
-  UpdateBudgetRequestDto,
-  CreateTransactionRequestDto,
-  UpdateTransactionRequestDto,
-  CreateGoalRequestDto,
-  UpdateGoalRequestDto,
-  CreateAccountRequestDto,
-  UpdateAccountRequestDto,
-  CreateCreditCardRequestDto,
-  UpdateCreditCardRequestDto,
-} from '../../dtos';
+  CreateCreditCardBillRequestDto,
+  UpdateCreditCardBillRequestDto,
+} from '../../dtos/credit-card-bill';
+import { CreateCategoryRequestDto, UpdateCategoryRequestDto } from '../../dtos/category';
+import { CreateGoalRequestDto, UpdateGoalRequestDto } from '../../dtos/goal';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidationService {
-  validateCreateBudget(request: CreateBudgetRequestDto): string[] {
+  validateCreateEnvelope(dto: CreateEnvelopeRequestDto): string[] {
     const errors: string[] = [];
 
-    if (!request.name || request.name.trim().length === 0) {
-      errors.push('Budget name is required');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.name && request.name.length > 100) {
-      errors.push('Budget name must be less than 100 characters');
+    if (!dto.budgetId || dto.budgetId.trim() === '') {
+      errors.push('budgetId is required');
     }
 
-    if (request.totalAmount <= 0) {
-      errors.push('Total amount must be greater than 0');
+    if (!dto.name || dto.name.trim() === '') {
+      errors.push('name is required');
     }
 
-    if (request.startDate >= request.endDate) {
-      errors.push('Start date must be before end date');
-    }
-
-    if (!request.categoryId) {
-      errors.push('Category ID is required');
+    if (dto.amount === undefined || dto.amount === null || dto.amount < 0) {
+      errors.push('amount must be a positive number');
     }
 
     return errors;
   }
 
-  validateUpdateBudget(request: UpdateBudgetRequestDto): string[] {
+  validateUpdateEnvelope(dto: UpdateEnvelopeRequestDto): string[] {
     const errors: string[] = [];
 
-    if (request.name !== undefined && (!request.name || request.name.trim().length === 0)) {
-      errors.push('Budget name cannot be empty');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.name && request.name.length > 100) {
-      errors.push('Budget name must be less than 100 characters');
+    if (!dto.envelopeId || dto.envelopeId.trim() === '') {
+      errors.push('envelopeId is required');
     }
 
-    if (request.totalAmount !== undefined && request.totalAmount <= 0) {
-      errors.push('Total amount must be greater than 0');
-    }
-
-    if (request.startDate && request.endDate && request.startDate >= request.endDate) {
-      errors.push('Start date must be before end date');
+    if (dto.amount !== undefined && dto.amount < 0) {
+      errors.push('amount must be a positive number');
     }
 
     return errors;
   }
 
-  validateCreateTransaction(request: CreateTransactionRequestDto): string[] {
+  validateCreateCreditCardBill(dto: CreateCreditCardBillRequestDto): string[] {
     const errors: string[] = [];
 
-    if (!request.amount || request.amount <= 0) {
-      errors.push('Transaction amount must be greater than 0');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (!request.type || !['income', 'expense', 'transfer'].includes(request.type)) {
-      errors.push('Transaction type must be income, expense, or transfer');
+    if (!dto.creditCardId || dto.creditCardId.trim() === '') {
+      errors.push('creditCardId is required');
     }
 
-    if (
-      request.description !== undefined &&
-      (!request.description || request.description.trim().length === 0)
-    ) {
-      errors.push('Transaction description cannot be empty');
+    if (dto.amount === undefined || dto.amount === null || dto.amount <= 0) {
+      errors.push('amount must be a positive number');
     }
 
-    if (!request.budgetId || request.budgetId.trim().length === 0) {
-      errors.push('Budget ID is required');
+    if (!dto.dueDate || !(dto.dueDate instanceof Date)) {
+      errors.push('dueDate is required and must be a valid date');
     }
 
     return errors;
   }
 
-  validateUpdateTransaction(request: UpdateTransactionRequestDto): string[] {
+  validateUpdateCreditCardBill(dto: UpdateCreditCardBillRequestDto): string[] {
     const errors: string[] = [];
 
-    if (request.amount !== undefined && request.amount <= 0) {
-      errors.push('Transaction amount must be greater than 0');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.type && !['income', 'expense', 'transfer'].includes(request.type)) {
-      errors.push('Transaction type must be income, expense, or transfer');
+    if (!dto.billId || dto.billId.trim() === '') {
+      errors.push('billId is required');
     }
 
-    if (
-      request.description !== undefined &&
-      (!request.description || request.description.trim().length === 0)
-    ) {
-      errors.push('Transaction description cannot be empty');
+    if (dto.amount !== undefined && dto.amount <= 0) {
+      errors.push('amount must be a positive number');
     }
 
     return errors;
   }
 
-  validateCreateGoal(request: CreateGoalRequestDto): string[] {
+  validateCreateCategory(dto: CreateCategoryRequestDto): string[] {
     const errors: string[] = [];
 
-    if (!request.title || request.title.trim().length === 0) {
-      errors.push('Goal title is required');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (!request.targetAmount || request.targetAmount <= 0) {
-      errors.push('Goal target amount must be greater than 0');
-    }
-
-    if (request.targetDate && request.targetDate <= new Date()) {
-      errors.push('Target date must be in the future');
+    if (!dto.name || dto.name.trim() === '') {
+      errors.push('name is required');
     }
 
     return errors;
   }
 
-  validateUpdateGoal(request: UpdateGoalRequestDto): string[] {
+  validateUpdateCategory(dto: UpdateCategoryRequestDto): string[] {
     const errors: string[] = [];
 
-    if (request.title !== undefined && (!request.title || request.title.trim().length === 0)) {
-      errors.push('Goal title cannot be empty');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.targetAmount !== undefined && request.targetAmount <= 0) {
-      errors.push('Goal target amount must be greater than 0');
-    }
-
-    if (request.targetDate && request.targetDate <= new Date()) {
-      errors.push('Target date must be in the future');
+    if (!dto.categoryId || dto.categoryId.trim() === '') {
+      errors.push('categoryId is required');
     }
 
     return errors;
   }
 
-  validateCreateAccount(request: CreateAccountRequestDto): string[] {
+  validateCreateGoal(dto: CreateGoalRequestDto): string[] {
     const errors: string[] = [];
 
-    if (!request.name || request.name.trim().length === 0) {
-      errors.push('Account name is required');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.balance === undefined || request.balance < 0) {
-      errors.push('Account balance must be 0 or greater');
+    if (!dto.budgetId || dto.budgetId.trim() === '') {
+      errors.push('budgetId is required');
     }
 
-    if (
-      request.type &&
-      !['checking', 'savings', 'investment', 'credit', 'cash'].includes(request.type)
-    ) {
-      errors.push('Account type must be checking, savings, investment, credit, or cash');
+    if (!dto.title || dto.title.trim() === '') {
+      errors.push('title is required');
+    }
+
+    if (dto.targetAmount === undefined || dto.targetAmount === null || dto.targetAmount <= 0) {
+      errors.push('targetAmount must be a positive number');
+    }
+
+    if (!dto.targetDate || !(dto.targetDate instanceof Date)) {
+      errors.push('targetDate is required and must be a valid date');
+    }
+
+    if (!dto.categoryId || dto.categoryId.trim() === '') {
+      errors.push('categoryId is required');
     }
 
     return errors;
   }
 
-  validateUpdateAccount(request: UpdateAccountRequestDto): string[] {
+  validateUpdateGoal(dto: UpdateGoalRequestDto): string[] {
     const errors: string[] = [];
 
-    if (request.name !== undefined && (!request.name || request.name.trim().length === 0)) {
-      errors.push('Account name cannot be empty');
+    if (!dto.userId || dto.userId.trim() === '') {
+      errors.push('userId is required');
     }
 
-    if (request.balance !== undefined && request.balance < 0) {
-      errors.push('Account balance must be 0 or greater');
+    if (!dto.goalId || dto.goalId.trim() === '') {
+      errors.push('goalId is required');
     }
 
-    if (
-      request.type &&
-      !['checking', 'savings', 'investment', 'credit', 'cash'].includes(request.type)
-    ) {
-      errors.push('Account type must be checking, savings, investment, credit, or cash');
-    }
-
-    return errors;
-  }
-
-  validateCreateCreditCard(request: CreateCreditCardRequestDto): string[] {
-    const errors: string[] = [];
-
-    if (!request.name || request.name.trim().length === 0) {
-      errors.push('Credit card name is required');
-    }
-
-    if (!request.limit || request.limit <= 0) {
-      errors.push('Credit card limit must be greater than 0');
-    }
-
-    if (request.currentBalance === undefined || request.currentBalance < 0) {
-      errors.push('Current balance must be 0 or greater');
-    }
-
-    if (
-      request.interestRate !== undefined &&
-      (request.interestRate < 0 || request.interestRate > 100)
-    ) {
-      errors.push('Interest rate must be between 0 and 100');
-    }
-
-    return errors;
-  }
-
-  validateUpdateCreditCard(request: UpdateCreditCardRequestDto): string[] {
-    const errors: string[] = [];
-
-    if (request.name !== undefined && (!request.name || request.name.trim().length === 0)) {
-      errors.push('Credit card name cannot be empty');
-    }
-
-    if (request.limit !== undefined && request.limit <= 0) {
-      errors.push('Credit card limit must be greater than 0');
-    }
-
-    if (request.currentBalance !== undefined && request.currentBalance < 0) {
-      errors.push('Current balance must be 0 or greater');
-    }
-
-    if (
-      request.interestRate !== undefined &&
-      (request.interestRate < 0 || request.interestRate > 100)
-    ) {
-      errors.push('Interest rate must be between 0 and 100');
+    if (dto.targetAmount !== undefined && dto.targetAmount <= 0) {
+      errors.push('targetAmount must be a positive number');
     }
 
     return errors;

@@ -1,6 +1,7 @@
 import { BaseResponseDto } from '@dtos/common';
 
-export interface BudgetResponseDto extends BaseResponseDto {
+export interface BudgetOverviewResponseDto extends BaseResponseDto {
+  id: string;
   name: string;
   type: string;
   participants: { id: string }[];

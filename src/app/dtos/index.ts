@@ -4,3 +4,6 @@ export * from './transaction';
 export * from './goal';
 export * from './account';
 export * from './credit-card';
+export * from './envelope';
+export * from './credit-card-bill';
+export * from './category';

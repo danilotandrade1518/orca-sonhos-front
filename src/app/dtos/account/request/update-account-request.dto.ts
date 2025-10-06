@@ -1,13 +1,10 @@
 import { BaseRequestDto } from '@dtos/common';
 
-/**
- * DTO for updating an existing account
- */
 export interface UpdateAccountRequestDto extends BaseRequestDto {
+  userId: string;
+  accountId: string;
   name?: string;
-  type?: 'checking' | 'savings' | 'investment' | 'credit' | 'cash';
-  balance?: number;
-  currency?: string;
+  type?: string;
+  budgetId?: string;
   description?: string;
-  isActive?: boolean;
 }

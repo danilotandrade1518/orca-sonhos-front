@@ -1,9 +1,7 @@
 import { BaseResponseDto } from '@dtos/common';
 
-/**
- * DTO for goal response
- */
 export interface GoalResponseDto extends BaseResponseDto {
+  budgetId: string;
   title: string;
   description?: string;
   targetAmount: number;
@@ -13,7 +11,6 @@ export interface GoalResponseDto extends BaseResponseDto {
   categoryId: string;
   categoryName: string;
   priority: 'low' | 'medium' | 'high';
-  isActive: boolean;
   progressPercentage: number;
   daysRemaining: number;
   isCompleted: boolean;

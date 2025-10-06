@@ -1,9 +1,8 @@
 import { BaseResponseDto } from '@dtos/common';
 
-export interface AccountResponseDto extends BaseResponseDto {
+export interface EnvelopeResponseDto extends BaseResponseDto {
   name: string;
-  type: string;
   budgetId: string;
-  balance: number;
+  amount: number;
   description?: string;
 }

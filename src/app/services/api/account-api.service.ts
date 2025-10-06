@@ -4,44 +4,41 @@ import { Observable } from 'rxjs';
 import {
   CreateAccountRequestDto,
   UpdateAccountRequestDto,
+  ReconcileAccountRequestDto,
+  TransferBetweenAccountsRequestDto,
   AccountResponseDto,
   AccountListResponseDto,
-  AccountSummaryResponseDto,
 } from '../../dtos/account';
-import { PaginationDto } from '../../dtos/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/accounts';
 
+  // Commands (POST endpoints)
   createAccount(request: CreateAccountRequestDto): Observable<AccountResponseDto> {
-    return this.http.post<AccountResponseDto>(this.baseUrl, request);
+    return this.http.post<AccountResponseDto>('/account/create-account', request);
   }
 
-  getAccount(id: string): Observable<AccountResponseDto> {
-    return this.http.get<AccountResponseDto>(`${this.baseUrl}/${id}`);
+  updateAccount(request: UpdateAccountRequestDto): Observable<AccountResponseDto> {
+    return this.http.post<AccountResponseDto>('/account/update-account', request);
   }
 
-  updateAccount(id: string, request: UpdateAccountRequestDto): Observable<AccountResponseDto> {
-    return this.http.put<AccountResponseDto>(`${this.baseUrl}/${id}`, request);
+  reconcileAccount(request: ReconcileAccountRequestDto): Observable<void> {
+    return this.http.post<void>('/account/reconcile-account', request);
   }
 
-  deleteAccount(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  transferBetweenAccounts(request: TransferBetweenAccountsRequestDto): Observable<void> {
+    return this.http.post<void>('/account/transfer-between-accounts', request);
   }
 
-  getAccounts(pagination: PaginationDto): Observable<AccountListResponseDto> {
-    const params = {
-      page: pagination.page.toString(),
-      limit: pagination.limit.toString(),
-    };
-    return this.http.get<AccountListResponseDto>(this.baseUrl, { params });
+  // Queries (GET endpoints)
+  getAccount(accountId: string): Observable<AccountResponseDto> {
+    return this.http.get<AccountResponseDto>(`/account/${accountId}`);
   }
 
-  getAccountSummary(): Observable<AccountSummaryResponseDto> {
-    return this.http.get<AccountSummaryResponseDto>(`${this.baseUrl}/summary`);
+  listAccounts(budgetId: string): Observable<AccountListResponseDto> {
+    return this.http.get<AccountListResponseDto>(`/account/list-accounts?budgetId=${budgetId}`);
   }
 }

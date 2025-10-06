@@ -1,14 +1,10 @@
 import { BaseRequestDto } from '@dtos/common';
+import { BudgetTypeEnum } from '../enums/budget-type.enum';
 
-/**
- * DTO for updating an existing budget
- */
 export interface UpdateBudgetRequestDto extends BaseRequestDto {
+  budgetId: string;
+  userId: string;
   name?: string;
-  description?: string;
-  totalAmount?: number;
-  startDate?: Date;
-  endDate?: Date;
-  categoryId?: string;
-  isActive?: boolean;
+  participantIds?: string[];
+  type?: BudgetTypeEnum;
 }
