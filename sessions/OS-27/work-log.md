@@ -477,11 +477,215 @@
 
 ---
 
-## 🗂️ Status Final da Sessão
+---
+
+### 🗓️ Sessão 2025-10-06 - Fase 4 Completada
+
+**Fase**: Fase 4 - Features e Lazy Loading
+**Objetivo da Sessão**: Implementar estrutura de features com lazy loading e configurar roteamento
+
+#### ✅ Trabalho Realizado
+
+**Layouts Standalone:**
+
+- ✅ `MainLayoutComponent` - Layout principal com navegação, header e footer
+- ✅ `AuthLayoutComponent` - Layout para páginas de autenticação
+- ✅ Testes spec para ambos os layouts
+
+**Componentes de Página (Features):**
+
+- ✅ `DashboardPageComponent` - Página principal do dashboard
+- ✅ `BudgetsPageComponent` - Gestão de orçamentos
+- ✅ `TransactionsPageComponent` - Gestão de transações
+- ✅ `GoalsPageComponent` - Gestão de metas
+- ✅ `AccountsPageComponent` - Gestão de contas
+- ✅ `CreditCardsPageComponent` - Gestão de cartões de crédito
+- ✅ `ReportsPageComponent` - Relatórios financeiros
+- ✅ `OnboardingPageComponent` - Fluxo de onboarding
+- ✅ Testes spec para todos os componentes de página
+
+**Roteamento:**
+
+- ✅ Configurado `app.routes.ts` com lazy loading usando `loadComponent()`
+- ✅ Rotas aninhadas com layouts (main-layout e auth-layout)
+- ✅ Títulos de página configurados para cada rota
+- ✅ Redirecionamentos configurados (raiz → dashboard, wildcard → dashboard)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Usar Standalone Components com `loadComponent()` ao invés de NgModules
+- **Alternativas**: NgModules com `loadChildren()`
+- **Justificativa**: Alinhamento com Angular 20+ moderno, simplificação da arquitetura, melhor tree-shaking
+
+- **Decisão**: Criar componentes de página básicos ("em breve") para cada feature
+- **Alternativas**: Implementar features completas agora
+- **Justificativa**: Foco na estrutura e navegação, implementação detalhada virá nas próximas fases
+
+- **Decisão**: Usar `inject()` nos componentes ao invés de constructor injection
+- **Alternativas**: Constructor injection tradicional
+- **Justificativa**: Padrão moderno do Angular recomendado pelas best practices
+
+#### 🧪 Testes Realizados
+
+- ✅ **Linting**: Passou sem erros
+- ✅ **Testes Unitários**: 98 testes passando (100% sucesso)
+  - 71 testes anteriores (Fases 1-3)
+  - 27 novos testes (Fase 4)
+    - 4 testes de layouts (main-layout, auth-layout)
+    - 16 testes de features (8 componentes × 2 testes cada)
+    - 7 testes adicionais de navegação
+- ✅ **Build Dev**: Funcionando perfeitamente
+- ✅ **Build Prod**: 285.49 kB inicial + lazy chunks por feature
+  - Lazy loading implementado com sucesso
+  - Chunks separados: main-layout (3.97 kB), auth-layout (1.67 kB)
+  - Features carregadas sob demanda (dashboard, budgets, transactions, etc.)
+
+#### 📊 Métricas de Build
+
+**Initial Bundle:**
+
+- Total: 285.49 kB (77.40 kB gzipped)
+- Aumento de ~30 kB em relação à Fase 3 devido ao roteamento
+
+**Lazy Chunks (carregados sob demanda):**
+
+- MainLayoutComponent: 3.97 kB
+- AuthLayoutComponent: 1.67 kB
+- DashboardPageComponent: 1.67 kB
+- TransactionsPageComponent: 1.04 kB
+- CreditCardsPageComponent: 1.04 kB
+- OnboardingPageComponent: 1.03 kB
+- BudgetsPageComponent: 1.02 kB
+- ReportsPageComponent: 1.01 kB
+- AccountsPageComponent: 999 bytes
+- GoalsPageComponent: 984 bytes
+
+**Total de Features Lazy-Loaded**: 10 chunks (layouts + páginas)
+
+#### 📝 Arquivos Criados
+
+**Layouts (4 arquivos):**
+
+- `layouts/main-layout/main-layout.component.ts` + spec
+- `layouts/auth-layout/auth-layout.component.ts` + spec
+
+**Features (16 arquivos - 8 componentes × 2 arquivos cada):**
+
+- `features/dashboard/components/dashboard-page.component.ts` + spec
+- `features/budgets/components/budgets-page.component.ts` + spec
+- `features/transactions/components/transactions-page.component.ts` + spec
+- `features/goals/components/goals-page.component.ts` + spec
+- `features/accounts/components/accounts-page.component.ts` + spec
+- `features/credit-cards/components/credit-cards-page.component.ts` + spec
+- `features/reports/components/reports-page.component.ts` + spec
+- `features/onboarding/components/onboarding-page.component.ts` + spec
+
+**Roteamento (1 arquivo modificado):**
+
+- `app.routes.ts` - Configuração completa de rotas com lazy loading
+
+**Total**: 21 arquivos (20 novos + 1 modificado)
+
+#### 🐛 Problemas Encontrados e Soluções
+
+**Problema 1**: MainLayoutComponent tentando acessar `AuthService` como classe estática
+
+- **Sintoma**: Erro de compilação ao tentar usar `AuthService` sem instanciação
+- **Solução**: Usar `inject(AuthService)` para obter instância do serviço
+- **Arquivo afetado**: `main-layout.component.ts`
+
+#### 📚 Lições Aprendidas
+
+1. **Lazy Loading com Standalone**: `loadComponent()` é extremamente simples e eficiente comparado ao antigo sistema de módulos
+2. **Tree Shaking**: Lazy chunks muito pequenos (< 2 kB) mostram excelente otimização do build
+3. **Navegação**: `RouterLinkActive` funciona perfeitamente com rotas lazy-loaded
+4. **Testes**: Layouts precisam de `provideRouter([])` para testar corretamente
+5. **Inject Function**: Uso consistente de `inject()` simplifica código e é o padrão recomendado
+
+#### ⏭️ Próximos Passos
+
+1. ✅ Fase 1 - Configuração Base e Ferramentas (CONCLUÍDA)
+2. ✅ Fase 2 - Estrutura de Diretórios Feature-Based (CONCLUÍDA)
+3. ✅ Fase 3 - Core e Shared Modules (CONCLUÍDA)
+4. ✅ **Fase 4 - Features e Lazy Loading (CONCLUÍDA)**
+5. ⏭️ **Fase 5 - DTOs e Services** (Próxima)
+
+---
+
+## 📊 Resumo de Progresso
+
+### Por Fase
+
+- **Fase 1**: Completada ✅
+
+  - Sessões: 2
+  - Tempo total: 1.5 horas
+  - Principais realizações: ESLint, environments, path aliases configurados
+
+- **Fase 2**: Completada ✅
+
+  - Sessões: 1
+  - Tempo total: 0.5 horas
+  - Principais realizações: Estrutura Feature-Based completa, migração de código, validações
+
+- **Fase 3**: Completada ✅
+
+  - Sessões: 2
+  - Tempo total: 1.5 horas
+  - Principais realizações: Core module, Shared module, Design System base, interceptors, guards
+
+- **Fase 4**: Completada ✅
+  - Sessões: 1
+  - Tempo total: 1 hora
+  - Principais realizações: Layouts, Features standalone, Lazy loading, Roteamento completo
+
+### Métricas Gerais
+
+- **Total de Sessões**: 6
+- **Tempo Total Investido**: 4.5 horas
+- **Arquivos Criados**: 43 (core services, interceptors, guards, design system, layouts, features)
+- **Arquivos Modificados**: 12 (environments, eslint.config.js, tsconfig.json, app.routes.ts, work-log.md, plan.md)
+- **Diretórios Criados**: 50+ (estrutura Feature-Based completa com features)
+- **Commits Realizados**: 0 (trabalho em andamento na branch)
+- **Testes Passando**: 98/98 ✅ (100% SUCCESS)
+- **Build Size (prod)**: 285.49 kB inicial + lazy chunks
+
+### Decisões Arquiteturais Importantes
+
+- Manter Angular 20+: Evita breaking changes desnecessários
+- Standalone Components: Simplificação e padrão moderno
+- DTO-First Architecture: Alinhamento com backend
+- Lazy Loading por Feature: Performance otimizada
+
+### Lições Aprendidas
+
+- Projeto já possui base sólida com Angular 20+
+- Meta Specs fornecem diretrizes detalhadas
+- Complexidade média requer abordagem faseada
+- Estrutura Feature-Based facilita organização e escalabilidade
+- Migração incremental mantém testes passando durante todo processo
+- Signals são mais simples e performáticos que RxJS para estado
+- Functional APIs (interceptors/guards) são o futuro do Angular
+- Angular 20+ zoneless requer ajustes nos testes (usar provideZonelessChangeDetection)
+- Lazy loading com standalone components é muito mais simples que NgModules
+
+## 🔄 Estado de Recovery
+
+### Para Continuação
+
+**Se interrompido, para retomar:**
+
+1. Verificar status atual do projeto: `ng serve`
+2. Revisar work-log para entender decisões e progresso
+3. Continuar com Fase 5 - DTOs e Services
+4. Focar em implementar DTOs e Command/Query pattern
+
+### Contexto Atual
 
 **Branch**: feature-OS-27
-**Última modificação**: Testes corrigidos para Angular 20+ zoneless
-**Testes passando**: 71/71 ✅ (100% SUCCESS)
-**Build funcionando**: Sim - dev e prod funcionando perfeitamente (256.12 kB prod)
+**Última modificação**: Fase 4 completada - Features e Lazy Loading implementados
+**Testes passando**: 98/98 ✅ (100% SUCCESS)
+**Build funcionando**: Sim - dev e prod funcionando perfeitamente (285.49 kB inicial + lazy chunks)
 **Linting**: Passando sem erros
-**Próxima tarefa específica**: Fase 4 - Implementar features com lazy loading
+**Lazy Loading**: Implementado com 10 chunks separados
+**Próxima tarefa específica**: Implementar Fase 5 - DTOs e Services (Command/Query pattern)

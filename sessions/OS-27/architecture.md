@@ -132,6 +132,76 @@ Seguir exatamente as Meta Specs com:
 - **Atomic Design**: Componentes standalone organizados por complexidade
 - **Lazy Loading**: Features carregadas sob demanda usando rotas standalone
 
+### Convenção de Organização de Arquivos
+
+**REGRA OBRIGATÓRIA**: Sempre que houver um arquivo de produção acompanhado de seu arquivo de teste, ambos devem estar dentro de seu próprio diretório.
+
+**Estrutura Correta**:
+
+```
+components/
+├── component-name/
+│   ├── component-name.component.ts
+│   └── component-name.component.spec.ts
+```
+
+**Estrutura INCORRETA** (NÃO fazer):
+
+```
+components/
+├── component-name.component.ts
+└── component-name.component.spec.ts
+```
+
+**Exemplos Aplicados**:
+
+**Core Services**:
+
+```
+core/
+├── services/
+│   ├── auth/
+│   │   ├── auth.service.ts
+│   │   └── auth.service.spec.ts
+│   ├── config/
+│   │   ├── config.service.ts
+│   │   └── config.service.spec.ts
+│   └── api/
+│       ├── api.service.ts
+│       └── api.service.spec.ts
+```
+
+**Features**:
+
+```
+features/
+├── dashboard/
+│   └── components/
+│       └── dashboard-page/
+│           ├── dashboard-page.component.ts
+│           └── dashboard-page.component.spec.ts
+```
+
+**Layouts**:
+
+```
+layouts/
+├── main-layout/
+│   ├── main-layout.component.ts
+│   └── main-layout.component.spec.ts
+└── auth-layout/
+    ├── auth-layout.component.ts
+    └── auth-layout.component.spec.ts
+```
+
+**Justificativa**:
+
+- **Organização**: Arquivos relacionados ficam agrupados logicamente
+- **Facilita localização**: Fácil encontrar o componente e seus testes
+- **Escalabilidade**: Permite adicionar mais arquivos relacionados (styles, mocks, etc.) no mesmo diretório
+- **Consistência**: Padrão uniforme em todo o projeto
+- **Padrão da indústria**: Seguido pelos principais projetos Angular
+
 ## 🏛️ Padrões Arquiteturais
 
 ### Padrões Seguidos
