@@ -11,8 +11,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
-    "lint": "eslint . --ext .ts,.html",
-    "lint:fix": "eslint . --ext .ts,.html --fix"
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix"
   },
   "prettier": {
     "printWidth": 100,

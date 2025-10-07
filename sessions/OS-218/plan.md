@@ -80,7 +80,7 @@ npm install --save-dev @angular-eslint/builder @angular-eslint/eslint-plugin @an
 
 ---
 
-## 📅 FASE 2: Estrutura de Diretórios e Environments [Status: ⏳]
+## 📅 FASE 2: Estrutura de Diretórios e Environments [Status: ✅]
 
 ### 🎯 Objetivo da Fase
 
@@ -88,7 +88,7 @@ Criar estrutura Feature-Based completa e configurar environments para diferentes
 
 ### 📋 Tarefas
 
-#### Criar Estrutura de Diretórios Feature-Based [⏳]
+#### Criar Estrutura de Diretórios Feature-Based [✅]
 
 **Descrição**: Criar diretórios e arquivos base para arquitetura Feature-Based
 **Dependências**: Fase 1 completa
@@ -119,7 +119,7 @@ src/
 │   └── environment.test.ts
 ```
 
-#### Configurar Environments [⏳]
+#### Configurar Environments [✅]
 
 **Descrição**: Configurar variáveis de ambiente para dev, prod e test
 **Arquivos**: `src/environments/*.ts`
@@ -132,7 +132,7 @@ src/
 - `version`: string
 - `debug`: boolean
 
-#### Atualizar Angular.json para Environments [⏳]
+#### Atualizar Angular.json para Environments [✅]
 
 **Descrição**: Configurar angular.json para usar environments corretamente
 **Arquivos**: `angular.json`
@@ -146,7 +146,13 @@ src/
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Decisão**: Criar arquivos de environment com configurações específicas para cada ambiente
+- **Implementação**: environment.ts (dev), environment.prod.ts (produção), environment.test.ts (testes)
+- **Configuração**: Angular.json atualizado com fileReplacements para cada ambiente
+- **Estrutura**: Diretórios Feature-Based criados com arquivos index.ts para exports
+- **Rollback**: Fase 3 foi cancelada conforme solicitado - componentes e roteamento removidos
+- **Validação**: Build funcionando corretamente após rollback
+- **Próxima fase**: Fase 3 será implementada em sessão futura
 
 ---
 
