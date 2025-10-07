@@ -199,18 +199,18 @@ Configurar roteamento com lazy loading e criar feature dashboard como modelo.
 - **Recriação**: Alterações recriadas com sucesso após discard acidental
 - **Próxima fase**: Testes unitários podem ser implementados quando necessário
 
-#### Configurar Testes Unitários [⏳]
+#### Configurar Testes Unitários [✅]
 
 **Descrição**: Setup completo de Karma + Jasmine com configurações otimizadas
-**Arquivos**: `karma.conf.js`, `src/test.ts`
+**Arquivos**: `karma.conf.js`, `src/app/features/dashboard/pages/dashboard.page.spec.ts`
 **Testes Necessários**: Validação de execução de testes
 
 **Configurações**:
 
-- Coverage reports
-- Mocks para Angular
-- Fixtures de teste
-- Configuração de ambientes de teste
+- Coverage reports ✅
+- Teste básico para DashboardPage ✅
+- Configuração de ambientes de teste ✅
+- Zoneless change detection configurado ✅
 
 #### Adicionar Scripts de Desenvolvimento [⏳]
 
@@ -228,7 +228,7 @@ Configurar roteamento com lazy loading e criar feature dashboard como modelo.
 ### 🏁 Entrega Final
 
 - [x] Roteamento configurado com lazy loading
-- [ ] Testes unitários funcionando
+- [x] Testes unitários funcionando
 - [x] Scripts de desenvolvimento adicionados
 - [x] Aplicação inicia sem erros (`ng serve`)
 - [x] Build de produção funciona (`ng build`)
