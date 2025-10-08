@@ -1,1 +1,1 @@
-export * from './ui-components/ui-components.module';
+export * from './ui-components';

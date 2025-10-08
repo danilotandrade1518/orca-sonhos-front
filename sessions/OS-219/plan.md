@@ -60,23 +60,23 @@ Estabelecer fundação técnica com estrutura de diretórios, sistema de tema cu
 **Dependências**: Design tokens implementados
 **Validação**: Tema aplicado corretamente nos componentes Material
 
-#### Configurar Módulo Principal [✅]
+#### Configurar Exportações Standalone [✅]
 
-**Descrição**: Criar módulo principal do Design System
+**Descrição**: Configurar exportações para componentes standalone
 **Arquivos**:
 
-- `src/app/shared/ui-components/ui-components.module.ts`
+- `src/app/shared/ui-components/index.ts`
 - `src/app/shared/index.ts` (modificação)
 
 **Dependências**: Estrutura de diretórios criada
-**Validação**: Módulo importa sem erros
+**Validação**: Exportações funcionando sem NgModule
 
 ### 🧪 Critérios de Validação
 
 - [x] Estrutura de diretórios criada
 - [x] Design tokens implementados e funcionais
 - [x] Tema Material customizado aplicado
-- [x] Módulo principal configurado
+- [x] Exportações standalone configuradas
 - [x] Build sem erros
 
 ### 📝 Comentários da Fase
@@ -86,7 +86,7 @@ Estabelecer fundação técnica com estrutura de diretórios, sistema de tema cu
 - **Estrutura de diretórios**: Criada seguindo Atomic Design (atoms, molecules, organisms, templates, theme)
 - **Design tokens**: Sistema completo implementado com paleta azul dominante e roxo secundário
 - **Tema Material**: Integração customizada com Angular Material funcionando
-- **Módulo principal**: Configurado e pronto para exportar componentes
+- **Exportações standalone**: Configuradas seguindo padrões modernos do Angular
 - **Validação**: Build funcionando sem erros, tema aplicado corretamente
 
 **Próximo passo**: Iniciar Fase 2 - Implementação dos componentes ATOMS
