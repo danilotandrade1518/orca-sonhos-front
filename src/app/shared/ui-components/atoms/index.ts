@@ -10,3 +10,7 @@ export * from './os-radio';
 export * from './os-toggle';
 export * from './os-progress-bar';
 export * from './os-chip';
+export * from './os-money-input';
+export * from './os-date-input';
+export * from './os-select';
+export * from './os-slider';
