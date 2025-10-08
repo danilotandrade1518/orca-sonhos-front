@@ -13,6 +13,13 @@
   user-select: none;
   border: 1px solid transparent;
 
+  // Override Material chip styles
+  ::ng-deep .mat-mdc-chip {
+    font-family: var(--os-font-family-base);
+    font-weight: var(--os-font-weight-medium);
+    border-radius: var(--os-border-radius-full);
+  }
+
   &__icon {
     display: flex;
     align-items: center;

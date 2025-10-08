@@ -1,33 +1,25 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'os-chip',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatChipsModule],
   template: `
-    <div
-      class="os-chip"
+    <mat-chip
       [class]="chipClasses()"
+      [disabled]="disabled()"
+      [removable]="removable()"
+      [color]="matColor()"
       (click)="onClick()"
-      (keydown)="onKeyDown($event)"
-      tabindex="0"
+      (removed)="onRemove()"
     >
       @if (icon()) {
       <span class="os-chip__icon">{{ icon() }}</span>
       }
       <span class="os-chip__text">{{ text() }}</span>
-      @if (removable()) {
-      <button
-        type="button"
-        class="os-chip__remove"
-        (click)="onRemove($event)"
-        [attr.aria-label]="removeLabel()"
-      >
-        <span class="os-chip__remove-icon">×</span>
-      </button>
-      }
-    </div>
+    </mat-chip>
   `,
   styleUrls: ['./os-chip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,17 +65,29 @@ export class OsChipComponent {
     }
   }
 
-  onRemove(event: Event): void {
-    event.stopPropagation();
+  onRemove(): void {
     if (!this.disabled()) {
       this.removed.emit();
     }
   }
 
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.onClick();
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    switch (this.variant()) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'accent';
+      case 'success':
+        return 'primary';
+      case 'warning':
+        return 'warn';
+      case 'danger':
+        return 'warn';
+      case 'neutral':
+        return undefined;
+      default:
+        return undefined;
     }
-  }
+  });
 }

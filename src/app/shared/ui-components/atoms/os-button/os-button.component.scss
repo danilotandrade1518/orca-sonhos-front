@@ -16,6 +16,14 @@
   position: relative;
   overflow: hidden;
 
+  // Override Material button styles
+  ::ng-deep .mat-mdc-button {
+    font-family: var(--os-font-family-primary);
+    font-weight: var(--os-font-weight-medium);
+    line-height: 1;
+    border-radius: var(--os-border-radius-md);
+  }
+
   &:focus-visible {
     outline: 2px solid var(--os-color-primary-500);
     outline-offset: 2px;
