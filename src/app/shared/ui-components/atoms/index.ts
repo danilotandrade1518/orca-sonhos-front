@@ -7,3 +7,6 @@ export * from './os-spinner';
 export * from './os-label';
 export * from './os-checkbox';
 export * from './os-radio';
+export * from './os-toggle';
+export * from './os-progress-bar';
+export * from './os-chip';
