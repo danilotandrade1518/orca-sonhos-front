@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { OsCardComponent, OsCardVariant, OsCardSize } from './os-card.component';
+
+import { OsCardComponent } from './os-card.component';
 
 describe('OsCardComponent', () => {
   let component: OsCardComponent;

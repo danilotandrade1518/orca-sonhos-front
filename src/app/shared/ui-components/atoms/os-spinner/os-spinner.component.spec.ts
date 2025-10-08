@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OsSpinnerComponent } from './os-spinner.component';
 
 describe('OsSpinnerComponent', () => {
@@ -8,7 +9,7 @@ describe('OsSpinnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsSpinnerComponent],
+      imports: [OsSpinnerComponent, MatProgressSpinnerModule],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -150,6 +151,48 @@ describe('OsSpinnerComponent', () => {
       expect(component.variant()).toBe('default');
       expect(component.ariaLabel()).toBe('Loading');
       expect(component.ariaHidden()).toBe(false);
+    });
+  });
+
+  describe('Material mapping', () => {
+    it('should map sizes to Material diameter', () => {
+      fixture.componentRef.setInput('size', 'xs');
+      fixture.detectChanges();
+      expect(component['matDiameter']()).toBe(16);
+
+      fixture.componentRef.setInput('size', 'sm');
+      fixture.detectChanges();
+      expect(component['matDiameter']()).toBe(20);
+
+      fixture.componentRef.setInput('size', 'md');
+      fixture.detectChanges();
+      expect(component['matDiameter']()).toBe(24);
+
+      fixture.componentRef.setInput('size', 'lg');
+      fixture.detectChanges();
+      expect(component['matDiameter']()).toBe(32);
+
+      fixture.componentRef.setInput('size', 'xl');
+      fixture.detectChanges();
+      expect(component['matDiameter']()).toBe(40);
+    });
+
+    it('should map variants to Material colors', () => {
+      fixture.componentRef.setInput('variant', 'primary');
+      fixture.detectChanges();
+      expect(component['matColor']()).toBe('primary');
+
+      fixture.componentRef.setInput('variant', 'secondary');
+      fixture.detectChanges();
+      expect(component['matColor']()).toBe('accent');
+
+      fixture.componentRef.setInput('variant', 'error');
+      fixture.detectChanges();
+      expect(component['matColor']()).toBe('warn');
+
+      fixture.componentRef.setInput('variant', 'default');
+      fixture.detectChanges();
+      expect(component['matColor']()).toBeUndefined();
     });
   });
 });
