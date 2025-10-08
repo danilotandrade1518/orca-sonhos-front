@@ -9,34 +9,40 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export type OsDateInputSize = 'small' | 'medium' | 'large';
 
 @Component({
   selector: 'os-date-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatButtonModule,
+    MatNativeDateModule,
+  ],
   template: `
     <div [class]="containerClass()">
-      @if (label()) {
-      <label [for]="inputId" [class]="labelClass()">
-        {{ label() }}
-        @if (required()) {
-        <span class="os-date-input__required" aria-label="required">*</span>
-        }
-      </label>
-      }
-
-      <div [class]="inputWrapperClass()">
-        @if (prefixIcon()) {
-        <span class="os-date-input__prefix-icon" [attr.aria-hidden]="true">
-          {{ prefixIcon() }}
-        </span>
+      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
+        @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
+        } @if (prefixIcon()) {
+        <mat-icon matPrefix [class]="prefixIconClass()">{{ prefixIcon() }}</mat-icon>
         }
 
         <input
+          matInput
+          [matDatepicker]="picker"
           [id]="inputId"
-          type="date"
           [placeholder]="placeholder()"
           [disabled]="disabled()"
           [readonly]="readonly()"
@@ -53,17 +59,20 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
         />
 
         @if (suffixIcon()) {
-        <span class="os-date-input__suffix-icon" [attr.aria-hidden]="true">
-          {{ suffixIcon() }}
-        </span>
+        <mat-icon matSuffix [class]="suffixIconClass()">{{ suffixIcon() }}</mat-icon>
+        } @else {
+        <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disabled()">
+          <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+        </mat-datepicker-toggle>
         }
-      </div>
+        <mat-datepicker #picker></mat-datepicker>
 
-      @if (helperText() || hasError()) {
-      <div [id]="inputId + '-helper'" [class]="helperClass()">
-        {{ errorMessage() || helperText() }}
-      </div>
-      }
+        @if (helperText() || hasError()) {
+        <mat-hint [class]="helperClass()">
+          {{ errorMessage() || helperText() }}
+        </mat-hint>
+        }
+      </mat-form-field>
     </div>
   `,
   styleUrls: ['./os-date-input.component.scss'],
@@ -158,6 +167,32 @@ export class OsDateInputComponent implements ControlValueAccessor {
     const value = this.value();
     if (!value) return '';
     return this.formatDateForInput(value);
+  });
+
+  // Mapeamento interno para Material
+  protected appearance = computed((): MatFormFieldAppearance => 'outline');
+
+  protected formFieldClass = computed(() => {
+    return [
+      'os-date-input__form-field',
+      `os-date-input__form-field--${this.size()}`,
+      this.hasError() ? 'os-date-input__form-field--error' : '',
+      this.disabled() ? 'os-date-input__form-field--disabled' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  });
+
+  protected prefixIconClass = computed(() => {
+    return ['os-date-input__prefix-icon', `os-date-input__prefix-icon--${this.size()}`]
+      .filter(Boolean)
+      .join(' ');
+  });
+
+  protected suffixIconClass = computed(() => {
+    return ['os-date-input__suffix-icon', `os-date-input__suffix-icon--${this.size()}`]
+      .filter(Boolean)
+      .join(' ');
   });
 
   private formatDateForInput(date: Date): string {

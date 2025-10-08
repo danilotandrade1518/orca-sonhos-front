@@ -1,173 +1,52 @@
 @use '../../theme/tokens' as tokens;
 
+// Container styles
 .os-date-input-container {
   display: flex;
   flex-direction: column;
-  gap: var(--os-spacing-xs);
   width: 100%;
 
   &--small {
-    gap: var(--os-spacing-xxs);
+    .os-date-input__form-field {
+      font-size: var(--os-font-size-sm);
+    }
   }
 
   &--large {
-    gap: var(--os-spacing-sm);
+    .os-date-input__form-field {
+      font-size: var(--os-font-size-lg);
+    }
   }
+}
+
+// Material form field customization
+.os-date-input__form-field {
+  width: 100%;
 
   &--error {
-    .os-date-input__wrapper {
-      border-color: var(--os-color-error-500);
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-focus-overlay {
+        background-color: var(--os-color-error-100);
+      }
     }
   }
 
   &--disabled {
-    opacity: 0.6;
-    pointer-events: none;
-  }
-}
-
-.os-date-input__label {
-  font-size: var(--os-font-size-sm);
-  font-weight: var(--os-font-weight-medium);
-  color: var(--os-color-text-primary);
-  margin-bottom: var(--os-spacing-xs);
-
-  &--required {
-    &::after {
-      content: ' *';
-      color: var(--os-color-error-500);
+    .mat-mdc-form-field {
+      opacity: 0.6;
     }
   }
 }
 
-.os-date-input__wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--os-color-border-default);
-  border-radius: var(--os-border-radius-md);
-  background-color: var(--os-color-background-primary);
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--os-color-primary-400);
-  }
-
-  &:focus-within {
-    border-color: var(--os-color-primary-500);
-    box-shadow: 0 0 0 2px var(--os-color-primary-100);
-  }
-
-  &--with-prefix {
-    .os-date-input {
-      padding-left: var(--os-spacing-xs);
-    }
-  }
-
-  &--with-suffix {
-    .os-date-input {
-      padding-right: var(--os-spacing-xs);
-    }
-  }
-}
-
+// Icon customization
 .os-date-input__prefix-icon,
 .os-date-input__suffix-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: var(--os-color-text-secondary);
-  font-size: var(--os-font-size-base);
-  user-select: none;
 }
 
-.os-date-input__prefix-icon {
-  padding-left: var(--os-spacing-sm);
-  padding-right: var(--os-spacing-xs);
-}
-
-.os-date-input__suffix-icon {
-  padding-right: var(--os-spacing-sm);
-  padding-left: var(--os-spacing-xs);
-}
-
-.os-date-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: var(--os-font-family-primary);
-  color: var(--os-color-text-primary);
-  transition: all 0.2s ease;
-
-  &::placeholder {
-    color: var(--os-color-text-placeholder);
-  }
-
-  &::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
-  &--small {
-    padding: var(--os-spacing-xs) var(--os-spacing-sm);
-    font-size: var(--os-font-size-sm);
-    min-height: 32px;
-  }
-
-  &--medium {
-    padding: var(--os-spacing-sm);
-    font-size: var(--os-font-size-base);
-    min-height: 40px;
-  }
-
-  &--large {
-    padding: var(--os-spacing-md);
-    font-size: var(--os-font-size-lg);
-    min-height: 48px;
-  }
-
-  &--error {
-    color: var(--os-color-error-700);
-  }
-
-  &--disabled {
-    color: var(--os-color-text-disabled);
-    cursor: not-allowed;
-
-    &::-webkit-calendar-picker-indicator {
-      cursor: not-allowed;
-      opacity: 0.3;
-    }
-  }
-
-  &--readonly {
-    background-color: var(--os-color-background-disabled);
-    cursor: default;
-
-    &::-webkit-calendar-picker-indicator {
-      cursor: default;
-      opacity: 0.3;
-    }
-  }
-}
-
+// Helper text customization
 .os-date-input__helper {
-  font-size: var(--os-font-size-xs);
-  color: var(--os-color-text-secondary);
-  margin-top: var(--os-spacing-xs);
-
   &--error {
     color: var(--os-color-error-600);
   }
-}
-
-.os-date-input__required {
-  color: var(--os-color-error-500);
-  font-weight: var(--os-font-weight-bold);
 }
