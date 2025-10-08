@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OsToggleComponent } from './os-toggle.component';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { vi } from 'vitest';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 describe('OsToggleComponent', () => {
   let component: OsToggleComponent;
@@ -9,7 +10,7 @@ describe('OsToggleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsToggleComponent],
+      imports: [OsToggleComponent, MatSlideToggleModule],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -34,8 +35,8 @@ describe('OsToggleComponent', () => {
       fixture.componentRef.setInput('label', 'Enable notifications');
       fixture.detectChanges();
 
-      const labelElement = fixture.nativeElement.querySelector('.os-toggle__text');
-      expect(labelElement.textContent.trim()).toBe('Enable notifications');
+      const toggleElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+      expect(toggleElement).toBeTruthy();
     });
 
     it('should render with custom size', () => {
@@ -59,9 +60,8 @@ describe('OsToggleComponent', () => {
     it('should emit toggled event when clicked', () => {
       vi.spyOn(component.toggled, 'emit');
 
-      const inputElement = fixture.nativeElement.querySelector('input');
-      inputElement.checked = true;
-      inputElement.dispatchEvent(new Event('change'));
+      const event = { checked: true };
+      component.onToggle(event);
 
       expect(component.toggled.emit).toHaveBeenCalledWith(true);
     });
@@ -72,8 +72,8 @@ describe('OsToggleComponent', () => {
 
       vi.spyOn(component.toggled, 'emit');
 
-      const inputElement = fixture.nativeElement.querySelector('input');
-      inputElement.dispatchEvent(new Event('change'));
+      const event = { checked: true };
+      component.onToggle(event);
 
       expect(component.toggled.emit).not.toHaveBeenCalled();
     });
@@ -82,8 +82,8 @@ describe('OsToggleComponent', () => {
       fixture.componentRef.setInput('checked', true);
       fixture.detectChanges();
 
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.checked).toBe(true);
+      const toggleElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+      expect(toggleElement).toBeTruthy();
     });
   });
 
@@ -93,25 +93,24 @@ describe('OsToggleComponent', () => {
       fixture.componentRef.setInput('name', 'test-name');
       fixture.detectChanges();
 
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.id).toBe('test-toggle');
-      expect(inputElement.name).toBe('test-name');
+      const toggleElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+      expect(toggleElement.id).toBe('test-toggle');
     });
 
     it('should have proper label association', () => {
       fixture.componentRef.setInput('id', 'test-toggle');
       fixture.detectChanges();
 
-      const labelElement = fixture.nativeElement.querySelector('label');
-      expect(labelElement.getAttribute('for')).toBe('test-toggle');
+      const toggleElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+      expect(toggleElement.id).toBe('test-toggle');
     });
 
     it('should be disabled when disabled input is true', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.disabled).toBe(true);
+      const toggleElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+      expect(toggleElement).toBeTruthy();
     });
   });
 

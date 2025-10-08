@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 export type OsCheckboxSize = 'small' | 'medium' | 'large';
 export type OsCheckboxVariant =
@@ -22,35 +23,25 @@ export type OsCheckboxVariant =
 @Component({
   selector: 'os-checkbox',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatCheckboxModule],
   template: `
-    <div [class]="containerClass()">
-      <input
-        type="checkbox"
-        [id]="inputId"
-        [checked]="checked()"
-        [disabled]="disabled()"
-        [indeterminate]="indeterminate()"
-        [class]="inputClass()"
-        (change)="handleChange($event)"
-        (blur)="handleBlur($event)"
-        (focus)="handleFocus($event)"
-        [attr.aria-describedby]="ariaDescribedBy() || null"
-        [attr.aria-label]="ariaLabel() || null"
-      />
-      <label [for]="inputId" [class]="labelClass()" [attr.aria-hidden]="true">
-        <span [class]="checkboxClass()">
-          @if (checked() && !indeterminate()) {
-          <span class="os-checkbox__checkmark">✓</span>
-          } @else if (indeterminate()) {
-          <span class="os-checkbox__indeterminate">−</span>
-          }
-        </span>
-        @if (label()) {
-        <span class="os-checkbox__label-text">{{ label() }}</span>
-        }
-      </label>
-    </div>
+    <mat-checkbox
+      [id]="inputId"
+      [checked]="checked()"
+      [disabled]="disabled()"
+      [indeterminate]="indeterminate()"
+      [color]="matColor()"
+      [class]="checkboxClass()"
+      (change)="handleChange($event)"
+      (blur)="handleBlur($event)"
+      (focus)="handleFocus($event)"
+      [attr.aria-describedby]="ariaDescribedBy() || null"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      @if (label()) {
+      {{ label() }}
+      }
+    </mat-checkbox>
   `,
   styleUrls: ['./os-checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,13 +71,30 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   protected inputId = `os-checkbox-${Math.random().toString(36).substr(2, 9)}`;
   private onChange = (value: boolean) => {
     // This will be set by registerOnChange
-    console.debug('onChange called with:', value);
   };
   private onTouched = () => {
     // This will be set by registerOnTouched
   };
 
-  containerClass = computed(() => {
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    switch (this.variant()) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'accent';
+      case 'success':
+        return 'primary';
+      case 'warning':
+        return 'warn';
+      case 'error':
+        return 'warn';
+      default:
+        return undefined;
+    }
+  });
+
+  checkboxClass = computed(() => {
     return [
       'os-checkbox',
       `os-checkbox--${this.size()}`,
@@ -96,34 +104,8 @@ export class OsCheckboxComponent implements ControlValueAccessor {
       .join(' ');
   });
 
-  inputClass = computed(() => {
-    return ['os-checkbox__input', `os-checkbox__input--${this.variant()}`]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  labelClass = computed(() => {
-    return ['os-checkbox__label', this.disabled() ? 'os-checkbox__label--disabled' : '']
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  checkboxClass = computed(() => {
-    return [
-      'os-checkbox__box',
-      `os-checkbox__box--${this.variant()}`,
-      `os-checkbox__box--${this.size()}`,
-      this.checked() ? 'os-checkbox__box--checked' : '',
-      this.indeterminate() ? 'os-checkbox__box--indeterminate' : '',
-      this.disabled() ? 'os-checkbox__box--disabled' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  handleChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const isChecked = target.checked;
+  handleChange(event: any): void {
+    const isChecked = event.checked;
 
     this.onChange(isChecked);
     this.checkboxChange.emit(isChecked);

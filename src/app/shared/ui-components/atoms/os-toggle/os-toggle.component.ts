@@ -1,29 +1,26 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'os-toggle',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatSlideToggleModule],
   template: `
-    <div class="os-toggle" [class]="toggleClasses()">
-      <input
-        type="checkbox"
-        [id]="id()"
-        [name]="name()"
-        [disabled]="disabled()"
-        [checked]="checked()"
-        (change)="onToggle($event)"
-        class="os-toggle__input"
-      />
-      <label [for]="id()" class="os-toggle__label">
-        <span class="os-toggle__slider"></span>
-        @if (label()) {
-        <span class="os-toggle__text">{{ label() }}</span>
-        }
-      </label>
-    </div>
+    <mat-slide-toggle
+      [id]="id()"
+      [name]="name()"
+      [disabled]="disabled()"
+      [checked]="checked()"
+      [color]="matColor()"
+      [class]="toggleClasses()"
+      (change)="onToggle($event)"
+    >
+      @if (label()) {
+      {{ label() }}
+      }
+    </mat-slide-toggle>
   `,
   styleUrls: ['./os-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +35,24 @@ export class OsToggleComponent {
   readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');
 
   readonly toggled = output<boolean>();
+
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    switch (this.variant()) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'accent';
+      case 'success':
+        return 'primary';
+      case 'warning':
+        return 'warn';
+      case 'danger':
+        return 'warn';
+      default:
+        return undefined;
+    }
+  });
 
   readonly toggleClasses = computed(() => {
     const classes = ['os-toggle'];
@@ -55,10 +70,9 @@ export class OsToggleComponent {
     return classes.join(' ');
   });
 
-  onToggle(event: Event): void {
+  onToggle(event: any): void {
     if (!this.disabled()) {
-      const target = event.target as HTMLInputElement;
-      this.toggled.emit(target.checked);
+      this.toggled.emit(event.checked);
     }
   }
 }

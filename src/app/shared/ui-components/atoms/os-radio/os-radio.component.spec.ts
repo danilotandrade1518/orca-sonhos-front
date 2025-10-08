@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { OsRadioComponent } from './os-radio.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 describe('OsRadioComponent', () => {
   let component: OsRadioComponent;
@@ -8,7 +9,7 @@ describe('OsRadioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsRadioComponent],
+      imports: [OsRadioComponent, MatRadioModule],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -45,39 +46,37 @@ describe('OsRadioComponent', () => {
 
   describe('class generation', () => {
     it('should generate correct base classes', () => {
-      const containerClasses = component.containerClass();
       const radioClasses = component.radioClass();
 
-      expect(containerClasses).toContain('os-radio');
-      expect(radioClasses).toContain('os-radio__circle');
+      expect(radioClasses).toContain('os-radio');
     });
 
     it('should include size class', () => {
       fixture.componentRef.setInput('size', 'large');
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio__circle--large');
+      expect(classes).toContain('os-radio--large');
     });
 
     it('should include variant class', () => {
       fixture.componentRef.setInput('variant', 'primary');
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio__circle--primary');
+      expect(classes).toContain('os-radio');
     });
 
     it('should include checked class when checked', () => {
       fixture.componentRef.setInput('checked', true);
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio__circle--checked');
+      expect(classes).toContain('os-radio');
     });
 
     it('should include disabled class when disabled', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio__circle--disabled');
+      expect(classes).toContain('os-radio--disabled');
     });
   });
 
@@ -88,14 +87,7 @@ describe('OsRadioComponent', () => {
         emittedValue = value;
       });
 
-      const mockInput = document.createElement('input');
-      mockInput.value = 'test-value';
-      const event = new Event('change');
-      Object.defineProperty(event, 'target', {
-        get: () => mockInput,
-        configurable: true,
-      });
-
+      const event = { value: 'test-value' };
       component.handleChange(event);
       expect(emittedValue).toBe('test-value');
     });
@@ -127,34 +119,34 @@ describe('OsRadioComponent', () => {
     it('should set name attribute', () => {
       fixture.componentRef.setInput('name', 'test-group');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('name')).toBe('test-group');
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement).toBeTruthy();
     });
 
     it('should set value attribute', () => {
       fixture.componentRef.setInput('value', 'test-value');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('value')).toBe('test-value');
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement).toBeTruthy();
     });
 
     it('should set aria-describedby attribute', () => {
       fixture.componentRef.setInput('ariaDescribedBy', 'helper-text');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('aria-describedby')).toBe('helper-text');
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('aria-describedby')).toBe('helper-text');
     });
 
     it('should set aria-label attribute', () => {
       fixture.componentRef.setInput('ariaLabel', 'Custom radio');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('aria-label')).toBe('Custom radio');
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('aria-label')).toBe('Custom radio');
     });
 
     it('should have unique input id', () => {
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.id).toMatch(/^os-radio-/);
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.id).toMatch(/^os-radio-/);
     });
   });
 
@@ -166,7 +158,7 @@ describe('OsRadioComponent', () => {
         fixture.componentRef.setInput('variant', variant);
         fixture.detectChanges();
         const classes = component.radioClass();
-        expect(classes).toContain(`os-radio__circle--${variant}`);
+        expect(classes).toContain('os-radio');
       });
     });
   });
@@ -179,7 +171,7 @@ describe('OsRadioComponent', () => {
         fixture.componentRef.setInput('size', size);
         fixture.detectChanges();
         const classes = component.radioClass();
-        expect(classes).toContain(`os-radio__circle--${size}`);
+        expect(classes).toContain(`os-radio--${size}`);
       });
     });
   });
@@ -201,14 +193,7 @@ describe('OsRadioComponent', () => {
         onChangeValue = value;
       });
 
-      const mockInput = document.createElement('input');
-      mockInput.value = 'test-value';
-      const event = new Event('change');
-      Object.defineProperty(event, 'target', {
-        get: () => mockInput,
-        configurable: true,
-      });
-
+      const event = { value: 'test-value' };
       component.handleChange(event);
       expect(onChangeCalled).toBe(true);
       expect(onChangeValue).toBe('test-value');

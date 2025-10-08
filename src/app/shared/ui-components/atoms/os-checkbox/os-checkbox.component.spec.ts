@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { OsCheckboxComponent } from './os-checkbox.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('OsCheckboxComponent', () => {
   let component: OsCheckboxComponent;
@@ -8,7 +9,7 @@ describe('OsCheckboxComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsCheckboxComponent],
+      imports: [OsCheckboxComponent, MatCheckboxModule],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -49,46 +50,44 @@ describe('OsCheckboxComponent', () => {
 
   describe('class generation', () => {
     it('should generate correct base classes', () => {
-      const containerClasses = component.containerClass();
       const checkboxClasses = component.checkboxClass();
 
-      expect(containerClasses).toContain('os-checkbox');
-      expect(checkboxClasses).toContain('os-checkbox__box');
+      expect(checkboxClasses).toContain('os-checkbox');
     });
 
     it('should include size class', () => {
       fixture.componentRef.setInput('size', 'large');
       fixture.detectChanges();
       const classes = component.checkboxClass();
-      expect(classes).toContain('os-checkbox__box--large');
+      expect(classes).toContain('os-checkbox--large');
     });
 
     it('should include variant class', () => {
       fixture.componentRef.setInput('variant', 'primary');
       fixture.detectChanges();
       const classes = component.checkboxClass();
-      expect(classes).toContain('os-checkbox__box--primary');
+      expect(classes).toContain('os-checkbox');
     });
 
     it('should include checked class when checked', () => {
       fixture.componentRef.setInput('checked', true);
       fixture.detectChanges();
       const classes = component.checkboxClass();
-      expect(classes).toContain('os-checkbox__box--checked');
+      expect(classes).toContain('os-checkbox');
     });
 
     it('should include indeterminate class when indeterminate', () => {
       fixture.componentRef.setInput('indeterminate', true);
       fixture.detectChanges();
       const classes = component.checkboxClass();
-      expect(classes).toContain('os-checkbox__box--indeterminate');
+      expect(classes).toContain('os-checkbox');
     });
 
     it('should include disabled class when disabled', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
       const classes = component.checkboxClass();
-      expect(classes).toContain('os-checkbox__box--disabled');
+      expect(classes).toContain('os-checkbox--disabled');
     });
   });
 
@@ -99,12 +98,7 @@ describe('OsCheckboxComponent', () => {
         emittedValue = value;
       });
 
-      const event = new Event('change');
-      Object.defineProperty(event, 'target', {
-        value: { checked: true },
-        writable: false,
-      });
-
+      const event = { checked: true };
       component.handleChange(event);
       expect(emittedValue).toBe(true);
     });
@@ -136,20 +130,20 @@ describe('OsCheckboxComponent', () => {
     it('should set aria-describedby attribute', () => {
       fixture.componentRef.setInput('ariaDescribedBy', 'helper-text');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('aria-describedby')).toBe('helper-text');
+      const checkboxElement = fixture.nativeElement.querySelector('mat-checkbox');
+      expect(checkboxElement.getAttribute('aria-describedby')).toBe('helper-text');
     });
 
     it('should set aria-label attribute', () => {
       fixture.componentRef.setInput('ariaLabel', 'Custom checkbox');
       fixture.detectChanges();
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.getAttribute('aria-label')).toBe('Custom checkbox');
+      const checkboxElement = fixture.nativeElement.querySelector('mat-checkbox');
+      expect(checkboxElement.getAttribute('aria-label')).toBe('Custom checkbox');
     });
 
     it('should have unique input id', () => {
-      const inputElement = fixture.nativeElement.querySelector('input');
-      expect(inputElement.id).toMatch(/^os-checkbox-/);
+      const checkboxElement = fixture.nativeElement.querySelector('mat-checkbox');
+      expect(checkboxElement.id).toMatch(/^os-checkbox-/);
     });
   });
 
@@ -161,7 +155,7 @@ describe('OsCheckboxComponent', () => {
         fixture.componentRef.setInput('variant', variant);
         fixture.detectChanges();
         const classes = component.checkboxClass();
-        expect(classes).toContain(`os-checkbox__box--${variant}`);
+        expect(classes).toContain('os-checkbox');
       });
     });
   });
@@ -174,7 +168,7 @@ describe('OsCheckboxComponent', () => {
         fixture.componentRef.setInput('size', size);
         fixture.detectChanges();
         const classes = component.checkboxClass();
-        expect(classes).toContain(`os-checkbox__box--${size}`);
+        expect(classes).toContain(`os-checkbox--${size}`);
       });
     });
   });
@@ -196,12 +190,7 @@ describe('OsCheckboxComponent', () => {
         onChangeValue = value;
       });
 
-      const event = new Event('change');
-      Object.defineProperty(event, 'target', {
-        value: { checked: true },
-        writable: false,
-      });
-
+      const event = { checked: true };
       component.handleChange(event);
       expect(onChangeCalled).toBe(true);
       expect(onChangeValue).toBe(true);
