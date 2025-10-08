@@ -197,7 +197,10 @@ describe('OsFormFieldComponent', () => {
       const valueChangeSpy = vi.fn();
       component.valueChange.subscribe(valueChangeSpy);
 
-      component.handleValueChange('test value');
+      const mockEvent = {
+        target: { value: 'test value' },
+      } as any;
+      component.handleInput(mockEvent);
 
       expect(valueChangeSpy).toHaveBeenCalledWith('test value');
     });
@@ -232,7 +235,10 @@ describe('OsFormFieldComponent', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
 
-      component.handleValueChange('test');
+      const mockEvent = {
+        target: { value: 'test' },
+      } as any;
+      component.handleInput(mockEvent);
       expect(onChangeSpy).toHaveBeenCalledWith('test');
     });
 
@@ -264,18 +270,15 @@ describe('OsFormFieldComponent', () => {
       expect(containerClass).toContain('os-form-field--disabled');
     });
 
-    it('should compute label variant correctly', () => {
+    it('should compute hasError correctly', () => {
       fixture.componentRef.setInput('errorMessage', 'Error message');
       fixture.detectChanges();
 
-      expect(component.labelVariant()).toBe('error');
+      expect(component['hasError']()).toBe(true);
     });
 
-    it('should compute input variant correctly', () => {
-      fixture.componentRef.setInput('disabled', true);
-      fixture.detectChanges();
-
-      expect(component.inputVariant()).toBe('disabled');
+    it('should compute appearance correctly', () => {
+      expect(component['appearance']()).toBe('outline');
     });
 
     it('should compute hint class correctly', () => {

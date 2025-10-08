@@ -178,7 +178,7 @@ describe('OsAlertComponent', () => {
     it('should apply correct icon class for size', () => {
       fixture.componentRef.setInput('size', 'small');
       fixture.detectChanges();
-      
+
       const iconElement = fixture.nativeElement.querySelector('mat-icon');
       expect(iconElement.classList.contains('os-alert__icon--small')).toBe(true);
     });
