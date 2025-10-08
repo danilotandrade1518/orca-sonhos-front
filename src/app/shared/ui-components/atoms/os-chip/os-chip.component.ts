@@ -6,7 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="os-chip" [class]="chipClasses()" (click)="onClick()">
+    <div
+      class="os-chip"
+      [class]="chipClasses()"
+      (click)="onClick()"
+      (keydown)="onKeyDown($event)"
+      tabindex="0"
+    >
       @if (icon()) {
       <span class="os-chip__icon">{{ icon() }}</span>
       }
@@ -73,5 +79,11 @@ export class OsChipComponent {
       this.removed.emit();
     }
   }
-}
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.onClick();
+    }
+  }
+}

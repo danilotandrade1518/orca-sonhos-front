@@ -285,15 +285,15 @@ describe('OsAvatarComponent', () => {
 
   describe('image error handling', () => {
     it('should handle image error', () => {
-      expect((component as any)._imageError).toBe(false);
+      expect((component as unknown as { _imageError: boolean })._imageError).toBe(false);
       component.handleImageError();
-      expect((component as any)._imageError).toBe(true);
+      expect((component as unknown as { _imageError: boolean })._imageError).toBe(true);
     });
 
     it('should handle image load', () => {
-      (component as any)._imageError = true;
+      (component as unknown as { _imageError: boolean })._imageError = true;
       component.handleImageLoad();
-      expect((component as any)._imageError).toBe(false);
+      expect((component as unknown as { _imageError: boolean })._imageError).toBe(false);
     });
   });
 

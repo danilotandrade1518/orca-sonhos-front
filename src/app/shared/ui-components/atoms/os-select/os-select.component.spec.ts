@@ -184,7 +184,6 @@ describe('OsSelectComponent', () => {
 
   describe('form integration', () => {
     it('should work with reactive forms', () => {
-      const formControl = new FormControl('option1');
       fixture.componentRef.setInput('value', 'option1');
       component.registerOnChange(() => {
         // Mock onChange callback

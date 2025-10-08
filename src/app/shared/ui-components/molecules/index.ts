@@ -1,2 +1,2 @@
 // Molecules - Componentes compostos do Design System
-// Exportações serão adicionadas conforme implementação
+export * from './os-form-field/os-form-field.component';
