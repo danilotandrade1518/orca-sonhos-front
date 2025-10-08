@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { OsMoneyInputComponent } from './os-money-input.component';
 import { vi } from 'vitest';
 
@@ -11,7 +14,13 @@ describe('OsMoneyInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsMoneyInputComponent, ReactiveFormsModule],
+      imports: [
+        OsMoneyInputComponent,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
+      ],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -38,17 +47,17 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('required', true);
       fixture.detectChanges();
 
-      const label = fixture.debugElement.query(By.css('.os-money-input__label'));
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const label = fixture.debugElement.query(By.css('mat-label'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
-      expect(label.nativeElement.textContent.trim()).toBe('Amount *');
+      expect(label.nativeElement.textContent.trim()).toBe('Amount');
       expect(input.nativeElement.placeholder).toBe('Enter amount');
       expect(input.nativeElement.required).toBe(true);
     });
 
     it('should show currency symbol', () => {
-      const currency = fixture.debugElement.query(By.css('.os-money-input__currency'));
-      expect(currency.nativeElement.textContent.trim()).toBe('R$');
+      const currency = fixture.debugElement.query(By.css('.os-money-input__currency-icon'));
+      expect(currency.nativeElement.textContent.trim()).toBe('attach_money');
     });
   });
 
@@ -57,7 +66,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('value', 1234.56);
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.value).toBe('1.234,56');
     });
 
@@ -65,7 +74,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('value', 0);
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.value).toBe('0,00');
     });
 
@@ -74,7 +83,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('placeholder', '');
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.value).toBe('');
     });
   });
@@ -82,7 +91,7 @@ describe('OsMoneyInputComponent', () => {
   describe('user interactions', () => {
     it('should emit value change on input', () => {
       vi.spyOn(component.valueChange, 'emit');
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       input.nativeElement.value = '1234,56';
       input.nativeElement.dispatchEvent(new Event('input'));
@@ -92,7 +101,7 @@ describe('OsMoneyInputComponent', () => {
 
     it('should emit blur event', () => {
       vi.spyOn(component.blurEvent, 'emit');
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
@@ -101,7 +110,7 @@ describe('OsMoneyInputComponent', () => {
 
     it('should emit focus event', () => {
       vi.spyOn(component.focusEvent, 'emit');
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
@@ -114,7 +123,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('errorMessage', 'Invalid amount');
       fixture.detectChanges();
 
-      const helper = fixture.debugElement.query(By.css('.os-money-input__helper'));
+      const helper = fixture.debugElement.query(By.css('mat-hint'));
       expect(helper.nativeElement.textContent.trim()).toBe('Invalid amount');
       expect(helper.nativeElement.classList.contains('os-money-input__helper--error')).toBe(true);
     });
@@ -124,7 +133,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-money-input-container'));
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       expect(container.nativeElement.classList.contains('os-money-input-container--error')).toBe(
         true
@@ -138,7 +147,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       const container = fixture.debugElement.query(By.css('.os-money-input-container'));
 
       expect(input.nativeElement.disabled).toBe(true);
@@ -153,7 +162,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('readonly', true);
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.classList.contains('os-money-input--readonly')).toBe(true);
     });
   });
@@ -164,7 +173,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-money-input-container'));
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       expect(container.nativeElement.classList.contains('os-money-input-container--small')).toBe(
         true
@@ -177,7 +186,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-money-input-container'));
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
 
       expect(container.nativeElement.classList.contains('os-money-input-container--large')).toBe(
         true
@@ -192,7 +201,7 @@ describe('OsMoneyInputComponent', () => {
       component.registerOnChange(onChangeSpy);
 
       // Simulate user input
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.value = '123,45';
       input.nativeElement.dispatchEvent(new Event('input'));
 
@@ -204,7 +213,7 @@ describe('OsMoneyInputComponent', () => {
       component.registerOnTouched(onTouchedSpy);
 
       // Simulate blur event
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
       expect(onTouchedSpy).toHaveBeenCalled();
@@ -301,7 +310,7 @@ describe('OsMoneyInputComponent', () => {
       expect(component.value()).toBe(75.5);
 
       // Test Component -> FormControl
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.value = '100,75';
       input.nativeElement.dispatchEvent(new Event('input'));
 
@@ -315,11 +324,11 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('helperText', 'Enter the amount');
       fixture.detectChanges();
 
-      const input = fixture.debugElement.query(By.css('.os-money-input'));
-      const label = fixture.debugElement.query(By.css('.os-money-input__label'));
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      const label = fixture.debugElement.query(By.css('mat-label'));
 
       expect(input.nativeElement.getAttribute('aria-describedby')).toContain('helper');
-      expect(label.nativeElement.getAttribute('for')).toBe(input.nativeElement.id);
+      expect(input.nativeElement.id).toBeTruthy();
     });
 
     it('should indicate required field', () => {
@@ -327,8 +336,8 @@ describe('OsMoneyInputComponent', () => {
       fixture.componentRef.setInput('required', true);
       fixture.detectChanges();
 
-      const required = fixture.debugElement.query(By.css('.os-money-input__required'));
-      expect(required.nativeElement.getAttribute('aria-label')).toBe('required');
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.required).toBe(true);
     });
   });
 });

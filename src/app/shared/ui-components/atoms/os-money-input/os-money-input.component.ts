@@ -9,28 +9,27 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 export type OsMoneyInputSize = 'small' | 'medium' | 'large';
 
 @Component({
   selector: 'os-money-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatIconModule],
   template: `
     <div [class]="containerClass()">
-      @if (label()) {
-      <label [for]="inputId" [class]="labelClass()">
-        {{ label() }}
-        @if (required()) {
-        <span class="os-money-input__required" aria-label="required">*</span>
+      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
+        @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
         }
-      </label>
-      }
 
-      <div [class]="inputWrapperClass()">
-        <span class="os-money-input__currency" [attr.aria-hidden]="true">R$</span>
+        <mat-icon matPrefix class="os-money-input__currency-icon">attach_money</mat-icon>
 
         <input
+          matInput
           [id]="inputId"
           type="text"
           [placeholder]="placeholder()"
@@ -45,13 +44,13 @@ export type OsMoneyInputSize = 'small' | 'medium' | 'large';
           [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
           [attr.aria-invalid]="hasError()"
         />
-      </div>
 
-      @if (helperText() || hasError()) {
-      <div [id]="inputId + '-helper'" [class]="helperClass()">
-        {{ errorMessage() || helperText() }}
-      </div>
-      }
+        @if (helperText() || hasError()) {
+        <mat-hint [class]="helperClass()">
+          {{ errorMessage() || helperText() }}
+        </mat-hint>
+        }
+      </mat-form-field>
     </div>
   `,
   styleUrls: ['./os-money-input.component.scss'],
@@ -132,6 +131,20 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
 
   hasError = computed(() => {
     return !!this.errorMessage();
+  });
+
+  // Mapeamento interno para Material
+  protected appearance = computed((): MatFormFieldAppearance => 'outline');
+
+  protected formFieldClass = computed(() => {
+    return [
+      'os-money-input__form-field',
+      `os-money-input__form-field--${this.size()}`,
+      this.hasError() ? 'os-money-input__form-field--error' : '',
+      this.disabled() ? 'os-money-input__form-field--disabled' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
   });
 
   displayValue = computed(() => {
