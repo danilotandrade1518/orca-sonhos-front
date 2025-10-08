@@ -15,14 +15,45 @@
   }
 
   &--error {
-    .os-select__wrapper {
-      border-color: var(--os-color-error-500);
+    .os-select__form-field {
+      --mdc-outlined-text-field-error-outline-color: var(--os-color-error-500);
+      --mdc-outlined-text-field-error-label-color: var(--os-color-error-500);
     }
   }
 
   &--disabled {
     opacity: 0.6;
     pointer-events: none;
+  }
+}
+
+// Material form field customization
+.os-select__form-field {
+  width: 100%;
+
+  &--small {
+    .mat-mdc-form-field {
+      font-size: var(--os-font-size-sm);
+    }
+  }
+
+  &--large {
+    .mat-mdc-form-field {
+      font-size: var(--os-font-size-lg);
+    }
+  }
+
+  &--error {
+    .mat-mdc-form-field {
+      --mdc-outlined-text-field-error-outline-color: var(--os-color-error-500);
+      --mdc-outlined-text-field-error-label-color: var(--os-color-error-500);
+    }
+  }
+
+  &--disabled {
+    .mat-mdc-form-field {
+      opacity: 0.6;
+    }
   }
 }
 

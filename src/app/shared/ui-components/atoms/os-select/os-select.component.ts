@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
 
 export type OsSelectSize = 'small' | 'medium' | 'large';
 
@@ -21,48 +23,40 @@ export interface OsSelectOption {
 @Component({
   selector: 'os-select',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSelectModule, MatFormFieldModule],
   template: `
     <div [class]="containerClass()">
-      @if (label()) {
-      <label [for]="selectId" [class]="labelClass()">
-        {{ label() }}
-        @if (required()) {
-        <span class="os-select__required" aria-label="required">*</span>
+      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
+        @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
         }
-      </label>
-      }
 
-      <div [class]="selectWrapperClass()">
-        <select
+        <mat-select
           [id]="selectId"
           [disabled]="disabled()"
           [required]="required()"
           [value]="value()"
+          [placeholder]="placeholder()"
           [class]="selectClass()"
-          (change)="handleChange($event)"
+          (selectionChange)="handleChange($event)"
           (blur)="handleBlur($event)"
           (focus)="handleFocus($event)"
           [attr.aria-describedby]="helperText() ? selectId + '-helper' : null"
           [attr.aria-invalid]="hasError()"
         >
-          @if (placeholder()) {
-          <option value="" disabled>{{ placeholder() }}</option>
-          } @for (option of options(); track option.value) {
-          <option [value]="option.value" [disabled]="option.disabled">
+          @for (option of options(); track option.value) {
+          <mat-option [value]="option.value" [disabled]="option.disabled">
             {{ option.label }}
-          </option>
+          </mat-option>
           }
-        </select>
+        </mat-select>
 
-        <span class="os-select__arrow" [attr.aria-hidden]="true">▼</span>
-      </div>
-
-      @if (helperText() || hasError()) {
-      <div [id]="selectId + '-helper'" [class]="helperClass()">
-        {{ errorMessage() || helperText() }}
-      </div>
-      }
+        @if (helperText() || hasError()) {
+        <mat-hint [class]="helperClass()">
+          {{ errorMessage() || helperText() }}
+        </mat-hint>
+        }
+      </mat-form-field>
     </div>
   `,
   styleUrls: ['./os-select.component.scss'],
@@ -144,9 +138,22 @@ export class OsSelectComponent implements ControlValueAccessor {
     return !!this.errorMessage();
   });
 
-  handleChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const newValue = target.value;
+  // Mapeamento interno para Material
+  protected appearance = computed((): MatFormFieldAppearance => 'outline');
+
+  protected formFieldClass = computed(() => {
+    return [
+      'os-select__form-field',
+      `os-select__form-field--${this.size()}`,
+      this.hasError() ? 'os-select__form-field--error' : '',
+      this.disabled() ? 'os-select__form-field--disabled' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  });
+
+  handleChange(event: any): void {
+    const newValue = event.value;
     this._onChange(newValue);
     this.valueChange.emit(newValue);
   }
