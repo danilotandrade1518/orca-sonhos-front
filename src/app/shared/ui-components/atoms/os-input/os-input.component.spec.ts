@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { OsInputComponent } from './os-input.component';
 
 describe('OsInputComponent', () => {
@@ -9,7 +13,14 @@ describe('OsInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsInputComponent, ReactiveFormsModule],
+      imports: [
+        OsInputComponent,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatButtonModule,
+      ],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 

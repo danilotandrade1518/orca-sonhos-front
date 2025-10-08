@@ -9,6 +9,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 export type OsInputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
 export type OsInputSize = 'small' | 'medium' | 'large';
@@ -16,26 +20,18 @@ export type OsInputSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule],
   template: `
     <div [class]="containerClass()">
-      @if (label()) {
-      <label [for]="inputId" [class]="labelClass()">
-        {{ label() }}
-        @if (required()) {
-        <span class="os-input__required" aria-label="required">*</span>
-        }
-      </label>
-      }
-
-      <div [class]="inputWrapperClass()">
-        @if (prefixIcon()) {
-        <span class="os-input__prefix-icon" [attr.aria-hidden]="true">
-          {{ prefixIcon() }}
-        </span>
+      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
+        @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
+        } @if (prefixIcon()) {
+        <mat-icon matPrefix [class]="prefixIconClass()">{{ prefixIcon() }}</mat-icon>
         }
 
         <input
+          matInput
           [id]="inputId"
           [type]="type()"
           [placeholder]="placeholder()"
@@ -52,26 +48,24 @@ export type OsInputSize = 'small' | 'medium' | 'large';
         />
 
         @if (suffixIcon()) {
-        <span class="os-input__suffix-icon" [attr.aria-hidden]="true">
-          {{ suffixIcon() }}
-        </span>
+        <mat-icon matSuffix [class]="suffixIconClass()">{{ suffixIcon() }}</mat-icon>
         } @if (clearable() && value() && !disabled()) {
         <button
+          matSuffix
+          mat-icon-button
           type="button"
           class="os-input__clear"
           (click)="handleClear()"
           [attr.aria-label]="'Clear ' + (label() || 'input')"
         >
-          ×
+          <mat-icon>close</mat-icon>
         </button>
+        } @if (helperText() || hasError()) {
+        <mat-hint [class]="helperClass()">
+          {{ errorMessage() || helperText() }}
+        </mat-hint>
         }
-      </div>
-
-      @if (helperText() || hasError()) {
-      <div [id]="inputId + '-helper'" [class]="helperClass()">
-        {{ errorMessage() || helperText() }}
-      </div>
-      }
+      </mat-form-field>
     </div>
   `,
   styleUrls: ['./os-input.component.scss'],
@@ -161,6 +155,32 @@ export class OsInputComponent implements ControlValueAccessor {
 
   hasError = computed(() => {
     return !!this.errorMessage();
+  });
+
+  // Mapeamento interno para Material
+  protected appearance = computed((): MatFormFieldAppearance => 'outline');
+
+  protected formFieldClass = computed(() => {
+    return [
+      'os-input__form-field',
+      `os-input__form-field--${this.size()}`,
+      this.hasError() ? 'os-input__form-field--error' : '',
+      this.disabled() ? 'os-input__form-field--disabled' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  });
+
+  protected prefixIconClass = computed(() => {
+    return ['os-input__prefix-icon', `os-input__prefix-icon--${this.size()}`]
+      .filter(Boolean)
+      .join(' ');
+  });
+
+  protected suffixIconClass = computed(() => {
+    return ['os-input__suffix-icon', `os-input__suffix-icon--${this.size()}`]
+      .filter(Boolean)
+      .join(' ');
   });
 
   handleInput(event: Event): void {
