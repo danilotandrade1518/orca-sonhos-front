@@ -1,10 +1,11 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'os-progress-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressBarModule],
   template: `
     <div class="os-progress-bar" [class]="progressBarClasses()">
       @if (label()) {
@@ -15,13 +16,13 @@ import { CommonModule } from '@angular/common';
         }
       </div>
       }
-      <div class="os-progress-bar__track">
-        <div
-          class="os-progress-bar__fill"
-          [style.width.%]="percentage()"
-          [class]="fillClasses()"
-        ></div>
-      </div>
+      <mat-progress-bar
+        [mode]="mode()"
+        [value]="percentage()"
+        [bufferValue]="bufferValue()"
+        [color]="matColor()"
+        [class]="progressBarClass()"
+      ></mat-progress-bar>
       @if (hint()) {
       <div class="os-progress-bar__hint">{{ hint() }}</div>
       }
@@ -40,11 +41,34 @@ export class OsProgressBarComponent {
   readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');
   readonly animated = input(false);
   readonly striped = input(false);
+  readonly bufferValue = input<number | null>(null);
 
   readonly percentage = computed(() => {
     const value = this.value();
     const max = this.max();
     return Math.min(Math.max((value / max) * 100, 0), 100);
+  });
+
+  readonly mode = computed(() => {
+    return this.bufferValue() !== null ? 'buffer' : 'determinate';
+  });
+
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    switch (this.variant()) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'accent';
+      case 'success':
+        return 'primary';
+      case 'warning':
+        return 'warn';
+      case 'danger':
+        return 'warn';
+      default:
+        return undefined;
+    }
   });
 
   readonly progressBarClasses = computed(() => {
@@ -63,18 +87,18 @@ export class OsProgressBarComponent {
     return classes.join(' ');
   });
 
-  readonly fillClasses = computed(() => {
-    const classes = ['os-progress-bar__fill'];
+  readonly progressBarClass = computed(() => {
+    const classes = ['os-progress-bar__material'];
+    classes.push(`os-progress-bar__material--${this.size()}`);
 
     if (this.animated()) {
-      classes.push('os-progress-bar__fill--animated');
+      classes.push('os-progress-bar__material--animated');
     }
 
     if (this.striped()) {
-      classes.push('os-progress-bar__fill--striped');
+      classes.push('os-progress-bar__material--striped');
     }
 
     return classes.join(' ');
   });
 }
-

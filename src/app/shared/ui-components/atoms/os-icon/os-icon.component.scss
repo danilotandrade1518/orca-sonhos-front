@@ -8,6 +8,18 @@
   line-height: 1;
   user-select: none;
 
+  // Override Material icon styles
+  ::ng-deep mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    user-select: none;
+  }
+
   &--xs {
     font-size: var(--os-font-size-xs);
     width: 12px;

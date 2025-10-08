@@ -1,5 +1,6 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 export type OsIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type OsIconVariant =
@@ -14,16 +15,22 @@ export type OsIconVariant =
 @Component({
   selector: 'os-icon',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   template: `
-    <span
+    <mat-icon
       [class]="iconClass()"
       [attr.aria-hidden]="ariaHidden()"
       [attr.aria-label]="ariaLabel() || null"
       [attr.title]="title() || null"
+      [fontSet]="fontSet()"
+      [fontIcon]="fontIcon()"
+      [color]="matColor()"
+      [inline]="inline()"
     >
+      @if (!fontIcon()) {
       {{ iconContent() }}
-    </span>
+      }
+    </mat-icon>
   `,
   styleUrls: ['./os-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +44,9 @@ export class OsIconComponent {
   title = input<string>('');
   spin = input(false);
   pulse = input(false);
+  fontSet = input<string>('');
+  fontIcon = input<string>('');
+  inline = input(false);
   iconClass = computed(() => {
     return [
       'os-icon',
@@ -137,5 +147,25 @@ export class OsIconComponent {
     };
 
     return iconMap[iconName] || iconName;
+  });
+
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    switch (this.variant()) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'accent';
+      case 'success':
+        return 'primary';
+      case 'warning':
+        return 'warn';
+      case 'error':
+        return 'warn';
+      case 'info':
+        return 'accent';
+      default:
+        return undefined;
+    }
   });
 }

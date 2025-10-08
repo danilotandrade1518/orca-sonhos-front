@@ -8,6 +8,12 @@
   border-radius: var(--os-border-radius-sm);
   transition: all var(--os-transition-fast) ease-in-out;
 
+  &__wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &--sm {
     padding: 2px var(--os-spacing-xs);
     font-size: var(--os-font-size-xs);

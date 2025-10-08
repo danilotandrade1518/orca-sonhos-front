@@ -130,8 +130,9 @@ describe('OsProgressBarComponent', () => {
       fixture.componentRef.setInput('value', 60);
       fixture.detectChanges();
 
-      const fillElement = fixture.nativeElement.querySelector('.os-progress-bar__fill');
-      expect(fillElement.style.width).toBe('60%');
+      const progressBarElement = fixture.nativeElement.querySelector('mat-progress-bar');
+      expect(progressBarElement).toBeTruthy();
+      expect(component.percentage()).toBe(60);
     });
 
     it('should apply correct classes for animated state', () => {
