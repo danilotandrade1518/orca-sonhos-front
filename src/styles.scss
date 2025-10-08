@@ -5,6 +5,9 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+// Import OrçaSonhos Design System theme
+@import './app/shared/ui-components/theme/theme.scss';
+
 html {
   @include mat.theme(
     (
