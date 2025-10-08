@@ -425,13 +425,23 @@ Para cada fase do desenvolvimento:
 - **Manutenibilidade**: Código legível e bem estruturado
 - **Consistência**: Aplique padrões identificados em implementações similares
 
+**⚠️ REGRA CRÍTICA - SEM COMENTÁRIOS NO CÓDIGO:**
+
+- **NUNCA** deixe comentários no código final (//, /\* \*/, #, etc.)
+- **NUNCA** deixe instruções temporárias ou TODOs no código
+- **NUNCA** deixe console.log, debugger ou código de debug
+- **NUNCA** deixe código comentado ou "morto"
+- O código deve ser autoexplicativo através de nomes descritivos e estrutura clara
+- Se precisar documentar algo complexo, use JSDoc para funções públicas ou documentação externa
+
 **Processo de Revisão Contínua:**
 Apply continuous code review seguindo as prioridades:
 
-1. **🎯 Correção** - O código funciona para o caso de uso?
-2. **🔒 Segurança** - Há vulnerabilidades ou bugs óbvios?
-3. **📖 Clareza** - O código é legível e manutenível?
-4. **⚖️ Adequação** - A complexidade está apropriada?
+1. **🚨 CRÍTICO - Limpeza** - Nenhum comentário, console.log, debugger ou código temporário?
+2. **🎯 Correção** - O código funciona para o caso de uso?
+3. **🔒 Segurança** - Há vulnerabilidades ou bugs óbvios?
+4. **📖 Clareza** - O código é legível e manutenível?
+5. **⚖️ Adequação** - A complexidade está apropriada?
 
 #### Após Completar Tarefas da Fase
 
@@ -621,6 +631,9 @@ Quando todas as fases estiverem completas:
 - [ ] Todos os critérios de aceitação atendidos
 - [ ] Testes passando completamente
 - [ ] Código segue padrões do projeto
+- [ ] **🚨 CRÍTICO**: Nenhum comentário no código final
+- [ ] **🚨 CRÍTICO**: Nenhum console.log, debugger ou código de debug
+- [ ] **🚨 CRÍTICO**: Nenhum código comentado ou "morto"
 - [ ] Documentação atualizada se necessário
 - [ ] Plan.md completamente atualizado
 
