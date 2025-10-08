@@ -1,0 +1,58 @@
+@use '../../theme/variables' as *;
+
+.os-money-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: $spacing-xs;
+  font-family: $font-family-mono;
+  font-weight: $font-weight-medium;
+
+  &--default {
+    color: $color-text-primary;
+  }
+
+  &--success {
+    color: $color-success;
+  }
+
+  &--warning {
+    color: $color-warning;
+  }
+
+  &--error {
+    color: $color-error;
+  }
+
+  &--info {
+    color: $color-info;
+  }
+
+  &--small {
+    font-size: $font-size-small;
+    gap: $spacing-xs;
+  }
+
+  &--medium {
+    font-size: $font-size-medium;
+    gap: $spacing-xs;
+  }
+
+  &--large {
+    font-size: $font-size-large;
+    gap: $spacing-small;
+  }
+
+  &__currency {
+    font-weight: $font-weight-semibold;
+    opacity: 0.8;
+  }
+
+  &__value {
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.5px;
+  }
+}
+
+.os-money-display-host {
+  display: inline-block;
+}
