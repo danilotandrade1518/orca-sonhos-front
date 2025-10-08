@@ -2,11 +2,11 @@
 // Integração completa dos design tokens com Angular Material
 
 // ===== IMPORTS =====
-@import './_tokens.scss';
-@import './_colors.scss';
-@import './_typography.scss';
-@import './_spacing.scss';
-@import './_material-theme.scss';
+@use './tokens';
+@use './colors';
+@use './typography';
+@use './spacing';
+@use './material-theme';
 
 // ===== RESET E BASE =====
 * {

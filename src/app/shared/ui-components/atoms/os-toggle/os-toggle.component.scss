@@ -1,4 +1,4 @@
-@import '../../theme/tokens';
+@use '../../theme/tokens';
 
 .os-toggle {
   display: inline-flex;
@@ -156,4 +156,3 @@
     }
   }
 }
-

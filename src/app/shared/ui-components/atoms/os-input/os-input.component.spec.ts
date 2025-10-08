@@ -239,7 +239,7 @@ describe('OsInputComponent', () => {
 
     it('should emit blur event', () => {
       let blurEmitted = false;
-      component.blur.subscribe(() => (blurEmitted = true));
+      component.blurEvent.subscribe(() => (blurEmitted = true));
 
       const mockEvent = new FocusEvent('blur');
       component.handleBlur(mockEvent);
@@ -248,7 +248,7 @@ describe('OsInputComponent', () => {
 
     it('should emit focus event', () => {
       let focusEmitted = false;
-      component.focus.subscribe(() => (focusEmitted = true));
+      component.focusEvent.subscribe(() => (focusEmitted = true));
 
       const mockEvent = new FocusEvent('focus');
       component.handleFocus(mockEvent);

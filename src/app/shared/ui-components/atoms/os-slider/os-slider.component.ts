@@ -85,9 +85,9 @@ export class OsSliderComponent implements ControlValueAccessor {
   label = input<string>('');
   helperText = input<string>('');
   errorMessage = input<string>('');
-  disabled = input(false);
+  disabled = model(false);
   required = input(false);
-  value = input<number>(0);
+  value = model<number>(0);
   min = input<number>(0);
   max = input<number>(100);
   step = input<number>(1);
@@ -96,11 +96,16 @@ export class OsSliderComponent implements ControlValueAccessor {
   ariaLabel = input<string>('');
 
   valueChange = output<number>();
-  blur = output<FocusEvent>();
-  focus = output<FocusEvent>();
+  blurEvent = output<FocusEvent>();
+  focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: number) => {};
-  private _onTouched = () => {};
+  private _onChange = (value: number) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   sliderId = `os-slider-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -174,15 +179,18 @@ export class OsSliderComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this._onTouched();
-    this.blur.emit(event);
+    this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.focus.emit(event);
+    this.focusEvent.emit(event);
   }
 
   writeValue(value: number): void {
-    // Value is controlled by input signal
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
   }
 
   registerOnChange(fn: (value: number) => void): void {
@@ -193,5 +201,8 @@ export class OsSliderComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
+  }
 }

@@ -1,4 +1,4 @@
-@import '../../theme/tokens';
+@use '../../theme/tokens';
 
 .os-chip {
   display: inline-flex;
@@ -181,4 +181,3 @@
     outline-offset: 2px;
   }
 }
-

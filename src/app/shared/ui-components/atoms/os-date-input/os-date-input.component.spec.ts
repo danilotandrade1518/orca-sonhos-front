@@ -113,21 +113,21 @@ describe('OsDateInputComponent', () => {
     });
 
     it('should emit blur event', () => {
-      vi.spyOn(component.blur, 'emit');
+      vi.spyOn(component.blurEvent, 'emit');
       const input = fixture.debugElement.query(By.css('.os-date-input'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
-      expect(component.blur.emit).toHaveBeenCalled();
+      expect(component.blurEvent.emit).toHaveBeenCalled();
     });
 
     it('should emit focus event', () => {
-      vi.spyOn(component.focus, 'emit');
+      vi.spyOn(component.focusEvent, 'emit');
       const input = fixture.debugElement.query(By.css('.os-date-input'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
-      expect(component.focus.emit).toHaveBeenCalled();
+      expect(component.focusEvent.emit).toHaveBeenCalled();
     });
   });
 
@@ -230,8 +230,12 @@ describe('OsDateInputComponent', () => {
     it('should work with reactive forms', () => {
       const testDate = new Date('2024-03-15');
       fixture.componentRef.setInput('value', testDate);
-      component.registerOnChange(() => {});
-      component.registerOnTouched(() => {});
+      component.registerOnChange(() => {
+        // Mock onChange callback
+      });
+      component.registerOnTouched(() => {
+        // Mock onTouched callback
+      });
 
       expect(component.value()).toEqual(testDate);
     });
@@ -246,6 +250,40 @@ describe('OsDateInputComponent', () => {
       fixture.detectChanges();
 
       expect(component.value()).toEqual(newDate);
+    });
+  });
+
+  describe('ControlValueAccessor', () => {
+    it('should implement writeValue', () => {
+      const testDate = new Date('2024-03-15');
+      component.writeValue(testDate);
+      expect(component.value()).toEqual(testDate);
+    });
+
+    it('should implement setDisabledState', () => {
+      component.setDisabledState(true);
+      expect(component.disabled()).toBe(true);
+    });
+
+    it('should register onChange callback', () => {
+      const onChangeSpy = vi.fn();
+      component.registerOnChange(onChangeSpy);
+
+      const input = fixture.debugElement.query(By.css('.os-date-input'));
+      input.nativeElement.value = '2024-03-15';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(onChangeSpy).toHaveBeenCalled();
+    });
+
+    it('should register onTouched callback', () => {
+      const onTouchedSpy = vi.fn();
+      component.registerOnTouched(onTouchedSpy);
+
+      const input = fixture.debugElement.query(By.css('.os-date-input'));
+      input.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(onTouchedSpy).toHaveBeenCalled();
     });
   });
 

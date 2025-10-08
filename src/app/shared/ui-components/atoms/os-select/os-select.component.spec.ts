@@ -103,21 +103,21 @@ describe('OsSelectComponent', () => {
     });
 
     it('should emit blur event', () => {
-      vi.spyOn(component.blur, 'emit');
+      vi.spyOn(component.blurEvent, 'emit');
       const select = fixture.debugElement.query(By.css('.os-select'));
 
       select.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
-      expect(component.blur.emit).toHaveBeenCalled();
+      expect(component.blurEvent.emit).toHaveBeenCalled();
     });
 
     it('should emit focus event', () => {
-      vi.spyOn(component.focus, 'emit');
+      vi.spyOn(component.focusEvent, 'emit');
       const select = fixture.debugElement.query(By.css('.os-select'));
 
       select.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
-      expect(component.focus.emit).toHaveBeenCalled();
+      expect(component.focusEvent.emit).toHaveBeenCalled();
     });
   });
 
@@ -186,8 +186,12 @@ describe('OsSelectComponent', () => {
     it('should work with reactive forms', () => {
       const formControl = new FormControl('option1');
       fixture.componentRef.setInput('value', 'option1');
-      component.registerOnChange(() => {});
-      component.registerOnTouched(() => {});
+      component.registerOnChange(() => {
+        // Mock onChange callback
+      });
+      component.registerOnTouched(() => {
+        // Mock onTouched callback
+      });
 
       expect(component.value()).toBe('option1');
     });
@@ -201,6 +205,39 @@ describe('OsSelectComponent', () => {
       fixture.detectChanges();
 
       expect(component.value()).toBe('option2');
+    });
+  });
+
+  describe('ControlValueAccessor', () => {
+    it('should implement writeValue', () => {
+      component.writeValue('option3');
+      expect(component.value()).toBe('option3');
+    });
+
+    it('should implement setDisabledState', () => {
+      component.setDisabledState(true);
+      expect(component.disabled()).toBe(true);
+    });
+
+    it('should register onChange callback', () => {
+      const onChangeSpy = vi.fn();
+      component.registerOnChange(onChangeSpy);
+
+      const select = fixture.debugElement.query(By.css('.os-select'));
+      select.nativeElement.value = 'option2';
+      select.nativeElement.dispatchEvent(new Event('change'));
+
+      expect(onChangeSpy).toHaveBeenCalledWith('option2');
+    });
+
+    it('should register onTouched callback', () => {
+      const onTouchedSpy = vi.fn();
+      component.registerOnTouched(onTouchedSpy);
+
+      const select = fixture.debugElement.query(By.css('.os-select'));
+      select.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(onTouchedSpy).toHaveBeenCalled();
     });
   });
 

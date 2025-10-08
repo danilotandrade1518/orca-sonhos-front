@@ -82,21 +82,26 @@ export class OsDateInputComponent implements ControlValueAccessor {
   placeholder = input<string>('');
   helperText = input<string>('');
   errorMessage = input<string>('');
-  disabled = input(false);
+  disabled = model(false);
   readonly = input(false);
   required = input(false);
   prefixIcon = input<string>('');
   suffixIcon = input<string>('');
-  value = input<Date | null>(null);
+  value = model<Date | null>(null);
   minDate = input<string>('');
   maxDate = input<string>('');
 
   valueChange = output<Date | null>();
-  blur = output<FocusEvent>();
-  focus = output<FocusEvent>();
+  blurEvent = output<FocusEvent>();
+  focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: Date | null) => {};
-  private _onTouched = () => {};
+  private _onChange = (value: Date | null) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   inputId = `os-date-input-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -178,15 +183,18 @@ export class OsDateInputComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this._onTouched();
-    this.blur.emit(event);
+    this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.focus.emit(event);
+    this.focusEvent.emit(event);
   }
 
   writeValue(value: Date | null): void {
-    // Value is controlled by input signal
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
   }
 
   registerOnChange(fn: (value: Date | null) => void): void {
@@ -197,5 +205,8 @@ export class OsDateInputComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
+  }
 }

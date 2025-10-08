@@ -102,7 +102,7 @@ describe('OsRadioComponent', () => {
 
     it('should emit radioBlur when input blurs', () => {
       let emittedEvent: FocusEvent | undefined;
-      component.radioBlur.subscribe((event: FocusEvent) => {
+      component.radioBlurEvent.subscribe((event: FocusEvent) => {
         emittedEvent = event;
       });
 
@@ -113,7 +113,7 @@ describe('OsRadioComponent', () => {
 
     it('should emit radioFocus when input focuses', () => {
       let emittedEvent: FocusEvent | undefined;
-      component.radioFocus.subscribe((event: FocusEvent) => {
+      component.radioFocusEvent.subscribe((event: FocusEvent) => {
         emittedEvent = event;
       });
 

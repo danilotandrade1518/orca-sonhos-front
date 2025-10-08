@@ -111,7 +111,7 @@ describe('OsCheckboxComponent', () => {
 
     it('should emit checkboxBlur when input blurs', () => {
       let emittedEvent: FocusEvent | undefined;
-      component.checkboxBlur.subscribe((event: FocusEvent) => {
+      component.checkboxBlurEvent.subscribe((event: FocusEvent) => {
         emittedEvent = event;
       });
 
@@ -122,7 +122,7 @@ describe('OsCheckboxComponent', () => {
 
     it('should emit checkboxFocus when input focuses', () => {
       let emittedEvent: FocusEvent | undefined;
-      component.checkboxFocus.subscribe((event: FocusEvent) => {
+      component.checkboxFocusEvent.subscribe((event: FocusEvent) => {
         emittedEvent = event;
       });
 

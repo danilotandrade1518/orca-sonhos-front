@@ -115,21 +115,21 @@ describe('OsSliderComponent', () => {
     });
 
     it('should emit blur event', () => {
-      vi.spyOn(component.blur, 'emit');
+      vi.spyOn(component.blurEvent, 'emit');
       const slider = fixture.debugElement.query(By.css('.os-slider'));
 
       slider.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
-      expect(component.blur.emit).toHaveBeenCalled();
+      expect(component.blurEvent.emit).toHaveBeenCalled();
     });
 
     it('should emit focus event', () => {
-      vi.spyOn(component.focus, 'emit');
+      vi.spyOn(component.focusEvent, 'emit');
       const slider = fixture.debugElement.query(By.css('.os-slider'));
 
       slider.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
-      expect(component.focus.emit).toHaveBeenCalled();
+      expect(component.focusEvent.emit).toHaveBeenCalled();
     });
   });
 
@@ -223,8 +223,12 @@ describe('OsSliderComponent', () => {
   describe('form integration', () => {
     it('should work with reactive forms', () => {
       fixture.componentRef.setInput('value', 50);
-      component.registerOnChange(() => {});
-      component.registerOnTouched(() => {});
+      component.registerOnChange(() => {
+        // Mock onChange callback
+      });
+      component.registerOnTouched(() => {
+        // Mock onTouched callback
+      });
 
       expect(component.value()).toBe(50);
     });
@@ -238,6 +242,39 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       expect(component.value()).toBe(75);
+    });
+  });
+
+  describe('ControlValueAccessor', () => {
+    it('should implement writeValue', () => {
+      component.writeValue(42);
+      expect(component.value()).toBe(42);
+    });
+
+    it('should implement setDisabledState', () => {
+      component.setDisabledState(true);
+      expect(component.disabled()).toBe(true);
+    });
+
+    it('should register onChange callback', () => {
+      const onChangeSpy = vi.fn();
+      component.registerOnChange(onChangeSpy);
+
+      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      slider.nativeElement.value = '30';
+      slider.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(onChangeSpy).toHaveBeenCalledWith(30);
+    });
+
+    it('should register onTouched callback', () => {
+      const onTouchedSpy = vi.fn();
+      component.registerOnTouched(onTouchedSpy);
+
+      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      slider.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(onTouchedSpy).toHaveBeenCalled();
     });
   });
 

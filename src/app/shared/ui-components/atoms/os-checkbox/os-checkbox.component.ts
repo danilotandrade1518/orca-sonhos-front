@@ -3,6 +3,7 @@ import {
   input,
   output,
   computed,
+  model,
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
@@ -65,20 +66,25 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   size = input<OsCheckboxSize>('medium');
   variant = input<OsCheckboxVariant>('default');
   label = input<string>('');
-  checked = input(false);
-  disabled = input(false);
+  checked = model(false);
+  disabled = model(false);
   indeterminate = input(false);
   required = input(false);
   ariaDescribedBy = input<string>('');
   ariaLabel = input<string>('');
 
   checkboxChange = output<boolean>();
-  checkboxBlur = output<FocusEvent>();
-  checkboxFocus = output<FocusEvent>();
+  checkboxBlurEvent = output<FocusEvent>();
+  checkboxFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-checkbox-${Math.random().toString(36).substr(2, 9)}`;
-  private onChange = (value: boolean) => {};
-  private onTouched = () => {};
+  private onChange = (value: boolean) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   containerClass = computed(() => {
     return [
@@ -125,15 +131,18 @@ export class OsCheckboxComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this.onTouched();
-    this.checkboxBlur.emit(event);
+    this.checkboxBlurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.checkboxFocus.emit(event);
+    this.checkboxFocusEvent.emit(event);
   }
 
   writeValue(value: boolean): void {
-    // Value is controlled by input signal
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.checked()) {
+      this.checked.set(value);
+    }
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
@@ -145,6 +154,7 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Disabled state is controlled by input signal
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
   }
 }

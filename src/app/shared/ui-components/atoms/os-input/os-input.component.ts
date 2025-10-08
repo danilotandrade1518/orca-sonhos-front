@@ -3,6 +3,7 @@ import {
   input,
   output,
   computed,
+  model,
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
@@ -90,20 +91,25 @@ export class OsInputComponent implements ControlValueAccessor {
   placeholder = input<string>('');
   helperText = input<string>('');
   errorMessage = input<string>('');
-  disabled = input(false);
+  disabled = model(false);
   readonly = input(false);
   required = input(false);
   clearable = input(false);
   prefixIcon = input<string>('');
   suffixIcon = input<string>('');
-  value = input<string>('');
+  value = model<string>('');
 
   valueChange = output<string>();
-  blur = output<FocusEvent>();
-  focus = output<FocusEvent>();
+  blurEvent = output<FocusEvent>();
+  focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: string) => {};
-  private _onTouched = () => {};
+  private _onChange = (value: string) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   inputId = `os-input-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -166,11 +172,11 @@ export class OsInputComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this._onTouched();
-    this.blur.emit(event);
+    this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.focus.emit(event);
+    this.focusEvent.emit(event);
   }
 
   handleClear(): void {
@@ -178,7 +184,12 @@ export class OsInputComponent implements ControlValueAccessor {
     this.valueChange.emit('');
   }
 
-  writeValue(value: string): void {}
+  writeValue(value: string): void {
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
+  }
 
   registerOnChange(fn: (value: string) => void): void {
     this._onChange = fn;
@@ -188,5 +199,8 @@ export class OsInputComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
+  }
 }

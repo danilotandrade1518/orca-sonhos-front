@@ -3,6 +3,7 @@ import {
   input,
   output,
   computed,
+  model,
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
@@ -58,21 +59,26 @@ export class OsRadioComponent implements ControlValueAccessor {
   size = input<OsRadioSize>('medium');
   variant = input<OsRadioVariant>('default');
   name = input<string>('');
-  value = input<string>('');
+  value = model<string>('');
   label = input<string>('');
   checked = input(false);
-  disabled = input(false);
+  disabled = model(false);
   required = input(false);
   ariaDescribedBy = input<string>('');
   ariaLabel = input<string>('');
 
   radioChange = output<string>();
-  radioBlur = output<FocusEvent>();
-  radioFocus = output<FocusEvent>();
+  radioBlurEvent = output<FocusEvent>();
+  radioFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-radio-${Math.random().toString(36).substr(2, 9)}`;
-  private onChange = (value: string) => {};
-  private onTouched = () => {};
+  private onChange = (value: string) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   containerClass = computed(() => {
     return ['os-radio', `os-radio--${this.size()}`, this.disabled() ? 'os-radio--disabled' : '']
@@ -112,15 +118,18 @@ export class OsRadioComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this.onTouched();
-    this.radioBlur.emit(event);
+    this.radioBlurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.radioFocus.emit(event);
+    this.radioFocusEvent.emit(event);
   }
 
   writeValue(value: string): void {
-    // Value is controlled by input signal
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -132,6 +141,7 @@ export class OsRadioComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Disabled state is controlled by input signal
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
   }
 }
