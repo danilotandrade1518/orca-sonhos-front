@@ -85,7 +85,7 @@ describe('OsCardComponent', () => {
       fixture.componentRef.setInput('header', true);
       fixture.detectChanges();
 
-      const headerElement = fixture.nativeElement.querySelector('.os-card__header');
+      const headerElement = fixture.nativeElement.querySelector('mat-card-header');
       expect(headerElement).toBeTruthy();
     });
   });
@@ -100,7 +100,7 @@ describe('OsCardComponent', () => {
       fixture.componentRef.setInput('actions', true);
       fixture.detectChanges();
 
-      const actionsElement = fixture.nativeElement.querySelector('.os-card__actions');
+      const actionsElement = fixture.nativeElement.querySelector('mat-card-actions');
       expect(actionsElement).toBeTruthy();
     });
   });
@@ -145,7 +145,7 @@ describe('OsCardComponent', () => {
     it('should project content into content area', () => {
       fixture.detectChanges();
 
-      const contentElement = fixture.nativeElement.querySelector('.os-card__content');
+      const contentElement = fixture.nativeElement.querySelector('mat-card-content');
       expect(contentElement).toBeTruthy();
     });
 
@@ -153,7 +153,7 @@ describe('OsCardComponent', () => {
       fixture.componentRef.setInput('header', true);
       fixture.detectChanges();
 
-      const headerElement = fixture.nativeElement.querySelector('.os-card__header');
+      const headerElement = fixture.nativeElement.querySelector('mat-card-header');
       expect(headerElement).toBeTruthy();
     });
 
@@ -161,7 +161,7 @@ describe('OsCardComponent', () => {
       fixture.componentRef.setInput('actions', true);
       fixture.detectChanges();
 
-      const actionsElement = fixture.nativeElement.querySelector('.os-card__actions');
+      const actionsElement = fixture.nativeElement.querySelector('mat-card-actions');
       expect(actionsElement).toBeTruthy();
     });
   });

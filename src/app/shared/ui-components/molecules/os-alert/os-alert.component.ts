@@ -1,6 +1,7 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 export type OsAlertType = 'success' | 'warning' | 'error' | 'info';
 export type OsAlertSize = 'small' | 'medium' | 'large';
@@ -8,7 +9,7 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-alert',
   standalone: true,
-  imports: [CommonModule, OsIconComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
   template: `
     <div
       class="os-alert"
@@ -20,7 +21,7 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
     >
       @if (showIcon()) {
       <div class="os-alert__icon">
-        <os-icon [name]="iconName()" [size]="iconSize()"></os-icon>
+        <mat-icon [class]="iconClass()">{{ iconName() }}</mat-icon>
       </div>
       }
 
@@ -35,12 +36,13 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
 
       @if (dismissible()) {
       <button
+        mat-icon-button
         class="os-alert__dismiss"
         (click)="onDismiss()"
         [attr.aria-label]="'Fechar alerta'"
         type="button"
       >
-        <os-icon name="close" size="sm"></os-icon>
+        <mat-icon>close</mat-icon>
       </button>
       }
     </div>
@@ -62,7 +64,7 @@ export class OsAlertComponent {
 
   iconName = () => {
     const iconMap: Record<OsAlertType, string> = {
-      success: 'check-circle',
+      success: 'check_circle',
       warning: 'warning',
       error: 'error',
       info: 'info',
@@ -70,13 +72,10 @@ export class OsAlertComponent {
     return iconMap[this.type()];
   };
 
-  iconSize = () => {
-    const sizeMap: Record<OsAlertSize, 'sm' | 'md' | 'lg'> = {
-      small: 'sm',
-      medium: 'md',
-      large: 'lg',
-    };
-    return sizeMap[this.size()];
+  iconClass = () => {
+    const classes = ['os-alert__icon'];
+    classes.push(`os-alert__icon--${this.size()}`);
+    return classes.join(' ');
   };
 
   alertClasses = () => {

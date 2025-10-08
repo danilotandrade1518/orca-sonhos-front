@@ -1,5 +1,6 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 export type OsCardVariant = 'default' | 'outlined' | 'elevated' | 'flat';
 export type OsCardSize = 'small' | 'medium' | 'large';
@@ -7,10 +8,9 @@ export type OsCardSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatCardModule],
   template: `
-    <div
-      class="os-card"
+    <mat-card
       [class]="cardClasses()"
       [attr.data-variant]="variant()"
       [attr.data-size]="size()"
@@ -21,21 +21,21 @@ export type OsCardSize = 'small' | 'medium' | 'large';
       (keydown.space)="onCardClick()"
     >
       @if (header()) {
-      <div class="os-card__header">
+      <mat-card-header>
         <ng-content select="[slot=header]"></ng-content>
-      </div>
+      </mat-card-header>
       }
 
-      <div class="os-card__content">
+      <mat-card-content>
         <ng-content></ng-content>
-      </div>
+      </mat-card-content>
 
       @if (actions()) {
-      <div class="os-card__actions">
+      <mat-card-actions>
         <ng-content select="[slot=actions]"></ng-content>
-      </div>
+      </mat-card-actions>
       }
-    </div>
+    </mat-card>
   `,
   styleUrl: './os-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

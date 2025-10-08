@@ -149,7 +149,7 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('type', 'success');
       fixture.detectChanges();
 
-      expect(component.iconName()).toBe('check-circle');
+      expect(component.iconName()).toBe('check_circle');
     });
 
     it('should show correct icon for warning type', () => {
@@ -175,15 +175,12 @@ describe('OsAlertComponent', () => {
   });
 
   describe('Icon Size', () => {
-    it('should map size correctly', () => {
+    it('should apply correct icon class for size', () => {
       fixture.componentRef.setInput('size', 'small');
-      expect(component.iconSize()).toBe('sm');
-
-      fixture.componentRef.setInput('size', 'medium');
-      expect(component.iconSize()).toBe('md');
-
-      fixture.componentRef.setInput('size', 'large');
-      expect(component.iconSize()).toBe('lg');
+      fixture.detectChanges();
+      
+      const iconElement = fixture.nativeElement.querySelector('mat-icon');
+      expect(iconElement.classList.contains('os-alert__icon--small')).toBe(true);
     });
   });
 
