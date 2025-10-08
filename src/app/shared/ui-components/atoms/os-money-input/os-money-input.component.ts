@@ -70,17 +70,22 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   placeholder = input<string>('0,00');
   helperText = input<string>('');
   errorMessage = input<string>('');
-  disabled = input(false);
+  disabled = model(false);
   readonly = input(false);
   required = input(false);
   value = model<number>(0);
 
   valueChange = output<number>();
-  blur = output<FocusEvent>();
-  focus = output<FocusEvent>();
+  blurEvent = output<FocusEvent>();
+  focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: number) => {};
-  private _onTouched = () => {};
+  private _onChange = (value: number) => {
+    // This will be set by registerOnChange
+    console.debug('onChange called with:', value);
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   inputId = `os-money-input-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -159,15 +164,18 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
 
   handleBlur(event: FocusEvent): void {
     this._onTouched();
-    this.blur.emit(event);
+    this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
-    this.focus.emit(event);
+    this.focusEvent.emit(event);
   }
 
   writeValue(value: number): void {
-    this.value.set(value || 0);
+    // Update the model signal when FormControl value changes programmatically
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
   }
 
   registerOnChange(fn: (value: number) => void): void {
@@ -178,5 +186,8 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    // Update the disabled state when called by Angular Forms
+    this.disabled.set(isDisabled);
+  }
 }

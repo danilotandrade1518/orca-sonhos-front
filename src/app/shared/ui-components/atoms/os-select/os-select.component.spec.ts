@@ -185,7 +185,7 @@ describe('OsSelectComponent', () => {
   describe('form integration', () => {
     it('should work with reactive forms', () => {
       const formControl = new FormControl('option1');
-      component.writeValue('option1');
+      fixture.componentRef.setInput('value', 'option1');
       component.registerOnChange(() => {});
       component.registerOnTouched(() => {});
 
@@ -194,10 +194,10 @@ describe('OsSelectComponent', () => {
 
     it('should handle form control changes', () => {
       const formControl = new FormControl('');
-      component.writeValue('');
+      fixture.componentRef.setInput('value', '');
 
       formControl.setValue('option2');
-      component.writeValue('option2');
+      fixture.componentRef.setInput('value', 'option2');
       fixture.detectChanges();
 
       expect(component.value()).toBe('option2');

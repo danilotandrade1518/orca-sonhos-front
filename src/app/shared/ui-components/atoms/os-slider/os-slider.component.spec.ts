@@ -222,7 +222,7 @@ describe('OsSliderComponent', () => {
 
   describe('form integration', () => {
     it('should work with reactive forms', () => {
-      component.writeValue(50);
+      fixture.componentRef.setInput('value', 50);
       component.registerOnChange(() => {});
       component.registerOnTouched(() => {});
 
@@ -231,10 +231,10 @@ describe('OsSliderComponent', () => {
 
     it('should handle form control changes', () => {
       const formControl = new FormControl(0);
-      component.writeValue(0);
+      fixture.componentRef.setInput('value', 0);
 
       formControl.setValue(75);
-      component.writeValue(75);
+      fixture.componentRef.setInput('value', 75);
       fixture.detectChanges();
 
       expect(component.value()).toBe(75);

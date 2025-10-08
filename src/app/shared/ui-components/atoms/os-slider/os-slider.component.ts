@@ -87,7 +87,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   errorMessage = input<string>('');
   disabled = input(false);
   required = input(false);
-  value = model<number>(0);
+  value = input<number>(0);
   min = input<number>(0);
   max = input<number>(100);
   step = input<number>(1);
@@ -182,7 +182,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   }
 
   writeValue(value: number): void {
-    this.value.set(value || 0);
+    // Value is controlled by input signal
   }
 
   registerOnChange(fn: (value: number) => void): void {

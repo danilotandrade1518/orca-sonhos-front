@@ -87,7 +87,7 @@ export class OsDateInputComponent implements ControlValueAccessor {
   required = input(false);
   prefixIcon = input<string>('');
   suffixIcon = input<string>('');
-  value = model<Date | null>(null);
+  value = input<Date | null>(null);
   minDate = input<string>('');
   maxDate = input<string>('');
 
@@ -186,7 +186,7 @@ export class OsDateInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: Date | null): void {
-    this.value.set(value);
+    // Value is controlled by input signal
   }
 
   registerOnChange(fn: (value: Date | null) => void): void {

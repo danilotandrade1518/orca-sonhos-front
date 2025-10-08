@@ -83,7 +83,7 @@ export class OsSelectComponent implements ControlValueAccessor {
   errorMessage = input<string>('');
   disabled = input(false);
   required = input(false);
-  value = model<string | number>('');
+  value = input<string | number>('');
   options = input<OsSelectOption[]>([]);
 
   valueChange = output<string | number>();
@@ -156,7 +156,7 @@ export class OsSelectComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string | number): void {
-    this.value.set(value);
+    // Value is controlled by input signal
   }
 
   registerOnChange(fn: (value: string | number) => void): void {

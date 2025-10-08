@@ -91,21 +91,21 @@ describe('OsMoneyInputComponent', () => {
     });
 
     it('should emit blur event', () => {
-      vi.spyOn(component.blur, 'emit');
+      vi.spyOn(component.blurEvent, 'emit');
       const input = fixture.debugElement.query(By.css('.os-money-input'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
-      expect(component.blur.emit).toHaveBeenCalled();
+      expect(component.blurEvent.emit).toHaveBeenCalled();
     });
 
     it('should emit focus event', () => {
-      vi.spyOn(component.focus, 'emit');
+      vi.spyOn(component.focusEvent, 'emit');
       const input = fixture.debugElement.query(By.css('.os-money-input'));
 
       input.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
-      expect(component.focus.emit).toHaveBeenCalled();
+      expect(component.focusEvent.emit).toHaveBeenCalled();
     });
   });
 
@@ -186,24 +186,126 @@ describe('OsMoneyInputComponent', () => {
     });
   });
 
+  describe('ControlValueAccessor integration', () => {
+    it('should register onChange callback', () => {
+      const onChangeSpy = vi.fn();
+      component.registerOnChange(onChangeSpy);
+
+      // Simulate user input
+      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      input.nativeElement.value = '123,45';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(onChangeSpy).toHaveBeenCalledWith(123.45);
+    });
+
+    it('should register onTouched callback', () => {
+      const onTouchedSpy = vi.fn();
+      component.registerOnTouched(onTouchedSpy);
+
+      // Simulate blur event
+      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      input.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(onTouchedSpy).toHaveBeenCalled();
+    });
+
+    it('should update value when writeValue is called', () => {
+      const initialValue = component.value();
+      const newValue = 999.99;
+
+      component.writeValue(newValue);
+
+      expect(component.value()).toBe(newValue);
+      expect(component.value()).not.toBe(initialValue);
+    });
+
+    it('should not update value if writeValue receives same value', () => {
+      const currentValue = 100.5;
+      component.value.set(currentValue);
+
+      // Spy on the set method to ensure it's not called
+      const setSpy = vi.spyOn(component.value, 'set');
+
+      component.writeValue(currentValue);
+
+      expect(setSpy).not.toHaveBeenCalled();
+    });
+
+    it('should update disabled state when setDisabledState is called', () => {
+      expect(component.disabled()).toBe(false);
+
+      component.setDisabledState(true);
+      expect(component.disabled()).toBe(true);
+
+      component.setDisabledState(false);
+      expect(component.disabled()).toBe(false);
+    });
+  });
+
   describe('form integration', () => {
     it('should work with reactive forms', () => {
-      component.writeValue(100.5);
-      component.registerOnChange(() => {});
-      component.registerOnTouched(() => {});
+      fixture.componentRef.setInput('value', 100.5);
+      component.registerOnChange(() => {
+        // Mock onChange callback
+      });
+      component.registerOnTouched(() => {
+        // Mock onTouched callback
+      });
 
       expect(component.value()).toBe(100.5);
     });
 
-    it('should handle form control changes', () => {
+    it('should handle form control changes through writeValue', () => {
       const formControl = new FormControl(0);
-      component.writeValue(0);
 
+      // Simulate FormControl setting value programmatically
       formControl.setValue(250.75);
       component.writeValue(250.75);
       fixture.detectChanges();
 
       expect(component.value()).toBe(250.75);
+    });
+
+    it('should handle form control disabled state', () => {
+      const formControl = new FormControl(100);
+
+      // Simulate FormControl being disabled
+      formControl.disable();
+      component.setDisabledState(true);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(true);
+
+      // Simulate FormControl being enabled
+      formControl.enable();
+      component.setDisabledState(false);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(false);
+    });
+
+    it('should integrate with FormControl bidirectionally', () => {
+      const formControl = new FormControl(50.25);
+
+      // Register the component with the form control
+      component.registerOnChange((value: number) => {
+        formControl.setValue(value, { emitEvent: false });
+      });
+      component.registerOnTouched(() => {
+        // Mock onTouched callback
+      });
+
+      // Test FormControl -> Component
+      component.writeValue(75.5);
+      expect(component.value()).toBe(75.5);
+
+      // Test Component -> FormControl
+      const input = fixture.debugElement.query(By.css('.os-money-input'));
+      input.nativeElement.value = '100,75';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(formControl.value).toBe(100.75);
     });
   });
 
