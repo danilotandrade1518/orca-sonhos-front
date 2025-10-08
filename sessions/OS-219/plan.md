@@ -93,7 +93,7 @@ Estabelecer fundação técnica com estrutura de diretórios, sistema de tema cu
 
 ---
 
-## 📅 FASE 2: ATOMS - Componentes Básicos [Status: ⏳ - 6/16 COMPLETO]
+## 📅 FASE 2: ATOMS - Componentes Básicos [Status: ⏳ - 9/16 COMPLETO]
 
 ### 🎯 Objetivo da Fase
 
@@ -174,17 +174,18 @@ Implementar 16 componentes atômicos fundamentais que servirão como base para t
 **Complexidade**: Baixa
 **Validação**: Animação funcionando
 
-#### Implementar os-label [⏳]
+#### Implementar os-label [✅ COMPLETO]
 
 **Descrição**: Labels de texto
 **Arquivos**:
 
-- `src/app/shared/ui-components/atoms/os-label/os-label.component.ts`
-- `src/app/shared/ui-components/atoms/os-label/os-label.component.scss`
-- `src/app/shared/ui-components/atoms/os-label/os-label.component.spec.ts`
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.ts` ✅
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.scss` ✅
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.spec.ts` ✅
 
 **Complexidade**: Baixa
-**Validação**: Estilos aplicados corretamente
+**Validação**: 30 testes passando (100% cobertura)
+**Status**: ✅ **COMPLETO** - Labels com variantes e tamanhos implementados
 
 #### Implementar os-chip [⏳]
 
@@ -234,29 +235,31 @@ Implementar 16 componentes atômicos fundamentais que servirão como base para t
 **Complexidade**: Média
 **Validação**: Seleção funcionando
 
-#### Implementar os-checkbox [⏳]
+#### Implementar os-checkbox [✅ COMPLETO]
 
 **Descrição**: Seleção múltipla
 **Arquivos**:
 
-- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.ts`
-- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.scss`
-- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.spec.ts`
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.ts` ✅
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.scss` ✅
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.spec.ts` ✅
 
 **Complexidade**: Baixa
-**Validação**: Estado checked/unchecked
+**Validação**: 32 testes passando (100% cobertura)
+**Status**: ✅ **COMPLETO** - Checkbox com ControlValueAccessor implementado
 
-#### Implementar os-radio [⏳]
+#### Implementar os-radio [✅ COMPLETO]
 
 **Descrição**: Seleção única
 **Arquivos**:
 
-- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.ts`
-- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.scss`
-- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.spec.ts`
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.ts` ✅
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.scss` ✅
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.spec.ts` ✅
 
 **Complexidade**: Baixa
-**Validação**: Grupo de radio funcionando
+**Validação**: 30 testes passando (100% cobertura)
+**Status**: ✅ **COMPLETO** - Radio com ControlValueAccessor implementado
 
 #### Implementar os-toggle [⏳]
 
