@@ -15,8 +15,9 @@
   }
 
   &--error {
-    .os-slider__track {
-      border-color: var(--os-color-error-500);
+    .mat-mdc-slider {
+      --mdc-slider-track-color: var(--os-color-error-100);
+      --mdc-slider-handle-color: var(--os-color-error-500);
     }
   }
 
@@ -62,122 +63,54 @@
   }
 }
 
-.os-slider {
+// Material Slider customizations
+.mat-mdc-slider {
   width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--os-color-background-secondary);
-  outline: none;
-  cursor: pointer;
-  appearance: none;
-  transition: all 0.2s ease;
 
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--os-color-primary-500);
-    cursor: pointer;
-    border: 2px solid var(--os-color-background-primary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+  // Customize Material colors to match OrçaSonhos theme
+  --mdc-slider-track-color: var(--os-color-background-secondary);
+  --mdc-slider-handle-color: var(--os-color-primary-500);
+  --mdc-slider-focus-handle-color: var(--os-color-primary-600);
+  --mdc-slider-hover-handle-color: var(--os-color-primary-600);
+  --mdc-slider-active-track-color: var(--os-color-primary-500);
+  --mdc-slider-inactive-track-color: var(--os-color-background-secondary);
+  --mdc-slider-disabled-track-color: var(--os-color-background-disabled);
+  --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
+  --mdc-slider-disabled-active-track-color: var(--os-color-background-disabled);
+  --mdc-slider-disabled-inactive-track-color: var(--os-color-background-disabled);
+}
 
-    &:hover {
-      background: var(--os-color-primary-600);
-      transform: scale(1.1);
-    }
-
-    &:active {
-      background: var(--os-color-primary-700);
-      transform: scale(1.05);
-    }
-  }
-
-  &::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--os-color-primary-500);
-    cursor: pointer;
-    border: 2px solid var(--os-color-background-primary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: var(--os-color-primary-600);
-      transform: scale(1.1);
-    }
-  }
-
-  &::-webkit-slider-track {
-    background: var(--os-color-background-secondary);
-    border-radius: 3px;
-  }
-
-  &::-moz-range-track {
-    background: var(--os-color-background-secondary);
-    border-radius: 3px;
-    height: 6px;
-  }
-
+.os-slider {
+  // Size variants for Material slider
   &--small {
-    height: 4px;
-
-    &::-webkit-slider-thumb {
-      width: 16px;
-      height: 16px;
-    }
-
-    &::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
+    .mat-mdc-slider {
+      --mdc-slider-handle-size: 16px;
+      --mdc-slider-track-height: 4px;
     }
   }
 
   &--large {
-    height: 8px;
-
-    &::-webkit-slider-thumb {
-      width: 24px;
-      height: 24px;
-    }
-
-    &::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
+    .mat-mdc-slider {
+      --mdc-slider-handle-size: 24px;
+      --mdc-slider-track-height: 8px;
     }
   }
 
   &--error {
-    background: var(--os-color-error-100);
-
-    &::-webkit-slider-thumb {
-      background: var(--os-color-error-500);
-    }
-
-    &::-moz-range-thumb {
-      background: var(--os-color-error-500);
+    .mat-mdc-slider {
+      --mdc-slider-track-color: var(--os-color-error-100);
+      --mdc-slider-handle-color: var(--os-color-error-500);
+      --mdc-slider-focus-handle-color: var(--os-color-error-600);
+      --mdc-slider-hover-handle-color: var(--os-color-error-600);
+      --mdc-slider-active-track-color: var(--os-color-error-500);
     }
   }
 
   &--disabled {
-    background: var(--os-color-background-disabled);
-    cursor: not-allowed;
-
-    &::-webkit-slider-thumb {
-      background: var(--os-color-text-disabled);
-      cursor: not-allowed;
+    .mat-mdc-slider {
+      --mdc-slider-disabled-track-color: var(--os-color-background-disabled);
+      --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
     }
-
-    &::-moz-range-thumb {
-      background: var(--os-color-text-disabled);
-      cursor: not-allowed;
-    }
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 2px var(--os-color-primary-100);
   }
 }
 

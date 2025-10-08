@@ -9,13 +9,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
 
 export type OsSliderSize = 'small' | 'medium' | 'large';
 
 @Component({
   selector: 'os-slider',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSliderModule],
   template: `
     <div [class]="containerClass()">
       @if (label()) {
@@ -33,23 +34,32 @@ export type OsSliderSize = 'small' | 'medium' | 'large';
         }
 
         <div [class]="sliderTrackClass()">
-          <input
+          <mat-slider
             [id]="sliderId"
-            type="range"
             [min]="min()"
             [max]="max()"
             [step]="step()"
             [disabled]="disabled()"
-            [required]="required()"
-            [value]="value()"
             [class]="sliderClass()"
-            (input)="handleInput($event)"
+            [color]="matColor()"
+            [discrete]="showValue()"
+            [showTickMarks]="showMinMax()"
+            (change)="handleInput($event)"
             (blur)="handleBlur($event)"
             (focus)="handleFocus($event)"
             [attr.aria-describedby]="helperText() ? sliderId + '-helper' : null"
             [attr.aria-invalid]="hasError()"
             [attr.aria-label]="ariaLabel() || label()"
-          />
+          >
+            <input
+              matSliderThumb
+              [value]="value()"
+              [min]="min()"
+              [max]="max()"
+              [step]="step()"
+              [disabled]="disabled()"
+            />
+          </mat-slider>
 
           @if (showValue()) {
           <div [class]="valueDisplayClass()">
@@ -169,9 +179,16 @@ export class OsSliderComponent implements ControlValueAccessor {
     return this.value().toString();
   });
 
-  handleInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const newValue = parseFloat(target.value);
+  // Mapeamento interno para Material
+  protected matColor = computed(() => {
+    if (this.hasError()) {
+      return 'warn';
+    }
+    return 'primary';
+  });
+
+  handleInput(event: any): void {
+    const newValue = event.value || event.target?.value || 0;
 
     this._onChange(newValue);
     this.valueChange.emit(newValue);

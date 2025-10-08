@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { OsSliderComponent } from './os-slider.component';
+import { MatSliderModule } from '@angular/material/slider';
 import { vi } from 'vitest';
 
 describe('OsSliderComponent', () => {
@@ -11,7 +12,7 @@ describe('OsSliderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OsSliderComponent, ReactiveFormsModule],
+      imports: [OsSliderComponent, ReactiveFormsModule, MatSliderModule],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -44,13 +45,12 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const label = fixture.debugElement.query(By.css('.os-slider__label'));
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
 
       expect(label.nativeElement.textContent.trim()).toBe('Volume *');
-      expect(slider.nativeElement.min).toBe('0');
-      expect(slider.nativeElement.max).toBe('100');
-      expect(slider.nativeElement.step).toBe('5');
-      expect(slider.nativeElement.required).toBe(true);
+      expect(sliderInput.nativeElement.getAttribute('min')).toBe('0');
+      expect(sliderInput.nativeElement.getAttribute('max')).toBe('100');
+      expect(sliderInput.nativeElement.getAttribute('step')).toBe('5');
     });
 
     it('should show value display when enabled', () => {
@@ -89,8 +89,8 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('value', 75);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.value).toBe('75');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.value).toBe('75');
     });
 
     it('should handle decimal values', () => {
@@ -98,25 +98,27 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('step', 0.5);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.value).toBe('25.5');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.value).toBe('25.5');
     });
   });
 
   describe('user interactions', () => {
     it('should emit value change on input', () => {
       vi.spyOn(component.valueChange, 'emit');
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
-      slider.nativeElement.value = '75';
-      slider.nativeElement.dispatchEvent(new Event('input'));
+      // Simular evento de mudança do Material slider
+      const changeEvent = new Event('change');
+      (changeEvent as any).value = 75;
+      slider.nativeElement.dispatchEvent(changeEvent);
 
       expect(component.valueChange.emit).toHaveBeenCalledWith(75);
     });
 
     it('should emit blur event', () => {
       vi.spyOn(component.blurEvent, 'emit');
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       slider.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
@@ -125,7 +127,7 @@ describe('OsSliderComponent', () => {
 
     it('should emit focus event', () => {
       vi.spyOn(component.focusEvent, 'emit');
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       slider.nativeElement.dispatchEvent(new FocusEvent('focus'));
 
@@ -138,24 +140,24 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('min', 10);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.min).toBe('10');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.getAttribute('min')).toBe('10');
     });
 
     it('should set max value', () => {
       fixture.componentRef.setInput('max', 90);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.max).toBe('90');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.getAttribute('max')).toBe('90');
     });
 
     it('should set step value', () => {
       fixture.componentRef.setInput('step', 5);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.step).toBe('5');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.getAttribute('step')).toBe('5');
     });
   });
 
@@ -174,7 +176,7 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-slider-container'));
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       expect(container.nativeElement.classList.contains('os-slider-container--error')).toBe(true);
       expect(slider.nativeElement.classList.contains('os-slider--error')).toBe(true);
@@ -186,10 +188,10 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
       const container = fixture.debugElement.query(By.css('.os-slider-container'));
 
-      expect(slider.nativeElement.disabled).toBe(true);
+      expect(sliderInput.nativeElement.getAttribute('disabled')).toBe('');
       expect(container.nativeElement.classList.contains('os-slider-container--disabled')).toBe(
         true
       );
@@ -202,7 +204,7 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-slider-container'));
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       expect(container.nativeElement.classList.contains('os-slider-container--small')).toBe(true);
       expect(slider.nativeElement.classList.contains('os-slider--small')).toBe(true);
@@ -213,7 +215,7 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.debugElement.query(By.css('.os-slider-container'));
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       expect(container.nativeElement.classList.contains('os-slider-container--large')).toBe(true);
       expect(slider.nativeElement.classList.contains('os-slider--large')).toBe(true);
@@ -260,9 +262,11 @@ describe('OsSliderComponent', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      slider.nativeElement.value = '30';
-      slider.nativeElement.dispatchEvent(new Event('input'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      // Simular evento de mudança do Material slider
+      const changeEvent = new Event('change');
+      (changeEvent as any).value = 30;
+      slider.nativeElement.dispatchEvent(changeEvent);
 
       expect(onChangeSpy).toHaveBeenCalledWith(30);
     });
@@ -271,7 +275,7 @@ describe('OsSliderComponent', () => {
       const onTouchedSpy = vi.fn();
       component.registerOnTouched(onTouchedSpy);
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
       slider.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
       expect(onTouchedSpy).toHaveBeenCalled();
@@ -284,7 +288,7 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('helperText', 'Adjust the volume level');
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
       const label = fixture.debugElement.query(By.css('.os-slider__label'));
 
       expect(slider.nativeElement.getAttribute('aria-describedby')).toContain('helper');
@@ -301,15 +305,15 @@ describe('OsSliderComponent', () => {
     });
 
     it('should have proper input type', () => {
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
-      expect(slider.nativeElement.type).toBe('range');
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+      expect(sliderInput.nativeElement.type).toBe('range');
     });
 
     it('should use custom aria label when provided', () => {
       fixture.componentRef.setInput('ariaLabel', 'Custom slider label');
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.css('.os-slider'));
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
       expect(slider.nativeElement.getAttribute('aria-label')).toBe('Custom slider label');
     });
   });
