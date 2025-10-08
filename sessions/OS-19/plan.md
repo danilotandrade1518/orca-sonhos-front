@@ -1,0 +1,977 @@
+# Design System Base - Atomic Design até Templates - Plano de Implementação
+
+> **Instruções**: Mantenha este arquivo atualizado conforme o progresso. Marque tarefas como concluídas ✅, em progresso ⏰ ou não iniciadas ⏳.
+
+## 📋 Resumo Executivo
+
+Implementar Design System completo do OrçaSonhos seguindo metodologia Atomic Design, estabelecendo base sólida para desenvolvimento de todas as features futuras. O sistema incluirá 47+ componentes organizados em 4 níveis (Atoms, Molecules, Organisms, Templates) com sistema de tema customizado e integração com Angular Material.
+
+## 🎯 Objetivos da Implementação
+
+- **Objetivo Principal**: Estabelecer Design System escalável e consistente
+- **Objetivo Secundário**: Criar identidade visual única do OrçaSonhos
+- **Critérios de Sucesso**: 47+ componentes funcionais, acessibilidade WCAG 2.1 AA, performance otimizada
+
+---
+
+## 📅 FASE 1: Configuração Base e Sistema de Tema [Status: ✅ Completada]
+
+### 🎯 Objetivo da Fase
+
+Estabelecer fundação técnica com estrutura de diretórios, sistema de tema customizado e design tokens, preparando base para implementação dos componentes.
+
+### 📋 Tarefas
+
+#### Criar Estrutura de Diretórios [✅]
+
+**Descrição**: Criar estrutura completa de pastas seguindo Atomic Design
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/`
+- `src/app/shared/ui-components/molecules/`
+- `src/app/shared/ui-components/organisms/`
+- `src/app/shared/ui-components/templates/`
+- `src/app/shared/ui-components/theme/`
+
+**Critério de Conclusão**: Todas as pastas criadas com arquivos index.ts
+
+#### Implementar Design Tokens [✅]
+
+**Descrição**: Criar sistema de design tokens com paleta azul dominante
+**Arquivos**:
+
+- `src/app/shared/ui-components/theme/_tokens.scss`
+- `src/app/shared/ui-components/theme/_colors.scss`
+- `src/app/shared/ui-components/theme/_typography.scss`
+- `src/app/shared/ui-components/theme/_spacing.scss`
+
+**Dependências**: Estrutura de diretórios criada
+**Validação**: Tokens aplicados e visíveis no browser
+
+#### Configurar Tema Material Customizado [✅]
+
+**Descrição**: Integrar design tokens com Angular Material
+**Arquivos**:
+
+- `src/app/shared/ui-components/theme/_material-theme.scss`
+- `src/app/shared/ui-components/theme/theme.scss`
+- `src/styles.scss` (modificação)
+
+**Dependências**: Design tokens implementados
+**Validação**: Tema aplicado corretamente nos componentes Material
+
+#### Configurar Módulo Principal [✅]
+
+**Descrição**: Criar módulo principal do Design System
+**Arquivos**:
+
+- `src/app/shared/ui-components/ui-components.module.ts`
+- `src/app/shared/index.ts` (modificação)
+
+**Dependências**: Estrutura de diretórios criada
+**Validação**: Módulo importa sem erros
+
+### 🧪 Critérios de Validação
+
+- [x] Estrutura de diretórios criada
+- [x] Design tokens implementados e funcionais
+- [x] Tema Material customizado aplicado
+- [x] Módulo principal configurado
+- [x] Build sem erros
+
+### 📝 Comentários da Fase
+
+**Decisões Técnicas:**
+
+- **Design Tokens**: Implementados com paleta azul dominante (#2196f3) e roxo secundário (#9c27b0)
+- **Tema Material**: Integração completa com Angular Material 20.2.3
+- **Estrutura**: Organização seguindo Atomic Design (atoms, molecules, organisms, templates)
+- **Build**: Testado e funcionando sem erros
+
+**Arquivos Criados:**
+
+- Estrutura completa de diretórios
+- Sistema de design tokens com variáveis CSS
+- Tema Material customizado com paletas específicas
+- Módulo principal UiComponentsModule
+- Integração com sistema de exportações shared
+
+**Próximos Passos:**
+
+- Iniciar Fase 2 com implementação dos ATOMS
+- Começar com os-button como componente base
+
+---
+
+## 📅 FASE 2: ATOMS - Componentes Básicos [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Implementar 16 componentes atômicos fundamentais que servirão como base para todos os outros componentes do sistema.
+
+### 📋 Tarefas
+
+#### Implementar os-button [⏳]
+
+**Descrição**: Botão com 4 variantes (primary, secondary, tertiary, danger) e 3 tamanhos
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-button/os-button.component.ts`
+- `src/app/shared/ui-components/atoms/os-button/os-button.component.scss`
+- `src/app/shared/ui-components/atoms/os-button/os-button.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: 4 variantes x 3 tamanhos = 12 combinações testadas
+
+#### Implementar os-input [⏳]
+
+**Descrição**: Input com validação integrada e múltiplos tipos
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-input/os-input.component.ts`
+- `src/app/shared/ui-components/atoms/os-input/os-input.component.scss`
+- `src/app/shared/ui-components/atoms/os-input/os-input.component.spec.ts`
+
+**Complexidade**: Alta
+**Validação**: Tipos text, email, password, number, tel funcionando
+
+#### Implementar os-icon [⏳]
+
+**Descrição**: Sistema de ícones próprio
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-icon/os-icon.component.ts`
+- `src/app/shared/ui-components/atoms/os-icon/os-icon.component.scss`
+- `src/app/shared/ui-components/atoms/os-icon/os-icon.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Ícones renderizando corretamente
+
+#### Implementar os-badge [⏳]
+
+**Descrição**: Indicadores de status
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-badge/os-badge.component.ts`
+- `src/app/shared/ui-components/atoms/os-badge/os-badge.component.scss`
+- `src/app/shared/ui-components/atoms/os-badge/os-badge.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Estados success, warning, error, info
+
+#### Implementar os-avatar [⏳]
+
+**Descrição**: Avatares de usuário
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-avatar/os-avatar.component.ts`
+- `src/app/shared/ui-components/atoms/os-avatar/os-avatar.component.scss`
+- `src/app/shared/ui-components/atoms/os-avatar/os-avatar.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Imagem, iniciais e placeholder funcionando
+
+#### Implementar os-spinner [⏳]
+
+**Descrição**: Indicadores de loading
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-spinner/os-spinner.component.ts`
+- `src/app/shared/ui-components/atoms/os-spinner/os-spinner.component.scss`
+- `src/app/shared/ui-components/atoms/os-spinner/os-spinner.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Animação funcionando
+
+#### Implementar os-label [⏳]
+
+**Descrição**: Labels de texto
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.ts`
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.scss`
+- `src/app/shared/ui-components/atoms/os-label/os-label.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Estilos aplicados corretamente
+
+#### Implementar os-chip [⏳]
+
+**Descrição**: Tags e filtros
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-chip/os-chip.component.ts`
+- `src/app/shared/ui-components/atoms/os-chip/os-chip.component.scss`
+- `src/app/shared/ui-components/atoms/os-chip/os-chip.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Interação de clique funcionando
+
+#### Implementar os-money-input [⏳]
+
+**Descrição**: Input com formatação monetária brasileira
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-money-input/os-money-input.component.ts`
+- `src/app/shared/ui-components/atoms/os-money-input/os-money-input.component.scss`
+- `src/app/shared/ui-components/atoms/os-money-input/os-money-input.component.spec.ts`
+
+**Complexidade**: Alta
+**Validação**: Formatação R$ X.XXX,XX funcionando
+
+#### Implementar os-date-input [⏳]
+
+**Descrição**: Input para seleção de datas
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-date-input/os-date-input.component.ts`
+- `src/app/shared/ui-components/atoms/os-date-input/os-date-input.component.scss`
+- `src/app/shared/ui-components/atoms/os-date-input/os-date-input.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Date picker funcionando
+
+#### Implementar os-select [⏳]
+
+**Descrição**: Dropdowns
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-select/os-select.component.ts`
+- `src/app/shared/ui-components/atoms/os-select/os-select.component.scss`
+- `src/app/shared/ui-components/atoms/os-select/os-select.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Seleção funcionando
+
+#### Implementar os-checkbox [⏳]
+
+**Descrição**: Seleção múltipla
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.ts`
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.scss`
+- `src/app/shared/ui-components/atoms/os-checkbox/os-checkbox.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Estado checked/unchecked
+
+#### Implementar os-radio [⏳]
+
+**Descrição**: Seleção única
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.ts`
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.scss`
+- `src/app/shared/ui-components/atoms/os-radio/os-radio.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Grupo de radio funcionando
+
+#### Implementar os-toggle [⏳]
+
+**Descrição**: Switch on/off
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-toggle/os-toggle.component.ts`
+- `src/app/shared/ui-components/atoms/os-toggle/os-toggle.component.scss`
+- `src/app/shared/ui-components/atoms/os-toggle/os-toggle.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Toggle funcionando
+
+#### Implementar os-slider [⏳]
+
+**Descrição**: Controle de range
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-slider/os-slider.component.ts`
+- `src/app/shared/ui-components/atoms/os-slider/os-slider.component.scss`
+- `src/app/shared/ui-components/atoms/os-slider/os-slider.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Range funcionando
+
+#### Implementar os-progress-bar [⏳]
+
+**Descrição**: Indicadores de progresso
+**Arquivos**:
+
+- `src/app/shared/ui-components/atoms/os-progress-bar/os-progress-bar.component.ts`
+- `src/app/shared/ui-components/atoms/os-progress-bar/os-progress-bar.component.scss`
+- `src/app/shared/ui-components/atoms/os-progress-bar/os-progress-bar.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Progresso visual funcionando
+
+### 🔄 Dependências
+
+- ✅ Fase 1 completada
+- Design tokens implementados
+- Tema Material configurado
+
+### 🧪 Critérios de Validação
+
+- [ ] 16 componentes atoms implementados
+- [ ] Todos os componentes com testes unitários
+- [ ] Acessibilidade WCAG 2.1 AA validada
+- [ ] Responsividade em todos os componentes
+- [ ] Performance OnPush implementada
+
+### 📝 Comentários da Fase
+
+_[Observações sobre decisões tomadas]_
+
+---
+
+## 📅 FASE 3: MOLECULES - Componentes Compostos [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Implementar 12 componentes moleculares que combinam atoms para criar funcionalidades mais complexas e reutilizáveis.
+
+### 📋 Tarefas
+
+#### Implementar os-form-field [⏳]
+
+**Descrição**: Input + label + validation integrados
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-form-field/os-form-field.component.ts`
+- `src/app/shared/ui-components/molecules/os-form-field/os-form-field.component.scss`
+- `src/app/shared/ui-components/molecules/os-form-field/os-form-field.component.spec.ts`
+
+**Dependências**: os-input, os-label implementados
+**Complexidade**: Alta
+**Validação**: Validação integrada funcionando
+
+#### Implementar os-card [⏳]
+
+**Descrição**: Containers de conteúdo
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-card/os-card.component.ts`
+- `src/app/shared/ui-components/molecules/os-card/os-card.component.scss`
+- `src/app/shared/ui-components/molecules/os-card/os-card.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Header, content, actions funcionando
+
+#### Implementar os-search-box [⏳]
+
+**Descrição**: Busca com sugestões
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-search-box/os-search-box.component.ts`
+- `src/app/shared/ui-components/molecules/os-search-box/os-search-box.component.scss`
+- `src/app/shared/ui-components/molecules/os-search-box/os-search-box.component.spec.ts`
+
+**Dependências**: os-input, os-icon implementados
+**Complexidade**: Alta
+**Validação**: Sugestões funcionando
+
+#### Implementar os-data-table [⏳]
+
+**Descrição**: Tabelas básicas
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-data-table/os-data-table.component.ts`
+- `src/app/shared/ui-components/molecules/os-data-table/os-data-table.component.scss`
+- `src/app/shared/ui-components/molecules/os-data-table/os-data-table.component.spec.ts`
+
+**Complexidade**: Alta
+**Validação**: Sorting, filtering funcionando
+
+#### Implementar os-filter-bar [⏳]
+
+**Descrição**: Filtros de dados
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-filter-bar/os-filter-bar.component.ts`
+- `src/app/shared/ui-components/molecules/os-filter-bar/os-filter-bar.component.scss`
+- `src/app/shared/ui-components/molecules/os-filter-bar/os-filter-bar.component.spec.ts`
+
+**Dependências**: os-input, os-select, os-button implementados
+**Complexidade**: Média
+**Validação**: Filtros aplicando corretamente
+
+#### Implementar os-navigation-item [⏳]
+
+**Descrição**: Itens de navegação
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-navigation-item/os-navigation-item.component.ts`
+- `src/app/shared/ui-components/molecules/os-navigation-item/os-navigation-item.component.scss`
+- `src/app/shared/ui-components/molecules/os-navigation-item/os-navigation-item.component.spec.ts`
+
+**Dependências**: os-icon implementado
+**Complexidade**: Média
+**Validação**: Estados ativo/inativo funcionando
+
+#### Implementar os-money-display [⏳]
+
+**Descrição**: Formatação de valores monetários
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-money-display/os-money-display.component.ts`
+- `src/app/shared/ui-components/molecules/os-money-display/os-money-display.component.scss`
+- `src/app/shared/ui-components/molecules/os-money-display/os-money-display.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Formatação brasileira funcionando
+
+#### Implementar os-date-picker [⏳]
+
+**Descrição**: Seleção de datas avançada
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-date-picker/os-date-picker.component.ts`
+- `src/app/shared/ui-components/molecules/os-date-picker/os-date-picker.component.scss`
+- `src/app/shared/ui-components/molecules/os-date-picker/os-date-picker.component.spec.ts`
+
+**Dependências**: os-date-input implementado
+**Complexidade**: Alta
+**Validação**: Calendar funcionando
+
+#### Implementar os-dropdown [⏳]
+
+**Descrição**: Menus suspensos
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-dropdown/os-dropdown.component.ts`
+- `src/app/shared/ui-components/molecules/os-dropdown/os-dropdown.component.scss`
+- `src/app/shared/ui-components/molecules/os-dropdown/os-dropdown.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Menu abrindo/fechando
+
+#### Implementar os-form-group [⏳]
+
+**Descrição**: Grupos de campos
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-form-group/os-form-group.component.ts`
+- `src/app/shared/ui-components/molecules/os-form-group/os-form-group.component.scss`
+- `src/app/shared/ui-components/molecules/os-form-group/os-form-group.component.spec.ts`
+
+**Dependências**: os-form-field implementado
+**Complexidade**: Média
+**Validação**: Agrupamento funcionando
+
+#### Implementar os-alert [⏳]
+
+**Descrição**: Notificações
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-alert/os-alert.component.ts`
+- `src/app/shared/ui-components/molecules/os-alert/os-alert.component.scss`
+- `src/app/shared/ui-components/molecules/os-alert/os-alert.component.spec.ts`
+
+**Dependências**: os-icon, os-badge implementados
+**Complexidade**: Média
+**Validação**: Tipos success, warning, error, info
+
+#### Implementar os-tooltip [⏳]
+
+**Descrição**: Dicas contextuais
+**Arquivos**:
+
+- `src/app/shared/ui-components/molecules/os-tooltip/os-tooltip.component.ts`
+- `src/app/shared/ui-components/molecules/os-tooltip/os-tooltip.component.scss`
+- `src/app/shared/ui-components/molecules/os-tooltip/os-tooltip.component.spec.ts`
+
+**Complexidade**: Média
+**Validação**: Tooltip aparecendo/desaparecendo
+
+### 🔄 Dependências
+
+- ✅ Fase 2 completada (atoms implementados)
+- Componentes atoms funcionando
+
+### 🧪 Critérios de Validação
+
+- [ ] 12 componentes molecules implementados
+- [ ] Integração com atoms funcionando
+- [ ] Testes de integração passando
+- [ ] Acessibilidade mantida
+- [ ] Performance otimizada
+
+### 📝 Comentários da Fase
+
+_[Observações sobre composição de componentes]_
+
+---
+
+## 📅 FASE 4: ORGANISMS - Componentes Complexos [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Implementar 12 componentes complexos que combinam molecules e atoms para criar funcionalidades completas e específicas do domínio.
+
+### 📋 Tarefas
+
+#### Implementar os-header [⏳]
+
+**Descrição**: Cabeçalho da aplicação
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-header/os-header.component.ts`
+- `src/app/shared/ui-components/organisms/os-header/os-header.component.scss`
+- `src/app/shared/ui-components/organisms/os-header/os-header.component.spec.ts`
+
+**Dependências**: os-button, os-avatar, os-navigation-item implementados
+**Complexidade**: Alta
+**Validação**: Responsividade funcionando
+
+#### Implementar os-sidebar [⏳]
+
+**Descrição**: Navegação lateral
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-sidebar/os-sidebar.component.ts`
+- `src/app/shared/ui-components/organisms/os-sidebar/os-sidebar.component.scss`
+- `src/app/shared/ui-components/organisms/os-sidebar/os-sidebar.component.spec.ts`
+
+**Dependências**: os-navigation-item implementado
+**Complexidade**: Alta
+**Validação**: Colapso/expansão funcionando
+
+#### Implementar os-footer [⏳]
+
+**Descrição**: Rodapé da aplicação
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-footer/os-footer.component.ts`
+- `src/app/shared/ui-components/organisms/os-footer/os-footer.component.scss`
+- `src/app/shared/ui-components/organisms/os-footer/os-footer.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Links funcionando
+
+#### Implementar os-data-grid [⏳]
+
+**Descrição**: Tabelas avançadas
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-data-grid/os-data-grid.component.ts`
+- `src/app/shared/ui-components/organisms/os-data-grid/os-data-grid.component.scss`
+- `src/app/shared/ui-components/organisms/os-data-grid/os-data-grid.component.spec.ts`
+
+**Dependências**: os-data-table, os-filter-bar implementados
+**Complexidade**: Alta
+**Validação**: Paginação, sorting, filtering funcionando
+
+#### Implementar os-form-section [⏳]
+
+**Descrição**: Seções de formulário
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-form-section/os-form-section.component.ts`
+- `src/app/shared/ui-components/organisms/os-form-section/os-form-section.component.scss`
+- `src/app/shared/ui-components/organisms/os-form-section/os-form-section.component.spec.ts`
+
+**Dependências**: os-form-group implementado
+**Complexidade**: Média
+**Validação**: Seções funcionando
+
+#### Implementar os-navigation [⏳]
+
+**Descrição**: Navegação principal
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-navigation/os-navigation.component.ts`
+- `src/app/shared/ui-components/organisms/os-navigation/os-navigation.component.scss`
+- `src/app/shared/ui-components/organisms/os-navigation/os-navigation.component.spec.ts`
+
+**Dependências**: os-navigation-item implementado
+**Complexidade**: Média
+**Validação**: Navegação funcionando
+
+#### Implementar os-modal [⏳]
+
+**Descrição**: Diálogos e overlays
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-modal/os-modal.component.ts`
+- `src/app/shared/ui-components/organisms/os-modal/os-modal.component.scss`
+- `src/app/shared/ui-components/organisms/os-modal/os-modal.component.spec.ts`
+
+**Dependências**: os-button, os-card implementados
+**Complexidade**: Alta
+**Validação**: Modal abrindo/fechando
+
+#### Implementar os-page-header [⏳]
+
+**Descrição**: Cabeçalhos de página
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-page-header/os-page-header.component.ts`
+- `src/app/shared/ui-components/organisms/os-page-header/os-page-header.component.scss`
+- `src/app/shared/ui-components/organisms/os-page-header/os-page-header.component.spec.ts`
+
+**Dependências**: os-button implementado
+**Complexidade**: Média
+**Validação**: Breadcrumbs funcionando
+
+#### Implementar os-goal-progress [⏳]
+
+**Descrição**: Progresso de metas financeiras
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-goal-progress/os-goal-progress.component.ts`
+- `src/app/shared/ui-components/organisms/os-goal-progress/os-goal-progress.component.scss`
+- `src/app/shared/ui-components/organisms/os-goal-progress/os-goal-progress.component.spec.ts`
+
+**Dependências**: os-progress-bar, os-money-display implementados
+**Complexidade**: Média
+**Validação**: Progresso visual funcionando
+
+#### Implementar os-budget-summary [⏳]
+
+**Descrição**: Resumo de orçamentos
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-budget-summary/os-budget-summary.component.ts`
+- `src/app/shared/ui-components/organisms/os-budget-summary/os-budget-summary.component.scss`
+- `src/app/shared/ui-components/organisms/os-budget-summary/os-budget-summary.component.spec.ts`
+
+**Dependências**: os-card, os-money-display implementados
+**Complexidade**: Média
+**Validação**: Resumo calculando corretamente
+
+#### Implementar os-transaction-list [⏳]
+
+**Descrição**: Lista de transações
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-transaction-list/os-transaction-list.component.ts`
+- `src/app/shared/ui-components/organisms/os-transaction-list/os-transaction-list.component.scss`
+- `src/app/shared/ui-components/organisms/os-transaction-list/os-transaction-list.component.spec.ts`
+
+**Dependências**: os-data-grid implementado
+**Complexidade**: Alta
+**Validação**: Lista funcionando
+
+#### Implementar os-category-manager [⏳]
+
+**Descrição**: Gerenciador de categorias
+**Arquivos**:
+
+- `src/app/shared/ui-components/organisms/os-category-manager/os-category-manager.component.ts`
+- `src/app/shared/ui-components/organisms/os-category-manager/os-category-manager.component.scss`
+- `src/app/shared/ui-components/organisms/os-category-manager/os-category-manager.component.spec.ts`
+
+**Dependências**: os-form-section, os-button implementados
+**Complexidade**: Alta
+**Validação**: CRUD funcionando
+
+### 🔄 Dependências
+
+- ✅ Fase 3 completada (molecules implementados)
+- Componentes molecules funcionando
+
+### 🧪 Critérios de Validação
+
+- [ ] 12 componentes organisms implementados
+- [ ] Integração com molecules funcionando
+- [ ] Funcionalidades específicas do domínio
+- [ ] Testes de integração completos
+- [ ] Performance otimizada
+
+### 📝 Comentários da Fase
+
+_[Observações sobre componentes complexos]_
+
+---
+
+## 📅 FASE 5: TEMPLATES - Layouts [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Implementar 8 templates de layout que definem a estrutura visual das páginas da aplicação.
+
+### 📋 Tarefas
+
+#### Implementar os-dashboard-layout [⏳]
+
+**Descrição**: Layout principal com sidebar + appbar
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-dashboard-layout/os-dashboard-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-dashboard-layout/os-dashboard-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-dashboard-layout/os-dashboard-layout.component.spec.ts`
+
+**Dependências**: os-header, os-sidebar implementados
+**Complexidade**: Alta
+**Validação**: Layout responsivo funcionando
+
+#### Implementar os-form-layout [⏳]
+
+**Descrição**: Layout para formulários com appbar
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-form-layout/os-form-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-form-layout/os-form-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-form-layout/os-form-layout.component.spec.ts`
+
+**Dependências**: os-header implementado
+**Complexidade**: Média
+**Validação**: Formulário centralizado
+
+#### Implementar os-list-layout [⏳]
+
+**Descrição**: Layout para listas com sidebar + appbar
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-list-layout/os-list-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-list-layout/os-list-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-list-layout/os-list-layout.component.spec.ts`
+
+**Dependências**: os-header, os-sidebar implementados
+**Complexidade**: Média
+**Validação**: Lista com filtros funcionando
+
+#### Implementar os-detail-layout [⏳]
+
+**Descrição**: Layout para detalhes com appbar
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-detail-layout/os-detail-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-detail-layout/os-detail-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-detail-layout/os-detail-layout.component.spec.ts`
+
+**Dependências**: os-header implementado
+**Complexidade**: Média
+**Validação**: Detalhes organizados
+
+#### Implementar os-auth-layout [⏳]
+
+**Descrição**: Layout para autenticação
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-auth-layout/os-auth-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-auth-layout/os-auth-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-auth-layout/os-auth-layout.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Layout limpo funcionando
+
+#### Implementar os-onboarding-layout [⏳]
+
+**Descrição**: Layout simplificado para onboarding
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-onboarding-layout/os-onboarding-layout.component.ts`
+- `src/app/shared/ui-components/templates/os-onboarding-layout/os-onboarding-layout.component.scss`
+- `src/app/shared/ui-components/templates/os-onboarding-layout/os-onboarding-layout.component.spec.ts`
+
+**Complexidade**: Baixa
+**Validação**: Onboarding funcionando
+
+#### Implementar os-sidebar-template [⏳]
+
+**Descrição**: Template de navegação lateral
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-sidebar-template/os-sidebar-template.component.ts`
+- `src/app/shared/ui-components/templates/os-sidebar-template/os-sidebar-template.component.scss`
+- `src/app/shared/ui-components/templates/os-sidebar-template/os-sidebar-template.component.spec.ts`
+
+**Dependências**: os-sidebar implementado
+**Complexidade**: Média
+**Validação**: Navegação funcionando
+
+#### Implementar os-appbar-template [⏳]
+
+**Descrição**: Template de barra superior
+**Arquivos**:
+
+- `src/app/shared/ui-components/templates/os-appbar-template/os-appbar-template.component.ts`
+- `src/app/shared/ui-components/templates/os-appbar-template/os-appbar-template.component.scss`
+- `src/app/shared/ui-components/templates/os-appbar-template/os-appbar-template.component.spec.ts`
+
+**Dependências**: os-header implementado
+**Complexidade**: Média
+**Validação**: Appbar funcionando
+
+### 🔄 Dependências
+
+- ✅ Fase 4 completada (organisms implementados)
+- Componentes organisms funcionando
+
+### 🧪 Critérios de Validação
+
+- [ ] 8 templates implementados
+- [ ] Layouts responsivos funcionando
+- [ ] Integração com roteamento
+- [ ] Testes de layout passando
+- [ ] Performance otimizada
+
+### 📝 Comentários da Fase
+
+_[Observações sobre layouts]_
+
+---
+
+## 📅 FASE 6: Qualidade e Documentação [Status: ⏳]
+
+### 🎯 Objetivo da Fase
+
+Finalizar implementação com testes abrangentes, documentação completa e otimizações de performance.
+
+### 📋 Tarefas
+
+#### Implementar Testes Abrangentes [⏳]
+
+**Descrição**: Testes unitários para todos os componentes
+**Arquivos**: Todos os arquivos `.spec.ts`
+**Complexidade**: Alta
+**Validação**: Coverage > 90%
+
+#### Configurar Storybook [⏳]
+
+**Descrição**: Documentação interativa
+**Arquivos**:
+
+- `.storybook/main.ts`
+- `.storybook/preview.ts`
+- Stories para cada componente
+
+**Complexidade**: Média
+**Validação**: Storybook funcionando
+
+#### Validar Acessibilidade [⏳]
+
+**Descrição**: Testes WCAG 2.1 AA
+**Arquivos**: Testes de acessibilidade
+**Complexidade**: Média
+**Validação**: Todos os componentes acessíveis
+
+#### Otimizar Performance [⏳]
+
+**Descrição**: Bundle size e renderização
+**Arquivos**: Configurações de build
+**Complexidade**: Média
+**Validação**: Bundle < 50KB, renderização < 100ms
+
+#### Documentar Design System [⏳]
+
+**Descrição**: Documentação completa
+**Arquivos**:
+
+- `README.md` do Design System
+- Guias de uso
+- Exemplos de implementação
+
+**Complexidade**: Baixa
+**Validação**: Documentação completa
+
+### 🏁 Entrega Final
+
+- [ ] Todos os testes passando
+- [ ] Documentação atualizada
+- [ ] Code review interno realizado
+- [ ] Pronto para PR
+
+### 🧪 Critérios de Validação
+
+- [ ] 47+ componentes funcionais
+- [ ] Testes unitários completos
+- [ ] Acessibilidade WCAG 2.1 AA
+- [ ] Performance otimizada
+- [ ] Bundle size < 50KB
+- [ ] Documentação completa
+
+### 📝 Comentários da Fase
+
+_[Observações finais]_
+
+---
+
+## 🔀 Estratégia de Desenvolvimento
+
+### Ordem de Execução
+
+1. **Sequencial**: Fases 1 → 2 → 3 → 4 → 5 → 6 (dependências claras)
+2. **Paralelo**: Dentro de cada fase, componentes independentes podem ser desenvolvidos simultaneamente
+
+### Pontos de Validação
+
+- **Após Fase 1**: Sistema de tema funcionando
+- **Após Fase 2**: Atoms testados e funcionais
+- **Após Fase 3**: Molecules integrados com atoms
+- **Após Fase 4**: Organisms funcionando com molecules
+- **Após Fase 5**: Templates integrados com roteamento
+- **Final**: Design System completo e documentado
+
+### Contingências
+
+- **Se Fase X falhar**: Revisar dependências e ajustar plano
+- **Se dependência atrasar**: Implementar componentes independentes primeiro
+- **Se performance degradar**: Otimizar bundle size e lazy loading
+
+## 🧪 Estratégia de Testes
+
+### Testes por Fase
+
+- **Fase 1**: Testes de tema e tokens
+- **Fase 2**: Testes unitários de atoms
+- **Fase 3**: Testes de integração de molecules
+- **Fase 4**: Testes de funcionalidade de organisms
+- **Fase 5**: Testes de layout de templates
+- **Fase 6**: Testes end-to-end e acessibilidade
+
+### Dados de Teste
+
+- **Fixtures**: Dados de exemplo para componentes
+- **Mocks**: Serviços e dependências externas
+- **Factories**: Criação de dados de teste consistentes
+
+## 📚 Referências e Pesquisas
+
+### Documentação Consultada
+
+- **Angular Material**: https://material.angular.dev/
+- **Atomic Design**: https://bradfrost.com/blog/post/atomic-web-design/
+- **Design Tokens**: https://spectrum.adobe.com/page/design-tokens/
+- **WCAG 2.1**: https://www.w3.org/WAI/WCAG21/quickref/
+
+### Decisões Arquiteturais Durante Planejamento
+
+- **Decisão**: Implementação incremental por nível
+- **Motivo**: Facilita desenvolvimento e teste
+- **Impacto**: Permite validação contínua
+
+## 🚨 Riscos Identificados
+
+### Riscos Técnicos
+
+- **Risco**: Bundle size pode crescer além do limite
+- **Probabilidade**: Média
+- **Mitigação**: Lazy loading e tree shaking otimizado
+
+- **Risco**: Performance pode degradar com muitos componentes
+- **Probabilidade**: Baixa
+- **Mitigação**: OnPush strategy e otimizações
+
+### Riscos de Dependência
+
+- **Dependência Externa**: Angular Material updates
+- **Impacto se Indisponível**: Breaking changes
+- **Plano B**: Versionamento e testes de compatibilidade
+
+## 📈 Métricas de Progresso
+
+### Por Fase
+
+- Fase 1: 4 tarefas, ~2 horas estimadas
+- Fase 2: 16 tarefas, ~8 horas estimadas
+- Fase 3: 12 tarefas, ~6 horas estimadas
+- Fase 4: 12 tarefas, ~6 horas estimadas
+- Fase 5: 8 tarefas, ~4 horas estimadas
+- Fase 6: 5 tarefas, ~3 horas estimadas
+
+### Total
+
+- **Tarefas**: 57 tarefas
+- **Tempo Estimado**: ~29 horas
+- **Marcos**: 6 fases principais

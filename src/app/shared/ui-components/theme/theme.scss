@@ -1,0 +1,168 @@
+// Tema Principal - OrçaSonhos Design System
+// Integração completa dos design tokens com Angular Material
+
+// ===== IMPORTS =====
+@import './_tokens.scss';
+@import './_colors.scss';
+@import './_typography.scss';
+@import './_spacing.scss';
+@import './_material-theme.scss';
+
+// ===== RESET E BASE =====
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--os-font-family-primary);
+  font-size: 16px;
+  line-height: var(--os-line-height-normal);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--os-color-background);
+  color: var(--os-color-on-surface);
+  font-size: var(--os-font-size-base);
+  font-weight: var(--os-font-weight-regular);
+}
+
+// ===== UTILITÁRIOS GLOBAIS =====
+.os-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--os-spacing-md);
+}
+
+.os-section {
+  padding: var(--os-spacing-xl) 0;
+}
+
+.os-grid {
+  display: grid;
+  gap: var(--os-spacing-md);
+
+  &--2-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &--3-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &--4-cols {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.os-flex {
+  display: flex;
+
+  &--center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--between {
+    justify-content: space-between;
+  }
+
+  &--around {
+    justify-content: space-around;
+  }
+
+  &--column {
+    flex-direction: column;
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+}
+
+// ===== RESPONSIVIDADE =====
+@media (max-width: 768px) {
+  .os-grid {
+    &--2-cols,
+    &--3-cols,
+    &--4-cols {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .os-container {
+    padding: 0 var(--os-spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .os-container {
+    padding: 0 var(--os-spacing-xs);
+  }
+}
+
+// ===== ANIMAÇÕES =====
+.os-fade-in {
+  animation: fadeIn var(--os-transition-normal) ease-in-out;
+}
+
+.os-slide-up {
+  animation: slideUp var(--os-transition-normal) ease-out;
+}
+
+.os-scale-in {
+  animation: scaleIn var(--os-transition-fast) ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ===== FOCUS E ACESSIBILIDADE =====
+.os-focus-visible {
+  outline: 2px solid var(--os-color-primary-500);
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  @extend .os-focus-visible;
+}
+
+// ===== PRINT STYLES =====
+@media print {
+  .os-no-print {
+    display: none !important;
+  }
+
+  .os-print-only {
+    display: block !important;
+  }
+}
