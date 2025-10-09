@@ -251,7 +251,7 @@ describe('OsModalComponent', () => {
 
       fixture.componentRef.setInput('closeOnEscape', true);
       const event = new KeyboardEvent('keydown', { key: 'Escape' });
-      
+
       // Mock preventDefault to track if it was called
       const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
 
@@ -342,7 +342,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-      
+
       // Just verify that the buttons are rendered
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
@@ -354,7 +354,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-      
+
       // Just verify that the buttons are rendered
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
