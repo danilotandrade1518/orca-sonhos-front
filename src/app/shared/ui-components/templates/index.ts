@@ -21,3 +21,9 @@ export type {
   DetailTemplateField,
   DetailTemplateSection,
 } from './os-detail-template/os-detail-template.component';
+
+export { OsWizardTemplateComponent } from './os-wizard-template/os-wizard-template.component';
+export type {
+  WizardTemplateConfig,
+  WizardStep,
+} from './os-wizard-template/os-wizard-template.component';

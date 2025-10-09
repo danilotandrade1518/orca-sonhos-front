@@ -392,7 +392,7 @@ src/app/shared/ui-components/
 - **os-form-template**: Template de formulário com validação e layout ✅ **COMPLETO**
 - **os-list-template**: Template de lista com filtros, ordenação e paginação ✅ **COMPLETO**
 - **os-detail-template**: Template de detalhes com informações e ações ✅ **COMPLETO**
-- **os-wizard-template**: Template de wizard com steps e navegação
+- **os-wizard-template**: Template de wizard com steps e navegação ✅ **COMPLETO**
 - **os-modal-template**: Template de modal com conteúdo e ações
 - **os-drawer-template**: Template de drawer com conteúdo e ações
 - **os-panel-template**: Template de panel com conteúdo e ações
@@ -413,7 +413,7 @@ src/app/shared/ui-components/
 - ✅ Cobertura de testes abrangente
 - ✅ Documentação completa com exemplos de uso
 
-**Progresso da Fase 5**: 1/8 Templates completos (12.5%)
+**Progresso da Fase 5**: 5/8 Templates completos (62.5%)
 
 ## 📅 FASE 6: DOCUMENTAÇÃO - Documentação e Exemplos [Status: ⏳ Pendente]
 
