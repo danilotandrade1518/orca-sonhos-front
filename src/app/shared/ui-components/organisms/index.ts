@@ -30,3 +30,10 @@ export {
   OsBudgetSummaryComponent,
   type BudgetSummaryData,
 } from './os-budget-summary/os-budget-summary.component';
+
+export {
+  OsModalComponent,
+  type OsModalVariant,
+  type OsModalSize,
+  type OsModalAction,
+} from './os-modal/os-modal.component';
