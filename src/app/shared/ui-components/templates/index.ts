@@ -27,3 +27,6 @@ export type {
   WizardTemplateConfig,
   WizardStep,
 } from './os-wizard-template/os-wizard-template.component';
+
+export { OsModalTemplateComponent } from './os-modal-template/os-modal-template.component';
+export type { ModalTemplateConfig } from './os-modal-template/os-modal-template.component';

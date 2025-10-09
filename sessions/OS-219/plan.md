@@ -393,7 +393,7 @@ src/app/shared/ui-components/
 - **os-list-template**: Template de lista com filtros, ordenação e paginação ✅ **COMPLETO**
 - **os-detail-template**: Template de detalhes com informações e ações ✅ **COMPLETO**
 - **os-wizard-template**: Template de wizard com steps e navegação ✅ **COMPLETO**
-- **os-modal-template**: Template de modal com conteúdo e ações
+- **os-modal-template**: Template de modal com conteúdo e ações ⏰ **EM ANDAMENTO**
 - **os-drawer-template**: Template de drawer com conteúdo e ações
 - **os-panel-template**: Template de panel com conteúdo e ações
 
