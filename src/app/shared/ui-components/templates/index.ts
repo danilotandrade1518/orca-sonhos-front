@@ -14,3 +14,10 @@ export type {
   ListTemplateFilter,
   ListTemplateAction,
 } from './os-list-template/os-list-template.component';
+
+export { OsDetailTemplateComponent } from './os-detail-template/os-detail-template.component';
+export type {
+  DetailTemplateAction,
+  DetailTemplateField,
+  DetailTemplateSection,
+} from './os-detail-template/os-detail-template.component';
