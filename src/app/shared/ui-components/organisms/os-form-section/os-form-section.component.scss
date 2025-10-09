@@ -1,0 +1,152 @@
+@use '../../theme/variables' as *;
+
+.os-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  background: $color-background-primary;
+  border: 1px solid $color-border;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0;
+    line-height: $line-height-tight;
+  }
+
+  &__description {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin: 0;
+    line-height: $line-height-relaxed;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+    padding-top: $spacing-sm;
+    border-top: 1px solid $color-border;
+  }
+
+  // Variants
+  &--card {
+    background: $color-background-primary;
+    border: 1px solid $color-border;
+    box-shadow: $shadow-sm;
+  }
+
+  &--outlined {
+    background: transparent;
+    border: 2px solid $color-border;
+    box-shadow: none;
+  }
+
+  &--minimal {
+    background: transparent;
+    border: none;
+    padding: $spacing-md;
+    box-shadow: none;
+  }
+
+  // Sizes
+  &--small {
+    padding: $spacing-md;
+    gap: $spacing-sm;
+
+    .os-form-section__title {
+      font-size: $font-size-lg;
+    }
+
+    .os-form-section__description {
+      font-size: $font-size-sm;
+    }
+  }
+
+  &--large {
+    padding: $spacing-xl;
+    gap: $spacing-lg;
+
+    .os-form-section__title {
+      font-size: $font-size-2xl;
+    }
+
+    .os-form-section__description {
+      font-size: $font-size-lg;
+    }
+  }
+
+  // Collapsible
+  &--collapsible {
+    .os-form-section__content {
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    &.os-form-section--collapsed {
+      .os-form-section__content {
+        max-height: 0;
+        opacity: 0;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  // Dark theme
+  &--dark {
+    background: $color-background-secondary;
+    border-color: $color-border;
+    color: $color-text-primary;
+
+    .os-form-section__title {
+      color: $color-text-primary;
+    }
+
+    .os-form-section__description {
+      color: $color-text-secondary;
+    }
+
+    .os-form-section__actions {
+      border-top-color: $color-border;
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: $spacing-md;
+    gap: $spacing-sm;
+
+    &__actions {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: $spacing-sm;
+    gap: $spacing-xs;
+
+    &__title {
+      font-size: $font-size-lg;
+    }
+
+    &__description {
+      font-size: $font-size-sm;
+    }
+  }
+}
