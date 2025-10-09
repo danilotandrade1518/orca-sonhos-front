@@ -1,2 +1,5 @@
-// Organisms - Componentes complexos do Design System
-// Exportações serão adicionadas conforme implementação
+export {
+  OsFooterComponent,
+  type FooterLink,
+  type FooterSection,
+} from './os-footer/os-footer.component';
