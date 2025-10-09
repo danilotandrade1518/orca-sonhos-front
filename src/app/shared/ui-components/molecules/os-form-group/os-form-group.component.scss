@@ -1,0 +1,77 @@
+@import '../../theme/variables';
+
+.os-form-group {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+
+  &__title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xs;
+    padding: 0;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-sm;
+    line-height: $line-height-relaxed;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__helper {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    margin-top: $spacing-xs;
+  }
+
+  // Variants
+  &--compact {
+    .os-form-group__content {
+      gap: $spacing-xs;
+    }
+  }
+
+  &--spaced {
+    .os-form-group__content {
+      gap: $spacing-md;
+    }
+  }
+
+  // Sizes
+  &--small {
+    .os-form-group__title {
+      font-size: $font-size-sm;
+    }
+
+    .os-form-group__description {
+      font-size: $font-size-xs;
+    }
+  }
+
+  &--large {
+    .os-form-group__title {
+      font-size: $font-size-lg;
+    }
+
+    .os-form-group__description {
+      font-size: $font-size-md;
+    }
+  }
+
+  // Required indicator
+  &--required {
+    .os-form-group__title::after {
+      content: ' *';
+      color: $color-error;
+    }
+  }
+}

@@ -1,0 +1,206 @@
+@use '../../theme/_variables.scss' as *;
+
+.os-tooltip {
+  display: inline-block;
+  position: relative;
+
+  &--small {
+    font-size: var(--os-font-size-sm);
+  }
+
+  &--medium {
+    font-size: var(--os-font-size-base);
+  }
+
+  &--large {
+    font-size: var(--os-font-size-lg);
+  }
+
+  &--default {
+    color: var(--os-color-on-surface);
+  }
+
+  &--primary {
+    color: var(--os-color-primary-600);
+  }
+
+  &--secondary {
+    color: var(--os-color-secondary-600);
+  }
+
+  &--accent {
+    color: var(--os-color-accent-600);
+  }
+
+  &--error {
+    color: var(--os-color-error);
+  }
+
+  &--warning {
+    color: var(--os-color-warning);
+  }
+
+  &--info {
+    color: var(--os-color-info);
+  }
+
+  &--success {
+    color: var(--os-color-success);
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &__content {
+    max-width: 200px;
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
+    border-radius: var(--os-border-radius-sm);
+    font-weight: var(--os-font-weight-normal);
+    line-height: var(--os-line-height-base);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    box-shadow: var(--os-shadow-md);
+    z-index: 1000;
+
+    &--small {
+      font-size: var(--os-font-size-xs);
+      padding: var(--os-spacing-xs) var(--os-spacing-sm);
+      max-width: 150px;
+    }
+
+    &--medium {
+      font-size: var(--os-font-size-sm);
+      padding: var(--os-spacing-sm) var(--os-spacing-md);
+      max-width: 200px;
+    }
+
+    &--large {
+      font-size: var(--os-font-size-base);
+      padding: var(--os-spacing-md) var(--os-spacing-lg);
+      max-width: 250px;
+    }
+
+    &--default {
+      background-color: var(--os-color-surface-container-highest);
+      color: var(--os-color-on-surface-container-highest);
+    }
+
+    &--primary {
+      background-color: var(--os-color-primary-600);
+      color: var(--os-color-on-primary);
+    }
+
+    &--secondary {
+      background-color: var(--os-color-secondary-600);
+      color: var(--os-color-on-secondary);
+    }
+
+    &--accent {
+      background-color: var(--os-color-accent-600);
+      color: var(--os-color-on-accent);
+    }
+
+    &--error {
+      background-color: var(--os-color-error);
+      color: var(--os-color-on-error);
+    }
+
+    &--warning {
+      background-color: var(--os-color-warning);
+      color: var(--os-color-on-warning);
+    }
+
+    &--info {
+      background-color: var(--os-color-info);
+      color: var(--os-color-on-info);
+    }
+
+    &--success {
+      background-color: var(--os-color-success);
+      color: var(--os-color-on-success);
+    }
+  }
+}
+
+.os-tooltip--primary {
+  .os-tooltip__content {
+    background-color: var(--os-color-primary-600);
+    color: var(--os-color-on-primary);
+  }
+}
+
+.os-tooltip--secondary {
+  .os-tooltip__content {
+    background-color: var(--os-color-secondary-600);
+    color: var(--os-color-on-secondary);
+  }
+}
+
+.os-tooltip--accent {
+  .os-tooltip__content {
+    background-color: var(--os-color-accent-600);
+    color: var(--os-color-on-accent);
+  }
+}
+
+.os-tooltip--error {
+  .os-tooltip__content {
+    background-color: var(--os-color-error);
+    color: var(--os-color-on-error);
+  }
+}
+
+.os-tooltip--warning {
+  .os-tooltip__content {
+    background-color: var(--os-color-warning);
+    color: var(--os-color-on-warning);
+  }
+}
+
+.os-tooltip--info {
+  .os-tooltip__content {
+    background-color: var(--os-color-info);
+    color: var(--os-color-on-info);
+  }
+}
+
+.os-tooltip--success {
+  .os-tooltip__content {
+    background-color: var(--os-color-success);
+    color: var(--os-color-on-success);
+  }
+}
+
+@media (max-width: 768px) {
+  .os-tooltip {
+    &--large {
+      font-size: var(--os-font-size-base);
+    }
+
+    &__content {
+      &--large {
+        font-size: var(--os-font-size-sm);
+        padding: var(--os-spacing-sm) var(--os-spacing-md);
+        max-width: 200px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .os-tooltip {
+    &--large {
+      font-size: var(--os-font-size-sm);
+    }
+
+    &__content {
+      &--large {
+        font-size: var(--os-font-size-xs);
+        padding: var(--os-spacing-xs) var(--os-spacing-sm);
+        max-width: 150px;
+      }
+    }
+  }
+}
