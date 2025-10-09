@@ -1,0 +1,194 @@
+@use '../../theme/variables' as *;
+
+.os-navigation {
+  display: flex;
+  width: 100%;
+
+  // Base styles
+  &__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    // Horizontal orientation
+    &--horizontal {
+      flex-direction: row;
+      align-items: center;
+      gap: $spacing-xs;
+    }
+
+    // Vertical orientation
+    &--vertical {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $spacing-xs;
+    }
+  }
+
+  // Custom content
+  &__custom {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+}
+
+// Variants
+.os-navigation {
+  // Default variant
+  &--default {
+    .os-navigation__list {
+      &--horizontal {
+        gap: $spacing-sm;
+      }
+
+      &--vertical {
+        gap: $spacing-sm;
+      }
+    }
+  }
+
+  // Minimal variant
+  &--minimal {
+    .os-navigation__list {
+      &--horizontal {
+        gap: $spacing-xs;
+      }
+
+      &--vertical {
+        gap: $spacing-xs;
+      }
+    }
+  }
+
+  // Sidebar variant
+  &--sidebar {
+    flex-direction: column;
+
+    .os-navigation__list {
+      &--vertical {
+        gap: $spacing-xs;
+      }
+    }
+  }
+
+  // Tabs variant
+  &--tabs {
+    border-bottom: 1px solid $color-border;
+
+    .os-navigation__list {
+      &--horizontal {
+        gap: 0;
+      }
+    }
+  }
+}
+
+// Sizes
+.os-navigation {
+  // Small size
+  &--small {
+    .os-navigation__list {
+      &--horizontal {
+        gap: $spacing-xs;
+      }
+
+      &--vertical {
+        gap: $spacing-xs;
+      }
+    }
+  }
+
+  // Medium size (default)
+  &--medium {
+    .os-navigation__list {
+      &--horizontal {
+        gap: $spacing-sm;
+      }
+
+      &--vertical {
+        gap: $spacing-sm;
+      }
+    }
+  }
+
+  // Large size
+  &--large {
+    .os-navigation__list {
+      &--horizontal {
+        gap: $spacing-md;
+      }
+
+      &--vertical {
+        gap: $spacing-md;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: $breakpoint-tablet) {
+  .os-navigation {
+    &--horizontal {
+      .os-navigation__list {
+        flex-wrap: wrap;
+        gap: $spacing-xs;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .os-navigation {
+    &--horizontal {
+      .os-navigation__list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: $spacing-xs;
+      }
+    }
+
+    &--tabs {
+      .os-navigation__list {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 0;
+      }
+    }
+  }
+}
+
+// Accessibility
+.os-navigation {
+  // Focus management
+  &:focus-within {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    &--tabs {
+      border-bottom-color: $color-text-primary;
+    }
+  }
+
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .os-navigation {
+    &--tabs {
+      border-bottom-color: $color-border;
+    }
+  }
+}
