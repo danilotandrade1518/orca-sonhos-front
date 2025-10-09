@@ -1,0 +1,251 @@
+.os-drawer-template {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--os-color-background);
+  color: var(--os-color-text);
+  border-radius: var(--os-border-radius);
+  box-shadow: var(--os-shadow-lg);
+  overflow: hidden;
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &--loading {
+    pointer-events: none;
+  }
+
+  &--small {
+    min-width: 300px;
+    max-width: 400px;
+  }
+
+  &--medium {
+    min-width: 400px;
+    max-width: 600px;
+  }
+
+  &--large {
+    min-width: 600px;
+    max-width: 800px;
+  }
+
+  &--left {
+    border-radius: 0 var(--os-border-radius) var(--os-border-radius) 0;
+  }
+
+  &--right {
+    border-radius: var(--os-border-radius) 0 0 var(--os-border-radius);
+  }
+
+  &--top {
+    border-radius: 0 0 var(--os-border-radius) var(--os-border-radius);
+  }
+
+  &--bottom {
+    border-radius: var(--os-border-radius) var(--os-border-radius) 0 0;
+  }
+
+  &--compact {
+    min-width: 250px;
+    max-width: 350px;
+  }
+
+  &--detailed {
+    min-width: 500px;
+    max-width: 700px;
+  }
+
+  &--light {
+    background: var(--os-color-background);
+    color: var(--os-color-text);
+  }
+
+  &--dark {
+    background: var(--os-color-background-dark);
+    color: var(--os-color-text-light);
+  }
+}
+
+.os-drawer-template__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--os-spacing-md);
+  background: var(--os-color-background-secondary);
+  border-bottom: 1px solid var(--os-color-border);
+
+  &--small {
+    padding: var(--os-spacing-sm);
+  }
+
+  &--medium {
+    padding: var(--os-spacing-md);
+  }
+
+  &--large {
+    padding: var(--os-spacing-lg);
+  }
+
+  &--compact {
+    padding: var(--os-spacing-sm);
+  }
+
+  &--detailed {
+    padding: var(--os-spacing-lg);
+  }
+}
+
+.os-drawer-template__header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.os-drawer-template__title {
+  margin: 0;
+  font-size: var(--os-font-size-lg);
+  font-weight: 600;
+  color: var(--os-color-text);
+  line-height: 1.2;
+}
+
+.os-drawer-template__subtitle {
+  margin: var(--os-spacing-xs) 0 0 0;
+  font-size: var(--os-font-size-sm);
+  color: var(--os-color-text-secondary);
+  line-height: 1.4;
+}
+
+.os-drawer-template__content {
+  flex: 1;
+  padding: var(--os-spacing-md);
+  overflow-y: auto;
+  background: var(--os-color-background);
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &--loading {
+    pointer-events: none;
+  }
+
+  &--small {
+    padding: var(--os-spacing-sm);
+  }
+
+  &--medium {
+    padding: var(--os-spacing-md);
+  }
+
+  &--large {
+    padding: var(--os-spacing-lg);
+  }
+
+  &--compact {
+    padding: var(--os-spacing-sm);
+  }
+
+  &--detailed {
+    padding: var(--os-spacing-lg);
+  }
+}
+
+.os-drawer-template__actions {
+  display: flex;
+  gap: var(--os-spacing-sm);
+  justify-content: flex-end;
+  align-items: center;
+  padding: var(--os-spacing-md);
+  background: var(--os-color-background-secondary);
+  border-top: 1px solid var(--os-color-border);
+
+  &--small {
+    padding: var(--os-spacing-sm);
+    gap: var(--os-spacing-xs);
+  }
+
+  &--medium {
+    padding: var(--os-spacing-md);
+    gap: var(--os-spacing-sm);
+  }
+
+  &--large {
+    padding: var(--os-spacing-lg);
+    gap: var(--os-spacing-md);
+  }
+
+  &--compact {
+    padding: var(--os-spacing-sm);
+    gap: var(--os-spacing-xs);
+  }
+
+  &--detailed {
+    padding: var(--os-spacing-lg);
+    gap: var(--os-spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .os-drawer-template {
+    &--small,
+    &--medium,
+    &--large {
+      min-width: 100%;
+      max-width: 100%;
+      height: 100vh;
+    }
+  }
+
+  .os-drawer-template__actions {
+    flex-direction: column;
+    gap: var(--os-spacing-sm);
+
+    &--small {
+      gap: var(--os-spacing-xs);
+    }
+
+    &--medium {
+      gap: var(--os-spacing-sm);
+    }
+
+    &--large {
+      gap: var(--os-spacing-md);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .os-drawer-template__header {
+    padding: var(--os-spacing-sm);
+
+    &--small,
+    &--medium,
+    &--large {
+      padding: var(--os-spacing-sm);
+    }
+  }
+
+  .os-drawer-template__content {
+    padding: var(--os-spacing-sm);
+
+    &--small,
+    &--medium,
+    &--large {
+      padding: var(--os-spacing-sm);
+    }
+  }
+
+  .os-drawer-template__actions {
+    padding: var(--os-spacing-sm);
+
+    &--small,
+    &--medium,
+    &--large {
+      padding: var(--os-spacing-sm);
+    }
+  }
+}
