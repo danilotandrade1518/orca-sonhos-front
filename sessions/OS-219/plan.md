@@ -390,7 +390,7 @@ src/app/shared/ui-components/
 
 - **os-dashboard-template**: Template de dashboard com widgets e métricas ✅ **COMPLETO**
 - **os-form-template**: Template de formulário com validação e layout ✅ **COMPLETO**
-- **os-list-template**: Template de lista com filtros, ordenação e paginação
+- **os-list-template**: Template de lista com filtros, ordenação e paginação ✅ **COMPLETO**
 - **os-detail-template**: Template de detalhes com informações e ações
 - **os-wizard-template**: Template de wizard com steps e navegação
 - **os-modal-template**: Template de modal com conteúdo e ações

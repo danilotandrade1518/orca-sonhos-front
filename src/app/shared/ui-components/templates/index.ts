@@ -4,3 +4,13 @@ export type {
   DashboardWidget,
   DashboardLayout,
 } from './os-dashboard-template/os-dashboard-template.component';
+
+export { OsFormTemplateComponent } from './os-form-template/os-form-template.component';
+export type { FormTemplateConfig } from './os-form-template/os-form-template.component';
+
+export { OsListTemplateComponent } from './os-list-template/os-list-template.component';
+export type {
+  ListTemplateData,
+  ListTemplateFilter,
+  ListTemplateAction,
+} from './os-list-template/os-list-template.component';
