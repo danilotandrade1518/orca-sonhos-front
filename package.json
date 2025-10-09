@@ -11,6 +11,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
+    "test:coverage": "ng test --code-coverage --watch=false",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix"
   },
@@ -45,6 +46,7 @@
     "@angular/compiler-cli": "^20.2.0",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
+    "@vitest/coverage-v8": "^3.2.4",
     "angular-eslint": "20.3.0",
     "eslint": "^9.35.0",
     "eslint-plugin-boundaries": "^5.0.2",
