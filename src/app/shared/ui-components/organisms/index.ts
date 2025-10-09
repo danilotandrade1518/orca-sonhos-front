@@ -25,3 +25,8 @@ export {
   type GoalProgressSize,
   type GoalProgressTheme,
 } from './os-goal-progress/os-goal-progress.component';
+
+export {
+  OsBudgetSummaryComponent,
+  type BudgetSummaryData,
+} from './os-budget-summary/os-budget-summary.component';
