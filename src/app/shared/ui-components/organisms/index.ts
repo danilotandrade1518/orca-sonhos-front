@@ -39,6 +39,13 @@ export {
 } from './os-budget-summary/os-budget-summary.component';
 
 export {
+  OsBudgetTrackerComponent,
+  type BudgetTrackerData,
+  type MonthlySpending,
+  type BudgetTrends,
+} from './os-budget-tracker/os-budget-tracker.component';
+
+export {
   OsModalComponent,
   type OsModalVariant,
   type OsModalSize,
@@ -52,6 +59,23 @@ export {
   type SidebarSize,
   type SidebarTheme,
 } from './os-sidebar/os-sidebar.component';
+
+export {
+  OsCategoryManagerComponent,
+  type Category,
+  type CategoryFormData,
+} from './os-category-manager/os-category-manager.component';
+
+export {
+  OsTransactionListComponent,
+  type Transaction,
+  type TransactionListFilter,
+  type TransactionListSort,
+  type TransactionListPagination,
+  type TransactionListVariant,
+  type TransactionListSize,
+  type TransactionListTheme,
+} from './os-transaction-list/os-transaction-list.component';
 
 // Temporarily commented out due to compilation errors
 // export {
