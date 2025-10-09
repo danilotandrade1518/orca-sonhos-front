@@ -17,3 +17,11 @@ export {
   type OsFormSectionTheme,
   type FormSectionField,
 } from './os-form-section/os-form-section.component';
+
+export {
+  OsGoalProgressComponent,
+  type GoalProgressData,
+  type GoalProgressVariant,
+  type GoalProgressSize,
+  type GoalProgressTheme,
+} from './os-goal-progress/os-goal-progress.component';
