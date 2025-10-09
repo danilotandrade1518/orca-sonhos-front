@@ -62,7 +62,7 @@ describe('OsSidebarComponent', () => {
 
     fixture = TestBed.createComponent(OsSidebarComponent);
     component = fixture.componentInstance;
-    component.items.set(mockItems);
+    fixture.componentRef.setInput('items', mockItems);
     fixture.detectChanges();
   });
 
@@ -85,18 +85,18 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should accept custom inputs', () => {
-      component.variant.set('minimal');
-      component.size.set('large');
-      component.theme.set('dark');
-      component.collapsed.set(true);
-      component.title.set('My App');
-      component.logo.set('/assets/logo.png');
-      component.ariaLabel.set('Custom navigation');
-      component.logoAlt.set('Custom logo');
-      component.showHeader.set(false);
-      component.showFooter.set(true);
-      component.showToggleButton.set(false);
-      component.showCustomContent.set(true);
+      fixture.componentRef.setInput('variant', 'minimal');
+      fixture.componentRef.setInput('size', 'large');
+      fixture.componentRef.setInput('theme', 'dark');
+      fixture.componentRef.setInput('collapsed', true);
+      fixture.componentRef.setInput('title', 'My App');
+      fixture.componentRef.setInput('logo', '/assets/logo.png');
+      fixture.componentRef.setInput('ariaLabel', 'Custom navigation');
+      fixture.componentRef.setInput('logoAlt', 'Custom logo');
+      fixture.componentRef.setInput('showHeader', false);
+      fixture.componentRef.setInput('showFooter', true);
+      fixture.componentRef.setInput('showToggleButton', false);
+      fixture.componentRef.setInput('showCustomContent', true);
 
       expect(component.variant()).toBe('minimal');
       expect(component.size()).toBe('large');
@@ -126,7 +126,7 @@ describe('OsSidebarComponent', () => {
       const variants: SidebarVariant[] = ['default', 'minimal', 'compact', 'expanded'];
 
       variants.forEach((variant) => {
-        component.variant.set(variant);
+        fixture.componentRef.setInput('variant', variant);
         const classes = component.sidebarClasses();
         expect(classes).toContain(`os-sidebar--${variant}`);
       });
@@ -136,7 +136,7 @@ describe('OsSidebarComponent', () => {
       const sizes: SidebarSize[] = ['small', 'medium', 'large'];
 
       sizes.forEach((size) => {
-        component.size.set(size);
+        fixture.componentRef.setInput('size', size);
         const classes = component.sidebarClasses();
         expect(classes).toContain(`os-sidebar--${size}`);
       });
@@ -146,20 +146,20 @@ describe('OsSidebarComponent', () => {
       const themes: SidebarTheme[] = ['light', 'dark'];
 
       themes.forEach((theme) => {
-        component.theme.set(theme);
+        fixture.componentRef.setInput('theme', theme);
         const classes = component.sidebarClasses();
         expect(classes).toContain(`os-sidebar--${theme}`);
       });
     });
 
     it('should apply collapsed class when collapsed', () => {
-      component.collapsed.set(true);
+      fixture.componentRef.setInput('collapsed', true);
       const classes = component.sidebarClasses();
       expect(classes).toContain('os-sidebar--collapsed');
     });
 
     it('should not apply collapsed class when expanded', () => {
-      component.collapsed.set(false);
+      fixture.componentRef.setInput('collapsed', false);
       const classes = component.sidebarClasses();
       expect(classes).not.toContain('os-sidebar--collapsed');
     });
@@ -175,7 +175,7 @@ describe('OsSidebarComponent', () => {
       };
 
       Object.entries(variantMap).forEach(([sidebarVariant, expectedItemVariant]) => {
-        component.variant.set(sidebarVariant as SidebarVariant);
+        fixture.componentRef.setInput('variant', sidebarVariant as SidebarVariant);
         expect(component.itemVariant()).toBe(expectedItemVariant);
       });
     });
@@ -189,7 +189,7 @@ describe('OsSidebarComponent', () => {
       };
 
       Object.entries(variantMap).forEach(([sidebarVariant, expectedItemVariant]) => {
-        component.variant.set(sidebarVariant as SidebarVariant);
+        fixture.componentRef.setInput('variant', sidebarVariant as SidebarVariant);
         expect(component.subItemVariant()).toBe(expectedItemVariant);
       });
     });
@@ -202,7 +202,7 @@ describe('OsSidebarComponent', () => {
       };
 
       Object.entries(sizeMap).forEach(([sidebarSize, expectedItemSize]) => {
-        component.size.set(sidebarSize as SidebarSize);
+        fixture.componentRef.setInput('size', sidebarSize as SidebarSize);
         expect(component.itemSize()).toBe(expectedItemSize);
       });
     });
@@ -215,7 +215,7 @@ describe('OsSidebarComponent', () => {
       };
 
       Object.entries(sizeMap).forEach(([sidebarSize, expectedItemSize]) => {
-        component.size.set(sidebarSize as SidebarSize);
+        fixture.componentRef.setInput('size', sidebarSize as SidebarSize);
         expect(component.subItemSize()).toBe(expectedItemSize);
       });
     });
@@ -223,7 +223,7 @@ describe('OsSidebarComponent', () => {
 
   describe('Active Item Detection', () => {
     it('should detect active item by id', () => {
-      component.activeItemId.set('budgets');
+      fixture.componentRef.setInput('activeItemId', 'budgets');
 
       const budgetsItem = mockItems.find((item) => item.id === 'budgets');
       const dashboardItem = mockItems.find((item) => item.id === 'dashboard');
@@ -233,7 +233,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should return false when no active item is set', () => {
-      component.activeItemId.set(null);
+      fixture.componentRef.setInput('activeItemId', null);
 
       const budgetsItem = mockItems.find((item) => item.id === 'budgets');
       expect(component.isActiveItem(budgetsItem!)).toBe(false);
@@ -297,16 +297,6 @@ describe('OsSidebarComponent', () => {
   });
 
   describe('Collapse Functionality', () => {
-    it('should toggle collapse state', () => {
-      expect(component.isCollapsed()).toBe(false);
-
-      component.toggleCollapse();
-      expect(component.isCollapsed()).toBe(true);
-
-      component.toggleCollapse();
-      expect(component.isCollapsed()).toBe(false);
-    });
-
     it('should emit collapseChange event when toggling', () => {
       let emittedValues: boolean[] = [];
       component.collapseChange.subscribe((value) => emittedValues.push(value));
@@ -315,7 +305,15 @@ describe('OsSidebarComponent', () => {
       expect(emittedValues[0]).toBe(true);
 
       component.toggleCollapse();
-      expect(emittedValues[1]).toBe(false);
+      expect(emittedValues[1]).toBe(true);
+    });
+
+    it('should reflect collapsed state from input', () => {
+      fixture.componentRef.setInput('collapsed', true);
+      expect(component.isCollapsed()).toBe(true);
+
+      fixture.componentRef.setInput('collapsed', false);
+      expect(component.isCollapsed()).toBe(false);
     });
   });
 
@@ -337,8 +335,8 @@ describe('OsSidebarComponent', () => {
 
   describe('Template Rendering', () => {
     it('should render header when showHeader is true', () => {
-      component.showHeader.set(true);
-      component.title.set('Test App');
+      fixture.componentRef.setInput('showHeader', true);
+      fixture.componentRef.setInput('title', 'Test App');
       fixture.detectChanges();
 
       const header = fixture.nativeElement.querySelector('.os-sidebar__header');
@@ -346,7 +344,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should not render header when showHeader is false', () => {
-      component.showHeader.set(false);
+      fixture.componentRef.setInput('showHeader', false);
       fixture.detectChanges();
 
       const header = fixture.nativeElement.querySelector('.os-sidebar__header');
@@ -354,7 +352,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should render title when provided', () => {
-      component.title.set('My Application');
+      fixture.componentRef.setInput('title', 'My Application');
       fixture.detectChanges();
 
       const title = fixture.nativeElement.querySelector('.os-sidebar__title');
@@ -363,7 +361,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should render logo when provided', () => {
-      component.logo.set('/assets/logo.png');
+      fixture.componentRef.setInput('logo', '/assets/logo.png');
       fixture.detectChanges();
 
       const logo = fixture.nativeElement.querySelector('.os-sidebar__logo-image');
@@ -372,7 +370,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should render toggle button when showToggleButton is true', () => {
-      component.showToggleButton.set(true);
+      fixture.componentRef.setInput('showToggleButton', true);
       fixture.detectChanges();
 
       const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
@@ -380,7 +378,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should not render toggle button when showToggleButton is false', () => {
-      component.showToggleButton.set(false);
+      fixture.componentRef.setInput('showToggleButton', false);
       fixture.detectChanges();
 
       const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
@@ -388,7 +386,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should render footer when showFooter is true', () => {
-      component.showFooter.set(true);
+      fixture.componentRef.setInput('showFooter', true);
       fixture.detectChanges();
 
       const footer = fixture.nativeElement.querySelector('.os-sidebar__footer');
@@ -396,7 +394,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should not render footer when showFooter is false', () => {
-      component.showFooter.set(false);
+      fixture.componentRef.setInput('showFooter', false);
       fixture.detectChanges();
 
       const footer = fixture.nativeElement.querySelector('.os-sidebar__footer');
@@ -404,7 +402,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should render custom content when showCustomContent is true', () => {
-      component.showCustomContent.set(true);
+      fixture.componentRef.setInput('showCustomContent', true);
       fixture.detectChanges();
 
       const customContent = fixture.nativeElement.querySelector('.os-sidebar__custom');
@@ -412,7 +410,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should not render custom content when showCustomContent is false', () => {
-      component.showCustomContent.set(false);
+      fixture.componentRef.setInput('showCustomContent', false);
       fixture.detectChanges();
 
       const customContent = fixture.nativeElement.querySelector('.os-sidebar__custom');
@@ -443,7 +441,7 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should have proper toggle button ARIA attributes', () => {
-      component.showToggleButton.set(true);
+      fixture.componentRef.setInput('showToggleButton', true);
       fixture.detectChanges();
 
       const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
@@ -452,8 +450,8 @@ describe('OsSidebarComponent', () => {
     });
 
     it('should update toggle button ARIA attributes when collapsed', () => {
-      component.showToggleButton.set(true);
-      component.collapsed.set(true);
+      fixture.componentRef.setInput('showToggleButton', true);
+      fixture.componentRef.setInput('collapsed', true);
       fixture.detectChanges();
 
       const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
@@ -465,8 +463,8 @@ describe('OsSidebarComponent', () => {
   describe('Responsive Behavior', () => {
     it('should handle different screen sizes', () => {
       // Test that component doesn't break with different configurations
-      component.size.set('small');
-      component.variant.set('compact');
+      fixture.componentRef.setInput('size', 'small');
+      fixture.componentRef.setInput('variant', 'compact');
       fixture.detectChanges();
 
       expect(component).toBeTruthy();

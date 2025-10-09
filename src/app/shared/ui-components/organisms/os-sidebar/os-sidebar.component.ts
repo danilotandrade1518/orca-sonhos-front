@@ -1,21 +1,13 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  signal,
-  computed,
-  ChangeDetectionStrategy,
-  HostBinding,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import {
   OsNavigationItemComponent,
-  OsNavigationItemVariant,
   OsNavigationItemSize,
+  OsNavigationItemVariant,
 } from '../../molecules/os-navigation-item/os-navigation-item.component';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export interface SidebarItem {
   id: string;
@@ -128,25 +120,25 @@ export type SidebarTheme = 'light' | 'dark';
 })
 export class OsSidebarComponent {
   // Inputs
-  @Input({ required: true }) items = signal<SidebarItem[]>([]);
-  @Input() variant = signal<SidebarVariant>('default');
-  @Input() size = signal<SidebarSize>('medium');
-  @Input() theme = signal<SidebarTheme>('light');
-  @Input() collapsed = signal(false);
-  @Input() activeItemId = signal<string | null>(null);
-  @Input() ariaLabel = signal('Navegação lateral');
-  @Input() title = signal<string | null>(null);
-  @Input() logo = signal<string | null>(null);
-  @Input() logoAlt = signal('Logo');
-  @Input() showHeader = signal(true);
-  @Input() showFooter = signal(false);
-  @Input() showToggleButton = signal(true);
-  @Input() showCustomContent = signal(false);
+  readonly items = input.required<SidebarItem[]>();
+  readonly variant = input<SidebarVariant>('default');
+  readonly size = input<SidebarSize>('medium');
+  readonly theme = input<SidebarTheme>('light');
+  readonly collapsed = input<boolean>(false);
+  readonly activeItemId = input<string | null>(null);
+  readonly ariaLabel = input<string>('Navegação lateral');
+  readonly title = input<string | null>(null);
+  readonly logo = input<string | null>(null);
+  readonly logoAlt = input<string>('Logo');
+  readonly showHeader = input<boolean>(true);
+  readonly showFooter = input<boolean>(false);
+  readonly showToggleButton = input<boolean>(true);
+  readonly showCustomContent = input<boolean>(false);
 
   // Outputs
-  @Output() itemClick = new EventEmitter<SidebarItem>();
-  @Output() navigate = new EventEmitter<{ item: SidebarItem; route?: string; href?: string }>();
-  @Output() collapseChange = new EventEmitter<boolean>();
+  readonly itemClick = output<SidebarItem>();
+  readonly navigate = output<{ item: SidebarItem; route?: string; href?: string }>();
+  readonly collapseChange = output<boolean>();
 
   // Computed properties
   sidebarClasses = computed(() => {
@@ -218,7 +210,6 @@ export class OsSidebarComponent {
 
   toggleCollapse(): void {
     const newCollapsed = !this.isCollapsed();
-    this.collapsed.set(newCollapsed);
     this.collapseChange.emit(newCollapsed);
   }
 
