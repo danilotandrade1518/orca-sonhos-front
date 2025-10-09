@@ -1,12 +1,15 @@
-import { Component, input, output, ChangeDetectionStrategy, forwardRef } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  ChangeDetectionStrategy,
+  forwardRef,
+  model,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { OsDateInputComponent } from '../../atoms/os-date-input/os-date-input.component';
 
 export type OsDatePickerSize = 'small' | 'medium' | 'large';
 export type OsDatePickerVariant = 'default' | 'outlined' | 'filled';
@@ -14,52 +17,24 @@ export type OsDatePickerVariant = 'default' | 'outlined' | 'filled';
 @Component({
   selector: 'os-date-picker',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [CommonModule, FormsModule, OsDateInputComponent],
   template: `
     <div class="os-date-picker" [class]="datePickerClasses()">
-      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
-        <mat-label>{{ label() }}</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          [value]="value()"
-          [placeholder]="placeholder()"
-          [disabled]="disabled()"
-          [required]="required()"
-          [min]="minDate()"
-          [max]="maxDate()"
-          (dateChange)="onDateChange($event)"
-          (blur)="onBlur($event)"
-          (focus)="onFocus($event)"
-          [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disabled()">
-          <mat-icon matDatepickerToggleIcon>{{ calendarIcon() }}</mat-icon>
-        </mat-datepicker-toggle>
-        @if (helperText()) {
-        <mat-hint>{{ helperText() }}</mat-hint>
-        }
-      </mat-form-field>
-
-      <mat-datepicker
-        #picker
-        [startAt]="startAt()"
-        [touchUi]="touchUi()"
-        [opened]="opened()"
+      <os-date-input
+        [value]="value()"
+        [label]="label()"
+        [placeholder]="placeholder()"
         [disabled]="disabled()"
-        [dateClass]="dateClass"
-        (openedChange)="handleOpenedChange($event)"
-        (monthSelected)="onMonthSelected($event)"
-        (yearSelected)="onYearSelected($event)"
-      ></mat-datepicker>
+        [required]="required()"
+        [minDate]="minDate()?.toISOString() || ''"
+        [maxDate]="maxDate()?.toISOString() || ''"
+        [size]="getInputSize()"
+        [helperText]="helperText()"
+        [prefixIcon]="calendarIcon()"
+        (valueChange)="onValueChange($event)"
+        (blurEvent)="onBlur($event)"
+        (focusEvent)="onFocus($event)"
+      />
     </div>
   `,
   styleUrl: './os-date-picker.component.scss',
@@ -76,13 +51,14 @@ export type OsDatePickerVariant = 'default' | 'outlined' | 'filled';
   },
 })
 export class OsDatePickerComponent implements ControlValueAccessor {
-  value = input<Date | null>(null);
+  value = model<Date | null>(null);
+  disabled = model<boolean>(false);
+
   label = input<string>('');
   placeholder = input<string>('Selecionar data');
   helperText = input<string>('');
   size = input<OsDatePickerSize>('medium');
   variant = input<OsDatePickerVariant>('default');
-  disabled = input<boolean>(false);
   required = input<boolean>(false);
   minDate = input<Date | null>(null);
   maxDate = input<Date | null>(null);
@@ -96,21 +72,24 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   openedChange = output<boolean>();
   monthSelected = output<Date>();
   yearSelected = output<Date>();
-  focus = output<FocusEvent>();
-  blur = output<FocusEvent>();
+  focusEvent = output<FocusEvent>();
+  blurEvent = output<FocusEvent>();
 
-  protected inputId = `os-date-picker-${Math.random().toString(36).substr(2, 9)}`;
+  private _onChange = (value: Date | null) => {
+    console.debug('onChange called with:', value);
+  };
+  private _onTouched = () => {
+    console.debug('onTouched called');
+  };
 
-  private _onChange = (value: Date | null) => {};
-  private _onTouched = () => {};
-
-  protected appearance = () => {
-    const variantMap: Record<OsDatePickerVariant, 'outline' | 'fill'> = {
-      default: 'outline',
-      outlined: 'outline',
-      filled: 'fill',
+  // Mapeamento interno para Atoms
+  protected getInputSize = () => {
+    const sizeMap: Record<OsDatePickerSize, 'small' | 'medium' | 'large'> = {
+      small: 'small',
+      medium: 'medium',
+      large: 'large',
     };
-    return variantMap[this.variant()];
+    return sizeMap[this.size()];
   };
 
   datePickerClasses = () => {
@@ -131,65 +110,26 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     return classes.join(' ');
   };
 
-  formFieldClass = () => {
-    const classes = ['os-date-picker__field'];
-
-    if (this.size() !== 'medium') {
-      classes.push(`os-date-picker__field--${this.size()}`);
-    }
-
-    return classes.join(' ');
-  };
-
-  dateClass = (date: Date): string => {
-    const classes = ['os-date-picker__date'];
-
-    if (this.minDate() && date < this.minDate()!) {
-      classes.push('os-date-picker__date--disabled');
-    }
-
-    if (this.maxDate() && date > this.maxDate()!) {
-      classes.push('os-date-picker__date--disabled');
-    }
-
-    return classes.join(' ');
-  };
-
-  onDateChange(event: any): void {
-    const date = event.value;
-    this.valueChange.emit(date);
-    this.dateChange.emit(date);
-    this._onChange(date);
-  }
-
-  handleOpenedChange(event: any): void {
-    this.onOpenedChange(event);
-  }
-
-  onOpenedChange(opened: boolean): void {
-    this.openedChange.emit(opened);
-  }
-
-  onMonthSelected(date: Date): void {
-    this.monthSelected.emit(date);
-  }
-
-  onYearSelected(date: Date): void {
-    this.yearSelected.emit(date);
-  }
-
-  onFocus(event: FocusEvent): void {
-    this.focus.emit(event);
+  onValueChange(value: Date | null): void {
+    this.value.set(value);
+    this.valueChange.emit(value);
+    this.dateChange.emit(value);
+    this._onChange(value);
   }
 
   onBlur(event: FocusEvent): void {
+    this.blurEvent.emit(event);
     this._onTouched();
-    this.blur.emit(event);
   }
 
-  // ControlValueAccessor implementation
+  onFocus(event: FocusEvent): void {
+    this.focusEvent.emit(event);
+  }
+
   writeValue(value: Date | null): void {
-    // Value is handled by input signal
+    if (value !== this.value()) {
+      this.value.set(value);
+    }
   }
 
   registerOnChange(fn: (value: Date | null) => void): void {
@@ -201,6 +141,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Disabled state is handled by input signal
+    this.disabled.set(isDisabled);
   }
 }

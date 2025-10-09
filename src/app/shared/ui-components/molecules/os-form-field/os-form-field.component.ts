@@ -9,10 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { OsInputComponent } from '../../atoms/os-input/os-input.component';
+import { OsLabelComponent } from '../../atoms/os-label/os-label.component';
 
 export type OsFormFieldSize = 'small' | 'medium' | 'large';
 export type OsFormFieldVariant = 'default' | 'outlined' | 'filled';
@@ -21,64 +19,43 @@ export type OsFormFieldType = 'text' | 'email' | 'password' | 'number' | 'tel' |
 @Component({
   selector: 'os-form-field',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [CommonModule, FormsModule, OsInputComponent, OsLabelComponent],
   template: `
     <div [class]="containerClass()">
-      <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
-        @if (label()) {
-        <mat-label>{{ label() }}</mat-label>
-        } @if (prefixIcon()) {
-        <mat-icon matPrefix [class]="prefixIconClass()">{{ prefixIcon() }}</mat-icon>
-        }
+      @if (label()) {
+      <os-label
+        [for]="fieldId()"
+        [size]="size()"
+        [variant]="labelVariant()"
+        [required]="required()"
+      >
+        {{ label() }}
+      </os-label>
+      }
 
-        <input
-          matInput
-          [id]="inputId"
-          [type]="type()"
-          [placeholder]="placeholder()"
-          [disabled]="disabled()"
-          [readonly]="readonly()"
-          [required]="required()"
-          [value]="value()"
-          [class]="inputClass()"
-          (input)="handleInput($event)"
-          (blur)="handleBlur($event)"
-          (focus)="handleFocus($event)"
-          [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
-          [attr.aria-invalid]="hasError()"
-        />
-
-        @if (suffixIcon()) {
-        <mat-icon matSuffix [class]="suffixIconClass()">{{ suffixIcon() }}</mat-icon>
-        } @if (clearable() && value() && !disabled()) {
-        <button
-          matSuffix
-          mat-icon-button
-          type="button"
-          class="os-form-field__clear"
-          (click)="handleClear()"
-          [attr.aria-label]="'Clear ' + (label() || 'input')"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        } @if (helperText() || hasError()) {
-        <mat-hint [class]="helperClass()">
-          {{ errorMessage() || helperText() }}
-        </mat-hint>
-        }
-      </mat-form-field>
+      <os-input
+        [id]="fieldId()"
+        [type]="type()"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        [readonly]="readonly()"
+        [required]="required()"
+        [value]="value()"
+        [errorMessage]="errorMessage()"
+        [helperText]="helperText()"
+        [size]="size()"
+        [prefixIcon]="prefixIcon()"
+        [suffixIcon]="suffixIcon()"
+        [clearable]="clearable()"
+        (valueChange)="onValueChange($event)"
+        (blurEvent)="onBlur($event)"
+        (focusEvent)="onFocus($event)"
+      />
 
       @if (hintText() && !errorMessage()) {
-      <div [class]="hintClass()" [id]="inputId + '-hint'">
+      <os-label [variant]="'default'" [size]="size()" [id]="fieldId() + '-hint'">
         {{ hintText() }}
-      </div>
+      </os-label>
       }
     </div>
   `,
@@ -114,7 +91,7 @@ export class OsFormFieldComponent implements ControlValueAccessor {
   readonly blurEvent = output<FocusEvent>();
   readonly focusEvent = output<FocusEvent>();
 
-  protected inputId = `os-form-field-${Math.random().toString(36).substr(2, 9)}`;
+  protected fieldId = computed(() => `field-${Math.random().toString(36).substr(2, 9)}`);
 
   private _onChange = (value: string) => {
     console.debug('onChange called with:', value);
@@ -123,10 +100,11 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     console.debug('onTouched called');
   };
 
-  // Mapeamento interno para Material
-  protected appearance = computed((): MatFormFieldAppearance => 'outline');
-
-  protected hasError = computed(() => !!this.errorMessage());
+  // Mapeamento interno para Atoms
+  protected labelVariant = computed(() => {
+    if (this.errorMessage()) return 'error';
+    return 'default';
+  });
 
   readonly containerClass = computed(() => {
     const classes = ['os-form-field'];
@@ -148,76 +126,18 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     return classes.join(' ');
   });
 
-  protected formFieldClass = computed(() => {
-    return [
-      'os-form-field__form-field',
-      `os-form-field__form-field--${this.size()}`,
-      this.hasError() ? 'os-form-field__form-field--error' : '',
-      this.disabled() ? 'os-form-field__form-field--disabled' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  protected inputClass = computed(() => {
-    return ['os-form-field__input', `os-form-field__input--${this.size()}`]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  protected prefixIconClass = computed(() => {
-    return ['os-form-field__prefix-icon', `os-form-field__prefix-icon--${this.size()}`]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  protected suffixIconClass = computed(() => {
-    return ['os-form-field__suffix-icon', `os-form-field__suffix-icon--${this.size()}`]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  protected helperClass = computed(() => {
-    return [
-      'os-form-field__helper',
-      `os-form-field__helper--${this.size()}`,
-      this.hasError() ? 'os-form-field__helper--error' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  readonly hintClass = computed(() => {
-    const classes = ['os-form-field__hint'];
-    classes.push(`os-form-field__hint--${this.size()}`);
-
-    if (this.disabled()) {
-      classes.push('os-form-field__hint--disabled');
-    }
-
-    return classes.join(' ');
-  });
-
-  handleInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
+  onValueChange(value: string): void {
     this.value.set(value);
     this.valueChange.emit(value);
     this._onChange(value);
   }
 
-  handleClear(): void {
-    this.value.set('');
-    this.valueChange.emit('');
-    this._onChange('');
-  }
-
-  handleBlur(event: FocusEvent): void {
+  onBlur(event: FocusEvent): void {
     this.blurEvent.emit(event);
     this._onTouched();
   }
 
-  handleFocus(event: FocusEvent): void {
+  onFocus(event: FocusEvent): void {
     this.focusEvent.emit(event);
   }
 

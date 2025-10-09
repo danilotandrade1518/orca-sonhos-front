@@ -1,4 +1,4 @@
-@import '../../theme/variables';
+@use '../../theme/variables' as *;
 
 .os-search-box {
   position: relative;

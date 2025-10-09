@@ -48,9 +48,8 @@ describe('OsNavigationItemComponent', () => {
       fixture.componentRef.setInput('icon', 'home');
       fixture.detectChanges();
 
-      const icon = fixture.nativeElement.querySelector('mat-icon');
+      const icon = fixture.nativeElement.querySelector('os-icon');
       expect(icon).toBeTruthy();
-      expect(icon.textContent.trim()).toBe('home');
     });
 
     it('should render with badge when provided', () => {

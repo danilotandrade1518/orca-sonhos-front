@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type OsDropdownSize = 'small' | 'medium' | 'large';
 export type OsDropdownVariant = 'default' | 'primary' | 'secondary' | 'accent';
@@ -28,7 +28,7 @@ export interface OsDropdownOption {
 @Component({
   selector: 'os-dropdown',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule],
+  imports: [CommonModule, MatButtonModule, MatMenuModule, MatDividerModule, OsIconComponent],
   template: `
     <div [class]="containerClass()" [attr.data-variant]="variant()" [attr.data-size]="size()">
       <button
@@ -42,15 +42,17 @@ export interface OsDropdownOption {
         (click)="handleTriggerClick($event)"
       >
         @if (icon()) {
-        <mat-icon [class]="iconClass()" [attr.aria-hidden]="true">{{ icon() }}</mat-icon>
+        <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
         }
         <span [class]="textClass()">
           {{ selectedLabel() }}
         </span>
         @if (showChevron()) {
-        <mat-icon [class]="chevronClass()" [attr.aria-hidden]="true">
-          {{ isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
-        </mat-icon>
+        <os-icon
+          [name]="isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+          [size]="getIconSize()"
+          [variant]="getIconVariant()"
+        />
         }
       </button>
 
@@ -77,9 +79,7 @@ export interface OsDropdownOption {
           (click)="handleOptionClick(option, $event)"
         >
           @if (option.icon) {
-          <mat-icon [class]="optionIconClass()" [attr.aria-hidden]="true">{{
-            option.icon
-          }}</mat-icon>
+          <os-icon [name]="option.icon" [size]="getIconSize()" [variant]="getIconVariant()" />
           }
           <span [class]="optionTextClass()">{{ option.label }}</span>
         </button>
@@ -121,6 +121,26 @@ export class OsDropdownComponent {
     return selected ? selected.label : this.placeholder();
   });
 
+  // Mapeamento interno para Atoms
+  protected getIconSize = () => {
+    const sizeMap: Record<OsDropdownSize, 'sm' | 'md' | 'lg'> = {
+      small: 'sm',
+      medium: 'md',
+      large: 'lg',
+    };
+    return sizeMap[this.size()];
+  };
+
+  protected getIconVariant = () => {
+    const variantMap: Record<OsDropdownVariant, 'default' | 'primary' | 'secondary' | 'info'> = {
+      default: 'default',
+      primary: 'primary',
+      secondary: 'secondary',
+      accent: 'info',
+    };
+    return variantMap[this.variant()];
+  };
+
   containerClass = computed(() => {
     const classes = ['os-dropdown'];
 
@@ -153,31 +173,11 @@ export class OsDropdownComponent {
     return classes.join(' ');
   });
 
-  iconClass = computed(() => {
-    const classes = ['os-dropdown__icon'];
-
-    if (this.size() !== 'medium') {
-      classes.push(`os-dropdown__icon--${this.size()}`);
-    }
-
-    return classes.join(' ');
-  });
-
   textClass = computed(() => {
     const classes = ['os-dropdown__text'];
 
     if (this.size() !== 'medium') {
       classes.push(`os-dropdown__text--${this.size()}`);
-    }
-
-    return classes.join(' ');
-  });
-
-  chevronClass = computed(() => {
-    const classes = ['os-dropdown__chevron'];
-
-    if (this.size() !== 'medium') {
-      classes.push(`os-dropdown__chevron--${this.size()}`);
     }
 
     return classes.join(' ');
@@ -220,16 +220,6 @@ export class OsDropdownComponent {
 
     return classes.join(' ');
   };
-
-  optionIconClass = computed(() => {
-    const classes = ['os-dropdown__option-icon'];
-
-    if (this.size() !== 'medium') {
-      classes.push(`os-dropdown__option-icon--${this.size()}`);
-    }
-
-    return classes.join(' ');
-  });
 
   optionTextClass = computed(() => {
     const classes = ['os-dropdown__option-text'];

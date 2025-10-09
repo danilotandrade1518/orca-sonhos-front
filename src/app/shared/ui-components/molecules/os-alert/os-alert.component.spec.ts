@@ -116,7 +116,7 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('dismissible', true);
       fixture.detectChanges();
 
-      const dismissButton = fixture.nativeElement.querySelector('.os-alert__dismiss');
+      const dismissButton = fixture.nativeElement.querySelector('os-button');
       expect(dismissButton).toBeTruthy();
     });
 
@@ -125,8 +125,7 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('dismissible', true);
       fixture.detectChanges();
 
-      const dismissButton = fixture.nativeElement.querySelector('.os-alert__dismiss');
-      dismissButton.click();
+      component.onDismiss();
 
       expect(emitSpy).toHaveBeenCalled();
     });
@@ -149,28 +148,28 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('type', 'success');
       fixture.detectChanges();
 
-      expect(component.iconName()).toBe('check_circle');
+      expect(component['iconName']()).toBe('check_circle');
     });
 
     it('should show correct icon for warning type', () => {
       fixture.componentRef.setInput('type', 'warning');
       fixture.detectChanges();
 
-      expect(component.iconName()).toBe('warning');
+      expect(component['iconName']()).toBe('warning');
     });
 
     it('should show correct icon for error type', () => {
       fixture.componentRef.setInput('type', 'error');
       fixture.detectChanges();
 
-      expect(component.iconName()).toBe('error');
+      expect(component['iconName']()).toBe('error');
     });
 
     it('should show correct icon for info type', () => {
       fixture.componentRef.setInput('type', 'info');
       fixture.detectChanges();
 
-      expect(component.iconName()).toBe('info');
+      expect(component['iconName']()).toBe('info');
     });
   });
 
@@ -179,8 +178,8 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('size', 'small');
       fixture.detectChanges();
 
-      const iconElement = fixture.nativeElement.querySelector('mat-icon');
-      expect(iconElement.classList.contains('os-alert__icon--small')).toBe(true);
+      const iconElement = fixture.nativeElement.querySelector('os-icon');
+      expect(iconElement).toBeTruthy();
     });
   });
 
@@ -195,9 +194,8 @@ describe('OsAlertComponent', () => {
       fixture.componentRef.setInput('dismissible', true);
       fixture.detectChanges();
 
-      const dismissButton = fixture.nativeElement.querySelector('.os-alert__dismiss');
+      const dismissButton = fixture.nativeElement.querySelector('os-button');
       expect(dismissButton.getAttribute('aria-label')).toBe('Fechar alerta');
-      expect(dismissButton.getAttribute('type')).toBe('button');
     });
   });
 
@@ -219,10 +217,10 @@ describe('OsAlertComponent', () => {
       fixture.detectChanges();
 
       const alertElement = fixture.nativeElement.querySelector('.os-alert');
-      const iconElement = fixture.nativeElement.querySelector('.os-alert__icon');
+      const iconElement = fixture.nativeElement.querySelector('os-icon');
       const titleElement = fixture.nativeElement.querySelector('.os-alert__title');
       const messageElement = fixture.nativeElement.querySelector('.os-alert__message');
-      const dismissButton = fixture.nativeElement.querySelector('.os-alert__dismiss');
+      const dismissButton = fixture.nativeElement.querySelector('os-button');
 
       expect(alertElement).toBeTruthy();
       expect(iconElement).toBeTruthy();

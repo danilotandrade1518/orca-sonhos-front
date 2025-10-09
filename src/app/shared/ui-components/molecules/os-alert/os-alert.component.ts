@@ -1,7 +1,7 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export type OsAlertType = 'success' | 'warning' | 'error' | 'info';
 export type OsAlertSize = 'small' | 'medium' | 'large';
@@ -9,7 +9,7 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-alert',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, OsIconComponent, OsButtonComponent],
   template: `
     <div
       class="os-alert"
@@ -21,7 +21,7 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
     >
       @if (showIcon()) {
       <div class="os-alert__icon">
-        <mat-icon [class]="iconClass()">{{ iconName() }}</mat-icon>
+        <os-icon [name]="iconName()" [size]="iconSize()" [variant]="iconVariant()" />
       </div>
       }
 
@@ -35,15 +35,13 @@ export type OsAlertSize = 'small' | 'medium' | 'large';
       </div>
 
       @if (dismissible()) {
-      <button
-        mat-icon-button
-        class="os-alert__dismiss"
-        (click)="onDismiss()"
+      <os-button
+        variant="tertiary"
+        size="small"
+        [icon]="'close'"
+        (buttonClick)="onDismiss()"
         [attr.aria-label]="'Fechar alerta'"
-        type="button"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
+      />
       }
     </div>
   `,
@@ -62,7 +60,8 @@ export class OsAlertComponent {
 
   dismiss = output<void>();
 
-  iconName = () => {
+  // Mapeamento interno para Atoms
+  protected iconName = computed(() => {
     const iconMap: Record<OsAlertType, string> = {
       success: 'check_circle',
       warning: 'warning',
@@ -70,13 +69,29 @@ export class OsAlertComponent {
       info: 'info',
     };
     return iconMap[this.type()];
-  };
+  });
 
-  iconClass = () => {
-    const classes = ['os-alert__icon'];
-    classes.push(`os-alert__icon--${this.size()}`);
-    return classes.join(' ');
-  };
+  protected iconSize = computed(() => {
+    const sizeMap: Record<OsAlertSize, 'sm' | 'md' | 'lg'> = {
+      small: 'sm',
+      medium: 'md',
+      large: 'lg',
+    };
+    return sizeMap[this.size()];
+  });
+
+  protected iconVariant = computed(() => {
+    switch (this.type()) {
+      case 'success':
+        return 'success';
+      case 'warning':
+        return 'warning';
+      case 'error':
+        return 'error';
+      default:
+        return 'info';
+    }
+  });
 
   alertClasses = () => {
     const classes = ['os-alert'];

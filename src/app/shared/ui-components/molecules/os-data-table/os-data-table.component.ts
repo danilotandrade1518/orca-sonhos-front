@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type OsDataTableSize = 'small' | 'medium' | 'large';
 export type OsDataTableVariant = 'default' | 'striped' | 'bordered';
@@ -32,8 +32,8 @@ export interface OsDataTableAction {
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatButtonModule,
-    MatIconModule,
+    OsButtonComponent,
+    OsIconComponent,
   ],
   template: `
     <div class="os-data-table" [class]="dataTableClasses()">
@@ -43,17 +43,15 @@ export interface OsDataTableAction {
         @if (showActions() && actions().length > 0) {
         <div class="os-data-table__actions">
           @for (action of actions(); track action.key) {
-          <button
-            mat-button
-            [color]="action.color || 'primary'"
-            (click)="onActionClick(action)"
+          <os-button
+            [variant]="getButtonVariant(action.color)"
+            [size]="getButtonSize()"
+            [icon]="action.icon || ''"
+            (buttonClick)="onActionClick(action)"
             [attr.aria-label]="action.label"
           >
-            @if (action.icon) {
-            <mat-icon>{{ action.icon }}</mat-icon>
-            }
             {{ action.label }}
-          </button>
+          </os-button>
           }
         </div>
         }
@@ -96,7 +94,7 @@ export interface OsDataTableAction {
 
         @if (showNoData() && data().length === 0) {
         <div class="os-data-table__no-data">
-          <mat-icon>inbox</mat-icon>
+          <os-icon name="inbox" size="lg" />
           <p>{{ noDataText() }}</p>
         </div>
         }
@@ -149,6 +147,25 @@ export class OsDataTableComponent {
   protected sort = true;
 
   displayedColumns = computed(() => this.columns().map((col) => col.key));
+
+  // Mapeamento interno para Atoms
+  protected getButtonVariant = (color?: string) => {
+    const colorMap: Record<string, 'primary' | 'secondary' | 'tertiary' | 'danger'> = {
+      primary: 'primary',
+      secondary: 'secondary',
+      warn: 'danger',
+    };
+    return colorMap[color || 'primary'] || 'primary';
+  };
+
+  protected getButtonSize = () => {
+    const sizeMap: Record<OsDataTableSize, 'small' | 'medium' | 'large'> = {
+      small: 'small',
+      medium: 'medium',
+      large: 'large',
+    };
+    return sizeMap[this.size()];
+  };
 
   dataTableClasses = () => {
     const classes = ['os-data-table'];

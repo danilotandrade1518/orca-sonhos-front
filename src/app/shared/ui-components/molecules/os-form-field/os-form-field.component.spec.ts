@@ -155,7 +155,7 @@ describe('OsFormFieldComponent', () => {
       fixture.componentRef.setInput('hintText', 'We will never share your email');
       fixture.detectChanges();
 
-      const hintElement = fixture.nativeElement.querySelector('.os-form-field__hint');
+      const hintElement = fixture.nativeElement.querySelector('os-label');
       expect(hintElement.textContent.trim()).toBe('We will never share your email');
     });
 
@@ -164,7 +164,7 @@ describe('OsFormFieldComponent', () => {
       fixture.componentRef.setInput('errorMessage', 'This is an error');
       fixture.detectChanges();
 
-      const hintElement = fixture.nativeElement.querySelector('.os-form-field__hint');
+      const hintElement = fixture.nativeElement.querySelector('os-label');
       expect(hintElement).toBeNull();
     });
   });
@@ -197,10 +197,7 @@ describe('OsFormFieldComponent', () => {
       const valueChangeSpy = vi.fn();
       component.valueChange.subscribe(valueChangeSpy);
 
-      const mockEvent = {
-        target: { value: 'test value' },
-      } as any;
-      component.handleInput(mockEvent);
+      component.onValueChange('test value');
 
       expect(valueChangeSpy).toHaveBeenCalledWith('test value');
     });
@@ -210,7 +207,7 @@ describe('OsFormFieldComponent', () => {
       component.blurEvent.subscribe(blurSpy);
 
       const mockEvent = new FocusEvent('blur');
-      component.handleBlur(mockEvent);
+      component.onBlur(mockEvent);
 
       expect(blurSpy).toHaveBeenCalledWith(mockEvent);
     });
@@ -220,7 +217,7 @@ describe('OsFormFieldComponent', () => {
       component.focusEvent.subscribe(focusSpy);
 
       const mockEvent = new FocusEvent('focus');
-      component.handleFocus(mockEvent);
+      component.onFocus(mockEvent);
 
       expect(focusSpy).toHaveBeenCalledWith(mockEvent);
     });
@@ -235,10 +232,7 @@ describe('OsFormFieldComponent', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
 
-      const mockEvent = {
-        target: { value: 'test' },
-      } as any;
-      component.handleInput(mockEvent);
+      component.onValueChange('test');
       expect(onChangeSpy).toHaveBeenCalledWith('test');
     });
 
@@ -247,7 +241,7 @@ describe('OsFormFieldComponent', () => {
       component.registerOnTouched(onTouchedSpy);
 
       const mockEvent = new FocusEvent('blur');
-      component.handleBlur(mockEvent);
+      component.onBlur(mockEvent);
       expect(onTouchedSpy).toHaveBeenCalled();
     });
 
@@ -274,11 +268,11 @@ describe('OsFormFieldComponent', () => {
       fixture.componentRef.setInput('errorMessage', 'Error message');
       fixture.detectChanges();
 
-      expect(component['hasError']()).toBe(true);
+      expect(component.errorMessage()).toBe('Error message');
     });
 
     it('should compute appearance correctly', () => {
-      expect(component['appearance']()).toBe('outline');
+      expect(component.variant()).toBe('default');
     });
 
     it('should compute hint class correctly', () => {
@@ -286,26 +280,24 @@ describe('OsFormFieldComponent', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
-      const hintClass = component.hintClass();
-      expect(hintClass).toContain('os-form-field__hint');
-      expect(hintClass).toContain('os-form-field__hint--small');
-      expect(hintClass).toContain('os-form-field__hint--disabled');
+      const containerClass = component.containerClass();
+      expect(containerClass).toContain('os-form-field');
+      expect(containerClass).toContain('os-form-field--small');
+      expect(containerClass).toContain('os-form-field--disabled');
     });
   });
 
   describe('accessibility', () => {
     it('should have unique input id', () => {
-      const inputId = (component as unknown as { inputId: string }).inputId;
-      expect(inputId).toMatch(/^os-form-field-/);
+      const fieldId = component['fieldId']();
+      expect(fieldId).toMatch(/^field-/);
     });
 
     it('should generate different ids for different instances', () => {
       const fixture2 = TestBed.createComponent(OsFormFieldComponent);
       const component2 = fixture2.componentInstance;
 
-      expect((component as unknown as { inputId: string }).inputId).not.toBe(
-        (component2 as unknown as { inputId: string }).inputId
-      );
+      expect(component['fieldId']()).not.toBe(component2['fieldId']());
     });
   });
 

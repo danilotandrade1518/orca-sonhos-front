@@ -1,7 +1,6 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export type OsFilterBarVariant = 'default' | 'compact' | 'expanded';
 export type OsFilterBarSize = 'small' | 'medium' | 'large';
@@ -17,7 +16,7 @@ export interface OsFilterOption {
 @Component({
   selector: 'os-filter-bar',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, OsButtonComponent],
   template: `
     <div class="os-filter-bar" [class]="filterBarClasses()">
       <div class="os-filter-bar__content">
@@ -27,25 +26,25 @@ export interface OsFilterOption {
       @if (showActions()) {
       <div class="os-filter-bar__actions">
         @if (showClearButton()) {
-        <button
-          mat-button
-          class="os-filter-bar__clear"
-          (click)="onClear()"
+        <os-button
+          variant="tertiary"
+          [size]="getButtonSize()"
+          icon="clear"
           [disabled]="!hasActiveFilters()"
+          (buttonClick)="onClear()"
         >
-          <mat-icon>clear</mat-icon>
           {{ clearButtonText() }}
-        </button>
+        </os-button>
         } @if (showApplyButton()) {
-        <button
-          mat-raised-button
-          class="os-filter-bar__apply"
-          (click)="onApply()"
+        <os-button
+          variant="primary"
+          [size]="getButtonSize()"
+          icon="check"
           [disabled]="!hasActiveFilters()"
+          (buttonClick)="onApply()"
         >
-          <mat-icon>check</mat-icon>
           {{ applyButtonText() }}
-        </button>
+        </os-button>
         }
       </div>
       }
@@ -69,6 +68,16 @@ export class OsFilterBarComponent {
 
   clear = output<void>();
   apply = output<void>();
+
+  // Mapeamento interno para Atoms
+  protected getButtonSize = () => {
+    const sizeMap: Record<OsFilterBarSize, 'small' | 'medium' | 'large'> = {
+      small: 'small',
+      medium: 'medium',
+      large: 'large',
+    };
+    return sizeMap[this.size()];
+  };
 
   filterBarClasses = () => {
     const classes = ['os-filter-bar'];

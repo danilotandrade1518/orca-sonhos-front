@@ -1,8 +1,7 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type OsNavigationItemSize = 'small' | 'medium' | 'large';
 export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'accent';
@@ -10,7 +9,7 @@ export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'acc
 @Component({
   selector: 'os-navigation-item',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, OsIconComponent],
   template: `
     <div [class]="containerClass()" [attr.data-variant]="variant()" [attr.data-size]="size()">
       @if (routerLink()) {
@@ -24,7 +23,7 @@ export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'acc
         (click)="handleClick($event)"
       >
         @if (icon()) {
-        <mat-icon [class]="iconClass()" [attr.aria-hidden]="true">{{ icon() }}</mat-icon>
+        <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
         }
         <span [class]="textClass()">
           <ng-content />
@@ -44,7 +43,7 @@ export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'acc
         (click)="handleClick($event)"
       >
         @if (icon()) {
-        <mat-icon [class]="iconClass()" [attr.aria-hidden]="true">{{ icon() }}</mat-icon>
+        <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
         }
         <span [class]="textClass()">
           <ng-content />
@@ -80,6 +79,29 @@ export class OsNavigationItemComponent {
   itemClick = output<MouseEvent>();
 
   isActive = computed(() => this.active());
+
+  // Mapeamento interno para Atoms
+  protected getIconSize = () => {
+    const sizeMap: Record<OsNavigationItemSize, 'sm' | 'md' | 'lg'> = {
+      small: 'sm',
+      medium: 'md',
+      large: 'lg',
+    };
+    return sizeMap[this.size()];
+  };
+
+  protected getIconVariant = () => {
+    const variantMap: Record<
+      OsNavigationItemVariant,
+      'default' | 'primary' | 'secondary' | 'info'
+    > = {
+      default: 'default',
+      primary: 'primary',
+      secondary: 'secondary',
+      accent: 'info',
+    };
+    return variantMap[this.variant()];
+  };
 
   containerClass = computed(() => {
     const classes = ['os-navigation-item'];
@@ -126,16 +148,6 @@ export class OsNavigationItemComponent {
 
     if (this.size() !== 'medium') {
       classes.push(`os-navigation-item__button--${this.size()}`);
-    }
-
-    return classes.join(' ');
-  });
-
-  iconClass = computed(() => {
-    const classes = ['os-navigation-item__icon'];
-
-    if (this.size() !== 'medium') {
-      classes.push(`os-navigation-item__icon--${this.size()}`);
     }
 
     return classes.join(' ');
