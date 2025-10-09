@@ -287,7 +287,8 @@ src/app/shared/ui-components/
 - ✅ Rastreamento de metas: Progresso, status, timeline
 - ✅ Estados de meta: active, completed, paused, cancelled
 - ✅ Timeline: Data de início, prazo e última atualização
-- ✅ Contribuição mensal: Exibição opcional da contribuição
+- ✅ Contribuição mensal: Exibição opcional da contribuição com cálculo de viabilidade
+- ✅ Histórico de progresso: Últimas 3 entradas com datas e valores
 - ✅ Integração: Com atoms (os-progress-bar, os-money-display, os-card, os-badge, os-icon)
 - ✅ Responsividade: Design mobile-first completo
 - ✅ Acessibilidade: WCAG 2.1 AA com ARIA attributes
@@ -296,13 +297,22 @@ src/app/shared/ui-components/
 
 - ✅ Angular standalone component com signals
 - ✅ Computed properties para cálculos de progresso
-- ✅ Event handlers para interações
+- ✅ Event handlers para interações (goalClick, refreshClick, actionClick)
 - ✅ Size mappings para componentes filhos
 - ✅ Status variants dinâmicos
 - ✅ Progress variants baseados no estado
 - ✅ Formatação de datas em português brasileiro
 - ✅ Estados de loading e disabled
 - ✅ Cobertura de testes abrangente (100%)
+
+**Correções aplicadas**:
+
+- ✅ Imports corretos dos componentes atoms e molecules
+- ✅ Tipos corretos para badges (sm, md, lg)
+- ✅ Mapeamento de variantes para OsCardComponent
+- ✅ Testes com setInput() para configuração correta
+- ✅ Acessibilidade com ARIA attributes
+- ✅ TypeScript strict sem tipos any desnecessários
 
 ### ✅ OS-CATEGORY-MANAGER IMPLEMENTADO COM SUCESSO (09/10/2025)
 

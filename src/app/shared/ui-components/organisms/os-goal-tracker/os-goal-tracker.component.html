@@ -1,0 +1,227 @@
+<div class="os-goal-tracker" [class]="goalClasses()" [attr.aria-label]="ariaLabel()">
+    @if (loading()) {
+    <div class="os-goal-tracker__loading">
+        <os-spinner [size]="iconSize()" />
+        <span class="os-goal-tracker__loading-text">Carregando meta...</span>
+    </div>
+    } @else if (goalData()) {
+    <os-card [variant]="cardVariant()" [size]="size()" [clickable]="clickable()" (cardClick)="onCardClick()"
+        class="os-goal-tracker__card">
+
+        <!-- Header -->
+        <div class="os-goal-tracker__header">
+            <div class="os-goal-tracker__title-section">
+                <h3 class="os-goal-tracker__title">{{ goalData()!.title }}</h3>
+                @if (goalData()!.description && variant() !== 'compact') {
+                <p class="os-goal-tracker__description">{{ goalData()!.description }}</p>
+                }
+            </div>
+
+            <div class="os-goal-tracker__badges">
+                @if (showStatus()) {
+                <os-badge [variant]="statusInfo().type" [size]="badgeSize()" [icon]="statusInfo().icon">
+                    {{ statusInfo().label }}
+                </os-badge>
+                }
+
+                <os-badge variant="info" [size]="badgeSize()" [style.color]="priorityInfo().color">
+                    {{ priorityInfo().label }} Prioridade
+                </os-badge>
+
+                @if (goalData()!.category) {
+                <os-badge variant="default" [size]="badgeSize()">
+                    {{ goalData()!.category }}
+                </os-badge>
+                }
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="os-goal-tracker__progress">
+            <div class="os-goal-tracker__amounts">
+                <div class="os-goal-tracker__current">
+                    <os-money-display [value]="goalData()!.currentAmount" [currency]="goalData()!.currency"
+                        [variant]="isCompleted() ? 'success' : 'default'" [size]="moneySize()" />
+                    <span class="os-goal-tracker__current-label">Arrecadado</span>
+                </div>
+
+                <div class="os-goal-tracker__target">
+                    <os-money-display [value]="goalData()!.targetAmount" [currency]="goalData()!.currency"
+                        variant="default" [size]="moneySize()" />
+                    <span class="os-goal-tracker__target-label">Meta</span>
+                </div>
+
+                @if (remainingAmount() > 0) {
+                <div class="os-goal-tracker__remaining">
+                    <os-money-display [value]="remainingAmount()" [currency]="goalData()!.currency" variant="info"
+                        [size]="moneySize()" />
+                    <span class="os-goal-tracker__remaining-label">Restante</span>
+                </div>
+                }
+            </div>
+
+            <div class="os-goal-tracker__progress-bar">
+                <os-progress-bar [value]="progressPercentage()" [variant]="progressVariant()" [size]="progressSize()"
+                    [showPercentage]="true" [animated]="true" />
+            </div>
+
+            <div class="os-goal-tracker__stats">
+                <div class="os-goal-tracker__stat">
+                    <span class="os-goal-tracker__stat-label">Progresso</span>
+                    <span class="os-goal-tracker__stat-value">{{ progressPercentage() }}%</span>
+                </div>
+
+                @if (timelineInfo()) {
+                <div class="os-goal-tracker__stat">
+                    <span class="os-goal-tracker__stat-label">Prazo</span>
+                    <span class="os-goal-tracker__stat-value">{{ timelineInfo()!.deadline }}</span>
+                </div>
+                }
+
+                @if (timelineInfo() && timelineInfo()!.daysRemaining > 0) {
+                <div class="os-goal-tracker__stat">
+                    <span class="os-goal-tracker__stat-label">Dias Restantes</span>
+                    <span class="os-goal-tracker__stat-value">{{ timelineInfo()!.daysRemaining }}</span>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        @if (showTimeline() && timelineInfo()) {
+        <div class="os-goal-tracker__timeline">
+            <h4 class="os-goal-tracker__timeline-title">
+                <os-icon name="schedule" [size]="iconSize()" />
+                Timeline
+            </h4>
+
+            <div class="os-goal-tracker__timeline-content">
+                <div class="os-goal-tracker__timeline-item">
+                    <os-icon name="play_arrow" [size]="iconSize()" />
+                    <span class="os-goal-tracker__timeline-label">Início</span>
+                    <span class="os-goal-tracker__timeline-value">{{ timelineInfo()!.start }}</span>
+                </div>
+
+                @if (goalData()!.deadline) {
+                <div class="os-goal-tracker__timeline-item">
+                    <os-icon name="flag" [size]="iconSize()" />
+                    <span class="os-goal-tracker__timeline-label">Prazo</span>
+                    <span class="os-goal-tracker__timeline-value">{{ timelineInfo()!.deadline }}</span>
+                </div>
+                }
+
+                <div class="os-goal-tracker__timeline-item">
+                    <os-icon name="update" [size]="iconSize()" />
+                    <span class="os-goal-tracker__timeline-label">Última Atualização</span>
+                    <span class="os-goal-tracker__timeline-value">{{ timelineInfo()!.lastUpdated }}</span>
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Contribution Section -->
+        @if (showContribution() && contributionInfo()) {
+        <div class="os-goal-tracker__contribution">
+            <h4 class="os-goal-tracker__contribution-title">
+                <os-icon name="savings" [size]="iconSize()" />
+                Contribuição Mensal
+            </h4>
+
+            <div class="os-goal-tracker__contribution-content">
+                <div class="os-goal-tracker__contribution-info">
+                    <os-money-display [value]="contributionInfo()!.monthly" [currency]="goalData()!.currency"
+                        variant="default" [size]="moneySize()" />
+                    <span class="os-goal-tracker__contribution-label">por mês</span>
+                </div>
+
+                <div class="os-goal-tracker__contribution-stats">
+                    <span class="os-goal-tracker__contribution-stat">
+                        {{ contributionInfo()!.monthsNeeded }} meses para completar
+                    </span>
+
+                    @if (contributionInfo()!.isFeasible) {
+                    <os-badge variant="success" [size]="badgeSize()">
+                        Viável
+                    </os-badge>
+                    } @else {
+                    <os-badge variant="warning" [size]="badgeSize()">
+                        Longo Prazo
+                    </os-badge>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- History Section -->
+        @if (showHistory() && recentHistory().length > 0) {
+        <div class="os-goal-tracker__history">
+            <h4 class="os-goal-tracker__history-title">
+                <os-icon name="history" [size]="iconSize()" />
+                Histórico Recente
+            </h4>
+
+            <div class="os-goal-tracker__history-list">
+                @for (entry of recentHistory(); track entry.date) {
+                <div class="os-goal-tracker__history-item">
+                    <div class="os-goal-tracker__history-date">
+                        {{ formatHistoryDate(entry.date) }}
+                    </div>
+                    <div class="os-goal-tracker__history-amount">
+                        <os-money-display [value]="entry.amount" [currency]="goalData()!.currency" variant="default"
+                            [size]="moneySize()" />
+                    </div>
+                    <div class="os-goal-tracker__history-percentage">
+                        {{ entry.percentage }}%
+                    </div>
+                    @if (entry.note) {
+                    <div class="os-goal-tracker__history-note">
+                        {{ entry.note }}
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Actions -->
+        <div class="os-goal-tracker__actions">
+            <button type="button" class="os-goal-tracker__action" (click)="onRefreshClick()"
+                [attr.aria-label]="'Atualizar meta ' + goalData()!.title">
+                <os-icon name="refresh" [size]="iconSize()" />
+                Atualizar
+            </button>
+
+            @if (goalData()!.status === 'active') {
+            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('pause')"
+                [attr.aria-label]="'Pausar meta ' + goalData()!.title">
+                <os-icon name="pause" [size]="iconSize()" />
+                Pausar
+            </button>
+            }
+
+            @if (goalData()!.status === 'paused') {
+            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('resume')"
+                [attr.aria-label]="'Retomar meta ' + goalData()!.title">
+                <os-icon name="play_arrow" [size]="iconSize()" />
+                Retomar
+            </button>
+            }
+
+            @if (!isCompleted()) {
+            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('cancel')"
+                [attr.aria-label]="'Cancelar meta ' + goalData()!.title">
+                <os-icon name="cancel" [size]="iconSize()" />
+                Cancelar
+            </button>
+            }
+        </div>
+    </os-card>
+    } @else {
+    <div class="os-goal-tracker__empty">
+        <os-icon name="target" [size]="iconSize()" />
+        <p class="os-goal-tracker__empty-text">Nenhuma meta encontrada</p>
+    </div>
+    }
+</div>

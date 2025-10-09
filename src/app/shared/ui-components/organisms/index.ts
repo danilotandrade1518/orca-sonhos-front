@@ -77,6 +77,12 @@ export {
   type TransactionListTheme,
 } from './os-transaction-list/os-transaction-list.component';
 
+export {
+  OsGoalTrackerComponent,
+  type GoalTrackerData,
+  type ProgressHistory,
+} from './os-goal-tracker/os-goal-tracker.component';
+
 // Temporarily commented out due to compilation errors
 // export {
 //   OsDataGridComponent,
