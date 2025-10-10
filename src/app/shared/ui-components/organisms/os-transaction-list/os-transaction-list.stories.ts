@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsTransactionListComponent } from './os-transaction-list.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const meta: Meta<OsTransactionListComponent> = {
   title: 'Design System/Organisms/Transaction List',

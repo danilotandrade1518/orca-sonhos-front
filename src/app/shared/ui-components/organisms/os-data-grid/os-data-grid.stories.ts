@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsDataGridComponent } from './os-data-grid.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const meta: Meta<OsDataGridComponent> = {
   title: 'Design System/Organisms/Data Grid',

@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsFormGroupComponent } from './os-form-group.component';
-import { OsFormFieldComponent } from '../os-form-field/os-form-field.component';
-import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 const meta: Meta<OsFormGroupComponent> = {
   title: 'Design System/Molecules/Form Group',

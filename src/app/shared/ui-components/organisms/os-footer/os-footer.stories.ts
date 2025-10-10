@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsFooterComponent } from './os-footer.component';
-import { RouterModule } from '@angular/router';
 
 const meta: Meta<OsFooterComponent> = {
   title: 'Design System/Organisms/Footer',

@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsFormSectionComponent } from './os-form-section.component';
-import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
-import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 const meta: Meta<OsFormSectionComponent> = {
   title: 'Design System/Organisms/Form Section',

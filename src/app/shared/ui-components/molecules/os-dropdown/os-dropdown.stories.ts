@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsDropdownComponent } from './os-dropdown.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const meta: Meta<OsDropdownComponent> = {
   title: 'Design System/Molecules/Dropdown',

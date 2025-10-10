@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsTooltipComponent } from './os-tooltip.component';
-import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 const meta: Meta<OsTooltipComponent> = {
   title: 'Design System/Molecules/Tooltip',

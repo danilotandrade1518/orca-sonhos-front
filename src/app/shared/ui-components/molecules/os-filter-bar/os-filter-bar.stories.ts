@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsFilterBarComponent } from './os-filter-bar.component';
-import { OsInputComponent } from '../../atoms/os-input/os-input.component';
-import { OsSelectComponent } from '../../atoms/os-select/os-select.component';
-import { OsDateInputComponent } from '../../atoms/os-date-input/os-date-input.component';
 
 const meta: Meta<OsFilterBarComponent> = {
   title: 'Design System/Molecules/Filter Bar',

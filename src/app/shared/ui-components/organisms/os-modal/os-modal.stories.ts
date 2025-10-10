@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsModalComponent } from './os-modal.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const meta: Meta<OsModalComponent> = {
   title: 'Design System/Organisms/Modal',

@@ -439,7 +439,7 @@ export const WithActions: Story = {
         { label: 'Adicionar Valor', variant: 'secondary' },
         { label: 'Excluir', variant: 'danger' },
       ],
-      onActionClick: (event: any) => console.log('Action clicked:', event),
+      onActionClick: (event: MouseEvent) => console.log('Action clicked:', event),
     },
   }),
   parameters: {

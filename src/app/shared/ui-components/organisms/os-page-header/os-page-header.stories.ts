@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsPageHeaderComponent } from './os-page-header.component';
-import { RouterModule } from '@angular/router';
 
 const meta: Meta<OsPageHeaderComponent> = {
   title: 'Design System/Organisms/Page Header',

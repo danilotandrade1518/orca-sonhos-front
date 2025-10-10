@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsSidebarComponent } from './os-sidebar.component';
-import { RouterModule } from '@angular/router';
 
 const meta: Meta<OsSidebarComponent> = {
   title: 'Design System/Organisms/Sidebar',

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { OsFormTemplateComponent } from './os-form-template.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 const meta: Meta<OsFormTemplateComponent> = {
   title: 'Design System/Templates/Form Template',
@@ -92,16 +91,16 @@ const sampleConfig = {
   ],
 };
 
-const simpleConfig = {
-  title: 'Formulário Simples',
-  subtitle: 'Formulário básico sem progresso',
-  showBackButton: false,
-  showSaveButton: true,
-  showCancelButton: true,
-  showProgress: false,
-  showActions: true,
-  actions: [],
-};
+  // const simpleConfig = {
+  //   title: 'Formulário Simples',
+  //   subtitle: 'Formulário básico sem progresso',
+  //   showBackButton: false,
+  //   showSaveButton: true,
+  //   showCancelButton: true,
+  //   showProgress: false,
+  //   showActions: true,
+  //   actions: [],
+  // };
 
 const wizardConfig = {
   title: 'Assistente de Configuração',

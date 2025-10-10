@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { OsCategoryManagerComponent } from './os-category-manager.component';
+import { OsCategoryManagerComponent, Category } from './os-category-manager.component';
 
 const meta: Meta<OsCategoryManagerComponent> = {
   title: 'Design System/Organisms/Category Manager',
@@ -109,7 +109,7 @@ const sampleCategories = [
   },
 ];
 
-const emptyCategories: any[] = [];
+const emptyCategories: Category[] = [];
 
 export const Default: Story = {
   args: {

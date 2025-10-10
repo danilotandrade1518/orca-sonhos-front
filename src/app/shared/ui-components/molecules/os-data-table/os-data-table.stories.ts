@@ -5,6 +5,7 @@ import {
   OsDataTableAction,
   OsDataTableRow,
 } from './os-data-table.component';
+import { PageEvent } from '@angular/material/paginator';
 
 const meta: Meta<OsDataTableComponent> = {
   title: 'Design System/Molecules/Data Table',
@@ -284,7 +285,7 @@ export const WithPagination: Story = {
       columns: sampleColumns,
     },
     methods: {
-      onPageChange: (event: any) => {
+      onPageChange: (event: PageEvent) => {
         console.log('Página alterada:', event);
       },
     },

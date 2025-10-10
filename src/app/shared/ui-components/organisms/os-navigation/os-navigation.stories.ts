@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
 import { OsNavigationComponent } from './os-navigation.component';
-import { RouterModule } from '@angular/router';
 
 const meta: Meta<OsNavigationComponent> = {
   title: 'Design System/Organisms/Navigation',

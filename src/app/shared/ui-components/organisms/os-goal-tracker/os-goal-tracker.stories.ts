@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { OsGoalTrackerComponent } from './os-goal-tracker.component';
+import { OsGoalTrackerComponent, GoalTrackerData } from './os-goal-tracker.component';
 
 const meta: Meta<OsGoalTrackerComponent> = {
   title: 'Design System/Organisms/Goal Tracker',
@@ -490,7 +490,7 @@ export const Clickable: Story = {
     `,
     props: {
       sampleGoalData,
-      onGoalClick: (data: any) => console.log('Goal clicked:', data),
+      onGoalClick: (data: GoalTrackerData) => console.log('Goal clicked:', data),
     },
   }),
   parameters: {
