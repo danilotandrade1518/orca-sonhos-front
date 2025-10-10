@@ -109,8 +109,11 @@ describe('OsSliderComponent', () => {
       const slider = fixture.debugElement.query(By.css('mat-slider'));
 
       // Simular evento de mudança do Material slider
-      const changeEvent = new Event('change') as Event & { value: number };
-      changeEvent.value = 75;
+      const changeEvent = new Event('change');
+      Object.defineProperty(changeEvent, 'target', {
+        value: { value: '75' },
+        writable: false,
+      });
       slider.nativeElement.dispatchEvent(changeEvent);
 
       expect(component.valueChange.emit).toHaveBeenCalledWith(75);
@@ -264,8 +267,11 @@ describe('OsSliderComponent', () => {
 
       const slider = fixture.debugElement.query(By.css('mat-slider'));
       // Simular evento de mudança do Material slider
-      const changeEvent = new Event('change') as Event & { value: number };
-      changeEvent.value = 30;
+      const changeEvent = new Event('change');
+      Object.defineProperty(changeEvent, 'target', {
+        value: { value: '30' },
+        writable: false,
+      });
       slider.nativeElement.dispatchEvent(changeEvent);
 
       expect(onChangeSpy).toHaveBeenCalledWith(30);

@@ -143,7 +143,7 @@ describe('OsDataGridComponent', () => {
 
       const filteredData = component.filteredData();
       expect(filteredData.length).toBe(1);
-      expect(filteredData[0].name).toBe('Item 1');
+      expect(filteredData[0]['name']).toBe('Item 1');
     });
 
     it('should handle multiple filters', () => {
@@ -160,8 +160,8 @@ describe('OsDataGridComponent', () => {
 
       const filteredData = component.filteredData();
       expect(filteredData.length).toBe(1);
-      expect(filteredData[0].category).toBe('A');
-      expect(filteredData[0].value).toBe(100);
+      expect(filteredData[0]['category']).toBe('A');
+      expect(filteredData[0]['value']).toBe(100);
     });
 
     it('should clear filters', () => {
@@ -204,9 +204,9 @@ describe('OsDataGridComponent', () => {
       fixture.detectChanges();
 
       const sortedData = component.filteredData();
-      expect(sortedData[0].name).toBe('Item 1');
-      expect(sortedData[1].name).toBe('Item 2');
-      expect(sortedData[2].name).toBe('Item 3');
+      expect(sortedData[0]['name']).toBe('Item 1');
+      expect(sortedData[1]['name']).toBe('Item 2');
+      expect(sortedData[2]['name']).toBe('Item 3');
     });
 
     it('should sort in descending order', () => {
@@ -218,9 +218,9 @@ describe('OsDataGridComponent', () => {
       fixture.detectChanges();
 
       const sortedData = component.filteredData();
-      expect(sortedData[0].name).toBe('Item 3');
-      expect(sortedData[1].name).toBe('Item 2');
-      expect(sortedData[2].name).toBe('Item 1');
+      expect(sortedData[0]['name']).toBe('Item 3');
+      expect(sortedData[1]['name']).toBe('Item 2');
+      expect(sortedData[2]['name']).toBe('Item 1');
     });
   });
 
@@ -242,8 +242,8 @@ describe('OsDataGridComponent', () => {
 
       const paginatedData = component.filteredData();
       expect(paginatedData.length).toBe(10);
-      expect(paginatedData[0].id).toBe(1);
-      expect(paginatedData[9].id).toBe(10);
+      expect(paginatedData[0]['id']).toBe(1);
+      expect(paginatedData[9]['id']).toBe(10);
     });
 
     it('should handle page changes', () => {
@@ -263,8 +263,8 @@ describe('OsDataGridComponent', () => {
 
       const paginatedData = component.filteredData();
       expect(paginatedData.length).toBe(10);
-      expect(paginatedData[0].id).toBe(11);
-      expect(paginatedData[9].id).toBe(20);
+      expect(paginatedData[0]['id']).toBe(11);
+      expect(paginatedData[9]['id']).toBe(20);
     });
   });
 

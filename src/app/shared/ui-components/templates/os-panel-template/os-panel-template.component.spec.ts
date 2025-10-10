@@ -170,7 +170,7 @@ describe('OsPanelTemplateComponent', () => {
   });
 
   it('should emit toggle event when collapsible button is clicked', () => {
-    const toggleSpy = vi.spyOn(component.toggle, 'emit');
+    const toggleSpy = vi.spyOn(component.toggled, 'emit');
     const collapsibleConfig = { ...mockConfig, collapsible: true };
     fixture.componentRef.setInput('config', collapsibleConfig);
     fixture.detectChanges();

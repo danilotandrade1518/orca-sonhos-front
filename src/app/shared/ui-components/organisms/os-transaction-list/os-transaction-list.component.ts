@@ -17,6 +17,7 @@ import {
   OsDataTableComponent,
   OsDataTableColumn,
   OsDataTableAction,
+  OsDataTableRow,
 } from '../../molecules/os-data-table/os-data-table.component';
 import {
   OsFilterBarComponent,
@@ -34,6 +35,7 @@ export interface Transaction {
   status: 'pending' | 'completed' | 'cancelled';
   account?: string;
   tags?: string[];
+  [key: string]: unknown;
 }
 
 export interface TransactionListFilter {
@@ -602,8 +604,8 @@ export class OsTransactionListComponent {
     this.filterChange.emit(this.filters());
   }
 
-  onRowClick(transaction: Transaction): void {
-    this.rowClick.emit(transaction);
+  onRowClick(row: OsDataTableRow): void {
+    this.rowClick.emit(row as Transaction);
   }
 
   onTableActionClick(action: OsDataTableAction): void {

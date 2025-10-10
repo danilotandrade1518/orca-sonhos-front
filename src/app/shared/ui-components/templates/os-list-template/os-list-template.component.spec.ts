@@ -310,10 +310,13 @@ describe('OsListTemplateComponent', () => {
       const rowClickSpy = vi.fn();
       component.rowClick.subscribe(rowClickSpy);
 
-      const event = { item: mockData[0], index: 0, event: new MouseEvent('click') };
-      component.onRowClick(event);
+      component.onRowClick(mockData[0]);
 
-      expect(rowClickSpy).toHaveBeenCalledWith(event);
+      expect(rowClickSpy).toHaveBeenCalledWith({
+        item: mockData[0],
+        index: 0,
+        event: new MouseEvent('click'),
+      });
     });
 
     it('should emit headerActionClick event', () => {

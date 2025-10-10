@@ -253,9 +253,9 @@ describe('OsDetailTemplateComponent', () => {
     it('should emit onActionClick when action is clicked', () => {
       const action: DetailTemplateAction = { id: 'test', label: 'Test', variant: 'primary' };
       const spy = vi.fn();
-      component.onActionClick.subscribe(spy);
+      component.actionClicked.subscribe(spy);
 
-      component.onActionClick.emit(action);
+      component.actionClicked.emit(action);
       expect(spy).toHaveBeenCalledWith(action);
     });
 
@@ -263,9 +263,9 @@ describe('OsDetailTemplateComponent', () => {
       const action: DetailTemplateAction = { id: 'test', label: 'Test', variant: 'primary' };
       const event = new MouseEvent('click');
       const spy = vi.fn();
-      component.onHeaderActionClick.subscribe(spy);
+      component.headerActionClicked.subscribe(spy);
 
-      component.onHeaderActionClick.emit({ action, event });
+      component.headerActionClicked.emit({ action, event });
       expect(spy).toHaveBeenCalledWith({ action, event });
     });
 
@@ -277,9 +277,9 @@ describe('OsDetailTemplateComponent', () => {
         expanded: false,
       };
       const spy = vi.fn();
-      component.onSectionToggle.subscribe(spy);
+      component.sectionToggled.subscribe(spy);
 
-      component.onSectionToggle.emit({ section, expanded: true });
+      component.sectionToggled.emit({ section, expanded: true });
       expect(spy).toHaveBeenCalledWith({ section, expanded: true });
     });
   });

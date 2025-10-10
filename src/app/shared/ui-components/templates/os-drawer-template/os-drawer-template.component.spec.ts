@@ -127,31 +127,31 @@ describe('OsDrawerTemplateComponent', () => {
   });
 
   it('should emit close event when close button is clicked', () => {
-    vi.spyOn(component.close, 'emit');
+    vi.spyOn(component.closed, 'emit');
     const closeButton = fixture.debugElement.query(By.css('os-button[aria-label="Fechar drawer"]'));
     closeButton.triggerEventHandler('click', null);
 
-    expect(component.close.emit).toHaveBeenCalled();
+    expect(component.closed.emit).toHaveBeenCalled();
   });
 
   it('should emit cancel event when cancel button is clicked', () => {
-    vi.spyOn(component.cancel, 'emit');
+    vi.spyOn(component.cancelled, 'emit');
     // Usar o segundo botão (índice 1) que é o botão de cancelar
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
     const cancelButton = buttons[1]; // Segundo botão é o cancelar
     cancelButton?.triggerEventHandler('click', null);
 
-    expect(component.cancel.emit).toHaveBeenCalled();
+    expect(component.cancelled.emit).toHaveBeenCalled();
   });
 
   it('should emit confirm event when confirm button is clicked', () => {
-    vi.spyOn(component.confirm, 'emit');
+    vi.spyOn(component.confirmed, 'emit');
     // Usar o terceiro botão (índice 2) que é o botão de confirmar
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
     const confirmButton = buttons[2]; // Terceiro botão é o confirmar
     confirmButton?.triggerEventHandler('click', null);
 
-    expect(component.confirm.emit).toHaveBeenCalled();
+    expect(component.confirmed.emit).toHaveBeenCalled();
   });
 
   it('should render custom actions when provided', () => {

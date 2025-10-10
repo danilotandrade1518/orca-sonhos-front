@@ -238,7 +238,7 @@ describe('OsDropdownComponent', () => {
       component.valueChange.subscribe(valueChangeSpy);
       component.optionSelect.subscribe(optionSelectSpy);
 
-      component.handleOptionClick(mockOptions[0], new MouseEvent('click'));
+      component.handleOptionClick(mockOptions[0]);
 
       expect(valueChangeSpy).toHaveBeenCalledWith('option1');
       expect(optionSelectSpy).toHaveBeenCalledWith(mockOptions[0]);
@@ -251,7 +251,7 @@ describe('OsDropdownComponent', () => {
       const valueChangeSpy = vi.fn();
       component.valueChange.subscribe(valueChangeSpy);
 
-      component.handleOptionClick(mockOptions[1], new MouseEvent('click'));
+      component.handleOptionClick(mockOptions[1]);
 
       expect(valueChangeSpy).not.toHaveBeenCalled();
     });

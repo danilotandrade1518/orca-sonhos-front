@@ -108,21 +108,21 @@ describe('OsModalTemplateComponent', () => {
 
   describe('Event handling', () => {
     it('should emit close event', () => {
-      vi.spyOn(component.close, 'emit');
+      vi.spyOn(component.closed, 'emit');
       component.onClose();
-      expect(component.close.emit).toHaveBeenCalled();
+      expect(component.closed.emit).toHaveBeenCalled();
     });
 
     it('should emit confirm event', () => {
-      vi.spyOn(component.confirm, 'emit');
+      vi.spyOn(component.confirmed, 'emit');
       component.onConfirm();
-      expect(component.confirm.emit).toHaveBeenCalled();
+      expect(component.confirmed.emit).toHaveBeenCalled();
     });
 
     it('should emit cancel event', () => {
-      vi.spyOn(component.cancel, 'emit');
+      vi.spyOn(component.cancelled, 'emit');
       component.onCancel();
-      expect(component.cancel.emit).toHaveBeenCalled();
+      expect(component.cancelled.emit).toHaveBeenCalled();
     });
 
     it('should emit action click event', () => {
