@@ -3,11 +3,12 @@
 // Export all core services, guards, and interceptors from here
 
 // Services
-// export * from './services';
+export * from './services/config.service';
+export * from './services/auth.service';
+export * from './services/api.service';
 
 // Guards
 // export * from './guards';
 
 // Interceptors
 // export * from './interceptors';
-
