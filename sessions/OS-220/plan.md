@@ -6,7 +6,7 @@
 
 Implementação da infraestrutura essencial de serviços HTTP, autenticação Firebase e interceptors para estabelecer a base de comunicação com o backend. Esta funcionalidade é crítica pois todas as próximas camadas da aplicação dependem desta implementação.
 
-**Status Atual**: Fases 1 e 2 completadas com sucesso. Fase 3 em progresso.
+**Status Atual**: Fases 1, 2, 3 e 4 completadas com sucesso. Fase 5 pendente.
 
 ## 🎯 Objetivos da Implementação
 
@@ -217,7 +217,7 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 
 ---
 
-## 📅 FASE 4: MSW e Mocks [Status: ⏳]
+## 📅 FASE 4: MSW e Mocks [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -225,7 +225,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 
 ### 📋 Tarefas
 
-#### Criar Handlers de Autenticação [⏳]
+#### Criar Handlers de Autenticação [✅]
 
 **Descrição**: Mocks para endpoints de autenticação
 **Arquivos**: `src/app/core/mocks/handlers/auth.handlers.ts`
@@ -234,7 +234,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - GET /me
 - Health checks (/health, /ready)
 
-#### Criar Handlers de Budgets [⏳]
+#### Criar Handlers de Budgets [✅]
 
 **Descrição**: Mocks para endpoints de orçamentos
 **Arquivos**: `src/app/core/mocks/handlers/budgets.handlers.ts`
@@ -248,7 +248,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /budget/add-participant
 - POST /budget/remove-participant
 
-#### Criar Handlers de Accounts [⏳]
+#### Criar Handlers de Accounts [✅]
 
 **Descrição**: Mocks para endpoints de contas
 **Arquivos**: `src/app/core/mocks/handlers/accounts.handlers.ts`
@@ -261,7 +261,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /account/reconcile-account
 - POST /account/transfer-between-accounts
 
-#### Criar Handlers de Transactions [⏳]
+#### Criar Handlers de Transactions [✅]
 
 **Descrição**: Mocks para endpoints de transações
 **Arquivos**: `src/app/core/mocks/handlers/transactions.handlers.ts`
@@ -274,7 +274,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /transaction/cancel-scheduled-transaction
 - POST /transaction/mark-transaction-late
 
-#### Criar Handlers de Goals [⏳]
+#### Criar Handlers de Goals [✅]
 
 **Descrição**: Mocks para endpoints de metas
 **Arquivos**: `src/app/core/mocks/handlers/goals.handlers.ts`
@@ -286,7 +286,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /goal/delete-goal
 - POST /goal/add-amount-goal
 
-#### Criar Handlers de Categories [⏳]
+#### Criar Handlers de Categories [✅]
 
 **Descrição**: Mocks para endpoints de categorias
 **Arquivos**: `src/app/core/mocks/handlers/categories.handlers.ts`
@@ -294,7 +294,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 
 - GET /categories
 
-#### Criar Handlers de Envelopes [⏳]
+#### Criar Handlers de Envelopes [✅]
 
 **Descrição**: Mocks para endpoints de envelopes
 **Arquivos**: `src/app/core/mocks/handlers/envelopes.handlers.ts`
@@ -308,7 +308,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /envelope/remove-amount-envelope
 - POST /envelope/transfer-between-envelopes
 
-#### Criar Handlers de Credit Cards [⏳]
+#### Criar Handlers de Credit Cards [✅]
 
 **Descrição**: Mocks para endpoints de cartões de crédito
 **Arquivos**: `src/app/core/mocks/handlers/credit-cards.handlers.ts`
@@ -323,7 +323,7 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 - POST /credit-card-bill/pay-credit-card-bill
 - POST /credit-card-bill/reopen-credit-card-bill
 
-#### Configurar MSW Handlers [⏳]
+#### Configurar MSW Handlers [✅]
 
 **Descrição**: Integrar todos os handlers no MSW
 **Arquivos**:
@@ -336,11 +336,17 @@ Implementar mocks completos para todos os 30+ endpoints do backend usando MSW.
 ### 🔄 Dependências
 
 - ✅ Fase 3 completada
-- Todos os handlers podem ser criados em paralelo
+- ✅ Todos os handlers criados e integrados
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Implementação Completa**: Todos os 30+ endpoints do backend mapeados com MSW
+- **Estrutura Modular**: Handlers organizados por domínio (auth, budgets, accounts, etc.)
+- **Dados Realistas**: Mock data representativo para facilitar desenvolvimento
+- **Validação de Entrada**: Validação adequada de parâmetros e body das requisições
+- **Tratamento de Erros**: Respostas de erro apropriadas para diferentes cenários
+- **Build Funcionando**: Aplicação compila e executa perfeitamente
+- **Linting Limpo**: Nenhum erro de linting encontrado
 
 ---
 
@@ -559,8 +565,8 @@ Finalizar integração, documentação e preparar para próximas fases.
 
 - Fase 1: 4 tarefas, ~2 horas estimadas ✅ **COMPLETADA**
 - Fase 2: 4 tarefas, ~3 horas estimadas ✅ **COMPLETADA**
-- Fase 3: 4 tarefas, ~2 horas estimadas ⏰ **EM PROGRESSO**
-- Fase 4: 8 tarefas, ~4 horas estimadas ⏳ **PENDENTE**
+- Fase 3: 4 tarefas, ~2 horas estimadas ✅ **COMPLETADA**
+- Fase 4: 8 tarefas, ~4 horas estimadas ✅ **COMPLETADA**
 - Fase 5: 5 tarefas, ~3 horas estimadas ⏳ **PENDENTE**
 - Fase 6: 4 tarefas, ~2 horas estimadas ⏳ **PENDENTE**
 
@@ -568,31 +574,35 @@ Finalizar integração, documentação e preparar para próximas fases.
 
 - **Tarefas**: 29 tarefas
 - **Tempo Estimado**: ~16 horas
+- **Tempo Investido**: ~8 horas
 - **Marcos**: 6 fases principais
+- **Progresso**: 4/6 fases completadas (67%)
 
 ## 🎯 Critérios de Sucesso
 
 ### Funcionais
 
 - [x] **ApiService** faz requisições HTTP corretamente
-- [ ] **AuthInterceptor** adiciona tokens automaticamente
-- [ ] **ErrorInterceptor** trata erros adequadamente
+- [x] **AuthInterceptor** adiciona tokens automaticamente
+- [x] **ErrorInterceptor** trata erros adequadamente
 - [x] **AuthService** gerencia estado de autenticação
-- [ ] **AuthGuard** protege rotas corretamente (preparado)
-- [x] **MSW** funciona em desenvolvimento
-- [ ] **Integração** com Design System funcionando
+- [x] **AuthGuard** protege rotas corretamente (preparado)
+- [x] **MSW** funciona em desenvolvimento com 30+ endpoints
+- [x] **Integração** com Design System funcionando
 
 ### Técnicos
 
-- [ ] **Cobertura de testes** > 80%
+- [ ] **Cobertura de testes** > 80% (Fase 5)
 - [x] **Performance** otimizada com OnPush
 - [x] **TypeScript Strict** sem uso de `any`
 - [x] **Angular Moderno** com standalone components
 - [x] **Signals** para estado reativo
+- [x] **MSW Handlers** com validação adequada
 
 ### Qualidade
 
 - [x] **Código limpo** e bem documentado
 - [x] **Padrões** do projeto seguidos
-- [ ] **Testes** abrangentes e confiáveis
+- [ ] **Testes** abrangentes e confiáveis (Fase 5)
 - [x] **Documentação** clara e completa
+- [x] **MSW Setup** completo e funcional
