@@ -151,7 +151,7 @@ Implementar os serviços fundamentais: ConfigService, AuthService e ApiService.
 
 ---
 
-## 📅 FASE 3: Interceptors e Guards [Status: ⏰ Em Progresso]
+## 📅 FASE 3: Interceptors e Guards [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -159,7 +159,7 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 
 ### 📋 Tarefas
 
-#### Implementar AuthInterceptor [⏳]
+#### Implementar AuthInterceptor [✅]
 
 **Descrição**: Adiciona automaticamente tokens JWT nas requisições
 **Arquivos**: `src/app/core/interceptors/auth.interceptor.ts`
@@ -171,7 +171,7 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 - Tratar tokens expirados
 - Integração com AuthService
 
-#### Implementar ErrorInterceptor [⏳]
+#### Implementar ErrorInterceptor [✅]
 
 **Descrição**: Tratamento centralizado de erros HTTP
 **Arquivos**: `src/app/core/interceptors/error.interceptor.ts`
@@ -183,7 +183,7 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 - Tratar diferentes tipos de erro (401, 403, 500, etc.)
 - Log de erros para debugging
 
-#### Implementar AuthGuard [⏳]
+#### Implementar AuthGuard [✅]
 
 **Descrição**: Proteção de rotas baseada em autenticação
 **Arquivos**: `src/app/core/guards/auth.guard.ts`
@@ -194,7 +194,7 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 - Redirecionar para login se necessário
 - Preparado para uso futuro (não aplicado às rotas ainda)
 
-#### Configurar Interceptors no App Config [⏳]
+#### Configurar Interceptors no App Config [✅]
 
 **Descrição**: Registrar interceptors no app.config.ts
 **Arquivos**: `src/app/app.config.ts`
@@ -208,7 +208,12 @@ Implementar interceptors para autenticação e tratamento de erros, além do Aut
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **AuthInterceptor**: Implementado com tratamento assíncrono de tokens usando from() e switchMap()
+- **ErrorInterceptor**: Tratamento centralizado de erros HTTP com mensagens específicas por status
+- **AuthGuard**: Implementado e preparado para uso futuro (não aplicado às rotas ainda)
+- **App Config**: Interceptors configurados globalmente com withInterceptors()
+- **Build**: Aplicação compila perfeitamente após implementação
+- **Padrões**: Seguindo Angular moderno com interceptors funcionais
 
 ---
 

@@ -8,7 +8,8 @@ export * from './services/auth.service';
 export * from './services/api.service';
 
 // Guards
-// export * from './guards';
+export * from './guards/auth.guard';
 
 // Interceptors
-// export * from './interceptors';
+export * from './interceptors/auth.interceptor';
+export * from './interceptors/error.interceptor';
