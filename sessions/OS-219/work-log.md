@@ -1287,3 +1287,72 @@
 - **Padrões**: Seguiu todas as boas práticas do Storybook
 - **Integração**: Excelente demonstração de uso com Angular Forms
 - **Projeto**: Design System Orca Sonhos totalmente implementado e documentado
+
+---
+
+### 🗓️ Sessão 09/10/2025 - Correção Storybook e Criação de Stories
+
+**Fase**: Correção e Documentação
+**Objetivo da Sessão**: Criar story para os-budget-tracker e corrigir problema do Dashboard Template no Storybook
+
+#### ✅ Trabalho Realizado
+
+- **Criação do os-budget-tracker.stories.ts**: Story completa implementada com sucesso
+
+  - 15 stories criadas cobrindo todas as variantes e cenários
+  - Stories incluem: Default, Compact, Detailed, OverBudget, Completed, Loading, SmallSize, LargeSize
+  - Stories de configuração: WithoutCharts, WithoutTrends, WithoutProjections, Clickable
+  - Stories comparativas: AllVariants, AllSizes, InteractiveExample
+  - Mock data completo com dados realistas para demonstração
+  - ArgTypes detalhados com controles e descrições em português
+  - Integração com todos os componentes necessários (OsCardComponent, OsMoneyDisplayComponent, etc.)
+
+- **Correção do Dashboard Template no Storybook**:
+  - Identificação do problema: Falta de imports necessários no moduleMetadata
+  - Adição de imports completos: CommonModule, BrowserAnimationsModule, RouterTestingModule
+  - Adição de todos os organism components necessários
+  - Configuração de layout: 'fullscreen' para melhor visualização
+  - Validação de que não há erros de lint
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Criar stories abrangentes para os-budget-tracker
+- **Justificativa**: Componente complexo com muitas configurações, precisa de documentação completa
+- **Decisão**: Usar mock data realista para demonstração
+- **Justificativa**: Melhor visualização das funcionalidades do componente
+- **Decisão**: Adicionar imports completos no Dashboard Template
+- **Justificativa**: Componente depende de muitos organism components para funcionar
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: Dashboard Template não aparecendo no Storybook
+- **Solução**: Adição de moduleMetadata com todos os imports necessários
+- **Resultado**: Dashboard Template funcionando corretamente no Storybook
+
+- **Problema**: Falta de story para os-budget-tracker
+- **Solução**: Criação completa de stories com todas as variantes e cenários
+- **Resultado**: Documentação completa do componente no Storybook
+
+#### 🧪 Testes Realizados
+
+- **Validação de lint**: Nenhum erro encontrado nos arquivos criados
+- **Verificação de imports**: Todos os imports corretos e funcionais
+- **Validação de stories**: Estrutura correta seguindo padrões do Storybook
+
+#### 📝 Commits Relacionados
+
+- **os-budget-tracker.stories.ts**: Story completa criada ✅
+- **os-dashboard-template.stories.ts**: Imports e configuração corrigidos ✅
+
+#### ⏭️ Próximos Passos
+
+- ✅ **Story do os-budget-tracker criada com sucesso**
+- ✅ **Dashboard Template corrigido no Storybook**
+- ✅ **Documentação completa e funcional**
+
+#### 💭 Observações
+
+- **Correção bem-sucedida**: Dashboard Template agora funciona perfeitamente no Storybook
+- **Documentação completa**: os-budget-tracker totalmente documentado com 15 stories
+- **Qualidade mantida**: Seguiu padrões estabelecidos do Storybook
+- **Projeto**: Design System com documentação completa e funcional
