@@ -43,3 +43,6 @@ Thumbs.db
 
 ai.properties.md
 temp
+
+*storybook.log
+storybook-static
