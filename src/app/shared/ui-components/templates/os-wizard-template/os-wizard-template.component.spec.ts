@@ -319,8 +319,8 @@ describe('OsWizardTemplateComponent', () => {
       expect(buttons.length).toBeGreaterThan(0);
 
       // The finish button should be the primary button (mat-raised-button)
-      const finishButton = Array.from(buttons).find((button: any) =>
-        button.querySelector('button[mat-raised-button]')
+      const finishButton = Array.from(buttons).find((button) =>
+        (button as Element).querySelector('button[mat-raised-button]')
       ) as Element;
       expect(finishButton).toBeTruthy();
 
@@ -350,8 +350,8 @@ describe('OsWizardTemplateComponent', () => {
       expect(buttons.length).toBeGreaterThan(0);
 
       // Find the skip button by looking for the tertiary button (mat-button)
-      const skipButton = Array.from(buttons).find((button: any) => {
-        const buttonElement = button.querySelector('button[mat-button]');
+      const skipButton = Array.from(buttons).find((button) => {
+        const buttonElement = (button as Element).querySelector('button[mat-button]');
         return buttonElement !== null;
       }) as Element;
       expect(skipButton).toBeTruthy();

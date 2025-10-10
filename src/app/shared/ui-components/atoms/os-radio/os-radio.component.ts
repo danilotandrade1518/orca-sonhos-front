@@ -65,6 +65,7 @@ export class OsRadioComponent implements ControlValueAccessor {
   radioFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-radio-${Math.random().toString(36).substr(2, 9)}`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange = (value: string) => {
     // This will be set by registerOnChange
   };
@@ -96,7 +97,7 @@ export class OsRadioComponent implements ControlValueAccessor {
       .join(' ');
   });
 
-  handleChange(event: any): void {
+  handleChange(event: { value: string }): void {
     const value = event.value;
 
     this.onChange(value);

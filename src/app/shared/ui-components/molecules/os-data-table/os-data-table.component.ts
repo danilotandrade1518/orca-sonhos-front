@@ -17,6 +17,8 @@ export interface OsDataTableColumn {
   align?: 'left' | 'center' | 'right';
 }
 
+export type OsDataTableRow = Record<string, unknown>;
+
 export interface OsDataTableAction {
   key: string;
   label: string;
@@ -120,7 +122,7 @@ export interface OsDataTableAction {
   },
 })
 export class OsDataTableComponent {
-  data = input<any[]>([]);
+  data = input<OsDataTableRow[]>([]);
   columns = input<OsDataTableColumn[]>([]);
   title = input<string>('');
   actions = input<OsDataTableAction[]>([]);
@@ -139,7 +141,7 @@ export class OsDataTableComponent {
   pageSizeOptions = input<number[]>([5, 10, 25, 50]);
   showFirstLastButtons = input<boolean>(true);
 
-  rowClick = output<any>();
+  rowClick = output<OsDataTableRow>();
   actionClick = output<OsDataTableAction>();
   sortChange = output<Sort>();
   pageChange = output<PageEvent>();
@@ -201,7 +203,7 @@ export class OsDataTableComponent {
     return classes.join(' ');
   };
 
-  rowClass = (row: any) => {
+  rowClass = (row: OsDataTableRow) => {
     const classes = ['os-data-table__row'];
 
     if (this.variant() === 'striped') {
@@ -214,11 +216,11 @@ export class OsDataTableComponent {
     return classes.join(' ');
   };
 
-  getCellValue = (row: any, key: string) => {
+  getCellValue = (row: OsDataTableRow, key: string) => {
     return row[key] || '';
   };
 
-  onRowClick(row: any): void {
+  onRowClick(row: OsDataTableRow): void {
     this.rowClick.emit(row);
   }
 

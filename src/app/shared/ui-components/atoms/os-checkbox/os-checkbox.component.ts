@@ -69,6 +69,7 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   checkboxFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-checkbox-${Math.random().toString(36).substr(2, 9)}`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange = (value: boolean) => {
     // This will be set by registerOnChange
   };
@@ -104,7 +105,7 @@ export class OsCheckboxComponent implements ControlValueAccessor {
       .join(' ');
   });
 
-  handleChange(event: any): void {
+  handleChange(event: { checked: boolean }): void {
     const isChecked = event.checked;
 
     this.onChange(isChecked);

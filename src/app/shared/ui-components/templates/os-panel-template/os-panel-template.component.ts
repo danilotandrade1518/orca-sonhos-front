@@ -10,14 +10,14 @@ export interface PanelTemplateConfig {
   showActions?: boolean;
   collapsible?: boolean;
   expanded?: boolean;
-  actions?: Array<{
+  actions?: {
     label: string;
     variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
     size: 'small' | 'medium' | 'large';
     disabled?: boolean;
     loading?: boolean;
     icon?: string;
-  }>;
+  }[];
 }
 
 @Component({
@@ -85,7 +85,7 @@ export class OsPanelTemplateComponent {
     loading?: boolean;
     icon?: string;
   }>();
-  toggle = output<boolean>();
+  toggled = output<boolean>();
 
   isExpanded = computed(() => {
     return this.expanded();
@@ -143,7 +143,7 @@ export class OsPanelTemplateComponent {
 
   toggleExpanded(): void {
     const newExpanded = !this.isExpanded();
-    this.toggle.emit(newExpanded);
+    this.toggled.emit(newExpanded);
   }
 
   onActionClick(action: {

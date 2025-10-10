@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { OsPageHeaderComponent } from '../../organisms/os-page-header/os-page-header.component';
-import { OsDataGridComponent } from '../../organisms/os-data-grid/os-data-grid.component';
-import { OsFilterBarComponent } from '../../molecules/os-filter-bar/os-filter-bar.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
+import { OsFilterBarComponent } from '../../molecules/os-filter-bar/os-filter-bar.component';
+import { OsDataGridComponent } from '../../organisms/os-data-grid/os-data-grid.component';
+import { OsPageHeaderComponent } from '../../organisms/os-page-header/os-page-header.component';
 
 export interface ListTemplateData {
   id: string;
@@ -18,6 +18,7 @@ export interface ListTemplateData {
   amount?: number;
   category?: string;
   tags?: string[];
+  [key: string]: unknown;
 }
 
 export interface ListTemplateFilter {
@@ -166,13 +167,13 @@ export class OsListTemplateComponent {
   // Header
   title = input<string>('');
   subtitle = input<string>('');
-  breadcrumbs = input<Array<{ label: string; url?: string }>>([]);
+  breadcrumbs = input<{ label: string; url?: string }[]>([]);
   showBackButton = input<boolean>(false);
   backUrl = input<string>('');
 
   // Data
   data = input<ListTemplateData[]>([]);
-  columns = input<Array<{ key: string; label: string; sortable?: boolean }>>([]);
+  columns = input<{ key: string; label: string; sortable?: boolean }[]>([]);
   filters = input<ListTemplateFilter[]>([]);
   sort = input<{ field: string; direction: 'asc' | 'desc' } | null>(null);
   page = input<number>(1);
@@ -205,17 +206,17 @@ export class OsListTemplateComponent {
 
   // Actions
   headerActions = input<
-    Array<{
+    {
       label: string;
       icon?: string;
       variant?: 'primary' | 'secondary' | 'tertiary' | 'danger';
       size?: 'small' | 'medium' | 'large';
       disabled?: boolean;
       loading?: boolean;
-    }>
+    }[]
   >([]);
   gridActions = input<
-    Array<{ key: string; label: string; icon?: string; color?: 'primary' | 'secondary' | 'warn' }>
+    { key: string; label: string; icon?: string; color?: 'primary' | 'secondary' | 'warn' }[]
   >([]);
   footerActions = input<ListTemplateAction[]>([]);
 
@@ -342,12 +343,24 @@ export class OsListTemplateComponent {
     return this.filters().map((filter) => ({
       key: filter.field,
       label: filter.field,
-      value: filter.value,
+      value:
+        typeof filter.value === 'object' && 'from' in filter.value
+          ? filter.value.from
+          : filter.value,
       type: this.getFilterType(filter.value),
     }));
   });
 
-  private getFilterType(value: any): 'text' | 'select' | 'date' | 'number' {
+  private getFilterType(
+    value:
+      | string
+      | number
+      | Date
+      | {
+          from: Date;
+          to: Date;
+        }
+  ): 'text' | 'select' | 'date' | 'number' {
     if (typeof value === 'number') return 'number';
     if (value instanceof Date) return 'date';
     if (typeof value === 'object' && value.from && value.to) return 'date';
@@ -355,8 +368,12 @@ export class OsListTemplateComponent {
   }
 
   // Event Handlers
-  onRowClick(event: { item: ListTemplateData; index: number; event: MouseEvent }) {
-    this.rowClick.emit(event);
+  onRowClick(item: Record<string, unknown>) {
+    this.rowClick.emit({
+      item: item as ListTemplateData,
+      index: 0,
+      event: new MouseEvent('click'),
+    });
   }
 
   onHeaderActionClick(action: {
@@ -383,17 +400,17 @@ export class OsListTemplateComponent {
     this.footerActionClick.emit({ action, event });
   }
 
-  onFilterChange(filters: any[]) {
+  onFilterChange(filters: { field?: string; operator?: string; value?: unknown }[]) {
     // Convert OsDataGridFilter[] to ListTemplateFilter[]
     const convertedFilters: ListTemplateFilter[] = filters.map((filter) => ({
       field: filter.field || '',
-      operator: filter.operator || 'equals',
-      value: filter.value || '',
+      operator: (filter.operator as ListTemplateFilter['operator']) || 'equals',
+      value: (filter.value as ListTemplateFilter['value']) || '',
     }));
     this.filterChange.emit(convertedFilters);
   }
 
-  onSortChange(sort: any) {
+  onSortChange(sort: { field?: string; direction?: 'asc' | 'desc' }) {
     // Convert OsDataGridSort to our format
     const convertedSort = {
       field: sort.field || '',

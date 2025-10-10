@@ -325,7 +325,6 @@ describe('OsMoneyInputComponent', () => {
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      const label = fixture.debugElement.query(By.css('mat-label'));
 
       expect(input.nativeElement.getAttribute('aria-describedby')).toContain('helper');
       expect(input.nativeElement.id).toBeTruthy();

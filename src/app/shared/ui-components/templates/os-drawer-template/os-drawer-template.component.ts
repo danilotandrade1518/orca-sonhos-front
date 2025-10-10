@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
-import { OsCardComponent } from '../../molecules/os-card/os-card.component';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export interface DrawerTemplateConfig {
   title: string;
@@ -16,14 +14,14 @@ export interface DrawerTemplateConfig {
   cancelButtonText?: string;
   showConfirmButton?: boolean;
   showCancelButton?: boolean;
-  actions?: Array<{
+  actions?: {
     label: string;
     variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
     size: 'small' | 'medium' | 'large';
     disabled?: boolean;
     loading?: boolean;
     icon?: string;
-  }>;
+  }[];
 }
 
 @Component({
@@ -105,9 +103,9 @@ export class OsDrawerTemplateComponent {
   loading = input(false);
   valid = input(true);
 
-  close = output<void>();
-  confirm = output<void>();
-  cancel = output<void>();
+  closed = output<void>();
+  confirmed = output<void>();
+  cancelled = output<void>();
   actionClick = output<{
     label: string;
     variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
@@ -172,15 +170,15 @@ export class OsDrawerTemplateComponent {
   });
 
   onClose(): void {
-    this.close.emit();
+    this.closed.emit();
   }
 
   onConfirm(): void {
-    this.confirm.emit();
+    this.confirmed.emit();
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelled.emit();
   }
 
   onActionClick(action: {

@@ -298,7 +298,7 @@ describe('OsSidebarComponent', () => {
 
   describe('Collapse Functionality', () => {
     it('should emit collapseChange event when toggling', () => {
-      let emittedValues: boolean[] = [];
+      const emittedValues: boolean[] = [];
       component.collapseChange.subscribe((value) => emittedValues.push(value));
 
       component.toggleCollapse();

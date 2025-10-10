@@ -1,22 +1,23 @@
-import { Component, input, output, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import {
-  OsDataTableComponent,
-  OsDataTableColumn,
   OsDataTableAction,
+  OsDataTableColumn,
+  OsDataTableComponent,
 } from '../../molecules/os-data-table/os-data-table.component';
 import {
   OsFilterBarComponent,
   OsFilterOption,
 } from '../../molecules/os-filter-bar/os-filter-bar.component';
-import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export type OsDataGridSize = 'small' | 'medium' | 'large';
 export type OsDataGridVariant = 'default' | 'compact' | 'detailed';
 
 export interface OsDataGridFilter {
   key: string;
-  value: any;
+  value: string | number | Date | boolean;
   operator?: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'gt' | 'lt' | 'gte' | 'lte';
 }
 
@@ -99,9 +100,12 @@ export interface OsDataGridPagination {
           <div class="os-data-grid__filter-content">
             @for (option of filterOptions(); track option.key) {
             <div class="os-data-grid__filter-item">
-              <label class="os-data-grid__filter-label">{{ option.label }}</label>
+              <label [for]="'filter-' + option.key" class="os-data-grid__filter-label">{{
+                option.label
+              }}</label>
               @switch (option.type) { @case ('text') {
               <input
+                [id]="'filter-' + option.key"
                 type="text"
                 class="os-data-grid__filter-input"
                 [placeholder]="'Filtrar por ' + option.label"
@@ -197,7 +201,7 @@ export interface OsDataGridPagination {
 })
 export class OsDataGridComponent {
   // Inputs
-  data = input<any[]>([]);
+  data = input<Record<string, unknown>[]>([]);
   columns = input<OsDataTableColumn[]>([]);
   filterOptions = input<OsFilterOption[]>([]);
   tableActions = input<OsDataTableAction[]>([]);
@@ -230,7 +234,7 @@ export class OsDataGridComponent {
   lastUpdated = input<Date>(new Date());
 
   // Outputs
-  rowClick = output<any>();
+  rowClick = output<Record<string, unknown>>();
   tableActionClick = output<OsDataTableAction>();
   refresh = output<void>();
   export = output<void>();
@@ -395,7 +399,7 @@ export class OsDataGridComponent {
     this.add.emit();
   }
 
-  onRowClick(row: any): void {
+  onRowClick(row: Record<string, unknown>): void {
     this.rowClick.emit(row);
   }
 
@@ -403,9 +407,9 @@ export class OsDataGridComponent {
     this.tableActionClick.emit(action);
   }
 
-  onFilterChange(key: string, event: any): void {
-    const value = event.target?.value || event;
-    this.updateFilter(key, value);
+  onFilterChange(key: string, event: Event | { target?: { value: unknown } } | unknown): void {
+    const value = (event as { target?: { value: unknown } })?.target?.value || event;
+    this.updateFilter(key, value as string | number | Date | boolean | null | undefined);
   }
 
   onClearFilters(): void {
@@ -417,15 +421,17 @@ export class OsDataGridComponent {
     this.filterChange.emit([...this.filters()]);
   }
 
-  onSortChange(sort: any): void {
+  onSortChange(sort: { active: string; direction: 'asc' | 'desc' | '' }): void {
+    if (sort.direction === '') return;
+
     this.sort.set({
       column: sort.active,
-      direction: sort.direction,
+      direction: sort.direction as 'asc' | 'desc',
     });
     this.sortChange.emit(this.sort()!);
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.pagination.update((p) => ({
       ...p,
       page: event.pageIndex,
@@ -435,7 +441,10 @@ export class OsDataGridComponent {
   }
 
   // Helper methods
-  private updateFilter(key: string, value: any): void {
+  private updateFilter(
+    key: string,
+    value: string | number | Date | boolean | null | undefined
+  ): void {
     const currentFilters = [...this.filters()];
     const existingIndex = currentFilters.findIndex((f) => f.key === key);
 
@@ -455,11 +464,13 @@ export class OsDataGridComponent {
     this.filters.set(currentFilters);
   }
 
-  private getNestedValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
+  private getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+    return path
+      .split('.')
+      .reduce((current: unknown, key: string) => (current as Record<string, unknown>)?.[key], obj);
   }
 
-  private matchesFilter(itemValue: any, filterValue: any, operator: string): boolean {
+  private matchesFilter(itemValue: unknown, filterValue: unknown, operator: string): boolean {
     if (itemValue === null || itemValue === undefined) {
       return false;
     }
@@ -489,14 +500,19 @@ export class OsDataGridComponent {
     }
   }
 
-  private applySorting(data: any[], sort: OsDataGridSort): any[] {
+  private applySorting(
+    data: Record<string, unknown>[],
+    sort: OsDataGridSort
+  ): Record<string, unknown>[] {
     return [...data].sort((a, b) => {
       const aValue = this.getNestedValue(a, sort.column);
       const bValue = this.getNestedValue(b, sort.column);
 
       if (aValue === bValue) return 0;
 
-      const comparison = aValue < bValue ? -1 : 1;
+      const aStr = String(aValue || '');
+      const bStr = String(bValue || '');
+      const comparison = aStr < bStr ? -1 : aStr > bStr ? 1 : 0;
       return sort.direction === 'asc' ? comparison : -comparison;
     });
   }

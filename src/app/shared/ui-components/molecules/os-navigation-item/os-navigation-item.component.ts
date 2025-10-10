@@ -67,7 +67,7 @@ export class OsNavigationItemComponent {
   label = input<string>('');
   icon = input<string>('');
   routerLink = input<string | string[] | undefined>(undefined);
-  queryParams = input<Record<string, any> | undefined>(undefined);
+  queryParams = input<Record<string, string | number | boolean> | undefined>(undefined);
   fragment = input<string | undefined>(undefined);
   variant = input<OsNavigationItemVariant>('default');
   size = input<OsNavigationItemSize>('medium');

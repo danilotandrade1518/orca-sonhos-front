@@ -1,10 +1,13 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
-import { OsPageHeaderComponent } from '../../organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '../../organisms/os-page-header/os-page-header.component';
 
 export interface DetailTemplateAction {
   id: string;
@@ -64,8 +67,10 @@ export interface DetailTemplateSection {
           <div class="os-detail-template__fields">
             @for (field of section.fields; track field.label) {
             <div class="os-detail-template__field">
-              <label class="os-detail-template__field-label">{{ field.label }}</label>
-              <div [class]="getFieldClass(field)">
+              <label [for]="'field-' + field.label" class="os-detail-template__field-label">{{
+                field.label
+              }}</label>
+              <div [id]="'field-' + field.label" [class]="getFieldClass(field)">
                 @switch (field.type) { @case ('currency') {
                 <span class="os-detail-template__currency">
                   R$ {{ formatCurrency(field.value) }}
@@ -98,7 +103,7 @@ export interface DetailTemplateSection {
           [size]="size()"
           [icon]="action.icon || ''"
           [disabled]="action.disabled || disabled()"
-          (click)="onActionClick.emit(action)"
+          (click)="actionClicked.emit(action)"
         >
           {{ action.label }}
         </os-button>
@@ -121,15 +126,15 @@ export class OsDetailTemplateComponent {
   subtitle = input<string>('');
   showHeader = input(true);
   showBreadcrumb = input(false);
-  breadcrumbItems = input<any[]>([]);
+  breadcrumbItems = input<{ label: string; route?: string }[]>([]);
   headerActions = input<DetailTemplateAction[]>([]);
 
   sections = input<DetailTemplateSection[]>([]);
   actions = input<DetailTemplateAction[]>([]);
 
-  onHeaderActionClick = output<{ action: DetailTemplateAction; event: MouseEvent }>();
-  onActionClick = output<DetailTemplateAction>();
-  onSectionToggle = output<{ section: DetailTemplateSection; expanded: boolean }>();
+  headerActionClicked = output<{ action: DetailTemplateAction; event: MouseEvent }>();
+  actionClicked = output<DetailTemplateAction>();
+  sectionToggled = output<{ section: DetailTemplateSection; expanded: boolean }>();
 
   protected templateClass = computed(() => {
     return [
@@ -209,11 +214,18 @@ export class OsDetailTemplateComponent {
   public toggleSection(section: DetailTemplateSection): void {
     if (section.collapsible) {
       section.expanded = !section.expanded;
-      this.onSectionToggle.emit({ section, expanded: section.expanded });
+      this.sectionToggled.emit({ section, expanded: section.expanded });
     }
   }
 
-  public handleHeaderActionClick(event: any): void {
-    this.onHeaderActionClick.emit({ action: event, event: new MouseEvent('click') });
+  public handleHeaderActionClick(event: PageHeaderAction): void {
+    const detailAction: DetailTemplateAction = {
+      id: event.label.toLowerCase().replace(/\s+/g, '-'),
+      label: event.label,
+      variant: event.variant || 'primary',
+      icon: event.icon,
+      disabled: event.disabled,
+    };
+    this.headerActionClicked.emit({ action: detailAction, event: new MouseEvent('click') });
   }
 }

@@ -70,7 +70,7 @@ export class OsToggleComponent {
     return classes.join(' ');
   });
 
-  onToggle(event: any): void {
+  onToggle(event: { checked: boolean }): void {
     if (!this.disabled()) {
       this.toggled.emit(event.checked);
     }

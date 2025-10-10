@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
+
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type OsDropdownSize = 'small' | 'medium' | 'large';
@@ -18,7 +19,7 @@ export type OsDropdownVariant = 'default' | 'primary' | 'secondary' | 'accent';
 export type OsDropdownAlignment = 'start' | 'center' | 'end';
 
 export interface OsDropdownOption {
-  value: any;
+  value: string | number | boolean;
   label: string;
   disabled?: boolean;
   icon?: string;
@@ -39,7 +40,7 @@ export interface OsDropdownOption {
         [attr.aria-label]="ariaLabel()"
         [attr.aria-expanded]="isOpen()"
         [attr.aria-haspopup]="'menu'"
-        (click)="handleTriggerClick($event)"
+        (click)="handleTriggerClick()"
       >
         @if (icon()) {
         <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
@@ -76,7 +77,7 @@ export interface OsDropdownOption {
           [disabled]="option.disabled"
           [class]="optionClass(option)"
           [attr.aria-label]="option.label"
-          (click)="handleOptionClick(option, $event)"
+          (click)="handleOptionClick(option)"
         >
           @if (option.icon) {
           <os-icon [name]="option.icon" [size]="getIconSize()" [variant]="getIconVariant()" />
@@ -96,7 +97,7 @@ export interface OsDropdownOption {
 export class OsDropdownComponent {
   options = input<OsDropdownOption[]>([]);
   placeholder = input<string>('');
-  selectedValue = input<any>(null);
+  selectedValue = input<string | number | boolean | null>(null);
   variant = input<OsDropdownVariant>('default');
   size = input<OsDropdownSize>('medium');
   disabled = input(false);
@@ -105,12 +106,12 @@ export class OsDropdownComponent {
   alignment = input<OsDropdownAlignment>('start');
   ariaLabel = input<string>('');
 
-  valueChange = output<any>();
+  valueChange = output<string | number | boolean>();
   optionSelect = output<OsDropdownOption>();
   menuOpen = output<void>();
   menuClose = output<void>();
 
-  @ViewChild('menu') menu!: any;
+  @ViewChild('menu') menu!: MatMenu;
 
   private _isOpen = signal(false);
 
@@ -245,14 +246,14 @@ export class OsDropdownComponent {
 
   yPosition = computed(() => 'below' as const);
 
-  handleTriggerClick(event: MouseEvent): void {
+  handleTriggerClick(): void {
     if (!this.disabled()) {
       this._isOpen.set(true);
       this.menuOpen.emit();
     }
   }
 
-  handleOptionClick(option: OsDropdownOption, event: MouseEvent): void {
+  handleOptionClick(option: OsDropdownOption): void {
     if (!option.disabled) {
       this.valueChange.emit(option.value);
       this.optionSelect.emit(option);

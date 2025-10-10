@@ -1,7 +1,8 @@
-import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OsInputComponent } from '../../atoms/os-input/os-input.component';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { OsInputComponent } from '../../atoms/os-input/os-input.component';
 
 export type OsSearchBoxSize = 'small' | 'medium' | 'large';
 export type OsSearchBoxVariant = 'default' | 'outlined' | 'filled';
@@ -37,7 +38,7 @@ export interface OsSearchSuggestion {
         <os-button
           variant="tertiary"
           size="small"
-          [class]="suggestionClass(suggestion)"
+          [class]="suggestionClass()"
           (buttonClick)="onSuggestionClick(suggestion)"
           [attr.aria-label]="'Selecionar: ' + suggestion.text"
         >
@@ -106,7 +107,7 @@ export class OsSearchBoxComponent {
     return classes.join(' ');
   };
 
-  suggestionClass = (suggestion: OsSearchSuggestion) => {
+  suggestionClass = () => {
     const classes = ['os-search-box__suggestion'];
 
     if (this.size() !== 'medium') {

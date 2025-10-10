@@ -152,7 +152,7 @@ export class OsSelectComponent implements ControlValueAccessor {
       .join(' ');
   });
 
-  handleChange(event: any): void {
+  handleChange(event: { value: string | number }): void {
     const newValue = event.value;
     this._onChange(newValue);
     this.valueChange.emit(newValue);

@@ -8,9 +8,9 @@ export type OsFilterBarSize = 'small' | 'medium' | 'large';
 export interface OsFilterOption {
   key: string;
   label: string;
-  value: any;
+  value: string | number | Date | null;
   type: 'text' | 'select' | 'date' | 'number';
-  options?: { value: any; label: string }[];
+  options?: { value: string | number; label: string }[];
 }
 
 @Component({

@@ -115,7 +115,11 @@ describe('OsModalComponent', () => {
       expect(component.showActions()).toBe(false);
 
       fixture.componentRef.setInput('actions', [
-        { label: 'Test', variant: 'primary', action: () => {} },
+        {
+          label: 'Test',
+          variant: 'primary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
       ]);
       expect(component.showActions()).toBe(true);
 
@@ -190,8 +194,16 @@ describe('OsModalComponent', () => {
 
     it('should apply correct actions classes', () => {
       fixture.componentRef.setInput('actions', [
-        { label: 'Action 1', variant: 'primary', action: () => {} },
-        { label: 'Action 2', variant: 'secondary', action: () => {} },
+        {
+          label: 'Action 1',
+          variant: 'primary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
+        {
+          label: 'Action 2',
+          variant: 'secondary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
       ]);
 
       let classes = component.actionsClasses();
@@ -199,9 +211,21 @@ describe('OsModalComponent', () => {
       expect(classes).toContain('os-modal__actions--dual');
 
       fixture.componentRef.setInput('actions', [
-        { label: 'Action 1', variant: 'primary', action: () => {} },
-        { label: 'Action 2', variant: 'secondary', action: () => {} },
-        { label: 'Action 3', variant: 'tertiary', action: () => {} },
+        {
+          label: 'Action 1',
+          variant: 'primary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
+        {
+          label: 'Action 2',
+          variant: 'secondary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
+        {
+          label: 'Action 3',
+          variant: 'tertiary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
       ]);
 
       classes = component.actionsClasses();
@@ -333,8 +357,16 @@ describe('OsModalComponent', () => {
 
     it('should render custom actions when provided', () => {
       const actions: OsModalAction[] = [
-        { label: 'Save', variant: 'primary', action: () => {} },
-        { label: 'Cancel', variant: 'secondary', action: () => {} },
+        {
+          label: 'Save',
+          variant: 'primary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
+        {
+          label: 'Cancel',
+          variant: 'secondary',
+          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        },
       ];
 
       fixture.componentRef.setInput('actions', actions);

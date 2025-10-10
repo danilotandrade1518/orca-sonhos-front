@@ -187,8 +187,9 @@ export class OsSliderComponent implements ControlValueAccessor {
     return 'primary';
   });
 
-  handleInput(event: any): void {
-    const newValue = event.value || event.target?.value || 0;
+  handleInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const newValue = target?.value ? Number(target.value) : this.value();
 
     this._onChange(newValue);
     this.valueChange.emit(newValue);

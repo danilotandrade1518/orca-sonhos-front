@@ -178,7 +178,9 @@ describe('OsDataTableComponent', () => {
   it('should apply alignment classes to cells', () => {
     const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
     const valueCell = Array.from(cells).find(
-      (cell: any) => cell.textContent.trim() === '100' || cell.textContent.trim() === '200'
+      (cell) =>
+        (cell as HTMLElement).textContent?.trim() === '100' ||
+        (cell as HTMLElement).textContent?.trim() === '200'
     ) as HTMLElement;
     expect(valueCell?.classList.contains('os-data-table__cell--right')).toBe(true);
   });
