@@ -1,0 +1,315 @@
+@use '../../theme/variables' as *;
+
+.os-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--os-color-surface);
+  border-right: 1px solid var(--os-color-border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  // Variants
+  &--default {
+    width: 280px;
+    min-width: 280px;
+  }
+
+  &--minimal {
+    width: 240px;
+    min-width: 240px;
+  }
+
+  &--compact {
+    width: 200px;
+    min-width: 200px;
+  }
+
+  &--expanded {
+    width: 320px;
+    min-width: 320px;
+  }
+
+  // Sizes
+  &--small {
+    .os-sidebar__header {
+      padding: var(--os-spacing-sm);
+    }
+
+    .os-sidebar__nav {
+      padding: var(--os-spacing-sm);
+    }
+
+    .os-sidebar__footer {
+      padding: var(--os-spacing-sm);
+    }
+  }
+
+  &--medium {
+    .os-sidebar__header {
+      padding: var(--os-spacing-md);
+    }
+
+    .os-sidebar__nav {
+      padding: var(--os-spacing-md);
+    }
+
+    .os-sidebar__footer {
+      padding: var(--os-spacing-md);
+    }
+  }
+
+  &--large {
+    .os-sidebar__header {
+      padding: var(--os-spacing-lg);
+    }
+
+    .os-sidebar__nav {
+      padding: var(--os-spacing-lg);
+    }
+
+    .os-sidebar__footer {
+      padding: var(--os-spacing-lg);
+    }
+  }
+
+  // Themes
+  &--light {
+    background-color: var(--os-color-surface);
+    color: var(--os-color-text-primary);
+    border-right-color: var(--os-color-border);
+  }
+
+  &--dark {
+    background-color: var(--os-color-surface-dark);
+    color: var(--os-color-text-primary-light);
+    border-right-color: var(--os-color-border-dark);
+  }
+
+  // Collapsed state
+  &--collapsed {
+    width: 60px;
+    min-width: 60px;
+
+    .os-sidebar__title {
+      display: none;
+    }
+
+    .os-sidebar__logo {
+      .os-sidebar__logo-image {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .os-sidebar__list {
+      .os-navigation-item {
+        justify-content: center;
+        padding: var(--os-spacing-sm);
+
+        .os-navigation-item__text {
+          display: none;
+        }
+
+        .os-navigation-item__badge {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          transform: scale(0.8);
+        }
+      }
+    }
+
+    .os-sidebar__sub-list {
+      display: none;
+    }
+  }
+
+  // Header
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--os-spacing-sm);
+    border-bottom: 1px solid var(--os-color-border);
+    background-color: var(--os-color-surface-elevated);
+    flex-shrink: 0;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    &-image {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      transition: all 0.3s ease;
+    }
+  }
+
+  &__title {
+    font-size: var(--os-font-size-lg);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-primary);
+    margin: 0;
+    flex: 1;
+    transition: all 0.3s ease;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--os-color-text-secondary);
+    border-radius: var(--os-border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: var(--os-color-surface-hover);
+      color: var(--os-color-text-primary);
+    }
+
+    &:focus {
+      outline: 2px solid var(--os-color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  // Navigation
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-xs);
+  }
+
+  &__item {
+    position: relative;
+  }
+
+  &__sub-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-left: var(--os-spacing-lg);
+    margin-top: var(--os-spacing-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-xs);
+    border-left: 2px solid var(--os-color-border-light);
+    padding-left: var(--os-spacing-sm);
+  }
+
+  &__sub-item {
+    position: relative;
+  }
+
+  // Footer
+  &__footer {
+    border-top: 1px solid var(--os-color-border);
+    background-color: var(--os-color-surface-elevated);
+    flex-shrink: 0;
+  }
+
+  // Custom content
+  &__custom {
+    padding: var(--os-spacing-md);
+    border-top: 1px solid var(--os-color-border);
+    background-color: var(--os-color-surface-elevated);
+    flex-shrink: 0;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .os-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &--open {
+      transform: translateX(0);
+    }
+
+    &--collapsed {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .os-sidebar {
+    width: 100vw;
+    min-width: 100vw;
+
+    &--collapsed {
+      width: 100vw;
+      min-width: 100vw;
+    }
+  }
+}
+
+// Dark theme adjustments
+.os-sidebar--dark {
+  .os-sidebar__header {
+    background-color: var(--os-color-surface-dark-elevated);
+    border-bottom-color: var(--os-color-border-dark);
+  }
+
+  .os-sidebar__footer {
+    background-color: var(--os-color-surface-dark-elevated);
+    border-top-color: var(--os-color-border-dark);
+  }
+
+  .os-sidebar__custom {
+    background-color: var(--os-color-surface-dark-elevated);
+    border-top-color: var(--os-color-border-dark);
+  }
+
+  .os-sidebar__sub-list {
+    border-left-color: var(--os-color-border-dark);
+  }
+}
+
+// Accessibility
+.os-sidebar {
+  &:focus-within {
+    outline: 2px solid var(--os-color-primary);
+    outline-offset: -2px;
+  }
+}
+
+// Animation for smooth transitions
+.os-sidebar__list {
+  .os-navigation-item {
+    transition: all 0.2s ease;
+  }
+}
+
+// Hover effects
+.os-sidebar:not(.os-sidebar--collapsed) {
+  .os-sidebar__list {
+    .os-navigation-item:hover {
+      background-color: var(--os-color-surface-hover);
+    }
+  }
+}

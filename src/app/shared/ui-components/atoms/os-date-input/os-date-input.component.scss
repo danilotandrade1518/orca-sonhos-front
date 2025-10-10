@@ -1,0 +1,52 @@
+@use '../../theme/tokens' as tokens;
+
+// Container styles
+.os-date-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &--small {
+    .os-date-input__form-field {
+      font-size: var(--os-font-size-sm);
+    }
+  }
+
+  &--large {
+    .os-date-input__form-field {
+      font-size: var(--os-font-size-lg);
+    }
+  }
+}
+
+// Material form field customization
+.os-date-input__form-field {
+  width: 100%;
+
+  &--error {
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-focus-overlay {
+        background-color: var(--os-color-error-100);
+      }
+    }
+  }
+
+  &--disabled {
+    .mat-mdc-form-field {
+      opacity: 0.6;
+    }
+  }
+}
+
+// Icon customization
+.os-date-input__prefix-icon,
+.os-date-input__suffix-icon {
+  color: var(--os-color-text-secondary);
+}
+
+// Helper text customization
+.os-date-input__helper {
+  &--error {
+    color: var(--os-color-error-600);
+  }
+}

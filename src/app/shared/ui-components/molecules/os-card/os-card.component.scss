@@ -1,0 +1,94 @@
+@use '../../theme/variables' as *;
+
+.os-card {
+  display: flex;
+  flex-direction: column;
+  background: $color-surface;
+  border-radius: $border-radius-medium;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &--default {
+    border: 1px solid $color-border;
+  }
+
+  &--outlined {
+    border: 2px solid $color-primary;
+    background: $color-surface;
+  }
+
+  &--elevated {
+    border: none;
+    box-shadow: $shadow-medium;
+    background: $color-surface;
+  }
+
+  &--flat {
+    border: none;
+    background: $color-background;
+  }
+
+  &--small {
+    padding: $spacing-small;
+    border-radius: $border-radius-small;
+  }
+
+  &--medium {
+    padding: $spacing-medium;
+  }
+
+  &--large {
+    padding: $spacing-large;
+    border-radius: $border-radius-large;
+  }
+
+  &--clickable {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-large;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__header {
+    padding: $spacing-medium $spacing-medium 0;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: $spacing-medium;
+
+    &:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $spacing-medium;
+    min-height: 0;
+  }
+
+  &__actions {
+    padding: 0 $spacing-medium $spacing-medium;
+    border-top: 1px solid $color-border;
+    margin-top: $spacing-medium;
+    display: flex;
+    gap: $spacing-small;
+    justify-content: flex-end;
+
+    &:first-child {
+      margin-top: 0;
+      border-top: none;
+    }
+  }
+}
+
+.os-card-host {
+  display: block;
+  width: 100%;
+}

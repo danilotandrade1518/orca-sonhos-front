@@ -1,0 +1,93 @@
+@if (budgetData(); as data) {
+<os-card [variant]="variant() === 'compact' ? 'flat' : 'default'" [size]="size()" [clickable]="clickable()"
+    (click)="onCardClick()"
+    [class]="'os-budget-summary os-budget-summary--' + variant() + ' os-budget-summary--' + size()">
+    <!-- Header -->
+    <div class="os-budget-summary__header">
+        <div class="os-budget-summary__title-section">
+            <h3 class="os-budget-summary__title">{{ data.name }}</h3>
+            @if (data.category) {
+            <span class="os-budget-summary__category">{{ data.category }}</span>
+            }
+        </div>
+
+        @if (showStatus()) {
+        <os-badge [variant]="statusInfo().type" [size]="size() === 'large' ? 'md' : 'sm'">
+            <os-icon [name]="statusInfo().icon" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+            {{ statusInfo().label }}
+        </os-badge>
+        }
+    </div>
+
+    <!-- Progress Section -->
+    @if (showProgress()) {
+    <div class="os-budget-summary__progress">
+        <div class="os-budget-summary__progress-header">
+            <span class="os-budget-summary__progress-label">Progresso</span>
+            <span class="os-budget-summary__progress-percentage">{{ progressPercentage() }}%</span>
+        </div>
+
+        <div class="os-budget-summary__progress-bar">
+            <div class="os-budget-summary__progress-fill" [style.width.%]="progressPercentage()"
+                [class.os-budget-summary__progress-fill--over-budget]="isOverBudget()"
+                [class.os-budget-summary__progress-fill--completed]="isCompleted()"></div>
+        </div>
+    </div>
+    }
+
+    <!-- Financial Summary -->
+    <div class="os-budget-summary__financial">
+        <div class="os-budget-summary__amount-group">
+            <div class="os-budget-summary__amount">
+                <span class="os-budget-summary__amount-label">Orçamento Total</span>
+                <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()"></os-money-display>
+            </div>
+
+            <div class="os-budget-summary__amount">
+                <span class="os-budget-summary__amount-label">Gasto</span>
+                <os-money-display [value]="data.spentAmount" [variant]="isOverBudget() ? 'error' : 'default'"
+                    [size]="size()"></os-money-display>
+            </div>
+
+            <div class="os-budget-summary__amount">
+                <span class="os-budget-summary__amount-label">Restante</span>
+                <os-money-display [value]="data.remainingAmount"
+                    [variant]="data.remainingAmount >= 0 ? 'success' : 'error'" [size]="size()"></os-money-display>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dates Section (only for detailed variant) -->
+    @if (variant() === 'detailed' && showDates() && formattedDates(); as dates) {
+    <div class="os-budget-summary__dates">
+        <div class="os-budget-summary__date-item">
+            <os-icon name="calendar_today" size="sm"></os-icon>
+            <span class="os-budget-summary__date-label">Início:</span>
+            <span class="os-budget-summary__date-value">{{ dates.start }}</span>
+        </div>
+
+        <div class="os-budget-summary__date-item">
+            <os-icon name="event" size="sm"></os-icon>
+            <span class="os-budget-summary__date-label">Fim:</span>
+            <span class="os-budget-summary__date-value">{{ dates.end }}</span>
+        </div>
+
+        <div class="os-budget-summary__date-item">
+            <os-icon name="update" size="sm"></os-icon>
+            <span class="os-budget-summary__date-label">Atualizado:</span>
+            <span class="os-budget-summary__date-value">{{ dates.lastUpdated }}</span>
+        </div>
+    </div>
+    }
+
+    <!-- Compact variant additional info -->
+    @if (variant() === 'compact') {
+    <div class="os-budget-summary__compact-info">
+        <span class="os-budget-summary__compact-percentage">{{ progressPercentage() }}%</span>
+        <span class="os-budget-summary__compact-status" [style.color]="getStatusColor()">
+            {{ statusInfo().label }}
+        </span>
+    </div>
+    }
+</os-card>
+}

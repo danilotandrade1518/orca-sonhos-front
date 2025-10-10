@@ -1,0 +1,109 @@
+@use '../../theme/variables' as *;
+
+.os-date-picker {
+  width: 100%;
+
+  &__field {
+    width: 100%;
+  }
+
+  &__date {
+    &--disabled {
+      color: $color-text-disabled;
+      pointer-events: none;
+    }
+  }
+
+  // Sizes
+  &--small {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        min-height: 40px;
+      }
+    }
+  }
+
+  &--large {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        min-height: 56px;
+      }
+    }
+  }
+
+  // Variants
+  &--outlined {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        border: 2px solid $color-border;
+
+        &:hover {
+          border-color: $color-primary;
+        }
+
+        &.mdc-text-field--focused {
+          border-color: $color-primary;
+        }
+      }
+    }
+  }
+
+  &--filled {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        background: $color-background-secondary;
+        border: 1px solid $color-border;
+
+        &:hover {
+          background: $color-background-hover;
+        }
+      }
+    }
+  }
+
+  // Disabled state
+  &--disabled {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        background: $color-background-disabled;
+        color: $color-text-disabled;
+      }
+    }
+
+    .mat-datepicker-toggle {
+      color: $color-text-disabled;
+    }
+  }
+
+  // Calendar icon customization
+  .mat-datepicker-toggle {
+    .mat-icon {
+      color: $color-primary;
+    }
+  }
+
+  // Date picker panel customization
+  ::ng-deep .mat-datepicker-popup {
+    .mat-calendar {
+      .mat-calendar-header {
+        background: $color-primary;
+        color: $color-on-primary;
+      }
+
+      .mat-calendar-body-cell {
+        &:hover {
+          background: $color-background-hover;
+        }
+
+        &.mat-calendar-body-selected {
+          background: $color-primary;
+          color: $color-on-primary;
+        }
+
+        &.mat-calendar-body-today {
+          border: 1px solid $color-primary;
+        }
+      }
+    }
+  }
+}

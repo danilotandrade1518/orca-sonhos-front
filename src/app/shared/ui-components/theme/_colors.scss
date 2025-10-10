@@ -1,0 +1,263 @@
+// Cores do Design System OrçaSonhos
+// Paleta azul dominante com roxo secundário
+
+// ===== CORES PRIMÁRIAS =====
+.os-color-primary {
+  &-50 {
+    color: var(--os-color-primary-50);
+  }
+  &-100 {
+    color: var(--os-color-primary-100);
+  }
+  &-200 {
+    color: var(--os-color-primary-200);
+  }
+  &-300 {
+    color: var(--os-color-primary-300);
+  }
+  &-400 {
+    color: var(--os-color-primary-400);
+  }
+  &-500 {
+    color: var(--os-color-primary-500);
+  }
+  &-600 {
+    color: var(--os-color-primary-600);
+  }
+  &-700 {
+    color: var(--os-color-primary-700);
+  }
+  &-800 {
+    color: var(--os-color-primary-800);
+  }
+  &-900 {
+    color: var(--os-color-primary-900);
+  }
+}
+
+.os-bg-primary {
+  &-50 {
+    background-color: var(--os-color-primary-50);
+  }
+  &-100 {
+    background-color: var(--os-color-primary-100);
+  }
+  &-200 {
+    background-color: var(--os-color-primary-200);
+  }
+  &-300 {
+    background-color: var(--os-color-primary-300);
+  }
+  &-400 {
+    background-color: var(--os-color-primary-400);
+  }
+  &-500 {
+    background-color: var(--os-color-primary-500);
+  }
+  &-600 {
+    background-color: var(--os-color-primary-600);
+  }
+  &-700 {
+    background-color: var(--os-color-primary-700);
+  }
+  &-800 {
+    background-color: var(--os-color-primary-800);
+  }
+  &-900 {
+    background-color: var(--os-color-primary-900);
+  }
+}
+
+// ===== CORES SECUNDÁRIAS =====
+.os-color-secondary {
+  &-50 {
+    color: var(--os-color-secondary-50);
+  }
+  &-100 {
+    color: var(--os-color-secondary-100);
+  }
+  &-200 {
+    color: var(--os-color-secondary-200);
+  }
+  &-300 {
+    color: var(--os-color-secondary-300);
+  }
+  &-400 {
+    color: var(--os-color-secondary-400);
+  }
+  &-500 {
+    color: var(--os-color-secondary-500);
+  }
+  &-600 {
+    color: var(--os-color-secondary-600);
+  }
+  &-700 {
+    color: var(--os-color-secondary-700);
+  }
+  &-800 {
+    color: var(--os-color-secondary-800);
+  }
+  &-900 {
+    color: var(--os-color-secondary-900);
+  }
+}
+
+.os-bg-secondary {
+  &-50 {
+    background-color: var(--os-color-secondary-50);
+  }
+  &-100 {
+    background-color: var(--os-color-secondary-100);
+  }
+  &-200 {
+    background-color: var(--os-color-secondary-200);
+  }
+  &-300 {
+    background-color: var(--os-color-secondary-300);
+  }
+  &-400 {
+    background-color: var(--os-color-secondary-400);
+  }
+  &-500 {
+    background-color: var(--os-color-secondary-500);
+  }
+  &-600 {
+    background-color: var(--os-color-secondary-600);
+  }
+  &-700 {
+    background-color: var(--os-color-secondary-700);
+  }
+  &-800 {
+    background-color: var(--os-color-secondary-800);
+  }
+  &-900 {
+    background-color: var(--os-color-secondary-900);
+  }
+}
+
+// ===== CORES NEUTRAS =====
+.os-color-neutral {
+  &-50 {
+    color: var(--os-color-neutral-50);
+  }
+  &-100 {
+    color: var(--os-color-neutral-100);
+  }
+  &-200 {
+    color: var(--os-color-neutral-200);
+  }
+  &-300 {
+    color: var(--os-color-neutral-300);
+  }
+  &-400 {
+    color: var(--os-color-neutral-400);
+  }
+  &-500 {
+    color: var(--os-color-neutral-500);
+  }
+  &-600 {
+    color: var(--os-color-neutral-600);
+  }
+  &-700 {
+    color: var(--os-color-neutral-700);
+  }
+  &-800 {
+    color: var(--os-color-neutral-800);
+  }
+  &-900 {
+    color: var(--os-color-neutral-900);
+  }
+}
+
+.os-bg-neutral {
+  &-50 {
+    background-color: var(--os-color-neutral-50);
+  }
+  &-100 {
+    background-color: var(--os-color-neutral-100);
+  }
+  &-200 {
+    background-color: var(--os-color-neutral-200);
+  }
+  &-300 {
+    background-color: var(--os-color-neutral-300);
+  }
+  &-400 {
+    background-color: var(--os-color-neutral-400);
+  }
+  &-500 {
+    background-color: var(--os-color-neutral-500);
+  }
+  &-600 {
+    background-color: var(--os-color-neutral-600);
+  }
+  &-700 {
+    background-color: var(--os-color-neutral-700);
+  }
+  &-800 {
+    background-color: var(--os-color-neutral-800);
+  }
+  &-900 {
+    background-color: var(--os-color-neutral-900);
+  }
+}
+
+// ===== CORES SEMÂNTICAS =====
+.os-color-success {
+  color: var(--os-color-success);
+}
+.os-color-warning {
+  color: var(--os-color-warning);
+}
+.os-color-error {
+  color: var(--os-color-error);
+}
+.os-color-info {
+  color: var(--os-color-info);
+}
+
+.os-bg-success {
+  background-color: var(--os-color-success);
+}
+.os-bg-warning {
+  background-color: var(--os-color-warning);
+}
+.os-bg-error {
+  background-color: var(--os-color-error);
+}
+.os-bg-info {
+  background-color: var(--os-color-info);
+}
+
+// ===== CORES DE SUPERFÍCIE =====
+.os-color-surface {
+  color: var(--os-color-surface);
+}
+.os-color-surface-variant {
+  color: var(--os-color-surface-variant);
+}
+.os-color-background {
+  color: var(--os-color-background);
+}
+.os-color-on-surface {
+  color: var(--os-color-on-surface);
+}
+.os-color-on-surface-variant {
+  color: var(--os-color-on-surface-variant);
+}
+
+.os-bg-surface {
+  background-color: var(--os-color-surface);
+}
+.os-bg-surface-variant {
+  background-color: var(--os-color-surface-variant);
+}
+.os-bg-background {
+  background-color: var(--os-color-background);
+}
+.os-bg-on-surface {
+  background-color: var(--os-color-on-surface);
+}
+.os-bg-on-surface-variant {
+  background-color: var(--os-color-on-surface-variant);
+}

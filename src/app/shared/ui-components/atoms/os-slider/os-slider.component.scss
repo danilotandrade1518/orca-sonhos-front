@@ -1,0 +1,165 @@
+@use '../../theme/tokens' as tokens;
+
+.os-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--os-spacing-xs);
+  width: 100%;
+
+  &--small {
+    gap: var(--os-spacing-xxs);
+  }
+
+  &--large {
+    gap: var(--os-spacing-sm);
+  }
+
+  &--error {
+    .mat-mdc-slider {
+      --mdc-slider-track-color: var(--os-color-error-100);
+      --mdc-slider-handle-color: var(--os-color-error-500);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.os-slider__label {
+  font-size: var(--os-font-size-sm);
+  font-weight: var(--os-font-weight-medium);
+  color: var(--os-color-text-primary);
+  margin-bottom: var(--os-spacing-xs);
+
+  &--required {
+    &::after {
+      content: ' *';
+      color: var(--os-color-error-500);
+    }
+  }
+}
+
+.os-slider__wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--os-spacing-sm);
+
+  &--with-labels {
+    gap: var(--os-spacing-md);
+  }
+}
+
+.os-slider__track {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 20px;
+
+  &--with-value {
+    margin-bottom: var(--os-spacing-sm);
+  }
+}
+
+// Material Slider customizations
+.mat-mdc-slider {
+  width: 100%;
+
+  // Customize Material colors to match OrçaSonhos theme
+  --mdc-slider-track-color: var(--os-color-background-secondary);
+  --mdc-slider-handle-color: var(--os-color-primary-500);
+  --mdc-slider-focus-handle-color: var(--os-color-primary-600);
+  --mdc-slider-hover-handle-color: var(--os-color-primary-600);
+  --mdc-slider-active-track-color: var(--os-color-primary-500);
+  --mdc-slider-inactive-track-color: var(--os-color-background-secondary);
+  --mdc-slider-disabled-track-color: var(--os-color-background-disabled);
+  --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
+  --mdc-slider-disabled-active-track-color: var(--os-color-background-disabled);
+  --mdc-slider-disabled-inactive-track-color: var(--os-color-background-disabled);
+}
+
+.os-slider {
+  // Size variants for Material slider
+  &--small {
+    .mat-mdc-slider {
+      --mdc-slider-handle-size: 16px;
+      --mdc-slider-track-height: 4px;
+    }
+  }
+
+  &--large {
+    .mat-mdc-slider {
+      --mdc-slider-handle-size: 24px;
+      --mdc-slider-track-height: 8px;
+    }
+  }
+
+  &--error {
+    .mat-mdc-slider {
+      --mdc-slider-track-color: var(--os-color-error-100);
+      --mdc-slider-handle-color: var(--os-color-error-500);
+      --mdc-slider-focus-handle-color: var(--os-color-error-600);
+      --mdc-slider-hover-handle-color: var(--os-color-error-600);
+      --mdc-slider-active-track-color: var(--os-color-error-500);
+    }
+  }
+
+  &--disabled {
+    .mat-mdc-slider {
+      --mdc-slider-disabled-track-color: var(--os-color-background-disabled);
+      --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
+    }
+  }
+}
+
+.os-slider__value-display {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--os-color-primary-500);
+  color: var(--os-color-background-primary);
+  padding: var(--os-spacing-xs) var(--os-spacing-sm);
+  border-radius: var(--os-border-radius-sm);
+  font-size: var(--os-font-size-xs);
+  font-weight: var(--os-font-weight-medium);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+
+  &--small {
+    font-size: var(--os-font-size-xxs);
+    padding: var(--os-spacing-xxs) var(--os-spacing-xs);
+  }
+
+  &--large {
+    font-size: var(--os-font-size-sm);
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
+  }
+}
+
+.os-slider__min-value,
+.os-slider__max-value {
+  font-size: var(--os-font-size-xs);
+  color: var(--os-color-text-secondary);
+  font-weight: var(--os-font-weight-medium);
+  min-width: 20px;
+  text-align: center;
+}
+
+.os-slider__helper {
+  font-size: var(--os-font-size-xs);
+  color: var(--os-color-text-secondary);
+  margin-top: var(--os-spacing-xs);
+
+  &--error {
+    color: var(--os-color-error-600);
+  }
+}
+
+.os-slider__required {
+  color: var(--os-color-error-500);
+  font-weight: var(--os-font-weight-bold);
+}

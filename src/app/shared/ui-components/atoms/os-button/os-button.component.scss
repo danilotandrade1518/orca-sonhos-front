@@ -1,0 +1,143 @@
+@use '../../theme/tokens' as tokens;
+
+.os-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--os-spacing-xs);
+  border: none;
+  border-radius: var(--os-border-radius-md);
+  font-family: var(--os-font-family-primary);
+  font-weight: var(--os-font-weight-medium);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--os-transition-fast) ease;
+  position: relative;
+  overflow: hidden;
+
+  // Override Material button styles
+  ::ng-deep .mat-mdc-button {
+    font-family: var(--os-font-family-primary);
+    font-weight: var(--os-font-weight-medium);
+    line-height: 1;
+    border-radius: var(--os-border-radius-md);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--os-color-primary-500);
+    outline-offset: 2px;
+  }
+
+  &--small {
+    padding: var(--os-spacing-xs) var(--os-spacing-sm);
+    font-size: var(--os-font-size-sm);
+    min-height: 32px;
+  }
+
+  &--medium {
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
+    font-size: var(--os-font-size-base);
+    min-height: 40px;
+  }
+
+  &--large {
+    padding: var(--os-spacing-md) var(--os-spacing-lg);
+    font-size: var(--os-font-size-lg);
+    min-height: 48px;
+  }
+
+  &--primary {
+    background-color: var(--os-color-primary-500);
+    color: var(--os-color-surface);
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-primary-600);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-primary-700);
+    }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: var(--os-color-primary-500);
+    border: 1px solid var(--os-color-primary-500);
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-primary-50);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-primary-100);
+    }
+  }
+
+  &--tertiary {
+    background-color: transparent;
+    color: var(--os-color-primary-500);
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-primary-50);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-primary-100);
+    }
+  }
+
+  &--danger {
+    background-color: var(--os-color-error);
+    color: var(--os-color-surface);
+
+    &:hover:not(:disabled) {
+      background-color: #d32f2f;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #b71c1c;
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &--loading {
+    cursor: wait;
+    pointer-events: none;
+  }
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: os-button-spin 1s linear infinite;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@keyframes os-button-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

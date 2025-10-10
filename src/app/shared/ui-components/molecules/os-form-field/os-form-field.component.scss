@@ -1,0 +1,143 @@
+.os-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--os-spacing-xs);
+  width: 100%;
+
+  &--small {
+    gap: var(--os-spacing-xs);
+  }
+
+  &--medium {
+    gap: var(--os-spacing-sm);
+  }
+
+  &--large {
+    gap: var(--os-spacing-md);
+  }
+
+  &--default {
+  }
+
+  &--outlined {
+    .os-form-field__hint {
+      border-left: var(--os-border-width-thin) solid var(--os-color-primary-300);
+      padding-left: var(--os-spacing-sm);
+    }
+  }
+
+  &--filled {
+    background-color: var(--os-color-surface-variant);
+    padding: var(--os-spacing-sm);
+    border-radius: var(--os-border-radius-md);
+    border: var(--os-border-width-thin) solid transparent;
+
+    &:focus-within {
+      border-color: var(--os-color-primary-500);
+      background-color: var(--os-color-surface);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &--error {
+    .os-form-field__hint {
+      color: var(--os-color-error);
+    }
+  }
+
+  &--required {
+  }
+
+  &__hint {
+    font-size: var(--os-font-size-sm);
+    color: var(--os-color-on-surface-variant);
+    margin-top: var(--os-spacing-xs);
+    transition: color var(--os-transition-fast);
+
+    &--small {
+      font-size: var(--os-font-size-xs);
+    }
+
+    &--medium {
+      font-size: var(--os-font-size-sm);
+    }
+
+    &--large {
+      font-size: var(--os-font-size-base);
+    }
+
+    &--disabled {
+      color: var(--os-color-on-surface-variant);
+      opacity: 0.6;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &--large {
+      gap: var(--os-spacing-sm);
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: var(--os-spacing-xs);
+
+    &__hint {
+      font-size: var(--os-font-size-xs);
+    }
+  }
+}
+
+.os-form-field:focus-within {
+  .os-form-field__hint {
+    color: var(--os-color-primary-600);
+  }
+}
+
+.os-form-field--error {
+  .os-form-field__hint {
+    color: var(--os-color-error);
+    font-weight: var(--os-font-weight-medium);
+  }
+}
+
+.os-form-field {
+  &:focus-within {
+    outline: none;
+  }
+
+  @media (prefers-contrast: high) {
+    &--error {
+      .os-form-field__hint {
+        color: var(--os-color-error);
+        font-weight: var(--os-font-weight-bold);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .os-form-field__hint {
+      transition: none;
+    }
+  }
+}
+
+[data-theme='dark'] {
+  .os-form-field {
+    &--filled {
+      background-color: var(--os-color-surface-variant);
+
+      &:focus-within {
+        background-color: var(--os-color-surface);
+        border-color: var(--os-color-primary-400);
+      }
+    }
+
+    &__hint {
+      color: var(--os-color-on-surface-variant);
+    }
+  }
+}

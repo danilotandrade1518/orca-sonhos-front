@@ -1,0 +1,184 @@
+// Tipografia do Design System OrçaSonhos
+// Baseada na fonte Roboto com hierarquia clara
+
+// ===== FAMÍLIAS DE FONTE =====
+.os-font-primary {
+  font-family: var(--os-font-family-primary);
+}
+.os-font-mono {
+  font-family: var(--os-font-family-mono);
+}
+
+// ===== TAMANHOS DE FONTE =====
+.os-text-xs {
+  font-size: var(--os-font-size-xs);
+}
+.os-text-sm {
+  font-size: var(--os-font-size-sm);
+}
+.os-text-base {
+  font-size: var(--os-font-size-base);
+}
+.os-text-lg {
+  font-size: var(--os-font-size-lg);
+}
+.os-text-xl {
+  font-size: var(--os-font-size-xl);
+}
+.os-text-2xl {
+  font-size: var(--os-font-size-2xl);
+}
+.os-text-3xl {
+  font-size: var(--os-font-size-3xl);
+}
+.os-text-4xl {
+  font-size: var(--os-font-size-4xl);
+}
+
+// ===== PESOS DE FONTE =====
+.os-font-light {
+  font-weight: var(--os-font-weight-light);
+}
+.os-font-regular {
+  font-weight: var(--os-font-weight-regular);
+}
+.os-font-medium {
+  font-weight: var(--os-font-weight-medium);
+}
+.os-font-bold {
+  font-weight: var(--os-font-weight-bold);
+}
+
+// ===== ALTURAS DE LINHA =====
+.os-leading-tight {
+  line-height: var(--os-line-height-tight);
+}
+.os-leading-normal {
+  line-height: var(--os-line-height-normal);
+}
+.os-leading-relaxed {
+  line-height: var(--os-line-height-relaxed);
+}
+
+// ===== HIERARQUIA TIPOGRÁFICA =====
+.os-heading-1 {
+  font-size: var(--os-font-size-4xl);
+  font-weight: var(--os-font-weight-bold);
+  line-height: var(--os-line-height-tight);
+  margin: 0 0 var(--os-spacing-lg) 0;
+}
+
+.os-heading-2 {
+  font-size: var(--os-font-size-3xl);
+  font-weight: var(--os-font-weight-bold);
+  line-height: var(--os-line-height-tight);
+  margin: 0 0 var(--os-spacing-md) 0;
+}
+
+.os-heading-3 {
+  font-size: var(--os-font-size-2xl);
+  font-weight: var(--os-font-weight-medium);
+  line-height: var(--os-line-height-normal);
+  margin: 0 0 var(--os-spacing-md) 0;
+}
+
+.os-heading-4 {
+  font-size: var(--os-font-size-xl);
+  font-weight: var(--os-font-weight-medium);
+  line-height: var(--os-line-height-normal);
+  margin: 0 0 var(--os-spacing-sm) 0;
+}
+
+.os-heading-5 {
+  font-size: var(--os-font-size-lg);
+  font-weight: var(--os-font-weight-medium);
+  line-height: var(--os-line-height-normal);
+  margin: 0 0 var(--os-spacing-sm) 0;
+}
+
+.os-heading-6 {
+  font-size: var(--os-font-size-base);
+  font-weight: var(--os-font-weight-medium);
+  line-height: var(--os-line-height-normal);
+  margin: 0 0 var(--os-spacing-sm) 0;
+}
+
+// ===== CORPOS DE TEXTO =====
+.os-body-large {
+  font-size: var(--os-font-size-lg);
+  font-weight: var(--os-font-weight-regular);
+  line-height: var(--os-line-height-relaxed);
+}
+
+.os-body-medium {
+  font-size: var(--os-font-size-base);
+  font-weight: var(--os-font-weight-regular);
+  line-height: var(--os-line-height-normal);
+}
+
+.os-body-small {
+  font-size: var(--os-font-size-sm);
+  font-weight: var(--os-font-weight-regular);
+  line-height: var(--os-line-height-normal);
+}
+
+.os-caption {
+  font-size: var(--os-font-size-xs);
+  font-weight: var(--os-font-weight-regular);
+  line-height: var(--os-line-height-normal);
+}
+
+// ===== ESTILOS DE TEXTO =====
+.os-text-uppercase {
+  text-transform: uppercase;
+}
+.os-text-lowercase {
+  text-transform: lowercase;
+}
+.os-text-capitalize {
+  text-transform: capitalize;
+}
+
+.os-text-left {
+  text-align: left;
+}
+.os-text-center {
+  text-align: center;
+}
+.os-text-right {
+  text-align: right;
+}
+.os-text-justify {
+  text-align: justify;
+}
+
+.os-text-nowrap {
+  white-space: nowrap;
+}
+.os-text-break {
+  word-break: break-word;
+}
+
+// ===== DECORAÇÃO DE TEXTO =====
+.os-text-underline {
+  text-decoration: underline;
+}
+.os-text-line-through {
+  text-decoration: line-through;
+}
+.os-text-no-underline {
+  text-decoration: none;
+}
+
+// ===== UTILITÁRIOS DE TEXTO =====
+.os-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.os-text-clip {
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
