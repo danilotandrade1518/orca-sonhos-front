@@ -33,3 +33,6 @@ export type { ModalTemplateConfig } from './os-modal-template/os-modal-template.
 
 export { OsDrawerTemplateComponent } from './os-drawer-template/os-drawer-template.component';
 export type { DrawerTemplateConfig } from './os-drawer-template/os-drawer-template.component';
+
+export { OsPanelTemplateComponent } from './os-panel-template/os-panel-template.component';
+export type { PanelTemplateConfig } from './os-panel-template/os-panel-template.component';
