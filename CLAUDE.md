@@ -7,7 +7,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - **Start development server**: `ng serve` or `npm start` (runs on http://localhost:4200)
 - **Build project**: `ng build` (production build) or `ng build --configuration development`
-- **Run tests**: `ng test` (Karma/Jasmine test runner)
+- **Run tests**: `ng test` (vitest test runner)
 - **Watch build**: `ng build --watch --configuration development`
 - **SSR server**: `npm run serve:ssr:orca-sonhos-front` (after build)
 
@@ -49,7 +49,7 @@ This is an Angular 20+ application using **Clean Architecture** principles with 
 - **SCSS Styling**: Configured with Angular Material
 - **SSR Ready**: Server-side rendering configured
 - **TypeScript**: Strict type checking enabled
-- **Testing**: Karma + Jasmine setup
+- **Testing**: vitest
 
 ## Code Conventions
 
