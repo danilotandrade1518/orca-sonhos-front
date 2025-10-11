@@ -5,17 +5,27 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 
 import { errorInterceptor } from './error.interceptor';
+import { NotificationService } from '../../services/notification/notification.service';
 
 describe('ErrorInterceptor', () => {
   let mockNext: ReturnType<typeof vi.fn>;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let mockNotificationService: {
+    showError: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     mockNext = vi.fn();
+    mockNotificationService = {
+      showError: vi.fn(),
+    };
 
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection()],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: NotificationService, useValue: mockNotificationService },
+      ],
     });
   });
 
@@ -33,7 +43,9 @@ describe('ErrorInterceptor', () => {
       const response = { status: 200, data: 'success' };
       mockNext.mockReturnValue(of(response));
 
-      const result = await errorInterceptor(request, mockNext).toPromise();
+      const result = await TestBed.runInInjectionContext(() =>
+        errorInterceptor(request, mockNext)
+      ).toPromise();
       expect(result).toBe(response);
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
@@ -50,7 +62,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Dados inválidos. Verifique as informações enviadas.');
@@ -60,6 +72,10 @@ describe('ErrorInterceptor', () => {
           url: '/api/budgets',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Dados inválidos. Verifique as informações enviadas.',
+          'Dados Inválidos'
+        );
       }
     });
 
@@ -73,7 +89,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Não autorizado. Faça login novamente.');
@@ -83,6 +99,10 @@ describe('ErrorInterceptor', () => {
           url: '/api/budgets',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Não autorizado. Faça login novamente.',
+          'Não Autorizado'
+        );
       }
     });
 
@@ -96,7 +116,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -108,6 +128,10 @@ describe('ErrorInterceptor', () => {
           url: '/api/budgets/123',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Acesso negado. Você não tem permissão para esta ação.',
+          'Acesso Negado'
+        );
       }
     });
 
@@ -121,7 +145,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Recurso não encontrado.');
@@ -131,11 +155,15 @@ describe('ErrorInterceptor', () => {
           url: '/api/budgets/999',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Recurso não encontrado.',
+          'Não Encontrado'
+        );
       }
     });
 
     it('should handle 500 Internal Server Error', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('POST', '/api/budgets', {});
       const error = new HttpErrorResponse({
         error: { message: 'Internal Server Error' },
         status: 500,
@@ -144,7 +172,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -154,13 +182,17 @@ describe('ErrorInterceptor', () => {
           status: 500,
           message: 'Erro interno do servidor. Tente novamente mais tarde.',
           url: '/api/budgets',
-          method: 'GET',
+          method: 'POST',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Erro interno do servidor. Tente novamente mais tarde.',
+          'Erro do Servidor'
+        );
       }
     });
 
     it('should handle unknown status codes', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/unknown');
       const error = new HttpErrorResponse({
         error: { message: 'Unknown Error' },
         status: 999,
@@ -169,7 +201,7 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -178,34 +210,42 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 999,
           message: 'Erro 999: Http failure response for (unknown url): 999 Unknown Error',
-          url: '/api/budgets',
+          url: '/api/unknown',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Erro 999: Http failure response for (unknown url): 999 Unknown Error',
+          'Erro'
+        );
       }
     });
 
     it('should handle error with no status', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/network-error');
       const error = new HttpErrorResponse({
-        error: { message: 'Network Error' },
+        error: new ErrorEvent('Network error', {
+          message: 'Network connection failed',
+        }),
         status: 0,
         statusText: 'Unknown Error',
       });
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await errorInterceptor(request, mockNext).toPromise();
+        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
         expect.fail('Expected error to be thrown');
       } catch (err) {
-        expect((err as Error).message).toBe(
-          'Erro 0: Http failure response for (unknown url): 0 Unknown Error'
-        );
+        expect((err as Error).message).toBe('Erro de cliente: Network connection failed');
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 0,
-          message: 'Erro 0: Http failure response for (unknown url): 0 Unknown Error',
-          url: '/api/budgets',
+          message: 'Erro de cliente: Network connection failed',
+          url: '/api/network-error',
           method: 'GET',
         });
+        expect(mockNotificationService.showError).toHaveBeenCalledWith(
+          'Erro de cliente: Network connection failed',
+          'Erro de Rede'
+        );
       }
     });
   });

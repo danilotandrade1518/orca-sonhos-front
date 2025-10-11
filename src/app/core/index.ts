@@ -2,6 +2,7 @@
 export * from './services/config/config.service';
 export * from './services/auth/auth.service';
 export * from './services/api/api.service';
+export * from './services/notification/notification.service';
 
 // Adapters
 export * from './adapters/external-auth-service.adapter';

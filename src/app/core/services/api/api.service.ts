@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry, timeout } from 'rxjs/operators';
 
 import { ConfigService } from '../config/config.service';
+import { NotificationService } from '../notification/notification.service';
 
 export interface ApiResponse<T = unknown> {
   data: T;
@@ -27,6 +28,7 @@ export interface ApiError {
 export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly configService = inject(ConfigService);
+  private readonly notificationService = inject(NotificationService);
 
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<ApiError | null>(null);
@@ -65,6 +67,7 @@ export class ApiService {
   private executeRequest<T>(request: Observable<T>, showLoading = true): Observable<T> {
     if (showLoading) {
       this._isLoading.set(true);
+      this.notificationService.setLoading(true);
     }
 
     return request.pipe(
@@ -72,10 +75,12 @@ export class ApiService {
       retry(this.retryAttempts),
       catchError((error) => {
         this._isLoading.set(false);
+        this.notificationService.setLoading(false);
         return this.handleError(error);
       }),
       map((response) => {
         this._isLoading.set(false);
+        this.notificationService.setLoading(false);
         this._error.set(null);
         return response;
       })
