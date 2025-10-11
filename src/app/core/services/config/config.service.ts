@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 export interface ApiConfig {
   baseUrl: string;

@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry, timeout } from 'rxjs/operators';
 
-import { ConfigService } from './config.service';
+import { ConfigService } from '../config/config.service';
 
 export interface ApiResponse<T = unknown> {
   data: T;

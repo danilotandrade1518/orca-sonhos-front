@@ -1,25 +1,17 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import {
-  Auth,
-  User,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from '@angular/fire/auth';
-import { Observable, from } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { from, Observable } from 'rxjs';
 
-export interface AuthUser {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-}
+import {
+  AuthCredentials,
+  AuthUser,
+  EXTERNAL_AUTH_SERVICE_ADAPTER,
+} from '../../adapters/external-auth-service.adapter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly auth = inject(Auth);
+  private externalAuthService = inject(EXTERNAL_AUTH_SERVICE_ADAPTER);
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
@@ -35,18 +27,9 @@ export class AuthService {
   }
 
   private initializeAuthState(): void {
-    onAuthStateChanged(this.auth, (user: User | null) => {
+    this.externalAuthService.initializeAuthState((user: AuthUser | null) => {
       this._isLoading.set(false);
-      if (user) {
-        this._user.set({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        });
-      } else {
-        this._user.set(null);
-      }
+      this._user.set(user);
     });
   }
 
@@ -55,18 +38,10 @@ export class AuthService {
       this._isLoading.set(true);
       this._error.set(null);
 
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      const user = userCredential.user;
-
-      const authUser: AuthUser = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      };
-
-      this._user.set(authUser);
-      return authUser;
+      const credentials: AuthCredentials = { email, password };
+      const authResult = await this.externalAuthService.signIn(credentials);
+      this._user.set(authResult.user);
+      return authResult.user;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login';
       this._error.set(errorMessage);
@@ -81,7 +56,7 @@ export class AuthService {
       this._isLoading.set(true);
       this._error.set(null);
 
-      await signOut(this.auth);
+      await this.externalAuthService.signOut();
       this._user.set(null);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer logout';
@@ -97,7 +72,7 @@ export class AuthService {
   }
 
   getCurrentUserId(): string | null {
-    return this.user()?.uid || null;
+    return this.user()?.id || null;
   }
 
   getCurrentUserEmail(): string | null {
@@ -105,29 +80,11 @@ export class AuthService {
   }
 
   async getToken(): Promise<string | null> {
-    const user = this.auth.currentUser;
-    if (user) {
-      try {
-        return await user.getIdToken();
-      } catch (error) {
-        console.error('Erro ao obter token:', error);
-        return null;
-      }
-    }
-    return null;
+    return this.externalAuthService.getToken();
   }
 
   async refreshToken(): Promise<string | null> {
-    const user = this.auth.currentUser;
-    if (user) {
-      try {
-        return await user.getIdToken(true);
-      } catch (error) {
-        console.error('Erro ao renovar token:', error);
-        return null;
-      }
-    }
-    return null;
+    return this.externalAuthService.refreshToken();
   }
 
   clearError(): void {
