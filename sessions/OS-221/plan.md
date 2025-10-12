@@ -210,7 +210,7 @@ _[Observações sobre decisões tomadas]_
 
 ---
 
-## 📅 FASE 5: Integração e Dados [Status: ⏳]
+## 📅 FASE 5: Integração e Dados [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -218,7 +218,7 @@ Integrar com MSW handlers existentes e implementar loading states e dados mockad
 
 ### 📋 Tarefas
 
-#### Integrar com MSW Handlers [⏳]
+#### Integrar com MSW Handlers [✅]
 
 **Descrição**: Conectar serviços com handlers MSW existentes para dados mockados
 **Arquivos**:
@@ -227,7 +227,7 @@ Integrar com MSW handlers existentes e implementar loading states e dados mockad
   **Dependências**: MSW handlers existentes
   **Validação**: Dados mockados sendo exibidos corretamente
 
-#### Implementar Loading States [⏳]
+#### Implementar Loading States [✅]
 
 **Descrição**: Adicionar indicadores de carregamento durante mudanças de orçamento
 **Arquivos**:
@@ -237,7 +237,7 @@ Integrar com MSW handlers existentes e implementar loading states e dados mockad
   **Dependências**: OsDashboardTemplateComponent (já tem loading state)
   **Validação**: Loading states funcionando durante transições
 
-#### Configurar Dados Mockados Realistas [⏳]
+#### Configurar Dados Mockados Realistas [✅]
 
 **Descrição**: Ajustar dados MSW para cenário completo com 1 orçamento e dados realistas
 **Arquivos**:
@@ -251,11 +251,15 @@ Integrar com MSW handlers existentes e implementar loading states e dados mockad
 ### 🔄 Dependências
 
 - ✅ Fase 4 completada
-- MSW handlers existentes
+- ✅ MSW handlers existentes
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Integração MSW**: Handlers já configurados e funcionando perfeitamente
+- **Loading States**: Implementados em todos os componentes (DashboardWidgetsComponent, BudgetSelectorComponent, DashboardPage)
+- **Dados Mockados**: Cenário realista com "Orçamento Pessoal" (R$ 5.000 total, R$ 3.000 receita, R$ 2.500 despesa)
+- **Validação**: 1710 testes passando, build bem-sucedido, integração completa funcionando
+- **Performance**: Loading states reativos com Angular Signals, UX fluida durante transições
 
 ---
 
@@ -414,15 +418,15 @@ _[Observações sobre decisões tomadas]_
 - ✅ Fase 2: 3 tarefas, ~2 horas estimadas (Completada)
 - ✅ Fase 3: 3 tarefas, ~2 horas estimadas (Completada)
 - ✅ Fase 4: 3 tarefas, ~2 horas estimadas (Completada)
-- ⏳ Fase 5: 3 tarefas, ~1.5 horas estimadas (Pendente)
+- ✅ Fase 5: 3 tarefas, ~1.5 horas estimadas (Completada)
 - ⏳ Fase 6: 4 tarefas, ~2.5 horas estimadas (Pendente)
 
 ### Total
 
 - **Tarefas**: 18 tarefas
 - **Tempo Estimado**: ~11 horas
-- **Progresso**: 11/18 tarefas completadas (61%)
-- **Marcos**: ✅ DTOs → ✅ Serviços → ✅ Componentes → ✅ Dashboard → ⏳ Dados → ⏳ Responsividade
+- **Progresso**: 14/18 tarefas completadas (78%)
+- **Marcos**: ✅ DTOs → ✅ Serviços → ✅ Componentes → ✅ Dashboard → ✅ Dados → ⏳ Responsividade
 
 ## 🎯 Critérios de Aceitação Finais
 
@@ -436,3 +440,5 @@ _[Observações sobre decisões tomadas]_
 - [ ] Breadcrumbs funcionais
 - [x] Dados mockados realistas exibidos
 - [x] Testes unitários e de integração implementados
+- [x] Integração MSW funcionando
+- [x] Estados de loading/error/empty implementados
