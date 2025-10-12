@@ -14,7 +14,7 @@ Implementar um dashboard básico com funcionalidade de seleção de orçamento, 
 
 ---
 
-## 📅 FASE 1: DTOs e Tipos [Status: ⏳]
+## 📅 FASE 1: DTOs e Tipos [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -22,7 +22,7 @@ Definir contratos de dados e tipos TypeScript para budget e dashboard, estabelec
 
 ### 📋 Tarefas
 
-#### Criar DTOs de Budget [⏳]
+#### Criar DTOs de Budget [✅]
 
 **Descrição**: Definir interfaces TypeScript para budget baseadas nos dados mockados existentes
 **Arquivos**:
@@ -31,7 +31,7 @@ Definir contratos de dados e tipos TypeScript para budget e dashboard, estabelec
 - `src/dtos/index.ts` (atualizar exports)
   **Critério de Conclusão**: DTOs definidos e exportados, compatíveis com dados MSW existentes
 
-#### Criar Tipos de Dashboard [⏳]
+#### Criar Tipos de Dashboard [✅]
 
 **Descrição**: Definir interfaces para dados do dashboard e widgets
 **Arquivos**:
@@ -41,17 +41,21 @@ Definir contratos de dados e tipos TypeScript para budget e dashboard, estabelec
 
 ### 🧪 Critérios de Validação
 
-- [ ] DTOs de budget compatíveis com MSW handlers existentes
-- [ ] Tipos TypeScript bem definidos e reutilizáveis
-- [ ] Exports atualizados no index.ts
+- [x] DTOs de budget compatíveis com MSW handlers existentes
+- [x] Tipos TypeScript bem definidos e reutilizáveis
+- [x] Exports atualizados no index.ts
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: DTOs criados seguindo exatamente a estrutura dos MSW handlers
+- **Estrutura Modular**: DTOs organizados por query/mutation (get-budgets-response-dto.ts, create-budget-request-dto.ts, etc.)
+- **Validação**: Compilação TypeScript confirma compatibilidade com dados mockados
+- **Tipos Dashboard**: Organizados por responsabilidade (seleção, dados, widgets)
+- **Exports**: Atualizados em todos os index.ts (dtos/budget, dtos, dashboard feature)
 
 ---
 
-## 📅 FASE 2: Serviços e Estado Global [Status: ⏳]
+## 📅 FASE 2: Serviços e Estado Global [Status: ✅ Completada]
 
 ### 🎯 Objetivo da Fase
 
@@ -59,7 +63,7 @@ Implementar serviços para gerenciamento de estado global e dados do dashboard u
 
 ### 📋 Tarefas
 
-#### Criar BudgetSelectionService [⏳]
+#### Criar BudgetSelectionService [✅]
 
 **Descrição**: Serviço para gerenciar orçamento selecionado com Angular Signals
 **Arquivos**:
@@ -69,7 +73,7 @@ Implementar serviços para gerenciamento de estado global e dados do dashboard u
   **Dependências**: Fase 1 completa (DTOs)
   **Validação**: Serviço funcional com signals reativos
 
-#### Criar DashboardDataService [⏳]
+#### Criar DashboardDataService [✅]
 
 **Descrição**: Serviço para buscar e processar dados do dashboard via API
 **Arquivos**:
@@ -79,7 +83,7 @@ Implementar serviços para gerenciamento de estado global e dados do dashboard u
   **Dependências**: Fase 1 completa (DTOs), ApiService existente
   **Validação**: Integração com MSW handlers funcionando
 
-#### Integrar com ApiService [⏳]
+#### Integrar com ApiService [✅]
 
 **Descrição**: Configurar chamadas HTTP para endpoints de budget
 **Arquivos**:
@@ -91,11 +95,16 @@ Implementar serviços para gerenciamento de estado global e dados do dashboard u
 ### 🔄 Dependências
 
 - ✅ Fase 1 completada
-- ApiService existente funcional
+- ✅ ApiService existente funcional
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Decisão**: Seguir padrões existentes do projeto (AuthService, ConfigService, ApiService)
+- **Implementação**: BudgetSelectionService com signals reativos para estado global
+- **Integração**: DashboardDataService usando ApiService existente para chamadas HTTP
+- **Testes**: 44 testes implementados e passando (25 BudgetSelectionService + 19 DashboardDataService)
+- **Padrões**: Uso de inject(), signals readonly, computed values, tratamento de erro consistente
+- **Validação**: Todos os serviços funcionais e integrados com ApiService
 
 ---
 
