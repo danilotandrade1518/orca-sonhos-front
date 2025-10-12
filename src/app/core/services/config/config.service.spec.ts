@@ -59,14 +59,14 @@ describe('ConfigService', () => {
 
   describe('getApiUrl', () => {
     it('should return correct URL for endpoint without leading slash', () => {
-      const endpoint = 'budgets';
-      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budgets`;
+      const endpoint = 'budget';
+      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budget`;
       expect(service.getApiUrl(endpoint)).toBe(expectedUrl);
     });
 
     it('should return correct URL for endpoint with leading slash', () => {
-      const endpoint = '/budgets';
-      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budgets`;
+      const endpoint = '/budget';
+      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budget`;
       expect(service.getApiUrl(endpoint)).toBe(expectedUrl);
     });
 

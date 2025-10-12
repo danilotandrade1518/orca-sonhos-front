@@ -29,6 +29,9 @@
       }
     ]
   },
+  "msw": {
+    "workerDirectory": "public"
+  },
   "private": true,
   "dependencies": {
     "@angular/cdk": "^20.2.3",

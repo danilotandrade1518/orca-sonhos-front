@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { BudgetDto } from '@dtos/budget';
 import { BudgetSelectorComponent } from '@features/dashboard/components/budget-selector/budget-selector.component';
@@ -101,7 +102,7 @@ export class DashboardPage implements OnInit {
 
     try {
       // Carregar orçamentos disponíveis
-      await this.dashboardDataService.loadBudgets().toPromise();
+      await firstValueFrom(this.dashboardDataService.loadBudgets());
 
       // Se houver orçamentos, selecionar o primeiro
       const budgets = this.dashboardDataService.budgets();
@@ -110,7 +111,7 @@ export class DashboardPage implements OnInit {
         this.budgetSelectionService.setSelectedBudget(budgets[0]);
 
         // Carregar visão geral do orçamento selecionado
-        await this.dashboardDataService.loadBudgetOverview(budgets[0].id).toPromise();
+        await firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgets[0].id));
       }
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);

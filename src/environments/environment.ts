@@ -2,10 +2,11 @@ import { Environment } from './environment.interface';
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'http://localhost:4200/api',
   version: '1.0.0',
   debug: true,
   enableLogging: true,
+  authBypass: true,
   firebase: {
     apiKey: 'AIzaSyCkQKwFo-txr5p7v_rMM56Tznj4V8vA9tc',
     authDomain: 'orca-sonhos.firebaseapp.com',

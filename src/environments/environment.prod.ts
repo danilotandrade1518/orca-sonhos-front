@@ -6,6 +6,7 @@ export const environment: Environment = {
   version: '1.0.0',
   debug: false,
   enableLogging: false,
+  authBypass: false,
   firebase: {
     apiKey: 'AIzaSyCkQKwFo-txr5p7v_rMM56Tznj4V8vA9tc',
     authDomain: 'orca-sonhos.firebaseapp.com',

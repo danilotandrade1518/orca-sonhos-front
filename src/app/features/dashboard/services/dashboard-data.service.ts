@@ -37,7 +37,7 @@ export class DashboardDataService {
     this._isLoading.set(true);
     this._error.set(null);
 
-    return this.apiService.get<GetBudgetsResponseDto['data']>('budgets').pipe(
+    return this.apiService.get<GetBudgetsResponseDto['data']>('budget').pipe(
       map((response) => {
         this._budgets.set(response.data);
         this._isLoading.set(false);
@@ -56,7 +56,7 @@ export class DashboardDataService {
     this._error.set(null);
 
     return this.apiService
-      .get<GetBudgetOverviewResponseDto['data']>(`budgets/${budgetId}/overview`)
+      .get<GetBudgetOverviewResponseDto['data']>(`budget/${budgetId}/overview`)
       .pipe(
         map((response) => {
           this._budgetOverview.set(response.data);
