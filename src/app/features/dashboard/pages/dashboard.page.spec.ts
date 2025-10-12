@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 import { DashboardPage } from './dashboard.page';
-import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
@@ -10,7 +11,7 @@ describe('DashboardPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [DashboardPage],
-      providers: [provideZonelessChangeDetection()],
+      providers: [provideZonelessChangeDetection(), provideHttpClient()],
     });
   });
 
@@ -19,6 +20,7 @@ describe('DashboardPage', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
   it('should create', () => {
     expect(component).toBeDefined();
   });
