@@ -43,7 +43,7 @@ const mockBudgetOverview = {
 };
 
 export const budgetHandlers = [
-  http.get('/api/budget', ({ request }) => {
+  http.get('/api/budget', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
