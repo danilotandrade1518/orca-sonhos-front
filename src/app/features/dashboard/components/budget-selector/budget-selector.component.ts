@@ -28,12 +28,14 @@ import { BudgetDto } from '../../../../../dtos/budget/budget-types';
       role="combobox"
       [attr.aria-expanded]="isDropdownOpen()"
       aria-haspopup="listbox"
+      aria-controls="budget-selector-dropdown"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="hasError() ? 'budget-selector-error' : null"
       tabindex="0"
       (keydown)="onKeyDown($event)"
     >
       <os-dropdown
+        id="budget-selector-dropdown"
         [options]="dropdownOptions()"
         [selectedValue]="selectedBudgetId()"
         [placeholder]="placeholder()"

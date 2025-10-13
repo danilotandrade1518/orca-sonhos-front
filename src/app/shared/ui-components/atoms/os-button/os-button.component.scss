@@ -24,21 +24,32 @@
     border-radius: var(--os-border-radius-md);
   }
 
+  ::ng-deep .mat-mdc-button .mdc-button__label {
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  ::ng-deep .mat-mdc-button .mat-mdc-button-touch-target {
+    display: none;
+  }
+
   &:focus-visible {
-    outline: 2px solid var(--os-color-primary-500);
+    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
     outline-offset: 2px;
   }
 
   &--small {
     padding: var(--os-spacing-xs) var(--os-spacing-sm);
     font-size: var(--os-font-size-sm);
-    min-height: 32px;
+    min-height: 44px; // Touch target mínimo
   }
 
   &--medium {
     padding: var(--os-spacing-sm) var(--os-spacing-md);
     font-size: var(--os-font-size-base);
-    min-height: 40px;
+    min-height: 44px; // Touch target mínimo
   }
 
   &--large {
@@ -53,10 +64,12 @@
 
     &:hover:not(:disabled) {
       background-color: var(--os-color-primary-600);
+      transform: scale(1.02);
     }
 
     &:active:not(:disabled) {
       background-color: var(--os-color-primary-700);
+      transform: scale(0.98);
     }
   }
 
@@ -67,10 +80,12 @@
 
     &:hover:not(:disabled) {
       background-color: var(--os-color-primary-50);
+      transform: scale(1.02);
     }
 
     &:active:not(:disabled) {
       background-color: var(--os-color-primary-100);
+      transform: scale(0.98);
     }
   }
 
@@ -80,28 +95,80 @@
 
     &:hover:not(:disabled) {
       background-color: var(--os-color-primary-50);
+      transform: scale(1.02);
     }
 
     &:active:not(:disabled) {
       background-color: var(--os-color-primary-100);
+      transform: scale(0.98);
     }
   }
 
   &--danger {
-    background-color: var(--os-color-error);
-    color: var(--os-color-surface);
+    background-color: var(--os-color-error) !important;
+    color: var(--os-color-surface) !important;
 
     &:hover:not(:disabled) {
-      background-color: #d32f2f;
+      background-color: var(--os-color-error-600) !important;
+      transform: scale(1.02);
     }
 
     &:active:not(:disabled) {
-      background-color: #b71c1c;
+      background-color: var(--os-color-error-700) !important;
+      transform: scale(0.98);
+    }
+
+    // Override Material theme colors
+    ::ng-deep &.mat-mdc-unelevated-button {
+      --mdc-filled-button-container-color: var(--os-color-error) !important;
+      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;
+    }
+  }
+
+  &--success {
+    background-color: var(--os-color-success) !important;
+    color: var(--os-color-surface) !important;
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-success-600) !important;
+      transform: scale(1.02);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-success-700) !important;
+      transform: scale(0.98);
+    }
+
+    // Override Material theme colors
+    ::ng-deep &.mat-mdc-unelevated-button {
+      --mdc-filled-button-container-color: var(--os-color-success) !important;
+      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;
+    }
+  }
+
+  &--warning {
+    background-color: var(--os-color-warning) !important;
+    color: var(--os-color-surface) !important;
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-warning-600) !important;
+      transform: scale(1.02);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-warning-700) !important;
+      transform: scale(0.98);
+    }
+
+    // Override Material theme colors
+    ::ng-deep &.mat-mdc-unelevated-button {
+      --mdc-filled-button-container-color: var(--os-color-warning) !important;
+      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;
     }
   }
 
   &--disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;
   }
@@ -118,18 +185,37 @@
     border-top: 2px solid currentColor;
     border-radius: 50%;
     animation: os-button-spin 1s linear infinite;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   &__content {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  &__spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: os-button-spin 1s linear infinite;
+    margin-right: var(--os-spacing-xs);
   }
 }
 

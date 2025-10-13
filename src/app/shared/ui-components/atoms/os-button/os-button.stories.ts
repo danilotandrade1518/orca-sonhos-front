@@ -8,14 +8,14 @@ const meta: Meta<OsButtonComponent> = {
     docs: {
       description: {
         component:
-          'Botão do Design System Orca Sonhos com 4 variantes, 3 tamanhos, estados de loading e suporte a ícones.',
+          'Botão do Design System Orca Sonhos com 6 variantes, 3 tamanhos, estados de loading e suporte a ícones.',
       },
     },
   },
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'danger'],
+      options: ['primary', 'secondary', 'tertiary', 'danger', 'success', 'warning'],
       description: 'Variante visual do botão',
     },
     size: {
@@ -75,6 +75,8 @@ export const Variants: Story = {
         <os-button variant="secondary">Secondary</os-button>
         <os-button variant="tertiary">Tertiary</os-button>
         <os-button variant="danger">Danger</os-button>
+        <os-button variant="success">Success</os-button>
+        <os-button variant="warning">Warning</os-button>
       </div>
     `,
   }),
