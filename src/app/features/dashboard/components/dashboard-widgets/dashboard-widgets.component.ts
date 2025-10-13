@@ -10,24 +10,55 @@ import { WidgetConfiguration } from '../../types/dashboard.types';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="os-dashboard-widgets" [class]="containerClass()">
+    <div
+      class="os-dashboard-widgets"
+      [class]="containerClass()"
+      role="main"
+      aria-label="Dashboard widgets"
+      aria-live="polite"
+      [attr.aria-busy]="isLoading()"
+    >
       @if (isLoading()) {
-      <div class="os-dashboard-widgets__loading">
-        <div class="os-dashboard-widgets__spinner"></div>
-        <p>Carregando dados do dashboard...</p>
+      <div class="os-dashboard-widgets__loading" role="status" aria-live="polite">
+        <div class="os-dashboard-widgets__skeleton-grid" [class]="gridClass()">
+          @for (widget of widgets(); track widget.id) {
+          <div
+            class="os-dashboard-widgets__skeleton-widget"
+            [class]="widgetClass(widget)"
+            [style.grid-column]="getWidgetGridColumn(widget)"
+            [style.grid-row]="getWidgetGridRow(widget)"
+            aria-hidden="true"
+          >
+            <div class="os-dashboard-widgets__skeleton-header">
+              <div class="os-dashboard-widgets__skeleton-title"></div>
+            </div>
+            <div class="os-dashboard-widgets__skeleton-content">
+              <div class="os-dashboard-widgets__skeleton-line"></div>
+              <div class="os-dashboard-widgets__skeleton-line"></div>
+              <div
+                class="os-dashboard-widgets__skeleton-line os-dashboard-widgets__skeleton-line--short"
+              ></div>
+            </div>
+          </div>
+          }
+        </div>
       </div>
       } @else if (hasError()) {
-      <div class="os-dashboard-widgets__error">
-        <div class="os-dashboard-widgets__error-icon">⚠️</div>
+      <div class="os-dashboard-widgets__error" role="alert" aria-live="assertive">
+        <div class="os-dashboard-widgets__error-icon" aria-hidden="true">⚠️</div>
         <h3>Erro ao carregar dados</h3>
         <p>{{ errorMessage() }}</p>
-        <button class="os-dashboard-widgets__retry-button" (click)="onRetry()">
+        <button
+          class="os-dashboard-widgets__retry-button"
+          (click)="onRetry()"
+          [attr.aria-label]="'Tentar carregar dados novamente'"
+        >
           Tentar Novamente
         </button>
       </div>
       } @else if (!hasSelectedBudget()) {
-      <div class="os-dashboard-widgets__empty">
-        <div class="os-dashboard-widgets__empty-icon">📊</div>
+      <div class="os-dashboard-widgets__empty" role="status">
+        <div class="os-dashboard-widgets__empty-icon" aria-hidden="true">📊</div>
         <h3>Nenhum orçamento selecionado</h3>
         <p>Selecione um orçamento para visualizar os dados do dashboard.</p>
       </div>
@@ -39,7 +70,12 @@ import { WidgetConfiguration } from '../../types/dashboard.types';
           [class]="widgetClass(widget)"
           [style.grid-column]="getWidgetGridColumn(widget)"
           [style.grid-row]="getWidgetGridRow(widget)"
-          [attr.aria-label]="widget.title"
+          [attr.aria-label]="getWidgetAriaLabel(widget)"
+          [attr.aria-describedby]="getWidgetDescriptionId(widget)"
+          role="region"
+          tabindex="0"
+          (click)="onWidgetClick(widget, null)"
+          (keydown)="onWidgetKeyDown($event, widget)"
         >
           <div class="os-dashboard-widgets__widget-header">
             <h4 class="os-dashboard-widgets__widget-title">{{ widget.title }}</h4>
@@ -50,19 +86,34 @@ import { WidgetConfiguration } from '../../types/dashboard.types';
             <div class="os-dashboard-widgets__budget-summary">
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Total</span>
-                <span class="os-dashboard-widgets__metric-value">
+                <span
+                  class="os-dashboard-widgets__metric-value"
+                  aria-label="Saldo total: {{
+                    formatCurrency(budgetOverview()?.totals?.accountsBalance || 0)
+                  }}"
+                >
                   {{ formatCurrency(budgetOverview()?.totals?.accountsBalance || 0) }}
                 </span>
               </div>
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Receita Mensal</span>
-                <span class="os-dashboard-widgets__metric-value">
+                <span
+                  class="os-dashboard-widgets__metric-value"
+                  aria-label="Receita mensal: {{
+                    formatCurrency(budgetOverview()?.totals?.monthIncome || 0)
+                  }}"
+                >
                   {{ formatCurrency(budgetOverview()?.totals?.monthIncome || 0) }}
                 </span>
               </div>
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Despesa Mensal</span>
-                <span class="os-dashboard-widgets__metric-value">
+                <span
+                  class="os-dashboard-widgets__metric-value"
+                  aria-label="Despesa mensal: {{
+                    formatCurrency(budgetOverview()?.totals?.monthExpense || 0)
+                  }}"
+                >
                   {{ formatCurrency(budgetOverview()?.totals?.monthExpense || 0) }}
                 </span>
               </div>
@@ -197,5 +248,29 @@ export class DashboardWidgetsComponent {
 
   onWidgetClick(widget: WidgetConfiguration, data: unknown): void {
     this.widgetClick.emit({ widget, data });
+  }
+
+  onWidgetKeyDown(event: KeyboardEvent, widget: WidgetConfiguration): void {
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.onWidgetClick(widget, null);
+        break;
+      case 'Tab':
+        // Allow default tab behavior
+        break;
+      default:
+        // Handle other keys if needed
+        break;
+    }
+  }
+
+  getWidgetAriaLabel(widget: WidgetConfiguration): string {
+    return `${widget.title} widget`;
+  }
+
+  getWidgetDescriptionId(widget: WidgetConfiguration): string {
+    return `widget-${widget.id}-description`;
   }
 }
