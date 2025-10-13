@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const authHandlers = [
-  http.get('/me', ({ request }) => {
+  http.get('/api/me', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,7 +21,7 @@ export const authHandlers = [
     return HttpResponse.json({ error: 'Invalid token' }, { status: 401 });
   }),
 
-  http.get('/health', () => {
+  http.get('/api/health', () => {
     return HttpResponse.json({
       status: 'ok',
       traceId: 'trace-' + Date.now(),
@@ -29,7 +29,7 @@ export const authHandlers = [
     });
   }),
 
-  http.get('/ready', () => {
+  http.get('/api/ready', () => {
     return HttpResponse.json({
       status: 'ready',
       traceId: 'trace-' + Date.now(),

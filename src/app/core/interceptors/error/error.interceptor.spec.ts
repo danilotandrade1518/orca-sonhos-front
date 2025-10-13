@@ -39,7 +39,7 @@ describe('ErrorInterceptor', () => {
 
   describe('successful requests', () => {
     it('should pass through successful responses without modification', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const response = { status: 200, data: 'success' };
       mockNext.mockReturnValue(of(response));
 
@@ -53,7 +53,7 @@ describe('ErrorInterceptor', () => {
 
   describe('error handling', () => {
     it('should handle 400 Bad Request error', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const error = new HttpErrorResponse({
         error: { message: 'Invalid data' },
         status: 400,
@@ -69,7 +69,7 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 400,
           message: 'Dados inválidos. Verifique as informações enviadas.',
-          url: '/api/budgets',
+          url: '/api/budget',
           method: 'GET',
         });
         expect(mockNotificationService.showError).toHaveBeenCalledWith(
@@ -80,7 +80,7 @@ describe('ErrorInterceptor', () => {
     });
 
     it('should handle 401 Unauthorized error', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const error = new HttpErrorResponse({
         error: { message: 'Unauthorized' },
         status: 401,
@@ -96,7 +96,7 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 401,
           message: 'Não autorizado. Faça login novamente.',
-          url: '/api/budgets',
+          url: '/api/budget',
           method: 'GET',
         });
         expect(mockNotificationService.showError).toHaveBeenCalledWith(
@@ -107,7 +107,7 @@ describe('ErrorInterceptor', () => {
     });
 
     it('should handle 403 Forbidden error', async () => {
-      const request = new HttpRequest('GET', '/api/budgets/123');
+      const request = new HttpRequest('GET', '/api/budget/123');
       const error = new HttpErrorResponse({
         error: { message: 'Forbidden' },
         status: 403,
@@ -125,7 +125,7 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 403,
           message: 'Acesso negado. Você não tem permissão para esta ação.',
-          url: '/api/budgets/123',
+          url: '/api/budget/123',
           method: 'GET',
         });
         expect(mockNotificationService.showError).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe('ErrorInterceptor', () => {
     });
 
     it('should handle 404 Not Found error', async () => {
-      const request = new HttpRequest('GET', '/api/budgets/999');
+      const request = new HttpRequest('GET', '/api/budget/999');
       const error = new HttpErrorResponse({
         error: { message: 'Not Found' },
         status: 404,
@@ -152,7 +152,7 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 404,
           message: 'Recurso não encontrado.',
-          url: '/api/budgets/999',
+          url: '/api/budget/999',
           method: 'GET',
         });
         expect(mockNotificationService.showError).toHaveBeenCalledWith(
@@ -163,7 +163,7 @@ describe('ErrorInterceptor', () => {
     });
 
     it('should handle 500 Internal Server Error', async () => {
-      const request = new HttpRequest('POST', '/api/budgets', {});
+      const request = new HttpRequest('POST', '/api/budget', {});
       const error = new HttpErrorResponse({
         error: { message: 'Internal Server Error' },
         status: 500,
@@ -181,7 +181,7 @@ describe('ErrorInterceptor', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP Error:', {
           status: 500,
           message: 'Erro interno do servidor. Tente novamente mais tarde.',
-          url: '/api/budgets',
+          url: '/api/budget',
           method: 'POST',
         });
         expect(mockNotificationService.showError).toHaveBeenCalledWith(

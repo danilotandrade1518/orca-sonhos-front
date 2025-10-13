@@ -12,6 +12,10 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error/error.interceptor';
+import { EXTERNAL_AUTH_SERVICE_ADAPTER } from './core/adapters/external-auth-service.adapter';
+import { FirebaseAuthServiceAdapter } from '../infra/firebase/firebase-auth-service-adapter';
+import { MockAuthServiceAdapter } from '../infra/mock/mock-auth-service-adapter';
+import { environment } from '../environments/environment';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCkQKwFo-txr5p7v_rMM56Tznj4V8vA9tc',
@@ -31,5 +35,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
+    {
+      provide: EXTERNAL_AUTH_SERVICE_ADAPTER,
+      useClass: environment.authBypass ? MockAuthServiceAdapter : FirebaseAuthServiceAdapter,
+    },
   ],
 };

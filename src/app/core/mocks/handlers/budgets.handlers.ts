@@ -43,7 +43,7 @@ const mockBudgetOverview = {
 };
 
 export const budgetHandlers = [
-  http.get('/budgets', ({ request }) => {
+  http.get('/api/budget', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -58,7 +58,7 @@ export const budgetHandlers = [
     });
   }),
 
-  http.get('/budget/:budgetId/overview', ({ request, params }) => {
+  http.get('/api/budget/:budgetId/overview', ({ request, params }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -76,7 +76,7 @@ export const budgetHandlers = [
     return HttpResponse.json({ error: 'Budget not found' }, { status: 404 });
   }),
 
-  http.post('/budget/create-budget', async ({ request }) => {
+  http.post('/api/budget/create-budget', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -99,7 +99,7 @@ export const budgetHandlers = [
     return HttpResponse.json({ id: newBudget.id }, { status: 201 });
   }),
 
-  http.post('/budget/update-budget', async ({ request }) => {
+  http.post('/api/budget/update-budget', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -115,7 +115,7 @@ export const budgetHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/budget/delete-budget', async ({ request }) => {
+  http.post('/api/budget/delete-budget', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -131,7 +131,7 @@ export const budgetHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/budget/add-participant', async ({ request }) => {
+  http.post('/api/budget/add-participant', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -147,7 +147,7 @@ export const budgetHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/budget/remove-participant', async ({ request }) => {
+  http.post('/api/budget/remove-participant', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

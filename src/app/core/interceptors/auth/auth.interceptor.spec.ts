@@ -59,7 +59,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should not skip auth for other endpoints', () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const skipAuthUrls = ['/health', '/ready', '/me'];
       const shouldSkip = skipAuthUrls.some((skipUrl) => request.url.includes(skipUrl));
       expect(shouldSkip).toBe(false);
@@ -89,7 +89,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should add authorization header when token is available', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const response = new HttpResponse({ status: 200 });
       const token = 'test-token-123';
 
@@ -107,7 +107,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should pass through request without token when getToken returns null', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const response = new HttpResponse({ status: 200 });
 
       mockAuthService.getToken.mockReturnValue(Promise.resolve(null));
@@ -123,7 +123,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should pass through request without token when getToken returns undefined', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const response = new HttpResponse({ status: 200 });
 
       mockAuthService.getToken.mockReturnValue(Promise.resolve(undefined));
@@ -139,7 +139,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should handle 401 error by calling signOut', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const token = 'test-token-123';
       const error = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
 
@@ -156,7 +156,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should handle non-401 error without calling signOut', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const token = 'test-token-123';
       const error = new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' });
 
@@ -173,7 +173,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should handle getToken promise rejection', async () => {
-      const request = new HttpRequest('GET', '/api/budgets');
+      const request = new HttpRequest('GET', '/api/budget');
       const error = new Error('Token fetch failed');
 
       mockAuthService.getToken.mockReturnValue(Promise.reject(error));
@@ -188,7 +188,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should preserve request method and body when adding auth header', async () => {
-      const request = new HttpRequest('POST', '/api/budgets', { name: 'Test Budget' });
+      const request = new HttpRequest('POST', '/api/budget', { name: 'Test Budget' });
       const response = new HttpResponse({ status: 201 });
       const token = 'test-token-123';
 

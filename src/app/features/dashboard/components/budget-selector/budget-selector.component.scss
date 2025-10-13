@@ -1,0 +1,105 @@
+@use '../../../../shared/ui-components/theme/_tokens.scss' as *;
+
+.os-budget-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--os-spacing-3);
+  width: 100%;
+  max-width: 100%;
+  padding: var(--os-budget-selector-padding-vertical) var(--os-budget-selector-padding-horizontal);
+  border: var(--os-budget-selector-border);
+  border-radius: var(--os-budget-selector-radius);
+  font-size: var(--os-budget-selector-font-size);
+  font-weight: var(--os-budget-selector-font-weight);
+  background-color: var(--os-color-background-primary);
+  transition: var(--os-transition-colors);
+
+  &:hover {
+    background-color: var(--os-color-background-hover);
+    cursor: pointer;
+  }
+
+  &:focus-within {
+    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+    outline-offset: var(--os-focus-ring-offset);
+  }
+
+  &--small {
+    gap: var(--os-spacing-2);
+    padding: var(--os-spacing-1) var(--os-spacing-2);
+  }
+
+  &--large {
+    gap: var(--os-spacing-4);
+    padding: var(--os-spacing-3) var(--os-spacing-4);
+  }
+
+  &--loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  &--empty {
+    .os-budget-selector__dropdown {
+      opacity: 0.5;
+    }
+  }
+
+  &__error {
+    color: var(--os-color-error);
+    font-size: var(--os-font-size-xs);
+    margin-top: var(--os-spacing-1);
+    padding: var(--os-spacing-1) var(--os-spacing-2);
+    background-color: var(--os-color-error-bg);
+    border-radius: var(--os-border-radius-sm);
+    border: var(--os-border-width-1) solid var(--os-color-error);
+  }
+
+  &__dropdown {
+    flex: 1;
+    min-width: 200px;
+    max-width: 100%;
+  }
+
+  &__create-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-height: var(--os-touch-target-min);
+  }
+
+  // Tablet responsive adjustments (576-991px)
+  @media (max-width: 991px) {
+    gap: var(--os-spacing-2);
+
+    &__dropdown {
+      min-width: 180px;
+    }
+  }
+
+  // Mobile responsive adjustments (0-575px)
+  @media (max-width: 575px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--os-spacing-2);
+
+    &__dropdown {
+      min-width: unset;
+      width: 100%;
+    }
+
+    &__create-button {
+      width: 100%;
+      min-height: var(--os-touch-target-min);
+    }
+  }
+
+  // Small mobile adjustments
+  @media (max-width: 480px) {
+    gap: var(--os-spacing-1);
+
+    &__create-button {
+      font-size: var(--os-font-size-sm);
+      padding: var(--os-spacing-2) var(--os-spacing-3);
+    }
+  }
+}

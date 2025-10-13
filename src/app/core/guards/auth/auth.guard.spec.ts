@@ -97,11 +97,11 @@ describe('AuthGuard', () => {
     });
 
     it('should redirect to login with correct return URL for simple path', () => {
-      mockState.url = '/budgets/123/overview';
+      mockState.url = '/budget/123/overview';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/budgets/123/overview' },
+        queryParams: { returnUrl: '/budget/123/overview' },
       });
     });
 
@@ -115,20 +115,20 @@ describe('AuthGuard', () => {
     });
 
     it('should redirect to login with query parameters preserved', () => {
-      mockState.url = '/budgets?page=2&filter=active';
+      mockState.url = '/budget?page=2&filter=active';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/budgets?page=2&filter=active' },
+        queryParams: { returnUrl: '/budget?page=2&filter=active' },
       });
     });
 
     it('should redirect to login with fragment preserved', () => {
-      mockState.url = '/budgets#section1';
+      mockState.url = '/budget#section1';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/budgets#section1' },
+        queryParams: { returnUrl: '/budget#section1' },
       });
     });
 
@@ -142,20 +142,20 @@ describe('AuthGuard', () => {
     });
 
     it('should handle complex URLs with multiple segments', () => {
-      mockState.url = '/budgets/123/transactions?page=1&size=10&sort=date#top';
+      mockState.url = '/budget/123/transactions?page=1&size=10&sort=date#top';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/budgets/123/transactions?page=1&size=10&sort=date#top' },
+        queryParams: { returnUrl: '/budget/123/transactions?page=1&size=10&sort=date#top' },
       });
     });
 
     it('should handle URLs with special characters', () => {
-      mockState.url = '/budgets/search?q=test%20query&category=expense';
+      mockState.url = '/budget/search?q=test%20query&category=expense';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/budgets/search?q=test%20query&category=expense' },
+        queryParams: { returnUrl: '/budget/search?q=test%20query&category=expense' },
       });
     });
 

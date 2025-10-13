@@ -4,6 +4,7 @@ export interface Environment {
   version: string;
   debug: boolean;
   enableLogging: boolean;
+  authBypass: boolean;
   firebase: {
     apiKey: string;
     authDomain: string;

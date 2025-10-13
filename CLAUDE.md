@@ -117,3 +117,5 @@ Follow existing patterns in the codebase:
 - Use the `inject()` function instead of constructor injection
 
 ## Use angular-cli MCP to best practices of Angular projects
+
+## Sempre responda em Português do Brasil
