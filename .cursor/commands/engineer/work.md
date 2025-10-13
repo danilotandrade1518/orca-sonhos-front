@@ -79,7 +79,16 @@ Se não estiver em uma feature branch:
 2. **code-standards**: Padrões de código e boas práticas
 3. **frontend-architecture**: Arquitetura específica do frontend
 
-##### 2.3: Documentos Contextuais
+##### 2.3: Documentos da Sessão
+
+**Leia automaticamente se existirem**:
+
+1. **context.md**: Requisitos e contexto da funcionalidade
+2. **architecture.md**: Design técnico detalhado
+3. **layout-specification.md**: Especificações de UI/UX e layout ⭐ NOVO
+4. **plan.md**: Plano faseado de implementação (se já existir)
+
+##### 2.4: Documentos Contextuais
 
 **Baseado na análise automática, leia adicionalmente**:
 
@@ -90,7 +99,7 @@ Se não estiver em uma feature branch:
 
 **Localização**: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
-##### 2.4: Context Summary
+##### 2.5: Context Summary
 
 **Após carregar contexto, gere automaticamente**:
 
@@ -547,6 +556,46 @@ Apply continuous code review seguindo as prioridades:
 - Exceções apropriadas
 - Mensagens de erro úteis
 
+### 5.5. Validações de Layout
+
+@if (layoutSpecificationExists) {
+
+**Durante implementação de componentes de UI, valide:**
+
+#### Design System Compliance
+
+- [ ] Componentes os-\* utilizados conforme especificado
+- [ ] Design tokens (--os-\*) aplicados corretamente
+- [ ] Nomenclatura consistente com padrões
+- [ ] Variantes e tamanhos corretos
+
+#### Responsividade
+
+- [ ] Breakpoints implementados (mobile, tablet, desktop)
+- [ ] Touch targets >= 44px em mobile
+- [ ] Layout mobile-first
+- [ ] Sem scroll horizontal
+- [ ] Media queries conforme especificação
+
+#### Acessibilidade
+
+- [ ] ARIA attributes conforme layout-specification
+- [ ] Keyboard navigation funcional
+- [ ] Focus visible em elementos interativos
+- [ ] Screen reader friendly
+- [ ] Contraste >= 4.5:1
+
+#### Visual Quality
+
+- [ ] Spacing conforme grid system
+- [ ] Estados (loading, error, empty) implementados
+- [ ] Micro-interactions conforme especificado
+- [ ] Hierarquia visual correta
+
+**Referência:** Consulte `layout-specification.md` para detalhes completos
+
+}
+
 ### 6. Atualização do Plano
 
 Após completar cada fase:
@@ -652,15 +701,16 @@ Quando todas as fases estiverem completas:
 
 ## Princípios de Trabalho
 
-1. **📚 Contexto Inteligente**: Use Context Loading Inteligente para carregar automaticamente documentos relevantes e gerar context summary
-2. **🧠 Memória Contextual**: Aplique sistema de memória contextual para decisões baseadas em padrões existentes e histórico
-3. **⚡ Estratégia Adaptativa**: Use análise de complexidade para selecionar automaticamente a melhor estratégia de execução
-4. **🔄 Iterativo**: Trabalhe em pequenas etapas com validação constante
-5. **🎯 Focado**: Siga o plano estabelecido, não se desvie sem discussão
-6. **🤝 Colaborativo**: Sempre busque aprovação antes de prosseguir
-7. **🔍 Qualidade**: Code review contínuo durante desenvolvimento
-8. **📝 Documentado**: Mantenha registros claros de decisões e progresso
-9. **🎓 Aprendizado Contínuo**: Atualize sistema de memória com cada implementação para melhorar futuras decisões
+1. **📚 Contexto Inteligente**: Use Context Loading para carregar documentos relevantes (context, architecture, layout-specification)
+2. **🧠 Memória Contextual**: Aplique padrões existentes e histórico
+3. **⚡ Estratégia Adaptativa**: Use análise de complexidade
+4. **🎨 Layout Compliant**: Siga especificações do layout-specification.md quando existir ⭐ NOVO
+5. **🔄 Iterativo**: Trabalhe em pequenas etapas com validação
+6. **🎯 Focado**: Siga o plano estabelecido, não se desvie sem discussão
+7. **🤝 Colaborativo**: Sempre busque aprovação antes de prosseguir
+8. **🔍 Qualidade**: Code review contínuo durante desenvolvimento
+9. **📝 Documentado**: Mantenha registros claros de decisões e progresso
+10. **🎓 Aprendizado Contínuo**: Atualize sistema de memória com cada implementação para melhorar futuras decisões
 
 ## Próximos Passos
 
