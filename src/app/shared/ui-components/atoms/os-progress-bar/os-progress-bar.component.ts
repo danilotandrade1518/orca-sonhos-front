@@ -7,7 +7,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   standalone: true,
   imports: [CommonModule, MatProgressBarModule],
   template: `
-    <div class="os-progress-bar" [class]="progressBarClasses()">
+    <div
+      class="os-progress-bar"
+      [class]="progressBarClasses()"
+      role="progressbar"
+      [attr.aria-valuenow]="value()"
+      [attr.aria-valuemin]="0"
+      [attr.aria-valuemax]="max()"
+      [attr.aria-label]="computedAriaLabel()"
+    >
       @if (label()) {
       <div class="os-progress-bar__label">
         <span class="os-progress-bar__text">{{ label() }}</span>
@@ -16,15 +24,21 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         }
       </div>
       }
-      <mat-progress-bar
-        [mode]="mode()"
-        [value]="percentage()"
-        [bufferValue]="bufferValue()"
-        [color]="matColor()"
-        [class]="progressBarClass()"
-      ></mat-progress-bar>
+
+      <div class="os-progress-bar__container">
+        <mat-progress-bar
+          [mode]="mode()"
+          [value]="percentage()"
+          [bufferValue]="bufferValue()"
+          [color]="matColor()"
+          [class]="progressBarClass()"
+        ></mat-progress-bar>
+      </div>
+
       @if (hint()) {
       <div class="os-progress-bar__hint">{{ hint() }}</div>
+      } @if (showCelebration() && isCompleted()) {
+      <div class="os-progress-bar__celebration">{{ celebrationText() }}</div>
       }
     </div>
   `,
@@ -42,6 +56,9 @@ export class OsProgressBarComponent {
   readonly animated = input(false);
   readonly striped = input(false);
   readonly bufferValue = input<number | null>(null);
+  readonly ariaLabel = input<string | null>(null);
+  readonly showCelebration = input(false);
+  readonly celebrationText = input('🎉 Concluído!');
 
   readonly percentage = computed(() => {
     const value = this.value();
@@ -53,7 +70,6 @@ export class OsProgressBarComponent {
     return this.bufferValue() !== null ? 'buffer' : 'determinate';
   });
 
-  // Mapeamento interno para Material
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
@@ -100,5 +116,19 @@ export class OsProgressBarComponent {
     }
 
     return classes.join(' ');
+  });
+
+  readonly isCompleted = computed(() => {
+    return this.percentage() >= 100;
+  });
+
+  readonly computedAriaLabel = computed(() => {
+    if (this.ariaLabel()) {
+      return this.ariaLabel();
+    }
+
+    const label = this.label() || 'Progresso';
+    const percentage = this.percentage();
+    return `${label}: ${percentage}% completo`;
   });
 }

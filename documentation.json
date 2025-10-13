@@ -11262,7 +11262,7 @@
         },
         {
             "name": "OsButtonComponent",
-            "id": "component-OsButtonComponent-4ad3864d9c7734f13248d4fef319c1013c99894b3a26162b501028b64b821729e0e67deb379aac2733da7d59506d8b47ad2d6b92159772e41478d76a8f3df0c8",
+            "id": "component-OsButtonComponent-b563eb43a14f254c2a9c59b422545a9d8135208c1ac094418334360eeab6b8228d47f8ad921468e1f93eb6c8d385e523ff38d9e7ad0399c7fd1f2ba8367c7f53",
             "file": "src/app/shared/ui-components/atoms/os-button/os-button.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -11275,7 +11275,7 @@
                 "./os-button.component.scss"
             ],
             "styles": [],
-            "template": "<button\n  [mat-raised-button]=\"\n    variant() === 'primary' ||\n    variant() === 'danger' ||\n    variant() === 'success' ||\n    variant() === 'warning'\n  \"\n  [mat-outlined-button]=\"variant() === 'secondary'\"\n  [mat-button]=\"variant() === 'tertiary'\"\n  [disabled]=\"disabled() || loading()\"\n  [type]=\"type()\"\n  [class]=\"buttonClass()\"\n  matRipple\n  [matRippleDisabled]=\"disabled() || loading()\"\n  [matRippleColor]=\"rippleColor()\"\n  (click)=\"handleClick($event)\"\n>\n  @if (loading()) {\n  <span class=\"os-button__spinner\" aria-hidden=\"true\"></span>\n  } @else if (icon() && !loading()) {\n  <span class=\"os-button__icon\" [attr.aria-hidden]=\"true\">\n    {{ icon() }}\n  </span>\n  }\n  <span class=\"os-button__content\">\n    <ng-content />\n  </span>\n</button>\n",
+            "template": "<button\n  [matButton]=\"buttonVariant\"\n  [disabled]=\"disabled() || loading()\"\n  [type]=\"type()\"\n  [class]=\"buttonClass()\"\n  matRipple\n  [matRippleDisabled]=\"disabled() || loading()\"\n  [matRippleColor]=\"rippleColor()\"\n  (click)=\"handleClick($event)\"\n>\n  @if (loading()) {\n  <span class=\"os-button__spinner\" aria-hidden=\"true\"></span>\n  } @else if (icon() && !loading()) {\n  <span class=\"os-button__icon\" [attr.aria-hidden]=\"true\">\n    {{ icon() }}\n  </span>\n  }\n  <span class=\"os-button__content\">\n    <ng-content />\n  </span>\n</button>\n",
             "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
@@ -11288,7 +11288,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 55,
+                    "line": 48,
                     "required": false
                 },
                 {
@@ -11300,7 +11300,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 57,
+                    "line": 50,
                     "required": false
                 },
                 {
@@ -11311,7 +11311,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 56,
+                    "line": 49,
                     "required": false
                 },
                 {
@@ -11323,7 +11323,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 54,
+                    "line": 47,
                     "required": false
                 },
                 {
@@ -11335,7 +11335,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 58,
+                    "line": 51,
                     "required": false
                 },
                 {
@@ -11347,7 +11347,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 53,
+                    "line": 46,
                     "required": false
                 }
             ],
@@ -11360,7 +11360,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 60,
+                    "line": 53,
                     "required": false
                 }
             ],
@@ -11374,32 +11374,18 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 62
-                },
-                {
-                    "name": "matColor",
-                    "defaultValue": "computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'tertiary':\n        return 'primary';\n      case 'danger':\n        return 'warn';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 81,
-                    "modifierKind": [
-                        124
-                    ]
+                    "line": 55
                 },
                 {
                     "name": "rippleColor",
-                    "defaultValue": "computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n      case 'success':\n        return 'rgba(255, 255, 255, 0.3)'; // Usar token quando disponível\n      case 'secondary':\n      case 'tertiary':\n        return 'rgba(59, 130, 246, 0.3)'; // Usar token quando disponível\n      case 'danger':\n      case 'warning':\n        return 'rgba(255, 255, 255, 0.3)'; // Usar token quando disponível\n      default:\n        return 'rgba(0, 0, 0, 0.1)';\n    }\n  })",
+                    "defaultValue": "computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n      case 'success':\n        return 'rgba(255, 255, 255, 0.3)';\n      case 'secondary':\n      case 'tertiary':\n        return 'rgba(59, 130, 246, 0.3)';\n      case 'danger':\n      case 'warning':\n        return 'rgba(255, 255, 255, 0.3)';\n      default:\n        return 'rgba(0, 0, 0, 0.1)';\n    }\n  })",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 101,
+                    "line": 73,
                     "modifierKind": [
                         124
                     ]
@@ -11419,7 +11405,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 74,
+                    "line": 67,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -11457,16 +11443,27 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatRippleModule } from '@angular/material/core';\n\nexport type OsButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'danger'\n  | 'success'\n  | 'warning';\nexport type OsButtonSize = 'small' | 'medium' | 'large';\n\n@Component({\n  selector: 'os-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatRippleModule],\n  template: `\n    <button\n      [mat-raised-button]=\"\n        variant() === 'primary' ||\n        variant() === 'danger' ||\n        variant() === 'success' ||\n        variant() === 'warning'\n      \"\n      [mat-outlined-button]=\"variant() === 'secondary'\"\n      [mat-button]=\"variant() === 'tertiary'\"\n      [disabled]=\"disabled() || loading()\"\n      [type]=\"type()\"\n      [class]=\"buttonClass()\"\n      matRipple\n      [matRippleDisabled]=\"disabled() || loading()\"\n      [matRippleColor]=\"rippleColor()\"\n      (click)=\"handleClick($event)\"\n    >\n      @if (loading()) {\n      <span class=\"os-button__spinner\" aria-hidden=\"true\"></span>\n      } @else if (icon() && !loading()) {\n      <span class=\"os-button__icon\" [attr.aria-hidden]=\"true\">\n        {{ icon() }}\n      </span>\n      }\n      <span class=\"os-button__content\">\n        <ng-content />\n      </span>\n    </button>\n  `,\n  styleUrls: ['./os-button.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsButtonComponent {\n  variant = input<OsButtonVariant>('primary');\n  size = input<OsButtonSize>('medium');\n  disabled = input(false);\n  loading = input(false);\n  icon = input<string>('');\n  type = input<'button' | 'submit' | 'reset'>('button');\n\n  buttonClick = output<MouseEvent>();\n\n  buttonClass = computed(() => {\n    return [\n      'os-button',\n      `os-button--${this.variant()}`,\n      `os-button--${this.size()}`,\n      this.disabled() ? 'os-button--disabled' : '',\n      this.loading() ? 'os-button--loading' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  handleClick(event: MouseEvent): void {\n    if (!this.disabled() && !this.loading()) {\n      this.buttonClick.emit(event);\n    }\n  }\n\n  // Mapeamento interno para Material\n  protected matColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'tertiary':\n        return 'primary';\n      case 'danger':\n        return 'warn';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  });\n\n  // Cor do ripple effect baseada na variante\n  protected rippleColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n      case 'success':\n        return 'rgba(255, 255, 255, 0.3)'; // Usar token quando disponível\n      case 'secondary':\n      case 'tertiary':\n        return 'rgba(59, 130, 246, 0.3)'; // Usar token quando disponível\n      case 'danger':\n      case 'warning':\n        return 'rgba(255, 255, 255, 0.3)'; // Usar token quando disponível\n      default:\n        return 'rgba(0, 0, 0, 0.1)';\n    }\n  });\n}\n",
+            "sourceCode": "import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatRippleModule } from '@angular/material/core';\n\nexport type OsButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'danger'\n  | 'success'\n  | 'warning';\nexport type OsButtonSize = 'small' | 'medium' | 'large';\n\n@Component({\n  selector: 'os-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatRippleModule],\n  template: `\n    <button\n      [matButton]=\"buttonVariant\"\n      [disabled]=\"disabled() || loading()\"\n      [type]=\"type()\"\n      [class]=\"buttonClass()\"\n      matRipple\n      [matRippleDisabled]=\"disabled() || loading()\"\n      [matRippleColor]=\"rippleColor()\"\n      (click)=\"handleClick($event)\"\n    >\n      @if (loading()) {\n      <span class=\"os-button__spinner\" aria-hidden=\"true\"></span>\n      } @else if (icon() && !loading()) {\n      <span class=\"os-button__icon\" [attr.aria-hidden]=\"true\">\n        {{ icon() }}\n      </span>\n      }\n      <span class=\"os-button__content\">\n        <ng-content />\n      </span>\n    </button>\n  `,\n  styleUrls: ['./os-button.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsButtonComponent {\n  variant = input<OsButtonVariant>('primary');\n  size = input<OsButtonSize>('medium');\n  disabled = input(false);\n  loading = input(false);\n  icon = input<string>('');\n  type = input<'button' | 'submit' | 'reset'>('button');\n\n  buttonClick = output<MouseEvent>();\n\n  buttonClass = computed(() => {\n    return [\n      'os-button',\n      `os-button--${this.variant()}`,\n      `os-button--${this.size()}`,\n      this.disabled() ? 'os-button--disabled' : '',\n      this.loading() ? 'os-button--loading' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  handleClick(event: MouseEvent): void {\n    if (!this.disabled() && !this.loading()) {\n      this.buttonClick.emit(event);\n    }\n  }\n\n  protected rippleColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n      case 'success':\n        return 'rgba(255, 255, 255, 0.3)';\n      case 'secondary':\n      case 'tertiary':\n        return 'rgba(59, 130, 246, 0.3)';\n      case 'danger':\n      case 'warning':\n        return 'rgba(255, 255, 255, 0.3)';\n      default:\n        return 'rgba(0, 0, 0, 0.1)';\n    }\n  });\n\n  get buttonVariant() {\n    switch (this.variant()) {\n      case 'primary':\n      case 'danger':\n      case 'success':\n      case 'warning':\n        return 'filled';\n\n      case 'secondary':\n        return 'outlined';\n\n      case 'tertiary':\n        return '';\n\n      default:\n        return 'elevated';\n    }\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "@use '../../theme/tokens' as tokens;\n\n.os-button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--os-spacing-xs);\n  border: none;\n  border-radius: var(--os-border-radius-md);\n  font-family: var(--os-font-family-primary);\n  font-weight: var(--os-font-weight-medium);\n  line-height: 1;\n  text-decoration: none;\n  cursor: pointer;\n  transition: all var(--os-transition-fast) ease;\n  position: relative;\n  overflow: hidden;\n\n  // Override Material button styles\n  ::ng-deep .mat-mdc-button {\n    font-family: var(--os-font-family-primary);\n    font-weight: var(--os-font-weight-medium);\n    line-height: 1;\n    border-radius: var(--os-border-radius-md);\n  }\n\n  ::ng-deep .mat-mdc-button .mdc-button__label {\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n    display: block !important;\n  }\n\n  ::ng-deep .mat-mdc-button .mat-mdc-button-touch-target {\n    display: none;\n  }\n\n  &:focus-visible {\n    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);\n    outline-offset: 2px;\n  }\n\n  &--small {\n    padding: var(--os-spacing-xs) var(--os-spacing-sm);\n    font-size: var(--os-font-size-sm);\n    min-height: 44px; // Touch target mínimo\n  }\n\n  &--medium {\n    padding: var(--os-spacing-sm) var(--os-spacing-md);\n    font-size: var(--os-font-size-base);\n    min-height: 44px; // Touch target mínimo\n  }\n\n  &--large {\n    padding: var(--os-spacing-md) var(--os-spacing-lg);\n    font-size: var(--os-font-size-lg);\n    min-height: 48px;\n  }\n\n  &--primary {\n    background-color: var(--os-color-primary-500);\n    color: var(--os-color-surface);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-600);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-700);\n      transform: scale(0.98);\n    }\n  }\n\n  &--secondary {\n    background-color: transparent;\n    color: var(--os-color-primary-500);\n    border: 1px solid var(--os-color-primary-500);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-50);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-100);\n      transform: scale(0.98);\n    }\n  }\n\n  &--tertiary {\n    background-color: transparent;\n    color: var(--os-color-primary-500);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-50);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-100);\n      transform: scale(0.98);\n    }\n  }\n\n  &--danger {\n    background-color: var(--os-color-error);\n    color: var(--os-color-surface);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-error-600);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-error-700);\n      transform: scale(0.98);\n    }\n  }\n\n  &--success {\n    background-color: var(--os-color-success);\n    color: var(--os-color-surface);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-success-600);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-success-700);\n      transform: scale(0.98);\n    }\n  }\n\n  &--warning {\n    background-color: var(--os-color-warning);\n    color: var(--os-color-surface);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-warning-600);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-warning-700);\n      transform: scale(0.98);\n    }\n  }\n\n  &--disabled {\n    opacity: 0.6;\n    cursor: not-allowed;\n    pointer-events: none;\n  }\n\n  &--loading {\n    cursor: wait;\n    pointer-events: none;\n  }\n\n  &__spinner {\n    width: 16px;\n    height: 16px;\n    border: 2px solid transparent;\n    border-top: 2px solid currentColor;\n    border-radius: 50%;\n    animation: os-button-spin 1s linear infinite;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n\n  &__icon {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n\n  &__content {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n}\n\n@keyframes os-button-spin {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n",
+                    "data": "@use '../../theme/tokens' as tokens;\n\n.os-button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: var(--os-spacing-xs);\n  border: none;\n  border-radius: var(--os-border-radius-md);\n  font-family: var(--os-font-family-primary);\n  font-weight: var(--os-font-weight-medium);\n  line-height: 1;\n  text-decoration: none;\n  cursor: pointer;\n  transition: all var(--os-transition-fast) ease;\n  position: relative;\n  overflow: hidden;\n\n  // Override Material button styles\n  ::ng-deep .mat-mdc-button {\n    font-family: var(--os-font-family-primary);\n    font-weight: var(--os-font-weight-medium);\n    line-height: 1;\n    border-radius: var(--os-border-radius-md);\n  }\n\n  ::ng-deep .mat-mdc-button .mdc-button__label {\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n    display: block !important;\n  }\n\n  ::ng-deep .mat-mdc-button .mat-mdc-button-touch-target {\n    display: none;\n  }\n\n  &:focus-visible {\n    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);\n    outline-offset: 2px;\n  }\n\n  &--small {\n    padding: var(--os-spacing-xs) var(--os-spacing-sm);\n    font-size: var(--os-font-size-sm);\n    min-height: 44px; // Touch target mínimo\n  }\n\n  &--medium {\n    padding: var(--os-spacing-sm) var(--os-spacing-md);\n    font-size: var(--os-font-size-base);\n    min-height: 44px; // Touch target mínimo\n  }\n\n  &--large {\n    padding: var(--os-spacing-md) var(--os-spacing-lg);\n    font-size: var(--os-font-size-lg);\n    min-height: 48px;\n  }\n\n  &--primary {\n    background-color: var(--os-color-primary-500);\n    color: var(--os-color-surface);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-600);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-700);\n      transform: scale(0.98);\n    }\n  }\n\n  &--secondary {\n    background-color: transparent;\n    color: var(--os-color-primary-500);\n    border: 1px solid var(--os-color-primary-500);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-50);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-100);\n      transform: scale(0.98);\n    }\n  }\n\n  &--tertiary {\n    background-color: transparent;\n    color: var(--os-color-primary-500);\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-primary-50);\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-primary-100);\n      transform: scale(0.98);\n    }\n  }\n\n  &--danger {\n    background-color: var(--os-color-error) !important;\n    color: var(--os-color-surface) !important;\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-error-600) !important;\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-error-700) !important;\n      transform: scale(0.98);\n    }\n\n    // Override Material theme colors\n    ::ng-deep &.mat-mdc-unelevated-button {\n      --mdc-filled-button-container-color: var(--os-color-error) !important;\n      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;\n    }\n  }\n\n  &--success {\n    background-color: var(--os-color-success) !important;\n    color: var(--os-color-surface) !important;\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-success-600) !important;\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-success-700) !important;\n      transform: scale(0.98);\n    }\n\n    // Override Material theme colors\n    ::ng-deep &.mat-mdc-unelevated-button {\n      --mdc-filled-button-container-color: var(--os-color-success) !important;\n      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;\n    }\n  }\n\n  &--warning {\n    background-color: var(--os-color-warning) !important;\n    color: var(--os-color-surface) !important;\n\n    &:hover:not(:disabled) {\n      background-color: var(--os-color-warning-600) !important;\n      transform: scale(1.02);\n    }\n\n    &:active:not(:disabled) {\n      background-color: var(--os-color-warning-700) !important;\n      transform: scale(0.98);\n    }\n\n    // Override Material theme colors\n    ::ng-deep &.mat-mdc-unelevated-button {\n      --mdc-filled-button-container-color: var(--os-color-warning) !important;\n      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;\n    }\n  }\n\n  &--disabled {\n    opacity: 0.6;\n    cursor: not-allowed;\n    pointer-events: none;\n  }\n\n  &--loading {\n    cursor: wait;\n    pointer-events: none;\n  }\n\n  &__spinner {\n    width: 16px;\n    height: 16px;\n    border: 2px solid transparent;\n    border-top: 2px solid currentColor;\n    border-radius: 50%;\n    animation: os-button-spin 1s linear infinite;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n\n  &__icon {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n\n  &__content {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    color: inherit !important;\n    opacity: 1 !important;\n    visibility: visible !important;\n  }\n\n  &__spinner {\n    display: inline-block;\n    width: 16px;\n    height: 16px;\n    border: 2px solid transparent;\n    border-top: 2px solid currentColor;\n    border-radius: 50%;\n    animation: os-button-spin 1s linear infinite;\n    margin-right: var(--os-spacing-xs);\n  }\n}\n\n@keyframes os-button-spin {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n",
                     "styleUrl": "./os-button.component.scss"
                 }
             ],
             "stylesData": "",
-            "extends": []
+            "extends": [],
+            "accessors": {
+                "buttonVariant": {
+                    "name": "buttonVariant",
+                    "getSignature": {
+                        "name": "buttonVariant",
+                        "type": "",
+                        "returnType": "",
+                        "line": 89
+                    }
+                }
+            }
         },
         {
             "name": "OsCardComponent",
@@ -27423,7 +27420,7 @@
         },
         {
             "name": "OsProgressBarComponent",
-            "id": "component-OsProgressBarComponent-cdec4a2feb64e882742320d97c9e495c583699f4ee9f69209de4cc3df10fc7d7e5082bf03a897d8f63fbf055c1bd5504f6fde0dee5b12fddfc4dc0c7a8b170b7",
+            "id": "component-OsProgressBarComponent-ab2fd1940d31d5e83a17d8d5dffb706892efdac1b8ed3b00dfcd66b6a998ff070c0d35f686bdf3d6be52c7954fa9d2837dc22f8765f073246ec18c510f83c6ad",
             "file": "src/app/shared/ui-components/atoms/os-progress-bar/os-progress-bar.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -27436,7 +27433,7 @@
                 "./os-progress-bar.component.scss"
             ],
             "styles": [],
-            "template": "<div class=\"os-progress-bar\" [class]=\"progressBarClasses()\">\n  @if (label()) {\n  <div class=\"os-progress-bar__label\">\n    <span class=\"os-progress-bar__text\">{{ label() }}</span>\n    @if (showPercentage()) {\n    <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n    }\n  </div>\n  }\n  <mat-progress-bar\n    [mode]=\"mode()\"\n    [value]=\"percentage()\"\n    [bufferValue]=\"bufferValue()\"\n    [color]=\"matColor()\"\n    [class]=\"progressBarClass()\"\n  ></mat-progress-bar>\n  @if (hint()) {\n  <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n  }\n</div>\n",
+            "template": "<div\n  class=\"os-progress-bar\"\n  [class]=\"progressBarClasses()\"\n  role=\"progressbar\"\n  [attr.aria-valuenow]=\"value()\"\n  [attr.aria-valuemin]=\"0\"\n  [attr.aria-valuemax]=\"max()\"\n  [attr.aria-label]=\"computedAriaLabel()\"\n>\n  @if (label()) {\n  <div class=\"os-progress-bar__label\">\n    <span class=\"os-progress-bar__text\">{{ label() }}</span>\n    @if (showPercentage()) {\n    <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n    }\n  </div>\n  }\n\n  <div class=\"os-progress-bar__container\">\n    <mat-progress-bar\n      [mode]=\"mode()\"\n      [value]=\"percentage()\"\n      [bufferValue]=\"bufferValue()\"\n      [color]=\"matColor()\"\n      [class]=\"progressBarClass()\"\n    ></mat-progress-bar>\n  </div>\n\n  @if (hint()) {\n  <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n  }\n</div>\n",
             "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
@@ -27449,7 +27446,22 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 42,
+                    "line": 54,
+                    "modifierKind": [
+                        148
+                    ],
+                    "required": false
+                },
+                {
+                    "name": "ariaLabel",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 57,
                     "modifierKind": [
                         148
                     ],
@@ -27464,7 +27476,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 44,
+                    "line": 56,
                     "modifierKind": [
                         148
                     ],
@@ -27479,7 +27491,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 38,
+                    "line": 50,
                     "modifierKind": [
                         148
                     ],
@@ -27494,7 +27506,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 37,
+                    "line": 49,
                     "modifierKind": [
                         148
                     ],
@@ -27508,7 +27520,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 36,
+                    "line": 48,
                     "modifierKind": [
                         148
                     ],
@@ -27522,7 +27534,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 39,
+                    "line": 51,
                     "modifierKind": [
                         148
                     ],
@@ -27537,7 +27549,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 40,
+                    "line": 52,
                     "modifierKind": [
                         148
                     ],
@@ -27551,7 +27563,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 43,
+                    "line": 55,
                     "modifierKind": [
                         148
                     ],
@@ -27565,7 +27577,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 35,
+                    "line": 47,
                     "modifierKind": [
                         148
                     ],
@@ -27580,7 +27592,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 41,
+                    "line": 53,
                     "modifierKind": [
                         148
                     ],
@@ -27590,6 +27602,20 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
+                    "name": "computedAriaLabel",
+                    "defaultValue": "computed(() => {\n    if (this.ariaLabel()) {\n      return this.ariaLabel();\n    }\n\n    const label = this.label() || 'Progresso';\n    const percentage = this.percentage();\n    return `${label}: ${percentage}% completo`;\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 117,
+                    "modifierKind": [
+                        148
+                    ]
+                },
+                {
                     "name": "matColor",
                     "defaultValue": "computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      case 'danger':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  })",
                     "deprecated": false,
@@ -27598,7 +27624,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 57,
+                    "line": 69,
                     "modifierKind": [
                         124
                     ]
@@ -27612,7 +27638,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 52,
+                    "line": 65,
                     "modifierKind": [
                         148
                     ]
@@ -27626,7 +27652,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46,
+                    "line": 59,
                     "modifierKind": [
                         148
                     ]
@@ -27640,7 +27666,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 90,
+                    "line": 102,
                     "modifierKind": [
                         148
                     ]
@@ -27654,7 +27680,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 74,
+                    "line": 86,
                     "modifierKind": [
                         148
                     ]
@@ -27679,11 +27705,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatProgressBarModule } from '@angular/material/progress-bar';\n\n@Component({\n  selector: 'os-progress-bar',\n  standalone: true,\n  imports: [CommonModule, MatProgressBarModule],\n  template: `\n    <div class=\"os-progress-bar\" [class]=\"progressBarClasses()\">\n      @if (label()) {\n      <div class=\"os-progress-bar__label\">\n        <span class=\"os-progress-bar__text\">{{ label() }}</span>\n        @if (showPercentage()) {\n        <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n        }\n      </div>\n      }\n      <mat-progress-bar\n        [mode]=\"mode()\"\n        [value]=\"percentage()\"\n        [bufferValue]=\"bufferValue()\"\n        [color]=\"matColor()\"\n        [class]=\"progressBarClass()\"\n      ></mat-progress-bar>\n      @if (hint()) {\n      <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n      }\n    </div>\n  `,\n  styleUrls: ['./os-progress-bar.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsProgressBarComponent {\n  readonly value = input(0);\n  readonly max = input(100);\n  readonly label = input<string | null>(null);\n  readonly hint = input<string | null>(null);\n  readonly showPercentage = input(true);\n  readonly size = input<'small' | 'medium' | 'large'>('medium');\n  readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');\n  readonly animated = input(false);\n  readonly striped = input(false);\n  readonly bufferValue = input<number | null>(null);\n\n  readonly percentage = computed(() => {\n    const value = this.value();\n    const max = this.max();\n    return Math.min(Math.max((value / max) * 100, 0), 100);\n  });\n\n  readonly mode = computed(() => {\n    return this.bufferValue() !== null ? 'buffer' : 'determinate';\n  });\n\n  // Mapeamento interno para Material\n  protected matColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      case 'danger':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  });\n\n  readonly progressBarClasses = computed(() => {\n    const classes = ['os-progress-bar'];\n    classes.push(`os-progress-bar--${this.size()}`);\n    classes.push(`os-progress-bar--${this.variant()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly progressBarClass = computed(() => {\n    const classes = ['os-progress-bar__material'];\n    classes.push(`os-progress-bar__material--${this.size()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar__material--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar__material--striped');\n    }\n\n    return classes.join(' ');\n  });\n}\n",
+            "sourceCode": "import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatProgressBarModule } from '@angular/material/progress-bar';\n\n@Component({\n  selector: 'os-progress-bar',\n  standalone: true,\n  imports: [CommonModule, MatProgressBarModule],\n  template: `\n    <div\n      class=\"os-progress-bar\"\n      [class]=\"progressBarClasses()\"\n      role=\"progressbar\"\n      [attr.aria-valuenow]=\"value()\"\n      [attr.aria-valuemin]=\"0\"\n      [attr.aria-valuemax]=\"max()\"\n      [attr.aria-label]=\"computedAriaLabel()\"\n    >\n      @if (label()) {\n      <div class=\"os-progress-bar__label\">\n        <span class=\"os-progress-bar__text\">{{ label() }}</span>\n        @if (showPercentage()) {\n        <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n        }\n      </div>\n      }\n\n      <div class=\"os-progress-bar__container\">\n        <mat-progress-bar\n          [mode]=\"mode()\"\n          [value]=\"percentage()\"\n          [bufferValue]=\"bufferValue()\"\n          [color]=\"matColor()\"\n          [class]=\"progressBarClass()\"\n        ></mat-progress-bar>\n      </div>\n\n      @if (hint()) {\n      <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n      }\n    </div>\n  `,\n  styleUrls: ['./os-progress-bar.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsProgressBarComponent {\n  readonly value = input(0);\n  readonly max = input(100);\n  readonly label = input<string | null>(null);\n  readonly hint = input<string | null>(null);\n  readonly showPercentage = input(true);\n  readonly size = input<'small' | 'medium' | 'large'>('medium');\n  readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');\n  readonly animated = input(false);\n  readonly striped = input(false);\n  readonly bufferValue = input<number | null>(null);\n  readonly ariaLabel = input<string | null>(null);\n\n  readonly percentage = computed(() => {\n    const value = this.value();\n    const max = this.max();\n    return Math.min(Math.max((value / max) * 100, 0), 100);\n  });\n\n  readonly mode = computed(() => {\n    return this.bufferValue() !== null ? 'buffer' : 'determinate';\n  });\n\n  protected matColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      case 'danger':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  });\n\n  readonly progressBarClasses = computed(() => {\n    const classes = ['os-progress-bar'];\n    classes.push(`os-progress-bar--${this.size()}`);\n    classes.push(`os-progress-bar--${this.variant()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly progressBarClass = computed(() => {\n    const classes = ['os-progress-bar__material'];\n    classes.push(`os-progress-bar__material--${this.size()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar__material--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar__material--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly computedAriaLabel = computed(() => {\n    if (this.ariaLabel()) {\n      return this.ariaLabel();\n    }\n\n    const label = this.label() || 'Progresso';\n    const percentage = this.percentage();\n    return `${label}: ${percentage}% completo`;\n  });\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "@use '../../theme/tokens';\n\n.os-progress-bar {\n  width: 100%;\n\n  &__label {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: var(--os-spacing-xs);\n  }\n\n  &__text {\n    font-family: var(--os-font-family-base);\n    font-weight: var(--os-font-weight-medium);\n    color: var(--os-color-text-primary);\n  }\n\n  &__percentage {\n    font-family: var(--os-font-family-mono);\n    font-weight: var(--os-font-weight-semibold);\n    color: var(--os-color-text-secondary);\n  }\n\n  &__material {\n    width: 100%;\n    border-radius: var(--os-border-radius-full);\n\n    &--small {\n      height: 4px;\n    }\n\n    &--medium {\n      height: 6px;\n    }\n\n    &--large {\n      height: 8px;\n    }\n\n    &--striped {\n      ::ng-deep .mat-progress-bar-fill::after {\n        background-image: linear-gradient(\n          45deg,\n          rgba(255, 255, 255, 0.15) 25%,\n          transparent 25%,\n          transparent 50%,\n          rgba(255, 255, 255, 0.15) 50%,\n          rgba(255, 255, 255, 0.15) 75%,\n          transparent 75%,\n          transparent\n        );\n        background-size: 1rem 1rem;\n        animation: progress-bar-stripes 1s linear infinite;\n      }\n    }\n\n    &--animated {\n      ::ng-deep .mat-progress-bar-fill::after {\n        animation: progress-bar-pulse 2s ease-in-out infinite;\n      }\n    }\n  }\n\n  &__hint {\n    margin-top: var(--os-spacing-xs);\n    font-family: var(--os-font-family-base);\n    font-size: var(--os-font-size-sm);\n    color: var(--os-color-text-secondary);\n  }\n\n  &--small {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-xs);\n    }\n\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-xs);\n    }\n  }\n\n  &--medium {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-sm);\n    }\n\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-sm);\n    }\n  }\n\n  &--large {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-base);\n    }\n\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-base);\n    }\n  }\n}\n\n@keyframes progress-bar-stripes {\n  0% {\n    background-position: 0 0;\n  }\n  100% {\n    background-position: 1rem 0;\n  }\n}\n\n@keyframes progress-bar-pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n",
+                    "data": "@use '../../theme/tokens';\n\n.os-progress-bar {\n  width: 100%;\n  position: relative;\n\n  &__label {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: var(--os-spacing-xs);\n  }\n\n  &__text {\n    font-family: var(--os-font-family-base);\n    font-weight: var(--os-font-weight-medium);\n    color: var(--os-color-text-primary);\n  }\n\n  &__percentage {\n    font-family: var(--os-font-family-mono);\n    font-weight: var(--os-font-weight-semibold);\n    color: var(--os-color-text-secondary);\n  }\n\n  &__container {\n    position: relative;\n    width: 100%;\n  }\n\n  &__material {\n    width: 100%;\n    border-radius: var(--os-border-radius-full);\n\n    &--small {\n      height: 4px;\n    }\n    &--medium {\n      height: 6px;\n    }\n    &--large {\n      height: 8px;\n    }\n\n    &--striped ::ng-deep .mat-progress-bar-fill::after {\n      background-image: linear-gradient(\n        45deg,\n        rgba(255, 255, 255, 0.15) 25%,\n        transparent 25%,\n        transparent 50%,\n        rgba(255, 255, 255, 0.15) 50%,\n        rgba(255, 255, 255, 0.15) 75%,\n        transparent 75%,\n        transparent\n      );\n      background-size: 1rem 1rem;\n      animation: progress-bar-stripes 1s linear infinite;\n    }\n\n    &--animated ::ng-deep .mat-progress-bar-fill::after {\n      animation: progress-bar-pulse 2s ease-in-out infinite;\n    }\n  }\n\n  &__hint {\n    margin-top: var(--os-spacing-xs);\n    font-family: var(--os-font-family-base);\n    font-size: var(--os-font-size-sm);\n    color: var(--os-color-text-secondary);\n  }\n\n  &--small {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-xs);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-xs);\n    }\n  }\n\n  &--medium {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-sm);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-sm);\n    }\n  }\n\n  &--large {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-base);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-base);\n    }\n  }\n}\n\n@keyframes progress-bar-stripes {\n  0% {\n    background-position: 0 0;\n  }\n  100% {\n    background-position: 1rem 0;\n  }\n}\n\n@keyframes progress-bar-pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n",
                     "styleUrl": "./os-progress-bar.component.scss"
                 }
             ],
@@ -35520,7 +35546,7 @@
                 "linktype": "component",
                 "name": "OsButtonComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/12",
+                "coverageCount": "0/11",
                 "status": "low"
             },
             {
@@ -35722,7 +35748,7 @@
                 "linktype": "component",
                 "name": "OsProgressBarComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/16",
+                "coverageCount": "0/18",
                 "status": "low"
             },
             {
