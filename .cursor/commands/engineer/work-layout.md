@@ -37,6 +37,34 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    - `responsive-design.md` - Mobile-first e breakpoints
    - `accessibility.md` - WCAG 2.1 AA
    - `ui-system.md` - Angular Material + abstração OrçaSonhos
+   - `personas.md` - Personas principais e perfis de usuário
+   - `customer-journey.md` - Jornada do cliente e touchpoints
+   - `core-concepts.md` - Conceitos centrais do domínio
+   - `03_funcionalidades_core.md` - Funcionalidades core e diferenciação
+
+   **SEMPRE analisar contexto de produto dinamicamente:**
+
+   ```typescript
+   // Ler Meta Specs para contexto de produto
+   const personas = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/personas.md'
+   );
+   const customerJourney = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/customer-journey.md'
+   );
+   const coreConcepts = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/product-vision/core-concepts.md'
+   );
+   const coreFeatures = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/03_funcionalidades_core.md'
+   );
+
+   // Analisar contexto de produto:
+   // - Identificar persona primária para o layout
+   // - Mapear estágio da jornada do usuário
+   // - Considerar funcionalidades core relacionadas
+   // - Aplicar conceitos de negócio específicos
+   ```
 
 3. **Busca Contextual no Codebase:**
 
@@ -91,6 +119,87 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    - Screen reader support
    - ARIA patterns necessários
 
+### 1.1. Análise de Personas e Contexto de Produto
+
+**Baseado nas Meta Specs (personas.md, customer-journey.md, core-concepts.md):**
+
+1. **Identificar Persona Primária:**
+
+   ```typescript
+   // Ler personas.md das Meta Specs
+   const personas = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/personas.md'
+   );
+
+   // Analisar persona mais relevante para o layout baseado em:
+   // - Tipo de funcionalidade (dashboard, form, list, etc.)
+   // - Complexidade da interação
+   // - Contexto de uso (mobile/desktop)
+   // - Nível de sofisticação necessário
+   ```
+
+2. **Contexto de Uso por Persona:**
+
+   ```typescript
+   // Extrair características específicas da persona selecionada:
+   // - Comportamento financeiro
+   // - Necessidades de interface
+   // - Contexto de uso (mobile/desktop)
+   // - Nível de sofisticação esperado
+   // - Dores específicas e objetivos
+   ```
+
+3. **Jornada do Usuário:**
+
+   ```typescript
+   // Ler customer-journey.md das Meta Specs
+   const customerJourney = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/customer-journey.md'
+   );
+
+   // Mapear estágio da jornada para o layout:
+   // - Descoberta: Interface impressionante
+   // - Primeiro Uso: Onboarding orientado a objetivos
+   // - Engajamento: Dashboard motivacional
+   // - Adoção: Features avançadas
+   // - Maestria: Controle total
+   ```
+
+4. **Conceitos de Negócio:**
+
+   ```typescript
+   // Ler core-concepts.md das Meta Specs
+   const coreConcepts = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/product-vision/core-concepts.md'
+   );
+
+   // Aplicar conceitos relevantes ao layout:
+   // - Metas SMART: Interface centrada em progresso
+   // - Múltiplos Orçamentos: Navegação contextual
+   // - Compartilhamento: Interfaces colaborativas
+   // - Transações Temporais: Controle de datas
+   // - Sistema Dual: Separação orçamentos/contas
+   ```
+
+5. **Funcionalidades Core e Implicações de Layout:**
+
+   ```typescript
+   // Ler 03_funcionalidades_core.md das Meta Specs
+   const coreFeatures = await read_file(
+     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/03_funcionalidades_core.md'
+   );
+
+   // Mapear funcionalidades core para implicações de layout:
+   // - Sistema de Metas SMART: Barras de progresso, indicadores visuais
+   // - Múltiplos Orçamentos: Seletor de orçamento, navegação contextual
+   // - Compartilhamento Familiar: Indicadores de colaboração
+   // - Transações Temporais: Calendário visual, status de transações
+   // - Gestão de Cartões: Área específica para cartões
+   // - Sistema Dual: Separação visual entre orçamentos e contas
+   // - Dashboard Motivacional: Progresso central, conquistas
+   // - Onboarding Orientado: Fluxo guiado, primeira meta
+   ```
+
 ### 2. Análise Automática de Necessidade de Wireframes
 
 **Critérios para geração de wireframes:**
@@ -135,9 +244,46 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 
 [Mobile-first | Desktop-first | Universal]
 
+### Persona Primária
+
+[Identificada dinamicamente das Meta Specs baseada no tipo de layout e funcionalidade]
+
+**Características da Persona:**
+
+- [Extraídas dinamicamente de personas.md]
+- [Comportamento financeiro específico]
+- [Necessidades de interface]
+- [Contexto de uso (mobile/desktop)]
+- [Nível de sofisticação esperado]
+- [Dores específicas e objetivos]
+
 ### Contexto de Uso
 
 [Onde e como será utilizado na aplicação]
+
+### Funcionalidades Core Relacionadas
+
+[Lista das funcionalidades core que impactam este layout - extraídas dinamicamente de 03_funcionalidades_core.md]
+
+### Considerações da Jornada do Usuário
+
+**Estágio da Jornada:**
+
+- [Identificado dinamicamente de customer-journey.md baseado no contexto do layout]
+
+**Objetivos do Usuário neste Estágio:**
+
+- [Extraídos dinamicamente de customer-journey.md]
+- [O que o usuário quer alcançar]
+- [Valor percebido esperado]
+- [Friction points a evitar]
+
+**Touchpoints Críticos:**
+
+- [Extraídos dinamicamente de customer-journey.md]
+- [Momentos de verdade específicos]
+- [Recovery points se necessário]
+- [Transições entre estágios]
 
 ## 📱 Responsive Strategy
 
@@ -576,6 +722,12 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 
 ### Código Similar no Projeto
 [Exemplos de layouts similares já implementados]
+
+### Meta Specs - Contexto de Produto
+- **Personas**: [personas.md] - Perfis de usuário e necessidades específicas
+- **Jornada do Cliente**: [customer-journey.md] - Touchpoints e estágios de engajamento
+- **Conceitos Centrais**: [core-concepts.md] - Domínio financeiro e regras de negócio
+- **Funcionalidades Core**: [03_funcionalidades_core.md] - Diferenciação e valor único
 ```
 
 ### 4. Enriquecimento do architecture.md
@@ -639,6 +791,9 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 ### Resumo das Especificações:
 
 - **Tipo de Layout**: [Dashboard | Form | ...]
+- **Persona Primária**: [Identificada dinamicamente das Meta Specs]
+- **Estágio da Jornada**: [Identificado dinamicamente de customer-journey.md]
+- **Funcionalidades Core**: [Extraídas dinamicamente de 03_funcionalidades_core.md]
 - **Componentes Reutilizados**: [X atoms, Y molecules, Z organisms]
 - **Componentes Novos**: [Lista]
 - **Wireframes**: [Generated | Not needed]
@@ -678,12 +833,14 @@ Após completion do `/work-layout`:
 **Este comando executa automaticamente**:
 
 1. ✅ **Context Loading Especializado** (Design System, Responsive, A11y, Material)
-2. ✅ **Angular Best Practices** (via MCP Angular CLI)
-3. ✅ **Geração de layout-specification.md** (completo e detalhado)
-4. ✅ **Enriquecimento do architecture.md** (com UI context)
-5. ✅ **Validação e Aprovação** (antes de prosseguir)
+2. ✅ **Análise de Personas** (Ana, Carlos, Roberto & Maria, Júlia)
+3. ✅ **Contexto de Produto** (Jornada do usuário, funcionalidades core, conceitos de negócio)
+4. ✅ **Angular Best Practices** (via MCP Angular CLI)
+5. ✅ **Geração de layout-specification.md** (completo e detalhado)
+6. ✅ **Enriquecimento do architecture.md** (com UI context)
+7. ✅ **Validação e Aprovação** (antes de prosseguir)
 
-**Resultado**: Especificações de layout robustas, responsivas, acessíveis e alinhadas com o Design System!
+**Resultado**: Especificações de layout robustas, responsivas, acessíveis, alinhadas com o Design System e **contextualizadas para o produto OrçaSonhos**!
 
 ---
 
