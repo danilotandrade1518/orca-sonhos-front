@@ -172,6 +172,69 @@ src/app/features/dashboard/
 - **Estado**: Sincronização entre seletor e widgets
 - **Responsividade**: Complexidade do layout em diferentes telas
 
+## 🎨 UI Components and Layout
+
+### Design System Integration
+
+**Componentes Reutilizados:**
+
+- `OsHeaderComponent` - Header principal com navegação
+- `OsSidebarComponent` - Navegação lateral responsiva
+- `OsDashboardTemplateComponent` - Template base do dashboard
+- `OsBudgetSummaryComponent` - Widget de resumo do orçamento
+- `OsGoalProgressComponent` - Widget de progresso das metas
+- `OsTransactionListComponent` - Widget de transações recentes
+- Atoms: `os-button`, `os-icon`, `os-badge`, `os-chip`, `os-progress-bar`
+
+### New Components Required
+
+**OsBudgetSelectorComponent (Molecule):**
+
+- Dropdown para seleção de orçamento ativo
+- Integração com `BudgetSelectionService`
+- Estados: loading, empty, error
+- Responsivo: compacto em mobile, expandido em desktop
+- Acessibilidade: ARIA labels, keyboard navigation
+
+**OsDashboardWidgetsComponent (Organism):**
+
+- Container responsivo para widgets do dashboard
+- Sistema de grid CSS adaptativo (12 col desktop, 8 col tablet, 1 col mobile)
+- Estados: loading (skeleton), empty, error, success
+- Integração com `DashboardDataService`
+- Acessibilidade: Live regions para updates
+
+### Layout Architecture
+
+**Estrutura Responsiva:**
+
+- **Mobile**: Stack vertical, sidebar overlay, touch targets >= 44px
+- **Tablet**: Grid 2 colunas, sidebar colapsável, navegação header
+- **Desktop**: Grid 12 colunas, sidebar fixa, hover states
+
+**Grid System:**
+
+- CSS Grid com breakpoints: mobile (1 col), tablet (8 col), desktop (12 col)
+- Gaps: 16px desktop, 12px tablet, 8px mobile
+- Max width: 1200px container
+
+### Performance Considerations
+
+**Otimizações:**
+
+- OnPush change detection em todos componentes
+- Lazy loading para widgets não críticos
+- Computed signals para derivações
+- Bundle size: +15KB estimado para novos componentes
+
+**Critical CSS:**
+
+- Estilos do header e grid para first paint
+- Mobile-first approach
+- Skeleton screens para loading states
+
+**Detalhes completos em:** `layout-specification.md`
+
 ## 📋 Lista de Implementação
 
 ### Fase 1: Serviços e Estado
@@ -180,11 +243,13 @@ src/app/features/dashboard/
 - [ ] Criar `DashboardDataService` para dados do dashboard
 - [ ] Implementar tipos TypeScript para dashboard
 
-### Fase 2: Componentes
+### Fase 2: Componentes UI
 
-- [ ] Criar `BudgetSelectorComponent` para seleção de orçamento
-- [ ] Criar `DashboardWidgetsComponent` para container dos widgets
+- [ ] Criar `BudgetSelectorComponent` conforme layout-specification
+- [ ] Criar `DashboardWidgetsComponent` com grid responsivo
 - [ ] Integrar seletor no `OsHeaderComponent`
+- [ ] Implementar responsividade (mobile/tablet/desktop)
+- [ ] Implementar acessibilidade (ARIA, keyboard)
 
 ### Fase 3: Dashboard Page
 
