@@ -357,7 +357,7 @@ Após todas as aprovações:
 
 - Confirme que ambos os arquivos estão completos e aprovados
 - Atualize o status no sistema de gestão de tarefas
-- Informe ao usuário que está pronto para o próximo passo: **planejamento** (`/plan`)
+- Informe ao usuário que está pronto para o próximo passo: **layout specification** (`/work-layout`)
 
 ## Ferramentas de Pesquisa
 
@@ -370,7 +370,8 @@ Após todas as aprovações:
 
 Após completion do `/start`:
 
-1. **Planejamento** (`/plan`) - Quebra em etapas de implementação
-2. **Desenvolvimento** (`/work`) - Execução das etapas
-3. **Revisão** (`/pre-pr`) - Validações antes do PR
-4. **Pull Request** (`/pr`) - Finalização e submissão
+1. **Layout Specification** (`/work-layout`) - Especificação de UI/UX e layout
+2. **Planejamento** (`/plan`) - Quebra em etapas de implementação
+3. **Desenvolvimento** (`/work`) - Execução das etapas
+4. **Revisão** (`/pre-pr`) - Validações antes do PR
+5. **Pull Request** (`/pr`) - Finalização e submissão
