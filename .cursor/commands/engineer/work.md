@@ -55,7 +55,7 @@ Se não estiver em uma feature branch:
    const contextQuery = `funcionalidade ${folder - name} arquitetura padrões frontend`;
    const contextResults = await codebase_search({
      query: contextQuery,
-     target_directories: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs' se não configurado],
+     target_directories: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto],
    });
    ```
 
