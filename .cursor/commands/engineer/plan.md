@@ -20,6 +20,7 @@ Leia os seguintes arquivos na pasta `sessions/<feature_slug>`:
 
 - **context.md**: Entendimento dos requisitos e objetivos
 - **architecture.md**: Design técnico e decisões arquiteturais
+- **layout-specification.md**: Especificações de layout
 
 ### 2. Desenvolvimento do Plano
 
@@ -239,7 +240,7 @@ Se durante o planejamento surgirem dúvidas:
 Se o planejamento revelar necessidade de ajustes:
 
 - Atualize **architecture.md** se necessário
-- Revise **context.md** para esclarecimentos
+- Revise **context.md** e **layout-specification.md** para esclarecimentos
 - Documente mudanças e justificativas
 
 ### 5. Aprovação Final

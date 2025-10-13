@@ -158,12 +158,20 @@ src/app/shared/ui-components/
 
 ## 📋 Lista de Implementação
 
+### UI Components
+
+- [ ] Implementar os-goal-progress-card conforme layout-specification
+- [ ] Implementar os-budget-selector-enhanced com indicadores visuais
+- [ ] Implementar os-dashboard-widgets-refined com refinamentos visuais
+- [ ] Configurar responsividade mobile-first em todos os componentes
+- [ ] Implementar acessibilidade WCAG 2.1 AA (ARIA, keyboard, screen reader)
+
 ### Fase 1: Análise e Mapeamento
 
-- [ ] Análise completa dos componentes existentes
-- [ ] Mapeamento de alinhamento com Meta Specs
-- [ ] Identificação de gaps de acessibilidade
-- [ ] Avaliação de responsividade mobile-first
+- [x] Análise completa dos componentes existentes
+- [x] Mapeamento de alinhamento com Meta Specs
+- [x] Identificação de gaps de acessibilidade
+- [x] Avaliação de responsividade mobile-first
 
 ### Fase 2: Refinamento de Atoms
 
@@ -214,11 +222,80 @@ src/app/shared/ui-components/
 - [ ] Guias de uso para personas
 - [ ] Finalização e entrega
 
+## 🎨 UI Components and Layout
+
+### Design System Integration
+
+**Componentes Existentes Mapeados:**
+
+- **15+ Atoms**: os-button, os-input, os-icon, os-badge, os-avatar, os-spinner, os-progress-bar, os-checkbox, os-radio, os-toggle, os-slider, os-chip, os-label, os-money-input, os-date-input
+- **12+ Molecules**: os-form-field, os-card, os-search-box, os-money-display, os-date-picker, os-dropdown, os-filter-bar, os-form-group, os-navigation-item, os-tooltip, os-alert, os-data-table
+- **12+ Organisms**: os-header, os-sidebar, os-navigation, os-modal, os-page-header, os-footer, os-budget-summary, os-budget-tracker, os-category-manager, os-goal-progress, os-goal-tracker, os-transaction-list
+- **8+ Templates**: os-dashboard-template, os-form-template, os-list-template, os-detail-template, os-modal-template, os-wizard-template, os-drawer-template, os-panel-template
+
+### New Components Required
+
+**Componentes Novos Identificados:**
+
+- **os-goal-progress-card** (Molecule): Card específico para exibir progresso de metas com visual motivacional
+- **os-budget-selector-enhanced** (Molecule): Seletor de orçamento melhorado com indicadores visuais e ações rápidas
+- **os-dashboard-widgets-refined** (Organism): Widgets do dashboard com refinamentos visuais
+
+**Detalhes completos em:** `layout-specification.md`
+
+### Layout Architecture
+
+**Estrutura Responsiva:**
+
+- **Mobile (0-575px)**: Stack vertical, sidebar overlay, touch targets >= 44px
+- **Tablet (576-991px)**: Grid 2 colunas, sidebar colapsável, widgets responsivos
+- **Desktop (992px+)**: Grid 12 colunas, sidebar fixo, hover states ativos
+
+**Grid System:**
+
+- Columns: 12-col desktop, 8-col tablet, 1-col mobile
+- Gap: 16px desktop, 12px tablet, 8px mobile
+- Max Width: 1200px container
+
+### Performance Considerations
+
+**Otimizações de UI:**
+
+- **Bundle Size**: Mantido ou reduzido com otimizações de componentes
+- **Lazy Loading**: Componentes críticos carregados primeiro
+- **Critical CSS**: Estilos críticos para first paint
+- **OnPush Change Detection**: Aplicado em todos os componentes
+- **Computed Signals**: Para derivações de estado
+
+**Impacto de UI na Performance:**
+
+- **Design Tokens**: Sistema de tokens otimizado para CSS
+- **Componentes Reutilizáveis**: Redução de bundle size
+- **Responsive Images**: Otimização de assets
+- **Virtual Scrolling**: Para listas grandes de transações
+
+### Accessibility Integration
+
+**WCAG 2.1 AA Compliance:**
+
+- **Keyboard Navigation**: Tab order lógico, focus management
+- **ARIA Implementation**: Landmarks, live regions, labels
+- **Screen Reader Support**: Content structure, alt text, form labels
+- **Visual Accessibility**: Contraste >= 4.5:1, typography escalável
+
+**Componentes Acessíveis:**
+
+- Todos os componentes seguem padrões de acessibilidade
+- Focus management integrado
+- Screen reader announcements
+- Keyboard navigation completa
+
 ## 📚 Referências
 
 - **Meta Specs**: /home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs
 - **Personas**: Ana, Carlos, Roberto & Maria, Júlia
 - **Design System**: Componentes existentes em `/src/app/shared/ui-components/`
 - **Dashboard**: Implementação em `/src/app/features/dashboard/`
+- **Layout Specification**: `sessions/OS-222/layout-specification.md`
 - **Angular Material**: Documentação oficial
 - **WCAG 2.1 AA**: Diretrizes de acessibilidade
