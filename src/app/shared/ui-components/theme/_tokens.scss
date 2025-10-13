@@ -1,69 +1,144 @@
 // Design Tokens - OrçaSonhos Design System
 // Baseado na especificação do layout-specification.md
+// Refinado para alinhamento 100% com visão de produto das Meta Specs
 
 // =============================================================================
-// COLORS
+// COLORS - ESCALA COMPLETA
 // =============================================================================
 
 :root {
-  // Background Colors
-  --os-color-background-primary: #ffffff;
-  --os-color-background-secondary: #f8fafc;
-  --os-color-background-hover: rgba(59, 130, 246, 0.1);
-  --os-color-background-disabled: #f1f5f9;
+  // ===== CORES PRIMÁRIAS (Azul Dominante) =====
+  --os-color-primary-50: #eff6ff;
+  --os-color-primary-100: #dbeafe;
+  --os-color-primary-200: #bfdbfe;
+  --os-color-primary-300: #93c5fd;
+  --os-color-primary-400: #60a5fa;
+  --os-color-primary-500: #3b82f6;
+  --os-color-primary-600: #2563eb;
+  --os-color-primary-700: #1d4ed8;
+  --os-color-primary-800: #1e40af;
+  --os-color-primary-900: #1e3a8a;
 
-  // Text Colors
-  --os-color-text-primary: #1f2937;
-  --os-color-text-secondary: #6b7280;
-  --os-color-text-muted: #9ca3af;
+  // ===== CORES SECUNDÁRIAS (Roxo) =====
+  --os-color-secondary-50: #faf5ff;
+  --os-color-secondary-100: #f3e8ff;
+  --os-color-secondary-200: #e9d5ff;
+  --os-color-secondary-300: #d8b4fe;
+  --os-color-secondary-400: #c084fc;
+  --os-color-secondary-500: #a855f7;
+  --os-color-secondary-600: #9333ea;
+  --os-color-secondary-700: #7c3aed;
+  --os-color-secondary-800: #6b21a8;
+  --os-color-secondary-900: #581c87;
+
+  // ===== CORES NEUTRAS =====
+  --os-color-neutral-50: #f8fafc;
+  --os-color-neutral-100: #f1f5f9;
+  --os-color-neutral-200: #e2e8f0;
+  --os-color-neutral-300: #cbd5e1;
+  --os-color-neutral-400: #94a3b8;
+  --os-color-neutral-500: #64748b;
+  --os-color-neutral-600: #475569;
+  --os-color-neutral-700: #334155;
+  --os-color-neutral-800: #1e293b;
+  --os-color-neutral-900: #0f172a;
+
+  // ===== CORES SEMÂNTICAS =====
+  --os-color-success: #10b981;
+  --os-color-success-50: #ecfdf5;
+  --os-color-success-100: #d1fae5;
+  --os-color-success-500: #10b981;
+  --os-color-success-600: #059669;
+  --os-color-success-700: #047857;
+
+  --os-color-warning: #f59e0b;
+  --os-color-warning-50: #fffbeb;
+  --os-color-warning-100: #fef3c7;
+  --os-color-warning-500: #f59e0b;
+  --os-color-warning-600: #d97706;
+  --os-color-warning-700: #b45309;
+
+  --os-color-error: #ef4444;
+  --os-color-error-50: #fef2f2;
+  --os-color-error-100: #fee2e2;
+  --os-color-error-500: #ef4444;
+  --os-color-error-600: #dc2626;
+  --os-color-error-700: #b91c1c;
+
+  --os-color-info: #06b6d4;
+  --os-color-info-50: #ecfeff;
+  --os-color-info-100: #cffafe;
+  --os-color-info-500: #06b6d4;
+  --os-color-info-600: #0891b2;
+  --os-color-info-700: #0e7490;
+
+  // ===== CORES DE SUPERFÍCIE =====
+  --os-color-surface: #ffffff;
+  --os-color-surface-variant: #f8fafc;
+  --os-color-background: #ffffff;
+  --os-color-on-surface: #1f2937;
+  --os-color-on-surface-variant: #6b7280;
+
+  // ===== CORES DE ESTADO =====
+  --os-color-primary: var(--os-color-primary-500);
+  --os-color-primary-hover: var(--os-color-primary-600);
+  --os-color-primary-active: var(--os-color-primary-700);
+  --os-color-background-hover: rgba(59, 130, 246, 0.1);
+  --os-color-background-disabled: var(--os-color-neutral-100);
+
+  // ===== CORES DE TEXTO =====
+  --os-color-text-primary: var(--os-color-neutral-900);
+  --os-color-text-secondary: var(--os-color-neutral-600);
+  --os-color-text-muted: var(--os-color-neutral-500);
   --os-color-text-inverse: #ffffff;
 
-  // Border Colors
-  --os-color-border: #e2e8f0;
-  --os-color-border-hover: #cbd5e1;
-  --os-color-border-focus: #3b82f6;
-
-  // State Colors
-  --os-color-primary: #3b82f6;
-  --os-color-primary-hover: #2563eb;
-  --os-color-primary-active: #1d4ed8;
-  --os-color-success: #10b981;
-  --os-color-warning: #f59e0b;
-  --os-color-error: #ef4444;
-  --os-color-info: #06b6d4;
-
-  // Semantic Colors
-  --os-color-success-bg: #d1fae5;
-  --os-color-warning-bg: #fef3c7;
-  --os-color-error-bg: #fee2e2;
-  --os-color-info-bg: #cffafe;
+  // ===== CORES DE BORDA =====
+  --os-color-border: var(--os-color-neutral-200);
+  --os-color-border-hover: var(--os-color-neutral-300);
+  --os-color-border-focus: var(--os-color-primary-500);
 }
 
 // =============================================================================
-// TYPOGRAPHY
+// TYPOGRAPHY - ACESSÍVEL WCAG 2.1 AA
 // =============================================================================
 
 :root {
-  // Font Sizes
+  // ===== FAMÍLIAS DE FONTE =====
+  --os-font-family-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --os-font-family-mono: 'Roboto Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  // ===== TAMANHOS DE FONTE =====
   --os-font-size-xs: 0.75rem; // 12px
   --os-font-size-sm: 0.875rem; // 14px
-  --os-font-size-base: 1rem; // 16px
+  --os-font-size-base: 1rem; // 16px - MÍNIMO PARA ACESSIBILIDADE
   --os-font-size-lg: 1.125rem; // 18px
   --os-font-size-xl: 1.25rem; // 20px
   --os-font-size-2xl: 1.5rem; // 24px
   --os-font-size-3xl: 1.875rem; // 30px
   --os-font-size-4xl: 2.25rem; // 36px
 
-  // Font Weights
+  // ===== PESOS DE FONTE =====
+  --os-font-weight-light: 300;
   --os-font-weight-normal: 400;
   --os-font-weight-medium: 500;
   --os-font-weight-semibold: 600;
   --os-font-weight-bold: 700;
 
-  // Line Heights
-  --os-line-height-tight: 1.25;
-  --os-line-height-normal: 1.5;
-  --os-line-height-relaxed: 1.75;
+  // ===== ALTURAS DE LINHA ACESSÍVEIS =====
+  --os-line-height-tight: 1.25; // Para títulos grandes
+  --os-line-height-normal: 1.5; // MÍNIMO PARA ACESSIBILIDADE
+  --os-line-height-relaxed: 1.6; // Confortável para leitura
+  --os-line-height-loose: 1.75; // Para textos longos
+
+  // ===== ESPAÇAMENTO ENTRE LETRAS =====
+  --os-letter-spacing-tight: -0.025em;
+  --os-letter-spacing-normal: 0;
+  --os-letter-spacing-wide: 0.025em;
+  --os-letter-spacing-wider: 0.05em;
+
+  // ===== ESPAÇAMENTO ENTRE PALAVRAS =====
+  --os-word-spacing-normal: 0;
+  --os-word-spacing-wide: 0.1em;
 }
 
 // =============================================================================
@@ -200,7 +275,7 @@
 // =============================================================================
 
 :root {
-  // Budget Selector
+  // ===== BUDGET SELECTOR ENHANCED =====
   --os-budget-selector-padding-horizontal: var(--os-spacing-3);
   --os-budget-selector-padding-vertical: var(--os-spacing-2);
   --os-budget-selector-border: var(--os-border-width-1) solid var(--os-color-border);
@@ -208,39 +283,109 @@
   --os-budget-selector-font-size: var(--os-font-size-sm);
   --os-budget-selector-font-weight: var(--os-font-weight-medium);
 
-  // Dashboard Widgets
+  // ===== GOAL PROGRESS CARD =====
+  --os-goal-progress-card-padding-horizontal: var(--os-spacing-4);
+  --os-goal-progress-card-padding-vertical: var(--os-spacing-3);
+  --os-goal-progress-card-border: var(--os-border-width-1) solid var(--os-color-border);
+  --os-goal-progress-card-radius: var(--os-border-radius-lg);
+  --os-goal-progress-card-font-size-label: var(--os-font-size-sm);
+  --os-goal-progress-card-font-size-value: var(--os-font-size-lg);
+  --os-goal-progress-card-background: var(--os-color-background-primary);
+  --os-goal-progress-card-progress-color: var(--os-color-primary);
+  --os-goal-progress-card-success-color: var(--os-color-success);
+  --os-goal-progress-card-overdue-color: var(--os-color-error);
+
+  // ===== DASHBOARD WIDGETS REFINED =====
   --os-dashboard-widgets-gap-desktop: var(--os-spacing-4);
   --os-dashboard-widgets-gap-tablet: var(--os-spacing-3);
   --os-dashboard-widgets-gap-mobile: var(--os-spacing-2);
   --os-dashboard-widgets-padding-desktop: var(--os-spacing-6);
   --os-dashboard-widgets-padding-mobile: var(--os-spacing-4);
+  --os-dashboard-widgets-skeleton-shimmer: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  --os-dashboard-widgets-empty-state-icon-size: 48px;
+  --os-dashboard-widgets-error-retry-button-size: var(--os-touch-target-min);
 
-  // Touch Targets
+  // ===== TOUCH TARGETS =====
   --os-touch-target-min: 44px;
   --os-touch-target-comfortable: 48px;
-}
 
-// =============================================================================
-// ACCESSIBILITY TOKENS
-// =============================================================================
+  // ===== ANIMATIONS =====
+  --os-animation-celebration-duration: 2s;
+  --os-animation-milestone-duration: 0.5s;
+  --os-animation-progress-fill-duration: 0.3s;
+  --os-animation-hover-scale: 1.02;
+  --os-animation-active-scale: 0.98;
 
-:root {
-  // Focus Ring
+  // ===== FOCUS RING =====
   --os-focus-ring-width: 2px;
   --os-focus-ring-color: var(--os-color-primary);
   --os-focus-ring-offset: 2px;
+}
 
-  // High Contrast Mode Support
+// =============================================================================
+// ACCESSIBILITY TOKENS - WCAG 2.1 AA COMPLIANCE
+// =============================================================================
+
+:root {
+  // ===== FOCUS MANAGEMENT =====
+  --os-focus-ring-width: 2px;
+  --os-focus-ring-color: var(--os-color-primary);
+  --os-focus-ring-offset: 2px;
+  --os-focus-ring-style: solid;
+  --os-focus-ring-radius: var(--os-border-radius-sm);
+
+  // ===== CONTRASTE WCAG 2.1 AA =====
+  // Texto normal: >= 4.5:1
+  --os-contrast-text-normal: 4.5;
+  // Texto grande: >= 3:1
+  --os-contrast-text-large: 3;
+  // UI Components: >= 3:1
+  --os-contrast-ui-components: 3;
+
+  // ===== TIPOGRAFIA ACESSÍVEL =====
+  --os-font-size-minimum: 16px; // 1rem - mínimo para acessibilidade
+  --os-line-height-minimum: 1.5; // Mínimo para acessibilidade
+  --os-line-height-comfortable: 1.6; // Confortável para leitura
+
+  // ===== HIGH CONTRAST MODE =====
   @media (prefers-contrast: high) {
     --os-color-border: #000000;
     --os-color-text-primary: #000000;
     --os-color-background-primary: #ffffff;
+    --os-color-primary: #0000ff;
+    --os-color-success: #008000;
+    --os-color-error: #ff0000;
+    --os-color-warning: #ff8c00;
   }
 
-  // Reduced Motion Support
+  // ===== REDUCED MOTION =====
   @media (prefers-reduced-motion: reduce) {
     --os-transition-fast: 0ms;
     --os-transition-normal: 0ms;
     --os-transition-slow: 0ms;
+    --os-animation-celebration-duration: 0ms;
+    --os-animation-milestone-duration: 0ms;
+    --os-animation-progress-fill-duration: 0ms;
+    --os-animation-hover-scale: 1;
+    --os-animation-active-scale: 1;
+  }
+
+  // ===== DARK MODE SUPPORT =====
+  @media (prefers-color-scheme: dark) {
+    --os-color-surface: #1e293b;
+    --os-color-surface-variant: #334155;
+    --os-color-background: #0f172a;
+    --os-color-on-surface: #f8fafc;
+    --os-color-on-surface-variant: #cbd5e1;
+    --os-color-text-primary: #f8fafc;
+    --os-color-text-secondary: #cbd5e1;
+    --os-color-text-muted: #94a3b8;
+    --os-color-border: #475569;
+    --os-color-border-hover: #64748b;
   }
 }

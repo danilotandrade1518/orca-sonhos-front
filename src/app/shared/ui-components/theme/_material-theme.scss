@@ -1,5 +1,6 @@
 // Tema Material Customizado - OrçaSonhos Design System
 // Integração dos design tokens com Angular Material
+// Refinado para alinhamento 100% com visão de produto das Meta Specs
 
 @use '@angular/material' as mat;
 
@@ -7,8 +8,12 @@
   border-radius: var(--os-border-radius-md);
   font-weight: var(--os-font-weight-medium);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: var(--os-letter-spacing-normal);
   font-family: var(--os-font-family-primary);
+  font-size: var(--os-font-size-base);
+  line-height: var(--os-line-height-normal);
+  min-height: var(--os-touch-target-min);
+  padding: var(--os-spacing-2) var(--os-spacing-4);
 }
 
 .mat-mdc-raised-button {
@@ -75,14 +80,29 @@
   --mdc-outlined-button-label-text-color: var(--os-color-error);
 }
 
-// ===== FORM FIELDS =====
+// ===== FORM FIELDS ACESSÍVEIS =====
 .mat-mdc-form-field {
   .mat-mdc-text-field-wrapper {
+    border-radius: var(--os-border-radius-md);
     .mat-mdc-form-field-flex {
       .mat-mdc-form-field-infix {
-        min-height: 48px;
+        min-height: var(--os-touch-target-min);
+        font-size: var(--os-font-size-base);
+        line-height: var(--os-line-height-normal);
+        font-family: var(--os-font-family-primary);
       }
     }
+  }
+
+  .mat-mdc-form-field-label {
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-medium);
+    line-height: var(--os-line-height-normal);
+  }
+
+  .mat-mdc-form-field-hint {
+    font-size: var(--os-font-size-xs);
+    line-height: var(--os-line-height-normal);
   }
 }
 
@@ -90,49 +110,80 @@
   .mat-mdc-text-field-wrapper {
     .mat-mdc-form-field-flex {
       .mat-mdc-form-field-infix {
-        border-color: var(--os-color-primary-500);
+        border-color: var(--os-color-primary);
+        box-shadow: var(--os-shadow-focus);
       }
     }
   }
 }
 
-// ===== CARDS =====
+// ===== CARDS ACESSÍVEIS =====
 .mat-mdc-card {
   background-color: var(--os-color-surface);
   color: var(--os-color-on-surface);
+  border-radius: var(--os-border-radius-lg);
+  box-shadow: var(--os-shadow-sm);
+  transition: var(--os-transition-all);
+
+  &:hover {
+    box-shadow: var(--os-shadow-md);
+    transform: var(--os-animation-hover-scale);
+  }
 
   .mat-mdc-card-header {
-    padding: var(--os-spacing-md);
+    padding: var(--os-spacing-4);
+    border-bottom: var(--os-border-width-1) solid var(--os-color-border);
   }
 
   .mat-mdc-card-content {
-    padding: var(--os-spacing-md);
+    padding: var(--os-spacing-4);
+    font-size: var(--os-font-size-base);
+    line-height: var(--os-line-height-normal);
   }
 
   .mat-mdc-card-actions {
-    padding: var(--os-spacing-md);
+    padding: var(--os-spacing-4);
+    gap: var(--os-spacing-2);
   }
 }
 
-// ===== DIALOGS =====
+// ===== DIALOGS ACESSÍVEIS =====
 .mat-mdc-dialog-container {
   background-color: var(--os-color-surface);
   color: var(--os-color-on-surface);
+  border-radius: var(--os-border-radius-lg);
+  box-shadow: var(--os-shadow-xl);
 
   .mat-mdc-dialog-title {
     color: var(--os-color-on-surface);
-    font-weight: var(--os-font-weight-medium);
+    font-weight: var(--os-font-weight-semibold);
+    font-size: var(--os-font-size-xl);
+    line-height: var(--os-line-height-tight);
+    margin-bottom: var(--os-spacing-4);
   }
 
   .mat-mdc-dialog-content {
     color: var(--os-color-on-surface-variant);
+    font-size: var(--os-font-size-base);
+    line-height: var(--os-line-height-normal);
+    padding: var(--os-spacing-4);
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: var(--os-spacing-4);
+    gap: var(--os-spacing-2);
   }
 }
 
-// ===== SNACK BAR =====
+// ===== SNACK BAR ACESSÍVEIS =====
 .mat-mdc-snack-bar-container {
   background-color: var(--os-color-surface);
   color: var(--os-color-on-surface);
+  border-radius: var(--os-border-radius-md);
+  box-shadow: var(--os-shadow-lg);
+  font-size: var(--os-font-size-sm);
+  line-height: var(--os-line-height-normal);
+  min-height: var(--os-touch-target-min);
 
   &.mat-mdc-snack-bar-success {
     background-color: var(--os-color-success);
@@ -148,6 +199,11 @@
     background-color: var(--os-color-warning);
     color: white;
   }
+
+  &.mat-mdc-snack-bar-info {
+    background-color: var(--os-color-info);
+    color: white;
+  }
 }
 
 // ===== TEMA ESCURO =====
@@ -155,6 +211,7 @@
   .mat-mdc-card {
     background-color: var(--os-color-surface);
     color: var(--os-color-on-surface);
+    border: var(--os-border-width-1) solid var(--os-color-border);
   }
 
   .mat-mdc-dialog-container {
@@ -165,5 +222,38 @@
   .mat-mdc-snack-bar-container {
     background-color: var(--os-color-surface);
     color: var(--os-color-on-surface);
+  }
+
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background-color: var(--os-color-surface-variant);
+    }
+  }
+}
+
+// ===== HIGH CONTRAST MODE =====
+@media (prefers-contrast: high) {
+  .mat-mdc-button {
+    border: var(--os-border-width-2) solid currentColor;
+  }
+
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      border: var(--os-border-width-2) solid var(--os-color-border);
+    }
+  }
+
+  .mat-mdc-card {
+    border: var(--os-border-width-2) solid var(--os-color-border);
+  }
+}
+
+// ===== REDUCED MOTION =====
+@media (prefers-reduced-motion: reduce) {
+  .mat-mdc-button,
+  .mat-mdc-card,
+  .mat-mdc-form-field {
+    transition: none;
+    animation: none;
   }
 }

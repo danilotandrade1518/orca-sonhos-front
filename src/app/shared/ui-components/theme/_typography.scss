@@ -1,5 +1,6 @@
 // Tipografia do Design System OrçaSonhos
 // Baseada na fonte Roboto com hierarquia clara
+// Refinada para acessibilidade WCAG 2.1 AA
 
 // ===== FAMÍLIAS DE FONTE =====
 .os-font-primary {
@@ -60,11 +61,12 @@
   line-height: var(--os-line-height-relaxed);
 }
 
-// ===== HIERARQUIA TIPOGRÁFICA =====
+// ===== HIERARQUIA TIPOGRÁFICA ACESSÍVEL =====
 .os-heading-1 {
   font-size: var(--os-font-size-4xl);
   font-weight: var(--os-font-weight-bold);
   line-height: var(--os-line-height-tight);
+  letter-spacing: var(--os-letter-spacing-tight);
   margin: 0 0 var(--os-spacing-lg) 0;
 }
 
@@ -72,20 +74,23 @@
   font-size: var(--os-font-size-3xl);
   font-weight: var(--os-font-weight-bold);
   line-height: var(--os-line-height-tight);
+  letter-spacing: var(--os-letter-spacing-tight);
   margin: 0 0 var(--os-spacing-md) 0;
 }
 
 .os-heading-3 {
   font-size: var(--os-font-size-2xl);
-  font-weight: var(--os-font-weight-medium);
+  font-weight: var(--os-font-weight-semibold);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
   margin: 0 0 var(--os-spacing-md) 0;
 }
 
 .os-heading-4 {
   font-size: var(--os-font-size-xl);
-  font-weight: var(--os-font-weight-medium);
+  font-weight: var(--os-font-weight-semibold);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
   margin: 0 0 var(--os-spacing-sm) 0;
 }
 
@@ -93,6 +98,7 @@
   font-size: var(--os-font-size-lg);
   font-weight: var(--os-font-weight-medium);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
   margin: 0 0 var(--os-spacing-sm) 0;
 }
 
@@ -100,32 +106,52 @@
   font-size: var(--os-font-size-base);
   font-weight: var(--os-font-weight-medium);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
   margin: 0 0 var(--os-spacing-sm) 0;
 }
 
-// ===== CORPOS DE TEXTO =====
+// ===== CORPOS DE TEXTO ACESSÍVEIS =====
 .os-body-large {
   font-size: var(--os-font-size-lg);
-  font-weight: var(--os-font-weight-regular);
+  font-weight: var(--os-font-weight-normal);
   line-height: var(--os-line-height-relaxed);
+  letter-spacing: var(--os-letter-spacing-normal);
 }
 
 .os-body-medium {
   font-size: var(--os-font-size-base);
-  font-weight: var(--os-font-weight-regular);
+  font-weight: var(--os-font-weight-normal);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
 }
 
 .os-body-small {
   font-size: var(--os-font-size-sm);
-  font-weight: var(--os-font-weight-regular);
+  font-weight: var(--os-font-weight-normal);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-normal);
 }
 
 .os-caption {
   font-size: var(--os-font-size-xs);
-  font-weight: var(--os-font-weight-regular);
+  font-weight: var(--os-font-weight-normal);
   line-height: var(--os-line-height-normal);
+  letter-spacing: var(--os-letter-spacing-wide);
+}
+
+// ===== TEXTOS ACESSÍVEIS ESPECIAIS =====
+.os-text-readable {
+  font-size: var(--os-font-size-base);
+  line-height: var(--os-line-height-relaxed);
+  letter-spacing: var(--os-letter-spacing-normal);
+  word-spacing: var(--os-word-spacing-normal);
+}
+
+.os-text-readable-large {
+  font-size: var(--os-font-size-lg);
+  line-height: var(--os-line-height-loose);
+  letter-spacing: var(--os-letter-spacing-normal);
+  word-spacing: var(--os-word-spacing-normal);
 }
 
 // ===== ESTILOS DE TEXTO =====
