@@ -22452,7 +22452,7 @@
         },
         {
             "name": "OsInputComponent",
-            "id": "component-OsInputComponent-bed7a982297ca7867e8df2f9a91442014d5d7e45d1cd689906f3cae144bf7e9d55e835b75a9b93d2285d993f8eae53fafb6e0941708121e8eac9d73c35e0c50f",
+            "id": "component-OsInputComponent-23d2c8f75e9cdb97f2e7f5066595d8d263b3dedfa946038b032bf5d1a6eb3e3ad891395e66a121c2a74abdbc4d97b131c097c24be1976f1a3b0050565358b21b",
             "file": "src/app/shared/ui-components/atoms/os-input/os-input.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -22469,7 +22469,7 @@
                 "./os-input.component.scss"
             ],
             "styles": [],
-            "template": "<div [class]=\"containerClass()\">\n  <mat-form-field [appearance]=\"appearance()\" [class]=\"formFieldClass()\">\n    @if (label()) {\n    <mat-label>{{ label() }}</mat-label>\n    } @if (prefixIcon()) {\n    <mat-icon matPrefix [class]=\"prefixIconClass()\">{{ prefixIcon() }}</mat-icon>\n    }\n\n    <input\n      matInput\n      [id]=\"inputId\"\n      [type]=\"type()\"\n      [placeholder]=\"placeholder()\"\n      [disabled]=\"disabled()\"\n      [readonly]=\"readonly()\"\n      [required]=\"required()\"\n      [value]=\"value()\"\n      [class]=\"inputClass()\"\n      (input)=\"handleInput($event)\"\n      (blur)=\"handleBlur($event)\"\n      (focus)=\"handleFocus($event)\"\n      [attr.aria-describedby]=\"helperText() ? inputId + '-helper' : null\"\n      [attr.aria-invalid]=\"hasError()\"\n    />\n\n    @if (suffixIcon()) {\n    <mat-icon matSuffix [class]=\"suffixIconClass()\">{{ suffixIcon() }}</mat-icon>\n    } @if (clearable() && value() && !disabled()) {\n    <button\n      matSuffix\n      mat-icon-button\n      type=\"button\"\n      class=\"os-input__clear\"\n      (click)=\"handleClear()\"\n      [attr.aria-label]=\"'Clear ' + (label() || 'input')\"\n    >\n      <mat-icon>close</mat-icon>\n    </button>\n    } @if (helperText() || hasError()) {\n    <mat-hint [class]=\"helperClass()\">\n      {{ errorMessage() || helperText() }}\n    </mat-hint>\n    }\n  </mat-form-field>\n</div>\n",
+            "template": "<div [class]=\"containerClass()\">\n  <mat-form-field [appearance]=\"appearance()\" [class]=\"formFieldClass()\">\n    @if (label()) {\n    <mat-label>{{ label() }}</mat-label>\n    } @if (prefixIcon()) {\n    <mat-icon matPrefix [class]=\"prefixIconClass()\">{{ prefixIcon() }}</mat-icon>\n    }\n\n    <input\n      matInput\n      [id]=\"inputId\"\n      [type]=\"type()\"\n      [placeholder]=\"placeholder()\"\n      [disabled]=\"disabled()\"\n      [readonly]=\"readonly()\"\n      [required]=\"required()\"\n      [value]=\"value()\"\n      [class]=\"inputClass()\"\n      (input)=\"handleInput($event)\"\n      (blur)=\"handleBlur($event)\"\n      (focus)=\"handleFocus($event)\"\n      [attr.aria-describedby]=\"helperText() ? inputId + '-helper' : null\"\n      [attr.aria-invalid]=\"hasError()\"\n      [attr.aria-required]=\"required()\"\n      [attr.aria-disabled]=\"disabled()\"\n    />\n\n    @if (suffixIcon()) {\n    <mat-icon matSuffix [class]=\"suffixIconClass()\">{{ suffixIcon() }}</mat-icon>\n    } @if (clearable() && value() && !disabled()) {\n    <button\n      matSuffix\n      mat-icon-button\n      type=\"button\"\n      class=\"os-input__clear\"\n      (click)=\"handleClear()\"\n      [attr.aria-label]=\"'Clear ' + (label() || 'input')\"\n    >\n      <mat-icon>close</mat-icon>\n    </button>\n    } @if (helperText() || hasError()) {\n    <mat-hint [class]=\"helperClass()\" [id]=\"inputId + '-helper'\">\n      {{ errorMessage() || helperText() }}\n    </mat-hint>\n    }\n  </mat-form-field>\n</div>\n",
             "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
@@ -22482,7 +22482,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 91,
+                    "line": 93,
                     "required": false
                 },
                 {
@@ -22493,7 +22493,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 88,
+                    "line": 90,
                     "required": false
                 },
                 {
@@ -22505,7 +22505,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 87,
+                    "line": 89,
                     "required": false
                 },
                 {
@@ -22517,7 +22517,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 86,
+                    "line": 88,
                     "required": false
                 },
                 {
@@ -22529,7 +22529,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 84,
+                    "line": 86,
                     "required": false
                 },
                 {
@@ -22541,7 +22541,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 85,
+                    "line": 87,
                     "required": false
                 },
                 {
@@ -22553,7 +22553,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 92,
+                    "line": 94,
                     "required": false
                 },
                 {
@@ -22564,7 +22564,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 89,
+                    "line": 91,
                     "required": false
                 },
                 {
@@ -22575,7 +22575,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 90,
+                    "line": 92,
                     "required": false
                 },
                 {
@@ -22587,7 +22587,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 83,
+                    "line": 85,
                     "required": false
                 },
                 {
@@ -22599,7 +22599,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 93,
+                    "line": 95,
                     "required": false
                 },
                 {
@@ -22611,7 +22611,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 82,
+                    "line": 84,
                     "required": false
                 },
                 {
@@ -22623,7 +22623,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 94,
+                    "line": 96,
                     "required": false
                 }
             ],
@@ -22636,7 +22636,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 97,
+                    "line": 99,
                     "required": false
                 },
                 {
@@ -22647,7 +22647,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 88,
+                    "line": 90,
                     "required": false
                 },
                 {
@@ -22658,7 +22658,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 98,
+                    "line": 100,
                     "required": false
                 },
                 {
@@ -22670,7 +22670,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 94,
+                    "line": 96,
                     "required": false
                 },
                 {
@@ -22681,7 +22681,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 96,
+                    "line": 98,
                     "required": false
                 }
             ],
@@ -22695,7 +22695,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 100,
+                    "line": 102,
                     "modifierKind": [
                         123
                     ]
@@ -22709,7 +22709,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 104,
+                    "line": 103,
                     "modifierKind": [
                         123
                     ]
@@ -22723,7 +22723,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 161,
+                    "line": 140,
                     "modifierKind": [
                         124
                     ]
@@ -22737,7 +22737,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 110
+                    "line": 107
                 },
                 {
                     "name": "formFieldClass",
@@ -22748,7 +22748,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 163,
+                    "line": 142,
                     "modifierKind": [
                         124
                     ]
@@ -22762,7 +22762,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 156
+                    "line": 136
                 },
                 {
                     "name": "helperClass",
@@ -22773,7 +22773,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 150
+                    "line": 130
                 },
                 {
                     "name": "inputClass",
@@ -22784,7 +22784,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 138
+                    "line": 118
                 },
                 {
                     "name": "inputId",
@@ -22795,29 +22795,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 108
-                },
-                {
-                    "name": "inputWrapperClass",
-                    "defaultValue": "computed(() => {\n    return [\n      'os-input__wrapper',\n      this.prefixIcon() ? 'os-input__wrapper--with-prefix' : '',\n      this.suffixIcon() ? 'os-input__wrapper--with-suffix' : '',\n      this.clearable() ? 'os-input__wrapper--clearable' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 127
-                },
-                {
-                    "name": "labelClass",
-                    "defaultValue": "computed(() => {\n    return ['os-input__label', this.required() ? 'os-input__label--required' : '']\n      .filter(Boolean)\n      .join(' ');\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 121
+                    "line": 105
                 },
                 {
                     "name": "prefixIconClass",
@@ -22828,7 +22806,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 174,
+                    "line": 153,
                     "modifierKind": [
                         124
                     ]
@@ -22842,7 +22820,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 180,
+                    "line": 159,
                     "modifierKind": [
                         124
                     ]
@@ -22862,7 +22840,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 193,
+                    "line": 172,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -22883,7 +22861,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 202,
+                    "line": 181,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -22900,7 +22878,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 198,
+                    "line": 177,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -22928,7 +22906,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 186,
+                    "line": 165,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -22964,7 +22942,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 214,
+                    "line": 192,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -23001,7 +22979,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 218,
+                    "line": 196,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -23030,7 +23008,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 222,
+                    "line": 200,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -23058,7 +23036,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 207,
+                    "line": 186,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -23104,11 +23082,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\n  Component,\n  input,\n  output,\n  computed,\n  model,\n  ChangeDetectionStrategy,\n  forwardRef,\n} from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatButtonModule } from '@angular/material/button';\n\nexport type OsInputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';\nexport type OsInputSize = 'small' | 'medium' | 'large';\n\n@Component({\n  selector: 'os-input',\n  standalone: true,\n  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule],\n  template: `\n    <div [class]=\"containerClass()\">\n      <mat-form-field [appearance]=\"appearance()\" [class]=\"formFieldClass()\">\n        @if (label()) {\n        <mat-label>{{ label() }}</mat-label>\n        } @if (prefixIcon()) {\n        <mat-icon matPrefix [class]=\"prefixIconClass()\">{{ prefixIcon() }}</mat-icon>\n        }\n\n        <input\n          matInput\n          [id]=\"inputId\"\n          [type]=\"type()\"\n          [placeholder]=\"placeholder()\"\n          [disabled]=\"disabled()\"\n          [readonly]=\"readonly()\"\n          [required]=\"required()\"\n          [value]=\"value()\"\n          [class]=\"inputClass()\"\n          (input)=\"handleInput($event)\"\n          (blur)=\"handleBlur($event)\"\n          (focus)=\"handleFocus($event)\"\n          [attr.aria-describedby]=\"helperText() ? inputId + '-helper' : null\"\n          [attr.aria-invalid]=\"hasError()\"\n        />\n\n        @if (suffixIcon()) {\n        <mat-icon matSuffix [class]=\"suffixIconClass()\">{{ suffixIcon() }}</mat-icon>\n        } @if (clearable() && value() && !disabled()) {\n        <button\n          matSuffix\n          mat-icon-button\n          type=\"button\"\n          class=\"os-input__clear\"\n          (click)=\"handleClear()\"\n          [attr.aria-label]=\"'Clear ' + (label() || 'input')\"\n        >\n          <mat-icon>close</mat-icon>\n        </button>\n        } @if (helperText() || hasError()) {\n        <mat-hint [class]=\"helperClass()\">\n          {{ errorMessage() || helperText() }}\n        </mat-hint>\n        }\n      </mat-form-field>\n    </div>\n  `,\n  styleUrls: ['./os-input.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  providers: [\n    {\n      provide: NG_VALUE_ACCESSOR,\n      useExisting: forwardRef(() => OsInputComponent),\n      multi: true,\n    },\n  ],\n})\nexport class OsInputComponent implements ControlValueAccessor {\n  type = input<OsInputType>('text');\n  size = input<OsInputSize>('medium');\n  label = input<string>('');\n  placeholder = input<string>('');\n  helperText = input<string>('');\n  errorMessage = input<string>('');\n  disabled = model(false);\n  readonly = input(false);\n  required = input(false);\n  clearable = input(false);\n  prefixIcon = input<string>('');\n  suffixIcon = input<string>('');\n  value = model<string>('');\n\n  valueChange = output<string>();\n  blurEvent = output<FocusEvent>();\n  focusEvent = output<FocusEvent>();\n\n  private _onChange = (value: string) => {\n    // This will be set by registerOnChange\n    console.debug('onChange called with:', value);\n  };\n  private _onTouched = () => {\n    // This will be set by registerOnTouched\n  };\n\n  inputId = `os-input-${Math.random().toString(36).substr(2, 9)}`;\n\n  containerClass = computed(() => {\n    return [\n      'os-input-container',\n      `os-input-container--${this.size()}`,\n      this.hasError() ? 'os-input-container--error' : '',\n      this.disabled() ? 'os-input-container--disabled' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  labelClass = computed(() => {\n    return ['os-input__label', this.required() ? 'os-input__label--required' : '']\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  inputWrapperClass = computed(() => {\n    return [\n      'os-input__wrapper',\n      this.prefixIcon() ? 'os-input__wrapper--with-prefix' : '',\n      this.suffixIcon() ? 'os-input__wrapper--with-suffix' : '',\n      this.clearable() ? 'os-input__wrapper--clearable' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  inputClass = computed(() => {\n    return [\n      'os-input',\n      `os-input--${this.size()}`,\n      this.hasError() ? 'os-input--error' : '',\n      this.disabled() ? 'os-input--disabled' : '',\n      this.readonly() ? 'os-input--readonly' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  helperClass = computed(() => {\n    return ['os-input__helper', this.hasError() ? 'os-input__helper--error' : '']\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  hasError = computed(() => {\n    return !!this.errorMessage();\n  });\n\n  // Mapeamento interno para Material\n  protected appearance = computed((): MatFormFieldAppearance => 'outline');\n\n  protected formFieldClass = computed(() => {\n    return [\n      'os-input__form-field',\n      `os-input__form-field--${this.size()}`,\n      this.hasError() ? 'os-input__form-field--error' : '',\n      this.disabled() ? 'os-input__form-field--disabled' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  protected prefixIconClass = computed(() => {\n    return ['os-input__prefix-icon', `os-input__prefix-icon--${this.size()}`]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  protected suffixIconClass = computed(() => {\n    return ['os-input__suffix-icon', `os-input__suffix-icon--${this.size()}`]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  handleInput(event: Event): void {\n    const target = event.target as HTMLInputElement;\n    const newValue = target.value;\n    this._onChange(newValue);\n    this.valueChange.emit(newValue);\n  }\n\n  handleBlur(event: FocusEvent): void {\n    this._onTouched();\n    this.blurEvent.emit(event);\n  }\n\n  handleFocus(event: FocusEvent): void {\n    this.focusEvent.emit(event);\n  }\n\n  handleClear(): void {\n    this._onChange('');\n    this.valueChange.emit('');\n  }\n\n  writeValue(value: string): void {\n    // Update the model signal when FormControl value changes programmatically\n    if (value !== this.value()) {\n      this.value.set(value);\n    }\n  }\n\n  registerOnChange(fn: (value: string) => void): void {\n    this._onChange = fn;\n  }\n\n  registerOnTouched(fn: () => void): void {\n    this._onTouched = fn;\n  }\n\n  setDisabledState(isDisabled: boolean): void {\n    // Update the disabled state when called by Angular Forms\n    this.disabled.set(isDisabled);\n  }\n}\n",
+            "sourceCode": "import {\n  Component,\n  input,\n  output,\n  computed,\n  model,\n  ChangeDetectionStrategy,\n  forwardRef,\n} from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatButtonModule } from '@angular/material/button';\n\nexport type OsInputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';\nexport type OsInputSize = 'small' | 'medium' | 'large';\n\n@Component({\n  selector: 'os-input',\n  standalone: true,\n  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule],\n  template: `\n    <div [class]=\"containerClass()\">\n      <mat-form-field [appearance]=\"appearance()\" [class]=\"formFieldClass()\">\n        @if (label()) {\n        <mat-label>{{ label() }}</mat-label>\n        } @if (prefixIcon()) {\n        <mat-icon matPrefix [class]=\"prefixIconClass()\">{{ prefixIcon() }}</mat-icon>\n        }\n\n        <input\n          matInput\n          [id]=\"inputId\"\n          [type]=\"type()\"\n          [placeholder]=\"placeholder()\"\n          [disabled]=\"disabled()\"\n          [readonly]=\"readonly()\"\n          [required]=\"required()\"\n          [value]=\"value()\"\n          [class]=\"inputClass()\"\n          (input)=\"handleInput($event)\"\n          (blur)=\"handleBlur($event)\"\n          (focus)=\"handleFocus($event)\"\n          [attr.aria-describedby]=\"helperText() ? inputId + '-helper' : null\"\n          [attr.aria-invalid]=\"hasError()\"\n          [attr.aria-required]=\"required()\"\n          [attr.aria-disabled]=\"disabled()\"\n        />\n\n        @if (suffixIcon()) {\n        <mat-icon matSuffix [class]=\"suffixIconClass()\">{{ suffixIcon() }}</mat-icon>\n        } @if (clearable() && value() && !disabled()) {\n        <button\n          matSuffix\n          mat-icon-button\n          type=\"button\"\n          class=\"os-input__clear\"\n          (click)=\"handleClear()\"\n          [attr.aria-label]=\"'Clear ' + (label() || 'input')\"\n        >\n          <mat-icon>close</mat-icon>\n        </button>\n        } @if (helperText() || hasError()) {\n        <mat-hint [class]=\"helperClass()\" [id]=\"inputId + '-helper'\">\n          {{ errorMessage() || helperText() }}\n        </mat-hint>\n        }\n      </mat-form-field>\n    </div>\n  `,\n  styleUrls: ['./os-input.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  providers: [\n    {\n      provide: NG_VALUE_ACCESSOR,\n      useExisting: forwardRef(() => OsInputComponent),\n      multi: true,\n    },\n  ],\n})\nexport class OsInputComponent implements ControlValueAccessor {\n  type = input<OsInputType>('text');\n  size = input<OsInputSize>('medium');\n  label = input<string>('');\n  placeholder = input<string>('');\n  helperText = input<string>('');\n  errorMessage = input<string>('');\n  disabled = model(false);\n  readonly = input(false);\n  required = input(false);\n  clearable = input(false);\n  prefixIcon = input<string>('');\n  suffixIcon = input<string>('');\n  value = model<string>('');\n\n  valueChange = output<string>();\n  blurEvent = output<FocusEvent>();\n  focusEvent = output<FocusEvent>();\n\n  private _onChange = (value: string) => {};\n  private _onTouched = () => {};\n\n  inputId = `os-input-${Math.random().toString(36).substr(2, 9)}`;\n\n  containerClass = computed(() => {\n    return [\n      'os-input-container',\n      `os-input-container--${this.size()}`,\n      this.hasError() ? 'os-input-container--error' : '',\n      this.disabled() ? 'os-input-container--disabled' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  inputClass = computed(() => {\n    return [\n      'os-input',\n      `os-input--${this.size()}`,\n      this.hasError() ? 'os-input--error' : '',\n      this.disabled() ? 'os-input--disabled' : '',\n      this.readonly() ? 'os-input--readonly' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  helperClass = computed(() => {\n    return ['os-input__helper', this.hasError() ? 'os-input__helper--error' : '']\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  hasError = computed(() => {\n    return !!this.errorMessage();\n  });\n\n  protected appearance = computed((): MatFormFieldAppearance => 'outline');\n\n  protected formFieldClass = computed(() => {\n    return [\n      'os-input__form-field',\n      `os-input__form-field--${this.size()}`,\n      this.hasError() ? 'os-input__form-field--error' : '',\n      this.disabled() ? 'os-input__form-field--disabled' : '',\n    ]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  protected prefixIconClass = computed(() => {\n    return ['os-input__prefix-icon', `os-input__prefix-icon--${this.size()}`]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  protected suffixIconClass = computed(() => {\n    return ['os-input__suffix-icon', `os-input__suffix-icon--${this.size()}`]\n      .filter(Boolean)\n      .join(' ');\n  });\n\n  handleInput(event: Event): void {\n    const target = event.target as HTMLInputElement;\n    const newValue = target.value;\n    this._onChange(newValue);\n    this.valueChange.emit(newValue);\n  }\n\n  handleBlur(event: FocusEvent): void {\n    this._onTouched();\n    this.blurEvent.emit(event);\n  }\n\n  handleFocus(event: FocusEvent): void {\n    this.focusEvent.emit(event);\n  }\n\n  handleClear(): void {\n    this._onChange('');\n    this.valueChange.emit('');\n  }\n\n  writeValue(value: string): void {\n    if (value !== this.value()) {\n      this.value.set(value);\n    }\n  }\n\n  registerOnChange(fn: (value: string) => void): void {\n    this._onChange = fn;\n  }\n\n  registerOnTouched(fn: () => void): void {\n    this._onTouched = fn;\n  }\n\n  setDisabledState(isDisabled: boolean): void {\n    this.disabled.set(isDisabled);\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".os-input-container {\n  display: flex;\n  flex-direction: column;\n  gap: var(--os-spacing-xs);\n  width: 100%;\n\n  &--small {\n    gap: calc(var(--os-spacing-xs) * 0.5);\n  }\n\n  &--large {\n    gap: var(--os-spacing-sm);\n  }\n\n  &--error {\n    .os-input {\n      border-color: var(--os-color-error);\n      box-shadow: 0 0 0 1px var(--os-color-error);\n    }\n  }\n\n  &--disabled {\n    opacity: 0.6;\n    pointer-events: none;\n  }\n}\n\n.os-input__label {\n  font-size: var(--os-font-size-sm);\n  font-weight: var(--os-font-weight-medium);\n  color: var(--os-color-on-surface);\n  margin-bottom: var(--os-spacing-xs);\n\n  &--required {\n    .os-input__required {\n      color: var(--os-color-error);\n      margin-left: var(--os-spacing-xs);\n    }\n  }\n}\n\n.os-input__wrapper {\n  position: relative;\n  display: flex;\n  align-items: center;\n  width: 100%;\n\n  &--with-prefix {\n    .os-input {\n      padding-left: calc(var(--os-spacing-lg) + var(--os-spacing-sm));\n    }\n  }\n\n  &--with-suffix {\n    .os-input {\n      padding-right: calc(var(--os-spacing-lg) + var(--os-spacing-sm));\n    }\n  }\n\n  &--clearable {\n    .os-input {\n      padding-right: calc(var(--os-spacing-lg) + var(--os-spacing-sm));\n    }\n  }\n}\n\n.os-input {\n  width: 100%;\n  border: var(--os-border-width-thin) solid var(--os-color-neutral-300);\n  border-radius: var(--os-border-radius-md);\n  background-color: var(--os-color-surface);\n  color: var(--os-color-on-surface);\n  font-family: var(--os-font-family-primary);\n  transition: all var(--os-transition-fast) ease-in-out;\n  outline: none;\n\n  &--small {\n    padding: var(--os-spacing-xs) var(--os-spacing-sm);\n    font-size: var(--os-font-size-sm);\n    min-height: 32px;\n  }\n\n  &--medium {\n    padding: var(--os-spacing-sm) var(--os-spacing-md);\n    font-size: var(--os-font-size-base);\n    min-height: 40px;\n  }\n\n  &--large {\n    padding: var(--os-spacing-md) var(--os-spacing-lg);\n    font-size: var(--os-font-size-lg);\n    min-height: 48px;\n  }\n\n  &--error {\n    border-color: var(--os-color-error);\n    box-shadow: 0 0 0 1px var(--os-color-error);\n  }\n\n  &--disabled {\n    background-color: var(--os-color-neutral-100);\n    color: var(--os-color-neutral-500);\n    cursor: not-allowed;\n  }\n\n  &--readonly {\n    background-color: var(--os-color-neutral-50);\n    cursor: default;\n  }\n\n  &:focus {\n    border-color: var(--os-color-primary-500);\n    box-shadow: 0 0 0 2px var(--os-color-primary-100);\n  }\n\n  &::placeholder {\n    color: var(--os-color-neutral-500);\n    opacity: 1;\n  }\n\n  &:disabled::placeholder {\n    color: var(--os-color-neutral-400);\n  }\n}\n\n.os-input__prefix-icon,\n.os-input__suffix-icon {\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: var(--os-color-neutral-500);\n  font-size: var(--os-font-size-lg);\n  pointer-events: none;\n  z-index: 1;\n}\n\n.os-input__prefix-icon {\n  left: var(--os-spacing-sm);\n}\n\n.os-input__suffix-icon {\n  right: var(--os-spacing-sm);\n}\n\n.os-input__clear {\n  position: absolute;\n  right: var(--os-spacing-sm);\n  top: 50%;\n  transform: translateY(-50%);\n  background: none;\n  border: none;\n  color: var(--os-color-neutral-500);\n  cursor: pointer;\n  font-size: var(--os-font-size-lg);\n  line-height: 1;\n  padding: var(--os-spacing-xs);\n  border-radius: var(--os-border-radius-sm);\n  transition: all var(--os-transition-fast) ease-in-out;\n  z-index: 2;\n\n  &:hover {\n    background-color: var(--os-color-neutral-100);\n    color: var(--os-color-neutral-700);\n  }\n\n  &:focus {\n    outline: 2px solid var(--os-color-primary-500);\n    outline-offset: 2px;\n  }\n}\n\n.os-input__helper {\n  font-size: var(--os-font-size-sm);\n  color: var(--os-color-neutral-600);\n  margin-top: var(--os-spacing-xs);\n\n  &--error {\n    color: var(--os-color-error);\n  }\n}\n\n@media (max-width: 768px) {\n  .os-input {\n    &--small {\n      min-height: 36px;\n    }\n\n    &--medium {\n      min-height: 44px;\n    }\n\n    &--large {\n      min-height: 52px;\n    }\n  }\n}\n\n[data-theme='dark'] {\n  .os-input {\n    background-color: var(--os-color-surface);\n    border-color: var(--os-color-neutral-600);\n    color: var(--os-color-on-surface);\n\n    &::placeholder {\n      color: var(--os-color-neutral-400);\n    }\n\n    &:focus {\n      border-color: var(--os-color-primary-400);\n      box-shadow: 0 0 0 2px var(--os-color-primary-900);\n    }\n\n    &--disabled {\n      background-color: var(--os-color-neutral-800);\n      color: var(--os-color-neutral-500);\n    }\n\n    &--readonly {\n      background-color: var(--os-color-neutral-800);\n    }\n  }\n\n  .os-input__label {\n    color: var(--os-color-on-surface);\n  }\n\n  .os-input__helper {\n    color: var(--os-color-neutral-400);\n\n    &--error {\n      color: var(--os-color-error);\n    }\n  }\n}\n",
+                    "data": "// OS-INPUT - Layout Specification Implementation\n// Seguindo especificação detalhada para alinhamento com visão de produto\n\n.os-input-container {\n  display: flex;\n  flex-direction: column;\n  gap: var(--os-spacing-xs);\n  width: 100%;\n\n  &--small {\n    gap: calc(var(--os-spacing-xs) * 0.5);\n  }\n\n  &--large {\n    gap: var(--os-spacing-sm);\n  }\n\n  &--error {\n    .os-input {\n      border-color: var(--os-color-error-500);\n      box-shadow: 0 0 0 1px var(--os-color-error-500);\n    }\n  }\n\n  &--disabled {\n    opacity: 0.6;\n    pointer-events: none;\n  }\n}\n\n.os-input__form-field {\n  width: 100%;\n\n  &--small {\n    .mat-mdc-form-field {\n      font-size: var(--os-font-size-sm);\n    }\n  }\n\n  &--medium {\n    .mat-mdc-form-field {\n      font-size: var(--os-font-size-base);\n    }\n  }\n\n  &--large {\n    .mat-mdc-form-field {\n      font-size: var(--os-font-size-lg);\n    }\n  }\n\n  &--error {\n    .mat-mdc-form-field {\n      .mat-mdc-form-field-focus-overlay {\n        background-color: var(--os-color-error-50);\n      }\n    }\n  }\n\n  &--disabled {\n    .mat-mdc-form-field {\n      opacity: 0.6;\n    }\n  }\n}\n\n.os-input {\n  width: 100%;\n  border: 1px solid var(--os-color-neutral-300);\n  border-radius: 6px;\n  background-color: var(--os-color-background-primary);\n  color: var(--os-color-text-primary);\n  font-family: var(--os-font-family-primary);\n  font-size: var(--os-font-size-sm);\n  font-weight: var(--os-font-weight-regular);\n  transition: all 200ms ease-in-out;\n  outline: none;\n\n  &--small {\n    padding: 8px 12px;\n    font-size: var(--os-font-size-sm);\n    min-height: 32px;\n  }\n\n  &--medium {\n    padding: 12px 16px;\n    font-size: var(--os-font-size-base);\n    min-height: 40px;\n  }\n\n  &--large {\n    padding: 16px 20px;\n    font-size: var(--os-font-size-lg);\n    min-height: 48px;\n  }\n\n  &--error {\n    border-color: var(--os-color-error-500);\n    background-color: var(--os-color-error-50);\n    box-shadow: 0 0 0 1px var(--os-color-error-500);\n  }\n\n  &--disabled {\n    background-color: var(--os-color-neutral-100);\n    color: var(--os-color-neutral-500);\n    cursor: not-allowed;\n    opacity: 0.5;\n  }\n\n  &--readonly {\n    background-color: var(--os-color-neutral-50);\n    cursor: default;\n  }\n\n  &:hover:not(:disabled):not(:readonly) {\n    border-color: var(--os-color-primary-400);\n    cursor: pointer;\n  }\n\n  &:focus {\n    border-color: var(--os-color-primary-500);\n    box-shadow: 0 0 0 2px var(--os-color-primary-100);\n    transform: scale(1.02);\n  }\n\n  &:active:not(:disabled):not(:readonly) {\n    transform: scale(0.98);\n  }\n\n  &::placeholder {\n    color: var(--os-color-neutral-500);\n    opacity: 1;\n  }\n\n  &:disabled::placeholder {\n    color: var(--os-color-neutral-400);\n  }\n}\n\n.os-input__prefix-icon,\n.os-input__suffix-icon {\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: var(--os-color-neutral-500);\n  font-size: var(--os-font-size-lg);\n  pointer-events: none;\n  z-index: 1;\n  transition: color 200ms ease-in-out;\n\n  &--small {\n    font-size: var(--os-font-size-base);\n  }\n\n  &--medium {\n    font-size: var(--os-font-size-lg);\n  }\n\n  &--large {\n    font-size: var(--os-font-size-xl);\n  }\n}\n\n.os-input__prefix-icon {\n  left: var(--os-spacing-sm);\n}\n\n.os-input__suffix-icon {\n  right: var(--os-spacing-sm);\n}\n\n.os-input__clear {\n  position: absolute;\n  right: var(--os-spacing-sm);\n  top: 50%;\n  transform: translateY(-50%);\n  background: none;\n  border: none;\n  color: var(--os-color-neutral-500);\n  cursor: pointer;\n  font-size: var(--os-font-size-lg);\n  line-height: 1;\n  padding: var(--os-spacing-xs);\n  border-radius: var(--os-border-radius-sm);\n  transition: all 200ms ease-in-out;\n  z-index: 2;\n  min-width: 44px;\n  min-height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  &:hover {\n    background-color: var(--os-color-neutral-100);\n    color: var(--os-color-neutral-700);\n  }\n\n  &:focus {\n    outline: 2px solid var(--os-color-primary-500);\n    outline-offset: 2px;\n  }\n\n  &:active {\n    transform: translateY(-50%) scale(0.95);\n  }\n}\n\n.os-input__helper {\n  font-size: var(--os-font-size-sm);\n  color: var(--os-color-neutral-600);\n  margin-top: var(--os-spacing-xs);\n  line-height: 1.5;\n\n  &--error {\n    color: var(--os-color-error-500);\n    font-weight: var(--os-font-weight-medium);\n  }\n}\n\n// Responsividade Mobile-First\n@media (max-width: 575px) {\n  .os-input {\n    &--small {\n      min-height: 44px;\n      padding: 12px 16px;\n    }\n\n    &--medium {\n      min-height: 44px;\n      padding: 12px 16px;\n    }\n\n    &--large {\n      min-height: 48px;\n      padding: 14px 18px;\n    }\n  }\n\n  .os-input__clear {\n    min-width: 44px;\n    min-height: 44px;\n  }\n}\n\n@media (min-width: 576px) and (max-width: 991px) {\n  .os-input {\n    &:hover:not(:disabled):not(:readonly) {\n      border-color: var(--os-color-primary-400);\n    }\n  }\n}\n\n@media (min-width: 992px) {\n  .os-input {\n    &:hover:not(:disabled):not(:readonly) {\n      border-color: var(--os-color-primary-400);\n    }\n  }\n}\n\n// Dark Mode Support\n[data-theme='dark'] {\n  .os-input {\n    background-color: var(--os-color-surface);\n    border-color: var(--os-color-neutral-600);\n    color: var(--os-color-on-surface);\n\n    &::placeholder {\n      color: var(--os-color-neutral-400);\n    }\n\n    &:focus {\n      border-color: var(--os-color-primary-400);\n      box-shadow: 0 0 0 2px var(--os-color-primary-900);\n    }\n\n    &--disabled {\n      background-color: var(--os-color-neutral-800);\n      color: var(--os-color-neutral-500);\n    }\n\n    &--readonly {\n      background-color: var(--os-color-neutral-800);\n    }\n\n    &--error {\n      border-color: var(--os-color-error-500);\n      background-color: var(--os-color-error-900);\n    }\n  }\n\n  .os-input__helper {\n    color: var(--os-color-neutral-400);\n\n    &--error {\n      color: var(--os-color-error-400);\n    }\n  }\n\n  .os-input__prefix-icon,\n  .os-input__suffix-icon {\n    color: var(--os-color-neutral-400);\n  }\n\n  .os-input__clear {\n    color: var(--os-color-neutral-400);\n\n    &:hover {\n      background-color: var(--os-color-neutral-700);\n      color: var(--os-color-neutral-200);\n    }\n  }\n}\n\n// High Contrast Mode Support\n@media (prefers-contrast: high) {\n  .os-input {\n    border-width: 2px;\n\n    &:focus {\n      border-width: 3px;\n    }\n  }\n\n  .os-input__clear {\n    border: 1px solid currentColor;\n  }\n}\n\n// Reduced Motion Support\n@media (prefers-reduced-motion: reduce) {\n  .os-input,\n  .os-input__clear,\n  .os-input__prefix-icon,\n  .os-input__suffix-icon {\n    transition: none;\n  }\n\n  .os-input:focus {\n    transform: none;\n  }\n\n  .os-input:active {\n    transform: none;\n  }\n\n  .os-input__clear:active {\n    transform: translateY(-50%);\n  }\n}\n",
                     "styleUrl": "./os-input.component.scss"
                 }
             ],
@@ -27420,7 +27398,7 @@
         },
         {
             "name": "OsProgressBarComponent",
-            "id": "component-OsProgressBarComponent-ab2fd1940d31d5e83a17d8d5dffb706892efdac1b8ed3b00dfcd66b6a998ff070c0d35f686bdf3d6be52c7954fa9d2837dc22f8765f073246ec18c510f83c6ad",
+            "id": "component-OsProgressBarComponent-6ceedfcf9eec1db4f3d86977ac8f02e9947b69c3abe7fff2d0efcae64add889e489da30097bd8464bf8a9f206e809724fabc23e20b97fd9ca9ae3a86fe85e3f7",
             "file": "src/app/shared/ui-components/atoms/os-progress-bar/os-progress-bar.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -27433,7 +27411,7 @@
                 "./os-progress-bar.component.scss"
             ],
             "styles": [],
-            "template": "<div\n  class=\"os-progress-bar\"\n  [class]=\"progressBarClasses()\"\n  role=\"progressbar\"\n  [attr.aria-valuenow]=\"value()\"\n  [attr.aria-valuemin]=\"0\"\n  [attr.aria-valuemax]=\"max()\"\n  [attr.aria-label]=\"computedAriaLabel()\"\n>\n  @if (label()) {\n  <div class=\"os-progress-bar__label\">\n    <span class=\"os-progress-bar__text\">{{ label() }}</span>\n    @if (showPercentage()) {\n    <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n    }\n  </div>\n  }\n\n  <div class=\"os-progress-bar__container\">\n    <mat-progress-bar\n      [mode]=\"mode()\"\n      [value]=\"percentage()\"\n      [bufferValue]=\"bufferValue()\"\n      [color]=\"matColor()\"\n      [class]=\"progressBarClass()\"\n    ></mat-progress-bar>\n  </div>\n\n  @if (hint()) {\n  <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n  }\n</div>\n",
+            "template": "<div\n  class=\"os-progress-bar\"\n  [class]=\"progressBarClasses()\"\n  role=\"progressbar\"\n  [attr.aria-valuenow]=\"value()\"\n  [attr.aria-valuemin]=\"0\"\n  [attr.aria-valuemax]=\"max()\"\n  [attr.aria-label]=\"computedAriaLabel()\"\n>\n  @if (label()) {\n  <div class=\"os-progress-bar__label\">\n    <span class=\"os-progress-bar__text\">{{ label() }}</span>\n    @if (showPercentage()) {\n    <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n    }\n  </div>\n  }\n\n  <div class=\"os-progress-bar__container\">\n    <mat-progress-bar\n      [mode]=\"mode()\"\n      [value]=\"percentage()\"\n      [bufferValue]=\"bufferValue()\"\n      [color]=\"matColor()\"\n      [class]=\"progressBarClass()\"\n    ></mat-progress-bar>\n  </div>\n\n  @if (hint()) {\n  <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n  } @if (showCelebration() && isCompleted()) {\n  <div class=\"os-progress-bar__celebration\">{{ celebrationText() }}</div>\n  }\n</div>\n",
             "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
@@ -27446,7 +27424,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 54,
+                    "line": 56,
                     "modifierKind": [
                         148
                     ],
@@ -27461,7 +27439,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 57,
+                    "line": 59,
                     "modifierKind": [
                         148
                     ],
@@ -27476,7 +27454,21 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 56,
+                    "line": 58,
+                    "modifierKind": [
+                        148
+                    ],
+                    "required": false
+                },
+                {
+                    "name": "celebrationText",
+                    "defaultValue": "'🎉 Concluído!'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 61,
                     "modifierKind": [
                         148
                     ],
@@ -27491,7 +27483,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 50,
+                    "line": 52,
                     "modifierKind": [
                         148
                     ],
@@ -27506,7 +27498,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 49,
+                    "line": 51,
                     "modifierKind": [
                         148
                     ],
@@ -27520,7 +27512,21 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 48,
+                    "line": 50,
+                    "modifierKind": [
+                        148
+                    ],
+                    "required": false
+                },
+                {
+                    "name": "showCelebration",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 60,
                     "modifierKind": [
                         148
                     ],
@@ -27534,7 +27540,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 51,
+                    "line": 53,
                     "modifierKind": [
                         148
                     ],
@@ -27549,7 +27555,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 52,
+                    "line": 54,
                     "modifierKind": [
                         148
                     ],
@@ -27563,7 +27569,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 55,
+                    "line": 57,
                     "modifierKind": [
                         148
                     ],
@@ -27577,7 +27583,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 47,
+                    "line": 49,
                     "modifierKind": [
                         148
                     ],
@@ -27592,7 +27598,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 53,
+                    "line": 55,
                     "modifierKind": [
                         148
                     ],
@@ -27610,7 +27616,21 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 117,
+                    "line": 125,
+                    "modifierKind": [
+                        148
+                    ]
+                },
+                {
+                    "name": "isCompleted",
+                    "defaultValue": "computed(() => {\n    return this.percentage() >= 100;\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 121,
                     "modifierKind": [
                         148
                     ]
@@ -27624,7 +27644,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 69,
+                    "line": 73,
                     "modifierKind": [
                         124
                     ]
@@ -27638,7 +27658,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 65,
+                    "line": 69,
                     "modifierKind": [
                         148
                     ]
@@ -27652,7 +27672,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 59,
+                    "line": 63,
                     "modifierKind": [
                         148
                     ]
@@ -27666,7 +27686,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 102,
+                    "line": 106,
                     "modifierKind": [
                         148
                     ]
@@ -27680,7 +27700,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 86,
+                    "line": 90,
                     "modifierKind": [
                         148
                     ]
@@ -27705,11 +27725,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatProgressBarModule } from '@angular/material/progress-bar';\n\n@Component({\n  selector: 'os-progress-bar',\n  standalone: true,\n  imports: [CommonModule, MatProgressBarModule],\n  template: `\n    <div\n      class=\"os-progress-bar\"\n      [class]=\"progressBarClasses()\"\n      role=\"progressbar\"\n      [attr.aria-valuenow]=\"value()\"\n      [attr.aria-valuemin]=\"0\"\n      [attr.aria-valuemax]=\"max()\"\n      [attr.aria-label]=\"computedAriaLabel()\"\n    >\n      @if (label()) {\n      <div class=\"os-progress-bar__label\">\n        <span class=\"os-progress-bar__text\">{{ label() }}</span>\n        @if (showPercentage()) {\n        <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n        }\n      </div>\n      }\n\n      <div class=\"os-progress-bar__container\">\n        <mat-progress-bar\n          [mode]=\"mode()\"\n          [value]=\"percentage()\"\n          [bufferValue]=\"bufferValue()\"\n          [color]=\"matColor()\"\n          [class]=\"progressBarClass()\"\n        ></mat-progress-bar>\n      </div>\n\n      @if (hint()) {\n      <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n      }\n    </div>\n  `,\n  styleUrls: ['./os-progress-bar.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsProgressBarComponent {\n  readonly value = input(0);\n  readonly max = input(100);\n  readonly label = input<string | null>(null);\n  readonly hint = input<string | null>(null);\n  readonly showPercentage = input(true);\n  readonly size = input<'small' | 'medium' | 'large'>('medium');\n  readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');\n  readonly animated = input(false);\n  readonly striped = input(false);\n  readonly bufferValue = input<number | null>(null);\n  readonly ariaLabel = input<string | null>(null);\n\n  readonly percentage = computed(() => {\n    const value = this.value();\n    const max = this.max();\n    return Math.min(Math.max((value / max) * 100, 0), 100);\n  });\n\n  readonly mode = computed(() => {\n    return this.bufferValue() !== null ? 'buffer' : 'determinate';\n  });\n\n  protected matColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      case 'danger':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  });\n\n  readonly progressBarClasses = computed(() => {\n    const classes = ['os-progress-bar'];\n    classes.push(`os-progress-bar--${this.size()}`);\n    classes.push(`os-progress-bar--${this.variant()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly progressBarClass = computed(() => {\n    const classes = ['os-progress-bar__material'];\n    classes.push(`os-progress-bar__material--${this.size()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar__material--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar__material--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly computedAriaLabel = computed(() => {\n    if (this.ariaLabel()) {\n      return this.ariaLabel();\n    }\n\n    const label = this.label() || 'Progresso';\n    const percentage = this.percentage();\n    return `${label}: ${percentage}% completo`;\n  });\n}\n",
+            "sourceCode": "import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatProgressBarModule } from '@angular/material/progress-bar';\n\n@Component({\n  selector: 'os-progress-bar',\n  standalone: true,\n  imports: [CommonModule, MatProgressBarModule],\n  template: `\n    <div\n      class=\"os-progress-bar\"\n      [class]=\"progressBarClasses()\"\n      role=\"progressbar\"\n      [attr.aria-valuenow]=\"value()\"\n      [attr.aria-valuemin]=\"0\"\n      [attr.aria-valuemax]=\"max()\"\n      [attr.aria-label]=\"computedAriaLabel()\"\n    >\n      @if (label()) {\n      <div class=\"os-progress-bar__label\">\n        <span class=\"os-progress-bar__text\">{{ label() }}</span>\n        @if (showPercentage()) {\n        <span class=\"os-progress-bar__percentage\">{{ percentage() }}%</span>\n        }\n      </div>\n      }\n\n      <div class=\"os-progress-bar__container\">\n        <mat-progress-bar\n          [mode]=\"mode()\"\n          [value]=\"percentage()\"\n          [bufferValue]=\"bufferValue()\"\n          [color]=\"matColor()\"\n          [class]=\"progressBarClass()\"\n        ></mat-progress-bar>\n      </div>\n\n      @if (hint()) {\n      <div class=\"os-progress-bar__hint\">{{ hint() }}</div>\n      } @if (showCelebration() && isCompleted()) {\n      <div class=\"os-progress-bar__celebration\">{{ celebrationText() }}</div>\n      }\n    </div>\n  `,\n  styleUrls: ['./os-progress-bar.component.scss'],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class OsProgressBarComponent {\n  readonly value = input(0);\n  readonly max = input(100);\n  readonly label = input<string | null>(null);\n  readonly hint = input<string | null>(null);\n  readonly showPercentage = input(true);\n  readonly size = input<'small' | 'medium' | 'large'>('medium');\n  readonly variant = input<'primary' | 'secondary' | 'success' | 'warning' | 'danger'>('primary');\n  readonly animated = input(false);\n  readonly striped = input(false);\n  readonly bufferValue = input<number | null>(null);\n  readonly ariaLabel = input<string | null>(null);\n  readonly showCelebration = input(false);\n  readonly celebrationText = input('🎉 Concluído!');\n\n  readonly percentage = computed(() => {\n    const value = this.value();\n    const max = this.max();\n    return Math.min(Math.max((value / max) * 100, 0), 100);\n  });\n\n  readonly mode = computed(() => {\n    return this.bufferValue() !== null ? 'buffer' : 'determinate';\n  });\n\n  protected matColor = computed(() => {\n    switch (this.variant()) {\n      case 'primary':\n        return 'primary';\n      case 'secondary':\n        return 'accent';\n      case 'success':\n        return 'primary';\n      case 'warning':\n        return 'warn';\n      case 'danger':\n        return 'warn';\n      default:\n        return undefined;\n    }\n  });\n\n  readonly progressBarClasses = computed(() => {\n    const classes = ['os-progress-bar'];\n    classes.push(`os-progress-bar--${this.size()}`);\n    classes.push(`os-progress-bar--${this.variant()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly progressBarClass = computed(() => {\n    const classes = ['os-progress-bar__material'];\n    classes.push(`os-progress-bar__material--${this.size()}`);\n\n    if (this.animated()) {\n      classes.push('os-progress-bar__material--animated');\n    }\n\n    if (this.striped()) {\n      classes.push('os-progress-bar__material--striped');\n    }\n\n    return classes.join(' ');\n  });\n\n  readonly isCompleted = computed(() => {\n    return this.percentage() >= 100;\n  });\n\n  readonly computedAriaLabel = computed(() => {\n    if (this.ariaLabel()) {\n      return this.ariaLabel();\n    }\n\n    const label = this.label() || 'Progresso';\n    const percentage = this.percentage();\n    return `${label}: ${percentage}% completo`;\n  });\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "@use '../../theme/tokens';\n\n.os-progress-bar {\n  width: 100%;\n  position: relative;\n\n  &__label {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: var(--os-spacing-xs);\n  }\n\n  &__text {\n    font-family: var(--os-font-family-base);\n    font-weight: var(--os-font-weight-medium);\n    color: var(--os-color-text-primary);\n  }\n\n  &__percentage {\n    font-family: var(--os-font-family-mono);\n    font-weight: var(--os-font-weight-semibold);\n    color: var(--os-color-text-secondary);\n  }\n\n  &__container {\n    position: relative;\n    width: 100%;\n  }\n\n  &__material {\n    width: 100%;\n    border-radius: var(--os-border-radius-full);\n\n    &--small {\n      height: 4px;\n    }\n    &--medium {\n      height: 6px;\n    }\n    &--large {\n      height: 8px;\n    }\n\n    &--striped ::ng-deep .mat-progress-bar-fill::after {\n      background-image: linear-gradient(\n        45deg,\n        rgba(255, 255, 255, 0.15) 25%,\n        transparent 25%,\n        transparent 50%,\n        rgba(255, 255, 255, 0.15) 50%,\n        rgba(255, 255, 255, 0.15) 75%,\n        transparent 75%,\n        transparent\n      );\n      background-size: 1rem 1rem;\n      animation: progress-bar-stripes 1s linear infinite;\n    }\n\n    &--animated ::ng-deep .mat-progress-bar-fill::after {\n      animation: progress-bar-pulse 2s ease-in-out infinite;\n    }\n  }\n\n  &__hint {\n    margin-top: var(--os-spacing-xs);\n    font-family: var(--os-font-family-base);\n    font-size: var(--os-font-size-sm);\n    color: var(--os-color-text-secondary);\n  }\n\n  &--small {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-xs);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-xs);\n    }\n  }\n\n  &--medium {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-sm);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-sm);\n    }\n  }\n\n  &--large {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-base);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-base);\n    }\n  }\n}\n\n@keyframes progress-bar-stripes {\n  0% {\n    background-position: 0 0;\n  }\n  100% {\n    background-position: 1rem 0;\n  }\n}\n\n@keyframes progress-bar-pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n",
+                    "data": "@use '../../theme/tokens';\n\n.os-progress-bar {\n  width: 100%;\n  position: relative;\n\n  &__label {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: var(--os-spacing-xs);\n  }\n\n  &__text {\n    font-family: var(--os-font-family-base);\n    font-weight: var(--os-font-weight-medium);\n    color: var(--os-color-text-primary);\n  }\n\n  &__percentage {\n    font-family: var(--os-font-family-mono);\n    font-weight: var(--os-font-weight-semibold);\n    color: var(--os-color-text-secondary);\n  }\n\n  &__container {\n    position: relative;\n    width: 100%;\n  }\n\n  &__material {\n    width: 100%;\n    border-radius: var(--os-border-radius-full);\n\n    &--small {\n      height: 4px;\n    }\n    &--medium {\n      height: 6px;\n    }\n    &--large {\n      height: 8px;\n    }\n\n    &--striped ::ng-deep .mat-progress-bar-fill::after {\n      background-image: linear-gradient(\n        45deg,\n        rgba(255, 255, 255, 0.15) 25%,\n        transparent 25%,\n        transparent 50%,\n        rgba(255, 255, 255, 0.15) 50%,\n        rgba(255, 255, 255, 0.15) 75%,\n        transparent 75%,\n        transparent\n      );\n      background-size: 1rem 1rem;\n      animation: progress-bar-stripes 1s linear infinite;\n    }\n\n    &--animated ::ng-deep .mat-progress-bar-fill::after {\n      animation: progress-bar-pulse 2s ease-in-out infinite;\n    }\n  }\n\n  &__hint {\n    margin-top: var(--os-spacing-xs);\n    font-family: var(--os-font-family-base);\n    font-size: var(--os-font-size-sm);\n    color: var(--os-color-text-secondary);\n  }\n\n  &__celebration {\n    margin-top: var(--os-spacing-xs);\n    font-size: var(--os-font-size-sm);\n    font-weight: var(--os-font-weight-semibold);\n    color: var(--os-color-success);\n    text-align: center;\n  }\n\n  &--small {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-xs);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-xs);\n    }\n  }\n\n  &--medium {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-sm);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-sm);\n    }\n  }\n\n  &--large {\n    .os-progress-bar__text,\n    .os-progress-bar__percentage {\n      font-size: var(--os-font-size-base);\n    }\n    .os-progress-bar__hint {\n      font-size: var(--os-font-size-base);\n    }\n  }\n}\n\n@keyframes progress-bar-stripes {\n  0% {\n    background-position: 0 0;\n  }\n  100% {\n    background-position: 1rem 0;\n  }\n}\n\n@keyframes progress-bar-pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n",
                     "styleUrl": "./os-progress-bar.component.scss"
                 }
             ],
@@ -35661,7 +35681,7 @@
                 "linktype": "component",
                 "name": "OsInputComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/40",
+                "coverageCount": "0/38",
                 "status": "low"
             },
             {
@@ -35748,7 +35768,7 @@
                 "linktype": "component",
                 "name": "OsProgressBarComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/18",
+                "coverageCount": "0/21",
                 "status": "low"
             },
             {

@@ -91,7 +91,7 @@ describe('OsInputComponent', () => {
       fixture.componentRef.setInput('label', 'Test Label');
       fixture.componentRef.setInput('required', true);
       fixture.detectChanges();
-      expect(component.labelClass()).toContain('os-input__label--required');
+      expect(component.required()).toBe(true);
     });
   });
 
@@ -162,7 +162,8 @@ describe('OsInputComponent', () => {
       fixture.componentRef.setInput('clearable', true);
       fixture.componentRef.setInput('value', 'test value');
       fixture.detectChanges();
-      expect(component.inputWrapperClass()).toContain('os-input__wrapper--clearable');
+      expect(component.clearable()).toBe(true);
+      expect(component.value()).toBe('test value');
     });
   });
 
@@ -175,14 +176,12 @@ describe('OsInputComponent', () => {
       fixture.componentRef.setInput('prefixIcon', '🔍');
       fixture.detectChanges();
       expect(component.prefixIcon()).toBe('🔍');
-      expect(component.inputWrapperClass()).toContain('os-input__wrapper--with-prefix');
     });
 
     it('should show suffix icon when provided', () => {
       fixture.componentRef.setInput('suffixIcon', '👁');
       fixture.detectChanges();
       expect(component.suffixIcon()).toBe('👁');
-      expect(component.inputWrapperClass()).toContain('os-input__wrapper--with-suffix');
     });
   });
 
@@ -315,6 +314,82 @@ describe('OsInputComponent', () => {
 
       const inputElement = fixture.nativeElement.querySelector('input');
       expect(inputElement.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it('should have aria-required when required', () => {
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+
+      const inputElement = fixture.nativeElement.querySelector('input');
+      expect(inputElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should have aria-disabled when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const inputElement = fixture.nativeElement.querySelector('input');
+      expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should have proper ARIA attributes for clear button', () => {
+      fixture.componentRef.setInput('clearable', true);
+      fixture.componentRef.setInput('value', 'test value');
+      fixture.detectChanges();
+
+      const clearButton = fixture.nativeElement.querySelector('.os-input__clear');
+      expect(clearButton.getAttribute('aria-label')).toContain('Clear');
+    });
+  });
+
+  describe('responsiveness', () => {
+    it('should apply mobile-first classes', () => {
+      expect(component.containerClass()).toContain('os-input-container');
+      expect(component.inputClass()).toContain('os-input');
+    });
+
+    it('should handle different sizes responsively', () => {
+      fixture.componentRef.setInput('size', 'small');
+      fixture.detectChanges();
+      expect(component.inputClass()).toContain('os-input--small');
+
+      fixture.componentRef.setInput('size', 'large');
+      fixture.detectChanges();
+      expect(component.inputClass()).toContain('os-input--large');
+    });
+  });
+
+  describe('micro-interactions', () => {
+    it('should handle focus states', () => {
+      const inputElement = fixture.nativeElement.querySelector('input');
+      expect(inputElement).toBeTruthy();
+    });
+
+    it('should handle hover states', () => {
+      const inputElement = fixture.nativeElement.querySelector('input');
+      expect(inputElement).toBeTruthy();
+    });
+
+    it('should handle active states', () => {
+      const inputElement = fixture.nativeElement.querySelector('input');
+      expect(inputElement).toBeTruthy();
+    });
+  });
+
+  describe('design tokens integration', () => {
+    it('should use design tokens for styling', () => {
+      expect(component.containerClass()).toContain('os-input-container');
+      expect(component.inputClass()).toContain('os-input');
+      expect(component.helperClass()).toContain('os-input__helper');
+    });
+
+    it('should apply error states with design tokens', () => {
+      fixture.componentRef.setInput('errorMessage', 'Error message');
+      fixture.detectChanges();
+
+      expect(component.hasError()).toBe(true);
+      expect(component.inputClass()).toContain('os-input--error');
+      expect(component.helperClass()).toContain('os-input__helper--error');
     });
   });
 

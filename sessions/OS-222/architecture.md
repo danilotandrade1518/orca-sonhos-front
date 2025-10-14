@@ -160,6 +160,10 @@ src/app/shared/ui-components/
 
 ### UI Components
 
+- [ ] Implementar os-input-enhanced conforme layout-specification
+- [ ] Implementar os-input-monetary com formatação automática
+- [ ] Implementar os-input-date com validação de formato
+- [ ] Implementar os-input-email com validação em tempo real
 - [ ] Implementar os-goal-progress-card conforme layout-specification
 - [ ] Implementar os-budget-selector-enhanced com indicadores visuais
 - [ ] Implementar os-dashboard-widgets-refined com refinamentos visuais
@@ -237,11 +241,15 @@ src/app/shared/ui-components/
 
 **Componentes Novos Identificados:**
 
+- **os-input-enhanced** (Atom): Versão otimizada do input atual com suporte a formatação monetária e validação avançada
+- **os-input-monetary** (Atom): Input específico para valores monetários com formatação automática
+- **os-input-date** (Atom): Input específico para datas com validação de formato e range
+- **os-input-email** (Atom): Input específico para emails com validação em tempo real
 - **os-goal-progress-card** (Molecule): Card específico para exibir progresso de metas com visual motivacional
 - **os-budget-selector-enhanced** (Molecule): Seletor de orçamento melhorado com indicadores visuais e ações rápidas
 - **os-dashboard-widgets-refined** (Organism): Widgets do dashboard com refinamentos visuais
 
-**Detalhes completos em:** `layout-specification.md`
+**Detalhes completos em:** `temp/os-input-layout-specification.md`
 
 ### Layout Architecture
 
