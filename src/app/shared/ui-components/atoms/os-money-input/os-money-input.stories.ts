@@ -50,6 +50,14 @@ const meta: Meta<OsMoneyInputComponent> = {
       control: { type: 'number' },
       description: 'Valor monetário',
     },
+    allowNegative: {
+      control: { type: 'boolean' },
+      description: 'Permitir valores negativos',
+    },
+    isFormatting: {
+      control: { type: 'boolean' },
+      description: 'Estado de formatação',
+    },
     valueChange: {
       action: 'valueChange',
       description: 'Evento de mudança de valor',
@@ -330,6 +338,97 @@ export const FormExample: Story = {
     docs: {
       description: {
         story: 'Exemplo de uso em um formulário de orçamento.',
+      },
+    },
+  },
+};
+
+export const QuickEntry: Story = {
+  args: {
+    size: 'medium',
+    label: 'Entrada rápida',
+    placeholder: '0,00',
+    helperText: 'Digite "100" para R$ 1,00',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração da entrada rápida para centavos. Digite "100" para obter R$ 1,00.',
+      },
+    },
+  },
+};
+
+export const LargeValue: Story = {
+  args: {
+    size: 'medium',
+    label: 'Valor alto',
+    placeholder: '0,00',
+    value: 50000.0,
+    helperText: 'Valores >= R$ 10.000 são destacados visualmente',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração do destaque visual para valores grandes.',
+      },
+    },
+  },
+};
+
+export const NegativeValues: Story = {
+  args: {
+    size: 'medium',
+    label: 'Valor com negativos',
+    placeholder: '0,00',
+    allowNegative: true,
+    value: -250.75,
+    helperText: 'Permite valores negativos',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração do suporte a valores negativos.',
+      },
+    },
+  },
+};
+
+export const EnhancedFeatures: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Funcionalidades Avançadas</h3>
+        <os-money-input
+          label="Entrada rápida"
+          placeholder="0,00"
+          helperText="Digite '100' para R$ 1,00">
+        </os-money-input>
+        <os-money-input
+          label="Valor alto destacado"
+          placeholder="0,00"
+          [value]="25000.00"
+          helperText="Valores >= R$ 10.000 são destacados">
+        </os-money-input>
+        <os-money-input
+          label="Valores negativos"
+          placeholder="0,00"
+          [allowNegative]="true"
+          [value]="-150.50"
+          helperText="Suporte a valores negativos">
+        </os-money-input>
+        <os-money-input
+          label="Formatação em tempo real"
+          placeholder="0,00"
+          helperText="Máscara aplicada automaticamente">
+        </os-money-input>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração das funcionalidades avançadas implementadas.',
       },
     },
   },

@@ -2,6 +2,20 @@
 
 .os-money-input-container {
   width: 100%;
+
+  &--formatting {
+    .os-money-input {
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  &--success {
+    .os-money-input {
+      color: var(--os-color-success-600);
+      font-weight: var(--os-font-weight-semibold);
+    }
+  }
 }
 
 .os-money-input__form-field {
@@ -42,17 +56,38 @@
 .os-money-input {
   font-family: var(--os-font-family-primary);
   color: var(--os-color-text-primary);
+  min-height: 44px; // Touch target requirement
+  transition: all 0.2s ease;
 
   &--small {
     font-size: var(--os-font-size-sm);
+    min-height: 40px;
   }
 
   &--medium {
     font-size: var(--os-font-size-base);
+    min-height: 44px;
   }
 
   &--large {
     font-size: var(--os-font-size-lg);
+    min-height: 48px;
+  }
+
+  &--large-value {
+    font-size: var(--os-font-size-lg);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-primary-600);
+  }
+
+  &--animating {
+    transform: scale(1.02);
+    transition: transform 0.1s ease;
+  }
+
+  &:focus {
+    outline: 2px solid var(--os-color-primary-500);
+    outline-offset: 2px;
   }
 }
 
@@ -62,5 +97,13 @@
 
   &--error {
     color: var(--os-color-error-600);
+  }
+}
+
+// Mobile-first responsive design
+@media (max-width: 576px) {
+  .os-money-input {
+    min-height: 44px;
+    font-size: 16px; // Prevent zoom on iOS
   }
 }

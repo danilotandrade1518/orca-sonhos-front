@@ -84,12 +84,60 @@
     color: var(--os-color-info);
   }
 
+  // Role-based styles
+  &--decorative {
+    // Ícones decorativos não precisam de foco
+  }
+
+  &--informative {
+    // Ícones informativos podem ter foco para screen readers
+    &:focus {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
+      border-radius: var(--os-border-radius-sm);
+    }
+  }
+
+  &--interactive {
+    // Ícones interativos precisam de foco e cursor
+    cursor: pointer;
+
+    &:focus {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
+      border-radius: var(--os-border-radius-sm);
+    }
+
+    &:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+      transition: all var(--os-transition-fast) ease-in-out;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
   &--spin {
     animation: spin 1s linear infinite;
   }
 
   &--pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  // SVG support
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   &:hover {
@@ -199,5 +247,56 @@
     &--pulse {
       animation: none;
     }
+  }
+}
+
+// Contraste automático para diferentes backgrounds
+.os-icon {
+  // Background claro
+  &[data-background='light'] {
+    &.os-icon--default {
+      color: var(--os-color-neutral-700);
+    }
+    &.os-icon--primary {
+      color: var(--os-color-primary-700);
+    }
+    &.os-icon--secondary {
+      color: var(--os-color-secondary-700);
+    }
+  }
+
+  // Background escuro
+  &[data-background='dark'] {
+    &.os-icon--default {
+      color: var(--os-color-neutral-300);
+    }
+    &.os-icon--primary {
+      color: var(--os-color-primary-300);
+    }
+    &.os-icon--secondary {
+      color: var(--os-color-secondary-300);
+    }
+  }
+
+  // Background colorido
+  &[data-background='colored'] {
+    &.os-icon--default {
+      color: var(--os-color-neutral-800);
+    }
+    &.os-icon--primary {
+      color: var(--os-color-primary-800);
+    }
+    &.os-icon--secondary {
+      color: var(--os-color-secondary-800);
+    }
+  }
+}
+
+// Fallback para ícones não encontrados
+.os-icon--fallback {
+  &::before {
+    content: '?';
+    font-weight: bold;
+    color: var(--os-color-warning);
   }
 }

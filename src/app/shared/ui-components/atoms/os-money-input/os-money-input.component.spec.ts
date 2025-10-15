@@ -339,4 +339,148 @@ describe('OsMoneyInputComponent', () => {
       expect(input.nativeElement.required).toBe(true);
     });
   });
+
+  describe('enhanced formatting', () => {
+    it('should support quick entry for cents', () => {
+      vi.spyOn(component.valueChange, 'emit');
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+
+      // Simulate typing "100" which should become "1,00"
+      input.nativeElement.value = '100';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(component.valueChange.emit).toHaveBeenCalledWith(1.0);
+    });
+
+    it('should highlight large values visually', () => {
+      fixture.componentRef.setInput('value', 15000.0);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.classList.contains('os-money-input--large-value')).toBe(true);
+    });
+
+    it('should apply real-time input mask', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+
+      // Simulate typing "1234" which should be formatted as "12,34"
+      input.nativeElement.value = '1234';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      // The display value should be formatted
+      expect(input.nativeElement.value).toBe('12,34');
+    });
+
+    it('should validate negative values when allowed', () => {
+      vi.spyOn(component.valueChange, 'emit');
+      fixture.componentRef.setInput('allowNegative', true);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.value = '-100,50';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(component.valueChange.emit).toHaveBeenCalledWith(-100.5);
+    });
+
+    it('should prevent negative values when not allowed', () => {
+      vi.spyOn(component.valueChange, 'emit');
+      fixture.componentRef.setInput('allowNegative', false);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.value = '-100,50';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      // Should not emit negative value
+      expect(component.valueChange.emit).not.toHaveBeenCalledWith(-100.5);
+    });
+  });
+
+  describe('mobile accessibility', () => {
+    it('should have touch targets >= 44px', () => {
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      const computedStyle = window.getComputedStyle(input.nativeElement);
+      const minHeight = parseInt(computedStyle.minHeight) || 0;
+
+      expect(minHeight).toBeGreaterThanOrEqual(44);
+    });
+
+    it('should have proper ARIA labels for screen readers', () => {
+      fixture.componentRef.setInput('label', 'Valor monetário');
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.getAttribute('aria-label')).toContain('Valor monetário');
+    });
+
+    it('should announce value changes to screen readers', () => {
+      fixture.componentRef.setInput('value', 1000.5);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.getAttribute('aria-valuenow')).toBe('1000.5');
+    });
+  });
+
+  describe('micro-interactions', () => {
+    it('should show loading state during formatting', () => {
+      fixture.componentRef.setInput('isFormatting', true);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.os-money-input-container'));
+      expect(
+        container.nativeElement.classList.contains('os-money-input-container--formatting')
+      ).toBe(true);
+    });
+
+    it('should animate value changes', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+
+      // Simulate value change
+      input.nativeElement.value = '1000,00';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      // Check if formatting state is active (which triggers animation)
+      expect(component.isFormatting()).toBe(true);
+    });
+
+    it('should show success state for valid large values', () => {
+      fixture.componentRef.setInput('value', 50000.0);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.os-money-input-container'));
+      expect(container.nativeElement.classList.contains('os-money-input-container--success')).toBe(
+        true
+      );
+    });
+  });
+
+  describe('currency formatting edge cases', () => {
+    it('should handle very large numbers correctly', () => {
+      fixture.componentRef.setInput('value', 999999999.99);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.value).toBe('999.999.999,99');
+    });
+
+    it('should handle decimal precision correctly', () => {
+      fixture.componentRef.setInput('value', 123.456);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.value).toBe('123,46'); // Should round to 2 decimals
+    });
+
+    it('should handle zero values correctly', () => {
+      fixture.componentRef.setInput('value', 0);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.value).toBe('0,00');
+    });
+  });
 });
