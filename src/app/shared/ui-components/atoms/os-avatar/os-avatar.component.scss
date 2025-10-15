@@ -130,6 +130,167 @@
     background-color: var(--os-color-neutral-100);
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  &--clickable {
+    cursor: pointer;
+    transition: all var(--os-transition-fast) ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: var(--os-shadow-md);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus {
+      outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+      outline-offset: var(--os-focus-ring-offset);
+    }
+  }
+
+  &__skeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--os-color-neutral-200) 25%,
+      var(--os-color-neutral-100) 50%,
+      var(--os-color-neutral-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+
+    &--xs {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--sm {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--md {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--lg {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--xl {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--2xl {
+      border-radius: var(--os-border-radius-full);
+    }
+  }
+
+  &__image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    &--circle {
+      border-radius: var(--os-border-radius-full);
+    }
+
+    &--square {
+      border-radius: var(--os-border-radius-sm);
+    }
+
+    &--rounded {
+      border-radius: var(--os-border-radius-md);
+    }
+  }
+
+  &__image-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: var(--os-border-radius-sm);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--os-transition-fast) ease-in-out;
+    z-index: 2;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    &--prev {
+      left: 4px;
+    }
+
+    &--next {
+      right: 4px;
+    }
+  }
+
+  &__status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--os-border-radius-full);
+    border: 2px solid var(--os-color-background-primary);
+    z-index: 3;
+
+    &--online {
+      background-color: var(--os-color-success-500);
+    }
+
+    &--offline {
+      background-color: var(--os-color-neutral-400);
+    }
+
+    &--away {
+      background-color: var(--os-color-warning-500);
+    }
+
+    &--busy {
+      background-color: var(--os-color-error-500);
+    }
+
+    &--invisible {
+      display: none;
+    }
+  }
+
+  &--status-online {
+    .os-avatar__status {
+      animation: pulse-status 2s infinite;
+    }
+  }
+
+  &--status-away {
+    .os-avatar__status {
+      animation: blink 1.5s infinite;
+    }
+  }
+
+  &--status-busy {
+    .os-avatar__status {
+      animation: pulse-status 1s infinite;
+    }
+  }
+
+  &:hover {
+    .os-avatar__image-nav {
+      opacity: 1;
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -191,6 +352,84 @@
   .os-avatar {
     &--loading {
       animation: none;
+    }
+
+    &--status-online,
+    &--status-away,
+    &--status-busy {
+      .os-avatar__status {
+        animation: none;
+      }
+    }
+
+    &__skeleton {
+      animation: none;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-status {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+// Responsividade aprimorada para mobile
+@media (max-width: 576px) {
+  .os-avatar {
+    &__status {
+      width: 10px;
+      height: 10px;
+      bottom: 1px;
+      right: 1px;
+    }
+
+    &__image-nav {
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+    }
+  }
+}
+
+// Suporte para touch devices
+@media (hover: none) and (pointer: coarse) {
+  .os-avatar {
+    &__image-nav {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    &--clickable {
+      &:hover {
+        transform: none;
+      }
     }
   }
 }

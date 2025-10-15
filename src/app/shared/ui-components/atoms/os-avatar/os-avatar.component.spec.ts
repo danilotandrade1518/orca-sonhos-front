@@ -297,6 +297,190 @@ describe('OsAvatarComponent', () => {
     });
   });
 
+  describe('new features', () => {
+    describe('images array', () => {
+      it('should have empty images array by default', () => {
+        expect(component.images()).toEqual([]);
+      });
+
+      it('should display first image when images array provided', () => {
+        fixture.componentRef.setInput('images', ['image1.jpg', 'image2.jpg']);
+        fixture.detectChanges();
+        expect(component.images()).toEqual(['image1.jpg', 'image2.jpg']);
+        expect(component.currentImageIndex()).toBe(0);
+      });
+    });
+
+    describe('status', () => {
+      it('should have offline status by default', () => {
+        expect(component.status()).toBe('offline');
+      });
+
+      it('should apply online status', () => {
+        fixture.componentRef.setInput('status', 'online');
+        fixture.detectChanges();
+        expect(component.status()).toBe('online');
+        expect(component.avatarClass()).toContain('os-avatar--status-online');
+      });
+
+      it('should apply away status', () => {
+        fixture.componentRef.setInput('status', 'away');
+        fixture.detectChanges();
+        expect(component.status()).toBe('away');
+        expect(component.avatarClass()).toContain('os-avatar--status-away');
+      });
+
+      it('should apply busy status', () => {
+        fixture.componentRef.setInput('status', 'busy');
+        fixture.detectChanges();
+        expect(component.status()).toBe('busy');
+        expect(component.avatarClass()).toContain('os-avatar--status-busy');
+      });
+    });
+
+    describe('loading state', () => {
+      it('should not be loading by default', () => {
+        expect(component.loading()).toBe(false);
+      });
+
+      it('should apply loading state', () => {
+        fixture.componentRef.setInput('loading', true);
+        fixture.detectChanges();
+        expect(component.loading()).toBe(true);
+        expect(component.avatarClass()).toContain('os-avatar--loading');
+      });
+    });
+
+    describe('clickable state', () => {
+      it('should not be clickable by default', () => {
+        expect(component.clickable()).toBe(false);
+      });
+
+      it('should apply clickable state', () => {
+        fixture.componentRef.setInput('clickable', true);
+        fixture.detectChanges();
+        expect(component.clickable()).toBe(true);
+        expect(component.avatarClass()).toContain('os-avatar--clickable');
+      });
+    });
+
+    describe('role', () => {
+      it('should have img role by default', () => {
+        expect(component.role()).toBe('img');
+      });
+
+      it('should apply button role when clickable', () => {
+        fixture.componentRef.setInput('clickable', true);
+        fixture.detectChanges();
+        expect(component.avatarRole()).toBe('button');
+      });
+
+      it('should apply custom role', () => {
+        fixture.componentRef.setInput('role', 'presentation');
+        fixture.detectChanges();
+        expect(component.role()).toBe('presentation');
+        expect(component.avatarRole()).toBe('presentation');
+      });
+    });
+
+    describe('optimized initials', () => {
+      it('should optimize single word initials', () => {
+        fixture.componentRef.setInput('initials', 'John');
+        fixture.detectChanges();
+        expect(component.optimizedInitials()).toBe('JO');
+      });
+
+      it('should optimize multiple word initials', () => {
+        fixture.componentRef.setInput('initials', 'John Doe');
+        fixture.detectChanges();
+        expect(component.optimizedInitials()).toBe('JD');
+      });
+
+      it('should handle empty initials', () => {
+        fixture.componentRef.setInput('initials', '');
+        fixture.detectChanges();
+        expect(component.optimizedInitials()).toBe('');
+      });
+
+      it('should handle single character', () => {
+        fixture.componentRef.setInput('initials', 'J');
+        fixture.detectChanges();
+        expect(component.optimizedInitials()).toBe('J');
+      });
+    });
+
+    describe('status label', () => {
+      it('should return correct status labels', () => {
+        const statusLabels = {
+          online: 'Online',
+          offline: 'Offline',
+          away: 'Ausente',
+          busy: 'Ocupado',
+          invisible: 'Invisível',
+        };
+
+        Object.entries(statusLabels).forEach(([status, label]) => {
+          fixture.componentRef.setInput('status', status as any);
+          fixture.detectChanges();
+          expect(component.statusLabel()).toBe(label);
+        });
+      });
+    });
+
+    describe('image navigation', () => {
+      it('should navigate to next image', () => {
+        fixture.componentRef.setInput('images', ['img1.jpg', 'img2.jpg', 'img3.jpg']);
+        fixture.detectChanges();
+
+        expect(component.currentImageIndex()).toBe(0);
+        component.nextImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(1);
+        component.nextImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(2);
+        component.nextImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(0); // Should wrap around
+      });
+
+      it('should navigate to previous image', () => {
+        fixture.componentRef.setInput('images', ['img1.jpg', 'img2.jpg', 'img3.jpg']);
+        fixture.detectChanges();
+
+        expect(component.currentImageIndex()).toBe(0);
+        component.previousImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(2); // Should wrap around
+        component.previousImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(1);
+      });
+
+      it('should not navigate with single image', () => {
+        fixture.componentRef.setInput('images', ['img1.jpg']);
+        fixture.detectChanges();
+
+        expect(component.currentImageIndex()).toBe(0);
+        component.nextImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(0);
+        component.previousImage(new Event('click'));
+        expect(component.currentImageIndex()).toBe(0);
+      });
+    });
+
+    describe('click handling', () => {
+      it('should handle click when clickable', () => {
+        fixture.componentRef.setInput('clickable', true);
+        fixture.detectChanges();
+
+        expect(() => component.handleClick()).not.toThrow();
+      });
+
+      it('should not handle click when not clickable', () => {
+        fixture.componentRef.setInput('clickable', false);
+        fixture.detectChanges();
+
+        expect(() => component.handleClick()).not.toThrow();
+      });
+    });
+  });
+
   describe('component integration', () => {
     it('should handle multiple input changes', () => {
       fixture.componentRef.setInput('image', 'https://example.com/avatar.jpg');
@@ -320,10 +504,15 @@ describe('OsAvatarComponent', () => {
 
     it('should maintain state consistency', () => {
       expect(component.image()).toBe('');
+      expect(component.images()).toEqual([]);
       expect(component.initials()).toBe('');
       expect(component.alt()).toBe('');
       expect(component.size()).toBe('md');
       expect(component.variant()).toBe('circle');
+      expect(component.status()).toBe('offline');
+      expect(component.role()).toBe('img');
+      expect(component.loading()).toBe(false);
+      expect(component.clickable()).toBe(false);
       expect(component.ariaLabel()).toBe('');
       expect(component.title()).toBe('');
       expect(component.badge()).toBe(false);
