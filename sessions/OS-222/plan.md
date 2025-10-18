@@ -110,7 +110,7 @@ Estabelecer base sólida de design tokens e sistema de tema refinado para suport
 
 Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade e alinhamento visual.
 
-### 📊 Progresso Atual: 9/16 atoms refinados (56%)
+### 📊 Progresso Atual: 10/16 atoms refinados (63%)
 
 ### 📋 Tarefas
 
@@ -424,12 +424,41 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 - ✅ Responsividade: Mobile-first
 - ✅ Performance: Bundle otimizado
 
-#### Refinamento de os-radio [⏳]
+#### Refinamento de os-radio [✅]
 
 **Descrição**: Garantir touch targets, animação de seleção, grupos estruturados
 **Arquivos**: `src/app/shared/ui-components/atoms/os-radio/`
 **Dependências**: Fase 1 completa
 **Complexidade**: Média
+
+**✅ CONCLUÍDO - Principais Realizações:**
+
+- **Acessibilidade WCAG 2.1 AA**: ARIA attributes completos implementados
+- **Touch Targets**: >= 44px garantidos para mobile (small/medium 44px, large 48px)
+- **Animações de Seleção**: Keyframes implementados com suporte a `prefers-reduced-motion`
+- **Design Tokens**: Integração completa com sistema de design
+- **Responsividade**: Tamanhos small, medium, large com touch targets adequados
+- **ControlValueAccessor**: Implementação completa para formulários
+- **Variantes Completas**: default, primary, secondary, success, warning, error
+- **Roles de Acessibilidade**: Suporte a radio e switch
+- **Micro-interactions**: Hover, active, focus com animações suaves
+- **Testes Abrangentes**: 49 testes unitários implementados e passando (100%)
+
+**Arquivos Modificados:**
+
+- `os-radio.component.ts` - Acessibilidade, ControlValueAccessor, computed properties
+- `os-radio.component.scss` - Design tokens, animações, responsividade, touch targets
+- `os-radio.component.spec.ts` - 49 testes unitários
+- `os-radio.stories.ts` - Stories atualizadas com novas funcionalidades
+
+**Métricas de Qualidade:**
+
+- ✅ Testes: 49/49 passando (100%)
+- ✅ Linting: 0 erros
+- ✅ Build: Passando com sucesso
+- ✅ Acessibilidade: WCAG 2.1 AA
+- ✅ Responsividade: Mobile-first
+- ✅ Performance: Bundle otimizado
 
 #### Refinamento de os-toggle [⏳]
 
@@ -497,10 +526,11 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 - **os-avatar**: Refinado com status visual, múltiplas imagens e loading state
 - **os-spinner**: Refinado com acessibilidade, variant overlay e performance otimizada
 - **os-checkbox**: Refinado com touch targets, animações e ControlValueAccessor
+- **os-radio**: Refinado com touch targets, animações de seleção e roles de acessibilidade
 
 **Principais Realizações:**
 
-- **9/16 atoms refinados (56%)**
+- **10/16 atoms refinados (63%)**
 - **Acessibilidade WCAG 2.1 AA** implementada em todos os componentes
 - **Responsividade mobile-first** garantida
 - **Design tokens** integrados consistentemente
@@ -511,7 +541,7 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 - **Stories Storybook** atualizadas com novos requisitos
 - **Performance** mantida ou melhorada
 
-**Próximo Componente**: os-radio (complexidade média)
+**Próximo Componente**: os-toggle (complexidade média)
 
 ---
 
