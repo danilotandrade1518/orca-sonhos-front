@@ -4,6 +4,7 @@ import {
   output,
   computed,
   model,
+  signal,
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
@@ -51,11 +52,17 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
           [min]="minDate()"
           [max]="maxDate()"
           [class]="inputClass()"
+          [attr.aria-label]="ariaLabel() || label()"
+          [attr.aria-describedby]="computedAriaDescribedBy()"
+          [attr.aria-invalid]="hasError()"
+          [attr.aria-required]="required() ? 'true' : 'false'"
+          [attr.aria-disabled]="disabled() ? 'true' : 'false'"
+          [attr.tabindex]="disabled() ? -1 : 0"
           (input)="handleInput($event)"
           (blur)="handleBlur($event)"
           (focus)="handleFocus($event)"
-          [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
-          [attr.aria-invalid]="hasError()"
+          (mouseenter)="onMouseEnter()"
+          (mouseleave)="onMouseLeave()"
         />
 
         @if (suffixIcon()) {
@@ -68,7 +75,7 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
         <mat-datepicker #picker></mat-datepicker>
 
         @if (helperText() || hasError()) {
-        <mat-hint [class]="helperClass()">
+        <mat-hint [id]="inputId + '-helper'" [class]="helperClass()">
           {{ errorMessage() || helperText() }}
         </mat-hint>
         }
@@ -99,6 +106,10 @@ export class OsDateInputComponent implements ControlValueAccessor {
   value = model<Date | null>(null);
   minDate = input<string>('');
   maxDate = input<string>('');
+  ariaLabel = input<string>('');
+  ariaDescribedBy = input<string>('');
+  animated = input(true);
+  hapticFeedback = input(true);
 
   valueChange = output<Date | null>();
   blurEvent = output<FocusEvent>();
@@ -113,6 +124,8 @@ export class OsDateInputComponent implements ControlValueAccessor {
   };
 
   inputId = `os-date-input-${Math.random().toString(36).substr(2, 9)}`;
+  isFocused = signal(false);
+  isHovered = signal(false);
 
   containerClass = computed(() => {
     return [
@@ -120,6 +133,9 @@ export class OsDateInputComponent implements ControlValueAccessor {
       `os-date-input-container--${this.size()}`,
       this.hasError() ? 'os-date-input-container--error' : '',
       this.disabled() ? 'os-date-input-container--disabled' : '',
+      this.isFocused() ? 'os-date-input-container--focused' : '',
+      this.isHovered() ? 'os-date-input-container--hovered' : '',
+      this.animated() ? 'os-date-input-container--animated' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -169,6 +185,12 @@ export class OsDateInputComponent implements ControlValueAccessor {
     return this.formatDateForInput(value);
   });
 
+  computedAriaDescribedBy = computed(() => {
+    const helperId = this.helperText() ? this.inputId + '-helper' : null;
+    const describedBy = this.ariaDescribedBy();
+    return describedBy || helperId;
+  });
+
   // Mapeamento interno para Material
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
@@ -212,17 +234,34 @@ export class OsDateInputComponent implements ControlValueAccessor {
     const target = event.target as HTMLInputElement;
     const dateValue = this.parseDateFromInput(target.value);
 
+    this.triggerHapticFeedback();
     this._onChange(dateValue);
     this.valueChange.emit(dateValue);
   }
 
   handleBlur(event: FocusEvent): void {
+    this.isFocused.set(false);
     this._onTouched();
     this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
+    this.isFocused.set(true);
     this.focusEvent.emit(event);
+  }
+
+  onMouseEnter(): void {
+    this.isHovered.set(true);
+  }
+
+  onMouseLeave(): void {
+    this.isHovered.set(false);
+  }
+
+  triggerHapticFeedback(): void {
+    if (this.hapticFeedback() && 'vibrate' in navigator) {
+      navigator.vibrate(50); // 50ms vibration
+    }
   }
 
   writeValue(value: Date | null): void {

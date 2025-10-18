@@ -31,6 +31,11 @@ describe('OsChipComponent', () => {
       expect(component.selected()).toBe(false);
       expect(component.size()).toBe('medium');
       expect(component.variant()).toBe('neutral');
+      expect(component.ariaLabel()).toBe('');
+      expect(component.ariaDescribedBy()).toBe('');
+      expect(component.role()).toBe('button');
+      expect(component.animated()).toBe(true);
+      expect(component.hapticFeedback()).toBe(true);
     });
 
     it('should render with custom text', () => {
@@ -194,6 +199,175 @@ describe('OsChipComponent', () => {
 
       const chipElement = fixture.nativeElement.querySelector('.os-chip');
       expect(chipElement.classList.contains('os-chip--success')).toBe(true);
+    });
+
+    it('should apply focused class when focused', () => {
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      chipElement.dispatchEvent(new FocusEvent('focus'));
+
+      expect(component.isFocused()).toBe(true);
+    });
+
+    it('should apply hovered class when hovered', () => {
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      chipElement.dispatchEvent(new MouseEvent('mouseenter'));
+
+      expect(component.isHovered()).toBe(true);
+    });
+
+    it('should apply animated class when animated', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      expect(chipElement.classList.contains('os-chip--animated')).toBe(true);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should have proper ARIA attributes', () => {
+      fixture.componentRef.setInput('text', 'Test Chip');
+      fixture.componentRef.setInput('ariaLabel', 'Custom label');
+      fixture.componentRef.setInput('ariaDescribedBy', 'description');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('mat-chip');
+      expect(chipElement.getAttribute('aria-label')).toBe('Custom label');
+      expect(chipElement.getAttribute('aria-describedby')).toBe('description');
+      // mat-chip applies role internally, so we test the component's role input
+      expect(component.role()).toBe('button');
+      expect(chipElement.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should have proper ARIA pressed attribute for selected state', () => {
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.componentRef.setInput('selected', true);
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('mat-chip');
+      expect(chipElement.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should have proper tabindex for disabled state', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('mat-chip');
+      expect(chipElement.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should have proper role attribute', () => {
+      fixture.componentRef.setInput('role', 'option');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('mat-chip');
+      expect(chipElement.getAttribute('role')).toBe('option');
+    });
+  });
+
+  describe('haptic feedback', () => {
+    it('should trigger haptic feedback on click', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      chipElement.click();
+
+      expect(vibrateSpy).toHaveBeenCalledWith(50);
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', false);
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      chipElement.click();
+
+      expect(vibrateSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('focus and blur events', () => {
+    it('should emit focus event', () => {
+      vi.spyOn(component.focusEvent, 'emit');
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      const focusEvent = new FocusEvent('focus');
+      chipElement.dispatchEvent(focusEvent);
+
+      expect(component.focusEvent.emit).toHaveBeenCalledWith(focusEvent);
+    });
+
+    it('should emit blur event', () => {
+      vi.spyOn(component.blurEvent, 'emit');
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const chipElement = fixture.nativeElement.querySelector('.os-chip');
+      const blurEvent = new FocusEvent('blur');
+      chipElement.dispatchEvent(blurEvent);
+
+      expect(component.blurEvent.emit).toHaveBeenCalledWith(blurEvent);
+    });
+  });
+
+  describe('remove button', () => {
+    it('should render remove button when removable is true', () => {
+      fixture.componentRef.setInput('removable', true);
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const removeButton = fixture.nativeElement.querySelector('.os-chip__remove');
+      expect(removeButton).toBeTruthy();
+    });
+
+    it('should have proper ARIA attributes for remove button', () => {
+      fixture.componentRef.setInput('removable', true);
+      fixture.componentRef.setInput('removeLabel', 'Remove tag');
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      const removeButton = fixture.nativeElement.querySelector('.os-chip__remove');
+      expect(removeButton.getAttribute('aria-label')).toBe('Remove tag');
+    });
+
+    it('should stop propagation when remove button is clicked', () => {
+      fixture.componentRef.setInput('removable', true);
+      fixture.componentRef.setInput('text', 'Test');
+      fixture.detectChanges();
+
+      vi.spyOn(component.clicked, 'emit');
+      vi.spyOn(component.removed, 'emit');
+
+      const removeButton = fixture.nativeElement.querySelector('.os-chip__remove');
+      removeButton.click();
+
+      expect(component.removed.emit).toHaveBeenCalled();
+      expect(component.clicked.emit).not.toHaveBeenCalled();
     });
   });
 });

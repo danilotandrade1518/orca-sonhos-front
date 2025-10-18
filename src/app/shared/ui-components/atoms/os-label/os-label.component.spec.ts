@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { OsLabelComponent } from './os-label.component';
+import { vi } from 'vitest';
 
 describe('OsLabelComponent', () => {
   let component: OsLabelComponent;
@@ -40,6 +41,14 @@ describe('OsLabelComponent', () => {
 
     it('should not be disabled by default', () => {
       expect(component.disabled()).toBe(false);
+    });
+
+    it('should have default animated state', () => {
+      expect(component.animated()).toBe(true);
+    });
+
+    it('should have default haptic feedback state', () => {
+      expect(component.hapticFeedback()).toBe(true);
     });
   });
 
@@ -83,6 +92,27 @@ describe('OsLabelComponent', () => {
       const classes = component.labelClass();
       expect(classes).toContain('os-label--disabled');
     });
+
+    it('should include focused class when focused', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new FocusEvent('focus'));
+      const classes = component.labelClass();
+      expect(classes).toContain('os-label--focused');
+    });
+
+    it('should include hovered class when hovered', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new MouseEvent('mouseenter'));
+      const classes = component.labelClass();
+      expect(classes).toContain('os-label--hovered');
+    });
+
+    it('should include animated class when animated', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      const classes = component.labelClass();
+      expect(classes).toContain('os-label--animated');
+    });
   });
 
   describe('accessibility', () => {
@@ -105,6 +135,118 @@ describe('OsLabelComponent', () => {
       fixture.detectChanges();
       const labelElement = fixture.nativeElement.querySelector('label');
       expect(labelElement.getAttribute('aria-label')).toBe('Custom label');
+    });
+
+    it('should set aria-required attribute', () => {
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+      const labelElement = fixture.nativeElement.querySelector('label');
+      expect(labelElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should set aria-disabled attribute', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const labelElement = fixture.nativeElement.querySelector('label');
+      expect(labelElement.getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should set tabindex for disabled state', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const labelElement = fixture.nativeElement.querySelector('label');
+      expect(labelElement.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should set tabindex for enabled state', () => {
+      fixture.componentRef.setInput('disabled', false);
+      fixture.detectChanges();
+      const labelElement = fixture.nativeElement.querySelector('label');
+      expect(labelElement.getAttribute('tabindex')).toBe('0');
+    });
+  });
+
+  describe('haptic feedback', () => {
+    it('should trigger haptic feedback on click', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.detectChanges();
+
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.click();
+
+      expect(vibrateSpy).toHaveBeenCalledWith(50);
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.click();
+
+      expect(vibrateSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', false);
+      fixture.detectChanges();
+
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.click();
+
+      expect(vibrateSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('interactions', () => {
+    it('should track focus state', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new FocusEvent('focus'));
+
+      expect(component.isFocused()).toBe(true);
+    });
+
+    it('should track blur state', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(component.isFocused()).toBe(false);
+    });
+
+    it('should track hover state', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new MouseEvent('mouseenter'));
+
+      expect(component.isHovered()).toBe(true);
+    });
+
+    it('should track mouse leave state', () => {
+      const labelElement = fixture.nativeElement.querySelector('label');
+      labelElement.dispatchEvent(new MouseEvent('mouseleave'));
+
+      expect(component.isHovered()).toBe(false);
     });
   });
 

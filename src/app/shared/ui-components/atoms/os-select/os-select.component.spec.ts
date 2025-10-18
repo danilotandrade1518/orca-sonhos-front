@@ -45,6 +45,10 @@ describe('OsSelectComponent', () => {
       expect(component.size()).toBe('medium');
       expect(component.disabled()).toBe(false);
       expect(component.required()).toBe(false);
+      expect(component.ariaLabel()).toBe('');
+      expect(component.ariaDescribedBy()).toBe('');
+      expect(component.animated()).toBe(true);
+      expect(component.hapticFeedback()).toBe(true);
     });
 
     it('should render with custom props', () => {
@@ -300,6 +304,108 @@ describe('OsSelectComponent', () => {
       // Material select doesn't render options until opened
       // We can only test that the component has empty options data
       expect(component.options().length).toBe(0);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should have proper ARIA attributes', () => {
+      fixture.componentRef.setInput('label', 'Choose Option');
+      fixture.componentRef.setInput('ariaLabel', 'Custom label');
+      fixture.componentRef.setInput('ariaDescribedBy', 'description');
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+
+      const select = fixture.debugElement.query(By.css('mat-select'));
+      expect(select.nativeElement.getAttribute('aria-label')).toBe('Custom label');
+      expect(select.nativeElement.getAttribute('aria-describedby')).toBe('description');
+      expect(select.nativeElement.getAttribute('aria-required')).toBe('true');
+      expect(select.nativeElement.getAttribute('aria-disabled')).toBe('false');
+      expect(select.nativeElement.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should have proper tabindex for disabled state', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const select = fixture.debugElement.query(By.css('mat-select'));
+      expect(select.nativeElement.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should have proper aria-describedby with helper text', () => {
+      fixture.componentRef.setInput('helperText', 'Helper text');
+      fixture.detectChanges();
+
+      const select = fixture.debugElement.query(By.css('mat-select'));
+      expect(select.nativeElement.getAttribute('aria-describedby')).toContain('helper');
+    });
+  });
+
+  describe('haptic feedback', () => {
+    it('should trigger haptic feedback on selection change', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.detectChanges();
+
+      const changeEvent = { value: 'option2' };
+      component.handleChange(changeEvent);
+
+      expect(vibrateSpy).toHaveBeenCalledWith(50);
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', false);
+      fixture.detectChanges();
+
+      const changeEvent = { value: 'option2' };
+      component.handleChange(changeEvent);
+
+      expect(vibrateSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('focus and state tracking', () => {
+    it('should track focus state', () => {
+      const select = fixture.debugElement.query(By.css('mat-select'));
+      select.nativeElement.dispatchEvent(new FocusEvent('focus'));
+
+      expect(component.isFocused()).toBe(true);
+    });
+
+    it('should track blur state', () => {
+      const select = fixture.debugElement.query(By.css('mat-select'));
+      select.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(component.isFocused()).toBe(false);
+    });
+
+    it('should track opened state', () => {
+      component.onOpenedChange(true);
+      expect(component.isOpened()).toBe(true);
+
+      component.onOpenedChange(false);
+      expect(component.isOpened()).toBe(false);
+    });
+  });
+
+  describe('opened change output', () => {
+    it('should emit opened change event', () => {
+      vi.spyOn(component.openedChange, 'emit');
+      component.onOpenedChange(true);
+
+      expect(component.openedChange.emit).toHaveBeenCalledWith(true);
     });
   });
 });
