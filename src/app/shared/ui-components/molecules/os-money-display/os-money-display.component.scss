@@ -3,53 +3,138 @@
 .os-money-display {
   display: inline-flex;
   align-items: baseline;
-  gap: $spacing-xs;
-  font-family: $font-family-mono;
-  font-weight: $font-weight-medium;
+  gap: var(--os-spacing-1);
+  font-family: var(--os-font-family-mono);
+  font-weight: var(--os-font-weight-medium);
+  transition: all 0.2s ease-in-out;
 
   &--default {
-    color: $color-text-primary;
+    color: var(--os-color-text-primary);
+  }
+
+  &--positive {
+    color: var(--os-color-success-600);
+  }
+
+  &--negative {
+    color: var(--os-color-error-600);
+  }
+
+  &--neutral {
+    color: var(--os-color-text-secondary);
   }
 
   &--success {
-    color: $color-success;
+    color: var(--os-color-success-600);
   }
 
   &--warning {
-    color: $color-warning;
+    color: var(--os-color-warning-600);
   }
 
   &--error {
-    color: $color-error;
+    color: var(--os-color-error-600);
   }
 
   &--info {
-    color: $color-info;
+    color: var(--os-color-info-600);
   }
 
+  &--xs {
+    font-size: var(--os-font-size-xs);
+    gap: var(--os-spacing-1);
+  }
+
+  &--sm {
+    font-size: var(--os-font-size-sm);
+    gap: var(--os-spacing-1);
+  }
+
+  &--md {
+    font-size: var(--os-font-size-md);
+    gap: var(--os-spacing-1);
+  }
+
+  &--lg {
+    font-size: var(--os-font-size-lg);
+    gap: var(--os-spacing-2);
+  }
+
+  &--xl {
+    font-size: var(--os-font-size-xl);
+    gap: var(--os-spacing-2);
+  }
+
+  // Legacy size support for backward compatibility
   &--small {
-    font-size: $font-size-small;
-    gap: $spacing-xs;
+    font-size: var(--os-font-size-sm);
+    gap: var(--os-spacing-1);
   }
 
   &--medium {
-    font-size: $font-size-medium;
-    gap: $spacing-xs;
+    font-size: var(--os-font-size-md);
+    gap: var(--os-spacing-1);
   }
 
   &--large {
-    font-size: $font-size-large;
-    gap: $spacing-small;
+    font-size: var(--os-font-size-lg);
+    gap: var(--os-spacing-2);
+  }
+
+  &--large-value {
+    font-weight: var(--os-font-weight-bold);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   &__currency {
-    font-weight: $font-weight-semibold;
+    font-weight: var(--os-font-weight-semibold);
     opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
   }
 
   &__value {
-    font-weight: $font-weight-bold;
+    font-weight: var(--os-font-weight-bold);
     letter-spacing: 0.5px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 575px) {
+    &--xs {
+      font-size: var(--os-font-size-sm);
+    }
+
+    &--sm {
+      font-size: var(--os-font-size-md);
+    }
+
+    &--md {
+      font-size: var(--os-font-size-lg);
+    }
+
+    &--lg {
+      font-size: var(--os-font-size-xl);
+    }
+
+    &--xl {
+      font-size: var(--os-font-size-2xl);
+    }
+  }
+
+  // Hover effects for interactive contexts
+  &:hover {
+    transform: scale(1.02);
+
+    .os-money-display__currency {
+      opacity: 1;
+    }
+  }
+
+  // Focus styles for accessibility
+  &:focus-visible {
+    outline: 2px solid var(--os-color-primary-500);
+    outline-offset: 2px;
+    border-radius: var(--os-border-radius-sm);
   }
 }
 
