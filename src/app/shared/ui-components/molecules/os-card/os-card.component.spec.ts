@@ -139,6 +139,72 @@ describe('OsCardComponent', () => {
 
       expect(emitSpy).not.toHaveBeenCalled();
     });
+
+    it('should not emit click event when disabled', () => {
+      const emitSpy = vi.spyOn(component.cardClick, 'emit');
+      fixture.componentRef.setInput('clickable', true);
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      cardElement.click();
+
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not emit click event when loading', () => {
+      const emitSpy = vi.spyOn(component.cardClick, 'emit');
+      fixture.componentRef.setInput('clickable', true);
+      fixture.componentRef.setInput('loading', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      cardElement.click();
+
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Loading State', () => {
+    it('should not be loading by default', () => {
+      expect(component.loading()).toBe(false);
+    });
+
+    it('should apply loading class when loading', () => {
+      fixture.componentRef.setInput('loading', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.classList.contains('os-card--loading')).toBe(true);
+    });
+  });
+
+  describe('Disabled State', () => {
+    it('should not be disabled by default', () => {
+      expect(component.disabled()).toBe(false);
+    });
+
+    it('should have aria-disabled when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.getAttribute('aria-disabled')).toBe('true');
+    });
+  });
+
+  describe('Selected State', () => {
+    it('should not be selected by default', () => {
+      expect(component.selected()).toBe(false);
+    });
+
+    it('should have aria-selected when selected', () => {
+      fixture.componentRef.setInput('selected', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.getAttribute('aria-selected')).toBe('true');
+    });
   });
 
   describe('Content Projection', () => {
@@ -182,6 +248,76 @@ describe('OsCardComponent', () => {
 
       const cardElement = fixture.nativeElement.querySelector('.os-card');
       expect(cardElement.getAttribute('role')).toBeFalsy();
+    });
+
+    it('should have custom aria-label when provided', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Custom card label');
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.getAttribute('aria-label')).toBe('Custom card label');
+    });
+
+    it('should have custom aria-describedby when provided', () => {
+      fixture.componentRef.setInput('ariaDescribedBy', 'description-id');
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.getAttribute('aria-describedby')).toBe('description-id');
+    });
+  });
+
+  describe('Keyboard Navigation', () => {
+    it('should handle Enter key when clickable', () => {
+      const emitSpy = vi.spyOn(component.cardClick, 'emit');
+      fixture.componentRef.setInput('clickable', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+      cardElement.dispatchEvent(enterEvent);
+
+      expect(emitSpy).toHaveBeenCalled();
+    });
+
+    it('should handle Space key when clickable', () => {
+      const emitSpy = vi.spyOn(component.cardClick, 'emit');
+      fixture.componentRef.setInput('clickable', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      const spaceEvent = new KeyboardEvent('keydown', { key: ' ' });
+      cardElement.dispatchEvent(spaceEvent);
+
+      expect(emitSpy).toHaveBeenCalled();
+    });
+
+    it('should not handle keyboard events when not clickable', () => {
+      const emitSpy = vi.spyOn(component.cardClick, 'emit');
+      fixture.componentRef.setInput('clickable', false);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+      cardElement.dispatchEvent(enterEvent);
+
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Computed Properties', () => {
+    it('should compute card classes correctly', () => {
+      fixture.componentRef.setInput('variant', 'elevated');
+      fixture.componentRef.setInput('size', 'large');
+      fixture.componentRef.setInput('clickable', true);
+      fixture.componentRef.setInput('loading', true);
+      fixture.detectChanges();
+
+      const cardElement = fixture.nativeElement.querySelector('.os-card');
+      expect(cardElement.classList.contains('os-card--elevated')).toBe(true);
+      expect(cardElement.classList.contains('os-card--large')).toBe(true);
+      expect(cardElement.classList.contains('os-card--clickable')).toBe(true);
+      expect(cardElement.classList.contains('os-card--loading')).toBe(true);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type OsCardVariant = 'default' | 'outlined' | 'elevated' | 'flat';
@@ -15,6 +15,10 @@ export type OsCardSize = 'small' | 'medium' | 'large';
       [attr.data-size]="size()"
       [attr.role]="clickable() ? 'button' : null"
       [attr.tabindex]="clickable() ? '0' : null"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      [attr.aria-selected]="selected() ? 'true' : null"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-describedby]="ariaDescribedBy()"
       (click)="onCardClick()"
       (keydown.enter)="onCardClick()"
       (keydown.space)="onCardClick()"
@@ -43,34 +47,50 @@ export type OsCardSize = 'small' | 'medium' | 'large';
   },
 })
 export class OsCardComponent {
+  // ===== INPUTS =====
   variant = input<OsCardVariant>('default');
   size = input<OsCardSize>('medium');
   header = input<boolean>(false);
   actions = input<boolean>(false);
   clickable = input<boolean>(false);
+  loading = input<boolean>(false);
+  disabled = input<boolean>(false);
+  selected = input<boolean>(false);
+  ariaLabel = input<string | null>(null);
+  ariaDescribedBy = input<string | null>(null);
 
+  // ===== OUTPUTS =====
   cardClick = output<void>();
 
-  cardClasses = () => {
+  // ===== COMPUTED PROPERTIES =====
+  cardClasses = computed(() => {
     const classes = ['os-card'];
 
+    // Variant
     if (this.variant() !== 'default') {
       classes.push(`os-card--${this.variant()}`);
     }
 
+    // Size
     if (this.size() !== 'medium') {
       classes.push(`os-card--${this.size()}`);
     }
 
+    // States
     if (this.clickable()) {
       classes.push('os-card--clickable');
     }
 
-    return classes.join(' ');
-  };
+    if (this.loading()) {
+      classes.push('os-card--loading');
+    }
 
+    return classes.join(' ');
+  });
+
+  // ===== METHODS =====
   onCardClick(): void {
-    if (this.clickable()) {
+    if (this.clickable() && !this.disabled() && !this.loading()) {
       this.cardClick.emit();
     }
   }
