@@ -46,6 +46,14 @@ describe('OsCheckboxComponent', () => {
     it('should not be required by default', () => {
       expect(component.required()).toBe(false);
     });
+
+    it('should be animated by default', () => {
+      expect(component.animated()).toBe(true);
+    });
+
+    it('should have default role', () => {
+      expect(component.role()).toBe('checkbox');
+    });
   });
 
   describe('class generation', () => {
@@ -141,6 +149,31 @@ describe('OsCheckboxComponent', () => {
       expect(checkboxElement.getAttribute('aria-label')).toBe('Custom checkbox');
     });
 
+    it('should set aria-labelledby attribute', () => {
+      fixture.componentRef.setInput('ariaLabelledBy', 'label-id');
+      fixture.detectChanges();
+      const checkboxElement = fixture.nativeElement.querySelector('mat-checkbox');
+      expect(checkboxElement.getAttribute('aria-labelledby')).toBe('label-id');
+    });
+
+    it('should set aria-checked attribute correctly', () => {
+      fixture.componentRef.setInput('checked', true);
+      fixture.detectChanges();
+      expect(component.ariaChecked()).toBe('true');
+    });
+
+    it('should set aria-checked to mixed when indeterminate', () => {
+      fixture.componentRef.setInput('indeterminate', true);
+      fixture.detectChanges();
+      expect(component.ariaChecked()).toBe('mixed');
+    });
+
+    it('should set role attribute', () => {
+      fixture.componentRef.setInput('role', 'switch');
+      fixture.detectChanges();
+      expect(component.checkboxRole()).toBe('switch');
+    });
+
     it('should have unique input id', () => {
       const checkboxElement = fixture.nativeElement.querySelector('mat-checkbox');
       expect(checkboxElement.id).toMatch(/^os-checkbox-/);
@@ -170,6 +203,50 @@ describe('OsCheckboxComponent', () => {
         const classes = component.checkboxClass();
         expect(classes).toContain(`os-checkbox--${size}`);
       });
+    });
+  });
+
+  describe('animations and interactions', () => {
+    it('should include animated class when animated is true', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      const classes = component.checkboxClass();
+      expect(classes).toContain('os-checkbox--animated');
+    });
+
+    it('should not include animated class when animated is false', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      const classes = component.checkboxClass();
+      expect(classes).not.toContain('os-checkbox--animated');
+    });
+
+    it('should include checked class when checked', () => {
+      fixture.componentRef.setInput('checked', true);
+      fixture.detectChanges();
+      const classes = component.checkboxClass();
+      expect(classes).toContain('os-checkbox--checked');
+    });
+
+    it('should include indeterminate class when indeterminate', () => {
+      fixture.componentRef.setInput('indeterminate', true);
+      fixture.detectChanges();
+      const classes = component.checkboxClass();
+      expect(classes).toContain('os-checkbox--indeterminate');
+    });
+  });
+
+  describe('roles', () => {
+    it('should support checkbox role', () => {
+      fixture.componentRef.setInput('role', 'checkbox');
+      fixture.detectChanges();
+      expect(component.checkboxRole()).toBe('checkbox');
+    });
+
+    it('should support switch role', () => {
+      fixture.componentRef.setInput('role', 'switch');
+      fixture.detectChanges();
+      expect(component.checkboxRole()).toBe('switch');
     });
   });
 

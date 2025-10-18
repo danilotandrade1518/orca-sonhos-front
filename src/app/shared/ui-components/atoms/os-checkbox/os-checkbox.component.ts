@@ -19,6 +19,7 @@ export type OsCheckboxVariant =
   | 'success'
   | 'warning'
   | 'error';
+export type OsCheckboxRole = 'checkbox' | 'switch';
 
 @Component({
   selector: 'os-checkbox',
@@ -37,6 +38,10 @@ export type OsCheckboxVariant =
       (focus)="handleFocus($event)"
       [attr.aria-describedby]="ariaDescribedBy() || null"
       [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-labelledby]="ariaLabelledBy() || null"
+      [attr.aria-checked]="ariaChecked()"
+      [attr.role]="checkboxRole()"
+      [attr.data-animated]="animated()"
     >
       @if (label()) {
       {{ label() }}
@@ -61,8 +66,11 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   disabled = model(false);
   indeterminate = input(false);
   required = input(false);
+  animated = input(true);
+  role = input<OsCheckboxRole>('checkbox');
   ariaDescribedBy = input<string>('');
   ariaLabel = input<string>('');
+  ariaLabelledBy = input<string>('');
 
   checkboxChange = output<boolean>();
   checkboxBlurEvent = output<FocusEvent>();
@@ -99,10 +107,23 @@ export class OsCheckboxComponent implements ControlValueAccessor {
     return [
       'os-checkbox',
       `os-checkbox--${this.size()}`,
+      `os-checkbox--${this.variant()}`,
       this.disabled() ? 'os-checkbox--disabled' : '',
+      this.checked() ? 'os-checkbox--checked' : '',
+      this.indeterminate() ? 'os-checkbox--indeterminate' : '',
+      this.animated() ? 'os-checkbox--animated' : '',
     ]
       .filter(Boolean)
       .join(' ');
+  });
+
+  ariaChecked = computed(() => {
+    if (this.indeterminate()) return 'mixed';
+    return this.checked() ? 'true' : 'false';
+  });
+
+  checkboxRole = computed(() => {
+    return this.role();
   });
 
   handleChange(event: { checked: boolean }): void {
