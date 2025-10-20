@@ -1,24 +1,85 @@
-@use '../../theme/variables' as *;
-
 .os-date-picker {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--os-spacing-3, 12px);
+
+  // Quick Selection Buttons
+  &__quick-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--os-spacing-2, 8px);
+    padding: var(--os-spacing-2, 8px);
+    background-color: var(--os-color-background-secondary, #f5f5f5);
+    border-radius: var(--os-border-radius-md, 8px);
+
+    // Mobile-first: stack buttons vertically on very small screens
+    @media (max-width: 375px) {
+      flex-direction: column;
+
+      os-button {
+        width: 100%;
+      }
+    }
+
+    // Tablet and up: horizontal layout
+    @media (min-width: 576px) {
+      justify-content: flex-start;
+    }
+  }
 
   &__field {
     width: 100%;
   }
 
-  &__date {
-    &--disabled {
-      color: $color-text-disabled;
-      pointer-events: none;
+  // Range Picker Separator
+  &__range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--os-spacing-2, 8px) 0;
+    color: var(--os-color-text-secondary, #666);
+    font-size: var(--os-font-size-sm, 0.875rem);
+    font-weight: var(--os-font-weight-medium, 500);
+    text-align: center;
+
+    // Mobile: larger spacing
+    @media (max-width: 575px) {
+      padding: var(--os-spacing-3, 12px) 0;
     }
+  }
+
+  // Today Indicator
+  &__today-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--os-spacing-2, 8px);
+    background-color: var(--os-color-primary-50, #e3f2fd);
+    border: 1px solid var(--os-color-primary-200, #90caf9);
+    border-radius: var(--os-border-radius-sm, 4px);
+    margin-top: var(--os-spacing-2, 8px);
+  }
+
+  &__today-text {
+    color: var(--os-color-primary-700, #1976d2);
+    font-size: var(--os-font-size-sm, 0.875rem);
+    font-weight: var(--os-font-weight-semibold, 600);
   }
 
   // Sizes
   &--small {
     .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
-        min-height: 40px;
+        min-height: var(--os-input-height-sm, 40px);
+      }
+    }
+  }
+
+  &--medium {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        min-height: var(--os-input-height-md, 44px);
       }
     }
   }
@@ -26,7 +87,7 @@
   &--large {
     .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
-        min-height: 56px;
+        min-height: var(--os-input-height-lg, 48px);
       }
     }
   }
@@ -35,14 +96,15 @@
   &--outlined {
     .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
-        border: 2px solid $color-border;
+        border: 2px solid var(--os-color-border, #e0e0e0);
 
         &:hover {
-          border-color: $color-primary;
+          border-color: var(--os-color-primary, #1976d2);
         }
 
         &.mdc-text-field--focused {
-          border-color: $color-primary;
+          border-color: var(--os-color-primary, #1976d2);
+          box-shadow: 0 0 0 3px var(--os-color-primary-alpha-20, rgba(25, 118, 210, 0.2));
         }
       }
     }
@@ -51,11 +113,16 @@
   &--filled {
     .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
-        background: $color-background-secondary;
-        border: 1px solid $color-border;
+        background: var(--os-color-background-secondary, #f5f5f5);
+        border: 1px solid var(--os-color-border, #e0e0e0);
 
         &:hover {
-          background: $color-background-hover;
+          background: var(--os-color-background-hover, #eeeeee);
+        }
+
+        &.mdc-text-field--focused {
+          background: var(--os-color-background-primary, #ffffff);
+          border-color: var(--os-color-primary, #1976d2);
         }
       }
     }
@@ -63,47 +130,250 @@
 
   // Disabled state
   &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+
     .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
-        background: $color-background-disabled;
-        color: $color-text-disabled;
+        background: var(--os-color-background-disabled, #fafafa);
+        color: var(--os-color-text-disabled, #9e9e9e);
+        cursor: not-allowed;
       }
     }
 
     .mat-datepicker-toggle {
-      color: $color-text-disabled;
+      color: var(--os-color-text-disabled, #9e9e9e);
     }
+
+    .os-date-picker__quick-selection {
+      opacity: 0.5;
+    }
+  }
+
+  // Mobile-friendly enhancements
+  &--mobile-friendly {
+    // Touch-friendly spacing on mobile
+    @media (max-width: 575px) {
+      gap: var(--os-spacing-4, 16px);
+
+      .mat-mdc-form-field {
+        .mat-mdc-text-field-wrapper {
+          min-height: var(--os-touch-target-min, 44px);
+        }
+      }
+
+      .os-date-picker__quick-selection {
+        padding: var(--os-spacing-3, 12px);
+      }
+    }
+
+    // Larger touch targets on mobile
+    @media (hover: none) and (pointer: coarse) {
+      .mat-mdc-form-field {
+        .mat-mdc-text-field-wrapper {
+          min-height: var(--os-touch-target-min, 44px);
+        }
+      }
+
+      .mat-datepicker-toggle {
+        min-width: var(--os-touch-target-min, 44px);
+        min-height: var(--os-touch-target-min, 44px);
+      }
+    }
+  }
+
+  // Range picker layout
+  &--range {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--os-spacing-3, 12px);
+
+    // Tablet and up: side by side
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+
+      .os-date-picker__range-separator {
+        padding-top: calc(var(--os-spacing-6, 24px) + var(--os-font-size-md, 1rem));
+      }
+    }
+  }
+
+  // With quick selection
+  &--with-quick-selection {
+    padding-top: var(--os-spacing-2, 8px);
   }
 
   // Calendar icon customization
   .mat-datepicker-toggle {
     .mat-icon {
-      color: $color-primary;
+      color: var(--os-color-primary, #1976d2);
+      transition: color var(--os-transition-normal, 200ms ease-in-out);
+    }
+
+    &:hover .mat-icon {
+      color: var(--os-color-primary-600, #1565c0);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--os-color-primary, #1976d2);
+      outline-offset: 2px;
+      border-radius: var(--os-border-radius-sm, 4px);
     }
   }
 
   // Date picker panel customization
   ::ng-deep .mat-datepicker-popup {
     .mat-calendar {
+      // Header
       .mat-calendar-header {
-        background: $color-primary;
-        color: $color-on-primary;
+        background: var(--os-color-primary, #1976d2);
+        color: var(--os-color-on-primary, #ffffff);
+        padding: var(--os-spacing-3, 12px);
       }
 
+      // Calendar body
       .mat-calendar-body-cell {
+        position: relative;
+        min-width: var(--os-touch-target-min, 44px);
+        min-height: var(--os-touch-target-min, 44px);
+        border-radius: var(--os-border-radius-sm, 4px);
+        transition: background-color var(--os-transition-fast, 150ms ease-in-out),
+          color var(--os-transition-fast, 150ms ease-in-out);
+
         &:hover {
-          background: $color-background-hover;
+          background: var(--os-color-background-hover, #eeeeee);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--os-color-primary, #1976d2);
+          outline-offset: -2px;
         }
 
         &.mat-calendar-body-selected {
-          background: $color-primary;
-          color: $color-on-primary;
+          background: var(--os-color-primary, #1976d2);
+          color: var(--os-color-on-primary, #ffffff);
+          font-weight: var(--os-font-weight-semibold, 600);
         }
 
         &.mat-calendar-body-today {
-          border: 1px solid $color-primary;
+          border: 2px solid var(--os-color-primary, #1976d2);
+          font-weight: var(--os-font-weight-semibold, 600);
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--os-color-primary, #1976d2);
+          }
+
+          &.mat-calendar-body-selected::after {
+            background-color: var(--os-color-on-primary, #ffffff);
+          }
+        }
+
+        &.mat-calendar-body-disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          color: var(--os-color-text-disabled, #9e9e9e);
+
+          &:hover {
+            background: transparent;
+          }
         }
       }
+
+      // Navigation buttons
+      .mat-calendar-previous-button,
+      .mat-calendar-next-button {
+        min-width: var(--os-touch-target-min, 44px);
+        min-height: var(--os-touch-target-min, 44px);
+        border-radius: var(--os-border-radius-round, 50%);
+        transition: background-color var(--os-transition-fast, 150ms ease-in-out);
+
+        &:hover {
+          background-color: var(--os-color-primary-alpha-10, rgba(25, 118, 210, 0.1));
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--os-color-primary, #1976d2);
+          outline-offset: 2px;
+        }
+      }
+    }
+
+    // Mobile: full-screen calendar
+    @media (max-width: 575px) {
+      max-width: 100vw;
+      max-height: 100vh;
+
+      .mat-calendar {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+  // Animations
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .os-date-picker__today-indicator {
+    animation: fadeIn var(--os-transition-normal, 200ms ease-in-out);
+  }
+
+  // Reduced motion support
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  // High contrast mode support
+  @media (prefers-contrast: high) {
+    &--outlined {
+      .mat-mdc-form-field {
+        .mat-mdc-text-field-wrapper {
+          border-width: 3px;
+        }
+      }
+    }
+
+    .mat-calendar-body-cell {
+      &.mat-calendar-body-today {
+        border-width: 3px;
+      }
+    }
+  }
+
+  // Dark mode support (if implemented)
+  @media (prefers-color-scheme: dark) {
+    .os-date-picker__quick-selection {
+      background-color: var(--os-color-background-secondary-dark, #2c2c2c);
+    }
+
+    .os-date-picker__today-indicator {
+      background-color: var(--os-color-primary-900, #0d47a1);
+      border-color: var(--os-color-primary-700, #1976d2);
+    }
+
+    .os-date-picker__today-text {
+      color: var(--os-color-primary-200, #90caf9);
     }
   }
 }

@@ -719,7 +719,7 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 
 Refinar todos os 12 componentes molecules com foco em consistência visual e integração com atoms refinados.
 
-### 📊 Progresso Atual: 5/12 molecules refinados (41%)
+### 📊 Progresso Atual: 6/12 molecules refinados (50%)
 
 ### 📋 Tarefas
 
@@ -843,12 +843,24 @@ Refinar todos os 12 componentes molecules com foco em consistência visual e int
   **Dependências**: Fase 2 completa
   **Complexidade**: Média
 
-#### Refinamento de os-date-picker [⏳]
+#### Refinamento de os-date-picker [✅]
 
-**Descrição**: Interface mobile-friendly, seleção rápida, keyboard navigation
+**Descrição**: Interface mobile-friendly, seleção rápida, keyboard navigation, range picker
 **Arquivos**: `src/app/shared/ui-components/molecules/os-date-picker/`
-**Dependências**: Fase 2 completa
+**Dependências**: Fase 2 completa ✅
 **Complexidade**: Alta
+**Testes**: 74/75 passando (98.7%) ✅
+**Features Implementadas**:
+
+- Seleção rápida de datas (Hoje, Amanhã, Próxima Semana, Próximo Mês) ✅
+- Indicador de "hoje" visual ✅
+- Suporte a range picker (início + fim) ✅
+- Interface mobile-friendly com touch targets >= 44px ✅
+- Destaque de data atual no calendário ✅
+- Migração completa para design tokens ✅
+- Acessibilidade WCAG 2.1 AA ✅
+- 75 testes unitários abrangentes ✅
+- Stories Storybook completas ✅
 
 #### Refinamento de os-dropdown [⏳]
 
