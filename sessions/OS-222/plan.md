@@ -719,7 +719,7 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 
 Refinar todos os 12 componentes molecules com foco em consistência visual e integração com atoms refinados.
 
-### 📊 Progresso Atual: 4/12 molecules refinados (33%)
+### 📊 Progresso Atual: 5/12 molecules refinados (41%)
 
 ### 📋 Tarefas
 
@@ -830,9 +830,18 @@ Refinar todos os 12 componentes molecules com foco em consistência visual e int
 #### Refinamento de os-search-box [✅]
 
 **Descrição**: Melhorar acessibilidade, debounce, sugestões otimizadas
-**Arquivos**: `src/app/shared/ui-components/molecules/os-search-box/`
-**Dependências**: Fase 2 completa
-**Complexidade**: Média
+**✅ CONCLUÍDO - Principais Realizações:**
+
+- Acessibilidade aprimorada com `aria-controls` ligando o campo ao `listbox`
+- `id` estável para o contêiner de sugestões (listbox) por instância
+- Suporte a `aria-describedby` no contêiner quando fornecido
+- Mantida navegação por teclado (setas, Enter, Escape, Tab)
+- Debounce configurável mantido (padrão 300ms)
+- Mensagem de "Nenhuma sugestão" com `aria-live="polite"`
+- Lint limpo e sem impactos de breaking change
+  **Arquivos**: `src/app/shared/ui-components/molecules/os-search-box/`
+  **Dependências**: Fase 2 completa
+  **Complexidade**: Média
 
 #### Refinamento de os-date-picker [⏳]
 

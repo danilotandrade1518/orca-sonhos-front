@@ -343,25 +343,18 @@
 
 ---
 
-### 🗓️ Sessão 19/12/2024 - Refinamento do os-search-box
+### 🗓️ Sessão 20/10/2025 - Refinamento do os-search-box
 
 **Fase**: Fase 3 - Refinamento de Molecules
-**Objetivo da Sessão**: Refinar o componente os-search-box com acessibilidade WCAG 2.1 AA, debounce para performance, sugestões otimizadas e touch targets adequados
+**Objetivo da Sessão**: Refinar o componente os-search-box com acessibilidade WCAG 2.1 AA (aria-controls, ids estáveis, aria-describedby), debounce para performance e sugestões otimizadas
 
 #### ✅ Trabalho Realizado
 
-- Refinamento completo do os-search-box implementado
-- Acessibilidade WCAG 2.1 AA com ARIA attributes completos
-- Debounce de 300ms implementado para performance
-- Navegação por teclado (setas, Enter, Escape, Tab)
-- Highlight de termos de busca nas sugestões
-- Histórico de buscas local implementado
-- Touch targets >= 44px para mobile
-- Sugestões otimizadas com filtros e categorias
-- Responsividade mobile-first com modal bottom sheet
-- Animações suaves com suporte a prefers-reduced-motion
-- Testes abrangentes criados (32 testes, 100% cobertura)
-- Stories do Storybook atualizadas com novos casos de uso
+- Adicionados `aria-controls` e `id` estável para o `listbox` de sugestões
+- Suporte a `aria-describedby` no contêiner raiz quando fornecido
+- Removida ligação inexistente `ariaDescribedBy` no `os-input` para evitar erro
+- Lint executado no arquivo modificado sem erros
+- Mantidos debounce (300ms), navegação por teclado e highlight existentes
 
 #### 🤔 Decisões Técnicas
 
@@ -389,18 +382,13 @@
 
 #### 🧪 Testes Realizados
 
-- Testes unitários: ✅ 32 testes passando
-- Testes de acessibilidade: ✅ WCAG 2.1 AA
-- Testes de performance: ✅ Debounce funcionando
-- Testes de navegação: ✅ Teclado e mouse
-- Testes de responsividade: ✅ Mobile-first
-- Testes de highlight: ✅ Termos destacados corretamente
+- Lint do componente: ✅ sem erros
+- Suite existente de testes do componente mantém cenários principais (sem regressões esperadas)
 
 #### ⏭️ Próximos Passos
 
+- Rodar testes unitários localmente (vitest) para validar regressões
 - Continuar com os-date-picker (próximo componente da fase)
-- Aplicar padrões similares de refinamento
-- Manter consistência com componentes refinados
 
 ## 🎯 Próximas Ações
 

@@ -34,9 +34,11 @@ export interface OsSearchSuggestion {
       class="os-search-box"
       [class]="searchBoxClasses()"
       [attr.role]="role()"
+      [attr.aria-controls]="showSuggestions() ? suggestionsListboxId() : null"
       [attr.aria-expanded]="showSuggestions() && suggestions().length > 0"
       [attr.aria-haspopup]="showSuggestions() ? 'listbox' : null"
       [attr.aria-activedescendant]="activeSuggestionId()"
+      [attr.aria-describedby]="ariaDescribedBy() || null"
     >
       <os-input
         [value]="value()"
@@ -57,6 +59,7 @@ export interface OsSearchSuggestion {
         class="os-search-box__suggestions"
         [class]="suggestionsClass()"
         role="listbox"
+        [attr.id]="suggestionsListboxId()"
         [attr.aria-label]="'Sugestões de busca'"
       >
         @for (suggestion of filteredSuggestions(); track suggestion.id; let i = $index) {
@@ -127,6 +130,8 @@ export class OsSearchBoxComponent {
   protected activeSuggestionIndex = signal<number>(-1);
   private isFocused = signal<boolean>(false);
   private searchHistory = signal<string[]>([]);
+  private static nextId = 0;
+  private readonly instanceId = OsSearchBoxComponent.nextId++;
 
   constructor() {
     // Setup debounced search
@@ -172,6 +177,8 @@ export class OsSearchBoxComponent {
 
     return filtered;
   });
+
+  suggestionsListboxId = computed(() => `os-search-box-suggestions-${this.instanceId}`);
 
   activeSuggestionId = computed(() => {
     const index = this.activeSuggestionIndex();
