@@ -719,7 +719,7 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 
 Refinar todos os 12 componentes molecules com foco em consistência visual e integração com atoms refinados.
 
-### 📊 Progresso Atual: 3/12 molecules refinados (25%)
+### 📊 Progresso Atual: 4/12 molecules refinados (33%)
 
 ### 📋 Tarefas
 
@@ -827,7 +827,7 @@ Refinar todos os 12 componentes molecules com foco em consistência visual e int
 - ✅ Responsividade: Mobile-first
 - ✅ Performance: Computed properties otimizadas
 
-#### Refinamento de os-search-box [⏳]
+#### Refinamento de os-search-box [✅]
 
 **Descrição**: Melhorar acessibilidade, debounce, sugestões otimizadas
 **Arquivos**: `src/app/shared/ui-components/molecules/os-search-box/`
