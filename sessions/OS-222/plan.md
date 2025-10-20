@@ -719,7 +719,7 @@ Refinar todos os 16 componentes atoms com foco em acessibilidade, responsividade
 
 Refinar todos os 12 componentes molecules com foco em consistência visual e integração com atoms refinados.
 
-### 📊 Progresso Atual: 8/12 molecules refinados (67%)
+### 📊 Progresso Atual: 9/12 molecules refinados (75%)
 
 ### 📋 Tarefas
 
@@ -937,12 +937,41 @@ Refinar todos os 12 componentes molecules com foco em consistência visual e int
 - ✅ Responsividade: Mobile-first
 - ✅ Performance: Computed properties otimizadas
 
-#### Refinamento de os-form-group [⏳]
+#### Refinamento de os-form-group [✅]
 
 **Descrição**: Spacing consistente, validação de grupo, responsividade
 **Arquivos**: `src/app/shared/ui-components/molecules/os-form-group/`
 **Dependências**: Fase 2 completa
 **Complexidade**: Média
+
+**✅ CONCLUÍDO - Principais Realizações:**
+
+- **Design Tokens Integrados**: Migração completa para tokens CSS customizados (--os-\*)
+- **Layout Flexível**: Suporte para 1, 2 e 3 colunas com CSS Grid
+- **Responsividade Dinâmica**: BreakpointObserver força 1 coluna em mobile
+- **Estados de Validação**: Inputs para invalid, disabled, errorMessage
+- **Acessibilidade WCAG 2.1 AA**: ARIA attributes completos, IDs únicos, role="alert"
+- **Computed Properties**: formGroupClasses, effectiveColumns, ariaDescribedby
+- **Dark Mode Support**: Suporte completo a temas escuros
+- **High Contrast Mode**: Border adicional em modo de alto contraste
+- **Reduced Motion**: Transições desabilitadas quando prefers-reduced-motion
+- **Testes Abrangentes**: 45 testes implementados e passando (100%)
+- **Stories Storybook**: 3 novas stories (ColumnLayouts, ValidationStates, Accessibility)
+
+**Arquivos Modificados:**
+
+- `os-form-group.component.ts` - Layout flexível, responsividade, estados de validação
+- `os-form-group.component.scss` - Design tokens, grid layouts, media queries
+- `os-form-group.component.spec.ts` - 45 testes unitários (Vitest)
+- `os-form-group.stories.ts` - Stories atualizadas com novas funcionalidades
+
+**Métricas de Qualidade:**
+
+- ✅ Testes: 45/45 passando (100%)
+- ✅ Linting: 0 erros
+- ✅ Acessibilidade: WCAG 2.1 AA
+- ✅ Responsividade: Mobile-first com breakpoints
+- ✅ Performance: Computed properties otimizadas
 
 #### Refinamento de os-navigation-item [⏳]
 

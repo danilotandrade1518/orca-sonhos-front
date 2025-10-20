@@ -6,8 +6,10 @@
 
 - **Início**: 19/12/2024
 - **Status Atual**: Em progresso
-- **Fase Atual**: Fase 3 - Refinamento of Molecules
-- **Última Sessão**: 20/10/2025
+- **Fase Atual**: Fase 3 - Refinamento de Molecules (9/12 - 75%)
+- **Última Sessão**: 20/10/2025 - Refinamento do os-form-group
+- **Componente Atual**: os-form-group ✅ CONCLUÍDO
+- **Próximo Componente**: os-navigation-item
 
 ---
 
@@ -570,10 +572,116 @@
 - **Testes**: Cobertura abrangente (100%) garante qualidade
 - **Performance**: Computed properties otimizam reatividade
 
+---
+
+### 🗓️ Sessão 20/10/2025 - Refinamento do os-form-group
+
+**Fase**: Fase 3 - Refinamento de Molecules
+**Objetivo da Sessão**: Refinar o componente os-form-group com spacing consistente, validação de grupo, responsividade e layout flexível
+
+#### ✅ Trabalho Realizado
+
+- **Design Tokens Integrados**: Migração completa de variáveis SCSS para tokens CSS customizados (--os-\*)
+- **Layout Flexível**: Implementação de suporte para 1, 2 e 3 colunas usando CSS Grid
+- **Responsividade Dinâmica**: BreakpointObserver do Angular CDK com Signal isMobile
+- **Estados de Validação**: Novos inputs invalid, disabled e errorMessage
+- **Acessibilidade WCAG 2.1 AA**: ARIA attributes completos, IDs únicos, role="alert"
+- **Computed Properties**: formGroupClasses, effectiveColumns, ariaDescribedby
+- **Dark Mode Support**: Suporte completo a temas escuros com fallbacks
+- **High Contrast Mode**: Border adicional de 1px em modo de alto contraste
+- **Reduced Motion**: Transições desabilitadas quando prefers-reduced-motion
+- **Testes Abrangentes**: 45 testes unitários implementados e passando (100%)
+- **Stories Storybook**: 3 novas stories (ColumnLayouts, ValidationStates, Accessibility)
+
+#### 🤔 Decisões Técnicas
+
+- **Decisão**: Usar BreakpointObserver do Angular CDK para responsividade
+- **Alternativas**: Media queries puras CSS ou window.matchMedia
+- **Justificativa**: Integração perfeita com Angular, reatividade automática com Signals
+
+- **Decisão**: Implementar layout flexível com CSS Grid (1, 2, 3 colunas)
+- **Alternativas**: Flexbox ou classes utilitárias
+- **Justificativa**: CSS Grid é mais poderoso para layouts de múltiplas colunas e mais fácil de manter
+
+- **Decisão**: Usar computed() para effectiveColumns que força 1 coluna em mobile
+- **Alternativas**: Apenas media queries CSS
+- **Justificativa**: TypeScript garante type safety e permite lógica condicional mais complexa
+
+- **Decisão**: Gerar IDs únicos com Math.random() para associação ARIA
+- **Alternativas**: UUID library ou contador global
+- **Justificativa**: Simplicidade e suficiente para componentes UI
+
+- **Decisão**: Converter testes de Jasmine para Vitest
+- **Alternativas**: Manter Jasmine
+- **Justificativa**: Projeto usa Vitest, necessário para compatibilidade
+
+#### 🚧 Problemas Encontrados
+
+- **Problema**: Testes falhando com "jasmine is not defined"
+- **Solução**: Converter de Jasmine (jasmine.createSpyObj) para Vitest (vi.fn())
+- **Lição Aprendida**: Sempre verificar qual framework de teste o projeto usa
+
+- **Problema**: Testes falhando por espaços em branco no textContent
+- **Solução**: Usar .trim() nos assertions de texto
+- **Lição Aprendida**: Templates Angular podem ter espaços extras, sempre normalizar
+
+- **Problema**: BreakpointObserver mock precisava ser recriado para cada teste de responsividade
+- **Solução**: Usar TestBed.resetTestingModule() e reconfigurar providers
+- **Lição Aprendida**: Mocks compartilhados podem causar interferência entre testes
+
+#### 🧪 Testes Realizados
+
+- **Testes Unitários**: 45/45 passando (100%)
+- **Categorias de Testes**:
+  - Component Initialization (2 testes)
+  - Content Rendering (8 testes)
+  - Variants (3 testes)
+  - Sizes (3 testes)
+  - Column Layouts (5 testes)
+  - States (6 testes)
+  - Accessibility WCAG 2.1 AA (10 testes)
+  - Responsiveness (3 testes)
+  - Data Attributes (4 testes)
+- **Build**: Passando com sucesso
+- **Linting**: 0 erros
+- **Funcionalidade**: Todas as features testadas e validadas
+
+#### 📝 Commits Relacionados
+
+- Refinamento completo do os-form-group component
+- Implementação de layout flexível com 1, 2, 3 colunas
+- Adição de BreakpointObserver para responsividade dinâmica
+- Implementação de estados de validação (invalid, disabled, errorMessage)
+- Acessibilidade WCAG 2.1 AA completa
+- Migração para design tokens CSS customizados
+- Conversão de testes de Jasmine para Vitest
+- Adição de 45 testes unitários abrangentes
+- 3 novas stories no Storybook
+
+#### ⏭️ Próximos Passos
+
+- Continuar com os-navigation-item (próximo componente da Fase 3)
+- Manter padrões similares de refinamento
+- Seguir especificação do layout-specification.md
+- Aplicar estratégia COMPLEX com testes abrangentes
+
+#### 💭 Observações
+
+- **Layout Flexível**: Sistema de colunas muito útil para formulários complexos
+- **Responsividade Automática**: BreakpointObserver + Signal funciona perfeitamente
+- **Design Tokens**: Migração completa facilita manutenção e temas
+- **Acessibilidade**: Implementação robusta com IDs únicos e ARIA completo
+- **Estados de Validação**: Feedback visual claro para usuários
+- **Testes**: Cobertura abrangente (100%) garante qualidade
+- **Vitest**: Conversão de Jasmine para Vitest foi necessária mas tranquila
+- **Progresso**: 9/12 molecules concluídos (75% da Fase 3)
+
+---
+
 ## 🎯 Próximas Ações
 
-1. **Continuar Fase 3**: Refinamento de Molecules (8/12 concluídos - 67%)
-2. **Próximo Componente**: os-form-group
+1. **Continuar Fase 3**: Refinamento de Molecules (9/12 concluídos - 75%)
+2. **Próximo Componente**: os-navigation-item
 3. **Aplicar Estratégia**: COMPLEX com testes abrangentes
 4. **Seguir Layout Spec**: Implementar conforme especificação detalhada
 5. **Validar Qualidade**: WCAG 2.1 AA, Mobile-First, Performance
