@@ -8,6 +8,11 @@ describe('OsFilterBarComponent', () => {
   let fixture: ComponentFixture<OsFilterBarComponent>;
 
   beforeEach(async () => {
+    // Limpar localStorage antes de cada teste
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
+
     await TestBed.configureTestingModule({
       imports: [OsFilterBarComponent],
       providers: [provideZonelessChangeDetection()],
@@ -18,6 +23,14 @@ describe('OsFilterBarComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  afterEach(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
+  });
+
+  // --- TESTES BÁSICOS ---
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -166,5 +179,261 @@ describe('OsFilterBarComponent', () => {
     const contentElement = fixture.nativeElement.querySelector('.test-filter');
     expect(contentElement).toBeTruthy();
     expect(contentElement.textContent).toBe('Test Filter');
+  });
+
+  // --- TESTES DE ACESSIBILIDADE ---
+
+  it('should have correct ARIA role', () => {
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.getAttribute('role')).toBe('search');
+  });
+
+  it('should have default aria-label', () => {
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.getAttribute('aria-label')).toBe('Barra de filtros');
+  });
+
+  it('should use custom aria-label when provided', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Custom Filter Bar');
+    fixture.detectChanges();
+
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.getAttribute('aria-label')).toBe('Custom Filter Bar');
+  });
+
+  it('should set aria-describedby when provided', () => {
+    fixture.componentRef.setInput('ariaDescribedBy', 'filter-help');
+    fixture.detectChanges();
+
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.getAttribute('aria-describedby')).toBe('filter-help');
+  });
+
+  it('should pass ariaLabel to clear button', () => {
+    fixture.componentRef.setInput('clearButtonAriaLabel', 'Custom Clear');
+    fixture.detectChanges();
+
+    expect(component.clearButtonAriaLabel()).toBe('Custom Clear');
+  });
+
+  it('should pass ariaLabel to apply button', () => {
+    fixture.componentRef.setInput('applyButtonAriaLabel', 'Custom Apply');
+    fixture.detectChanges();
+
+    expect(component.applyButtonAriaLabel()).toBe('Custom Apply');
+  });
+
+  // --- TESTES DE PERSISTÊNCIA ---
+
+  it('should save filters to localStorage when persistFilters is true', () => {
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    const testFilters = { category: 'food', amount: 100 };
+    component.saveFilters(testFilters);
+
+    const stored = localStorage.getItem('os-filter-bar:test-filters');
+    expect(stored).toBeTruthy();
+    expect(JSON.parse(stored!)).toEqual(testFilters);
+  });
+
+  it('should not save filters when persistFilters is false', () => {
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', false);
+    fixture.detectChanges();
+
+    const testFilters = { category: 'food' };
+    component.saveFilters(testFilters);
+
+    const stored = localStorage.getItem('os-filter-bar:test-filters');
+    expect(stored).toBeFalsy();
+  });
+
+  it('should not save filters when persistKey is null', () => {
+    fixture.componentRef.setInput('persistKey', null);
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    const testFilters = { category: 'food' };
+    component.saveFilters(testFilters);
+
+    const allKeys = Object.keys(localStorage);
+    const hasFilterKeys = allKeys.some((key) => key.startsWith('os-filter-bar:'));
+    expect(hasFilterKeys).toBe(false);
+  });
+
+  it('should restore filters from localStorage', () => {
+    const testFilters = { category: 'food', amount: 100 };
+    localStorage.setItem('os-filter-bar:test-filters', JSON.stringify(testFilters));
+
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    let restoredFilters: Record<string, unknown> | null = null;
+    component.filtersRestored.subscribe((filters) => {
+      restoredFilters = filters;
+    });
+
+    component.restoreFilters();
+
+    expect(restoredFilters).not.toBeNull();
+    if (restoredFilters) {
+      expect(restoredFilters['category']).toBe('food');
+      expect(restoredFilters['amount']).toBe(100);
+    }
+  });
+
+  it('should emit filtersRestored event when filters are restored', () => {
+    const testFilters = { category: 'food' };
+    localStorage.setItem('os-filter-bar:test-filters', JSON.stringify(testFilters));
+
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+
+    let emittedFilters: Record<string, unknown> | null = null;
+    component.filtersRestored.subscribe((filters) => {
+      emittedFilters = filters;
+    });
+
+    fixture.detectChanges();
+    component.restoreFilters();
+
+    expect(emittedFilters).not.toBeNull();
+    if (emittedFilters) {
+      expect(emittedFilters['category']).toBe('food');
+    }
+  });
+
+  it('should clear persisted filters from localStorage', () => {
+    const testFilters = { category: 'food' };
+    localStorage.setItem('os-filter-bar:test-filters', JSON.stringify(testFilters));
+
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    component.clearPersistedFilters();
+
+    const stored = localStorage.getItem('os-filter-bar:test-filters');
+    expect(stored).toBeFalsy();
+  });
+
+  it('should clear persisted filters when onClear is called with persistFilters enabled', () => {
+    const testFilters = { category: 'food' };
+    localStorage.setItem('os-filter-bar:test-filters', JSON.stringify(testFilters));
+
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    component.onClear();
+
+    const stored = localStorage.getItem('os-filter-bar:test-filters');
+    expect(stored).toBeFalsy();
+  });
+
+  it('should not throw error when localStorage is unavailable', () => {
+    const originalLocalStorage = window.localStorage;
+    // Simular localStorage indisponível
+    Object.defineProperty(window, 'localStorage', {
+      value: undefined,
+      writable: true,
+    });
+
+    fixture.componentRef.setInput('persistKey', 'test-filters');
+    fixture.componentRef.setInput('persistFilters', true);
+    fixture.detectChanges();
+
+    expect(() => component.saveFilters({ test: 'data' })).not.toThrow();
+    expect(() => component.restoreFilters()).not.toThrow();
+    expect(() => component.clearPersistedFilters()).not.toThrow();
+
+    // Restaurar localStorage
+    Object.defineProperty(window, 'localStorage', {
+      value: originalLocalStorage,
+      writable: true,
+    });
+  });
+
+  // --- TESTES DE RESPONSIVIDADE ---
+
+  it('should add mobile class when isMobile signal is true', () => {
+    component['isMobile'].set(true);
+    fixture.detectChanges();
+
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.classList.contains('os-filter-bar--mobile')).toBe(true);
+  });
+
+  it('should not add mobile class when isMobile signal is false', () => {
+    component['isMobile'].set(false);
+    fixture.detectChanges();
+
+    const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
+    expect(filterBarElement.classList.contains('os-filter-bar--mobile')).toBe(false);
+  });
+
+  // --- TESTES DE DATA ATTRIBUTES ---
+
+  it('should set data-variant attribute', () => {
+    fixture.componentRef.setInput('variant', 'compact');
+    fixture.detectChanges();
+
+    const hostElement = fixture.nativeElement;
+    expect(hostElement.getAttribute('data-variant')).toBe('compact');
+  });
+
+  it('should set data-size attribute', () => {
+    fixture.componentRef.setInput('size', 'large');
+    fixture.detectChanges();
+
+    const hostElement = fixture.nativeElement;
+    expect(hostElement.getAttribute('data-size')).toBe('large');
+  });
+
+  // --- TESTES DE COMPUTED PROPERTIES ---
+
+  it('should compute filterBarClasses correctly with default values', () => {
+    const classes = component.filterBarClasses();
+    expect(classes).toBe('os-filter-bar');
+  });
+
+  it('should compute filterBarClasses with variant', () => {
+    fixture.componentRef.setInput('variant', 'expanded');
+    fixture.detectChanges();
+
+    const classes = component.filterBarClasses();
+    expect(classes).toContain('os-filter-bar--expanded');
+  });
+
+  it('should compute filterBarClasses with size', () => {
+    fixture.componentRef.setInput('size', 'small');
+    fixture.detectChanges();
+
+    const classes = component.filterBarClasses();
+    expect(classes).toContain('os-filter-bar--small');
+  });
+
+  it('should compute filterBarClasses with mobile', () => {
+    component['isMobile'].set(true);
+    fixture.detectChanges();
+
+    const classes = component.filterBarClasses();
+    expect(classes).toContain('os-filter-bar--mobile');
+  });
+
+  it('should compute filterBarClasses with all options', () => {
+    fixture.componentRef.setInput('variant', 'compact');
+    fixture.componentRef.setInput('size', 'large');
+    component['isMobile'].set(true);
+    fixture.detectChanges();
+
+    const classes = component.filterBarClasses();
+    expect(classes).toContain('os-filter-bar');
+    expect(classes).toContain('os-filter-bar--compact');
+    expect(classes).toContain('os-filter-bar--large');
+    expect(classes).toContain('os-filter-bar--mobile');
   });
 });
