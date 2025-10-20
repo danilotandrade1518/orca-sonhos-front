@@ -6,8 +6,8 @@
 
 - **Início**: 19/12/2024
 - **Status Atual**: Em progresso
-- **Fase Atual**: Fase 3 - Refinamento de Molecules
-- **Última Sessão**: 19/12/2024
+- **Fase Atual**: Fase 3 - Refinamento of Molecules
+- **Última Sessão**: 20/10/2025
 
 ---
 
