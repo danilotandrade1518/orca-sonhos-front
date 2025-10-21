@@ -71,35 +71,84 @@ Se não estiver em uma feature branch:
    - Reutilize informações de sessões anteriores quando aplicável
    - Atualize cache com novas descobertas
 
-##### 2.2: Documentos Obrigatórios
+##### 2.2: Navegação Inteligente das Meta Specs
 
-**SEMPRE leia estes documentos**:
+**🧠 SISTEMA DE NAVEGAÇÃO AUTOMÁTICA**:
 
-1. **index.md** (Meta Specs): Visão geral do projeto
-   - Caminho: `{meta_specs_path}/index.md`
-2. **code-standards**: Padrões de código e boas práticas
-   - Caminho: `{meta_specs_path}/technical/code-standards/index.md`
-3. **frontend-architecture**: Arquitetura específica do frontend
-   - Caminho: `{meta_specs_path}/technical/frontend-architecture/index.md`
-
-**Exemplo de Execução**:
+Use os próprios índices das Meta Specs para navegação inteligente:
 
 ```typescript
 // 1. Ler ai.properties.md para obter meta_specs_path
 const aiProperties = await read_file({ target_file: 'ai.properties.md' });
 const metaSpecsPath = extractMetaSpecsPath(aiProperties);
 
-// 2. Ler documentos obrigatórios
-const indexDoc = await read_file({
+// 2. Ler índice principal das Meta Specs
+const metaSpecsIndex = await read_file({
   target_file: `${metaSpecsPath}/index.md`,
 });
-const codeStandards = await read_file({
+
+// 3. NAVEGAÇÃO INTELIGENTE - Use os índices para descobrir estrutura
+const codeStandardsIndex = await read_file({
   target_file: `${metaSpecsPath}/technical/code-standards/index.md`,
 });
-const frontendArch = await read_file({
+
+const frontendArchIndex = await read_file({
   target_file: `${metaSpecsPath}/technical/frontend-architecture/index.md`,
 });
+
+// 4. OBRIGATÓRIO: Obter melhores práticas Angular via MCP
+const angularBestPractices = (await mcp_angular) - cli_get_best_practices();
+
+// 5. ANÁLISE CONTEXTUAL INTELIGENTE
+await performIntelligentAnalysis({
+  metaSpecsIndex: metaSpecsIndex,
+  codeStandardsIndex: codeStandardsIndex,
+  frontendArchIndex: frontendArchIndex,
+  featureContext: featureAnalysis,
+  angularBestPractices: angularBestPractices,
+});
 ```
+
+**🎯 PRINCÍPIOS DA NAVEGAÇÃO INTELIGENTE**:
+
+1. **Use os índices como mapa**: Cada `index.md` contém a estrutura e navegação
+2. **Análise contextual automática**: Baseada no tipo de funcionalidade
+3. **Descoberta dinâmica**: A IA descobre quais documentos são relevantes
+4. **Manutenção zero**: Mudanças nas Meta Specs não afetam o work.md
+
+**🔧 INTEGRAÇÃO COM MCP ANGULAR-CLI**:
+
+**SEMPRE execute antes de qualquer implementação Angular**:
+
+```typescript
+// 1. Obter melhores práticas Angular
+const bestPractices = (await mcp_angular) - cli_get_best_practices();
+
+// 2. Buscar documentação específica se necessário
+const angularDocs =
+  (await mcp_angular) -
+  cli_search_documentation({
+    query: 'standalone components signals inject',
+  });
+
+// 3. Aplicar práticas no contexto da funcionalidade
+const contextualPractices = await applyAngularPractices({
+  bestPractices: bestPractices,
+  featureContext: featureAnalysis,
+  existingPatterns: similarFeatures,
+});
+```
+
+**📋 ANÁLISE INTELIGENTE BASEADA EM ÍNDICES**:
+
+A IA deve:
+
+- [ ] **Analisar o índice principal** para entender a estrutura geral
+- [ ] **Navegar pelos índices** de code-standards e frontend-architecture
+- [ ] **Identificar seções relevantes** baseado no tipo de funcionalidade
+- [ ] **Ler documentos específicos** conforme identificado pelos índices
+- [ ] **Aplicar padrões identificados** no contexto da funcionalidade
+- [ ] **Validar consistência** com padrões existentes no codebase
 
 ##### 2.3: Documentos da Sessão
 
@@ -110,7 +159,59 @@ const frontendArch = await read_file({
 3. **layout-specification.md**: Especificações de UI/UX e layout ⭐ NOVO
 4. **plan.md**: Plano faseado de implementação (se já existir)
 
-##### 2.4: Documentos Contextuais
+##### 2.4: Descoberta Inteligente de Documentos
+
+**🎯 SISTEMA DE DESCOBERTA AUTOMÁTICA**:
+
+A IA deve usar os índices para descobrir automaticamente quais documentos são relevantes:
+
+```typescript
+// 1. Análise da funcionalidade específica
+const featureAnalysis = await analyzeFeatureContext({
+  featureName: folderName,
+  complexity: await estimateComplexity(),
+  domain: await identifyDomain(),
+  uiComponents: await identifyUIComponents(),
+  backendIntegration: await identifyBackendNeeds(),
+});
+
+// 2. DESCOBERTA INTELIGENTE - Use os índices para encontrar documentos relevantes
+const relevantDocuments = await discoverRelevantDocuments({
+  codeStandardsIndex: codeStandardsIndex,
+  frontendArchIndex: frontendArchIndex,
+  featureContext: featureAnalysis,
+  searchTerms: await generateSearchTerms(featureAnalysis),
+});
+
+// 3. LEITURA CONTEXTUAL - Leia apenas os documentos identificados
+for (const doc of relevantDocuments) {
+  const content = await read_file({ target_file: doc.path });
+  await analyzeDocumentContent({
+    document: content,
+    context: featureAnalysis,
+    angularBestPractices: angularBestPractices,
+  });
+}
+```
+
+**🧠 PRINCÍPIOS DA DESCOBERTA INTELIGENTE**:
+
+1. **Análise semântica dos índices**: A IA identifica seções relevantes pelos títulos e descrições
+2. **Busca contextual**: Usa termos relacionados à funcionalidade para encontrar documentos
+3. **Priorização automática**: Identifica quais documentos são mais importantes
+4. **Adaptação dinâmica**: Ajusta a seleção baseada no contexto específico
+
+**📋 PROCESSO DE DESCOBERTA**:
+
+A IA deve:
+
+- [ ] **Analisar índices** para entender a estrutura disponível
+- [ ] **Identificar seções relevantes** baseado no tipo de funcionalidade
+- [ ] **Priorizar documentos** por relevância contextual
+- [ ] **Ler documentos selecionados** de forma inteligente
+- [ ] **Aplicar conhecimento** no contexto da implementação
+
+##### 2.5: Documentos Contextuais Adicionais
 
 **Baseado na análise automática, leia adicionalmente**:
 
@@ -121,19 +222,142 @@ const frontendArch = await read_file({
 
 **Localização**: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
-##### 2.5: Context Summary
+##### 2.6: Descoberta Inteligente de Padrões Existentes
 
-**Após carregar contexto, gere automaticamente**:
+**🔍 BUSCA CONTEXTUAL INTELIGENTE**:
+
+Use busca semântica para descobrir padrões existentes de forma inteligente:
+
+```typescript
+// 1. Análise contextual da funcionalidade
+const featureContext = await analyzeFeatureContext({
+  featureName: folderName,
+  complexity: await estimateComplexity(),
+  domain: await identifyDomain(),
+  uiComponents: await identifyUIComponents(),
+  backendIntegration: await identifyBackendNeeds(),
+});
+
+// 2. BUSCA INTELIGENTE - Use termos contextuais para encontrar padrões
+const searchQueries = await generateContextualSearchQueries(featureContext);
+
+const similarFeatures = await codebase_search({
+  query: searchQueries.featurePatterns,
+  target_directories: ['src/app/features/'],
+});
+
+const similarComponents = await codebase_search({
+  query: searchQueries.componentPatterns,
+  target_directories: ['src/app/shared/ui-components/'],
+});
+
+const architecturalPatterns = await codebase_search({
+  query: searchQueries.architecturalPatterns,
+  target_directories: ['src/'],
+});
+
+// 3. ANÁLISE DE DECISÕES ANTERIORES
+const previousDecisions = await analyzeDecisionHistory({
+  featureType: featureContext.type,
+  domain: featureContext.domain,
+  similarFeatures: similarFeatures,
+});
+```
+
+**🧠 PRINCÍPIOS DA DESCOBERTA DE PADRÕES**:
+
+1. **Busca semântica**: Use termos relacionados ao contexto da funcionalidade
+2. **Análise contextual**: Identifique padrões baseados no tipo de funcionalidade
+3. **Priorização inteligente**: Foque nos padrões mais relevantes
+4. **Aprendizado contínuo**: Use decisões anteriores para melhorar buscas futuras
+
+**📋 PROCESSO DE DESCOBERTA DE PADRÕES**:
+
+A IA deve:
+
+- [ ] **Gerar termos de busca** baseados no contexto da funcionalidade
+- [ ] **Buscar implementações similares** usando busca semântica
+- [ ] **Analisar padrões encontrados** para identificar reutilização
+- [ ] **Mapear decisões anteriores** para evitar anti-padrões
+- [ ] **Identificar oportunidades** de reutilização de código
+- [ ] **Documentar padrões** para futuras referências
+
+##### 2.7: Context Summary Inteligente
+
+**Após carregar contexto via navegação inteligente, gere automaticamente**:
 
 ```markdown
 ## 🧠 Context Summary
 
 **Funcionalidade**: [Nome da funcionalidade]
 **Complexidade Estimada**: [Baixa/Média/Alta]
-**Padrões Identificados**: [Lista de padrões relevantes]
+**Documentos Analisados**: [Lista de documentos descobertos e lidos]
+**Padrões Identificados**: [Padrões extraídos dos documentos analisados]
 **Arquitetura Aplicável**: [Componentes e estruturas relevantes]
+**Padrões Existentes**: [Implementações similares encontradas no codebase]
 **Gaps de Conhecimento**: [Áreas que precisam de mais contexto]
+**Decisões Arquiteturais**: [Decisões anteriores aplicáveis]
+**Melhores Práticas Angular**: [Práticas obtidas via MCP angular-cli]
+**Padrões de Design System**: [Padrões os-* identificados]
+**Navegação Utilizada**: [Como a IA navegou pelos índices para descobrir documentos]
 ```
+
+##### 2.8: Aplicação Contextual do Conhecimento
+
+**🧠 SISTEMA DE APLICAÇÃO INTELIGENTE**:
+
+Após carregar toda a documentação, execute aplicação contextual:
+
+```typescript
+// 1. Aplicar padrões identificados
+const appliedPatterns = await applyIdentifiedPatterns({
+  codeStandards: codeStandardsAnalysis,
+  frontendArch: frontendArchAnalysis,
+  angularBestPractices: angularBestPractices,
+  existingPatterns: similarFeatures,
+  featureContext: featureAnalysis,
+});
+
+// 2. Gerar guidelines específicas para a funcionalidade
+const featureGuidelines = await generateFeatureGuidelines({
+  featureType: featureAnalysis.type,
+  complexity: featureAnalysis.complexity,
+  patterns: appliedPatterns,
+  constraints: featureAnalysis.constraints,
+});
+
+// 3. Validar consistência com padrões existentes
+const consistencyCheck = await validateConsistency({
+  proposedImplementation: featureGuidelines,
+  existingCodebase: similarFeatures,
+  architecturalRules: frontendArchAnalysis,
+});
+```
+
+**📋 CHECKLIST DE APLICAÇÃO CONTEXTUAL**:
+
+**Padrões de Código**:
+
+- [ ] Aplicar convenções de nomenclatura identificadas
+- [ ] Seguir estrutura de classes definida
+- [ ] Usar padrões de import corretos
+- [ ] Implementar error handling com Either pattern
+- [ ] Aplicar padrões Angular modernos (signals, inject, standalone)
+
+**Arquitetura**:
+
+- [ ] Seguir Feature-Based Architecture
+- [ ] Respeitar responsabilidades das camadas
+- [ ] Implementar comunicação entre features conforme padrão
+- [ ] Aplicar estratégias de state management identificadas
+- [ ] Seguir padrões de integração com backend
+
+**Design System**:
+
+- [ ] Usar componentes os-\* conforme especificado
+- [ ] Aplicar padrões de responsividade
+- [ ] Implementar acessibilidade conforme guidelines
+- [ ] Seguir padrões de tema e design tokens
 
 #### Passo 3: Busca e Atualização do Jira
 

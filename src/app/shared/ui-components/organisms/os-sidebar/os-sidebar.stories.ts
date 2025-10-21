@@ -72,6 +72,19 @@ const meta: Meta<OsSidebarComponent> = {
       control: { type: 'boolean' },
       description: 'Mostrar conteúdo personalizado',
     },
+    animation: {
+      control: { type: 'select' },
+      options: ['slide', 'fade', 'scale'],
+      description: 'Tipo de animação para mobile',
+    },
+    mobileBreakpoint: {
+      control: { type: 'number' },
+      description: 'Breakpoint para mobile (px)',
+    },
+    hapticFeedback: {
+      control: { type: 'boolean' },
+      description: 'Feedback háptico em dispositivos móveis',
+    },
   },
   tags: ['autodocs'],
 };
@@ -585,6 +598,119 @@ export const Interactive: Story = {
     docs: {
       description: {
         story: 'Sidebar interativa com controles para testar todas as propriedades.',
+      },
+    },
+  },
+};
+
+export const MobileOptimized: Story = {
+  args: {
+    items: sampleItems,
+    variant: 'default',
+    size: 'medium',
+    theme: 'light',
+    collapsed: false,
+    activeItemId: 'dashboard',
+    ariaLabel: 'Navegação lateral',
+    title: 'OrçaSonhos',
+    logo: null,
+    logoAlt: 'Logo',
+    showHeader: true,
+    showFooter: false,
+    showToggleButton: true,
+    showCustomContent: false,
+    animation: 'slide',
+    mobileBreakpoint: 768,
+    hapticFeedback: true,
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="height: 100vh; position: relative;">
+        <os-sidebar
+          [items]="items"
+          [variant]="variant"
+          [size]="size"
+          [theme]="theme"
+          [collapsed]="collapsed"
+          [activeItemId]="activeItemId"
+          [ariaLabel]="ariaLabel"
+          [title]="title"
+          [logo]="logo"
+          [logoAlt]="logoAlt"
+          [showHeader]="showHeader"
+          [showFooter]="showFooter"
+          [showToggleButton]="showToggleButton"
+          [showCustomContent]="showCustomContent"
+          [animation]="animation"
+          [mobileBreakpoint]="mobileBreakpoint"
+          [hapticFeedback]="hapticFeedback"
+          (itemClick)="itemClick($event)"
+          (navigate)="navigate($event)"
+          (collapseChange)="collapseChange($event)"
+          (openChange)="openChange($event)"
+          (backdropClick)="backdropClick($event)"
+        ></os-sidebar>
+        <div style="margin-left: 280px; padding: 20px;">
+          <h2>Conteúdo Principal</h2>
+          <p>Este é o conteúdo principal da página. Em dispositivos móveis, a sidebar será um overlay.</p>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar otimizada para mobile com overlay, backdrop e animações.',
+      },
+    },
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
+
+export const AnimationVariants: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 20px; height: 100vh;">
+        <div>
+          <h3>Slide Animation</h3>
+          <os-sidebar
+            [items]="items"
+            animation="slide"
+            [mobileBreakpoint]="768"
+            [hapticFeedback]="true"
+          ></os-sidebar>
+        </div>
+        <div>
+          <h3>Fade Animation</h3>
+          <os-sidebar
+            [items]="items"
+            animation="fade"
+            [mobileBreakpoint]="768"
+            [hapticFeedback]="true"
+          ></os-sidebar>
+        </div>
+        <div>
+          <h3>Scale Animation</h3>
+          <os-sidebar
+            [items]="items"
+            animation="scale"
+            [mobileBreakpoint]="768"
+            [hapticFeedback]="true"
+          ></os-sidebar>
+        </div>
+      </div>
+    `,
+    props: {
+      items: sampleItems,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração das diferentes animações disponíveis para mobile.',
       },
     },
   },
