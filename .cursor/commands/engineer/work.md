@@ -14,6 +14,21 @@ Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitH
 #$ARGUMENTS
 </folder>
 
+## Configurações e Flags (Otimizador de Contexto)
+
+- Modo de execução: `--mode=lite|standard|full` (default: lite)
+- Saída reduzida: `--quiet=true|false` (default: true)
+- Orçamento de tokens (pré-trabalho): `--maxTokensPreWork=<n>` (default: 1200)
+- Cache: `--cache.enabled=true|false` (default: true), `--cache.dir=temp/context-cache`, `--cache.ttlHours=24`
+- Docs: `--docs.angularBestPracticesTTLHours=24`, `--docs.maxSearchResults=5`
+- Leituras parciais: `--partialReads.planCurrentPhaseOnly=true`
+
+Observações:
+
+- Flags de execução têm prioridade sobre `ai.properties.md`.
+- Quando `quiet=true`, imprime apenas resumos (5-10 bullets) e caminhos/âncoras.
+- Quando o orçamento estourar, alterna para mini-resumo e adia leituras pesadas.
+
 ## Objetivo
 
 Implementar a funcionalidade seguindo o plano faseado, com foco na qualidade, padrões do projeto e aprovação entre etapas.
@@ -44,6 +59,9 @@ Se não estiver em uma feature branch:
 
 **SEMPRE execute este passo no início de cada sessão**:
 
+– Este passo respeita: `mode`, `quiet`, `maxTokensPreWork`, `cache` e `partialReads`.
+– Metaspecs e Angular Best Practices são lidos via cache por hash/TTL; se inalterados, reutilize TL;DR em `temp/context-cache/`.
+
 ##### 2.1: Análise de Contexto Automática
 
 **Execute automaticamente**:
@@ -58,6 +76,8 @@ Se não estiver em uma feature branch:
      target_directories: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto],
    });
    ```
+
+- Limite buscas a Top `docs.maxSearchResults` resultados e gere apenas resumo curto.
 
 2. **Geração de Context Summary**:
 
@@ -108,6 +128,8 @@ await performIntelligentAnalysis({
   angularBestPractices: angularBestPractices,
 });
 ```
+
+- Cacheie o TL;DR das Best Practices em `temp/context-cache/angular-best-practices.tldr.md` (TTL configurável) e referencie-o sem imprimir conteúdo completo.
 
 **🎯 PRINCÍPIOS DA NAVEGAÇÃO INTELIGENTE**:
 
@@ -249,6 +271,8 @@ await analyzeTestingRequirements({
 3. **layout-specification.md**: Especificações de UI/UX e layout ⭐ NOVO
 4. **plan.md**: Plano faseado de implementação (se já existir)
 
+– Quando `partialReads.planCurrentPhaseOnly=true`, extraia apenas a seção marcada como "Em Progresso ⏰" ou a próxima pendente do `plan.md`.
+
 ##### 2.4: Descoberta Inteligente de Documentos
 
 **🎯 SISTEMA DE DESCOBERTA AUTOMÁTICA**:
@@ -283,6 +307,8 @@ for (const doc of relevantDocuments) {
   });
 }
 ```
+
+- Restringir a leitura aos Top `docs.maxSearchResults` documentos relevantes e sempre produzir resumos concisos (não colar conteúdo integral).
 
 **🧠 PRINCÍPIOS DA DESCOBERTA INTELIGENTE**:
 
@@ -353,6 +379,8 @@ const previousDecisions = await analyzeDecisionHistory({
   similarFeatures: similarFeatures,
 });
 ```
+
+- Mantenha o resumo em no máximo 10 bullets e inclua apenas referências (caminhos/âncoras), evitando colar conteúdo integral de documentos.
 
 **🧠 PRINCÍPIOS DA DESCOBERTA DE PADRÕES**:
 
@@ -603,6 +631,8 @@ Leia todos os arquivos markdown na pasta da sessão:
 ### 3. Inicialização do Work Log
 
 Crie o arquivo `sessions/<folder>/work-log.md` se não existir:
+
+Observação: em execução com `quiet=true`, não imprimir o template no output; apenas criar/atualizar o arquivo.
 
 ## Template do Work-Log.md
 
