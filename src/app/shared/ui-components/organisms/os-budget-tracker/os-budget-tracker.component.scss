@@ -293,17 +293,38 @@
     gap: var(--os-spacing-xs);
     min-width: 0;
     transition: all var(--os-transition-fast);
+    border-radius: var(--os-border-radius-sm);
+    padding: var(--os-spacing-xs);
 
     &--clickable {
       cursor: pointer;
+      border: 2px solid transparent;
 
       &:hover {
         transform: translateY(-2px);
+        border-color: var(--os-color-primary);
+        background: var(--os-color-background-secondary);
       }
 
       &:active {
         transform: translateY(0);
       }
+
+      &:focus {
+        outline: 2px solid var(--os-color-primary);
+        outline-offset: 2px;
+      }
+    }
+
+    &--urgent {
+      border: 2px solid var(--os-color-error);
+      background: var(--os-color-background-error);
+      animation: pulse 2s infinite;
+    }
+
+    &--high {
+      border: 2px solid var(--os-color-warning);
+      background: var(--os-color-background-warning);
     }
   }
 
@@ -313,14 +334,39 @@
     background: var(--os-color-primary);
     border-radius: var(--os-border-radius-sm) var(--os-border-radius-sm) 0 0;
     transition: all var(--os-transition-fast);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    &:hover::after {
+      transform: translateX(100%);
+    }
 
     &--high {
       background: var(--os-color-warning);
+      box-shadow: 0 0 8px rgba(var(--os-color-warning-rgb), 0.3);
     }
 
     &--urgent {
       background: var(--os-color-error);
       animation: pulse 2s infinite;
+      box-shadow: 0 0 12px rgba(var(--os-color-error-rgb), 0.4);
     }
   }
 
@@ -473,6 +519,16 @@
 
     &__chart-bars {
       gap: var(--os-spacing-xs);
+      height: 100px; // Reduced height for mobile
+    }
+
+    &__chart-bar {
+      min-width: 40px; // Ensure minimum touch target
+
+      &--clickable {
+        min-height: 44px; // Touch target compliance
+        padding: var(--os-spacing-sm);
+      }
     }
 
     &__trend-info,
@@ -487,12 +543,44 @@
       align-items: flex-start;
       gap: var(--os-spacing-xs);
     }
+
+    &__alert {
+      padding: var(--os-spacing-md);
+      margin: var(--os-spacing-md) 0;
+
+      &--urgent {
+        animation: pulse 1.5s infinite; // Faster pulse on mobile
+      }
+    }
+
+    &__category {
+      padding: var(--os-spacing-sm);
+      font-size: var(--os-font-size-sm);
+    }
+  }
+
+  // Touch device optimizations
+  @media (hover: none) and (pointer: coarse) {
+    &__chart-bar--clickable {
+      &:hover {
+        transform: none; // Disable hover effects on touch
+        border-color: transparent;
+        background: transparent;
+      }
+    }
+
+    &__category--clickable {
+      &:hover {
+        transform: none; // Disable hover effects on touch
+      }
+    }
   }
 }
 
 // Animations
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

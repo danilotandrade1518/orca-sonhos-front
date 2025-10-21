@@ -461,7 +461,8 @@ export const WithAlerts: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Componente com alertas visuais para orçamento excedido',
+        story:
+          'Componente com alertas visuais aprimorados para orçamento excedido, incluindo animações pulse e cores semânticas',
       },
     },
   },
@@ -485,7 +486,8 @@ export const WithDrillDown: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Componente com drill-down habilitado para navegação profunda',
+        story:
+          'Componente com drill-down funcional para navegação profunda em categorias, incluindo estados visuais por categoria',
       },
     },
   },
@@ -534,6 +536,40 @@ export const HighAlertThreshold: Story = {
     docs: {
       description: {
         story: 'Componente com limite de alerta alto (90%)',
+      },
+    },
+  },
+};
+
+export const RefinedFeatures: Story = {
+  args: {
+    budgetData: {
+      ...mockBudgetData,
+      spentAmount: 4500,
+      remainingAmount: 500,
+      percentage: 90,
+      status: 'over-budget',
+      categoryColor: '#F59E0B',
+      categoryIcon: 'warning',
+      isUrgent: true,
+    },
+    variant: 'detailed',
+    size: 'large',
+    showCharts: true,
+    showTrends: true,
+    showProjections: true,
+    showStatus: true,
+    loading: false,
+    clickable: true,
+    showAlerts: true,
+    enableDrillDown: true,
+    alertThreshold: 80,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstração das funcionalidades refinadas: progresso por categoria, alertas visuais aprimorados, drill-down funcional e responsividade mobile',
       },
     },
   },

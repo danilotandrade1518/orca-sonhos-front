@@ -243,12 +243,20 @@ export class OsBudgetTrackerComponent {
     const data = this.budgetData();
     if (!data || !this.showCharts()) return null;
 
+    const monthly = data.monthlySpending.slice(-6);
+    const maxValue = Math.max(...data.monthlySpending.map((m) => m.percentage));
+    const average =
+      data.monthlySpending.reduce((sum, m) => sum + m.percentage, 0) / data.monthlySpending.length;
+
     return {
-      monthly: data.monthlySpending.slice(-6),
-      maxValue: Math.max(...data.monthlySpending.map((m) => m.percentage)),
-      average:
-        data.monthlySpending.reduce((sum, m) => sum + m.percentage, 0) /
-        data.monthlySpending.length,
+      monthly,
+      maxValue,
+      average,
+      bars: monthly.map((month) => ({
+        ...month,
+        visualState: this.getBarVisualState(month.percentage),
+        height: (month.percentage / maxValue) * 100,
+      })),
     };
   });
 
@@ -377,5 +385,38 @@ export class OsBudgetTrackerComponent {
       Geral: 'category',
     };
     return icons[category] || 'category';
+  }
+
+  getBarVisualState(percentage: number): 'normal' | 'high' | 'urgent' {
+    if (percentage >= 90) return 'urgent';
+    if (percentage >= 80) return 'high';
+    return 'normal';
+  }
+
+  getBarColor(percentage: number, categoryColor?: string): string {
+    const state = this.getBarVisualState(percentage);
+    const baseColor = categoryColor || 'var(--os-color-primary)';
+
+    switch (state) {
+      case 'urgent':
+        return 'var(--os-color-error)';
+      case 'high':
+        return 'var(--os-color-warning)';
+      default:
+        return baseColor;
+    }
+  }
+
+  getBarHeight(percentage: number, maxValue: number): number {
+    return Math.max((percentage / maxValue) * 100, 4); // Minimum 4px height
+  }
+
+  onBarClick(): void {
+    if (this.enableDrillDown()) {
+      const data = this.budgetData();
+      if (data) {
+        this.categoryClick.emit({ category: data.category, data });
+      }
+    }
   }
 }
