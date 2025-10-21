@@ -119,11 +119,7 @@ const frontendArch = await read_file({
 - Especificações de domínio relacionadas
 - Documentação técnica específica do contexto
 
-**Localização**:
-
-- Leia `meta_specs_path` do arquivo `ai.properties.md` na raiz do projeto
-- Se não configurado, use: `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
-- Caminho atual configurado: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
+**Localização**: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
 
 ##### 2.5: Context Summary
 
