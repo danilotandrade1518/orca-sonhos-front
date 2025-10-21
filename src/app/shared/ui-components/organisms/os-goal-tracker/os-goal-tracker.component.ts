@@ -1,12 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  inject,
+  OnInit,
+} from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
 import { OsMoneyDisplayComponent } from '../../molecules/os-money-display/os-money-display.component';
+import { OsDropdownComponent } from '../../molecules/os-dropdown/os-dropdown.component';
 
 export interface GoalTrackerData {
   id: string;
@@ -43,13 +55,16 @@ export interface ProgressHistory {
     OsIconComponent,
     OsProgressBarComponent,
     OsSpinnerComponent,
+    OsButtonComponent,
+    OsDropdownComponent,
   ],
   templateUrl: './os-goal-tracker.component.html',
   styleUrls: ['./os-goal-tracker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OsGoalTrackerComponent {
-  // Inputs
+export class OsGoalTrackerComponent implements OnInit {
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
   goalData = input.required<GoalTrackerData | null>();
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -58,18 +73,25 @@ export class OsGoalTrackerComponent {
   showHistory = input<boolean>(true);
   showContribution = input<boolean>(true);
   showStatus = input<boolean>(true);
+  showQuickActions = input<boolean>(true);
+  showFilters = input<boolean>(true);
+  showPriority = input<boolean>(true);
   loading = input<boolean>(false);
   clickable = input<boolean>(false);
+  enableHapticFeedback = input<boolean>(true);
 
-  // Outputs
   readonly goalClick = output<GoalTrackerData>();
   readonly refreshClick = output<void>();
   readonly actionClick = output<{ action: string; goal: GoalTrackerData }>();
+  readonly filterChange = output<{ status: string; priority: string }>();
+  readonly priorityChange = output<{ goalId: string; priority: string }>();
 
-  // Additional properties for template
   readonly ariaLabel = input<string | null>(null);
 
-  // Computed properties
+  readonly isMobile = signal(false);
+  readonly selectedStatus = signal<string>('all');
+  readonly selectedPriority = signal<string>('all');
+  readonly showQuickActionsMenu = signal(false);
   readonly progressPercentage = computed(() => {
     const data = this.goalData();
     if (!data || data.targetAmount <= 0) return 0;
@@ -145,7 +167,7 @@ export class OsGoalTrackerComponent {
     const data = this.goalData();
     if (!data || !this.showHistory()) return [];
 
-    return data.progressHistory.slice(-3).reverse(); // Last 3 entries
+    return data.progressHistory.slice(-3).reverse();
   });
 
   readonly contributionInfo = computed(() => {
@@ -158,7 +180,7 @@ export class OsGoalTrackerComponent {
     return {
       monthly: data.monthlyContribution,
       monthsNeeded,
-      isFeasible: monthsNeeded <= 12, // Consider feasible if less than 1 year
+      isFeasible: monthsNeeded <= 12,
     };
   });
 
@@ -223,7 +245,106 @@ export class OsGoalTrackerComponent {
       classes.push('os-goal-tracker--overdue');
     }
 
+    const data = this.goalData();
+    if (data?.priority === 'high') {
+      classes.push('os-goal-tracker--high-priority');
+    }
+
+    if (this.isMobile()) {
+      classes.push('os-goal-tracker--mobile');
+    }
+
     return classes.join(' ');
+  });
+
+  readonly quickActions = computed(() => {
+    const data = this.goalData();
+    if (!data) return [];
+
+    const actions = [
+      { id: 'refresh', label: 'Atualizar', icon: 'refresh', variant: 'secondary' as const },
+    ];
+
+    if (data.status === 'active') {
+      actions.push(
+        { id: 'pause', label: 'Pausar', icon: 'pause', variant: 'secondary' as const },
+        {
+          id: 'add_contribution',
+          label: 'Adicionar Contribuição',
+          icon: 'add',
+          variant: 'secondary' as const,
+        }
+      );
+    }
+
+    if (data.status === 'paused') {
+      actions.push({
+        id: 'resume',
+        label: 'Retomar',
+        icon: 'play_arrow',
+        variant: 'secondary' as const,
+      });
+    }
+
+    if (!this.isCompleted()) {
+      actions.push({
+        id: 'cancel',
+        label: 'Cancelar',
+        icon: 'cancel',
+        variant: 'secondary' as const,
+      });
+    }
+
+    return actions;
+  });
+
+  readonly statusFilterOptions = computed(() => [
+    { value: 'all', label: 'Todos os Status', icon: 'filter_list' },
+    { value: 'active', label: 'Ativos', icon: 'play_circle' },
+    { value: 'completed', label: 'Concluídos', icon: 'check_circle' },
+    { value: 'paused', label: 'Pausados', icon: 'pause_circle' },
+    { value: 'cancelled', label: 'Cancelados', icon: 'cancel' },
+  ]);
+
+  readonly priorityFilterOptions = computed(() => [
+    { value: 'all', label: 'Todas as Prioridades', icon: 'filter_list' },
+    { value: 'high', label: 'Alta Prioridade', icon: 'priority_high' },
+    { value: 'medium', label: 'Média Prioridade', icon: 'remove' },
+    { value: 'low', label: 'Baixa Prioridade', icon: 'keyboard_arrow_down' },
+  ]);
+
+  readonly priorityVisual = computed(() => {
+    const data = this.goalData();
+    if (!data) return { level: 0, color: 'var(--os-color-gray-400)', icon: 'remove' };
+
+    switch (data.priority) {
+      case 'high':
+        return { level: 3, color: 'var(--os-color-error)', icon: 'priority_high' };
+      case 'medium':
+        return { level: 2, color: 'var(--os-color-warning)', icon: 'remove' };
+      case 'low':
+        return { level: 1, color: 'var(--os-color-success)', icon: 'keyboard_arrow_down' };
+      default:
+        return { level: 0, color: 'var(--os-color-gray-400)', icon: 'remove' };
+    }
+  });
+
+  readonly isUrgent = computed(() => {
+    const data = this.goalData();
+    if (!data) return false;
+    return data.priority === 'high' && (this.isOverdue() || this.progressPercentage() < 25);
+  });
+
+  readonly accessibilityAttributes = computed(() => {
+    const data = this.goalData();
+    if (!data) return {};
+
+    return {
+      role: 'region',
+      'aria-label': `Meta: ${data.title}`,
+      'aria-describedby': `goal-${data.id}-description`,
+      'aria-live': this.isUrgent() ? 'assertive' : 'polite',
+    };
   });
 
   readonly cardVariant = computed(() => {
@@ -236,7 +357,6 @@ export class OsGoalTrackerComponent {
     return 'default';
   });
 
-  // Methods
   onCardClick(): void {
     const data = this.goalData();
     if (this.clickable() && data) {
@@ -284,5 +404,56 @@ export class OsGoalTrackerComponent {
       default:
         return 'var(--os-color-info)';
     }
+  }
+
+  onQuickAction(actionId: string): void {
+    const data = this.goalData();
+    if (!data) return;
+
+    this.triggerHapticFeedback();
+    this.actionClick.emit({ action: actionId, goal: data });
+  }
+
+  onStatusFilterChange(event: string | number | boolean): void {
+    const status = String(event);
+    this.selectedStatus.set(status);
+    this.triggerHapticFeedback();
+    this.filterChange.emit({ status, priority: this.selectedPriority() });
+  }
+
+  onPriorityFilterChange(event: string | number | boolean): void {
+    const priority = String(event);
+    this.selectedPriority.set(priority);
+    this.triggerHapticFeedback();
+    this.filterChange.emit({ status: this.selectedStatus(), priority });
+  }
+
+  onPriorityChange(priority: string): void {
+    const data = this.goalData();
+    if (!data) return;
+
+    this.triggerHapticFeedback();
+    this.priorityChange.emit({ goalId: data.id, priority });
+  }
+
+  toggleQuickActionsMenu(): void {
+    this.showQuickActionsMenu.set(!this.showQuickActionsMenu());
+    this.triggerHapticFeedback();
+  }
+
+  private triggerHapticFeedback(): void {
+    if (!this.enableHapticFeedback()) return;
+
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  }
+
+  ngOnInit(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, Breakpoints.Tablet])
+      .subscribe((result) => {
+        this.isMobile.set(result.matches);
+      });
   }
 }
