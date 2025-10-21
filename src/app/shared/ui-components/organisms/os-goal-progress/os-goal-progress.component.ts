@@ -1,4 +1,12 @@
-import { Component, computed, input, output, signal, ChangeDetectionStrategy, effect } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  ChangeDetectionStrategy,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import {
@@ -88,7 +96,7 @@ export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
             [showCelebration]="shouldShowCelebration()"
             [celebrationText]="celebrationText()"
           />
-          
+
           @if (shouldShowMilestone()) {
           <div class="os-goal-progress__milestone" [attr.aria-live]="'polite'">
             <os-icon name="celebration" size="sm" [attr.aria-hidden]="true" />
@@ -132,16 +140,17 @@ export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
       <div class="os-goal-progress__actions">
         <ng-content select="[slot=actions]"></ng-content>
       </div>
-      }
-
-      @if (shouldShowCelebration()) {
+      } @if (shouldShowCelebration()) {
       <div class="os-goal-progress__celebration" [attr.aria-live]="'assertive'">
         <div class="os-goal-progress__celebration-content">
           <os-icon name="celebration" size="lg" [attr.aria-hidden]="true" />
           <span class="os-goal-progress__celebration-text">{{ celebrationText() }}</span>
         </div>
         <div class="os-goal-progress__confetti">
-          <div class="os-goal-progress__confetti-piece" *ngFor="let piece of [1,2,3,4,5,6,7,8]"></div>
+          <div
+            class="os-goal-progress__confetti-piece"
+            *ngFor="let piece of [1, 2, 3, 4, 5, 6, 7, 8]"
+          ></div>
         </div>
       </div>
       }
@@ -323,41 +332,35 @@ export class OsGoalProgressComponent {
   });
 
   constructor() {
-    // Effect para detectar milestones e celebração
     effect(() => {
       const currentMilestone = this.currentMilestone();
       const reachedMilestones = this.reachedMilestones();
       const shouldShowMilestone = this.shouldShowMilestone();
       const shouldShowCelebration = this.shouldShowCelebration();
 
-      // Detectar novo milestone
       if (shouldShowMilestone && currentMilestone !== null) {
         const newReached = new Set(reachedMilestones);
         newReached.add(currentMilestone);
         this.reachedMilestones.set(newReached);
-        
+
         this.milestoneReached.emit({
           milestone: currentMilestone,
-          goal: this.goalData()
+          goal: this.goalData(),
         });
 
-        // Haptic feedback se habilitado
         if (this.enableHapticFeedback() && 'vibrate' in navigator) {
           navigator.vibrate(100);
         }
       }
 
-      // Detectar conclusão da meta
       if (shouldShowCelebration) {
         this.isCelebrating.set(true);
         this.goalCompleted.emit(this.goalData());
-        
-        // Haptic feedback para conclusão
+
         if (this.enableHapticFeedback() && 'vibrate' in navigator) {
           navigator.vibrate([100, 50, 100]);
         }
 
-        // Parar celebração após 3 segundos
         setTimeout(() => {
           this.isCelebrating.set(false);
         }, 3000);

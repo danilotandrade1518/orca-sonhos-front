@@ -300,7 +300,6 @@
     border-top: 1px solid $color-border;
   }
 
-  // Responsive Design
   @media (max-width: 768px) {
     &__header {
       flex-direction: column;
@@ -339,7 +338,6 @@
     }
   }
 
-  // Dark theme adjustments
   &--dark {
     .os-goal-progress__title {
       color: $color-on-surface;
@@ -367,7 +365,6 @@
     }
   }
 
-  // Hover effects
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
@@ -378,14 +375,12 @@
     transform: none;
   }
 
-  // Focus styles
   &:focus-within {
     outline: 2px solid $color-primary;
     outline-offset: 2px;
   }
 }
 
-// Animations
 @keyframes milestone-entrance {
   0% {
     opacity: 0;
@@ -413,7 +408,8 @@
 }
 
 @keyframes celebration-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -432,7 +428,6 @@
   }
 }
 
-// Reduced motion support
 @media (prefers-reduced-motion: reduce) {
   .os-goal-progress__milestone,
   .os-goal-progress__celebration,
