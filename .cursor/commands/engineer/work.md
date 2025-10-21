@@ -150,6 +150,96 @@ A IA deve:
 - [ ] **Aplicar padrões identificados** no contexto da funcionalidade
 - [ ] **Validar consistência** com padrões existentes no codebase
 
+##### 2.2.1: Navegação Explícita em Code Standards
+
+**🎯 NAVEGAÇÃO OBRIGATÓRIA EM CODE-STANDARDS**:
+
+A IA deve navegar explicitamente pelo índice de code-standards e ler documentos relevantes:
+
+```typescript
+// 1. Ler índice de code-standards
+const codeStandardsIndex = await read_file({
+  target_file: `${metaSpecsPath}/technical/code-standards/index.md`,
+});
+
+// 2. NAVEGAÇÃO EXPLÍCITA - Identificar seções relevantes
+const codeStandardsSections = await identifyRelevantSections({
+  index: codeStandardsIndex,
+  featureContext: featureAnalysis,
+  focusAreas: [
+    'angular-modern-patterns',
+    'design-system-patterns',
+    'naming-conventions',
+    'class-structure',
+    'error-handling',
+    'performance-optimization',
+  ],
+});
+
+// 3. LEITURA CONTEXTUAL - Ler documentos identificados
+for (const section of codeStandardsSections) {
+  const content = await read_file({ target_file: section.path });
+  await analyzeCodeStandards({
+    document: content,
+    section: section.name,
+    context: featureAnalysis,
+    angularBestPractices: angularBestPractices,
+  });
+}
+```
+
+**📋 CHECKLIST DE NAVEGAÇÃO EM CODE-STANDARDS**:
+
+- [ ] **Ler índice completo** de code-standards
+- [ ] **Identificar seções relevantes** baseado no contexto da funcionalidade
+- [ ] **Ler documentos específicos** conforme identificado
+- [ ] **Extrair padrões Angular modernos** aplicáveis
+- [ ] **Mapear convenções de nomenclatura** específicas
+- [ ] **Identificar padrões do Design System** (os-\*)
+- [ ] **Extrair guidelines de performance** e otimização
+- [ ] **Mapear padrões de error handling** (Either pattern)
+
+##### 2.2.2: Navegação Explícita em Estratégia de Testes
+
+**🧪 NAVEGAÇÃO OBRIGATÓRIA EM ESTRATÉGIA DE TESTES**:
+
+A IA deve navegar explicitamente pela documentação de testes:
+
+```typescript
+// 1. Buscar documentação de testes nas Meta Specs
+const testingDocs = await discoverTestingDocumentation({
+  metaSpecsPath: metaSpecsPath,
+  featureContext: featureAnalysis,
+});
+
+// 2. NAVEGAÇÃO EXPLÍCITA EM TESTES
+const testingStrategy = await read_file({
+  target_file: `${metaSpecsPath}/technical/frontend-architecture/testing-strategy.md`,
+});
+
+const testingStandards = await read_file({
+  target_file: `${metaSpecsPath}/technical/code-standards/testing-standards.md`,
+});
+
+// 3. ANÁLISE CONTEXTUAL DE TESTES
+await analyzeTestingRequirements({
+  testingStrategy: testingStrategy,
+  testingStandards: testingStandards,
+  featureContext: featureAnalysis,
+  complexity: featureAnalysis.complexity,
+});
+```
+
+**📋 CHECKLIST DE NAVEGAÇÃO EM TESTES**:
+
+- [ ] **Identificar estratégia de testes** aplicável à funcionalidade
+- [ ] **Mapear padrões de teste** (unitários, integração, E2E)
+- [ ] **Identificar ferramentas de teste** (vitest, MSW, Playwright)
+- [ ] **Extrair guidelines de cobertura** e qualidade
+- [ ] **Mapear padrões de mocking** e factories
+- [ ] **Identificar requisitos de acessibilidade** em testes
+- [ ] **Extrair padrões de teste de componentes** Angular
+
 ##### 2.3: Documentos da Sessão
 
 **Leia automaticamente se existirem**:
@@ -300,6 +390,8 @@ A IA deve:
 **Melhores Práticas Angular**: [Práticas obtidas via MCP angular-cli]
 **Padrões de Design System**: [Padrões os-* identificados]
 **Navegação Utilizada**: [Como a IA navegou pelos índices para descobrir documentos]
+**Code Standards Analisados**: [Seções específicas de code-standards navegadas]
+**Estratégia de Testes**: [Documentos de teste analisados e padrões identificados]
 ```
 
 ##### 2.8: Aplicação Contextual do Conhecimento
@@ -358,6 +450,15 @@ const consistencyCheck = await validateConsistency({
 - [ ] Aplicar padrões de responsividade
 - [ ] Implementar acessibilidade conforme guidelines
 - [ ] Seguir padrões de tema e design tokens
+
+**Estratégia de Testes**:
+
+- [ ] Aplicar padrões de teste identificados na documentação
+- [ ] Implementar testes unitários conforme guidelines
+- [ ] Configurar mocks e factories conforme padrões
+- [ ] Aplicar estratégias de cobertura identificadas
+- [ ] Implementar testes de acessibilidade quando aplicável
+- [ ] Seguir padrões de teste de componentes Angular
 
 #### Passo 3: Busca e Atualização do Jira
 

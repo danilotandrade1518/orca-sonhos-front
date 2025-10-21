@@ -1,8 +1,7 @@
-@use '../../theme/variables' as *;
-
 .os-navigation {
   display: flex;
   width: 100%;
+  position: relative;
 
   // Base styles
   &__list {
@@ -16,14 +15,22 @@
     &--horizontal {
       flex-direction: row;
       align-items: center;
-      gap: $spacing-xs;
+      gap: var(--os-spacing-xs, 4px);
     }
 
     // Vertical orientation
     &--vertical {
       flex-direction: column;
       align-items: stretch;
-      gap: $spacing-xs;
+      gap: var(--os-spacing-xs, 4px);
+    }
+
+    // Mobile optimizations
+    &--mobile {
+      &.os-navigation__list--horizontal {
+        flex-wrap: wrap;
+        gap: var(--os-spacing-xs, 4px);
+      }
     }
   }
 
@@ -32,6 +39,31 @@
     display: flex;
     align-items: center;
     margin-left: auto;
+    padding: var(--os-spacing-sm, 8px);
+  }
+
+  // Loading state
+  &__loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--os-color-background-rgb, 255, 255, 255), 0.8);
+    backdrop-filter: blur(2px);
+    z-index: 10;
+
+    &-spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--os-color-border, #e0e0e0);
+      border-top: 2px solid var(--os-color-primary, #1976d2);
+      border-radius: 50%;
+      animation: os-navigation-spin 1s linear infinite;
+    }
   }
 }
 
@@ -41,11 +73,11 @@
   &--default {
     .os-navigation__list {
       &--horizontal {
-        gap: $spacing-sm;
+        gap: var(--os-spacing-sm, 8px);
       }
 
       &--vertical {
-        gap: $spacing-sm;
+        gap: var(--os-spacing-sm, 8px);
       }
     }
   }
@@ -54,11 +86,11 @@
   &--minimal {
     .os-navigation__list {
       &--horizontal {
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
 
       &--vertical {
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
     }
   }
@@ -66,23 +98,43 @@
   // Sidebar variant
   &--sidebar {
     flex-direction: column;
+    background: var(--os-color-background-secondary, #f8f9fa);
+    border-radius: var(--os-border-radius-md, 8px);
+    padding: var(--os-spacing-md, 16px);
 
     .os-navigation__list {
       &--vertical {
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
     }
   }
 
   // Tabs variant
   &--tabs {
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--os-color-border, #e0e0e0);
+    background: var(--os-color-background, #ffffff);
 
     .os-navigation__list {
       &--horizontal {
         gap: 0;
       }
     }
+  }
+
+  // Mobile variant
+  &--mobile {
+    .os-navigation__list {
+      &--horizontal {
+        flex-wrap: wrap;
+        gap: var(--os-spacing-xs, 4px);
+      }
+    }
+  }
+
+  // Loading state
+  &--loading {
+    pointer-events: none;
+    opacity: 0.7;
   }
 }
 
@@ -92,11 +144,11 @@
   &--small {
     .os-navigation__list {
       &--horizontal {
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
 
       &--vertical {
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
     }
   }
@@ -105,11 +157,11 @@
   &--medium {
     .os-navigation__list {
       &--horizontal {
-        gap: $spacing-sm;
+        gap: var(--os-spacing-sm, 8px);
       }
 
       &--vertical {
-        gap: $spacing-sm;
+        gap: var(--os-spacing-sm, 8px);
       }
     }
   }
@@ -118,35 +170,35 @@
   &--large {
     .os-navigation__list {
       &--horizontal {
-        gap: $spacing-md;
+        gap: var(--os-spacing-md, 16px);
       }
 
       &--vertical {
-        gap: $spacing-md;
+        gap: var(--os-spacing-md, 16px);
       }
     }
   }
 }
 
 // Responsive design
-@media (max-width: $breakpoint-tablet) {
+@media (max-width: 768px) {
   .os-navigation {
     &--horizontal {
       .os-navigation__list {
         flex-wrap: wrap;
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
     }
   }
 }
 
-@media (max-width: $breakpoint-mobile) {
+@media (max-width: 576px) {
   .os-navigation {
     &--horizontal {
       .os-navigation__list {
         flex-direction: column;
         align-items: stretch;
-        gap: $spacing-xs;
+        gap: var(--os-spacing-xs, 4px);
       }
     }
 
@@ -155,6 +207,21 @@
         overflow-x: auto;
         flex-wrap: nowrap;
         gap: 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--os-color-border, #e0e0e0) transparent;
+
+        &::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--os-color-border, #e0e0e0);
+          border-radius: 2px;
+        }
       }
     }
   }
@@ -164,14 +231,20 @@
 .os-navigation {
   // Focus management
   &:focus-within {
-    outline: 2px solid $color-primary;
+    outline: 2px solid var(--os-color-primary, #1976d2);
     outline-offset: 2px;
+    border-radius: var(--os-border-radius-sm, 4px);
   }
 
   // High contrast mode
   @media (prefers-contrast: high) {
     &--tabs {
-      border-bottom-color: $color-text-primary;
+      border-bottom-color: var(--os-color-text-primary, #000000);
+      border-bottom-width: 2px;
+    }
+
+    &--sidebar {
+      border: 2px solid var(--os-color-text-primary, #000000);
     }
   }
 
@@ -181,6 +254,10 @@
       transition: none !important;
       animation: none !important;
     }
+
+    &__loading-spinner {
+      animation: none !important;
+    }
   }
 }
 
@@ -188,7 +265,46 @@
 @media (prefers-color-scheme: dark) {
   .os-navigation {
     &--tabs {
-      border-bottom-color: $color-border;
+      border-bottom-color: var(--os-color-border-dark, #404040);
+      background: var(--os-color-background-dark, #1a1a1a);
+    }
+
+    &--sidebar {
+      background: var(--os-color-background-secondary-dark, #2a2a2a);
+    }
+
+    &__loading {
+      background: rgba(var(--os-color-background-dark-rgb, 26, 26, 26), 0.8);
+    }
+  }
+}
+
+// Animations
+@keyframes os-navigation-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Micro-interactions
+.os-navigation {
+  // Hover effects for interactive elements
+  &__custom {
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Loading animation
+  &--loading {
+    .os-navigation__list {
+      opacity: 0.5;
+      transition: opacity 0.3s ease-in-out;
     }
   }
 }
