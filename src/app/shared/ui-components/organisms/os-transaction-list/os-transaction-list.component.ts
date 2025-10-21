@@ -7,9 +7,15 @@ import {
   input,
   output,
   signal,
+  inject,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
@@ -35,6 +41,9 @@ export interface Transaction {
   status: 'pending' | 'completed' | 'cancelled';
   account?: string;
   tags?: string[];
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  color?: string;
+  icon?: string;
   [key: string]: unknown;
 }
 
@@ -55,9 +64,11 @@ export interface TransactionListPagination {
   total: number;
 }
 
-export type TransactionListVariant = 'default' | 'compact' | 'detailed';
+export type TransactionListVariant = 'default' | 'compact' | 'detailed' | 'card';
 export type TransactionListSize = 'small' | 'medium' | 'large';
 export type TransactionListTheme = 'light' | 'dark';
+export type TransactionListLayout = 'table' | 'card' | 'list';
+export type TransactionListSortBy = 'date' | 'amount' | 'category' | 'type' | 'status' | 'priority';
 
 @Component({
   selector: 'os-transaction-list',
@@ -184,14 +195,14 @@ export type TransactionListTheme = 'light' | 'dark';
       }
 
       <!-- Transaction List -->
-      <div class="os-transaction-list__content">
+      <div class="os-transaction-list__content" #scrollContainer>
         @if (isLoading()) {
-        <div class="os-transaction-list__loading">
+        <div class="os-transaction-list__loading" role="status" aria-live="polite">
           <os-spinner [variant]="'default'" [size]="getSpinnerSize()" />
           <p class="os-transaction-list__loading-text">Carregando transações...</p>
         </div>
         } @else if (paginatedTransactions().length === 0) {
-        <div class="os-transaction-list__empty">
+        <div class="os-transaction-list__empty" role="status" aria-live="polite">
           <os-icon name="receipt" [size]="'lg'" />
           <h3 class="os-transaction-list__empty-title">{{ noDataTitle() }}</h3>
           <p class="os-transaction-list__empty-text">{{ noDataText() }}</p>
@@ -199,6 +210,64 @@ export type TransactionListTheme = 'light' | 'dark';
           <os-button variant="primary" [size]="getButtonSize()" icon="add" (buttonClick)="onAdd()">
             {{ addButtonText() }}
           </os-button>
+          }
+        </div>
+        } @else { @if (layout() === 'card') {
+        <div class="os-transaction-list__cards" role="list" aria-label="Lista de transações">
+          @for (transaction of paginatedTransactions(); track transaction.id) {
+          <div
+            class="os-transaction-list__card"
+            role="listitem"
+            [style.--category-color]="getTransactionCategoryColor(transaction)"
+            [style.--priority-color]="getTransactionPriorityColor(transaction)"
+            (click)="onTransactionClick(transaction)"
+            (keydown.enter)="onTransactionClick(transaction)"
+            (keydown.space)="onTransactionClick(transaction)"
+            tabindex="0"
+            [attr.aria-label]="
+              'Transação: ' +
+              transaction.description +
+              ', Valor: ' +
+              formatTransactionAmount(transaction.amount)
+            "
+          >
+            <div class="os-transaction-list__card-header">
+              <div class="os-transaction-list__card-icon">
+                <os-icon [name]="getTransactionIcon(transaction)" [size]="'md'" />
+              </div>
+              <div class="os-transaction-list__card-info">
+                <h4 class="os-transaction-list__card-title">{{ transaction.description }}</h4>
+                <p class="os-transaction-list__card-category">{{ transaction.category }}</p>
+              </div>
+              @if (enablePriorityIndicators() && transaction.priority) {
+              <div class="os-transaction-list__card-priority">
+                <os-icon [name]="getTransactionPriorityIcon(transaction)" [size]="'sm'" />
+              </div>
+              }
+            </div>
+            <div class="os-transaction-list__card-body">
+              <div
+                class="os-transaction-list__card-amount"
+                [class]="'os-transaction-list__card-amount--' + transaction.type"
+              >
+                {{ formatTransactionAmount(transaction.amount) }}
+              </div>
+              <div class="os-transaction-list__card-date">
+                {{ formatTransactionDate(transaction.date) }}
+              </div>
+            </div>
+            <div class="os-transaction-list__card-footer">
+              <span
+                class="os-transaction-list__card-status"
+                [class]="'os-transaction-list__card-status--' + transaction.status"
+              >
+                {{ getTransactionStatusText(transaction.status) }}
+              </span>
+              <span class="os-transaction-list__card-type">
+                {{ getTransactionTypeText(transaction.type) }}
+              </span>
+            </div>
+          </div>
           }
         </div>
         } @else {
@@ -222,7 +291,12 @@ export type TransactionListTheme = 'light' | 'dark';
             (pageChange)="onPageChange($event)"
           />
         </div>
-        }
+        } @if (enableInfiniteScroll() && isLoadingMore()) {
+        <div class="os-transaction-list__loading-more" role="status" aria-live="polite">
+          <os-spinner [variant]="'default'" [size]="'sm'" />
+          <span class="os-transaction-list__loading-more-text">Carregando mais transações...</span>
+        </div>
+        } }
       </div>
 
       <!-- Footer -->
@@ -255,12 +329,27 @@ export type TransactionListTheme = 'light' | 'dark';
     class: 'os-transaction-list-host',
   },
 })
-export class OsTransactionListComponent {
+export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
+  private breakpointObserver = inject(BreakpointObserver);
+  private elementRef = inject(ElementRef);
+
+  @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
+
+  private scrollObserver?: IntersectionObserver;
+  private resizeObserver?: ResizeObserver;
+  private isDestroyed = false;
+
   constructor() {
     // Update pagination total when filtered transactions change
     effect(() => {
       const filteredLength = this.filteredTransactions().length;
       this.pagination.update((p) => ({ ...p, total: filteredLength }));
+    });
+
+    // Mobile detection
+    effect(() => {
+      const isMobile = this.breakpointObserver.isMatched(Breakpoints.Handset);
+      this.isMobile.set(isMobile);
     });
   }
 
@@ -271,6 +360,12 @@ export class OsTransactionListComponent {
   size = input<TransactionListSize>('medium');
   variant = input<TransactionListVariant>('default');
   theme = input<TransactionListTheme>('light');
+  layout = input<TransactionListLayout>('table');
+  sortBy = input<TransactionListSortBy>('date');
+  enableInfiniteScroll = input<boolean>(false);
+  enableCategoryColors = input<boolean>(true);
+  enablePriorityIndicators = input<boolean>(true);
+  enableHapticFeedback = input<boolean>(true);
 
   // Display options
   showHeaderActions = input<boolean>(true);
@@ -313,6 +408,17 @@ export class OsTransactionListComponent {
   // Internal state
   private filters = signal<TransactionListFilter[]>([]);
   private sort = signal<TransactionListSort | null>(null);
+  private isMobile = signal<boolean>(false);
+  protected isLoadingMore = signal<boolean>(false);
+  private hasMoreData = signal<boolean>(true);
+  private categoryColors = signal<Record<string, string>>({});
+  private priorityColors = signal<Record<string, string>>({
+    low: 'var(--os-color-success)',
+    medium: 'var(--os-color-warning)',
+    high: 'var(--os-color-error)',
+    urgent: 'var(--os-color-error-dark)',
+  });
+
   protected pagination = signal<TransactionListPagination>({
     page: 0,
     pageSize: 10,
@@ -325,8 +431,10 @@ export class OsTransactionListComponent {
     const variant = `os-transaction-list--${this.variant()}`;
     const size = `os-transaction-list--${this.size()}`;
     const theme = `os-transaction-list--${this.theme()}`;
+    const layout = `os-transaction-list--${this.layout()}`;
+    const mobile = this.isMobile() ? 'os-transaction-list--mobile' : '';
 
-    return `${base} ${variant} ${size} ${theme}`.trim();
+    return `${base} ${variant} ${size} ${theme} ${layout} ${mobile}`.trim();
   });
 
   filteredTransactions = computed(() => {
@@ -521,6 +629,7 @@ export class OsTransactionListComponent {
       default: 'default',
       compact: 'compact',
       detailed: 'expanded',
+      card: 'compact',
     };
     return variantMap[this.variant()];
   }
@@ -548,6 +657,7 @@ export class OsTransactionListComponent {
       default: 'default',
       compact: 'striped',
       detailed: 'bordered',
+      card: 'default',
     };
     return variantMap[this.variant()];
   }
@@ -624,5 +734,189 @@ export class OsTransactionListComponent {
       pageSize: page.pageSize,
       total: this.totalItems(),
     });
+  }
+
+  // Lifecycle methods
+  ngAfterViewInit(): void {
+    this.setupInfiniteScroll();
+    this.setupResizeObserver();
+    this.generateCategoryColors();
+  }
+
+  ngOnDestroy(): void {
+    this.isDestroyed = true;
+    this.scrollObserver?.disconnect();
+    this.resizeObserver?.disconnect();
+  }
+
+  // New methods for enhanced functionality
+  private setupInfiniteScroll(): void {
+    if (!this.enableInfiniteScroll() || !this.scrollContainer) return;
+
+    this.scrollObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && this.hasMoreData() && !this.isLoadingMore()) {
+          this.loadMoreTransactions();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    this.scrollObserver.observe(this.scrollContainer.nativeElement);
+  }
+
+  private setupResizeObserver(): void {
+    this.resizeObserver = new ResizeObserver(() => {
+      if (!this.isDestroyed) {
+        this.generateCategoryColors();
+      }
+    });
+
+    this.resizeObserver.observe(this.elementRef.nativeElement);
+  }
+
+  private generateCategoryColors(): void {
+    const categories = [...new Set(this.transactions().map((t) => t.category))];
+    const colors = this.getCategoryColorPalette();
+
+    const categoryColorMap: Record<string, string> = {};
+    categories.forEach((category, index) => {
+      categoryColorMap[category] = colors[index % colors.length];
+    });
+
+    this.categoryColors.set(categoryColorMap);
+  }
+
+  private getCategoryColorPalette(): string[] {
+    return [
+      'var(--os-color-primary)',
+      'var(--os-color-secondary)',
+      'var(--os-color-success)',
+      'var(--os-color-warning)',
+      'var(--os-color-error)',
+      'var(--os-color-info)',
+      'var(--os-color-primary-light)',
+      'var(--os-color-secondary-light)',
+    ];
+  }
+
+  private loadMoreTransactions(): void {
+    if (this.isLoadingMore() || !this.hasMoreData()) return;
+
+    this.isLoadingMore.set(true);
+
+    // Simulate loading delay
+    setTimeout(() => {
+      if (!this.isDestroyed) {
+        this.isLoadingMore.set(false);
+        // Emit event to parent to load more data
+        this.pageChange.emit({
+          page: this.pagination().page + 1,
+          pageSize: this.pagination().pageSize,
+          total: this.totalItems(),
+        });
+      }
+    }, 500);
+  }
+
+  getTransactionCategoryColor(transaction: Transaction): string {
+    if (!this.enableCategoryColors()) return '';
+    return this.categoryColors()[transaction.category] || '';
+  }
+
+  getTransactionPriorityColor(transaction: Transaction): string {
+    if (!this.enablePriorityIndicators() || !transaction.priority) return '';
+    return this.priorityColors()[transaction.priority] || '';
+  }
+
+  getTransactionIcon(transaction: Transaction): string {
+    if (transaction.icon) return transaction.icon;
+
+    switch (transaction.type) {
+      case 'income':
+        return 'trending_up';
+      case 'expense':
+        return 'trending_down';
+      case 'transfer':
+        return 'swap_horiz';
+      default:
+        return 'receipt';
+    }
+  }
+
+  getTransactionPriorityIcon(transaction: Transaction): string {
+    if (!transaction.priority) return '';
+
+    switch (transaction.priority) {
+      case 'low':
+        return 'keyboard_arrow_down';
+      case 'medium':
+        return 'remove';
+      case 'high':
+        return 'keyboard_arrow_up';
+      case 'urgent':
+        return 'priority_high';
+      default:
+        return '';
+    }
+  }
+
+  formatTransactionAmount(amount: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(amount);
+  }
+
+  formatTransactionDate(date: Date): string {
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  getTransactionStatusText(status: string): string {
+    switch (status) {
+      case 'completed':
+        return 'Concluída';
+      case 'pending':
+        return 'Pendente';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return status;
+    }
+  }
+
+  getTransactionTypeText(type: string): string {
+    switch (type) {
+      case 'income':
+        return 'Receita';
+      case 'expense':
+        return 'Despesa';
+      case 'transfer':
+        return 'Transferência';
+      default:
+        return type;
+    }
+  }
+
+  triggerHapticFeedback(): void {
+    if (!this.enableHapticFeedback() || !this.isMobile()) return;
+
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  }
+
+  onTransactionClick(transaction: Transaction): void {
+    this.triggerHapticFeedback();
+    this.rowClick.emit(transaction);
+  }
+
+  onTransactionActionClick(action: OsDataTableAction, transaction: Transaction): void {
+    this.triggerHapticFeedback();
+    this.tableActionClick.emit(action);
   }
 }

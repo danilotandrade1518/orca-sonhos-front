@@ -76,8 +76,30 @@ Se não estiver em uma feature branch:
 **SEMPRE leia estes documentos**:
 
 1. **index.md** (Meta Specs): Visão geral do projeto
+   - Caminho: `{meta_specs_path}/index.md`
 2. **code-standards**: Padrões de código e boas práticas
+   - Caminho: `{meta_specs_path}/technical/code-standards/index.md`
 3. **frontend-architecture**: Arquitetura específica do frontend
+   - Caminho: `{meta_specs_path}/technical/frontend-architecture/index.md`
+
+**Exemplo de Execução**:
+
+```typescript
+// 1. Ler ai.properties.md para obter meta_specs_path
+const aiProperties = await read_file({ target_file: 'ai.properties.md' });
+const metaSpecsPath = extractMetaSpecsPath(aiProperties);
+
+// 2. Ler documentos obrigatórios
+const indexDoc = await read_file({
+  target_file: `${metaSpecsPath}/index.md`,
+});
+const codeStandards = await read_file({
+  target_file: `${metaSpecsPath}/technical/code-standards/index.md`,
+});
+const frontendArch = await read_file({
+  target_file: `${metaSpecsPath}/technical/frontend-architecture/index.md`,
+});
+```
 
 ##### 2.3: Documentos da Sessão
 
@@ -97,7 +119,11 @@ Se não estiver em uma feature branch:
 - Especificações de domínio relacionadas
 - Documentação técnica específica do contexto
 
-**Localização**: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
+**Localização**:
+
+- Leia `meta_specs_path` do arquivo `ai.properties.md` na raiz do projeto
+- Se não configurado, use: `https://github.com/danilotandrade1518/orca-sonhos-meta-specs`
+- Caminho atual configurado: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
 
 ##### 2.5: Context Summary
 
@@ -173,8 +199,11 @@ if (searchResults.issues?.length > 0) {
 **Documentos Obrigatórios das Meta Specs**:
 
 - **index.md** (Meta Specs): Visão geral do projeto e contexto
+  - Caminho: `{meta_specs_path}/index.md`
 - **code-standards**: Padrões de código e boas práticas
+  - Caminho: `{meta_specs_path}/technical/code-standards/index.md`
 - **frontend-architecture**: Arquitetura específica do frontend
+  - Caminho: `{meta_specs_path}/technical/frontend-architecture/index.md`
 
 **Documentos Adicionais das Meta Specs** (conforme necessário):
 
