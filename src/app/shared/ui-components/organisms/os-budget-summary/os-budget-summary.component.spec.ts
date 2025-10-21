@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { vi } from 'vitest';
 import { OsBudgetSummaryComponent, BudgetSummaryData } from './os-budget-summary.component';
 
 describe('OsBudgetSummaryComponent', () => {
@@ -288,6 +289,215 @@ describe('OsBudgetSummaryComponent', () => {
       fixture.componentRef.setInput('budgetData', negativeData);
 
       expect(component.isOverBudget()).toBe(true);
+    });
+  });
+
+  describe('New Features', () => {
+    describe('Chart Data', () => {
+      it('should calculate chart data correctly', () => {
+        fixture.componentRef.setInput('showChart', true);
+        const chartData = component.chartData();
+
+        expect(chartData).toBeTruthy();
+        expect(chartData?.spent.value).toBe(3000);
+        expect(chartData?.remaining.value).toBe(2000);
+        expect(chartData?.spent.percentage).toBe(60);
+        expect(chartData?.remaining.percentage).toBe(40);
+      });
+
+      it('should return null when showChart is false', () => {
+        fixture.componentRef.setInput('showChart', false);
+        expect(component.chartData()).toBeNull();
+      });
+
+      it('should handle over-budget chart data', () => {
+        const overBudgetData = { ...mockBudgetData, spentAmount: 6000, remainingAmount: -1000 };
+        fixture.componentRef.setInput('budgetData', overBudgetData);
+        fixture.componentRef.setInput('showChart', true);
+
+        const chartData = component.chartData();
+        expect(chartData?.overBudget.value).toBe(1000);
+        expect(chartData?.remaining.value).toBe(0);
+      });
+    });
+
+    describe('Aria Label', () => {
+      it('should generate effective aria label from data', () => {
+        const ariaLabel = component.effectiveAriaLabel();
+        expect(ariaLabel).toContain('Orçamento Mensal');
+        expect(ariaLabel).toContain('60%');
+        expect(ariaLabel).toContain('on-track');
+      });
+
+      it('should use custom aria label when provided', () => {
+        fixture.componentRef.setInput('ariaLabel', 'Custom Budget Summary');
+        expect(component.effectiveAriaLabel()).toBe('Custom Budget Summary');
+      });
+
+      it('should return default label when no data', () => {
+        fixture.componentRef.setInput('budgetData', null);
+        expect(component.effectiveAriaLabel()).toBe('Resumo de orçamento');
+      });
+    });
+
+    describe('Card Classes', () => {
+      it('should generate correct card classes', () => {
+        const classes = component.cardClasses();
+        expect(classes).toContain('os-budget-summary');
+        expect(classes).toContain('os-budget-summary--default');
+        expect(classes).toContain('os-budget-summary--medium');
+      });
+
+      it('should include clickable class when clickable', () => {
+        fixture.componentRef.setInput('clickable', true);
+        const classes = component.cardClasses();
+        expect(classes).toContain('os-budget-summary--clickable');
+      });
+
+      it('should include loading class when loading', () => {
+        fixture.componentRef.setInput('loading', true);
+        const classes = component.cardClasses();
+        expect(classes).toContain('os-budget-summary--loading');
+      });
+
+      it('should include animated class when animated', () => {
+        fixture.componentRef.setInput('animated', true);
+        const classes = component.cardClasses();
+        expect(classes).toContain('os-budget-summary--animated');
+      });
+    });
+
+    describe('Chart Methods', () => {
+      it('should return correct chart type for compact variant', () => {
+        fixture.componentRef.setInput('variant', 'compact');
+        expect(component.getChartType()).toBe('pie');
+      });
+
+      it('should return correct chart type for default variant', () => {
+        fixture.componentRef.setInput('variant', 'default');
+        expect(component.getChartType()).toBe('bar');
+      });
+
+      it('should emit chart click event', () => {
+        const emitSpy = vi.spyOn(component.chartClicked, 'emit');
+        component.onChartClick('pie');
+        expect(emitSpy).toHaveBeenCalledWith({ type: 'pie', data: mockBudgetData });
+      });
+    });
+
+    describe('Total Highlight', () => {
+      it('should return highlight class when highlightTotals is true', () => {
+        fixture.componentRef.setInput('highlightTotals', true);
+        expect(component.getTotalHighlightClass()).toBe('os-budget-summary__total--highlighted');
+      });
+
+      it('should return empty string when highlightTotals is false', () => {
+        fixture.componentRef.setInput('highlightTotals', false);
+        expect(component.getTotalHighlightClass()).toBe('');
+      });
+    });
+
+    describe('Output Events', () => {
+      it('should emit cardClicked when card is clicked and clickable', () => {
+        const emitSpy = vi.spyOn(component.cardClicked, 'emit');
+        fixture.componentRef.setInput('clickable', true);
+        component.onCardClick();
+        expect(emitSpy).toHaveBeenCalledWith(mockBudgetData);
+      });
+
+      it('should not emit cardClicked when not clickable', () => {
+        const emitSpy = vi.spyOn(component.cardClicked, 'emit');
+        fixture.componentRef.setInput('clickable', false);
+        component.onCardClick();
+        expect(emitSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Loading State', () => {
+      it('should show loading state when loading is true', () => {
+        fixture.componentRef.setInput('loading', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__loading')).toBeTruthy();
+        expect(compiled.querySelector('.os-budget-summary__skeleton')).toBeTruthy();
+      });
+
+      it('should not show loading state when loading is false', () => {
+        fixture.componentRef.setInput('loading', false);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__loading')).toBeNull();
+      });
+    });
+
+    describe('Chart Rendering', () => {
+      it('should show chart when showChart is true', () => {
+        fixture.componentRef.setInput('showChart', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__chart')).toBeTruthy();
+      });
+
+      it('should not show chart when showChart is false', () => {
+        fixture.componentRef.setInput('showChart', false);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__chart')).toBeNull();
+      });
+
+      it('should show pie chart for compact variant', () => {
+        fixture.componentRef.setInput('variant', 'compact');
+        fixture.componentRef.setInput('showChart', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__pie-chart')).toBeTruthy();
+        expect(compiled.querySelector('.os-budget-summary__bar-chart')).toBeNull();
+      });
+
+      it('should show bar chart for default variant', () => {
+        fixture.componentRef.setInput('variant', 'default');
+        fixture.componentRef.setInput('showChart', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.os-budget-summary__bar-chart')).toBeTruthy();
+        expect(compiled.querySelector('.os-budget-summary__pie-chart')).toBeNull();
+      });
+    });
+
+    describe('Accessibility', () => {
+      it('should have correct ARIA attributes', () => {
+        fixture.detectChanges();
+        const compiled = fixture.nativeElement;
+        const card = compiled.querySelector('os-card');
+
+        expect(card.getAttribute('role')).toBe('region');
+        expect(card.getAttribute('aria-label')).toContain('Orçamento Mensal');
+      });
+
+      it('should have chart toggle with correct ARIA label', () => {
+        fixture.componentRef.setInput('showChart', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        const toggle = compiled.querySelector('.os-budget-summary__chart-toggle');
+        expect(toggle.getAttribute('aria-label')).toBe('Alternar tipo de gráfico');
+      });
+
+      it('should have loading state with correct ARIA attributes', () => {
+        fixture.componentRef.setInput('loading', true);
+        fixture.detectChanges();
+
+        const compiled = fixture.nativeElement;
+        const loading = compiled.querySelector('.os-budget-summary__loading');
+        expect(loading.getAttribute('aria-live')).toBe('polite');
+        expect(loading.getAttribute('aria-label')).toBe('Carregando dados do orçamento');
+      });
     });
   });
 });

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -43,6 +43,16 @@ export class OsBudgetSummaryComponent {
   showStatus = input<boolean>(true);
   showDates = input<boolean>(false);
   clickable = input<boolean>(false);
+  showChart = input<boolean>(true);
+  loading = input<boolean>(false);
+  highlightTotals = input<boolean>(true);
+  animated = input<boolean>(true);
+  ariaLabel = input<string>('');
+  ariaDescribedBy = input<string>('');
+
+  // Outputs
+  cardClicked = output<BudgetSummaryData>();
+  chartClicked = output<{ type: 'pie' | 'bar'; data: BudgetSummaryData }>();
 
   // Computed properties
   readonly progressPercentage = computed(() => {
@@ -89,11 +99,58 @@ export class OsBudgetSummaryComponent {
     };
   });
 
+  readonly chartData = computed(() => {
+    const data = this.budgetData();
+    if (!data || !this.showChart()) return null;
+
+    const spent = data.spentAmount;
+    const remaining = Math.max(0, data.remainingAmount);
+    const overBudget = Math.max(0, data.spentAmount - data.totalBudget);
+
+    return {
+      spent: { value: spent, percentage: (spent / data.totalBudget) * 100, color: 'var(--os-color-primary)' },
+      remaining: { value: remaining, percentage: (remaining / data.totalBudget) * 100, color: 'var(--os-color-success)' },
+      overBudget: { value: overBudget, percentage: (overBudget / data.totalBudget) * 100, color: 'var(--os-color-error)' }
+    };
+  });
+
+  readonly effectiveAriaLabel = computed(() => {
+    const data = this.budgetData();
+    if (!data) return this.ariaLabel() || 'Resumo de orçamento';
+
+    const customLabel = this.ariaLabel();
+    if (customLabel) return customLabel;
+
+    return `Resumo do orçamento ${data.name}: ${data.percentage}% utilizado, ${data.status}`;
+  });
+
+  readonly cardClasses = computed(() => {
+    const variant = this.variant();
+    const size = this.size();
+    const clickable = this.clickable();
+    const loading = this.loading();
+    const animated = this.animated();
+
+    return [
+      'os-budget-summary',
+      `os-budget-summary--${variant}`,
+      `os-budget-summary--${size}`,
+      clickable ? 'os-budget-summary--clickable' : '',
+      loading ? 'os-budget-summary--loading' : '',
+      animated ? 'os-budget-summary--animated' : ''
+    ].filter(Boolean).join(' ');
+  });
+
   // Methods
   onCardClick(): void {
     if (this.clickable() && this.budgetData()) {
-      // Emit event or handle navigation
-      console.log('Budget card clicked:', this.budgetData()?.id);
+      this.cardClicked.emit(this.budgetData()!);
+    }
+  }
+
+  onChartClick(type: 'pie' | 'bar'): void {
+    if (this.budgetData()) {
+      this.chartClicked.emit({ type, data: this.budgetData()! });
     }
   }
 
@@ -109,5 +166,14 @@ export class OsBudgetSummaryComponent {
       default:
         return 'var(--os-color-info)';
     }
+  }
+
+  getTotalHighlightClass(): string {
+    if (!this.highlightTotals()) return '';
+    return 'os-budget-summary__total--highlighted';
+  }
+
+  getChartType(): 'pie' | 'bar' {
+    return this.variant() === 'compact' ? 'pie' : 'bar';
   }
 }

@@ -1,7 +1,7 @@
 @if (budgetData(); as data) {
 <os-card [variant]="variant() === 'compact' ? 'flat' : 'default'" [size]="size()" [clickable]="clickable()"
-    (click)="onCardClick()"
-    [class]="'os-budget-summary os-budget-summary--' + variant() + ' os-budget-summary--' + size()">
+    (click)="onCardClick()" [class]="cardClasses()" [attr.aria-label]="effectiveAriaLabel()"
+    [attr.aria-describedby]="ariaDescribedBy() || null" role="region">
     <!-- Header -->
     <div class="os-budget-summary__header">
         <div class="os-budget-summary__title-section">
@@ -38,9 +38,10 @@
     <!-- Financial Summary -->
     <div class="os-budget-summary__financial">
         <div class="os-budget-summary__amount-group">
-            <div class="os-budget-summary__amount">
+            <div class="os-budget-summary__amount" [class]="getTotalHighlightClass()">
                 <span class="os-budget-summary__amount-label">Orçamento Total</span>
-                <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()"></os-money-display>
+                <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()"
+                    [class]="highlightTotals() ? 'os-budget-summary__total--highlighted' : ''"></os-money-display>
             </div>
 
             <div class="os-budget-summary__amount">
@@ -56,6 +57,44 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart Section -->
+    @if (showChart() && chartData(); as chart) {
+    <div class="os-budget-summary__chart" [attr.aria-label]="'Gráfico de distribuição do orçamento'">
+        <div class="os-budget-summary__chart-header">
+            <span class="os-budget-summary__chart-title">Distribuição</span>
+            <button class="os-budget-summary__chart-toggle" (click)="onChartClick(getChartType())"
+                [attr.aria-label]="'Alternar tipo de gráfico'">
+                <os-icon [name]="getChartType() === 'pie' ? 'bar_chart' : 'pie_chart'" size="sm"></os-icon>
+            </button>
+        </div>
+
+        @if (getChartType() === 'pie') {
+        <div class="os-budget-summary__pie-chart">
+            <div class="os-budget-summary__pie-slice" [style.background]="chart.spent.color"
+                [style.transform]="'rotate(0deg) scale(' + (chart.spent.percentage / 100) + ')'"
+                [attr.aria-label]="'Gasto: ' + chart.spent.value + ' reais'">
+            </div>
+            <div class="os-budget-summary__pie-slice" [style.background]="chart.remaining.color"
+                [style.transform]="'rotate(' + (chart.spent.percentage * 3.6) + 'deg) scale(' + (chart.remaining.percentage / 100) + ')'"
+                [attr.aria-label]="'Restante: ' + chart.remaining.value + ' reais'">
+            </div>
+        </div>
+        } @else {
+        <div class="os-budget-summary__bar-chart">
+            <div class="os-budget-summary__bar-group">
+                <div class="os-budget-summary__bar" [style.height.%]="chart.spent.percentage"
+                    [style.background]="chart.spent.color" [attr.aria-label]="'Gasto: ' + chart.spent.value + ' reais'">
+                </div>
+                <div class="os-budget-summary__bar" [style.height.%]="chart.remaining.percentage"
+                    [style.background]="chart.remaining.color"
+                    [attr.aria-label]="'Restante: ' + chart.remaining.value + ' reais'">
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
 
     <!-- Dates Section (only for detailed variant) -->
     @if (variant() === 'detailed' && showDates() && formattedDates(); as dates) {
@@ -87,6 +126,21 @@
         <span class="os-budget-summary__compact-status" [style.color]="getStatusColor()">
             {{ statusInfo().label }}
         </span>
+    </div>
+    }
+
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="os-budget-summary__loading" aria-live="polite" aria-label="Carregando dados do orçamento">
+        <div class="os-budget-summary__skeleton">
+            <div class="os-budget-summary__skeleton-header"></div>
+            <div class="os-budget-summary__skeleton-progress"></div>
+            <div class="os-budget-summary__skeleton-amounts">
+                <div class="os-budget-summary__skeleton-amount"></div>
+                <div class="os-budget-summary__skeleton-amount"></div>
+                <div class="os-budget-summary__skeleton-amount"></div>
+            </div>
+        </div>
     </div>
     }
 </os-card>
