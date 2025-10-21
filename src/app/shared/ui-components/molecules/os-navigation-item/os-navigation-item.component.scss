@@ -79,9 +79,7 @@
     border: none;
     background: none;
     cursor: pointer;
-    transition:
-      background-color 0.2s ease-in-out,
-      color 0.2s ease-in-out,
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
       transform 0.15s ease-in-out;
     border-radius: var(--os-border-radius-sm);
     position: relative;
@@ -104,11 +102,11 @@
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
-      
+
       &:hover:not(:disabled) {
         transform: none;
       }
-      
+
       &:active:not(:disabled) {
         transform: none;
       }
@@ -247,7 +245,7 @@
   &__expand-icon {
     margin-left: auto;
     transition: transform 0.2s ease-in-out;
-    
+
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }

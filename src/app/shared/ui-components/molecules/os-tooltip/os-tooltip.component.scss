@@ -51,6 +51,23 @@
   &--disabled {
     opacity: 0.6;
     pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  &--mobile {
+    cursor: pointer;
+  }
+
+  &--interactive {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:active {
+      opacity: 0.8;
+    }
   }
 
   &__content {
@@ -63,6 +80,24 @@
     white-space: pre-wrap;
     box-shadow: var(--os-shadow-md);
     z-index: 1000;
+    pointer-events: auto;
+
+    &--animated {
+      animation: tooltip-fade-in 200ms ease-out forwards;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    &--interactive {
+      pointer-events: auto;
+      cursor: auto;
+
+      &:hover {
+        box-shadow: var(--os-shadow-lg);
+      }
+    }
 
     &--small {
       font-size: var(--os-font-size-xs);
@@ -202,5 +237,34 @@
         max-width: 150px;
       }
     }
+  }
+}
+
+@keyframes tooltip-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tooltip-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@supports (prefers-reduced-motion: reduce) {
+  .os-tooltip__content--animated {
+    animation: none !important;
+    transition: none !important;
   }
 }

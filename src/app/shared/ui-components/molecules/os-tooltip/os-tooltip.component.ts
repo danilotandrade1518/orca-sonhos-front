@@ -1,5 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  output,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 export type OsTooltipPosition = 'above' | 'below' | 'left' | 'right' | 'before' | 'after';
@@ -13,6 +25,7 @@ export type OsTooltipVariant =
   | 'warning'
   | 'info'
   | 'success';
+export type OsTooltipRole = 'tooltip' | 'status' | 'alert';
 
 @Component({
   selector: 'os-tooltip',
@@ -23,14 +36,22 @@ export type OsTooltipVariant =
       [class]="containerClass()"
       [attr.data-variant]="variant()"
       [attr.data-size]="size()"
-      [attr.data-position]="position()"
+      [attr.data-position]="effectivePosition()"
+      [attr.data-mobile]="isMobile()"
+      [attr.data-interactive]="interactive()"
+      [attr.role]="role()"
+      [attr.aria-describedby]="ariaDescribedby()"
+      [attr.aria-label]="ariaLabel()"
       [matTooltip]="tooltipText()"
       [matTooltipPosition]="matPosition()"
       [matTooltipDisabled]="disabled()"
-      [matTooltipHideDelay]="hideDelay()"
-      [matTooltipShowDelay]="showDelay()"
-      [matTooltipTouchGestures]="touchGestures()"
+      [matTooltipHideDelay]="effectiveHideDelay()"
+      [matTooltipShowDelay]="effectiveShowDelay()"
+      [matTooltipTouchGestures]="effectiveTouchGestures()"
       [matTooltipClass]="tooltipClass()"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+      (click)="onMobileClick()"
     >
       <ng-content />
     </div>
@@ -42,19 +63,50 @@ export type OsTooltipVariant =
   },
 })
 export class OsTooltipComponent {
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
+
   tooltipText = input<string>('');
   position = input<OsTooltipPosition>('above');
   size = input<OsTooltipSize>('medium');
   variant = input<OsTooltipVariant>('default');
+  role = input<OsTooltipRole>('tooltip');
   disabled = input(false);
   hideDelay = input<number>(0);
   showDelay = input<number>(0);
   touchGestures = input<'auto' | 'on' | 'off'>('auto');
   maxWidth = input<number>(200);
+  smartPositioning = input(true);
+  interactive = input(false);
+  ariaLabel = input<string | null>(null);
+  ariaDescribedby = input<string | null>(null);
+  animated = input(true);
+
+  tooltipShow = output<void>();
+  tooltipHide = output<void>();
 
   private _isVisible = signal(false);
+  private _isMobile = signal(false);
+  private _effectivePosition = signal<OsTooltipPosition>('above');
 
   isVisible = computed(() => this._isVisible());
+  isMobile = computed(() => this._isMobile());
+  effectivePosition = computed(() => this._effectivePosition());
+
+  effectiveHideDelay = computed(() => {
+    return this.isMobile() ? 1500 : this.hideDelay();
+  });
+
+  effectiveShowDelay = computed(() => {
+    return this.isMobile() ? 0 : this.showDelay();
+  });
+
+  effectiveTouchGestures = computed(() => {
+    if (this.touchGestures() !== 'auto') {
+      return this.touchGestures();
+    }
+    return this.isMobile() ? 'on' : 'off';
+  });
 
   containerClass = computed(() => {
     const classes = ['os-tooltip'];
@@ -71,6 +123,18 @@ export class OsTooltipComponent {
       classes.push('os-tooltip--disabled');
     }
 
+    if (this.isMobile()) {
+      classes.push('os-tooltip--mobile');
+    }
+
+    if (this.interactive()) {
+      classes.push('os-tooltip--interactive');
+    }
+
+    if (this.animated()) {
+      classes.push('os-tooltip--animated');
+    }
+
     return classes.join(' ');
   });
 
@@ -85,11 +149,20 @@ export class OsTooltipComponent {
       classes.push(`os-tooltip__content--${this.size()}`);
     }
 
+    if (this.interactive()) {
+      classes.push('os-tooltip__content--interactive');
+    }
+
+    if (this.animated()) {
+      classes.push('os-tooltip__content--animated');
+    }
+
     return classes.join(' ');
   });
 
   matPosition = computed(() => {
-    switch (this.position()) {
+    const position = this.effectivePosition();
+    switch (position) {
       case 'above':
         return 'above';
       case 'below':
@@ -108,6 +181,13 @@ export class OsTooltipComponent {
   });
 
   constructor() {
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, Breakpoints.Tablet])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this._isMobile.set(result.matches);
+      });
+
     effect(() => {
       if (this.tooltipText()) {
         this._isVisible.set(true);
@@ -115,5 +195,36 @@ export class OsTooltipComponent {
         this._isVisible.set(false);
       }
     });
+
+    effect(() => {
+      if (this.smartPositioning()) {
+        this._effectivePosition.set(this.calculateSmartPosition());
+      } else {
+        this._effectivePosition.set(this.position());
+      }
+    });
+  }
+
+  onMouseEnter(): void {
+    if (!this.disabled() && !this.isMobile()) {
+      this.tooltipShow.emit();
+    }
+  }
+
+  onMouseLeave(): void {
+    if (!this.disabled() && !this.isMobile()) {
+      this.tooltipHide.emit();
+    }
+  }
+
+  onMobileClick(): void {
+    if (this.isMobile() && !this.disabled()) {
+      this.tooltipShow.emit();
+    }
+  }
+
+  private calculateSmartPosition(): OsTooltipPosition {
+    const requestedPosition = this.position();
+    return requestedPosition;
   }
 }

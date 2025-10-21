@@ -12,9 +12,9 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
   standalone: true,
   imports: [CommonModule, RouterModule, OsIconComponent],
   template: `
-    <div 
-      [class]="containerClass()" 
-      [attr.data-variant]="variant()" 
+    <div
+      [class]="containerClass()"
+      [attr.data-variant]="variant()"
       [attr.data-size]="size()"
       [attr.role]="role()"
       [attr.aria-describedby]="ariaDescribedBy()"
@@ -34,9 +34,9 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
         (keydown.space)="handleKeyDown($any($event))"
       >
         @if (icon()) {
-        <os-icon 
-          [name]="icon()" 
-          [size]="getIconSize()" 
+        <os-icon
+          [name]="icon()"
+          [size]="getIconSize()"
           [variant]="getIconVariant()"
           [attr.aria-hidden]="true"
         />
@@ -45,19 +45,14 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
           <ng-content />
         </span>
         @if (hasSubNav()) {
-        <os-icon 
-          [name]="isExpanded() ? 'expand_less' : 'expand_more'" 
+        <os-icon
+          [name]="isExpanded() ? 'expand_less' : 'expand_more'"
           [size]="'sm'"
           [attr.aria-hidden]="true"
           class="os-navigation-item__expand-icon"
         />
-        }
-        @if (badge() && badge()! > 0) {
-        <span 
-          [class]="badgeClass()" 
-          [attr.aria-label]="getBadgeAriaLabel()"
-          role="status"
-        >
+        } @if (badge() && badge()! > 0) {
+        <span [class]="badgeClass()" [attr.aria-label]="getBadgeAriaLabel()" role="status">
           {{ badge()! > 99 ? '99+' : badge()! }}
         </span>
         }
@@ -75,9 +70,9 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
         (keydown.space)="handleKeyDown($any($event))"
       >
         @if (icon()) {
-        <os-icon 
-          [name]="icon()" 
-          [size]="getIconSize()" 
+        <os-icon
+          [name]="icon()"
+          [size]="getIconSize()"
           [variant]="getIconVariant()"
           [attr.aria-hidden]="true"
         />
@@ -86,25 +81,19 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
           <ng-content />
         </span>
         @if (hasSubNav()) {
-        <os-icon 
-          [name]="isExpanded() ? 'expand_less' : 'expand_more'" 
+        <os-icon
+          [name]="isExpanded() ? 'expand_less' : 'expand_more'"
           [size]="'sm'"
           [attr.aria-hidden]="true"
           class="os-navigation-item__expand-icon"
         />
-        }
-        @if (badge() && badge()! > 0) {
-        <span 
-          [class]="badgeClass()" 
-          [attr.aria-label]="getBadgeAriaLabel()"
-          role="status"
-        >
+        } @if (badge() && badge()! > 0) {
+        <span [class]="badgeClass()" [attr.aria-label]="getBadgeAriaLabel()" role="status">
           {{ badge()! > 99 ? '99+' : badge()! }}
         </span>
         }
       </button>
-      }
-      @if (hasSubNav() && isExpanded()) {
+      } @if (hasSubNav() && isExpanded()) {
       <div class="os-navigation-item__subnav" role="group">
         <ng-content select="[osSubNav]" />
       </div>
@@ -236,16 +225,17 @@ export class OsNavigationItemComponent {
     if (this.ariaLabel()) {
       return this.ariaLabel();
     }
-    const badgeText = this.badge() && this.badge()! > 0 
-      ? ` (${this.badge()! > 99 ? '99+' : this.badge()!} notifications)` 
-      : '';
+    const badgeText =
+      this.badge() && this.badge()! > 0
+        ? ` (${this.badge()! > 99 ? '99+' : this.badge()!} notifications)`
+        : '';
     return `${this.label()}${badgeText}`;
   });
 
   getBadgeAriaLabel(): string {
     const count = this.badge()!;
-    return count > 99 
-      ? 'More than 99 notifications' 
+    return count > 99
+      ? 'More than 99 notifications'
       : `${count} notification${count > 1 ? 's' : ''}`;
   }
 
@@ -269,7 +259,7 @@ export class OsNavigationItemComponent {
         const mouseEvent = new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
-          view: window
+          view: window,
         });
         this.itemClick.emit(mouseEvent);
       }
