@@ -80,6 +80,23 @@ const meta: Meta<OsHeaderComponent> = {
       control: { type: 'boolean' },
       description: 'Cabeçalho fixo',
     },
+    enableAnimations: {
+      control: { type: 'boolean' },
+      description: 'Habilitar animações',
+    },
+    enableHapticFeedback: {
+      control: { type: 'boolean' },
+      description: 'Habilitar feedback háptico',
+    },
+    mobileMenuAnimation: {
+      control: { type: 'select' },
+      options: ['slide', 'fade', 'scale'],
+      description: 'Animação do menu mobile',
+    },
+    stickyThreshold: {
+      control: { type: 'number' },
+      description: 'Threshold para sticky behavior',
+    },
   },
   tags: ['autodocs'],
 };
@@ -123,6 +140,10 @@ export const Default: Story = {
     size: 'medium',
     theme: 'light',
     sticky: false,
+    enableAnimations: true,
+    enableHapticFeedback: false,
+    mobileMenuAnimation: 'slide',
+    stickyThreshold: 0,
   },
   render: (args) => ({
     props: args,
@@ -148,6 +169,105 @@ export const Default: Story = {
         (userMenuItemClick)="userMenuItemClick($event)"
         (mobileNavigationClick)="mobileNavigationClick($event)"
         (mobileMenuToggle)="mobileMenuToggle($event)"
+      ></os-header>
+    `,
+  }),
+};
+
+export const WithAnimations: Story = {
+  args: {
+    ...Default.args,
+    enableAnimations: true,
+    enableHapticFeedback: true,
+    mobileMenuAnimation: 'slide',
+    sticky: true,
+    stickyThreshold: 100,
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="height: 200vh; padding: 20px;">
+        <p>Role a página para ver o comportamento sticky com animações</p>
+        <os-header
+          [logoText]="logoText"
+          [logoRoute]="logoRoute"
+          [navigationItems]="navigationItems"
+          [showUserMenu]="showUserMenu"
+          [userName]="userName"
+          [userRole]="userRole"
+          [userInitials]="userInitials"
+          [userMenuItems]="userMenuItems"
+          [actions]="actions"
+          [showMobileMenu]="showMobileMenu"
+          [variant]="variant"
+          [size]="size"
+          [theme]="theme"
+          [sticky]="sticky"
+          [enableAnimations]="enableAnimations"
+          [enableHapticFeedback]="enableHapticFeedback"
+          [mobileMenuAnimation]="mobileMenuAnimation"
+          [stickyThreshold]="stickyThreshold"
+          (logoClick)="logoClick($event)"
+          (navigationClick)="navigationClick($event)"
+          (actionClick)="actionClick($event)"
+          (userMenuItemClick)="userMenuItemClick($event)"
+          (mobileNavigationClick)="mobileNavigationClick($event)"
+          (mobileMenuToggle)="mobileMenuToggle($event)"
+          (stickyChange)="stickyChange($event)"
+          (scrollChange)="scrollChange($event)"
+        ></os-header>
+        <div style="padding: 20px;">
+          <h2>Conteúdo da página</h2>
+          <p>Este é um exemplo de conteúdo para demonstrar o comportamento sticky do header.</p>
+          <p>Role a página para ver as animações em ação.</p>
+        </div>
+      </div>
+    `,
+  }),
+};
+
+export const MobileAnimations: Story = {
+  args: {
+    ...Default.args,
+    enableAnimations: true,
+    mobileMenuAnimation: 'fade',
+    showMobileMenu: true,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <os-header
+        [logoText]="logoText"
+        [logoRoute]="logoRoute"
+        [navigationItems]="navigationItems"
+        [showUserMenu]="showUserMenu"
+        [userName]="userName"
+        [userRole]="userRole"
+        [userInitials]="userInitials"
+        [userMenuItems]="userMenuItems"
+        [actions]="actions"
+        [showMobileMenu]="showMobileMenu"
+        [variant]="variant"
+        [size]="size"
+        [theme]="theme"
+        [sticky]="sticky"
+        [enableAnimations]="enableAnimations"
+        [enableHapticFeedback]="enableHapticFeedback"
+        [mobileMenuAnimation]="mobileMenuAnimation"
+        [stickyThreshold]="stickyThreshold"
+        (logoClick)="logoClick($event)"
+        (navigationClick)="navigationClick($event)"
+        (actionClick)="actionClick($event)"
+        (userMenuItemClick)="userMenuItemClick($event)"
+        (mobileNavigationClick)="mobileNavigationClick($event)"
+        (mobileMenuToggle)="mobileMenuToggle($event)"
+        (stickyChange)="stickyChange($event)"
+        (scrollChange)="scrollChange($event)"
       ></os-header>
     `,
   }),
