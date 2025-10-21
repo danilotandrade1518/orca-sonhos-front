@@ -1,61 +1,78 @@
-@use '../../theme/variables' as *;
-
 .os-alert {
   display: flex;
   align-items: flex-start;
-  gap: $spacing-medium;
-  padding: $spacing-medium;
-  border-radius: $border-radius-medium;
+  gap: var(--os-spacing-4);
+  padding: var(--os-spacing-4);
+  border-radius: var(--os-border-radius-md);
   border-left: 4px solid;
-  background: $color-background;
-  color: $color-text-primary;
-  font-family: $font-family-base;
-  line-height: $line-height-base;
+  background: var(--os-color-background-primary);
+  color: var(--os-color-text-primary);
+  font-family: var(--os-font-family-base);
+  line-height: var(--os-line-height-base);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (prefers-contrast: more) {
+    border-width: 2px;
+  }
+
+  &--animated {
+    animation: alert-entrance 0.3s ease-in-out;
+  }
+
+  &--dismissing {
+    animation: alert-exit 0.3s ease-in-out forwards;
+  }
 
   &--success {
-    border-left-color: $color-success;
-    background: rgba($color-success, 0.1);
-    color: $color-success-dark;
+    border-left-color: var(--os-color-success);
+    background: var(--os-color-success-bg);
+    color: var(--os-color-success-text);
   }
 
   &--warning {
-    border-left-color: $color-warning;
-    background: rgba($color-warning, 0.1);
-    color: $color-warning-dark;
+    border-left-color: var(--os-color-warning);
+    background: var(--os-color-warning-bg);
+    color: var(--os-color-warning-text);
   }
 
   &--error {
-    border-left-color: $color-error;
-    background: rgba($color-error, 0.1);
-    color: $color-error-dark;
+    border-left-color: var(--os-color-error);
+    background: var(--os-color-error-bg);
+    color: var(--os-color-error-text);
   }
 
   &--info {
-    border-left-color: $color-info;
-    background: rgba($color-info, 0.1);
-    color: $color-info-dark;
+    border-left-color: var(--os-color-info);
+    background: var(--os-color-info-bg);
+    color: var(--os-color-info-text);
   }
 
   &--small {
-    padding: $spacing-small;
-    font-size: $font-size-small;
-    gap: $spacing-small;
+    padding: var(--os-spacing-2);
+    font-size: var(--os-font-size-sm);
+    gap: var(--os-spacing-2);
   }
 
   &--medium {
-    padding: $spacing-medium;
-    font-size: $font-size-medium;
-    gap: $spacing-medium;
+    padding: var(--os-spacing-4);
+    font-size: var(--os-font-size-base);
+    gap: var(--os-spacing-4);
   }
 
   &--large {
-    padding: $spacing-large;
-    font-size: $font-size-large;
-    gap: $spacing-large;
+    padding: var(--os-spacing-6);
+    font-size: var(--os-font-size-lg);
+    gap: var(--os-spacing-6);
   }
 
   &--dismissible {
-    padding-right: $spacing-small;
+    padding-right: var(--os-spacing-2);
   }
 
   &__icon {
@@ -69,36 +86,36 @@
   }
 
   &__title {
-    font-weight: $font-weight-semibold;
-    margin-bottom: $spacing-xs;
+    font-weight: var(--os-font-weight-semibold);
+    margin-bottom: var(--os-spacing-1);
     font-size: inherit;
   }
 
   &__message {
-    font-weight: $font-weight-normal;
+    font-weight: var(--os-font-weight-normal);
     line-height: inherit;
   }
+}
 
-  &__dismiss {
-    flex-shrink: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: $spacing-xs;
-    border-radius: $border-radius-small;
-    color: inherit;
-    opacity: 0.7;
-    transition: opacity 0.2s ease-in-out;
+@keyframes alert-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    &:hover {
-      opacity: 1;
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    &:focus {
-      outline: 2px solid currentColor;
-      outline-offset: 2px;
-    }
+@keyframes alert-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(16px);
   }
 }
 

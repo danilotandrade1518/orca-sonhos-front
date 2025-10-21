@@ -121,13 +121,19 @@ describe('OsAlertComponent', () => {
     });
 
     it('should emit dismiss event when dismiss button is clicked', () => {
+      vi.useFakeTimers();
       const emitSpy = vi.spyOn(component.dismiss, 'emit');
       fixture.componentRef.setInput('dismissible', true);
+      fixture.componentRef.setInput('animated', false);
       fixture.detectChanges();
 
       component.onDismiss();
 
+      vi.advanceTimersByTime(1);
+
       expect(emitSpy).toHaveBeenCalled();
+
+      vi.useRealTimers();
     });
   });
 
@@ -184,10 +190,10 @@ describe('OsAlertComponent', () => {
   });
 
   describe('Accessibility', () => {
-    it('should have proper ARIA attributes', () => {
+    it('should have proper ARIA attributes with default role', () => {
       const alertElement = fixture.nativeElement.querySelector('.os-alert');
       expect(alertElement.getAttribute('role')).toBe('alert');
-      expect(alertElement.getAttribute('aria-live')).toBe('polite');
+      expect(alertElement.getAttribute('aria-live')).toBe('assertive');
     });
 
     it('should have proper dismiss button accessibility', () => {
@@ -196,6 +202,30 @@ describe('OsAlertComponent', () => {
 
       const dismissButton = fixture.nativeElement.querySelector('os-button');
       expect(dismissButton.getAttribute('aria-label')).toBe('Fechar alerta');
+    });
+
+    it('should support custom role', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('role')).toBe('status');
+      expect(alertElement.getAttribute('aria-live')).toBe('polite');
+    });
+
+    it('should support custom aria-label', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Custom alert message');
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('aria-label')).toBe('Custom alert message');
+    });
+
+    it('should have default aria-label based on type', () => {
+      fixture.componentRef.setInput('type', 'success');
+      fixture.detectChanges();
+
+      expect(component['effectiveAriaLabel']()).toBe('Mensagem de sucesso');
     });
   });
 
@@ -227,6 +257,109 @@ describe('OsAlertComponent', () => {
       expect(titleElement).toBeTruthy();
       expect(messageElement).toBeTruthy();
       expect(dismissButton).toBeTruthy();
+    });
+  });
+
+  describe('Auto Dismiss', () => {
+    it('should not auto-dismiss by default', () => {
+      expect(component.autoDismiss()).toBe(false);
+    });
+
+    it('should auto-dismiss when enabled', () => {
+      vi.useFakeTimers();
+      const dismissSpy = vi.spyOn(component.dismiss, 'emit');
+      fixture.componentRef.setInput('autoDismiss', true);
+      fixture.componentRef.setInput('autoDismissDelay', 100);
+      fixture.detectChanges();
+
+      expect(component.visible()).toBe(true);
+
+      vi.advanceTimersByTime(101);
+
+      expect(component.visible()).toBe(false);
+
+      vi.advanceTimersByTime(1);
+      expect(dismissSpy).toHaveBeenCalled();
+
+      vi.useRealTimers();
+    });
+  });
+
+  describe('Animations', () => {
+    it('should be animated by default', () => {
+      expect(component.animated()).toBe(true);
+    });
+
+    it('should apply animated class when animated', () => {
+      fixture.detectChanges();
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.classList.contains('os-alert--animated')).toBe(true);
+    });
+
+    it('should not apply animated class when not animated', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.classList.contains('os-alert--animated')).toBe(false);
+    });
+  });
+
+  describe('Visibility', () => {
+    it('should be visible by default', () => {
+      expect(component.visible()).toBe(true);
+    });
+
+    it('should hide when dismissed', () => {
+      vi.useFakeTimers();
+      fixture.componentRef.setInput('dismissible', true);
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+
+      component.onDismiss();
+
+      expect(component.visible()).toBe(false);
+
+      vi.advanceTimersByTime(1);
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement).toBeFalsy();
+
+      vi.useRealTimers();
+    });
+  });
+
+  describe('Data Attributes', () => {
+    it('should set data-type attribute', () => {
+      fixture.componentRef.setInput('type', 'warning');
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('data-type')).toBe('warning');
+    });
+
+    it('should set data-size attribute', () => {
+      fixture.componentRef.setInput('size', 'large');
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('data-size')).toBe('large');
+    });
+
+    it('should set data-role attribute', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('data-role')).toBe('status');
+    });
+
+    it('should set data-animated attribute', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+
+      const alertElement = fixture.nativeElement.querySelector('.os-alert');
+      expect(alertElement.getAttribute('data-animated')).toBe('false');
     });
   });
 });
