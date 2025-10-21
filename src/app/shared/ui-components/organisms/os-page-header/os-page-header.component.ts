@@ -1,7 +1,8 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
@@ -25,10 +26,19 @@ export interface PageHeaderAction {
   standalone: true,
   imports: [CommonModule, RouterModule, OsButtonComponent, OsIconComponent],
   template: `
-    <header class="os-page-header" [class]="headerClasses()" [attr.aria-label]="ariaLabel()">
+    <header
+      class="os-page-header"
+      [class]="headerClasses()"
+      [attr.aria-label]="ariaLabel()"
+      role="banner"
+    >
       <div class="os-page-header__content">
         @if (breadcrumbs().length > 0) {
-        <nav class="os-page-header__breadcrumbs" aria-label="Breadcrumb">
+        <nav
+          class="os-page-header__breadcrumbs"
+          [attr.aria-label]="breadcrumbAriaLabel()"
+          role="navigation"
+        >
           <ol class="os-page-header__breadcrumb-list">
             @for (item of breadcrumbs(); track $index; let isLast = $last) {
             <li class="os-page-header__breadcrumb-item">
@@ -37,6 +47,8 @@ export interface PageHeaderAction {
                 class="os-page-header__breadcrumb-link"
                 [routerLink]="item.route"
                 [attr.aria-current]="isLast ? 'page' : null"
+                [attr.aria-label]="'Ir para ' + item.label"
+                (click)="onBreadcrumbClick(item)"
               >
                 {{ item.label }}
               </a>
@@ -45,6 +57,7 @@ export interface PageHeaderAction {
                 class="os-page-header__breadcrumb-text"
                 [class]="getBreadcrumbClasses(item, isLast)"
                 [attr.aria-current]="isLast ? 'page' : null"
+                [attr.aria-label]="isLast ? 'Página atual: ' + item.label : item.label"
               >
                 {{ item.label }}
               </span>
@@ -85,7 +98,7 @@ export interface PageHeaderAction {
           </div>
 
           @if (actions().length > 0) {
-          <div class="os-page-header__actions">
+          <div class="os-page-header__actions" [attr.aria-label]="actionsAriaLabel()" role="group">
             @for (action of actions(); track action.label) {
             <os-button
               [variant]="action.variant || 'secondary'"
@@ -93,6 +106,7 @@ export interface PageHeaderAction {
               [disabled]="action.disabled || false"
               [loading]="action.loading || false"
               [icon]="action.icon || ''"
+              [attr.aria-label]="action.label + (action.loading ? ' (carregando)' : '')"
               (clicked)="onActionClick(action)"
             >
               {{ action.label }}
@@ -103,7 +117,11 @@ export interface PageHeaderAction {
         </div>
 
         @if (description()) {
-        <div class="os-page-header__description" [id]="descriptionId()">
+        <div
+          class="os-page-header__description"
+          [id]="descriptionId()"
+          [attr.aria-describedby]="titleId()"
+        >
           {{ description() }}
         </div>
         }
@@ -114,6 +132,8 @@ export interface PageHeaderAction {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsPageHeaderComponent {
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
   readonly title = input.required<string>();
   readonly subtitle = input<string | null>(null);
   readonly description = input<string | null>(null);
@@ -124,12 +144,16 @@ export class OsPageHeaderComponent {
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly theme = input<'light' | 'dark'>('light');
   readonly ariaLabel = input<string | null>(null);
+  readonly enableHapticFeedback = input(false);
+  readonly breadcrumbCollapse = input(false);
 
   readonly actionClick = output<PageHeaderAction>();
+  readonly breadcrumbClick = output<BreadcrumbItem>();
 
   readonly titleId = signal(`page-title-${Math.random().toString(36).substr(2, 9)}`);
   readonly subtitleId = signal(`page-subtitle-${Math.random().toString(36).substr(2, 9)}`);
   readonly descriptionId = signal(`page-description-${Math.random().toString(36).substr(2, 9)}`);
+  readonly isMobile = signal(false);
 
   readonly headerClasses = computed(() => {
     const classes = ['os-page-header'];
@@ -152,6 +176,14 @@ export class OsPageHeaderComponent {
       classes.push('os-page-header--with-description');
     }
 
+    if (this.isMobile()) {
+      classes.push('os-page-header--mobile');
+    }
+
+    if (this.breadcrumbCollapse()) {
+      classes.push('os-page-header--breadcrumb-collapsed');
+    }
+
     return classes.join(' ');
   });
 
@@ -163,6 +195,28 @@ export class OsPageHeaderComponent {
     };
     return sizeMap[this.size()];
   });
+
+  readonly breadcrumbAriaLabel = computed(() => {
+    const breadcrumbs = this.breadcrumbs();
+    if (breadcrumbs.length === 0) return null;
+
+    const labels = breadcrumbs.map((item) => item.label);
+    return `Navegação: ${labels.join(' > ')}`;
+  });
+
+  readonly actionsAriaLabel = computed(() => {
+    const actions = this.actions();
+    if (actions.length === 0) return null;
+
+    const labels = actions.map((action) => action.label);
+    return `Ações disponíveis: ${labels.join(', ')}`;
+  });
+
+  constructor() {
+    this.breakpointObserver.observe(['(max-width: 768px)']).subscribe((result) => {
+      this.isMobile.set(result.matches);
+    });
+  }
 
   getBreadcrumbClasses(item: BreadcrumbItem, isLast: boolean): string {
     const classes = ['os-page-header__breadcrumb-text'];
@@ -180,7 +234,19 @@ export class OsPageHeaderComponent {
 
   onActionClick(action: PageHeaderAction): void {
     if (!action.disabled && !action.loading) {
+      if (this.enableHapticFeedback() && 'vibrate' in navigator) {
+        navigator.vibrate(50);
+      }
       this.actionClick.emit(action);
+    }
+  }
+
+  onBreadcrumbClick(item: BreadcrumbItem): void {
+    if (!item.disabled && item.route) {
+      if (this.enableHapticFeedback() && 'vibrate' in navigator) {
+        navigator.vibrate(30);
+      }
+      this.breadcrumbClick.emit(item);
     }
   }
 }

@@ -11,6 +11,28 @@
   align-items: center;
   justify-content: center;
   padding: var(--os-spacing-md);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &--visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &--animated {
+    &.os-modal--entering {
+      animation: modalEnter 0.3s ease-out;
+    }
+
+    &.os-modal--entered {
+      animation: none;
+    }
+
+    &.os-modal--leaving {
+      animation: modalLeave 0.3s ease-in;
+    }
+  }
 
   &--centered {
     align-items: center;
@@ -30,6 +52,16 @@
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     cursor: pointer;
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    &:focus {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
+    }
   }
 
   &__container {
@@ -311,5 +343,46 @@
 
   .os-modal__actions {
     border-top-width: 2px;
+  }
+}
+
+// Animation keyframes
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalLeave {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .os-modal {
+    transition: none;
+
+    &--animated {
+      &.os-modal--entering,
+      &.os-modal--leaving {
+        animation: none;
+      }
+    }
+  }
+
+  .os-modal__backdrop {
+    transition: none;
   }
 }

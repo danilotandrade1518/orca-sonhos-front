@@ -71,6 +71,14 @@ const meta: Meta<OsModalComponent> = {
       control: { type: 'boolean' },
       description: 'Modal centralizado',
     },
+    animated: {
+      control: { type: 'boolean' },
+      description: 'Animações habilitadas',
+    },
+    hapticFeedback: {
+      control: { type: 'boolean' },
+      description: 'Feedback háptico em dispositivos móveis',
+    },
   },
   tags: ['autodocs'],
 };
@@ -107,6 +115,8 @@ export const Default: Story = {
     confirmLoading: false,
     fullHeight: false,
     centered: true,
+    animated: true,
+    hapticFeedback: true,
   },
   render: (args) => ({
     props: args,
@@ -501,6 +511,8 @@ export const Interactive: Story = {
     confirmLoading: false,
     fullHeight: false,
     centered: true,
+    animated: true,
+    hapticFeedback: true,
   },
   render: (args) => ({
     props: args,
@@ -520,9 +532,13 @@ export const Interactive: Story = {
         [confirmLoading]="confirmLoading"
         [fullHeight]="fullHeight"
         [centered]="centered"
+        [animated]="animated"
+        [hapticFeedback]="hapticFeedback"
         (closed)="closed()"
         (confirmed)="confirmed()"
         (backdropClicked)="backdropClicked()"
+        (opened)="opened()"
+        (animationEnd)="animationEnd($event)"
       >
         <p>Este é um modal interativo. Use os controles para testar todas as propriedades.</p>
         <p>Você pode alterar o título, subtítulo, variante, tamanho e outras propriedades.</p>
@@ -533,6 +549,48 @@ export const Interactive: Story = {
     docs: {
       description: {
         story: 'Modal interativo com controles para testar todas as propriedades.',
+      },
+    },
+  },
+};
+
+export const WithAnimations: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Modal com Animações</h4>
+          <os-modal
+            title="Modal Animado"
+            subtitle="Este modal tem animações suaves"
+            [animated]="true"
+            [hapticFeedback]="true"
+            [showDefaultActions]="true"
+          >
+            <p>Este modal possui animações de entrada e saída suaves.</p>
+            <p>Também inclui feedback háptico em dispositivos móveis.</p>
+          </os-modal>
+        </div>
+
+        <div>
+          <h4>Modal sem Animações</h4>
+          <os-modal
+            title="Modal Sem Animações"
+            subtitle="Este modal não tem animações"
+            [animated]="false"
+            [hapticFeedback]="false"
+            [showDefaultActions]="true"
+          >
+            <p>Este modal não possui animações, ideal para dispositivos com prefers-reduced-motion.</p>
+          </os-modal>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Modal com e sem animações para demonstrar as diferenças.',
       },
     },
   },

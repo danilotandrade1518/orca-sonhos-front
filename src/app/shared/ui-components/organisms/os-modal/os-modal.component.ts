@@ -7,6 +7,10 @@ import {
   inject,
   ElementRef,
   HostListener,
+  effect,
+  signal,
+  afterNextRender,
+  DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -131,15 +135,26 @@ export class OsModalComponent {
   readonly confirmLoading = input<boolean>(false);
   readonly fullHeight = input<boolean>(false);
   readonly centered = input<boolean>(true);
+  readonly animated = input<boolean>(true);
+  readonly hapticFeedback = input<boolean>(true);
 
   // Output signals
   readonly closed = output<void>();
   readonly confirmed = output<void>();
   readonly backdropClicked = output<void>();
+  readonly opened = output<void>();
+  readonly animationEnd = output<'enter' | 'leave'>();
 
   // Private properties
   private readonly elementRef = inject(ElementRef);
   private readonly dialogRef = inject(MatDialogRef<OsModalComponent>, { optional: true });
+  private readonly destroyRef = inject(DestroyRef);
+
+  // Internal state
+  private readonly isVisible = signal(false);
+  private readonly isAnimating = signal(false);
+  private readonly focusableElements: HTMLElement[] = [];
+  private readonly previousActiveElement: HTMLElement | null = null;
 
   // Computed values
   readonly titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
@@ -208,6 +223,18 @@ export class OsModalComponent {
       classes.push('os-modal--centered');
     }
 
+    if (this.animated()) {
+      classes.push('os-modal--animated');
+    }
+
+    if (this.isVisible()) {
+      classes.push('os-modal--visible');
+    }
+
+    if (this.isAnimating()) {
+      classes.push('os-modal--animating');
+    }
+
     return classes.join(' ');
   });
 
@@ -224,13 +251,23 @@ export class OsModalComponent {
 
   readonly contentClasses = computed(() => {
     const classes = ['os-modal__content'];
-
     if (this.fullHeight()) {
       classes.push('os-modal__content--full-height');
     }
-
     return classes.join(' ');
   });
+
+  constructor() {
+    afterNextRender(() => {
+      this.initializeModal();
+    });
+
+    effect(() => {
+      if (this.isAnimating()) {
+        this.handleAnimationEnd();
+      }
+    });
+  }
 
   readonly actionsClasses = computed(() => {
     const classes = ['os-modal__actions'];
@@ -245,20 +282,126 @@ export class OsModalComponent {
     return classes.join(' ');
   });
 
-  // Event handlers
-  onClose(): void {
+  // Private methods
+  private initializeModal(): void {
+    this.isVisible.set(true);
+    this.onOpen();
+    this.setupFocusTrap();
+    this.animateIn();
+  }
+
+  private setupFocusTrap(): void {
+    const modalElement = this.elementRef.nativeElement;
+    const focusableSelectors = [
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      'a[href]',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    this.focusableElements.length = 0;
+    this.focusableElements.push(
+      ...(Array.from(modalElement.querySelectorAll(focusableSelectors)) as HTMLElement[])
+    );
+
+    if (this.focusableElements.length > 0) {
+      this.focusableElements[0].focus();
+    }
+  }
+
+  private handleTabNavigation(event: KeyboardEvent): void {
+    if (this.focusableElements.length === 0) return;
+
+    const currentIndex = this.focusableElements.indexOf(document.activeElement as HTMLElement);
+
+    if (event.shiftKey) {
+      const nextIndex = currentIndex <= 0 ? this.focusableElements.length - 1 : currentIndex - 1;
+      this.focusableElements[nextIndex].focus();
+    } else {
+      const nextIndex = currentIndex >= this.focusableElements.length - 1 ? 0 : currentIndex + 1;
+      this.focusableElements[nextIndex].focus();
+    }
+
+    event.preventDefault();
+  }
+
+  private animateIn(): void {
+    if (!this.animated()) {
+      this.isVisible.set(true);
+      return;
+    }
+
+    this.isAnimating.set(true);
+    const modalElement = this.elementRef.nativeElement;
+    modalElement.classList.add('os-modal--entering');
+
+    setTimeout(() => {
+      modalElement.classList.remove('os-modal--entering');
+      modalElement.classList.add('os-modal--entered');
+      this.isAnimating.set(false);
+    }, 10);
+  }
+
+  private animateOut(): void {
+    if (!this.animated()) {
+      this.closeModal();
+      return;
+    }
+
+    this.isAnimating.set(true);
+    const modalElement = this.elementRef.nativeElement;
+    modalElement.classList.add('os-modal--leaving');
+
+    setTimeout(() => {
+      this.closeModal();
+    }, 300);
+  }
+
+  private closeModal(): void {
     this.closed.emit();
     if (this.dialogRef) {
       this.dialogRef.close();
     }
   }
 
+  private handleAnimationEnd(): void {
+    const modalElement = this.elementRef.nativeElement;
+    const isEntering = modalElement.classList.contains('os-modal--entering');
+    const isLeaving = modalElement.classList.contains('os-modal--leaving');
+
+    if (isEntering) {
+      this.animationEnd.emit('enter');
+    } else if (isLeaving) {
+      this.animationEnd.emit('leave');
+    }
+  }
+
+  private triggerHapticFeedback(): void {
+    if (this.hapticFeedback() && 'vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  }
+
+  // Event handlers
+  onClose(): void {
+    this.triggerHapticFeedback();
+    this.animateOut();
+  }
+
   onConfirm(): void {
+    this.triggerHapticFeedback();
     this.confirmed.emit();
+  }
+
+  onOpen(): void {
+    this.opened.emit();
   }
 
   onBackdropClick(): void {
     if (this.closeOnBackdrop()) {
+      this.triggerHapticFeedback();
       this.backdropClicked.emit();
       this.onClose();
     }
@@ -271,6 +414,12 @@ export class OsModalComponent {
       keyboardEvent.preventDefault();
       this.onClose();
     }
+  }
+
+  @HostListener('document:keydown.tab', ['$event'])
+  onTabKey(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    this.handleTabNavigation(keyboardEvent);
   }
 
   @HostListener('document:keydown.enter', ['$event'])
