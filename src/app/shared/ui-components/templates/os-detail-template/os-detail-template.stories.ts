@@ -68,6 +68,26 @@ const meta: Meta<OsDetailTemplateComponent> = {
       control: { type: 'object' },
       description: 'Ações do template',
     },
+    tabs: {
+      control: { type: 'object' },
+      description: 'Abas de navegação',
+    },
+    activeTabId: {
+      control: { type: 'text' },
+      description: 'ID da aba ativa',
+    },
+    showSidebar: {
+      control: { type: 'boolean' },
+      description: 'Mostrar sidebar',
+    },
+    sidebarAriaLabel: {
+      control: { type: 'text' },
+      description: 'Label ARIA da sidebar',
+    },
+    breadcrumbs: {
+      control: { type: 'object' },
+      description: 'Breadcrumbs de navegação',
+    },
   },
   tags: ['autodocs'],
 };
@@ -178,6 +198,13 @@ const sampleBreadcrumbItems = [
   { label: 'João Silva', route: '/users/123' },
 ];
 
+const sampleTabs = [
+  { id: 'overview', label: 'Visão Geral', icon: 'home' },
+  { id: 'details', label: 'Detalhes', icon: 'info' },
+  { id: 'history', label: 'Histórico', icon: 'history' },
+  { id: 'settings', label: 'Configurações', icon: 'settings', disabled: false },
+];
+
 export const Default: Story = {
   args: {
     variant: 'default',
@@ -189,10 +216,14 @@ export const Default: Story = {
     subtitle: 'Informações completas do perfil',
     showHeader: true,
     showBreadcrumb: false,
-    breadcrumbItems: [],
+    breadcrumbs: [],
     headerActions: sampleHeaderActions,
     sections: sampleSections,
     actions: sampleActions,
+    tabs: [],
+    activeTabId: null,
+    showSidebar: false,
+    sidebarAriaLabel: 'Sidebar de informações adicionais',
   },
   render: (args) => ({
     props: args,
@@ -352,7 +383,7 @@ export const WithBreadcrumb: Story = {
         [title]="'Usuário: João Silva'"
         [subtitle]="'Perfil completo do usuário'"
         [showBreadcrumb]="true"
-        [breadcrumbItems]="breadcrumbItems"
+        [breadcrumbs]="breadcrumbItems"
         [sections]="sampleSections"
         [headerActions]="sampleHeaderActions"
       ></os-detail-template>
@@ -367,6 +398,108 @@ export const WithBreadcrumb: Story = {
     docs: {
       description: {
         story: 'Template de detalhes com breadcrumb de navegação.',
+      },
+    },
+  },
+};
+
+export const WithTabs: Story = {
+  render: () => ({
+    template: `
+      <os-detail-template
+        [title]="'Usuário: João Silva'"
+        [subtitle]="'Perfil completo do usuário'"
+        [tabs]="sampleTabs"
+        [activeTabId]="'overview'"
+        [sections]="sampleSections"
+        [headerActions]="sampleHeaderActions"
+      ></os-detail-template>
+    `,
+    props: {
+      sampleSections,
+      sampleHeaderActions,
+      sampleTabs,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Template de detalhes com navegação por abas.',
+      },
+    },
+  },
+};
+
+export const WithSidebar: Story = {
+  render: () => ({
+    template: `
+      <os-detail-template
+        [title]="'Usuário: João Silva'"
+        [subtitle]="'Perfil completo do usuário'"
+        [showSidebar]="true"
+        [sidebarAriaLabel]="'Informações adicionais'"
+        [sections]="sampleSections"
+        [headerActions]="sampleHeaderActions"
+      >
+        <div slot="sidebar">
+          <h4>Informações Adicionais</h4>
+          <p>Conteúdo da sidebar com informações complementares.</p>
+          <ul>
+            <li>Última atualização: 15/01/2024</li>
+            <li>Status: Ativo</li>
+            <li>Permissões: Administrador</li>
+          </ul>
+        </div>
+      </os-detail-template>
+    `,
+    props: {
+      sampleSections,
+      sampleHeaderActions,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Template de detalhes com sidebar para informações adicionais.',
+      },
+    },
+  },
+};
+
+export const WithTabsAndSidebar: Story = {
+  render: () => ({
+    template: `
+      <os-detail-template
+        [title]="'Usuário: João Silva'"
+        [subtitle]="'Perfil completo do usuário'"
+        [tabs]="sampleTabs"
+        [activeTabId]="'overview'"
+        [showSidebar]="true"
+        [sidebarAriaLabel]="'Informações adicionais'"
+        [sections]="sampleSections"
+        [headerActions]="sampleHeaderActions"
+      >
+        <div slot="sidebar">
+          <h4>Informações Adicionais</h4>
+          <p>Conteúdo da sidebar com informações complementares.</p>
+          <ul>
+            <li>Última atualização: 15/01/2024</li>
+            <li>Status: Ativo</li>
+            <li>Permissões: Administrador</li>
+          </ul>
+        </div>
+      </os-detail-template>
+    `,
+    props: {
+      sampleSections,
+      sampleHeaderActions,
+      sampleTabs,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Template de detalhes com abas e sidebar combinados.',
       },
     },
   },
