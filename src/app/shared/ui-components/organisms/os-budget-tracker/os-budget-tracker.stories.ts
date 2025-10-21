@@ -70,6 +70,18 @@ const meta: Meta<OsBudgetTrackerComponent> = {
       control: 'boolean',
       description: 'Componente clicável',
     },
+    showAlerts: {
+      control: 'boolean',
+      description: 'Exibir alertas visuais',
+    },
+    enableDrillDown: {
+      control: 'boolean',
+      description: 'Habilitar drill-down em categorias',
+    },
+    alertThreshold: {
+      control: { type: 'range', min: 0, max: 100, step: 5 },
+      description: 'Limite para alertas (porcentagem)',
+    },
   },
 };
 
@@ -102,6 +114,10 @@ const mockBudgetData: BudgetTrackerData = {
     projection: 4200,
     riskLevel: 'medium',
   },
+  categoryColor: '#3B82F6',
+  categoryIcon: 'home',
+  alertThreshold: 80,
+  isUrgent: false,
 };
 
 const overBudgetData: BudgetTrackerData = {
@@ -111,6 +127,9 @@ const overBudgetData: BudgetTrackerData = {
   remainingAmount: -500,
   percentage: 110,
   status: 'over-budget',
+  categoryColor: '#EF4444',
+  categoryIcon: 'warning',
+  isUrgent: true,
   trends: {
     spendingTrend: 'increasing',
     projection: 6000,
@@ -125,6 +144,9 @@ const completedBudgetData: BudgetTrackerData = {
   remainingAmount: 0,
   percentage: 100,
   status: 'completed',
+  categoryColor: '#10B981',
+  categoryIcon: 'check_circle',
+  isUrgent: false,
   trends: {
     spendingTrend: 'stable',
     projection: 5000,
@@ -408,11 +430,110 @@ export const InteractiveExample: Story = {
     showStatus: true,
     loading: false,
     clickable: true,
+    showAlerts: true,
+    enableDrillDown: true,
+    alertThreshold: 80,
   },
   parameters: {
     docs: {
       description: {
         story: 'Exemplo interativo com todas as funcionalidades habilitadas',
+      },
+    },
+  },
+};
+
+export const WithAlerts: Story = {
+  args: {
+    budgetData: overBudgetData,
+    variant: 'default',
+    size: 'medium',
+    showCharts: true,
+    showTrends: true,
+    showProjections: true,
+    showStatus: true,
+    loading: false,
+    clickable: false,
+    showAlerts: true,
+    enableDrillDown: true,
+    alertThreshold: 80,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Componente com alertas visuais para orçamento excedido',
+      },
+    },
+  },
+};
+
+export const WithDrillDown: Story = {
+  args: {
+    budgetData: mockBudgetData,
+    variant: 'detailed',
+    size: 'large',
+    showCharts: true,
+    showTrends: true,
+    showProjections: true,
+    showStatus: true,
+    loading: false,
+    clickable: true,
+    showAlerts: true,
+    enableDrillDown: true,
+    alertThreshold: 80,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Componente com drill-down habilitado para navegação profunda',
+      },
+    },
+  },
+};
+
+export const WithoutAlerts: Story = {
+  args: {
+    budgetData: mockBudgetData,
+    variant: 'default',
+    size: 'medium',
+    showCharts: true,
+    showTrends: true,
+    showProjections: true,
+    showStatus: true,
+    loading: false,
+    clickable: false,
+    showAlerts: false,
+    enableDrillDown: false,
+    alertThreshold: 80,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Componente sem alertas visuais',
+      },
+    },
+  },
+};
+
+export const HighAlertThreshold: Story = {
+  args: {
+    budgetData: mockBudgetData,
+    variant: 'default',
+    size: 'medium',
+    showCharts: true,
+    showTrends: true,
+    showProjections: true,
+    showStatus: true,
+    loading: false,
+    clickable: false,
+    showAlerts: true,
+    enableDrillDown: true,
+    alertThreshold: 90,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Componente com limite de alerta alto (90%)',
       },
     },
   },

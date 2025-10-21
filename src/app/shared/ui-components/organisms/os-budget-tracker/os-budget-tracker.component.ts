@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  effect,
+  inject,
+} from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -22,6 +32,10 @@ export interface BudgetTrackerData {
   lastUpdated: Date;
   monthlySpending: MonthlySpending[];
   trends: BudgetTrends;
+  categoryColor?: string;
+  categoryIcon?: string;
+  alertThreshold?: number;
+  isUrgent?: boolean;
 }
 
 export interface MonthlySpending {
@@ -54,7 +68,19 @@ export interface BudgetTrends {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsBudgetTrackerComponent {
-  // Inputs
+  private breakpointObserver = inject(BreakpointObserver);
+
+  constructor() {
+    effect(() => {
+      this.breakpointObserver
+        .observe([Breakpoints.Handset, Breakpoints.Tablet])
+        .subscribe((result) => {
+          this.isMobile.set(result.matches);
+        });
+    });
+  }
+  isMobile = signal<boolean>(false);
+
   budgetData = input.required<BudgetTrackerData | null>();
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -64,13 +90,19 @@ export class OsBudgetTrackerComponent {
   showStatus = input<boolean>(true);
   loading = input<boolean>(false);
   clickable = input<boolean>(false);
+  showAlerts = input<boolean>(true);
+  enableDrillDown = input<boolean>(true);
+  alertThreshold = input<number>(80);
 
-  // Outputs
   readonly budgetClick = output<BudgetTrackerData>();
   readonly refreshClick = output<void>();
   readonly exportClick = output<void>();
+  readonly categoryClick = output<{ category: string; data: BudgetTrackerData }>();
+  readonly alertClick = output<{
+    type: 'over-budget' | 'urgent' | 'threshold';
+    data: BudgetTrackerData;
+  }>();
 
-  // Computed properties
   readonly progressPercentage = computed(() => {
     const data = this.budgetData();
     return data ? Math.min(Math.max(data.percentage, 0), 100) : 0;
@@ -150,7 +182,76 @@ export class OsBudgetTrackerComponent {
     };
   });
 
-  // Methods
+  readonly alertInfo = computed(() => {
+    const data = this.budgetData();
+    if (!data || !this.showAlerts()) return null;
+
+    const threshold = this.alertThreshold();
+    const isOverBudget = data.spentAmount > data.totalBudget;
+    const isOverThreshold = data.percentage >= threshold;
+    const isUrgent = data.isUrgent || data.percentage >= 90;
+
+    if (isOverBudget) {
+      return {
+        type: 'over-budget' as const,
+        severity: 'high' as const,
+        message: 'Orçamento estourado!',
+        icon: 'warning',
+        color: 'var(--os-color-error)',
+        urgent: true,
+      };
+    }
+
+    if (isUrgent) {
+      return {
+        type: 'urgent' as const,
+        severity: 'high' as const,
+        message: 'Atenção: próximo do limite!',
+        icon: 'priority_high',
+        color: 'var(--os-color-warning)',
+        urgent: true,
+      };
+    }
+
+    if (isOverThreshold) {
+      return {
+        type: 'threshold' as const,
+        severity: 'medium' as const,
+        message: `${threshold}% do orçamento utilizado`,
+        icon: 'info',
+        color: 'var(--os-color-info)',
+        urgent: false,
+      };
+    }
+
+    return null;
+  });
+
+  readonly categoryInfo = computed(() => {
+    const data = this.budgetData();
+    if (!data) return null;
+
+    return {
+      name: data.category,
+      color: data.categoryColor || this.getDefaultCategoryColor(data.category),
+      icon: data.categoryIcon || this.getDefaultCategoryIcon(data.category),
+      clickable: this.enableDrillDown(),
+    };
+  });
+
+  readonly chartData = computed(() => {
+    const data = this.budgetData();
+    if (!data || !this.showCharts()) return null;
+
+    return {
+      monthly: data.monthlySpending.slice(-6),
+      maxValue: Math.max(...data.monthlySpending.map((m) => m.percentage)),
+      average:
+        data.monthlySpending.reduce((sum, m) => sum + m.percentage, 0) /
+        data.monthlySpending.length,
+    };
+  });
+
   onCardClick(): void {
     const data = this.budgetData();
     if (this.clickable() && data) {
@@ -164,6 +265,21 @@ export class OsBudgetTrackerComponent {
 
   onExportClick(): void {
     this.exportClick.emit();
+  }
+
+  onCategoryClick(): void {
+    const data = this.budgetData();
+    if (data && this.enableDrillDown()) {
+      this.categoryClick.emit({ category: data.category, data });
+    }
+  }
+
+  onAlertClick(): void {
+    const data = this.budgetData();
+    const alert = this.alertInfo();
+    if (data && alert) {
+      this.alertClick.emit({ type: alert.type, data });
+    }
   }
 
   getStatusColor(): string {
@@ -235,5 +351,31 @@ export class OsBudgetTrackerComponent {
       '12': 'Dez',
     };
     return months[month as keyof typeof months] || month;
+  }
+
+  getDefaultCategoryColor(category: string): string {
+    const colors: Record<string, string> = {
+      Alimentação: 'var(--os-color-success)',
+      Transporte: 'var(--os-color-primary)',
+      Saúde: 'var(--os-color-error)',
+      Educação: 'var(--os-color-info)',
+      Lazer: 'var(--os-color-warning)',
+      Casa: 'var(--os-color-secondary)',
+      Geral: 'var(--os-color-text-secondary)',
+    };
+    return colors[category] || 'var(--os-color-primary)';
+  }
+
+  getDefaultCategoryIcon(category: string): string {
+    const icons: Record<string, string> = {
+      Alimentação: 'restaurant',
+      Transporte: 'directions_car',
+      Saúde: 'local_hospital',
+      Educação: 'school',
+      Lazer: 'sports_esports',
+      Casa: 'home',
+      Geral: 'category',
+    };
+    return icons[category] || 'category';
   }
 }

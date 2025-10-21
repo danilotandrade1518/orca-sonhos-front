@@ -57,7 +57,7 @@ describe('OsBudgetTrackerComponent', () => {
     expect(title.nativeElement.textContent.trim()).toBe('Orçamento Mensal');
 
     const category = fixture.debugElement.query(By.css('.os-budget-tracker__category'));
-    expect(category.nativeElement.textContent.trim()).toBe('Geral');
+    expect(category.nativeElement.textContent.trim()).toContain('Geral');
   });
 
   it('should display progress percentage correctly', () => {
