@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, output, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import {
@@ -22,6 +22,7 @@ export interface GoalProgressData {
 export type GoalProgressVariant = 'default' | 'compact' | 'detailed' | 'minimal';
 export type GoalProgressSize = 'small' | 'medium' | 'large';
 export type GoalProgressTheme = 'light' | 'dark';
+export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
 
 @Component({
   selector: 'os-goal-progress',
@@ -84,7 +85,18 @@ export type GoalProgressTheme = 'light' | 'dark';
             [size]="progressSize()"
             [showPercentage]="showPercentage()"
             [animated]="animated()"
+            [showCelebration]="shouldShowCelebration()"
+            [celebrationText]="celebrationText()"
           />
+          
+          @if (shouldShowMilestone()) {
+          <div class="os-goal-progress__milestone" [attr.aria-live]="'polite'">
+            <os-icon name="celebration" size="sm" [attr.aria-hidden]="true" />
+            <span class="os-goal-progress__milestone-text">
+              {{ currentMilestone() }}% alcançado! 🎯
+            </span>
+          </div>
+          }
         </div>
 
         @if (showStats()) {
@@ -121,6 +133,18 @@ export type GoalProgressTheme = 'light' | 'dark';
         <ng-content select="[slot=actions]"></ng-content>
       </div>
       }
+
+      @if (shouldShowCelebration()) {
+      <div class="os-goal-progress__celebration" [attr.aria-live]="'assertive'">
+        <div class="os-goal-progress__celebration-content">
+          <os-icon name="celebration" size="lg" [attr.aria-hidden]="true" />
+          <span class="os-goal-progress__celebration-text">{{ celebrationText() }}</span>
+        </div>
+        <div class="os-goal-progress__confetti">
+          <div class="os-goal-progress__confetti-piece" *ngFor="let piece of [1,2,3,4,5,6,7,8]"></div>
+        </div>
+      </div>
+      }
     </div>
   `,
   styleUrls: ['./os-goal-progress.component.scss'],
@@ -145,15 +169,26 @@ export class OsGoalProgressComponent {
   readonly animated = input(true);
   readonly actions = input<{ label: string; variant?: string; disabled?: boolean }[]>([]);
   readonly ariaLabel = input<string | null>(null);
+  readonly showCelebration = input(true);
+  readonly showMilestones = input(true);
+  readonly celebrationText = input('Meta alcançada! 🎉');
+  readonly enableHapticFeedback = input(false);
 
   readonly goalClick = output<GoalProgressData>();
   readonly actionClick = output<{
     action: { label: string; variant?: string; disabled?: boolean };
     goal: GoalProgressData;
   }>();
+  readonly milestoneReached = output<{
+    milestone: GoalProgressMilestone;
+    goal: GoalProgressData;
+  }>();
+  readonly goalCompleted = output<GoalProgressData>();
 
   readonly titleId = signal(`goal-title-${Math.random().toString(36).substr(2, 9)}`);
   readonly descriptionId = signal(`goal-description-${Math.random().toString(36).substr(2, 9)}`);
+  readonly isCelebrating = signal(false);
+  readonly reachedMilestones = signal<Set<GoalProgressMilestone>>(new Set());
 
   readonly progressPercentage = computed(() => {
     const data = this.goalData();
@@ -174,6 +209,27 @@ export class OsGoalProgressComponent {
     const data = this.goalData();
     if (!data.deadline) return false;
     return new Date() > data.deadline && !this.isCompleted();
+  });
+
+  readonly currentMilestone = computed((): GoalProgressMilestone | null => {
+    const percentage = this.progressPercentage();
+    if (percentage >= 100) return 100;
+    if (percentage >= 90) return 90;
+    if (percentage >= 75) return 75;
+    if (percentage >= 50) return 50;
+    if (percentage >= 25) return 25;
+    return null;
+  });
+
+  readonly shouldShowCelebration = computed(() => {
+    return this.showCelebration() && this.isCompleted() && !this.isCelebrating();
+  });
+
+  readonly shouldShowMilestone = computed(() => {
+    if (!this.showMilestones()) return false;
+    const current = this.currentMilestone();
+    const reached = this.reachedMilestones();
+    return current !== null && !reached.has(current);
   });
 
   readonly goalClasses = computed(() => {
@@ -265,6 +321,49 @@ export class OsGoalProgressComponent {
     if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} semanas`;
     return `${Math.ceil(diffDays / 30)} meses`;
   });
+
+  constructor() {
+    // Effect para detectar milestones e celebração
+    effect(() => {
+      const currentMilestone = this.currentMilestone();
+      const reachedMilestones = this.reachedMilestones();
+      const shouldShowMilestone = this.shouldShowMilestone();
+      const shouldShowCelebration = this.shouldShowCelebration();
+
+      // Detectar novo milestone
+      if (shouldShowMilestone && currentMilestone !== null) {
+        const newReached = new Set(reachedMilestones);
+        newReached.add(currentMilestone);
+        this.reachedMilestones.set(newReached);
+        
+        this.milestoneReached.emit({
+          milestone: currentMilestone,
+          goal: this.goalData()
+        });
+
+        // Haptic feedback se habilitado
+        if (this.enableHapticFeedback() && 'vibrate' in navigator) {
+          navigator.vibrate(100);
+        }
+      }
+
+      // Detectar conclusão da meta
+      if (shouldShowCelebration) {
+        this.isCelebrating.set(true);
+        this.goalCompleted.emit(this.goalData());
+        
+        // Haptic feedback para conclusão
+        if (this.enableHapticFeedback() && 'vibrate' in navigator) {
+          navigator.vibrate([100, 50, 100]);
+        }
+
+        // Parar celebração após 3 segundos
+        setTimeout(() => {
+          this.isCelebrating.set(false);
+        }, 3000);
+      }
+    });
+  }
 
   onGoalClick(): void {
     this.goalClick.emit(this.goalData());
