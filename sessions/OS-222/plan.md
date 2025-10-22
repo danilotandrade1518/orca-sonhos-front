@@ -1813,12 +1813,24 @@ Refinar todos os 8 templates com foco em layouts responsivos e integração com 
 - ✅ Código limpo sem comentários desnecessários
 - ✅ Stories do Storybook funcionando corretamente
 
-#### Refinamento de os-wizard-template [⏳]
+#### Refinamento de os-wizard-template [✅]
 
 **Descrição**: Step indicator acessível, mobile navigation, validação entre steps
 **Arquivos**: `src/app/shared/ui-components/templates/os-wizard-template/`
 **Dependências**: Fase 4 completa
 **Complexidade**: Alta
+
+**Critério de Conclusão**:
+
+- ✅ Melhorias visuais implementadas com transições suaves
+- ✅ Responsividade mobile-first com breakpoints otimizados
+- ✅ Acessibilidade WCAG 2.1 AA mantida e aprimorada
+- ✅ Estados visuais aprimorados (current, completed, disabled, hover)
+- ✅ Sticky actions implementadas para melhor usabilidade
+- ✅ Design tokens integrados completamente
+- ✅ Performance otimizada com transições cubic-bezier
+- ✅ Código limpo sem comentários desnecessários
+- ✅ Stories do Storybook funcionando corretamente
 
 #### Refinamento de os-drawer-template [⏳]
 
