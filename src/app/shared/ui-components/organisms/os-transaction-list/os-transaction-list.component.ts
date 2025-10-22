@@ -915,7 +915,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     this.rowClick.emit(transaction);
   }
 
-  onTransactionActionClick(action: OsDataTableAction, transaction: Transaction): void {
+  onTransactionActionClick(action: OsDataTableAction): void {
     this.triggerHapticFeedback();
     this.tableActionClick.emit(action);
   }

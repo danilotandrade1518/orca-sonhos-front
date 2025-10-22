@@ -3,7 +3,19 @@
 {
   "extends": "./tsconfig.json",
   // Exclude all files that are not needed for documentation generation.
-  "exclude": ["../src/test.ts", "../src/**/*.spec.ts", "../src/**/*.stories.ts"],
+  "exclude": [
+    "../src/test.ts",
+    "../src/**/*.spec.ts",
+    "../src/**/*.stories.ts",
+    "../src/**/*.mock.ts",
+    "../src/**/*.test.ts",
+    "../src/environments/**/*",
+    "../src/infra/**/*",
+    "../src/dtos/**/*",
+    "../coverage/**/*",
+    "../dist/**/*",
+    "../node_modules/**/*"
+  ],
   // Please make sure to include all files from which Compodoc should generate documentation.
   "include": ["../src/**/*"],
   "files": ["./typings.d.ts"]

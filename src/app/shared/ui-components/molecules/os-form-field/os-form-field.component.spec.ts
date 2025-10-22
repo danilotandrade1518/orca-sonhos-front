@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { OsFormFieldComponent, OsFormFieldValidationState } from './os-form-field.component';
+import { OsFormFieldComponent } from './os-form-field.component';
 import { vi } from 'vitest';
 
 describe('OsFormFieldComponent', () => {

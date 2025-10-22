@@ -1,13 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  OsSpinnerComponent,
-  OsSpinnerSize,
-  OsSpinnerVariant,
-  OsSpinnerRole,
-  OsSpinnerType,
-} from './os-spinner.component';
+import { OsSpinnerComponent } from './os-spinner.component';
 
 describe('OsSpinnerComponent', () => {
   let component: OsSpinnerComponent;

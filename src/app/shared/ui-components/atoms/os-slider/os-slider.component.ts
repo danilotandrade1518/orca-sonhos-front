@@ -146,6 +146,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
   rangeChange = output<{ min: number; max: number }>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _onChange = (value: number) => {
     // This will be set by registerOnChange
   };

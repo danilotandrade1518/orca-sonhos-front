@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-  signal,
-  effect,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';

@@ -420,7 +420,7 @@ describe('OsAvatarComponent', () => {
         };
 
         Object.entries(statusLabels).forEach(([status, label]) => {
-          fixture.componentRef.setInput('status', status as any);
+          fixture.componentRef.setInput('status', status as 'online' | 'offline' | 'away' | 'busy');
           fixture.detectChanges();
           expect(component.statusLabel()).toBe(label);
         });

@@ -6,7 +6,6 @@ import {
   effect,
   signal,
   ChangeDetectionStrategy,
-  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
@@ -22,23 +21,6 @@ export interface OsFilterOption {
   options?: { value: string | number; label: string }[];
 }
 
-/**
- * OsFilterBarComponent
- *
- * Barra de filtros responsiva com suporte a persistência em localStorage,
- * acessibilidade WCAG 2.1 AA e touch targets >= 44px para mobile.
- *
- * @example
- * ```html
- * <os-filter-bar
- *   [persistKey]="'budgets-filters'"
- *   [hasActiveFilters]="hasFilters"
- *   (clear)="onClearFilters()"
- *   (apply)="onApplyFilters()">
- *   <!-- Filter inputs here -->
- * </os-filter-bar>
- * ```
- */
 @Component({
   selector: 'os-filter-bar',
   standalone: true,

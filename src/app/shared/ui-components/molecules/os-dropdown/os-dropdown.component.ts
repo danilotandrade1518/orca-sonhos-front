@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   ElementRef,
   HostListener,
   inject,
@@ -105,7 +104,12 @@ export interface OsDropdownGroup {
         [attr.aria-label]="ariaLabel() || 'Options'"
       >
         @if (searchable() && filteredOptions().length > searchThreshold()) {
-        <div class="os-dropdown__search" (click)="$event.stopPropagation()">
+        <div
+          class="os-dropdown__search"
+          (click)="$event.stopPropagation()"
+          (keydown)="handleSearchKeydown($event)"
+          tabindex="0"
+        >
           <os-input
             #searchInput
             [value]="searchQuery()"
@@ -271,7 +275,7 @@ export class OsDropdownComponent {
   });
 
   flattenedOptions = computed(() => {
-    const result: Array<OsDropdownOption & { isGroupHeader?: boolean }> = [];
+    const result: (OsDropdownOption & { isGroupHeader?: boolean })[] = [];
     const groupsList = this.groups();
     const optionsList = this.options();
 

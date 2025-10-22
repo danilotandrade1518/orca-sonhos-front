@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { vi } from 'vitest';
 import { OsSearchBoxComponent, OsSearchSuggestion } from './os-search-box.component';
-import { of } from 'rxjs';
 
 describe('OsSearchBoxComponent', () => {
   let component: OsSearchBoxComponent;

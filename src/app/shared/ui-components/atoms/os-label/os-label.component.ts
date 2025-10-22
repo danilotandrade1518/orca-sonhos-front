@@ -28,9 +28,10 @@ export type OsLabelWeight = 'light' | 'regular' | 'medium' | 'semibold' | 'bold'
       [attr.tabindex]="disabled() ? -1 : 0"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
-      (focus)="onFocus($event)"
-      (blur)="onBlur($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
       (click)="onClick()"
+      (keydown)="onKeydown($event)"
     >
       <ng-content />
     </label>
@@ -78,17 +79,24 @@ export class OsLabelComponent {
     this.isHovered.set(false);
   }
 
-  onFocus(event: FocusEvent): void {
+  onFocus(): void {
     this.isFocused.set(true);
   }
 
-  onBlur(event: FocusEvent): void {
+  onBlur(): void {
     this.isFocused.set(false);
   }
 
   onClick(): void {
     if (!this.disabled()) {
       this.triggerHapticFeedback();
+    }
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.onClick();
     }
   }
 

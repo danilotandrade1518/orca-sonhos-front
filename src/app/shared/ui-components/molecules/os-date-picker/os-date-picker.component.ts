@@ -8,13 +8,10 @@ import {
   computed,
   signal,
   effect,
-  inject,
-  DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OsDateInputComponent } from '../../atoms/os-date-input/os-date-input.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
@@ -115,8 +112,6 @@ export interface QuickDateOption {
   },
 })
 export class OsDatePickerComponent implements ControlValueAccessor {
-  private readonly destroyRef = inject(DestroyRef);
-
   // Models
   value = model<Date | null>(null);
   disabled = model<boolean>(false);
@@ -209,8 +204,13 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   });
 
   // ControlValueAccessor
-  private _onChange = (value: Date | null) => {};
-  private _onTouched = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private _onChange = (value: Date | null) => {
+    // This will be set by registerOnChange
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   constructor() {
     // Initialize default quick date options if none provided

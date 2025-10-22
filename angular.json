@@ -109,7 +109,22 @@
             "configDir": ".storybook",
             "browserTarget": "orca-sonhos-front:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableSourceCode",
+              "--disableGraph",
+              "--disableCoverage",
+              "--disablePrivate",
+              "--disableInternal",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableSearch",
+              "--disableTemplateTab",
+              "--disableStyleTab"
+            ],
             "port": 6006,
             "experimentalZoneless": true
           }
@@ -120,7 +135,22 @@
             "configDir": ".storybook",
             "browserTarget": "orca-sonhos-front:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableSourceCode",
+              "--disableGraph",
+              "--disableCoverage",
+              "--disablePrivate",
+              "--disableInternal",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableSearch",
+              "--disableTemplateTab",
+              "--disableStyleTab"
+            ],
             "outputDir": "storybook-static",
             "experimentalZoneless": true
           }

@@ -19,7 +19,7 @@ export interface DashboardWidget {
     | 'monthly-trends'
     | 'quick-actions';
   title: string;
-  size: 'small' | 'medium' | 'large' | 'full';
+  size: 'small' | 'medium' | 'large' | 'full-width';
   position: { row: number; column: number };
   enabled: boolean;
   data?: unknown;
@@ -398,7 +398,7 @@ export class OsDashboardWidgetsComponent {
         return 'span 1';
       case 'large':
         return 'span 2';
-      case 'full':
+      case 'full-width':
         return 'span 3';
       default:
         return 'span 1';
@@ -406,7 +406,23 @@ export class OsDashboardWidgetsComponent {
   }
 
   getWidgetGridRow(widget: DashboardWidget): string {
-    return `span 1`;
+    // Baseado no tipo e tamanho do widget, define quantas linhas ele deve ocupar
+    switch (widget.type) {
+      case 'budget-summary':
+        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
+      case 'goal-progress':
+        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
+      case 'transaction-list':
+        return 'span 3'; // Lista de transações precisa de mais espaço vertical
+      case 'monthly-trends':
+        return 'span 2'; // Gráficos precisam de mais altura
+      case 'account-balance':
+        return 'span 1';
+      case 'quick-actions':
+        return 'span 1';
+      default:
+        return 'span 1';
+    }
   }
 
   getWidgetAriaLabel(widget: DashboardWidget): string {
@@ -422,7 +438,7 @@ export class OsDashboardWidgetsComponent {
       case 'small':
         return 'small';
       case 'large':
-      case 'full':
+      case 'full-width':
         return 'large';
       default:
         return 'medium';

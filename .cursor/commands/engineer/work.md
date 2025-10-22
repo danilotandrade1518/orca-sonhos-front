@@ -628,6 +628,81 @@ Leia todos os arquivos markdown na pasta da sessão:
 - **Aplique a estratégia selecionada** para abordar a próxima fase
 - Apresente ao usuário um plano claro adaptado à complexidade identificada
 
+Algoritmo de detecção robusto (regex + normalização):
+
+```typescript
+// 1) Ler apenas o arquivo do plano da sessão atual
+const planPath = `sessions/${folder}/plan.md`;
+const planContent = await read_file({ target_file: planPath });
+
+// 2) Extrair fases pelos headings formais
+// Formato esperado: "## 📅 FASE X: Título [Status: ...]"
+const phaseRegex = /^##\s*📅\s*FASE\s*(\d+)\s*:.*?\[\s*Status\s*:\s*([^\]]+)\]/gim;
+type PhaseStatus = 'completed' | 'in_progress' | 'pending' | 'unknown';
+
+function normalizeStatus(raw: string): PhaseStatus {
+  const s = raw.toLowerCase();
+  if (s.includes('⏰') || s.includes('em progresso') || s.includes('in progress'))
+    return 'in_progress';
+  if (s.includes('✅') || s.includes('conclu') || s.includes('completed') || s.includes('100%'))
+    return 'completed';
+  if (s.includes('⏳') || s.includes('pendente') || s.includes('pending')) return 'pending';
+  return 'unknown';
+}
+
+interface PhaseInfo {
+  num: number;
+  status: PhaseStatus;
+  headingIndex: number;
+}
+const phases: PhaseInfo[] = [];
+let match: RegExpExecArray | null;
+while ((match = phaseRegex.exec(planContent)) !== null) {
+  const num = Number(match[1]);
+  const status = normalizeStatus(match[2] ?? '');
+  phases.push({ num, status, headingIndex: match.index });
+}
+
+// 3) Seleção da fase atual
+// Regra:
+// - Se existir alguma com status in_progress → escolha a de menor número (ou única)
+// - Senão, escolha a primeira fase "pendente" imediatamente após a última "concluída"
+// - Se todas concluídas, considere a última como finalizado
+phases.sort((a, b) => a.num - b.num);
+let current: PhaseInfo | undefined = phases.find((p) => p.status === 'in_progress');
+if (!current) {
+  const lastCompleted = [...phases].reverse().find((p) => p.status === 'completed');
+  if (lastCompleted) {
+    current = phases.find((p) => p.num > lastCompleted.num && p.status !== 'completed');
+  }
+  if (!current) {
+    current = phases.find((p) => p.status === 'pending' || p.status === 'unknown') ?? phases.at(-1);
+  }
+}
+
+// 4) Extração parcial do conteúdo da fase atual (quando enabled)
+let currentPhaseMarkdown = '';
+if (current) {
+  if (work.partialReads?.planCurrentPhaseOnly) {
+    const nextHeading = phases.find((p) => p.num > current!.num);
+    const start = current.headingIndex;
+    const end = nextHeading ? nextHeading.headingIndex : planContent.length;
+    currentPhaseMarkdown = planContent.slice(start, end);
+  } else {
+    currentPhaseMarkdown = planContent;
+  }
+}
+
+// 5) Fallback opcional: ignorar seções como "Atualizações Recentes" para não confundir status
+// O algoritmo acima considera apenas headings formais de fase.
+
+return {
+  currentPhaseNumber: current?.num,
+  currentPhaseStatus: current?.status,
+  currentPhaseMarkdown,
+};
+```
+
 ### 3. Inicialização do Work Log
 
 Crie o arquivo `sessions/<folder>/work-log.md` se não existir:

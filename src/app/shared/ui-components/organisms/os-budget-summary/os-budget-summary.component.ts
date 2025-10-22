@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -108,9 +108,21 @@ export class OsBudgetSummaryComponent {
     const overBudget = Math.max(0, data.spentAmount - data.totalBudget);
 
     return {
-      spent: { value: spent, percentage: (spent / data.totalBudget) * 100, color: 'var(--os-color-primary)' },
-      remaining: { value: remaining, percentage: (remaining / data.totalBudget) * 100, color: 'var(--os-color-success)' },
-      overBudget: { value: overBudget, percentage: (overBudget / data.totalBudget) * 100, color: 'var(--os-color-error)' }
+      spent: {
+        value: spent,
+        percentage: (spent / data.totalBudget) * 100,
+        color: 'var(--os-color-primary)',
+      },
+      remaining: {
+        value: remaining,
+        percentage: (remaining / data.totalBudget) * 100,
+        color: 'var(--os-color-success)',
+      },
+      overBudget: {
+        value: overBudget,
+        percentage: (overBudget / data.totalBudget) * 100,
+        color: 'var(--os-color-error)',
+      },
     };
   });
 
@@ -137,8 +149,10 @@ export class OsBudgetSummaryComponent {
       `os-budget-summary--${size}`,
       clickable ? 'os-budget-summary--clickable' : '',
       loading ? 'os-budget-summary--loading' : '',
-      animated ? 'os-budget-summary--animated' : ''
-    ].filter(Boolean).join(' ');
+      animated ? 'os-budget-summary--animated' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
   });
 
   // Methods

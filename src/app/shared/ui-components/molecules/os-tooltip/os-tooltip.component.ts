@@ -52,6 +52,8 @@ export type OsTooltipRole = 'tooltip' | 'status' | 'alert';
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
       (click)="onMobileClick()"
+      (keydown)="onKeydown($event)"
+      tabindex="0"
     >
       <ng-content />
     </div>
@@ -220,6 +222,13 @@ export class OsTooltipComponent {
   onMobileClick(): void {
     if (this.isMobile() && !this.disabled()) {
       this.tooltipShow.emit();
+    }
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.onMobileClick();
     }
   }
 

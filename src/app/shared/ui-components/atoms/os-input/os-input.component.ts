@@ -99,8 +99,13 @@ export class OsInputComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: string) => {};
-  private _onTouched = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private _onChange = (value: string) => {
+    // This will be set by registerOnChange
+  };
+  private _onTouched = () => {
+    // This will be set by registerOnTouched
+  };
 
   inputId = `os-input-${Math.random().toString(36).substr(2, 9)}`;
 

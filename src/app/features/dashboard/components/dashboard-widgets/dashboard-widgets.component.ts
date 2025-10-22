@@ -49,11 +49,10 @@ export class DashboardWidgetsComponent {
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly showWidgetActions = input<boolean>(true);
   readonly showCreateActions = input<boolean>(true);
-  readonly errorMessage = input<string>('Erro ao carregar dados do dashboard');
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
 
   // Outputs
-  readonly widgetClick = output<{ widget: WidgetConfiguration; data: unknown }>();
+  readonly widgetClick = output<WidgetConfiguration>();
   readonly widgetConfigure = output<WidgetConfiguration>();
   readonly widgetClose = output<WidgetConfiguration>();
   readonly retryRequested = output<void>();
@@ -70,18 +69,16 @@ export class DashboardWidgetsComponent {
   readonly budgetOverview = computed(() => this.dashboardDataService.budgetOverview());
   readonly isLoading = computed(() => this.dashboardDataService.isLoading());
   readonly hasError = computed(() => !!this.dashboardDataService.error());
-  readonly errorMessage = computed(() => this.dashboardDataService.error());
+  readonly errorMessage = computed(
+    () => this.dashboardDataService.error() || 'Erro ao carregar dados do dashboard'
+  );
 
   readonly dashboardWidgets = computed(() => {
     return this.widgets().map((widget) => ({
       id: widget.id,
       type: widget.type,
       title: widget.title,
-      size: (widget.size === 'full-width' ? 'full' : widget.size) as
-        | 'small'
-        | 'medium'
-        | 'large'
-        | 'full',
+      size: widget.size,
       position: widget.position,
       enabled: widget.enabled,
     }));
@@ -140,8 +137,8 @@ export class DashboardWidgetsComponent {
     this.retryRequested.emit();
   }
 
-  onWidgetClick(widget: WidgetConfiguration, data: unknown): void {
-    this.widgetClick.emit({ widget, data });
+  onWidgetClick(widget: WidgetConfiguration): void {
+    this.widgetClick.emit(widget);
   }
 
   onWidgetKeyDown(event: KeyboardEvent, widget: WidgetConfiguration): void {
@@ -149,7 +146,7 @@ export class DashboardWidgetsComponent {
       case 'Enter':
       case ' ':
         event.preventDefault();
-        this.onWidgetClick(widget, null);
+        this.onWidgetClick(widget);
         break;
       case 'Tab':
         // Allow default tab behavior
@@ -166,27 +163,6 @@ export class DashboardWidgetsComponent {
 
   getWidgetDescriptionId(widget: WidgetConfiguration): string {
     return `widget-${widget.id}-description`;
-  }
-
-  onWidgetClick(widget: any): void {
-    const originalWidget = this.widgets().find((w) => w.id === widget.id);
-    if (originalWidget) {
-      this.widgetClick.emit({ widget: originalWidget, data: null });
-    }
-  }
-
-  onWidgetConfigure(widget: any): void {
-    const originalWidget = this.widgets().find((w) => w.id === widget.id);
-    if (originalWidget) {
-      this.widgetConfigure.emit(originalWidget);
-    }
-  }
-
-  onWidgetClose(widget: any): void {
-    const originalWidget = this.widgets().find((w) => w.id === widget.id);
-    if (originalWidget) {
-      this.widgetClose.emit(originalWidget);
-    }
   }
 
   onRetryRequested(): void {
@@ -217,7 +193,15 @@ export class DashboardWidgetsComponent {
     this.goalCardExpand.emit(data);
   }
 
-  getDashboardWidgets(): any[] {
+  getDashboardWidgets() {
     return this.dashboardWidgets();
+  }
+
+  onWidgetConfigure(widget: WidgetConfiguration): void {
+    this.widgetConfigure.emit(widget);
+  }
+
+  onWidgetClose(widget: WidgetConfiguration): void {
+    this.widgetClose.emit(widget);
   }
 }

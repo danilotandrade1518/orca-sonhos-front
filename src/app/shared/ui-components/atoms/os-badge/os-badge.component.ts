@@ -151,7 +151,14 @@ export class OsBadgeComponent {
         case 'goal-overdue':
           return 'warning';
         default:
-          return this.variant() as any;
+          return this.variant() as
+            | 'default'
+            | 'primary'
+            | 'secondary'
+            | 'success'
+            | 'warning'
+            | 'error'
+            | 'info';
       }
     }
     return 'default';

@@ -645,7 +645,7 @@ describe('OsDropdownComponent', () => {
     });
 
     it('should handle option with null value', () => {
-      const optionsWithNull = [{ value: null as any, label: 'Null option' }];
+      const optionsWithNull = [{ value: null as string | number | null, label: 'Null option' }];
       fixture.componentRef.setInput('options', optionsWithNull);
       fixture.componentRef.setInput('selectedValue', null);
       fixture.detectChanges();

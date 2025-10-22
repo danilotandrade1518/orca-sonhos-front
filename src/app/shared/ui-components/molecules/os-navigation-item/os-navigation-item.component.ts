@@ -123,8 +123,8 @@ export class OsNavigationItemComponent {
   hasSubNav = input(false);
   isExpanded = input(false);
 
-  itemClick = output<MouseEvent>();
-  toggle = output<void>();
+  itemClicked = output<MouseEvent>();
+  toggleExpanded = output<void>();
 
   isActive = computed(() => this.active());
 
@@ -243,9 +243,9 @@ export class OsNavigationItemComponent {
     if (!this.disabled()) {
       if (this.hasSubNav()) {
         event.preventDefault();
-        this.toggle.emit();
+        this.toggleExpanded.emit();
       }
-      this.itemClick.emit(event);
+      this.itemClicked.emit(event);
     }
   }
 
@@ -254,14 +254,14 @@ export class OsNavigationItemComponent {
       event.preventDefault();
       if (!this.disabled()) {
         if (this.hasSubNav()) {
-          this.toggle.emit();
+          this.toggleExpanded.emit();
         }
         const mouseEvent = new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
           view: window,
         });
-        this.itemClick.emit(mouseEvent);
+        this.itemClicked.emit(mouseEvent);
       }
     }
   }
