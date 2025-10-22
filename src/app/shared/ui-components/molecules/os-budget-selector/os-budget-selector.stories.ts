@@ -1,17 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import {
-  OsBudgetSelectorEnhancedComponent,
-  BudgetOption,
-} from './os-budget-selector-enhanced.component';
+import { OsBudgetSelectorComponent, BudgetOption } from './os-budget-selector.component';
 
-const meta: Meta<OsBudgetSelectorEnhancedComponent> = {
-  title: 'Design System/Molecules/Budget Selector Enhanced',
-  component: OsBudgetSelectorEnhancedComponent,
+const meta: Meta<OsBudgetSelectorComponent> = {
+  title: 'Design System/Molecules/Budget Selector',
+  component: OsBudgetSelectorComponent,
   parameters: {
     docs: {
       description: {
         component:
-          'Seletor de orçamento melhorado do Design System OrçaSonhos com indicadores visuais, ações rápidas e acessibilidade WCAG 2.1 AA.',
+          'Seletor de orçamento do Design System OrçaSonhos com indicadores visuais, ações rápidas e acessibilidade WCAG 2.1 AA.',
       },
     },
   },
@@ -84,7 +81,7 @@ const meta: Meta<OsBudgetSelectorEnhancedComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<OsBudgetSelectorEnhancedComponent>;
+type Story = StoryObj<OsBudgetSelectorComponent>;
 
 // Sample data
 const sampleBudgets: BudgetOption[] = [
@@ -350,8 +347,7 @@ export const AccessibilityDemo: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'Demonstração das funcionalidades de acessibilidade do seletor de orçamento melhorado.',
+        story: 'Demonstração das funcionalidades de acessibilidade do seletor de orçamento.',
       },
     },
   },

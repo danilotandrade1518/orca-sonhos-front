@@ -12,4 +12,4 @@ export * from './os-search-box/os-search-box.component';
 export * from './os-data-table/os-data-table.component';
 export * from './os-date-picker/os-date-picker.component';
 export * from './os-goal-progress-card/os-goal-progress-card.component';
-export * from './os-budget-selector-enhanced/os-budget-selector-enhanced.component';
+export * from './os-budget-selector/os-budget-selector.component';

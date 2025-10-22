@@ -32,7 +32,7 @@ export interface BudgetOption {
 export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 
 @Component({
-  selector: 'os-budget-selector-enhanced',
+  selector: 'os-budget-selector',
   standalone: true,
   imports: [
     CommonModule,
@@ -43,7 +43,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
   ],
   template: `
     <div
-      class="os-budget-selector-enhanced"
+      class="os-budget-selector"
       [class]="containerClass()"
       role="combobox"
       [attr.aria-expanded]="isDropdownOpen()"
@@ -55,7 +55,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
       (keydown)="onKeyDown($event)"
     >
       <!-- Main Selector -->
-      <div class="os-budget-selector-enhanced__main">
+      <div class="os-budget-selector__main">
         <os-dropdown
           id="budget-selector-dropdown"
           [options]="dropdownOptions()"
@@ -68,11 +68,11 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
           (valueChange)="onBudgetSelect($event)"
           (optionSelect)="onOptionSelect($event)"
           (dropdownToggle)="onDropdownToggle($event)"
-          class="os-budget-selector-enhanced__dropdown"
+          class="os-budget-selector__dropdown"
         />
 
         @if (showQuickActions() && !isMobile()) {
-        <div class="os-budget-selector-enhanced__quick-actions">
+        <div class="os-budget-selector__quick-actions">
           @if (showCreateButton()) {
           <os-button
             [variant]="'secondary'"
@@ -81,7 +81,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
             [icon]="'add'"
             [ariaLabel]="'Criar novo orçamento'"
             (buttonClick)="onCreateBudget()"
-            class="os-budget-selector-enhanced__create-button"
+            class="os-budget-selector__create-button"
           >
             Criar
           </os-button>
@@ -93,7 +93,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
             [icon]="'share'"
             [ariaLabel]="'Compartilhar orçamento'"
             (buttonClick)="onShareBudget()"
-            class="os-budget-selector-enhanced__share-button"
+            class="os-budget-selector__share-button"
           >
             Compartilhar
           </os-button>
@@ -104,7 +104,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 
       <!-- Mobile Actions -->
       @if (isMobile()) {
-      <div class="os-budget-selector-enhanced__mobile-actions">
+      <div class="os-budget-selector__mobile-actions">
         @if (showCreateButton()) {
         <os-button
           [variant]="'primary'"
@@ -113,7 +113,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
           [icon]="'add'"
           [ariaLabel]="'Criar novo orçamento'"
           (buttonClick)="onCreateBudget()"
-          class="os-budget-selector-enhanced__mobile-create"
+          class="os-budget-selector__mobile-create"
         >
           Criar Novo
         </os-button>
@@ -125,7 +125,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
           [icon]="'share'"
           [ariaLabel]="'Compartilhar orçamento'"
           (buttonClick)="onShareBudget()"
-          class="os-budget-selector-enhanced__mobile-share"
+          class="os-budget-selector__mobile-share"
         >
           Compartilhar
         </os-button>
@@ -135,7 +135,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 
       <!-- Loading State -->
       @if (isLoading()) {
-      <div class="os-budget-selector-enhanced__loading" aria-hidden="true">
+      <div class="os-budget-selector__loading" aria-hidden="true">
         <os-spinner size="sm" variant="primary" />
       </div>
       }
@@ -144,20 +144,20 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
       @if (hasError()) {
       <div
         id="budget-selector-error"
-        class="os-budget-selector-enhanced__error"
+        class="os-budget-selector__error"
         role="alert"
         aria-live="assertive"
       >
         <os-icon name="error" size="sm" variant="error" aria-hidden="true" />
-        <span class="os-budget-selector-enhanced__error-text">{{ errorMessage() }}</span>
+        <span class="os-budget-selector__error-text">{{ errorMessage() }}</span>
       </div>
       }
 
       <!-- Empty State -->
       @if (isEmpty() && !isLoading()) {
-      <div class="os-budget-selector-enhanced__empty" role="status">
+      <div class="os-budget-selector__empty" role="status">
         <os-icon name="info" size="md" variant="info" aria-hidden="true" />
-        <span class="os-budget-selector-enhanced__empty-text">{{ emptyMessage() }}</span>
+        <span class="os-budget-selector__empty-text">{{ emptyMessage() }}</span>
         @if (showCreateButton()) {
         <os-button
           [variant]="'primary'"
@@ -165,7 +165,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
           [icon]="'add'"
           [ariaLabel]="'Criar primeiro orçamento'"
           (buttonClick)="onCreateBudget()"
-          class="os-budget-selector-enhanced__empty-create"
+          class="os-budget-selector__empty-create"
         >
           Criar Primeiro Orçamento
         </os-button>
@@ -175,24 +175,24 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 
       <!-- Budget Info (when selected) -->
       @if (selectedBudget() && !isLoading() && !hasError()) {
-      <div class="os-budget-selector-enhanced__info">
-        <div class="os-budget-selector-enhanced__info-item">
+      <div class="os-budget-selector__info">
+        <div class="os-budget-selector__info-item">
           <os-icon name="people" size="xs" variant="default" aria-hidden="true" />
-          <span class="os-budget-selector-enhanced__info-text">
+          <span class="os-budget-selector__info-text">
             {{ getParticipantsText() }}
           </span>
         </div>
         @if (selectedBudget()?.balance !== undefined) {
-        <div class="os-budget-selector-enhanced__info-item">
+        <div class="os-budget-selector__info-item">
           <os-icon name="wallet" size="xs" variant="default" aria-hidden="true" />
-          <span class="os-budget-selector-enhanced__info-text">
+          <span class="os-budget-selector__info-text">
             Saldo: {{ formatCurrency(selectedBudget()?.balance || 0) }}
           </span>
         </div>
         } @if (selectedBudget()?.lastModified) {
-        <div class="os-budget-selector-enhanced__info-item">
+        <div class="os-budget-selector__info-item">
           <os-icon name="time" size="xs" variant="default" aria-hidden="true" />
-          <span class="os-budget-selector-enhanced__info-text">
+          <span class="os-budget-selector__info-text">
             Atualizado: {{ formatDate(selectedBudget()?.lastModified) }}
           </span>
         </div>
@@ -201,10 +201,10 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
       }
     </div>
   `,
-  styleUrls: ['./os-budget-selector-enhanced.component.scss'],
+  styleUrls: ['./os-budget-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OsBudgetSelectorEnhancedComponent {
+export class OsBudgetSelectorComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   // Inputs
@@ -259,34 +259,34 @@ export class OsBudgetSelectorEnhancedComponent {
   });
 
   readonly containerClass = computed(() => {
-    const classes = ['os-budget-selector-enhanced'];
+    const classes = ['os-budget-selector'];
 
     if (this.variant() !== 'default') {
-      classes.push(`os-budget-selector-enhanced--${this.variant()}`);
+      classes.push(`os-budget-selector--${this.variant()}`);
     }
 
     if (this.size() !== 'medium') {
-      classes.push(`os-budget-selector-enhanced--${this.size()}`);
+      classes.push(`os-budget-selector--${this.size()}`);
     }
 
     if (this.state() !== 'default') {
-      classes.push(`os-budget-selector-enhanced--${this.state()}`);
+      classes.push(`os-budget-selector--${this.state()}`);
     }
 
     if (this.isMobile()) {
-      classes.push('os-budget-selector-enhanced--mobile');
+      classes.push('os-budget-selector--mobile');
     }
 
     if (this.isLoading()) {
-      classes.push('os-budget-selector-enhanced--loading');
+      classes.push('os-budget-selector--loading');
     }
 
     if (this.hasError()) {
-      classes.push('os-budget-selector-enhanced--error');
+      classes.push('os-budget-selector--error');
     }
 
     if (this.isEmpty()) {
-      classes.push('os-budget-selector-enhanced--empty');
+      classes.push('os-budget-selector--empty');
     }
 
     return classes.join(' ');

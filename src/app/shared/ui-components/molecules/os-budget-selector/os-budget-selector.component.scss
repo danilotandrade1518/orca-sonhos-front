@@ -1,7 +1,7 @@
-// os-budget-selector-enhanced - Seletor de Orçamento Melhorado
+// os-budget-selector - Seletor de Orçamento
 // Design System OrçaSonhos - Molecule Component
 
-.os-budget-selector-enhanced {
+.os-budget-selector {
   // Base styles
   background-color: var(--os-color-background-primary);
   border: 1px solid var(--os-color-border);
@@ -166,11 +166,11 @@
   &--small {
     padding: var(--os-spacing-1) var(--os-spacing-2);
 
-    .os-budget-selector-enhanced__info {
+    .os-budget-selector__info {
       gap: var(--os-spacing-1);
     }
 
-    .os-budget-selector-enhanced__info-item {
+    .os-budget-selector__info-item {
       font-size: var(--os-font-size-xs);
     }
   }
@@ -178,11 +178,11 @@
   &--large {
     padding: var(--os-spacing-3) var(--os-spacing-4);
 
-    .os-budget-selector-enhanced__info {
+    .os-budget-selector__info {
       gap: var(--os-spacing-3);
     }
 
-    .os-budget-selector-enhanced__info-item {
+    .os-budget-selector__info-item {
       font-size: var(--os-font-size-sm);
     }
   }
@@ -192,7 +192,7 @@
     cursor: wait;
     pointer-events: none;
 
-    .os-budget-selector-enhanced__dropdown {
+    .os-budget-selector__dropdown {
       opacity: 0.6;
     }
   }
@@ -220,23 +220,23 @@
 
   // Mobile specific
   &--mobile {
-    .os-budget-selector-enhanced__main {
+    .os-budget-selector__main {
       flex-direction: column;
       align-items: stretch;
     }
 
-    .os-budget-selector-enhanced__quick-actions {
+    .os-budget-selector__quick-actions {
       display: none;
     }
 
-    .os-budget-selector-enhanced__mobile-actions {
+    .os-budget-selector__mobile-actions {
       display: flex;
     }
   }
 
   // Desktop specific
-  &:not(.os-budget-selector-enhanced--mobile) {
-    .os-budget-selector-enhanced__mobile-actions {
+  &:not(.os-budget-selector--mobile) {
+    .os-budget-selector__mobile-actions {
       display: none;
     }
   }
@@ -244,7 +244,7 @@
 
 // Responsive design
 @media (max-width: 768px) {
-  .os-budget-selector-enhanced {
+  .os-budget-selector {
     &__info {
       flex-direction: column;
       align-items: flex-start;
@@ -258,7 +258,7 @@
 }
 
 @media (max-width: 480px) {
-  .os-budget-selector-enhanced {
+  .os-budget-selector {
     padding: var(--os-spacing-2);
 
     &__main {
@@ -273,7 +273,7 @@
 
 // High contrast mode
 @media (prefers-contrast: high) {
-  .os-budget-selector-enhanced {
+  .os-budget-selector {
     border-width: 2px;
 
     &:focus-visible {
@@ -288,7 +288,7 @@
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-  .os-budget-selector-enhanced {
+  .os-budget-selector {
     transition: none;
 
     &:hover {
@@ -299,7 +299,7 @@
 
 // Dark mode support (preparado para futuro)
 @media (prefers-color-scheme: dark) {
-  .os-budget-selector-enhanced {
+  .os-budget-selector {
     &--empty {
       background-color: var(--os-color-neutral-800);
       border-color: var(--os-color-neutral-600);

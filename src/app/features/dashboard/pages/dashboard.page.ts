@@ -46,7 +46,7 @@ import {
             </div>
 
             <div class="dashboard-header__actions">
-              <os-budget-selector
+              <os-dashboard-budget-selector
                 id="budget-selector"
                 [variant]="'primary'"
                 [size]="'medium'"

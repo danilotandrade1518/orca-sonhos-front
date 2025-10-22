@@ -10,18 +10,18 @@ import {
 import { CommonModule } from '@angular/common';
 
 import {
-  OsBudgetSelectorEnhancedComponent,
+  OsBudgetSelectorComponent,
   BudgetOption,
-} from '../../../../shared/ui-components/molecules/os-budget-selector-enhanced/os-budget-selector-enhanced.component';
+} from '../../../../shared/ui-components/molecules/os-budget-selector/os-budget-selector.component';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { BudgetDto } from '../../../../../dtos/budget/budget-types';
 
 @Component({
-  selector: 'os-budget-selector',
+  selector: 'os-dashboard-budget-selector',
   standalone: true,
-  imports: [CommonModule, OsBudgetSelectorEnhancedComponent],
+  imports: [CommonModule, OsBudgetSelectorComponent],
   template: `
-    <os-budget-selector-enhanced
+    <os-budget-selector
       [budgets]="budgetOptions()"
       [selectedBudgetId]="selectedBudgetId()"
       [variant]="variant()"
