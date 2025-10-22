@@ -16,7 +16,7 @@ import {
   standalone: true,
   imports: [CommonModule, BudgetSelectorComponent, DashboardWidgetsComponent, OsSidebarComponent],
   template: `
-    <div class="dashboard-page">
+    <div [class]="pageClass()">
       <!-- Skip Links for Accessibility -->
       <a href="#main-content" class="dashboard-skip-link">Pular para conteúdo principal</a>
       <a href="#budget-selector" class="dashboard-skip-link">Pular para seletor de orçamento</a>
@@ -85,6 +85,7 @@ export class DashboardPage implements OnInit {
   // Signals
   readonly isLoading = signal(false);
   readonly sidebarCollapsed = signal(false);
+  readonly currentPersona = signal<'ana' | 'carlos' | 'roberto-maria' | 'julia'>('ana');
 
   // Computed properties
   readonly sidebarItems = computed((): SidebarItem[] => [
@@ -160,6 +161,12 @@ export class DashboardPage implements OnInit {
       enabled: true,
     },
   ]);
+
+  readonly pageClass = computed(() => {
+    const baseClass = 'dashboard-page';
+    const persona = this.currentPersona();
+    return `${baseClass} ${baseClass}--persona-${persona}`;
+  });
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -242,5 +249,21 @@ export class DashboardPage implements OnInit {
       // Future: implement modal/dropdown closing
       console.log('Escape key pressed');
     }
+  }
+
+  // Persona management methods
+  setPersona(persona: 'ana' | 'carlos' | 'roberto-maria' | 'julia'): void {
+    this.currentPersona.set(persona);
+  }
+
+  getPersonaDescription(): string {
+    const persona = this.currentPersona();
+    const descriptions = {
+      ana: 'Organizadora Familiar - Interface intuitiva para compartilhamento',
+      carlos: 'Jovem Planejador - Onboarding educativo e simplicidade',
+      'roberto-maria': 'Casal Experiente - Múltiplas metas e relatórios avançados',
+      julia: 'Empreendedora Iniciante - Flexibilidade para renda variável',
+    };
+    return descriptions[persona];
   }
 }
