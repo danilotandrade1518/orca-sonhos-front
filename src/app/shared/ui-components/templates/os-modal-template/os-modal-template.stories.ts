@@ -127,19 +127,6 @@ const infoConfig = {
   ],
 };
 
-  // const compactConfig = {
-  //   title: 'Confirmação Rápida',
-  //   showCloseButton: true,
-  //   showHeader: true,
-  //   showFooter: true,
-  //   showActions: true,
-  //   showConfirmButton: true,
-  //   showCancelButton: true,
-  //   confirmButtonText: 'Sim',
-  //   cancelButtonText: 'Não',
-  //   actions: [],
-  // };
-
 export const Default: Story = {
   args: {
     config: sampleConfig,
