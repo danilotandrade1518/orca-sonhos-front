@@ -56,92 +56,19 @@ const meta: Meta<OsDrawerTemplateComponent> = {
 export default meta;
 type Story = StoryObj<OsDrawerTemplateComponent>;
 
-const sampleConfig = {
-  title: 'Configurações',
-  subtitle: 'Ajuste as configurações do sistema',
-  showCloseButton: true,
-  showHeader: true,
-  showFooter: true,
-  showActions: true,
-  closeButtonText: 'Fechar',
-  confirmButtonText: 'Salvar',
-  cancelButtonText: 'Cancelar',
-  showConfirmButton: true,
-  showCancelButton: true,
-  actions: [
-    {
-      label: 'Aplicar',
-      variant: 'primary' as const,
-      size: 'medium' as const,
-      disabled: false,
-      loading: false,
-      icon: 'check',
-    },
-    {
-      label: 'Resetar',
-      variant: 'secondary' as const,
-      size: 'medium' as const,
-      disabled: false,
-      loading: false,
-      icon: 'refresh',
-    },
-  ],
-};
-
-const compactConfig = {
-  title: 'Drawer Compacto',
-  showCloseButton: true,
-  showHeader: true,
-  showFooter: false,
-  showActions: true,
-  showConfirmButton: true,
-  showCancelButton: false,
-  confirmButtonText: 'OK',
-};
-
-const detailedConfig = {
-  title: 'Configurações Detalhadas',
-  subtitle: 'Configure todas as opções disponíveis no sistema',
-  showCloseButton: true,
-  showHeader: true,
-  showFooter: true,
-  showActions: true,
-  closeButtonText: 'Fechar',
-  confirmButtonText: 'Salvar Alterações',
-  cancelButtonText: 'Descartar',
-  showConfirmButton: true,
-  showCancelButton: true,
-  actions: [
-    {
-      label: 'Aplicar',
-      variant: 'primary' as const,
-      size: 'medium' as const,
-      disabled: false,
-      loading: false,
-      icon: 'check',
-    },
-    {
-      label: 'Resetar',
-      variant: 'secondary' as const,
-      size: 'medium' as const,
-      disabled: false,
-      loading: false,
-      icon: 'refresh',
-    },
-    {
-      label: 'Exportar',
-      variant: 'tertiary' as const,
-      size: 'medium' as const,
-      disabled: false,
-      loading: false,
-      icon: 'download',
-    },
-  ],
-};
-
 export const Default: Story = {
   args: {
-    config: sampleConfig,
+    config: {
+      title: 'Configurações',
+      subtitle: 'Gerencie suas preferências e configurações',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Cancelar',
+    },
     size: 'medium',
     variant: 'default',
     theme: 'light',
@@ -150,578 +77,200 @@ export const Default: Story = {
     loading: false,
     valid: true,
   },
-  render: (args) => ({
-    props: args,
-    template: `
-      <div style="position: relative; height: 400px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-        <os-drawer-template
-          [config]="config"
-          [size]="size"
-          [variant]="variant"
-          [theme]="theme"
-          [position]="position"
-          [disabled]="disabled"
-          [loading]="loading"
-          [valid]="valid"
-          (closed)="closed()"
-          (confirmed)="confirmed()"
-          (cancelled)="cancelled()"
-          (actionClick)="actionClick($event)"
-        >
-          <div style="padding: 20px;">
-            <h3>Conteúdo do Drawer</h3>
-            <p>Este é o conteúdo principal do drawer. Aqui você pode colocar formulários, listas, ou qualquer outro conteúdo.</p>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <div>
-                <label>Campo de Texto:</label>
-                <input type="text" placeholder="Digite aqui" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-              </div>
-              <div>
-                <label>Seleção:</label>
-                <select style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                  <option>Opção 1</option>
-                  <option>Opção 2</option>
-                  <option>Opção 3</option>
-                </select>
-              </div>
-              <div>
-                <label>
-                  <input type="checkbox" style="margin-right: 8px;">
-                  Aceitar termos e condições
-                </label>
-              </div>
-            </div>
-          </div>
-        </os-drawer-template>
-      </div>
-    `,
-  }),
 };
 
-export const Variants: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Default</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="defaultConfig"
-              variant="default"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer padrão com todas as funcionalidades.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Compact</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="compactConfig"
-              variant="compact"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer compacto para economizar espaço.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Detailed</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="detailedConfig"
-              variant="detailed"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer detalhado com mais informações.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-      </div>
-    `,
-    props: {
-      defaultConfig: {
-        title: 'Drawer Default',
-        subtitle: 'Drawer padrão do sistema',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-      compactConfig,
-      detailedConfig,
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Todas as variantes disponíveis do template de drawer.',
-      },
+export const Compact: Story = {
+  args: {
+    ...Default.args,
+    variant: 'compact',
+    size: 'small',
+    config: {
+      title: 'Ação Rápida',
+      subtitle: 'Confirmação necessária',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
     },
   },
 };
 
-export const Sizes: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Small</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              size="small"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer pequeno para interfaces compactas.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Medium</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              size="medium"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer médio para a maioria dos casos de uso.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Large</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              size="large"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer grande para conteúdo extenso.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-      </div>
-    `,
-    props: {
-      config: {
-        title: 'Drawer',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Todos os tamanhos disponíveis do template de drawer.',
-      },
-    },
-  },
-};
-
-export const Positions: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Left</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              position="left"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer posicionado à esquerda.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Right</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              position="right"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer posicionado à direita.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Top</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              position="top"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer posicionado no topo.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Bottom</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              position="bottom"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer posicionado na parte inferior.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-      </div>
-    `,
-    props: {
-      config: {
-        title: 'Drawer',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Todas as posições disponíveis do template de drawer.',
-      },
-    },
-  },
-};
-
-export const Themes: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Light Theme</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              theme="light"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer com tema claro.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Dark Theme</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              theme="dark"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer com tema escuro.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-      </div>
-    `,
-    props: {
-      config: {
-        title: 'Drawer',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Temas claro e escuro do template de drawer.',
-      },
-    },
-  },
-};
-
-export const WithoutHeader: Story = {
-  render: () => ({
-    template: `
-      <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-        <os-drawer-template
-          [config]="configWithoutHeader"
-        >
-          <div style="padding: 20px;">
-            <h3>Drawer sem Header</h3>
-            <p>Este drawer não possui header, apenas o conteúdo e as ações.</p>
-          </div>
-        </os-drawer-template>
-      </div>
-    `,
-    props: {
-      configWithoutHeader: {
-        title: 'Drawer sem Header',
-        showCloseButton: false,
-        showHeader: false,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Drawer sem header para uma interface mais limpa.',
-      },
-    },
-  },
-};
-
-export const WithoutActions: Story = {
-  render: () => ({
-    template: `
-      <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-        <os-drawer-template
-          [config]="configWithoutActions"
-        >
-          <div style="padding: 20px;">
-            <h3>Drawer sem Ações</h3>
-            <p>Este drawer não possui ações, apenas o conteúdo.</p>
-          </div>
-        </os-drawer-template>
-      </div>
-    `,
-    props: {
-      configWithoutActions: {
-        title: 'Drawer sem Ações',
-        subtitle: 'Apenas visualização',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: false,
-        showActions: false,
-        showConfirmButton: false,
-        showCancelButton: false,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Drawer sem ações para visualização apenas.',
-      },
+export const Detailed: Story = {
+  args: {
+    ...Default.args,
+    variant: 'detailed',
+    size: 'large',
+    config: {
+      title: 'Configurações Avançadas',
+      subtitle: 'Configure opções detalhadas do sistema',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Aplicar Configurações',
+      cancelButtonText: 'Descartar',
     },
   },
 };
 
 export const WithCustomActions: Story = {
-  render: () => ({
-    template: `
-      <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-        <os-drawer-template
-          [config]="configWithCustomActions"
-        >
-          <div style="padding: 20px;">
-            <h3>Drawer com Ações Customizadas</h3>
-            <p>Este drawer possui ações personalizadas além dos botões padrão.</p>
-          </div>
-        </os-drawer-template>
-      </div>
-    `,
-    props: {
-      configWithCustomActions: {
-        title: 'Drawer com Ações Customizadas',
-        subtitle: 'Múltiplas opções de ação',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-        actions: [
-          {
-            label: 'Salvar como Rascunho',
-            variant: 'secondary' as const,
-            size: 'medium' as const,
-            disabled: false,
-            loading: false,
-            icon: 'save',
-          },
-          {
-            label: 'Pré-visualizar',
-            variant: 'tertiary' as const,
-            size: 'medium' as const,
-            disabled: false,
-            loading: false,
-            icon: 'visibility',
-          },
-          {
-            label: 'Excluir',
-            variant: 'danger' as const,
-            size: 'medium' as const,
-            disabled: false,
-            loading: false,
-            icon: 'delete',
-          },
-        ],
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Drawer com ações personalizadas além dos botões padrão.',
-      },
-    },
-  },
-};
-
-export const LoadingState: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Carregando</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              [loading]="true"
-            >
-              <div style="padding: 20px;">
-                <p>Processando dados...</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-
-        <div>
-          <h4>Carregado</h4>
-          <div style="position: relative; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-            <os-drawer-template
-              [config]="config"
-              [loading]="false"
-            >
-              <div style="padding: 20px;">
-                <p>Drawer carregado com sucesso.</p>
-              </div>
-            </os-drawer-template>
-          </div>
-        </div>
-      </div>
-    `,
-    props: {
-      config: {
-        title: 'Drawer',
-        showCloseButton: true,
-        showHeader: true,
-        showFooter: true,
-        showActions: true,
-        showConfirmButton: true,
-        showCancelButton: true,
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Estados de carregamento do template de drawer.',
-      },
-    },
-  },
-};
-
-export const Interactive: Story = {
   args: {
-    config: sampleConfig,
-    size: 'medium',
-    variant: 'default',
-    theme: 'light',
-    position: 'right',
-    disabled: false,
-    loading: false,
-    valid: true,
+    ...Default.args,
+    config: {
+      title: 'Ações Múltiplas',
+      subtitle: 'Escolha uma das opções disponíveis',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Cancelar',
+      actions: [
+        {
+          label: 'Duplicar',
+          variant: 'secondary',
+          size: 'medium',
+          icon: 'copy',
+        },
+        {
+          label: 'Excluir',
+          variant: 'danger',
+          size: 'medium',
+          icon: 'trash',
+        },
+      ],
+    },
   },
-  render: (args) => ({
-    props: args,
-    template: `
-      <div style="position: relative; height: 400px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-        <os-drawer-template
-          [config]="config"
-          [size]="size"
-          [variant]="variant"
-          [theme]="theme"
-          [position]="position"
-          [disabled]="disabled"
-          [loading]="loading"
-          [valid]="valid"
-          (closed)="closed()"
-          (confirmed)="confirmed()"
-          (cancelled)="cancelled()"
-          (actionClick)="actionClick($event)"
-        >
-          <div style="padding: 20px;">
-            <h3>Drawer Interativo</h3>
-            <p>Use os controles para testar diferentes configurações do drawer.</p>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <div>
-                <label>Campo de Texto:</label>
-                <input type="text" placeholder="Digite aqui" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-              </div>
-              <div>
-                <label>Seleção:</label>
-                <select style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                  <option>Opção 1</option>
-                  <option>Opção 2</option>
-                  <option>Opção 3</option>
-                </select>
-              </div>
-              <div>
-                <label>
-                  <input type="checkbox" style="margin-right: 8px;">
-                  Aceitar termos e condições
-                </label>
-              </div>
-            </div>
-          </div>
-        </os-drawer-template>
-      </div>
-    `,
-  }),
+};
+
+export const Loading: Story = {
+  args: {
+    ...Default.args,
+    loading: true,
+    config: {
+      title: 'Processando...',
+      subtitle: 'Aguarde enquanto processamos sua solicitação',
+      showCloseButton: false,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Processando...',
+    },
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    ...Default.args,
+    disabled: true,
+    config: {
+      title: 'Modo Somente Leitura',
+      subtitle: 'Este drawer está em modo somente leitura',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Fechar',
+    },
+  },
+};
+
+export const DarkTheme: Story = {
+  args: {
+    ...Default.args,
+    theme: 'dark',
+    config: {
+      title: 'Tema Escuro',
+      subtitle: 'Interface com tema escuro ativado',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Aplicar',
+      cancelButtonText: 'Cancelar',
+    },
+  },
+};
+
+export const LeftPosition: Story = {
+  args: {
+    ...Default.args,
+    position: 'left',
+    config: {
+      title: 'Navegação',
+      subtitle: 'Menu lateral de navegação',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: false,
+    },
+  },
+};
+
+export const TopPosition: Story = {
+  args: {
+    ...Default.args,
+    position: 'top',
+    size: 'small',
+    config: {
+      title: 'Notificação',
+      subtitle: 'Mensagem importante do sistema',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Entendi',
+    },
+  },
+};
+
+export const BottomPosition: Story = {
+  args: {
+    ...Default.args,
+    position: 'bottom',
+    size: 'small',
+    config: {
+      title: 'Ações Rápidas',
+      subtitle: 'Acesso rápido a funcionalidades',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Executar',
+      cancelButtonText: 'Fechar',
+    },
+  },
+};
+
+export const MobileResponsive: Story = {
+  args: {
+    ...Default.args,
+    size: 'medium',
+    config: {
+      title: 'Responsivo',
+      subtitle: 'Otimizado para dispositivos móveis',
+      showCloseButton: true,
+      showHeader: true,
+      showActions: true,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Voltar',
+    },
+  },
   parameters: {
-    docs: {
-      description: {
-        story: 'Template de drawer interativo com controles para testar todas as propriedades.',
-      },
+    viewport: {
+      defaultViewport: 'mobile1',
     },
   },
 };
