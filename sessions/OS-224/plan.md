@@ -86,7 +86,7 @@ Substituir ícone de moeda `attach_money` para `os-icon` com `matPrefix`.
 
 ---
 
-## 📅 FASE 3: Migração no `os-date-input` [Status: ⏳]
+## 📅 FASE 3: Migração no `os-date-input` [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -94,30 +94,35 @@ Substituir prefix/suffix por `os-icon` e avaliar o `matDatepickerToggleIcon`.
 
 ### 📋 Tarefas
 
-#### Migrar prefix/suffix [⏳]
+#### Migrar prefix/suffix [✅]
 
 **Descrição**: Trocar `<mat-icon matPrefix|matSuffix>` por `<os-icon>` mantendo classes.
 **Critério de Conclusão**: Paridade visual e funcional.
 
-#### Avaliar e decidir sobre `matDatepickerToggleIcon` [⏳]
+#### Avaliar e decidir sobre `matDatepickerToggleIcon` [✅]
 
 **Descrição**: Verificar se a diretiva aceita `os-icon`. Se não, manter exceção documentada.
 **Critério de Conclusão**: Toggle funciona e está documentado.
 
-#### Ajustar imports (se possível) [⏳]
+#### Ajustar imports (se possível) [✅]
 
 **Descrição**: Remover `MatIconModule` se não houver mais uso direto.
 **Critério de Conclusão**: Build ok.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Prefix/suffix com `os-icon` sem regressões
-- [ ] Toggle do datepicker funcional e acessível
-- [ ] Tests do componente passando
+- [x] Prefix/suffix com `os-icon` sem regressões
+- [x] Toggle do datepicker funcional e acessível
+- [x] Tests do componente passando
 
 ### 📝 Comentários da Fase
 
-\_
+- **Migração concluída**: Prefix e suffix migrados para `os-icon` com sucesso
+- **Toggle avaliado**: `matDatepickerToggleIcon` funciona perfeitamente com `os-icon`
+- **Ícones adicionados**: Suporte ao ícone `calendar_today` adicionado ao `os-icon`
+- **Testes atualizados**: Ajustados para usar `os-icon` ao invés de `mat-icon`
+- **Funcionalidade preservada**: Datepicker toggle funcionando corretamente
+- **Todos os testes passando**: 38 testes executados com sucesso
 
 ---
 
