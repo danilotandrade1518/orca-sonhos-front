@@ -329,9 +329,12 @@ describe('OsBudgetTrackerComponent', () => {
     const chartBars = fixture.debugElement.queryAll(By.css('.os-budget-tracker__chart-bar-fill'));
     expect(chartBars.length).toBe(6);
 
-    // Check if bars have correct height percentages
+    // Check if bars have correct height percentages based on chartData calculation
+    const chartData = component.chartData();
+    expect(chartData).toBeTruthy();
+
     chartBars.forEach((bar, index) => {
-      const expectedHeight = component.monthlyData()[index].percentage;
+      const expectedHeight = chartData!.bars[index].height;
       expect(bar.nativeElement.style.height).toBe(`${expectedHeight}%`);
     });
   });

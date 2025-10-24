@@ -308,17 +308,18 @@ describe('OsSearchBoxComponent', () => {
     expect(component.activeSuggestionId()).toBeNull();
   });
 
-  it('should emit debounced search events', (done) => {
-    vi.spyOn(component.debouncedSearch, 'emit');
+  it('should emit debounced search events', async () => {
+    const debouncedSearchSpy = vi.fn();
+    component.debouncedSearch.subscribe(debouncedSearchSpy);
 
     component.onValueChange('test');
     component.onValueChange('test2');
     component.onValueChange('test3');
 
-    setTimeout(() => {
-      expect(component.debouncedSearch.emit).toHaveBeenCalledWith('test3');
-      done();
-    }, 350);
+    // Wait for debounce time (300ms) plus some buffer
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    expect(debouncedSearchSpy).toHaveBeenCalledWith('test3');
   });
 
   it('should show no results message when no suggestions match', () => {

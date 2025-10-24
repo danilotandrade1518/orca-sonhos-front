@@ -9,6 +9,22 @@ import { OsDataTableComponent } from '../../molecules/os-data-table/os-data-tabl
 import { OsFilterBarComponent } from '../../molecules/os-filter-bar/os-filter-bar.component';
 import { OsTransactionListComponent, Transaction } from './os-transaction-list.component';
 
+// Mock do ResizeObserver para este teste
+const mockResizeObserver = vi.fn();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+mockResizeObserver.mockImplementation((callback: ResizeObserverCallback) => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// Mock global do ResizeObserver
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: mockResizeObserver,
+});
+
 describe('OsTransactionListComponent', () => {
   let component: OsTransactionListComponent;
   let fixture: ComponentFixture<OsTransactionListComponent>;
@@ -192,5 +208,37 @@ describe('OsTransactionListComponent', () => {
 
     fixture.componentRef.setInput('size', 'large');
     expect(component.getTableSize()).toBe('large');
+  });
+
+  it('should setup ResizeObserver on ngAfterViewInit', () => {
+    const observeSpy = vi.fn();
+    const mockObserver = {
+      observe: observeSpy,
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
+    };
+
+    mockResizeObserver.mockReturnValue(mockObserver);
+
+    component.ngAfterViewInit();
+
+    expect(mockResizeObserver).toHaveBeenCalled();
+    expect(observeSpy).toHaveBeenCalled();
+  });
+
+  it('should disconnect ResizeObserver on ngOnDestroy', () => {
+    const disconnectSpy = vi.fn();
+    const mockObserver = {
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: disconnectSpy,
+    };
+
+    mockResizeObserver.mockReturnValue(mockObserver);
+
+    component.ngAfterViewInit();
+    component.ngOnDestroy();
+
+    expect(disconnectSpy).toHaveBeenCalled();
   });
 });

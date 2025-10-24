@@ -67,16 +67,22 @@ describe('BudgetSelectorComponent', () => {
     expect(budgetOptions[0]).toEqual({
       id: '1',
       name: 'Orçamento Pessoal',
+      description: '',
       isActive: true,
       isShared: false,
       participants: 1,
+      lastModified: undefined,
+      balance: undefined,
     });
     expect(budgetOptions[1]).toEqual({
       id: '2',
       name: 'Orçamento Família',
+      description: '',
       isActive: true,
       isShared: true,
       participants: 3,
+      lastModified: undefined,
+      balance: undefined,
     });
   });
 
@@ -246,8 +252,16 @@ describe('BudgetSelectorComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    const containerClass = 'os-budget-selector';
-    expect(containerClass).toContain('os-budget-selector--loading');
+    // Verificar se o state está sendo passado corretamente para o OsBudgetSelectorComponent
+    const osBudgetSelectorElement =
+      fixture.debugElement.nativeElement.querySelector('os-budget-selector');
+    expect(osBudgetSelectorElement).toBeTruthy();
+
+    // Verificar se o componente interno tem as classes corretas
+    // O elemento com as classes CSS está dentro do OsBudgetSelectorComponent
+    const internalSelector = osBudgetSelectorElement.querySelector('.os-budget-selector');
+    expect(internalSelector).toBeTruthy();
+    expect(internalSelector.className).toContain('os-budget-selector--loading');
   });
 
   it('should apply empty class when no budgets available', () => {
@@ -275,7 +289,15 @@ describe('BudgetSelectorComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    const containerClass = 'os-budget-selector';
-    expect(containerClass).toContain('os-budget-selector--empty');
+    // Verificar se o state está sendo passado corretamente para o OsBudgetSelectorComponent
+    const osBudgetSelectorElement =
+      fixture.debugElement.nativeElement.querySelector('os-budget-selector');
+    expect(osBudgetSelectorElement).toBeTruthy();
+
+    // Verificar se o componente interno tem as classes corretas
+    // O elemento com as classes CSS está dentro do OsBudgetSelectorComponent
+    const internalSelector = osBudgetSelectorElement.querySelector('.os-budget-selector');
+    expect(internalSelector).toBeTruthy();
+    expect(internalSelector.className).toContain('os-budget-selector--empty');
   });
 });

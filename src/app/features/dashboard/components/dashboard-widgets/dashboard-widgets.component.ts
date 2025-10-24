@@ -10,7 +10,7 @@ import {
 } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 
 @Component({
-  selector: 'os-dashboard-widgets',
+  selector: 'os-dashboard-widgets-container',
   standalone: true,
   imports: [CommonModule, OsDashboardWidgetsComponent],
   template: `

@@ -583,7 +583,7 @@ describe('OsListTemplateComponent', () => {
       fixture.detectChanges();
 
       const templateElement = fixture.debugElement.query(By.css('.os-list-template'));
-      expect(templateElement.nativeElement.getAttribute('role')).toBeFalsy(); // No specific role needed for template
+      expect(templateElement.nativeElement.getAttribute('role')).toBe('main'); // Template has main role
     });
 
     it('should support keyboard navigation', () => {

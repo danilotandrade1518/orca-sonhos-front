@@ -146,26 +146,31 @@ describe('OsTooltipComponent', () => {
 
     it('should compute matPosition correctly for below', () => {
       fixture.componentRef.setInput('position', 'below');
+      fixture.detectChanges();
       expect(component.matPosition()).toBe('below');
     });
 
     it('should compute matPosition correctly for left', () => {
       fixture.componentRef.setInput('position', 'left');
+      fixture.detectChanges();
       expect(component.matPosition()).toBe('left');
     });
 
     it('should compute matPosition correctly for right', () => {
       fixture.componentRef.setInput('position', 'right');
+      fixture.detectChanges();
       expect(component.matPosition()).toBe('right');
     });
 
     it('should compute matPosition correctly for before', () => {
       fixture.componentRef.setInput('position', 'before');
+      fixture.detectChanges();
       expect(component.matPosition()).toBe('before');
     });
 
     it('should compute matPosition correctly for after', () => {
       fixture.componentRef.setInput('position', 'after');
+      fixture.detectChanges();
       expect(component.matPosition()).toBe('after');
     });
   });

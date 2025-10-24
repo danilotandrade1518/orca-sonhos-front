@@ -64,7 +64,7 @@ import {
         <main id="main-content" class="dashboard-main" role="main" aria-label="Dashboard principal">
           <div class="dashboard-main__container">
             <h2 class="dashboard-main__title" id="dashboard-title">Dashboard</h2>
-            <os-dashboard-widgets
+            <os-dashboard-widgets-container
               [widgets]="dashboardWidgets()"
               [variant]="'default'"
               [size]="'medium'"
