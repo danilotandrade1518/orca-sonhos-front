@@ -86,7 +86,6 @@ export {
 export {
   OsDashboardWidgetsComponent,
   type DashboardWidget,
-  type BudgetSummaryData,
   type TransactionData,
   type AccountBalanceData,
   type DashboardState,

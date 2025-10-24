@@ -153,7 +153,7 @@ describe('OsNavigationItemComponent', () => {
   describe('interactions', () => {
     it('should emit click event when clicked', () => {
       const clickSpy = vi.fn();
-      component.itemClick.subscribe(clickSpy);
+      component.itemClicked.subscribe(clickSpy);
 
       const button = fixture.nativeElement.querySelector('button');
       button.click();
@@ -166,7 +166,7 @@ describe('OsNavigationItemComponent', () => {
       fixture.detectChanges();
 
       const clickSpy = vi.fn();
-      component.itemClick.subscribe(clickSpy);
+      component.itemClicked.subscribe(clickSpy);
 
       const button = fixture.nativeElement.querySelector('button');
       button.click();

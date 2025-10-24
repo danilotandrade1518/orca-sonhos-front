@@ -207,8 +207,8 @@ export class DashboardPage implements OnInit {
     // Implementar navegação para criação de orçamento
   }
 
-  onWidgetClick(event: { widget: WidgetConfiguration; data: unknown }): void {
-    console.log('Widget clicado:', event);
+  onWidgetClick(widget: WidgetConfiguration): void {
+    console.log('Widget clicado:', widget);
   }
 
   onRetryRequested(): void {

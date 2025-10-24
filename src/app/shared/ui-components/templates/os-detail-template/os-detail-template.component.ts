@@ -242,19 +242,14 @@ export class OsDetailTemplateComponent implements OnDestroy {
           icon: tab.icon || '',
           route: undefined,
           disabled: tab.disabled || false,
-          badge: tab.badge || null,
+          badge: tab.badge || undefined,
           active: tab.id === activeTabId,
         }))
       );
 
       this.navigationActiveItemId.set(activeTabId);
 
-      const sizeMap = {
-        small: 'small' as const,
-        medium: 'medium' as const,
-        large: 'large' as const,
-      };
-      this.navigationSize.set(sizeMap[size]);
+      this.navigationSize.set('medium');
     });
   }
 

@@ -83,7 +83,7 @@ export interface HeaderAction {
                   [disabled]="item.disabled || false"
                   [variant]="getNavigationVariant()"
                   [size]="getNavigationSize()"
-                  (itemClick)="onNavigationClick(item, $event)"
+                  (itemClicked)="onNavigationClick(item, $event)"
                 />
               </li>
               }
@@ -205,7 +205,7 @@ export interface HeaderAction {
                   [disabled]="item.disabled || false"
                   [variant]="getMobileNavigationVariant()"
                   [size]="getMobileNavigationSize()"
-                  (itemClick)="onMobileNavigationClick(item, $event)"
+                  (itemClicked)="onMobileNavigationClick(item, $event)"
                 />
               </li>
               }

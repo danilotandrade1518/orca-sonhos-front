@@ -14,20 +14,46 @@ Se o arquivo não existir ou não estiver configurado, use a URL padrão do GitH
 #$ARGUMENTS
 </folder>
 
-## Configurações e Flags (Otimizador de Contexto)
+## Modos de Execução (Otimizador de Contexto)
 
-- Modo de execução: `--mode=lite|standard|full` (default: lite)
-- Saída reduzida: `--quiet=true|false` (default: true)
-- Orçamento de tokens (pré-trabalho): `--maxTokensPreWork=<n>` (default: 1200)
-- Cache: `--cache.enabled=true|false` (default: true), `--cache.dir=temp/context-cache`, `--cache.ttlHours=24`
-- Docs: `--docs.angularBestPracticesTTLHours=24`, `--docs.maxSearchResults=5`
-- Leituras parciais: `--partialReads.planCurrentPhaseOnly=true`
+### Modos Pré-definidos (Sem Parâmetros)
 
-Observações:
+**Modo Lite (≤25k tokens)**:
 
-- Flags de execução têm prioridade sobre `ai.properties.md`.
-- Quando `quiet=true`, imprime apenas resumos (5-10 bullets) e caminhos/âncoras.
-- Quando o orçamento estourar, alterna para mini-resumo e adia leituras pesadas.
+- `plan.md`: somente fase atual (bloco), número/status + 3 próximos passos
+- TL;DR: Angular Best Practices, Code Standards (index), Frontend Architecture (index)
+- Sem docs longos, sem Top-3 trechos, sem Jira
+- Respeita Ignore List
+
+**Modo Standard (≤60k tokens)**:
+
+- TL;DR adicionais: `angular-modern-patterns`, `design-system-patterns`, `ui-system`, `testing-strategy`
+- Para a fase atual, carregar apenas seções relevantes via âncoras (Top-3 trechos curtos por doc)
+- Resumo enxuto (≤10 bullets) com links/âncoras; sem colar trechos longos
+
+**Modo Full (≤100k tokens)**:
+
+- Apenas por configuração explícita do sistema
+- Igual ao Standard, podendo incluir +1–2 seções ancoradas por doc crítico
+- Nunca imprimir documentos inteiros
+
+### Seleção Automática de Modo
+
+- **Fases iniciais** (1-2): Lite (elevar p/ Standard se complexidade ≥ média)
+- **Fases de desenvolvimento** (3 até penúltima): Standard
+- **Fase final** (testes/validação): Standard; elevar p/ Full somente se reescrever estratégia de testes
+- **Fase pós-entrega**: Lite
+- Se a projeção exceder o teto do modo: degradar automaticamente p/ modo inferior
+
+### Hard Cap e Contabilização
+
+- Estimar custo antes de ler: TL;DR (baixo), Top-3 (médio), bloco da fase (baixo)
+- Interromper carregamentos ao atingir 95% do teto; registrar itens diferidos
+- **TETO ABSOLUTO**: 100.000 tokens (nunca exceder)
+
+### Ignore List (não ler/imprimir)
+
+- `documentation.json`, `storybook-static/**`, `.storybook/**`, `coverage/**`, `dist/**`, `sessions/*/work-log.md`, `public/mockServiceWorker.js`, `temp/*-context-inventory.md`
 
 ## Objetivo
 
@@ -55,31 +81,170 @@ Se não estiver em uma feature branch:
 1. Pergunte ao usuário: "Posso criar a feature branch `feature-{folder-name}`?"
 2. Após confirmação, execute: `git checkout -b feature-{folder-name}`
 
-#### Passo 2: Context Loading Inteligente (OBRIGATÓRIO)
+#### Passo 2: Preparação da Sessão (OBRIGATÓRIO)
 
-**SEMPRE execute este passo no início de cada sessão**:
+**SEMPRE execute este passo ANTES do Context Loading**:
 
-– Este passo respeita: `mode`, `quiet`, `maxTokensPreWork`, `cache` e `partialReads`.
+– Leia os documentos da sessão para entender a demanda específica.
+– Identifique a fase atual e necessidades específicas.
+– Com base na demanda, direcione o Context Loading para documentos relevantes.
+
+##### 2.1: Análise dos Documentos da Sessão
+
+**Leia automaticamente se existirem**:
+
+1. **context.md**: Requisitos e contexto da funcionalidade
+2. **architecture.md**: Design técnico detalhado
+3. **layout-specification.md**: Especificações de UI/UX e layout ⭐ NOVO
+4. **plan.md**: Plano faseado de implementação (se já existir)
+
+– Extraia apenas a seção marcada como "Em Progresso ⏰" ou a próxima pendente do `plan.md`.
+
+##### 2.2: Identificação da Fase Atual
+
+Algoritmo de detecção robusto (regex + normalização):
+
+```typescript
+// 1) Ler apenas o arquivo do plano da sessão atual
+const planPath = `sessions/${folder}/plan.md`;
+const planContent = await read_file({ target_file: planPath });
+
+// 2) Extrair fases pelos headings formais
+// Formato esperado: "## 📅 FASE X: Título [Status: ...]"
+const phaseRegex = /^##\s*📅\s*FASE\s*(\d+)\s*:.*?\[\s*Status\s*:\s*([^\]]+)\]/gim;
+type PhaseStatus = 'completed' | 'in_progress' | 'pending' | 'unknown';
+
+function normalizeStatus(raw: string): PhaseStatus {
+  const s = raw.toLowerCase();
+  if (s.includes('⏰') || s.includes('em progresso') || s.includes('in progress'))
+    return 'in_progress';
+  if (s.includes('✅') || s.includes('conclu') || s.includes('completed') || s.includes('100%'))
+    return 'completed';
+  if (s.includes('⏳') || s.includes('pendente') || s.includes('pending')) return 'pending';
+  return 'unknown';
+}
+
+interface PhaseInfo {
+  num: number;
+  status: PhaseStatus;
+  headingIndex: number;
+}
+const phases: PhaseInfo[] = [];
+let match: RegExpExecArray | null;
+while ((match = phaseRegex.exec(planContent)) !== null) {
+  const num = Number(match[1]);
+  const status = normalizeStatus(match[2] ?? '');
+  phases.push({ num, status, headingIndex: match.index });
+}
+
+// 3) Seleção da fase atual
+// Regra:
+// - Se existir alguma com status in_progress → escolha a de menor número (ou única)
+// - Senão, escolha a primeira fase "pendente" imediatamente após a última "concluída"
+// - Se todas concluídas, considere a última como finalizado
+phases.sort((a, b) => a.num - b.num);
+let current: PhaseInfo | undefined = phases.find((p) => p.status === 'in_progress');
+if (!current) {
+  const lastCompleted = [...phases].reverse().find((p) => p.status === 'completed');
+  if (lastCompleted) {
+    current = phases.find((p) => p.num > lastCompleted.num && p.status !== 'completed');
+  }
+  if (!current) {
+    current = phases.find((p) => p.status === 'pending' || p.status === 'unknown') ?? phases.at(-1);
+  }
+}
+
+// 4) Extração parcial do conteúdo da fase atual (quando enabled)
+let currentPhaseMarkdown = '';
+if (current) {
+  if (work.partialReads?.planCurrentPhaseOnly) {
+    const nextHeading = phases.find((p) => p.num > current!.num);
+    const start = current.headingIndex;
+    const end = nextHeading ? nextHeading.headingIndex : planContent.length;
+    currentPhaseMarkdown = planContent.slice(start, end);
+  } else {
+    currentPhaseMarkdown = planContent;
+  }
+}
+
+// 5) Fallback opcional: ignorar seções como "Atualizações Recentes" para não confundir status
+// O algoritmo acima considera apenas headings formais de fase.
+
+return {
+  currentPhaseNumber: current?.num,
+  currentPhaseStatus: current?.status,
+  currentPhaseMarkdown,
+};
+```
+
+##### 2.3: Seleção de Modo Baseada na Fase
+
+**Seleção Automática de Modo**:
+
+- Fases 1–2: Lite (elevar p/ Standard se complexidade ≥ média)
+- Fases 3–7: Standard
+- Fase 8 (testes/validação): Standard; elevar p/ Full somente se reescrever estratégia de testes
+- Fase 9: Lite
+- Se a projeção exceder o teto do modo: degradar automaticamente p/ modo inferior
+
+#### Passo 3: Context Loading Inteligente (OBRIGATÓRIO)
+
+**SEMPRE execute este passo APÓS entender a demanda**:
+
 – Metaspecs e Angular Best Practices são lidos via cache por hash/TTL; se inalterados, reutilize TL;DR em `temp/context-cache/`.
+– **NOVO**: Com base na fase identificada, carregar apenas documentos/seções relevantes.
 
-##### 2.1: Análise de Contexto Automática
+##### 3.1: Análise de Contexto Automática
 
-**Execute automaticamente**:
+**Execute automaticamente com CONTABILIZAÇÃO DE TOKENS**:
 
-1. **Busca Contextual Inteligente**:
+```typescript
+// CONTABILIZAÇÃO DE TOKENS - Hard Cap 100k
+let tokenCount = 0;
+const HARD_CAP = 100000;
+const INTERRUPT_THRESHOLD = 95000; // 95% do teto
+
+function estimateTokens(content: string): number {
+  // Estimativa: ~4 chars por token
+  return Math.ceil(content.length / 4);
+}
+
+function checkTokenLimit(): boolean {
+  if (tokenCount >= INTERRUPT_THRESHOLD) {
+    console.log(`⚠️ Token limit atingido: ${tokenCount}/${HARD_CAP}. Interrompendo carregamentos.`);
+    return false;
+  }
+  return true;
+}
+```
+
+1. **Busca Contextual Inteligente Guiada por Demanda**:
 
    ```typescript
-   // Use codebase_search para encontrar documentos relevantes
+   // Use codebase_search para encontrar documentos relevantes baseado na fase atual
    const contextQuery = `funcionalidade ${folder - name} arquitetura padrões frontend`;
    const contextResults = await codebase_search({
      query: contextQuery,
      target_directories: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto],
    });
+
+   // Contabilizar tokens
+   tokenCount += estimateTokens(contextResults.content);
+   if (!checkTokenLimit()) return;
    ```
 
-- Limite buscas a Top `docs.maxSearchResults` resultados e gere apenas resumo curto.
+- Limite buscas a Top 5 resultados e gere apenas resumo curto.
+- **NOVO**: Com base na fase identificada, direcione a busca para seções específicas (ex: fase de testes → testes, acessibilidade, performance).
+- **HARD CAP**: Interromper carregamentos ao atingir 95% do teto (95k tokens).
 
 2. **Geração de Context Summary**:
+
+   ```typescript
+   // Analise os resultados da busca
+   const summary = generateContextSummary(contextResults);
+   tokenCount += estimateTokens(summary);
+   if (!checkTokenLimit()) return;
+   ```
 
    - Analise os resultados da busca
    - Identifique documentos mais relevantes
@@ -87,37 +252,111 @@ Se não estiver em uma feature branch:
    - Identifique gaps de conhecimento
 
 3. **Cache de Contexto**:
+   ```typescript
+   // Verifique se contexto similar já foi carregado
+   const cachedContext = await checkCache();
+   if (cachedContext) {
+     tokenCount += estimateTokens(cachedContext);
+     if (!checkTokenLimit()) return;
+   }
+   ```
    - Verifique se contexto similar já foi carregado
    - Reutilize informações de sessões anteriores quando aplicável
    - Atualize cache com novas descobertas
 
-##### 2.2: Navegação Inteligente das Meta Specs
+##### 3.2: Navegação Inteligente das Meta Specs
 
-**🧠 SISTEMA DE NAVEGAÇÃO AUTOMÁTICA**:
+**🧠 SISTEMA DE NAVEGAÇÃO AUTOMÁTICA GUIADA POR DEMANDA**:
 
-Use os próprios índices das Meta Specs para navegação inteligente:
+Use os próprios índices das Meta Specs para navegação inteligente, direcionada pela fase atual:
 
 ```typescript
 // 1. Ler ai.properties.md para obter meta_specs_path
 const aiProperties = await read_file({ target_file: 'ai.properties.md' });
+tokenCount += estimateTokens(aiProperties);
+if (!checkTokenLimit()) return;
+
 const metaSpecsPath = extractMetaSpecsPath(aiProperties);
 
 // 2. Ler índice principal das Meta Specs
 const metaSpecsIndex = await read_file({
   target_file: `${metaSpecsPath}/index.md`,
 });
+tokenCount += estimateTokens(metaSpecsIndex);
+if (!checkTokenLimit()) return;
 
 // 3. NAVEGAÇÃO INTELIGENTE - Use os índices para descobrir estrutura
 const codeStandardsIndex = await read_file({
   target_file: `${metaSpecsPath}/technical/code-standards/index.md`,
 });
+tokenCount += estimateTokens(codeStandardsIndex);
+if (!checkTokenLimit()) return;
 
 const frontendArchIndex = await read_file({
   target_file: `${metaSpecsPath}/technical/frontend-architecture/index.md`,
 });
+tokenCount += estimateTokens(frontendArchIndex);
+if (!checkTokenLimit()) return;
 
-// 4. OBRIGATÓRIO: Obter melhores práticas Angular via MCP
-const angularBestPractices = (await mcp_angular) - cli_get_best_practices();
+// 4. NOVO: Seleção Guiada por Fase
+// Com base na fase atual identificada, carregar apenas seções relevantes:
+
+function getRelevantSectionsForPhase(
+  phaseNumber: number,
+  phaseStatus: string,
+  totalPhases: number
+): string[] {
+  const sections: string[] = [];
+
+  // Sempre incluir bases
+  sections.push('index.md', 'code-standards/index.md', 'frontend-architecture/index.md');
+
+  // Fases específicas baseadas no status e posição
+  if (phaseStatus === 'testes' || phaseStatus === 'validação' || phaseNumber === totalPhases) {
+    sections.push('technical/04_estrategia_testes.md');
+    sections.push('technical/code-standards/design-system-patterns.md'); // Acessibilidade
+    sections.push('technical/frontend-architecture/ui-system.md'); // Performance
+  }
+
+  // Fases de desenvolvimento (meio do plano)
+  if (phaseNumber >= 3 && phaseNumber < totalPhases) {
+    sections.push('technical/code-standards/angular-modern-patterns.md');
+    sections.push('technical/code-standards/design-system-patterns.md');
+    sections.push('technical/frontend-architecture/ui-system.md');
+  }
+
+  // Fases iniciais
+  if (phaseNumber <= 2) {
+    sections.push('technical/code-standards/angular-modern-patterns.md');
+  }
+
+  return sections;
+}
+
+const relevantSections = getRelevantSectionsForPhase(
+  currentPhaseNumber,
+  currentPhaseStatus,
+  phases.length
+);
+
+// 5. OBRIGATÓRIO: Obter melhores práticas Angular via MCP
+const angularBestPractices = await mcp_angular_cli_get_best_practices();
+tokenCount += estimateTokens(angularBestPractices);
+if (!checkTokenLimit()) return;
+
+// 6. Carregar apenas seções relevantes com contabilização
+for (const section of relevantSections) {
+  const content = await read_file({ target_file: `${metaSpecsPath}/${section}` });
+  tokenCount += estimateTokens(content);
+  if (!checkTokenLimit()) {
+    console.log(
+      `⚠️ Limite de tokens atingido. Seções restantes: ${relevantSections.slice(
+        relevantSections.indexOf(section)
+      )}`
+    );
+    break;
+  }
+}
 
 // 5. ANÁLISE CONTEXTUAL INTELIGENTE
 await performIntelligentAnalysis({
@@ -176,7 +415,7 @@ A IA deve:
 
 **🎯 NAVEGAÇÃO OBRIGATÓRIA EM CODE-STANDARDS**:
 
-A IA deve navegar explicitamente pelo índice de code-standards e ler documentos relevantes:
+A IA deve navegar explicitamente pelo índice de code-standards e ler documentos relevantes
 
 ```typescript
 // 1. Ler índice de code-standards
@@ -188,14 +427,6 @@ const codeStandardsIndex = await read_file({
 const codeStandardsSections = await identifyRelevantSections({
   index: codeStandardsIndex,
   featureContext: featureAnalysis,
-  focusAreas: [
-    'angular-modern-patterns',
-    'design-system-patterns',
-    'naming-conventions',
-    'class-structure',
-    'error-handling',
-    'performance-optimization',
-  ],
 });
 
 // 3. LEITURA CONTEXTUAL - Ler documentos identificados
@@ -215,117 +446,10 @@ for (const section of codeStandardsSections) {
 - [ ] **Ler índice completo** de code-standards
 - [ ] **Identificar seções relevantes** baseado no contexto da funcionalidade
 - [ ] **Ler documentos específicos** conforme identificado
-- [ ] **Extrair padrões Angular modernos** aplicáveis
 - [ ] **Mapear convenções de nomenclatura** específicas
 - [ ] **Identificar padrões do Design System** (os-\*)
 - [ ] **Extrair guidelines de performance** e otimização
 - [ ] **Mapear padrões de error handling** (Either pattern)
-
-##### 2.2.2: Navegação Explícita em Estratégia de Testes
-
-**🧪 NAVEGAÇÃO OBRIGATÓRIA EM ESTRATÉGIA DE TESTES**:
-
-A IA deve navegar explicitamente pela documentação de testes:
-
-```typescript
-// 1. Buscar documentação de testes nas Meta Specs
-const testingDocs = await discoverTestingDocumentation({
-  metaSpecsPath: metaSpecsPath,
-  featureContext: featureAnalysis,
-});
-
-// 2. NAVEGAÇÃO EXPLÍCITA EM TESTES
-const testingStrategy = await read_file({
-  target_file: `${metaSpecsPath}/technical/frontend-architecture/testing-strategy.md`,
-});
-
-const testingStandards = await read_file({
-  target_file: `${metaSpecsPath}/technical/code-standards/testing-standards.md`,
-});
-
-// 3. ANÁLISE CONTEXTUAL DE TESTES
-await analyzeTestingRequirements({
-  testingStrategy: testingStrategy,
-  testingStandards: testingStandards,
-  featureContext: featureAnalysis,
-  complexity: featureAnalysis.complexity,
-});
-```
-
-**📋 CHECKLIST DE NAVEGAÇÃO EM TESTES**:
-
-- [ ] **Identificar estratégia de testes** aplicável à funcionalidade
-- [ ] **Mapear padrões de teste** (unitários, integração, E2E)
-- [ ] **Identificar ferramentas de teste** (vitest, MSW, Playwright)
-- [ ] **Extrair guidelines de cobertura** e qualidade
-- [ ] **Mapear padrões de mocking** e factories
-- [ ] **Identificar requisitos de acessibilidade** em testes
-- [ ] **Extrair padrões de teste de componentes** Angular
-
-##### 2.3: Documentos da Sessão
-
-**Leia automaticamente se existirem**:
-
-1. **context.md**: Requisitos e contexto da funcionalidade
-2. **architecture.md**: Design técnico detalhado
-3. **layout-specification.md**: Especificações de UI/UX e layout ⭐ NOVO
-4. **plan.md**: Plano faseado de implementação (se já existir)
-
-– Quando `partialReads.planCurrentPhaseOnly=true`, extraia apenas a seção marcada como "Em Progresso ⏰" ou a próxima pendente do `plan.md`.
-
-##### 2.4: Descoberta Inteligente de Documentos
-
-**🎯 SISTEMA DE DESCOBERTA AUTOMÁTICA**:
-
-A IA deve usar os índices para descobrir automaticamente quais documentos são relevantes:
-
-```typescript
-// 1. Análise da funcionalidade específica
-const featureAnalysis = await analyzeFeatureContext({
-  featureName: folderName,
-  complexity: await estimateComplexity(),
-  domain: await identifyDomain(),
-  uiComponents: await identifyUIComponents(),
-  backendIntegration: await identifyBackendNeeds(),
-});
-
-// 2. DESCOBERTA INTELIGENTE - Use os índices para encontrar documentos relevantes
-const relevantDocuments = await discoverRelevantDocuments({
-  codeStandardsIndex: codeStandardsIndex,
-  frontendArchIndex: frontendArchIndex,
-  featureContext: featureAnalysis,
-  searchTerms: await generateSearchTerms(featureAnalysis),
-});
-
-// 3. LEITURA CONTEXTUAL - Leia apenas os documentos identificados
-for (const doc of relevantDocuments) {
-  const content = await read_file({ target_file: doc.path });
-  await analyzeDocumentContent({
-    document: content,
-    context: featureAnalysis,
-    angularBestPractices: angularBestPractices,
-  });
-}
-```
-
-- Restringir a leitura aos Top `docs.maxSearchResults` documentos relevantes e sempre produzir resumos concisos (não colar conteúdo integral).
-
-**🧠 PRINCÍPIOS DA DESCOBERTA INTELIGENTE**:
-
-1. **Análise semântica dos índices**: A IA identifica seções relevantes pelos títulos e descrições
-2. **Busca contextual**: Usa termos relacionados à funcionalidade para encontrar documentos
-3. **Priorização automática**: Identifica quais documentos são mais importantes
-4. **Adaptação dinâmica**: Ajusta a seleção baseada no contexto específico
-
-**📋 PROCESSO DE DESCOBERTA**:
-
-A IA deve:
-
-- [ ] **Analisar índices** para entender a estrutura disponível
-- [ ] **Identificar seções relevantes** baseado no tipo de funcionalidade
-- [ ] **Priorizar documentos** por relevância contextual
-- [ ] **Ler documentos selecionados** de forma inteligente
-- [ ] **Aplicar conhecimento** no contexto da implementação
 
 ##### 2.5: Documentos Contextuais Adicionais
 
@@ -539,24 +663,10 @@ if (searchResults.issues?.length > 0) {
 }
 ```
 
-### 1. Preparação da Sessão
+### 4. Implementação da Funcionalidade
 
-#### Análise dos Documentos
+**Após completar o Context Loading Inteligente, prossiga com a implementação**:
 
-**PRIORIDADE MÁXIMA**: Leia os documentos fundamentais das Meta Specs antes de qualquer implementação:
-
-**Documentos Obrigatórios das Meta Specs**:
-
-- **index.md** (Meta Specs): Visão geral do projeto e contexto
-  - Caminho: `{meta_specs_path}/index.md`
-- **code-standards**: Padrões de código e boas práticas
-  - Caminho: `{meta_specs_path}/technical/code-standards/index.md`
-- **frontend-architecture**: Arquitetura específica do frontend
-  - Caminho: `{meta_specs_path}/technical/frontend-architecture/index.md`
-
-**Documentos Adicionais das Meta Specs** (conforme necessário):
-
-- Documentação técnica relevante em `/technical/`
 - ADRs (Architecture Decision Records) em `/adr/` se aplicável
 - Especificações de domínio em `/business/` quando relevante
 - Outros arquivos que possam ser necessários para o contexto específico
@@ -568,448 +678,59 @@ Leia todos os arquivos markdown na pasta da sessão:
 - **context.md**: Entendimento dos requisitos
 - **architecture.md**: Design técnico detalhado
 - **plan.md**: Plano faseado de implementação
+- **layout-specification.md**: Especificações de layout
 
 ### 2. Análise de Complexidade e Estratégia Adaptativa
-
-#### 2.1: Análise Automática de Complexidade
-
-**Execute automaticamente**:
-
-1. **Avaliação de Complexidade**:
-
-   ```typescript
-   // Analise arquivos afetados, dependências e escopo
-   const complexityFactors = {
-     filesAffected: await countFilesInScope(),
-     externalDependencies: await identifyExternalDeps(),
-     architecturalImpact: await assessArchitecturalChanges(),
-     testingRequirements: await estimateTestingScope(),
-   };
-
-   const complexityScore = calculateComplexityScore(complexityFactors);
-   const strategy = selectExecutionStrategy(complexityScore);
-   ```
-
-2. **Classificação de Complexidade**:
-   - **Baixa (0-30)**: Mudanças simples, poucos arquivos, sem impacto arquitetural
-   - **Média (31-70)**: Mudanças moderadas, alguns arquivos, impacto limitado
-   - **Alta (71-100)**: Mudanças complexas, muitos arquivos, impacto arquitetural significativo
-
-#### 2.2: Seleção de Estratégia de Execução
-
-**Baseado na complexidade, escolha automaticamente**:
-
-**Estratégia SIMPLE** (Complexidade Baixa):
-
-- Implementação incremental direta
-- Aprovação automática para mudanças de estilo/formatação
-- Work-log simplificado
-- Testes básicos de caminho feliz
-
-**Estratégia STANDARD** (Complexidade Média):
-
-- Implementação faseada com validações
-- Aprovação por micro-etapas
-- Work-log detalhado
-- Testes de caminho feliz + casos extremos
-
-**Estratégia COMPLEX** (Complexidade Alta):
-
-- Implementação com TDD/BDD
-- Aprovação obrigatória por fase
-- Work-log completo com justificativas
-- Testes abrangentes + validações de segurança
-
-#### 2.3: Identificação da Fase Atual
-
-- Revise o **plan.md** para identificar qual fase está atualmente em progresso
-- Revise o **work-log.md**(caso exista) para entender o que foi feito até agora
-- Se nenhuma fase estiver marcada como \"Em Progresso ⏰\", comece pela primeira fase não iniciada
-- **Aplique a estratégia selecionada** para abordar a próxima fase
-- Apresente ao usuário um plano claro adaptado à complexidade identificada
-
-Algoritmo de detecção robusto (regex + normalização):
-
-```typescript
-// 1) Ler apenas o arquivo do plano da sessão atual
-const planPath = `sessions/${folder}/plan.md`;
-const planContent = await read_file({ target_file: planPath });
-
-// 2) Extrair fases pelos headings formais
-// Formato esperado: "## 📅 FASE X: Título [Status: ...]"
-const phaseRegex = /^##\s*📅\s*FASE\s*(\d+)\s*:.*?\[\s*Status\s*:\s*([^\]]+)\]/gim;
-type PhaseStatus = 'completed' | 'in_progress' | 'pending' | 'unknown';
-
-function normalizeStatus(raw: string): PhaseStatus {
-  const s = raw.toLowerCase();
-  if (s.includes('⏰') || s.includes('em progresso') || s.includes('in progress'))
-    return 'in_progress';
-  if (s.includes('✅') || s.includes('conclu') || s.includes('completed') || s.includes('100%'))
-    return 'completed';
-  if (s.includes('⏳') || s.includes('pendente') || s.includes('pending')) return 'pending';
-  return 'unknown';
-}
-
-interface PhaseInfo {
-  num: number;
-  status: PhaseStatus;
-  headingIndex: number;
-}
-const phases: PhaseInfo[] = [];
-let match: RegExpExecArray | null;
-while ((match = phaseRegex.exec(planContent)) !== null) {
-  const num = Number(match[1]);
-  const status = normalizeStatus(match[2] ?? '');
-  phases.push({ num, status, headingIndex: match.index });
-}
-
-// 3) Seleção da fase atual
-// Regra:
-// - Se existir alguma com status in_progress → escolha a de menor número (ou única)
-// - Senão, escolha a primeira fase "pendente" imediatamente após a última "concluída"
-// - Se todas concluídas, considere a última como finalizado
-phases.sort((a, b) => a.num - b.num);
-let current: PhaseInfo | undefined = phases.find((p) => p.status === 'in_progress');
-if (!current) {
-  const lastCompleted = [...phases].reverse().find((p) => p.status === 'completed');
-  if (lastCompleted) {
-    current = phases.find((p) => p.num > lastCompleted.num && p.status !== 'completed');
-  }
-  if (!current) {
-    current = phases.find((p) => p.status === 'pending' || p.status === 'unknown') ?? phases.at(-1);
-  }
-}
-
-// 4) Extração parcial do conteúdo da fase atual (quando enabled)
-let currentPhaseMarkdown = '';
-if (current) {
-  if (work.partialReads?.planCurrentPhaseOnly) {
-    const nextHeading = phases.find((p) => p.num > current!.num);
-    const start = current.headingIndex;
-    const end = nextHeading ? nextHeading.headingIndex : planContent.length;
-    currentPhaseMarkdown = planContent.slice(start, end);
-  } else {
-    currentPhaseMarkdown = planContent;
-  }
-}
-
-// 5) Fallback opcional: ignorar seções como "Atualizações Recentes" para não confundir status
-// O algoritmo acima considera apenas headings formais de fase.
-
-return {
-  currentPhaseNumber: current?.num,
-  currentPhaseStatus: current?.status,
-  currentPhaseMarkdown,
-};
-```
 
 ### 3. Inicialização do Work Log
 
 Crie o arquivo `sessions/<folder>/work-log.md` se não existir:
 
-Observação: em execução com `quiet=true`, não imprimir o template no output; apenas criar/atualizar o arquivo.
+Observação: não imprimir o template no output; apenas criar/atualizar o arquivo.
 
 ## Template do Work-Log.md
 
 ```markdown
 # [NOME DA FUNCIONALIDADE] - Log de Desenvolvimento
 
-> **Propósito**: Registrar detalhadamente o progresso do desenvolvimento, linha de pensamento, decisões tomadas, problemas encontrados e soluções aplicadas durante as sessões de trabalho.
-
-## 📅 Resumo do Projeto
-
-- **Início**: [Data]
-- **Status Atual**: [Em progresso/Pausado/Finalizado]
-- **Fase Atual**: [Nome da fase do plan.md]
-- **Última Sessão**: [Data da última sessão]
-
----
+> **Propósito**: Registrar progresso essencial, decisões técnicas e próximos passos.
 
 ## 📋 Sessões de Trabalho
 
 ### 🗓️ Sessão [DATA] - [DURAÇÃO]
 
 **Fase**: [Nome da fase trabalhada]
-**Objetivo da Sessão**: [O que pretendia alcançar]
+**Objetivo**: [O que pretendia alcançar]
 
 #### ✅ Trabalho Realizado
 
 - [Tarefa específica completada]
 - [Funcionalidade implementada]
-- [Arquivo modificado]: [Tipo de mudança]
 
-#### 🤔 Decisões Técnicas
+#### 🤔 Decisões/Problemas
 
-- **Decisão**: [Escolha feita]
-- **Alternativas**: [Outras opções consideradas]
-- **Justificativa**: [Razão da decisão]
+- **Decisão**: [Escolha feita] - **Motivo**: [Razão]
+- **Problema**: [Descrição] - **Solução**: [Como resolvido]
 
-#### 🚧 Problemas Encontrados
-
-- **Problema**: [Descrição do problema]
-- **Solução**: [Como foi resolvido]
-- **Lição Aprendida**: [O que aprendeu]
-
-#### 🧪 Testes Realizados
+#### 🧪 Validações
 
 - [Teste 1]: [Resultado]
-- [Validação executada]: [Status]
-
-#### 📝 Commits Relacionados
-
-- [hash-commit]: [Descrição do commit]
+- [Teste 2]: [Resultado]
 
 #### ⏭️ Próximos Passos
 
-- [Próxima tarefa a executar]
-- [Item pendente para próxima sessão]
-
-#### 💭 Observações
-
-[Anotações gerais, insights, lembretes]
+- [Próxima tarefa específica]
+- [Item pendente]
 
 ---
 
-### 🗓️ Sessão [PRÓXIMA DATA] - [DURAÇÃO]
-
-[Template para próxima sessão]
-
----
-
-## 📊 Resumo de Progresso
-
-### Por Fase
-
-- **Fase 1**: [Status - Completa ✅ / Em progresso ⏰ / Pendente ⏳]
-  - Sessões: [Número de sessões]
-  - Tempo total: [Horas]
-  - Principais realizações: [Lista]
-
-### Métricas Gerais
-
-- **Total de Sessões**: [Número]
-- **Tempo Total Investido**: [Horas]
-- **Arquivos Modificados**: [Número]
-- **Commits Realizados**: [Número]
-
-### Decisões Arquiteturais Importantes
-
-- [Decisão importante 1]: [Resumo e impacto]
-- [Decisão importante 2]: [Resumo e impacto]
-
-### Lições Aprendidas
-
-- [Lição 1]: [Descrição]
-- [Lição 2]: [Descrição]
-
-## 🔄 Estado de Recovery
-
-### Para Continuação
-
-**Se interrompido, para retomar:**
-
-1. [Passo específico para continuar]
-2. [Contexto importante para relembrar]
-3. [Arquivos que estavam sendo modificados]
-
-### Contexto Atual
+## 🔄 Estado Atual
 
 **Branch**: [Nome da branch]
-**Última modificação**: [Arquivo e descrição]
-**Testes passando**: [Sim/Não - quais falhando]
-**Próxima tarefa específica**: [Descrição detalhada]
+**Fase Atual**: [Nome da fase do plan.md]
+**Última Modificação**: [Arquivo e descrição]
+**Próxima Tarefa**: [Descrição específica]
 ```
-
-### 4. Sistema de Memória Contextual e Execução Inteligente
-
-#### 4.1: Context-Aware Decision Making
-
-**Execute automaticamente antes de cada implementação**:
-
-1. **Análise de Padrões Existentes**:
-
-   ```typescript
-   // Busque implementações similares no codebase
-   const similarImplementations = await codebase_search({
-     query: `funcionalidade similar ${featureType} padrão implementação`,
-     target_directories: ['src/'],
-   });
-
-   // Analise padrões de decisão anteriores
-   const decisionPatterns = await analyzeDecisionHistory();
-   ```
-
-2. **Sugestões Baseadas em Contexto**:
-
-   - Identifique soluções similares já implementadas
-   - Sugira padrões de código consistentes com o projeto
-   - Aplique decisões arquiteturais anteriores quando aplicável
-   - Evite anti-padrões identificados no histórico
-
-3. **Learning from History**:
-   - Consulte work-logs de funcionalidades similares
-   - Aplique lições aprendidas de implementações anteriores
-   - Use padrões de aprovação baseados em histórico de sucesso
-
-#### 4.2: Execução por Fases Adaptativa
-
-Para cada fase do desenvolvimento:
-
-##### Antes de Começar
-
-- **Análise Contextual**: Use sistema de memória para entender padrões aplicáveis
-- Marque a fase como \"Em Progresso ⏰\" no plan.md
-- **Inicie nova sessão** no work-log.md com timestamp e contexto aplicado
-- Revise os critérios de conclusão da fase
-- **Aplique estratégia selecionada** (SIMPLE/STANDARD/COMPLEX)
-- Confirme entendimento das tarefas com o usuário
-
-#### Durante a Implementação
-
-**Sistema de Memória Contextual Ativo:**
-
-1. **Pattern Matching Contínuo**:
-
-   - Compare implementação atual com padrões existentes
-   - Sugira melhorias baseadas em código similar
-   - Identifique inconsistências com padrões do projeto
-   - Aplique decisões arquiteturais comprovadas
-
-2. **Decision Tree Navigation**:
-   - Use histórico de decisões para guiar escolhas técnicas
-   - Aplique soluções testadas para problemas similares
-   - Evite caminhos que levaram a problemas anteriores
-   - Documente novas decisões para futuras referências
-
-**Princípios de Qualidade:**
-
-- **Código Limpo**: Sem comentários ou instruções temporárias no código final
-- **Padrões**: Siga as convenções estabelecidas no projeto (usando memória contextual)
-- **Segurança**: Implemente tratamento adequado de erros e validações
-- **Manutenibilidade**: Código legível e bem estruturado
-- **Consistência**: Aplique padrões identificados em implementações similares
-
-**⚠️ REGRA CRÍTICA - SEM COMENTÁRIOS NO CÓDIGO:**
-
-- **NUNCA** deixe comentários no código final (//, /\* \*/, #, etc.)
-- **NUNCA** deixe instruções temporárias ou TODOs no código
-- **NUNCA** deixe console.log, debugger ou código de debug
-- **NUNCA** deixe código comentado ou "morto"
-- O código deve ser autoexplicativo através de nomes descritivos e estrutura clara
-- Se precisar documentar algo complexo, use JSDoc para funções públicas ou documentação externa
-
-**Processo de Revisão Contínua:**
-Apply continuous code review seguindo as prioridades:
-
-1. **🚨 CRÍTICO - Limpeza** - Nenhum comentário, console.log, debugger ou código temporário?
-2. **🎯 Correção** - O código funciona para o caso de uso?
-3. **🔒 Segurança** - Há vulnerabilidades ou bugs óbvios?
-4. **📖 Clareza** - O código é legível e manutenível?
-5. **⚖️ Adequação** - A complexidade está apropriada?
-
-#### Após Completar Tarefas da Fase
-
-**Sistema de Memória Contextual - Atualização:**
-
-1. **Documentação de Padrões**:
-
-   - Registre novos padrões identificados durante implementação
-   - Atualize decision tree com novas decisões tomadas
-   - Documente soluções eficazes para futuras referências
-   - Identifique anti-padrões a serem evitados
-
-2. **Learning Update**:
-   - Analise eficácia das decisões tomadas
-   - Atualize scores de confiança para padrões aplicados
-   - Registre lições aprendidas no contexto do projeto
-   - Melhore sugestões baseadas em resultados obtidos
-
-**🛑 PAUSE OBRIGATÓRIA**: Solicite validação do usuário antes de prosseguir
-
-- **Atualize work-log.md** com trabalho realizado na sessão
-- **Atualize sistema de memória** com novos padrões e decisões
-- Apresente o código implementado
-- Aguarde aprovação explícita do usuário
-- Faça ajustes necessários baseados no feedback
-- **Registre decisões/problemas** no work-log.md
-- Apenas prossiga após aprovação clara
-
-### 4. Padrões de Code Review
-
-#### Template de Auto-Review
-
-```markdown
-## 🔍 Resumo da Implementação
-
-**Fase Completada**: [Nome da fase]
-**Arquivos Modificados**: [Lista de arquivos]
-
-### ✅ O que Foi Implementado
-
-- [Funcionalidade 1]: [Descrição do que foi feito]
-- [Funcionalidade 2]: [Detalhes da implementação]
-
-### 🧪 Testes Realizados
-
-- [Teste 1]: [Resultado]
-- [Teste 2]: [Validação]
-
-### ❗ Pontos de Atenção
-
-- [Decisão técnica importante]
-- [Trade-off realizado]
-
-**Status**: Pronto para revisão
-```
-
-#### Categorias de Problemas a Identificar
-
-**🚨 Críticos (Sempre corrigir):**
-
-- Bugs funcionais
-- Vulnerabilidades de segurança
-- Vazamentos de recursos
-- Breaking changes não intencionais
-
-**⚠️ Importantes (Corrigir se significativo):**
-
-- Tratamento de erro ausente
-- Problemas de performance óbvios
-- Legibilidade comprometida
-- Over-engineering
-
-**💡 Melhorias (Opcional):**
-
-- Pequenas otimizações
-- Consistências de estilo menores
-
-### 5. Estratégia de Testes
-
-#### Princípios Fundamentais
-
-1. **Teste comportamento, não implementação**
-2. **Foque em problemas reais, não perfeição teórica**
-3. **Teste o código como está, não modifique para se adequar aos testes**
-
-#### Tipos de Testes (por prioridade)
-
-**Testes de Caminho Feliz** (Sempre incluir):
-
-- Casos de uso principais com entradas típicas
-- Verificação de saídas esperadas
-- Funcionalidade central funcionando
-
-**Testes de Casos Extremos** (Quando relevante):
-
-- Condições de limite (vazios, valores máximos)
-- Casos extremos do domínio
-- Entradas null/undefined
-
-**Testes de Condições de Erro** (Se existir tratamento):
-
-- Entradas inválidas
-- Exceções apropriadas
-- Mensagens de erro úteis
 
 ### 5.5. Validações de Layout
 

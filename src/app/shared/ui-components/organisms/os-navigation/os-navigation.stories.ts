@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
-import { OsNavigationComponent } from './os-navigation.component';
+import { OsNavigationComponent, NavigationItem } from './os-navigation.component';
 
 const meta: Meta<OsNavigationComponent> = {
   title: 'Design System/Organisms/Navigation',
@@ -52,7 +52,7 @@ const meta: Meta<OsNavigationComponent> = {
 export default meta;
 type Story = StoryObj<OsNavigationComponent>;
 
-const sampleItems = [
+const sampleItems: NavigationItem[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',

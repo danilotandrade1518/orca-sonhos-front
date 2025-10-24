@@ -5,6 +5,8 @@ import {
   OsGoalProgressCardComponent,
   GoalProgressData,
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
+
+export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';

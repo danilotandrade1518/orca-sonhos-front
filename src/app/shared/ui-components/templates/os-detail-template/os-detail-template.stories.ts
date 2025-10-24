@@ -52,7 +52,7 @@ const meta: Meta<OsDetailTemplateComponent> = {
       control: { type: 'boolean' },
       description: 'Mostrar breadcrumb',
     },
-    breadcrumbItems: {
+    breadcrumbs: {
       control: { type: 'object' },
       description: 'Itens do breadcrumb',
     },
@@ -83,10 +83,6 @@ const meta: Meta<OsDetailTemplateComponent> = {
     sidebarAriaLabel: {
       control: { type: 'text' },
       description: 'Label ARIA da sidebar',
-    },
-    breadcrumbs: {
-      control: { type: 'object' },
-      description: 'Breadcrumbs de navegação',
     },
   },
   tags: ['autodocs'],
@@ -706,7 +702,7 @@ export const Interactive: Story = {
     subtitle: 'Informações completas do perfil',
     showHeader: true,
     showBreadcrumb: false,
-    breadcrumbItems: [],
+    breadcrumbs: [],
     headerActions: sampleHeaderActions,
     sections: sampleSections,
     actions: sampleActions,

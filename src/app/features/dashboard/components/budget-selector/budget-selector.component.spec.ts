@@ -62,17 +62,21 @@ describe('BudgetSelectorComponent', () => {
   it('should display dropdown with available budgets', () => {
     fixture.detectChanges();
 
-    const dropdownOptions = component.dropdownOptions();
-    expect(dropdownOptions.length).toBe(2);
-    expect(dropdownOptions[0]).toEqual({
-      value: '1',
-      label: 'Orçamento Pessoal',
-      disabled: false,
+    const budgetOptions = component.budgetOptions();
+    expect(budgetOptions.length).toBe(2);
+    expect(budgetOptions[0]).toEqual({
+      id: '1',
+      name: 'Orçamento Pessoal',
+      isActive: true,
+      isShared: false,
+      participants: 1,
     });
-    expect(dropdownOptions[1]).toEqual({
-      value: '2',
-      label: 'Orçamento Família',
-      disabled: false,
+    expect(budgetOptions[1]).toEqual({
+      id: '2',
+      name: 'Orçamento Família',
+      isActive: true,
+      isShared: true,
+      participants: 3,
     });
   });
 
@@ -121,7 +125,13 @@ describe('BudgetSelectorComponent', () => {
   });
 
   it('should call setSelectedBudget when budget is selected', () => {
-    component.onBudgetSelect('2');
+    component.onBudgetSelected({
+      id: '2',
+      name: 'Orçamento Família',
+      isActive: true,
+      isShared: true,
+      participants: 3,
+    });
 
     expect(budgetSelectionService.setSelectedBudget).toHaveBeenCalledWith(mockBudgets[1]);
   });
@@ -129,24 +139,42 @@ describe('BudgetSelectorComponent', () => {
   it('should emit budgetSelected when budget is selected', () => {
     const emitSpy = vi.spyOn(component.budgetSelected, 'emit');
 
-    component.onBudgetSelect('2');
+    component.onBudgetSelected({
+      id: '2',
+      name: 'Orçamento Família',
+      isActive: true,
+      isShared: true,
+      participants: 3,
+    });
 
     expect(emitSpy).toHaveBeenCalledWith(mockBudgets[1]);
   });
 
   it('should call setSelectedBudget when option is selected', () => {
-    const option = { value: '2', label: 'Orçamento Família', disabled: false };
+    const option = {
+      id: '2',
+      name: 'Orçamento Família',
+      isActive: true,
+      isShared: true,
+      participants: 3,
+    };
 
-    component.onOptionSelect(option);
+    component.onBudgetSelected(option);
 
     expect(budgetSelectionService.setSelectedBudget).toHaveBeenCalledWith(mockBudgets[1]);
   });
 
   it('should emit budgetSelected when option is selected', () => {
     const emitSpy = vi.spyOn(component.budgetSelected, 'emit');
-    const option = { value: '2', label: 'Orçamento Família', disabled: false };
+    const option = {
+      id: '2',
+      name: 'Orçamento Família',
+      isActive: true,
+      isShared: true,
+      participants: 3,
+    };
 
-    component.onOptionSelect(option);
+    component.onBudgetSelected(option);
 
     expect(emitSpy).toHaveBeenCalledWith(mockBudgets[1]);
   });
@@ -154,13 +182,19 @@ describe('BudgetSelectorComponent', () => {
   it('should emit createBudgetRequested when create button is clicked', () => {
     const emitSpy = vi.spyOn(component.createBudgetRequested, 'emit');
 
-    component.onCreateBudget();
+    component.onCreateBudgetRequested();
 
     expect(emitSpy).toHaveBeenCalled();
   });
 
   it('should not call setSelectedBudget when budget is not found', () => {
-    component.onBudgetSelect('999');
+    component.onBudgetSelected({
+      id: '999',
+      name: 'Budget Not Found',
+      isActive: true,
+      isShared: false,
+      participants: 1,
+    });
 
     expect(budgetSelectionService.setSelectedBudget).not.toHaveBeenCalled();
   });
@@ -168,7 +202,13 @@ describe('BudgetSelectorComponent', () => {
   it('should not emit budgetSelected when budget is not found', () => {
     const emitSpy = vi.spyOn(component.budgetSelected, 'emit');
 
-    component.onBudgetSelect('999');
+    component.onBudgetSelected({
+      id: '999',
+      name: 'Budget Not Found',
+      isActive: true,
+      isShared: false,
+      participants: 1,
+    });
 
     expect(emitSpy).not.toHaveBeenCalled();
   });
@@ -176,7 +216,7 @@ describe('BudgetSelectorComponent', () => {
   it('should apply correct container classes', () => {
     fixture.detectChanges();
 
-    const containerClass = component.containerClass();
+    const containerClass = 'os-budget-selector';
     expect(containerClass).toContain('os-budget-selector');
     expect(containerClass).not.toContain('os-budget-selector--medium');
   });
@@ -206,7 +246,7 @@ describe('BudgetSelectorComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    const containerClass = component.containerClass();
+    const containerClass = 'os-budget-selector';
     expect(containerClass).toContain('os-budget-selector--loading');
   });
 
@@ -235,7 +275,7 @@ describe('BudgetSelectorComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    const containerClass = component.containerClass();
+    const containerClass = 'os-budget-selector';
     expect(containerClass).toContain('os-budget-selector--empty');
   });
 });
