@@ -56,50 +56,61 @@ export interface DashboardLayout {
 @Component({
   selector: 'os-dashboard-template',
   template: `
-    <div [class]="dashboardClass()" [attr.aria-label]="ariaLabel()">
+    <div [class]="dashboardClass()" [attr.aria-label]="ariaLabel()" role="main">
       @if (layout().showHeader) {
-      <os-header
-        [variant]="headerVariant()"
-        [size]="layout().size"
-        [theme]="layout().theme"
-        [logo]="headerLogo()"
-        (navigationClick)="onNavigationClick($event)"
-        (userMenuItemClick)="onUserMenuClick($event)"
-        (actionClick)="onActionClick($event)"
-        (mobileMenuToggle)="onMobileMenuToggle($event)"
-      />
+      <header role="banner">
+        <os-header
+          [variant]="headerVariant()"
+          [size]="layout().size"
+          [theme]="layout().theme"
+          [logo]="headerLogo()"
+          (navigationClick)="onNavigationClick($event)"
+          (userMenuItemClick)="onUserMenuClick($event)"
+          (actionClick)="onActionClick($event)"
+          (mobileMenuToggle)="onMobileMenuToggle($event)"
+        />
+      </header>
       }
 
       <div class="os-dashboard-template__content">
         @if (layout().showSidebar) {
-        <os-sidebar
-          [items]="sidebarNavigation()"
-          [variant]="sidebarVariant()"
-          [size]="layout().size"
-          [theme]="layout().theme"
-          [collapsed]="layout().sidebarCollapsed"
-          [title]="sidebarTitle()"
-          [logo]="sidebarLogo()"
-          [showHeader]="sidebarShowHeader()"
-          [showFooter]="sidebarShowFooter()"
-          [showToggleButton]="sidebarShowToggleButton()"
-          (itemClick)="onSidebarNavigationClick($event)"
-          (collapseChange)="onSidebarToggleClick($event)"
-        />
+        <nav role="navigation" [attr.aria-label]="sidebarTitle() || 'Navegação principal'">
+          <os-sidebar
+            [items]="sidebarNavigation()"
+            [variant]="sidebarVariant()"
+            [size]="layout().size"
+            [theme]="layout().theme"
+            [collapsed]="layout().sidebarCollapsed"
+            [title]="sidebarTitle()"
+            [logo]="sidebarLogo()"
+            [showHeader]="sidebarShowHeader()"
+            [showFooter]="sidebarShowFooter()"
+            [showToggleButton]="sidebarShowToggleButton()"
+            (itemClick)="onSidebarNavigationClick($event)"
+            (collapseChange)="onSidebarToggleClick($event)"
+          />
+        </nav>
         }
-        <main class="os-dashboard-template__main" [class]="mainClass()">
+        <main
+          class="os-dashboard-template__main"
+          [class]="mainClass()"
+          role="main"
+          [attr.aria-label]="'Área principal do dashboard'"
+        >
           @if (loading()) {
-          <div class="os-dashboard-template__loading">
-            <div class="os-dashboard-template__spinner"></div>
+          <div class="os-dashboard-template__loading" role="status" aria-live="polite">
+            <div class="os-dashboard-template__spinner" aria-hidden="true"></div>
             <p>Carregando dashboard...</p>
           </div>
           } @else if (emptyState() && widgets().length === 0) {
-          <div class="os-dashboard-template__empty">
-            <div class="os-dashboard-template__empty-icon">📊</div>
+          <div class="os-dashboard-template__empty" role="status" aria-live="polite">
+            <div class="os-dashboard-template__empty-icon" aria-hidden="true">📊</div>
             <h3>{{ emptyState()!.message }}</h3>
             @if (emptyState()!.action) {
             <button
               class="os-dashboard-template__empty-action"
+              type="button"
+              [attr.aria-label]="emptyState()!.action!.label"
               (click)="onEmptyStateActionClick(emptyState()!.action!.action)"
             >
               {{ emptyState()!.action!.label }}
@@ -107,7 +118,12 @@ export interface DashboardLayout {
             }
           </div>
           } @else {
-          <div class="os-dashboard-template__grid" [class]="gridClass()">
+          <div
+            class="os-dashboard-template__grid"
+            [class]="gridClass()"
+            role="grid"
+            [attr.aria-label]="'Grid de widgets do dashboard'"
+          >
             @for (widget of widgets(); track widget.id) {
             <div
               class="os-dashboard-template__widget"
@@ -115,6 +131,9 @@ export interface DashboardLayout {
               [style.grid-column]="getWidgetGridColumn(widget)"
               [style.grid-row]="getWidgetGridRow(widget)"
               [attr.aria-label]="widget.title"
+              role="gridcell"
+              tabindex="0"
+              [attr.aria-describedby]="'widget-' + widget.id + '-description'"
             >
               @switch (widget.type) { @case ('budget-summary') {
               <os-budget-summary
@@ -165,13 +184,15 @@ export interface DashboardLayout {
       </div>
 
       @if (layout().showFooter) {
-      <os-footer
-        [variant]="footerVariant()"
-        [size]="layout().size"
-        [theme]="layout().theme"
-        (linkClick)="onFooterLinkClick()"
-        (socialClick)="onFooterSocialClick()"
-      />
+      <footer role="contentinfo">
+        <os-footer
+          [variant]="footerVariant()"
+          [size]="layout().size"
+          [theme]="layout().theme"
+          (linkClick)="onFooterLinkClick()"
+          (socialClick)="onFooterSocialClick()"
+        />
+      </footer>
       }
     </div>
   `,
@@ -384,10 +405,10 @@ export class OsDashboardTemplateComponent {
 
   private getWidgetColumnSpan = (widget: DashboardWidget): number => {
     const sizeMap: Record<string, number> = {
-      small: 3, // 3 colunas
-      medium: 6, // 6 colunas
-      large: 9, // 9 colunas
-      full: 12, // 12 colunas (toda a largura)
+      small: 3,
+      medium: 6,
+      large: 9,
+      full: 12,
     };
     return sizeMap[widget.size] || 6;
   };

@@ -22,6 +22,20 @@ describe('OsSpinnerComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('default values', () => {
+    it('should have default values', () => {
+      expect(component.size()).toBe('md');
+      expect(component.variant()).toBe('default');
+      expect(component.type()).toBe('default');
+      expect(component.role()).toBe('status');
+      expect(component.ariaLabel()).toBe('Loading');
+      expect(component.ariaHidden()).toBe(false);
+      expect(component.animated()).toBe(true);
+      expect(component.fadeIn()).toBe(true);
+      expect(component.fadeOut()).toBe(true);
+    });
+  });
+
   describe('size', () => {
     it('should apply medium size by default', () => {
       expect(component.size()).toBe('md');
@@ -154,6 +168,132 @@ describe('OsSpinnerComponent', () => {
     });
   });
 
+  describe('new functionality', () => {
+    describe('type', () => {
+      it('should apply default type by default', () => {
+        expect(component.type()).toBe('default');
+        expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--default');
+      });
+
+      it('should apply overlay type', () => {
+        fixture.componentRef.setInput('type', 'overlay');
+        fixture.detectChanges();
+        expect(component.type()).toBe('overlay');
+        expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--overlay');
+      });
+    });
+
+    describe('role', () => {
+      it('should apply status role by default', () => {
+        expect(component.role()).toBe('status');
+        expect(component.spinnerRole()).toBe('status');
+      });
+
+      it('should apply progressbar role', () => {
+        fixture.componentRef.setInput('role', 'progressbar');
+        fixture.detectChanges();
+        expect(component.role()).toBe('progressbar');
+        expect(component.spinnerRole()).toBe('progressbar');
+      });
+
+      it('should apply presentation role', () => {
+        fixture.componentRef.setInput('role', 'presentation');
+        fixture.detectChanges();
+        expect(component.role()).toBe('presentation');
+        expect(component.spinnerRole()).toBe('presentation');
+      });
+    });
+
+    describe('aria-live', () => {
+      it('should have aria-live polite for status role', () => {
+        expect(component.ariaLive()).toBe('polite');
+      });
+
+      it('should not have aria-live for non-status roles', () => {
+        fixture.componentRef.setInput('role', 'progressbar');
+        fixture.detectChanges();
+        expect(component.ariaLive()).toBeNull();
+      });
+    });
+
+    describe('animations', () => {
+      it('should apply animated class when animated is true', () => {
+        expect(component.animated()).toBe(true);
+        expect(component.spinnerClass()).toContain('os-spinner--animated');
+        expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--animated');
+      });
+
+      it('should not apply animated class when animated is false', () => {
+        fixture.componentRef.setInput('animated', false);
+        fixture.detectChanges();
+        expect(component.spinnerClass()).not.toContain('os-spinner--animated');
+        expect(component.spinnerWrapperClass()).not.toContain('os-spinner-wrapper--animated');
+      });
+
+      it('should apply fade-in class when fadeIn is true', () => {
+        expect(component.fadeIn()).toBe(true);
+        expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--fade-in');
+      });
+
+      it('should apply fade-out class when fadeOut is true', () => {
+        expect(component.fadeOut()).toBe(true);
+        expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--fade-out');
+      });
+    });
+
+    describe('wrapper class', () => {
+      it('should generate correct wrapper class', () => {
+        const expectedClass =
+          'os-spinner-wrapper os-spinner-wrapper--default os-spinner-wrapper--md os-spinner-wrapper--animated os-spinner-wrapper--fade-in os-spinner-wrapper--fade-out';
+        expect(component.spinnerWrapperClass()).toBe(expectedClass);
+      });
+
+      it('should generate correct wrapper class for overlay type', () => {
+        fixture.componentRef.setInput('type', 'overlay');
+        fixture.detectChanges();
+        const expectedClass =
+          'os-spinner-wrapper os-spinner-wrapper--overlay os-spinner-wrapper--md os-spinner-wrapper--animated os-spinner-wrapper--fade-in os-spinner-wrapper--fade-out';
+        expect(component.spinnerWrapperClass()).toBe(expectedClass);
+      });
+    });
+  });
+
+  describe('accessibility enhancements', () => {
+    it('should have proper ARIA attributes', () => {
+      const compiled = fixture.nativeElement;
+      const wrapper = compiled.querySelector('.os-spinner-wrapper');
+      const spinner = compiled.querySelector('mat-spinner');
+
+      expect(wrapper.getAttribute('aria-live')).toBe('polite');
+      expect(wrapper.getAttribute('aria-label')).toBe('Loading');
+      expect(wrapper.getAttribute('role')).toBe('status');
+      expect(spinner.getAttribute('aria-label')).toBe('Loading');
+      expect(spinner.getAttribute('aria-hidden')).toBe('false');
+    });
+
+    it('should handle custom aria-label', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Loading data');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement;
+      const wrapper = compiled.querySelector('.os-spinner-wrapper');
+      const spinner = compiled.querySelector('mat-spinner');
+
+      expect(wrapper.getAttribute('aria-label')).toBe('Loading data');
+      expect(spinner.getAttribute('aria-label')).toBe('Loading data');
+    });
+
+    it('should handle aria-hidden true', () => {
+      fixture.componentRef.setInput('ariaHidden', true);
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement;
+      const spinner = compiled.querySelector('mat-spinner');
+
+      expect(spinner.getAttribute('aria-hidden')).toBe('true');
+    });
+  });
+
   describe('Material mapping', () => {
     it('should map sizes to Material diameter', () => {
       fixture.componentRef.setInput('size', 'xs');
@@ -193,6 +333,34 @@ describe('OsSpinnerComponent', () => {
       fixture.componentRef.setInput('variant', 'default');
       fixture.detectChanges();
       expect(component['matColor']()).toBeUndefined();
+    });
+  });
+
+  describe('integration tests', () => {
+    it('should handle all inputs together', () => {
+      fixture.componentRef.setInput('size', 'lg');
+      fixture.componentRef.setInput('variant', 'success');
+      fixture.componentRef.setInput('type', 'overlay');
+      fixture.componentRef.setInput('role', 'progressbar');
+      fixture.componentRef.setInput('ariaLabel', 'Loading content');
+      fixture.componentRef.setInput('ariaHidden', true);
+      fixture.componentRef.setInput('animated', false);
+      fixture.componentRef.setInput('fadeIn', false);
+      fixture.componentRef.setInput('fadeOut', false);
+      fixture.detectChanges();
+
+      expect(component.size()).toBe('lg');
+      expect(component.variant()).toBe('success');
+      expect(component.type()).toBe('overlay');
+      expect(component.role()).toBe('progressbar');
+      expect(component.ariaLabel()).toBe('Loading content');
+      expect(component.ariaHidden()).toBe(true);
+      expect(component.animated()).toBe(false);
+      expect(component.fadeIn()).toBe(false);
+      expect(component.fadeOut()).toBe(false);
+      expect(component.spinnerClass()).toContain('os-spinner--lg');
+      expect(component.spinnerClass()).toContain('os-spinner--success');
+      expect(component.spinnerWrapperClass()).toContain('os-spinner-wrapper--overlay');
     });
   });
 });

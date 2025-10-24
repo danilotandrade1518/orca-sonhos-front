@@ -30,7 +30,17 @@ export interface FooterSection {
               @for (link of section.links; track link.label) {
               <li class="os-footer__link-item">
                 @if (link.routerLink) {
-                <a [routerLink]="link.routerLink" class="os-footer__link" [class]="linkClasses()">
+                <a
+                  [routerLink]="link.routerLink"
+                  class="os-footer__link"
+                  [class]="linkClasses()"
+                  [attr.aria-label]="link.label"
+                >
+                  @if (link.icon) {
+                  <span class="os-footer__link-icon" [attr.aria-hidden]="true">{{
+                    link.icon
+                  }}</span>
+                  }
                   {{ link.label }}
                 </a>
                 } @else {
@@ -40,7 +50,13 @@ export interface FooterSection {
                   [class]="linkClasses()"
                   [target]="link.external ? '_blank' : null"
                   [rel]="link.external ? 'noopener noreferrer' : null"
+                  [attr.aria-label]="link.label"
                 >
+                  @if (link.icon) {
+                  <span class="os-footer__link-icon" [attr.aria-hidden]="true">{{
+                    link.icon
+                  }}</span>
+                  }
                   {{ link.label }}
                 </a>
                 }
@@ -68,6 +84,7 @@ export interface FooterSection {
                   [target]="social.external ? '_blank' : null"
                   [rel]="social.external ? 'noopener noreferrer' : null"
                   [attr.aria-label]="social.label"
+                  [attr.title]="social.label"
                 >
                   <span class="os-footer__social-icon" [attr.aria-hidden]="true">
                     {{ social.icon }}

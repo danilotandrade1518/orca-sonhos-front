@@ -1,7 +1,18 @@
-import { Component, computed, input, output, signal, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  inject,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsInputComponent } from '../../atoms/os-input/os-input.component';
 import { OsSelectComponent } from '../../atoms/os-select/os-select.component';
@@ -22,6 +33,7 @@ export interface Category {
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
+  order?: number;
 }
 
 export interface CategoryFormData {
@@ -40,6 +52,8 @@ export interface CategoryFormData {
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    CdkDrag,
+    CdkDropList,
     OsButtonComponent,
     OsInputComponent,
     OsSelectComponent,
@@ -72,8 +86,8 @@ export interface CategoryFormData {
       </div>
 
       <div class="os-category-manager__content">
-        <!-- Formulário de Categoria -->
-        <div class="os-category-manager__form" *ngIf="showForm()" [formGroup]="categoryForm">
+        @if (showForm()) {
+        <div class="os-category-manager__form" [formGroup]="categoryForm">
           <os-form-group variant="default" size="medium">
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium" [required]="true">
@@ -87,17 +101,15 @@ export interface CategoryFormData {
                 [required]="true"
                 [disabled]="loading()"
               ></os-input>
-              <div
-                class="os-category-manager__error"
-                *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
-              >
-                <span *ngIf="categoryForm.get('name')?.errors?.['required']"
-                  >Nome é obrigatório</span
-                >
-                <span *ngIf="categoryForm.get('name')?.errors?.['minlength']"
-                  >Nome deve ter pelo menos 2 caracteres</span
-                >
+              @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+              <div class="os-category-manager__error">
+                @if (categoryForm.get('name')?.errors?.['required']) {
+                <span>Nome é obrigatório</span>
+                } @if (categoryForm.get('name')?.errors?.['minlength']) {
+                <span>Nome deve ter pelo menos 2 caracteres</span>
+                }
               </div>
+              }
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
@@ -125,24 +137,107 @@ export interface CategoryFormData {
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium"> Cor </os-label>
-              <os-input
-                formControlName="color"
-                variant="default"
-                size="medium"
-                type="text"
-                [disabled]="loading()"
-              ></os-input>
+              <div class="os-category-manager__color-picker">
+                <div
+                  class="os-category-manager__color-preview"
+                  [style.background-color]="selectedColor()"
+                  (click)="onToggleColorPicker()"
+                  (keydown.enter)="onToggleColorPicker()"
+                  (keydown.space)="onToggleColorPicker()"
+                  [attr.aria-label]="'Cor selecionada: ' + selectedColor()"
+                  role="button"
+                  tabindex="0"
+                ></div>
+                <os-input
+                  formControlName="color"
+                  variant="default"
+                  size="medium"
+                  type="text"
+                  [disabled]="loading()"
+                  placeholder="#3B82F6"
+                ></os-input>
+                <os-button
+                  variant="tertiary"
+                  size="small"
+                  (click)="onToggleColorPicker()"
+                  [disabled]="loading()"
+                  [attr.aria-label]="'Abrir seletor de cores'"
+                >
+                  <os-icon name="palette" size="sm"></os-icon>
+                </os-button>
+              </div>
+
+              @if (showColorPicker()) {
+              <div
+                class="os-category-manager__color-palette"
+                role="listbox"
+                aria-label="Paleta de cores"
+              >
+                @for (color of colorPalette; track trackByColor($index, color)) {
+                <div
+                  class="os-category-manager__color-option"
+                  [style.background-color]="color"
+                  [class.selected]="selectedColor() === color"
+                  (click)="onColorSelect(color)"
+                  (keydown.enter)="onColorSelect(color)"
+                  (keydown.space)="onColorSelect(color)"
+                  [attr.aria-label]="'Selecionar cor ' + color"
+                  [attr.aria-selected]="selectedColor() === color"
+                  role="option"
+                  tabindex="0"
+                ></div>
+                }
+              </div>
+              }
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium"> Ícone </os-label>
-              <os-input
-                formControlName="icon"
-                variant="default"
-                size="medium"
-                placeholder="Nome do ícone Font Awesome"
-                [disabled]="loading()"
-              ></os-input>
+              <div class="os-category-manager__icon-picker">
+                <div class="os-category-manager__icon-preview">
+                  <os-icon [name]="selectedIcon()" size="md"></os-icon>
+                </div>
+                <os-input
+                  formControlName="icon"
+                  variant="default"
+                  size="medium"
+                  placeholder="Nome do ícone"
+                  [disabled]="loading()"
+                ></os-input>
+                <os-button
+                  variant="tertiary"
+                  size="small"
+                  (click)="onToggleIconPicker()"
+                  [disabled]="loading()"
+                  [attr.aria-label]="'Abrir seletor de ícones'"
+                >
+                  <os-icon name="search" size="sm"></os-icon>
+                </os-button>
+              </div>
+
+              @if (showIconPicker()) {
+              <div
+                class="os-category-manager__icon-grid"
+                role="listbox"
+                aria-label="Seletor de ícones"
+              >
+                @for (icon of iconOptions; track trackByIcon($index, icon)) {
+                <div
+                  class="os-category-manager__icon-option"
+                  [class.selected]="selectedIcon() === icon"
+                  (click)="onIconSelect(icon)"
+                  (keydown.enter)="onIconSelect(icon)"
+                  (keydown.space)="onIconSelect(icon)"
+                  [attr.aria-label]="'Selecionar ícone ' + icon"
+                  [attr.aria-selected]="selectedIcon() === icon"
+                  role="option"
+                  tabindex="0"
+                >
+                  <os-icon [name]="icon" size="md"></os-icon>
+                </div>
+                }
+              </div>
+              }
             </os-form-field>
 
             <div class="os-category-manager__form-actions">
@@ -166,6 +261,7 @@ export interface CategoryFormData {
             </div>
           </os-form-group>
         </div>
+        }
 
         <!-- Lista de Categorias -->
         <div class="os-category-manager__list">
@@ -186,8 +282,8 @@ export interface CategoryFormData {
             </div>
           </div>
 
-          <!-- Filtros -->
-          <div class="os-category-manager__filters" *ngIf="showFilter()">
+          @if (showFilter()) {
+          <div class="os-category-manager__filters">
             <os-form-group variant="default" size="small">
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Buscar </os-label>
@@ -223,23 +319,40 @@ export interface CategoryFormData {
               </os-form-field>
             </os-form-group>
           </div>
+          }
 
           <!-- Lista -->
-          <div class="os-category-manager__items">
+          <div
+            class="os-category-manager__items"
+            cdkDropList
+            [cdkDropListDisabled]="!dragEnabled()"
+            (cdkDropListDropped)="onDragDrop($event)"
+            [attr.aria-label]="'Lista de categorias arrastáveis'"
+            role="list"
+          >
+            @for (category of filteredCategories(); track trackByCategoryId($index, category)) {
             <div
               class="os-category-manager__item"
-              *ngFor="let category of filteredCategories(); trackBy: trackByCategoryId"
               [class]="getCategoryItemClasses(category)"
+              [style]="getCategoryStyle(category)"
+              cdkDrag
+              [cdkDragDisabled]="!dragEnabled()"
+              [attr.aria-label]="'Categoria ' + category.name + ', arrastar para reordenar'"
+              role="listitem"
             >
               <div class="os-category-manager__item-content">
-                <div class="os-category-manager__item-icon" *ngIf="category.icon">
+                @if (category.icon) {
+                <div class="os-category-manager__item-icon">
                   <os-icon [name]="category.icon" size="md"></os-icon>
                 </div>
+                }
                 <div class="os-category-manager__item-info">
                   <h4 class="os-category-manager__item-name">{{ category.name }}</h4>
-                  <p class="os-category-manager__item-description" *ngIf="category.description">
+                  @if (category.description) {
+                  <p class="os-category-manager__item-description">
                     {{ category.description }}
                   </p>
+                  }
                   <div class="os-category-manager__item-meta">
                     <os-badge [variant]="getCategoryTypeVariant(category.type)" size="sm">
                       {{ getCategoryTypeLabel(category.type) }}
@@ -269,18 +382,17 @@ export interface CategoryFormData {
                 </os-button>
               </div>
             </div>
-
-            <!-- Estado Vazio -->
-            <div class="os-category-manager__empty" *ngIf="filteredCategories().length === 0">
+            } @if (filteredCategories().length === 0) {
+            <div class="os-category-manager__empty">
               <os-icon name="folder-open" size="lg"></os-icon>
               <h3>Nenhuma categoria encontrada</h3>
-              <p *ngIf="searchTerm || filterType || filterStatus">
-                Tente ajustar os filtros para encontrar mais categorias.
-              </p>
-              <p *ngIf="!searchTerm && !filterType && !filterStatus">
-                Comece criando sua primeira categoria.
-              </p>
+              @if (searchTerm || filterType || filterStatus) {
+              <p>Tente ajustar os filtros para encontrar mais categorias.</p>
+              } @if (!searchTerm && !filterType && !filterStatus) {
+              <p>Comece criando sua primeira categoria.</p>
+              }
             </div>
+            }
           </div>
         </div>
       </div>
@@ -289,8 +401,7 @@ export interface CategoryFormData {
   styleUrls: ['./os-category-manager.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OsCategoryManagerComponent {
-  // Inputs
+export class OsCategoryManagerComponent implements AfterViewInit {
   title = input<string>('Gerenciador de Categorias');
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -299,13 +410,11 @@ export class OsCategoryManagerComponent {
   loading = input<boolean>(false);
   disabled = input<boolean>(false);
 
-  // Outputs
   categoryAdded = output<CategoryFormData>();
   categoryUpdated = output<{ id: string; data: CategoryFormData }>();
   categoryDeleted = output<string>();
   categorySelected = output<Category>();
 
-  // Signals
   showFormSignal = signal<boolean>(false);
   editingCategorySignal = signal<Category | null>(null);
   showFilterSignal = signal<boolean>(false);
@@ -313,10 +422,8 @@ export class OsCategoryManagerComponent {
   filterTypeSignal = signal<string>('');
   filterStatusSignal = signal<string>('');
 
-  // Form
   categoryForm: FormGroup;
 
-  // Options
   categoryTypeOptions = [
     { value: 'income', label: 'Receita' },
     { value: 'expense', label: 'Despesa' },
@@ -337,6 +444,51 @@ export class OsCategoryManagerComponent {
   ];
 
   private fb = inject(FormBuilder);
+  private breakpointObserver = inject(BreakpointObserver);
+  private elementRef = inject(ElementRef);
+
+  isMobile = signal<boolean>(false);
+  showColorPicker = signal<boolean>(false);
+  showIconPicker = signal<boolean>(false);
+  selectedColor = signal<string>('#3B82F6');
+  selectedIcon = signal<string>('folder');
+  dragEnabled = signal<boolean>(true);
+
+  colorPalette = [
+    '#3B82F6',
+    '#10B981',
+    '#F59E0B',
+    '#EF4444',
+    '#8B5CF6',
+    '#06B6D4',
+    '#84CC16',
+    '#F97316',
+    '#EC4899',
+    '#6B7280',
+    '#1F2937',
+    '#374151',
+    '#4B5563',
+    '#9CA3AF',
+    '#D1D5DB',
+  ];
+
+  iconOptions = [
+    'folder',
+    'home',
+    'shopping-cart',
+    'car',
+    'utensils',
+    'heart',
+    'star',
+    'gift',
+    'credit-card',
+    'piggy-bank',
+    'chart-line',
+    'wallet',
+    'coins',
+    'receipt',
+    'calculator',
+  ];
 
   constructor() {
     this.categoryForm = this.fb.group({
@@ -344,12 +496,18 @@ export class OsCategoryManagerComponent {
       description: [''],
       type: ['expense', [Validators.required]],
       color: ['#3B82F6'],
-      icon: [''],
+      icon: ['folder'],
       active: [true],
     });
   }
 
-  // Computed properties
+  ngAfterViewInit(): void {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe((result) => {
+      this.isMobile.set(result.matches);
+      this.dragEnabled.set(!result.matches);
+    });
+  }
+
   categoryManagerClasses = computed(() => {
     return [
       'os-category-manager',
@@ -490,10 +648,6 @@ export class OsCategoryManagerComponent {
     this.categorySelected.emit(category);
   }
 
-  trackByCategoryId(index: number, category: Category): string {
-    return category.id;
-  }
-
   getCategoryItemClasses(category: Category): string {
     return [
       'os-category-manager__item',
@@ -536,5 +690,67 @@ export class OsCategoryManagerComponent {
       month: '2-digit',
       year: 'numeric',
     }).format(new Date(date));
+  }
+
+  onDragDrop(event: CdkDragDrop<Category[]>): void {
+    if (event.previousContainer === event.container) {
+      const categories = [...this.categories()];
+      moveItemInArray(categories, event.previousIndex, event.currentIndex);
+
+      categories.forEach((category, index) => {
+        category.order = index;
+      });
+
+      this.categoryReordered.emit(categories);
+    }
+  }
+
+  onColorSelect(color: string): void {
+    this.selectedColor.set(color);
+    this.categoryForm.patchValue({ color });
+    this.showColorPicker.set(false);
+  }
+
+  onIconSelect(icon: string): void {
+    this.selectedIcon.set(icon);
+    this.categoryForm.patchValue({ icon });
+    this.showIconPicker.set(false);
+  }
+
+  onToggleColorPicker(): void {
+    this.showColorPicker.set(!this.showColorPicker());
+    this.showIconPicker.set(false);
+  }
+
+  onToggleIconPicker(): void {
+    this.showIconPicker.set(!this.showIconPicker());
+    this.showColorPicker.set(false);
+  }
+
+  onClosePickers(): void {
+    this.showColorPicker.set(false);
+    this.showIconPicker.set(false);
+  }
+
+  getCategoryStyle(category: Category): Record<string, string> {
+    return {
+      'border-left-color': category.color || '#3B82F6',
+      'border-left-width': '4px',
+      'border-left-style': 'solid',
+    };
+  }
+
+  categoryReordered = output<Category[]>();
+
+  trackByCategoryId(index: number, category: Category): string {
+    return category.id;
+  }
+
+  trackByColor(index: number, color: string): string {
+    return color;
+  }
+
+  trackByIcon(index: number, icon: string): string {
+    return icon;
   }
 }

@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  inject,
+  effect,
+} from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import {
@@ -35,7 +46,13 @@ export interface OsDataGridPagination {
 @Component({
   selector: 'os-data-grid',
   standalone: true,
-  imports: [CommonModule, OsDataTableComponent, OsFilterBarComponent, OsButtonComponent],
+  imports: [
+    CommonModule,
+    ScrollingModule,
+    OsDataTableComponent,
+    OsFilterBarComponent,
+    OsButtonComponent,
+  ],
   template: `
     <div class="os-data-grid" [class]="dataGridClasses()">
       <!-- Header -->
@@ -147,7 +164,35 @@ export interface OsDataGridPagination {
       }
 
       <!-- Data Table -->
-      <div class="os-data-grid__table">
+      <div class="os-data-grid__table" [attr.aria-label]="'Tabela de dados'">
+        @if (shouldUseVirtualScrolling()) {
+        <cdk-virtual-scroll-viewport
+          class="os-data-grid__virtual-scroll"
+          [itemSize]="getVirtualScrollItemSize()"
+          [minBufferPx]="getVirtualScrollMinBuffer()"
+          [maxBufferPx]="getVirtualScrollMaxBuffer()"
+        >
+          <os-data-table
+            [data]="filteredData()"
+            [columns]="columns()"
+            [actions]="tableActions()"
+            [size]="getTableSize()"
+            [variant]="getTableVariant()"
+            [showPagination]="false"
+            [showNoData]="showNoData()"
+            [noDataText]="noDataText()"
+            [pageSize]="filteredData().length"
+            [pageIndex]="0"
+            [totalItems]="totalItems()"
+            [pageSizeOptions]="[]"
+            [showFirstLastButtons]="false"
+            (rowClick)="onRowClick($event)"
+            (actionClick)="onTableActionClick($event)"
+            (sortChange)="onSortChange($event)"
+            (pageChange)="onPageChange($event)"
+          />
+        </cdk-virtual-scroll-viewport>
+        } @else {
         <os-data-table
           [data]="filteredData()"
           [columns]="columns()"
@@ -167,6 +212,7 @@ export interface OsDataGridPagination {
           (sortChange)="onSortChange($event)"
           (pageChange)="onPageChange($event)"
         />
+        }
       </div>
 
       <!-- Footer -->
@@ -200,6 +246,9 @@ export interface OsDataGridPagination {
   },
 })
 export class OsDataGridComponent {
+  // Dependencies
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
   // Inputs
   data = input<Record<string, unknown>[]>([]);
   columns = input<OsDataTableColumn[]>([]);
@@ -209,6 +258,13 @@ export class OsDataGridComponent {
   subtitle = input<string>('');
   size = input<OsDataGridSize>('medium');
   variant = input<OsDataGridVariant>('default');
+
+  // Virtual scrolling options
+  useVirtualScrolling = input<boolean>(false);
+  virtualScrollThreshold = input<number>(100);
+  virtualScrollItemSize = input<number>(48);
+  virtualScrollMinBuffer = input<number>(200);
+  virtualScrollMaxBuffer = input<number>(400);
 
   // Display options
   showHeaderActions = input<boolean>(true);
@@ -251,6 +307,20 @@ export class OsDataGridComponent {
     pageSize: 10,
     total: 0,
   });
+
+  // Mobile detection
+  private isMobile = signal<boolean>(false);
+
+  constructor() {
+    // Mobile detection effect
+    effect(() => {
+      this.breakpointObserver
+        .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
+        .subscribe((result) => {
+          this.isMobile.set(result.matches);
+        });
+    });
+  }
 
   // Computed properties
   filteredData = computed(() => {
@@ -305,6 +375,14 @@ export class OsDataGridComponent {
     return this.filters().some((f) => f.value !== null && f.value !== undefined && f.value !== '');
   });
 
+  // Mobile-specific computed properties
+  isMobileDevice = computed(() => this.isMobile());
+
+  // Virtual scrolling computed properties
+  shouldUseVirtualScrolling = computed(() => {
+    return this.useVirtualScrolling() && this.filteredData().length > this.virtualScrollThreshold();
+  });
+
   // Methods
   dataGridClasses = () => {
     const classes = ['os-data-grid'];
@@ -319,6 +397,14 @@ export class OsDataGridComponent {
 
     if (this.isLoading()) {
       classes.push('os-data-grid--loading');
+    }
+
+    if (this.isMobileDevice()) {
+      classes.push('os-data-grid--mobile');
+    }
+
+    if (this.shouldUseVirtualScrolling()) {
+      classes.push('os-data-grid--virtual-scroll');
     }
 
     return classes.join(' ');
@@ -385,6 +471,11 @@ export class OsDataGridComponent {
 
     return `Mostrando ${start}-${end} de ${total} itens`;
   };
+
+  // Virtual scrolling methods
+  getVirtualScrollItemSize = () => this.virtualScrollItemSize();
+  getVirtualScrollMinBuffer = () => this.virtualScrollMinBuffer();
+  getVirtualScrollMaxBuffer = () => this.virtualScrollMaxBuffer();
 
   // Event handlers
   onRefresh(): void {

@@ -1,7 +1,8 @@
 // Cores do Design System OrçaSonhos
 // Paleta azul dominante com roxo secundário
+// Refinado para alinhamento 100% com visão de produto das Meta Specs
 
-// ===== CORES PRIMÁRIAS =====
+// ===== CORES PRIMÁRIAS (Azul Dominante) =====
 .os-color-primary {
   &-50 {
     color: var(--os-color-primary-50);
@@ -68,7 +69,7 @@
   }
 }
 
-// ===== CORES SECUNDÁRIAS =====
+// ===== CORES SECUNDÁRIAS (Roxo) =====
 .os-color-secondary {
   &-50 {
     color: var(--os-color-secondary-50);
@@ -204,29 +205,147 @@
 
 // ===== CORES SEMÂNTICAS =====
 .os-color-success {
-  color: var(--os-color-success);
+  &-50 {
+    color: var(--os-color-success-50);
+  }
+  &-100 {
+    color: var(--os-color-success-100);
+  }
+  &-500 {
+    color: var(--os-color-success-500);
+  }
+  &-600 {
+    color: var(--os-color-success-600);
+  }
+  &-700 {
+    color: var(--os-color-success-700);
+  }
 }
+
 .os-color-warning {
-  color: var(--os-color-warning);
+  &-50 {
+    color: var(--os-color-warning-50);
+  }
+  &-100 {
+    color: var(--os-color-warning-100);
+  }
+  &-500 {
+    color: var(--os-color-warning-500);
+  }
+  &-600 {
+    color: var(--os-color-warning-600);
+  }
+  &-700 {
+    color: var(--os-color-warning-700);
+  }
 }
+
 .os-color-error {
-  color: var(--os-color-error);
+  &-50 {
+    color: var(--os-color-error-50);
+  }
+  &-100 {
+    color: var(--os-color-error-100);
+  }
+  &-500 {
+    color: var(--os-color-error-500);
+  }
+  &-600 {
+    color: var(--os-color-error-600);
+  }
+  &-700 {
+    color: var(--os-color-error-700);
+  }
 }
+
 .os-color-info {
-  color: var(--os-color-info);
+  &-50 {
+    color: var(--os-color-info-50);
+  }
+  &-100 {
+    color: var(--os-color-info-100);
+  }
+  &-500 {
+    color: var(--os-color-info-500);
+  }
+  &-600 {
+    color: var(--os-color-info-600);
+  }
+  &-700 {
+    color: var(--os-color-info-700);
+  }
 }
 
 .os-bg-success {
-  background-color: var(--os-color-success);
+  &-50 {
+    background-color: var(--os-color-success-50);
+  }
+  &-100 {
+    background-color: var(--os-color-success-100);
+  }
+  &-500 {
+    background-color: var(--os-color-success-500);
+  }
+  &-600 {
+    background-color: var(--os-color-success-600);
+  }
+  &-700 {
+    background-color: var(--os-color-success-700);
+  }
 }
+
 .os-bg-warning {
-  background-color: var(--os-color-warning);
+  &-50 {
+    background-color: var(--os-color-warning-50);
+  }
+  &-100 {
+    background-color: var(--os-color-warning-100);
+  }
+  &-500 {
+    background-color: var(--os-color-warning-500);
+  }
+  &-600 {
+    background-color: var(--os-color-warning-600);
+  }
+  &-700 {
+    background-color: var(--os-color-warning-700);
+  }
 }
+
 .os-bg-error {
-  background-color: var(--os-color-error);
+  &-50 {
+    background-color: var(--os-color-error-50);
+  }
+  &-100 {
+    background-color: var(--os-color-error-100);
+  }
+  &-500 {
+    background-color: var(--os-color-error-500);
+  }
+  &-600 {
+    background-color: var(--os-color-error-600);
+  }
+  &-700 {
+    background-color: var(--os-color-error-700);
+  }
 }
+
 .os-bg-info {
-  background-color: var(--os-color-info);
+  &-50 {
+    background-color: var(--os-color-info-50);
+  }
+  &-100 {
+    background-color: var(--os-color-info-100);
+  }
+  &-500 {
+    background-color: var(--os-color-info-500);
+  }
+  &-600 {
+    background-color: var(--os-color-info-600);
+  }
+  &-700 {
+    background-color: var(--os-color-info-700);
+  }
 }
 
 // ===== CORES DE SUPERFÍCIE =====

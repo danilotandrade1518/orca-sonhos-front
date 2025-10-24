@@ -4,6 +4,7 @@ import {
   output,
   computed,
   model,
+  signal,
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
@@ -38,11 +39,16 @@ export interface OsSelectOption {
           [value]="value()"
           [placeholder]="placeholder()"
           [class]="selectClass()"
+          [attr.aria-label]="ariaLabel() || label()"
+          [attr.aria-describedby]="computedAriaDescribedBy()"
+          [attr.aria-invalid]="hasError()"
+          [attr.aria-required]="required() ? 'true' : 'false'"
+          [attr.aria-disabled]="disabled() ? 'true' : 'false'"
+          [attr.tabindex]="disabled() ? -1 : 0"
           (selectionChange)="handleChange($event)"
           (blur)="handleBlur($event)"
           (focus)="handleFocus($event)"
-          [attr.aria-describedby]="helperText() ? selectId + '-helper' : null"
-          [attr.aria-invalid]="hasError()"
+          (openedChange)="onOpenedChange($event)"
         >
           @for (option of options(); track option.value) {
           <mat-option [value]="option.value" [disabled]="option.disabled">
@@ -52,7 +58,7 @@ export interface OsSelectOption {
         </mat-select>
 
         @if (helperText() || hasError()) {
-        <mat-hint [class]="helperClass()">
+        <mat-hint [id]="selectId + '-helper'" [class]="helperClass()">
           {{ errorMessage() || helperText() }}
         </mat-hint>
         }
@@ -79,10 +85,15 @@ export class OsSelectComponent implements ControlValueAccessor {
   required = input(false);
   value = model<string | number>('');
   options = input<OsSelectOption[]>([]);
+  ariaLabel = input<string>('');
+  ariaDescribedBy = input<string>('');
+  animated = input(true);
+  hapticFeedback = input(true);
 
   valueChange = output<string | number>();
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
+  openedChange = output<boolean>();
 
   private _onChange = (value: string | number) => {
     // This will be set by registerOnChange
@@ -93,6 +104,9 @@ export class OsSelectComponent implements ControlValueAccessor {
   };
 
   selectId = `os-select-${Math.random().toString(36).substr(2, 9)}`;
+  isFocused = signal(false);
+  isHovered = signal(false);
+  isOpened = signal(false);
 
   containerClass = computed(() => {
     return [
@@ -100,6 +114,10 @@ export class OsSelectComponent implements ControlValueAccessor {
       `os-select-container--${this.size()}`,
       this.hasError() ? 'os-select-container--error' : '',
       this.disabled() ? 'os-select-container--disabled' : '',
+      this.isFocused() ? 'os-select-container--focused' : '',
+      this.isHovered() ? 'os-select-container--hovered' : '',
+      this.isOpened() ? 'os-select-container--opened' : '',
+      this.animated() ? 'os-select-container--animated' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -138,6 +156,12 @@ export class OsSelectComponent implements ControlValueAccessor {
     return !!this.errorMessage();
   });
 
+  computedAriaDescribedBy = computed(() => {
+    const helperId = this.helperText() ? this.selectId + '-helper' : null;
+    const describedBy = this.ariaDescribedBy();
+    return describedBy || helperId;
+  });
+
   // Mapeamento interno para Material
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
@@ -154,17 +178,31 @@ export class OsSelectComponent implements ControlValueAccessor {
 
   handleChange(event: { value: string | number }): void {
     const newValue = event.value;
+    this.triggerHapticFeedback();
     this._onChange(newValue);
     this.valueChange.emit(newValue);
   }
 
   handleBlur(event: FocusEvent): void {
+    this.isFocused.set(false);
     this._onTouched();
     this.blurEvent.emit(event);
   }
 
   handleFocus(event: FocusEvent): void {
+    this.isFocused.set(true);
     this.focusEvent.emit(event);
+  }
+
+  onOpenedChange(isOpened: boolean): void {
+    this.isOpened.set(isOpened);
+    this.openedChange.emit(isOpened);
+  }
+
+  triggerHapticFeedback(): void {
+    if (this.hapticFeedback() && 'vibrate' in navigator) {
+      navigator.vibrate(50); // 50ms vibration
+    }
   }
 
   writeValue(value: string | number): void {

@@ -23,11 +23,19 @@ export interface PanelTemplateConfig {
 @Component({
   selector: 'os-panel-template',
   template: `
-    <div [class]="panelClass()" [attr.aria-label]="ariaLabel()">
+    <div
+      [class]="panelClass()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.role]="'region'"
+      [attr.aria-expanded]="config().collapsible ? isExpanded() : null"
+      [attr.aria-labelledby]="panelTitleId()"
+    >
       @if (config().showHeader ?? true) {
       <div class="os-panel-template__header" [class]="headerClass()">
         <div class="os-panel-template__header-content">
-          <h3 class="os-panel-template__title">{{ config().title }}</h3>
+          <h3 class="os-panel-template__title" [id]="panelTitleId()">
+            {{ config().title }}
+          </h3>
           @if (config().subtitle) {
           <p class="os-panel-template__subtitle">{{ config().subtitle }}</p>
           }
@@ -39,11 +47,18 @@ export interface PanelTemplateConfig {
           [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
           (click)="toggleExpanded()"
           [attr.aria-label]="isExpanded() ? 'Recolher painel' : 'Expandir painel'"
+          [attr.aria-controls]="panelContentId()"
+          [attr.aria-expanded]="isExpanded()"
         />
         }
       </div>
       } @if (!config().collapsible || isExpanded()) {
-      <div class="os-panel-template__content" [class]="contentClass()">
+      <div
+        class="os-panel-template__content"
+        [class]="contentClass()"
+        [id]="panelContentId()"
+        [attr.aria-hidden]="config().collapsible ? !isExpanded() : null"
+      >
         <ng-content />
       </div>
       } @if (config().showActions ?? true) {
@@ -56,6 +71,7 @@ export interface PanelTemplateConfig {
           [loading]="action.loading || false"
           [icon]="action.icon || ''"
           (click)="onActionClick(action)"
+          [attr.aria-label]="action.label"
         >
           {{ action.label }}
         </os-button>
@@ -141,6 +157,20 @@ export class OsPanelTemplateComponent {
     return `Painel: ${this.config().title}`;
   });
 
+  panelTitleId = computed(() => {
+    return this.config().collapsible ? `panel-title-${this.generateId(this.config().title)}` : null;
+  });
+
+  panelContentId = computed(() => {
+    return this.config().collapsible
+      ? `panel-content-${this.generateId(this.config().title)}`
+      : null;
+  });
+
+  private generateId = (text: string): string => {
+    return text.replace(/\s+/g, '-').toLowerCase();
+  };
+
   toggleExpanded(): void {
     const newExpanded = !this.isExpanded();
     this.toggled.emit(newExpanded);
@@ -154,6 +184,10 @@ export class OsPanelTemplateComponent {
     loading?: boolean;
     icon?: string;
   }): void {
+    if (action.disabled || this.disabled() || action.loading) {
+      return;
+    }
+
     this.actionClick.emit(action);
   }
 }

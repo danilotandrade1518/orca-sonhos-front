@@ -339,7 +339,6 @@ describe('OsDashboardTemplateComponent', () => {
         position: { row: 1, col: 1 },
       };
 
-      // Set widgets input to include the widget
       fixture.componentRef.setInput('widgets', [widget]);
       fixture.detectChanges();
 

@@ -2,25 +2,32 @@
 
 .os-label {
   display: inline-block;
-  font-family: var(--os-font-family-primary);
+  font-family: var(--os-font-family-base);
   line-height: var(--os-line-height-normal);
   cursor: pointer;
   transition: var(--os-transition-fast);
   user-select: none;
+  position: relative;
+  min-height: 44px; // Touch target minimum
+  display: flex;
+  align-items: center;
 
   &--small {
     font-size: var(--os-font-size-sm);
-    padding: var(--os-spacing-xs) 0;
+    padding: var(--os-spacing-xs) var(--os-spacing-sm);
+    min-height: 44px; // Touch target minimum
   }
 
   &--medium {
     font-size: var(--os-font-size-base);
-    padding: var(--os-spacing-sm) 0;
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
+    min-height: 44px; // Touch target minimum
   }
 
   &--large {
     font-size: var(--os-font-size-lg);
-    padding: var(--os-spacing-md) 0;
+    padding: var(--os-spacing-md) var(--os-spacing-lg);
+    min-height: 48px; // Larger touch target
   }
 
   &--light {
@@ -44,43 +51,58 @@
   }
 
   &--default {
-    color: var(--os-color-on-surface);
+    color: var(--os-color-text-primary);
   }
 
   &--primary {
-    color: var(--os-color-primary);
+    color: var(--os-color-primary-600);
   }
 
   &--secondary {
-    color: var(--os-color-secondary);
+    color: var(--os-color-secondary-600);
   }
 
   &--success {
-    color: var(--os-color-success);
+    color: var(--os-color-success-600);
   }
 
   &--warning {
-    color: var(--os-color-warning);
+    color: var(--os-color-warning-600);
   }
 
   &--error {
-    color: var(--os-color-error);
+    color: var(--os-color-error-600);
   }
 
   &--info {
-    color: var(--os-color-info);
+    color: var(--os-color-info-600);
   }
 
   &--required::after {
     content: ' *';
-    color: var(--os-color-error);
+    color: var(--os-color-error-500);
     font-weight: var(--os-font-weight-bold);
   }
 
   &--disabled {
-    color: var(--os-color-on-surface-disabled);
+    color: var(--os-color-text-disabled);
     cursor: not-allowed;
     opacity: 0.6;
+  }
+
+  &--focused {
+    outline: 2px solid var(--os-color-primary-500);
+    outline-offset: 2px;
+    border-radius: var(--os-border-radius-sm);
+  }
+
+  &--hovered:not(&--disabled) {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+
+  &--animated {
+    transition: all var(--os-transition-duration-standard) var(--os-transition-easing-standard);
   }
 
   &:hover:not(&--disabled) {
@@ -88,8 +110,101 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--os-color-primary);
+    outline: 2px solid var(--os-color-primary-500);
     outline-offset: 2px;
     border-radius: var(--os-border-radius-sm);
+  }
+}
+
+// Responsive design
+@media (max-width: 575px) {
+  .os-label {
+    min-height: 48px; // Larger touch target on mobile
+
+    &--small {
+      min-height: 48px;
+      padding: var(--os-spacing-sm) var(--os-spacing-md);
+    }
+
+    &--medium {
+      min-height: 48px;
+      padding: var(--os-spacing-md) var(--os-spacing-lg);
+    }
+
+    &--large {
+      min-height: 52px;
+      padding: var(--os-spacing-lg) var(--os-spacing-xl);
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .os-label {
+    &--default {
+      color: var(--os-color-text-primary-dark);
+    }
+
+    &--primary {
+      color: var(--os-color-primary-400);
+    }
+
+    &--secondary {
+      color: var(--os-color-secondary-400);
+    }
+
+    &--success {
+      color: var(--os-color-success-400);
+    }
+
+    &--warning {
+      color: var(--os-color-warning-400);
+    }
+
+    &--error {
+      color: var(--os-color-error-400);
+    }
+
+    &--info {
+      color: var(--os-color-info-400);
+    }
+
+    &--disabled {
+      color: var(--os-color-text-disabled-dark);
+    }
+
+    &--required::after {
+      color: var(--os-color-error-400);
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .os-label {
+    &--focused {
+      outline-width: 3px;
+    }
+
+    &:focus-visible {
+      outline-width: 3px;
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .os-label {
+    &--animated {
+      transition: none;
+    }
+
+    &:hover:not(&--disabled) {
+      transform: none;
+    }
+
+    &--hovered:not(&--disabled) {
+      transform: none;
+    }
   }
 }

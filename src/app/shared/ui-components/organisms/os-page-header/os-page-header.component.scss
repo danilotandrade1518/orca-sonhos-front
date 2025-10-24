@@ -8,6 +8,9 @@
   --os-page-header-link: var(--os-primary-color);
   --os-page-header-link-hover: var(--os-primary-color-dark);
   --os-page-header-separator: var(--os-text-secondary);
+  --os-page-header-shadow: var(--os-shadow-sm);
+  --os-page-header-focus-ring: var(--os-focus-ring-width, 2px);
+  --os-page-header-focus-color: var(--os-focus-ring-color, var(--os-primary-color));
 
   background-color: var(--os-page-header-bg);
   border-bottom: 1px solid var(--os-page-header-border);
@@ -15,6 +18,8 @@
   padding: var(--os-spacing-md) var(--os-spacing-lg);
   position: relative;
   width: 100%;
+  box-shadow: var(--os-page-header-shadow);
+  transition: all 0.2s ease;
 
   &__content {
     max-width: 100%;
@@ -46,17 +51,28 @@
     text-decoration: none;
     font-size: var(--os-font-size-sm);
     font-weight: var(--os-font-weight-medium);
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    padding: var(--os-spacing-xs);
+    border-radius: var(--os-border-radius-sm);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
 
     &:hover {
       color: var(--os-page-header-link-hover);
       text-decoration: underline;
+      background-color: var(--os-surface-hover, rgba(0, 0, 0, 0.04));
+      transform: translateY(-1px);
     }
 
     &:focus {
-      outline: 2px solid var(--os-primary-color);
+      outline: var(--os-page-header-focus-ring) solid var(--os-page-header-focus-color);
       outline-offset: 2px;
       border-radius: var(--os-border-radius-sm);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
@@ -130,6 +146,20 @@
     align-items: flex-start;
     gap: var(--os-spacing-sm);
     flex-shrink: 0;
+    flex-wrap: wrap;
+
+    os-button {
+      min-height: 44px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 
   &__description {
@@ -203,50 +233,88 @@
     --os-page-header-text-secondary: var(--os-text-light-secondary);
   }
 
-  // Responsive design
-  @media (max-width: 768px) {
-    padding: var(--os-spacing-md);
+  // Mobile optimizations
+  &--mobile {
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
 
-    &__main {
+    .os-page-header__main {
       flex-direction: column;
       align-items: stretch;
       gap: var(--os-spacing-md);
     }
 
-    &__actions {
+    .os-page-header__actions {
       justify-content: flex-start;
       flex-wrap: wrap;
     }
 
-    &__title {
+    .os-page-header__title {
       font-size: var(--os-font-size-xl);
     }
 
-    &__subtitle {
+    .os-page-header__subtitle {
       font-size: var(--os-font-size-base);
     }
 
-    &__description {
+    .os-page-header__description {
       max-width: 100%;
     }
-  }
 
-  @media (max-width: 480px) {
-    padding: var(--os-spacing-sm);
-
-    &__title-section {
+    .os-page-header__title-section {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--os-spacing-sm);
     }
 
-    &__icon {
+    .os-page-header__icon {
       margin-top: 0;
     }
 
-    &__actions {
+    .os-page-header__actions {
       flex-direction: column;
       align-items: stretch;
+    }
+  }
+
+  // Breadcrumb collapse
+  &--breadcrumb-collapsed {
+    .os-page-header__breadcrumbs {
+      .os-page-header__breadcrumb-item:not(:last-child):not(:nth-last-child(2)) {
+        display: none;
+      }
+
+      .os-page-header__breadcrumb-item:nth-last-child(2)::before {
+        content: '...';
+        color: var(--os-page-header-separator);
+        margin-right: var(--os-spacing-xs);
+      }
+    }
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    border-bottom-width: 2px;
+
+    .os-page-header__breadcrumb-link {
+      border: 1px solid transparent;
+
+      &:hover {
+        border-color: var(--os-page-header-link);
+      }
+    }
+  }
+
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    .os-page-header__breadcrumb-link,
+    os-button {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
     }
   }
 }

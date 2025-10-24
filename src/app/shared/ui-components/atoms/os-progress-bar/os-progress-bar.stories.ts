@@ -55,6 +55,18 @@ const meta: Meta<OsProgressBarComponent> = {
       control: { type: 'number', min: 0, max: 100 },
       description: 'Valor do buffer (para modo buffer)',
     },
+    ariaLabel: {
+      control: { type: 'text' },
+      description: 'Label de acessibilidade',
+    },
+    showCelebration: {
+      control: { type: 'boolean' },
+      description: 'Mostrar celebração quando atinge 100%',
+    },
+    celebrationText: {
+      control: { type: 'text' },
+      description: 'Texto da celebração',
+    },
   },
   tags: ['autodocs'],
 };
@@ -478,6 +490,47 @@ export const RealWorldExample: Story = {
     docs: {
       description: {
         story: 'Exemplo de uso real em um dashboard de orçamento.',
+      },
+    },
+  },
+};
+
+export const AccessibilityExample: Story = {
+  args: {
+    value: 45,
+    max: 100,
+    label: 'Progresso acessível',
+    ariaLabel: 'Progresso da meta de economia: 45% completo',
+    hint: 'Faltam R$ 550 para completar a meta',
+    showPercentage: true,
+    size: 'medium',
+    variant: 'primary',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Exemplo de barra de progresso com foco em acessibilidade WCAG 2.1 AA.',
+      },
+    },
+  },
+};
+
+export const CompletedWithCelebration: Story = {
+  args: {
+    value: 100,
+    max: 100,
+    label: 'Meta de economia',
+    hint: 'R$ 1.000 de R$ 1.000',
+    showPercentage: true,
+    size: 'medium',
+    variant: 'success',
+    showCelebration: true,
+    celebrationText: '🎉 Meta alcançada!',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Exemplo de barra de progresso completa com celebração visual.',
       },
     },
   },

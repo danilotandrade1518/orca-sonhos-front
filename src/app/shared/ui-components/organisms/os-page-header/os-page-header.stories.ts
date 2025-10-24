@@ -519,6 +519,8 @@ export const Interactive: Story = {
     size: 'medium',
     theme: 'light',
     ariaLabel: 'Cabeçalho da página',
+    enableHapticFeedback: false,
+    breadcrumbCollapse: false,
   },
   render: (args) => ({
     props: args,
@@ -534,7 +536,10 @@ export const Interactive: Story = {
         [size]="size"
         [theme]="theme"
         [ariaLabel]="ariaLabel"
+        [enableHapticFeedback]="enableHapticFeedback"
+        [breadcrumbCollapse]="breadcrumbCollapse"
         (actionClick)="actionClick($event)"
+        (breadcrumbClick)="breadcrumbClick($event)"
       ></os-page-header>
     `,
   }),
@@ -542,6 +547,131 @@ export const Interactive: Story = {
     docs: {
       description: {
         story: 'Cabeçalho interativo com controles para testar todas as propriedades.',
+      },
+    },
+  },
+};
+
+export const MobileOptimized: Story = {
+  render: () => ({
+    template: `
+      <div style="max-width: 375px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <h4 style="padding: 16px; margin: 0; background: #f5f5f5; border-bottom: 1px solid #ddd;">Mobile View</h4>
+        <os-page-header
+          title="Dashboard Financeiro"
+          subtitle="Visão geral das suas finanças"
+          description="Acompanhe seus gastos e receitas em tempo real com gráficos interativos."
+          icon="dashboard"
+          [breadcrumbs]="sampleBreadcrumbs"
+          [actions]="sampleActions"
+          variant="compact"
+          size="small"
+          [enableHapticFeedback]="true"
+        ></os-page-header>
+      </div>
+    `,
+    props: {
+      sampleBreadcrumbs,
+      sampleActions,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cabeçalho otimizado para dispositivos móveis com haptic feedback.',
+      },
+    },
+  },
+};
+
+export const WithBreadcrumbCollapse: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Breadcrumbs Longos (Normal)</h4>
+          <os-page-header
+            title="Detalhes da Transação"
+            subtitle="Visualize os detalhes completos"
+            icon="receipt"
+            [breadcrumbs]="longBreadcrumbs"
+            [actions]="sampleActions"
+            [breadcrumbCollapse]="false"
+          ></os-page-header>
+        </div>
+
+        <div>
+          <h4>Breadcrumbs Longos (Colapsado)</h4>
+          <os-page-header
+            title="Detalhes da Transação"
+            subtitle="Visualize os detalhes completos"
+            icon="receipt"
+            [breadcrumbs]="longBreadcrumbs"
+            [actions]="sampleActions"
+            [breadcrumbCollapse]="true"
+          ></os-page-header>
+        </div>
+      </div>
+    `,
+    props: {
+      longBreadcrumbs: [
+        { label: 'Início', route: '/' },
+        { label: 'Transações', route: '/transactions' },
+        { label: 'Janeiro 2024', route: '/transactions/2024/01' },
+        { label: 'Alimentação', route: '/transactions/2024/01/food' },
+        { label: 'Supermercado', route: '/transactions/2024/01/food/supermarket' },
+        { label: 'Detalhes', disabled: true },
+      ],
+      sampleActions,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração do colapso de breadcrumbs longos para economizar espaço.',
+      },
+    },
+  },
+};
+
+export const AccessibilityDemo: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Com Acessibilidade Completa</h4>
+          <os-page-header
+            title="Relatórios Financeiros"
+            subtitle="Análise detalhada dos dados"
+            description="Visualize gráficos, tendências e insights sobre suas finanças pessoais com acessibilidade completa."
+            icon="bar_chart"
+            [breadcrumbs]="sampleBreadcrumbs"
+            [actions]="extendedActions"
+            ariaLabel="Cabeçalho da página de relatórios"
+            [enableHapticFeedback]="true"
+          ></os-page-header>
+        </div>
+
+        <div>
+          <h4>Sem Breadcrumbs (Apenas Título)</h4>
+          <os-page-header
+            title="Dashboard"
+            [breadcrumbs]="[]"
+            [actions]="[]"
+            ariaLabel="Cabeçalho do dashboard"
+          ></os-page-header>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBreadcrumbs,
+      extendedActions,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração de acessibilidade com ARIA labels e navegação por teclado.',
       },
     },
   },

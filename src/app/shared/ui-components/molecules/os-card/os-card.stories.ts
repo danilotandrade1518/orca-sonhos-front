@@ -35,6 +35,26 @@ const meta: Meta<OsCardComponent> = {
       control: { type: 'boolean' },
       description: 'Card clicável',
     },
+    loading: {
+      control: { type: 'boolean' },
+      description: 'Estado de loading com shimmer effect',
+    },
+    disabled: {
+      control: { type: 'boolean' },
+      description: 'Card desabilitado',
+    },
+    selected: {
+      control: { type: 'boolean' },
+      description: 'Card selecionado',
+    },
+    ariaLabel: {
+      control: { type: 'text' },
+      description: 'Label ARIA para acessibilidade',
+    },
+    ariaDescribedBy: {
+      control: { type: 'text' },
+      description: 'ID do elemento que descreve o card',
+    },
     cardClick: {
       action: 'cardClick',
       description: 'Evento de clique do card',
@@ -241,6 +261,114 @@ export const Clickable: Story = {
   },
 };
 
+export const Loading: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <os-card [loading]="true">
+          <h3>Card Carregando</h3>
+          <p>Este card está em estado de loading com shimmer effect.</p>
+        </os-card>
+
+        <os-card [loading]="true" variant="elevated">
+          <h3>Card Elevado Carregando</h3>
+          <p>Card elevado com loading state.</p>
+        </os-card>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cards em estado de loading com shimmer effect.',
+      },
+    },
+  },
+};
+
+export const Disabled: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <os-card [disabled]="true" [clickable]="true">
+          <h3>Card Desabilitado</h3>
+          <p>Este card está desabilitado e não pode ser clicado.</p>
+        </os-card>
+
+        <os-card [disabled]="true" variant="outlined" [clickable]="true">
+          <h3>Card Outline Desabilitado</h3>
+          <p>Card outline desabilitado com opacidade reduzida.</p>
+        </os-card>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cards desabilitados com opacidade reduzida.',
+      },
+    },
+  },
+};
+
+export const Selected: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <os-card [selected]="true" [clickable]="true">
+          <h3>Card Selecionado</h3>
+          <p>Este card está selecionado com destaque visual.</p>
+        </os-card>
+
+        <os-card [selected]="false" [clickable]="true">
+          <h3>Card Não Selecionado</h3>
+          <p>Este card não está selecionado.</p>
+        </os-card>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cards com estado de seleção.',
+      },
+    },
+  },
+};
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+        <os-card
+          [clickable]="true"
+          ariaLabel="Card acessível com descrição"
+          ariaDescribedBy="card-description"
+        >
+          <h3>Card Acessível</h3>
+          <p id="card-description">Este card possui atributos ARIA para melhor acessibilidade.</p>
+        </os-card>
+
+        <os-card
+          [clickable]="true"
+          [disabled]="true"
+          ariaLabel="Card desabilitado"
+        >
+          <h3>Card Desabilitado Acessível</h3>
+          <p>Card desabilitado com atributos ARIA apropriados.</p>
+        </os-card>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cards com atributos de acessibilidade ARIA.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     variant: 'default',
@@ -248,6 +376,9 @@ export const Interactive: Story = {
     header: true,
     actions: true,
     clickable: false,
+    loading: false,
+    disabled: false,
+    selected: false,
   },
   render: (args) => ({
     props: args,
@@ -258,6 +389,9 @@ export const Interactive: Story = {
         [header]="header"
         [actions]="actions"
         [clickable]="clickable"
+        [loading]="loading"
+        [disabled]="disabled"
+        [selected]="selected"
         (cardClick)="cardClick($event)"
       >
         <div slot="header" *ngIf="header">
@@ -281,4 +415,3 @@ export const Interactive: Story = {
     },
   },
 };
-

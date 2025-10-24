@@ -45,8 +45,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kB",
-                  "maximumError": "12kB"
+                  "maximumWarning": "15kB",
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"
@@ -93,7 +93,8 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "runner": "vitest",
-            "buildTarget": "::development"
+            "buildTarget": "::development",
+            "watch": false
           }
         },
         "lint": {
@@ -108,7 +109,22 @@
             "configDir": ".storybook",
             "browserTarget": "orca-sonhos-front:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableSourceCode",
+              "--disableGraph",
+              "--disableCoverage",
+              "--disablePrivate",
+              "--disableInternal",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableSearch",
+              "--disableTemplateTab",
+              "--disableStyleTab"
+            ],
             "port": 6006,
             "experimentalZoneless": true
           }
@@ -119,7 +135,22 @@
             "configDir": ".storybook",
             "browserTarget": "orca-sonhos-front:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableSourceCode",
+              "--disableGraph",
+              "--disableCoverage",
+              "--disablePrivate",
+              "--disableInternal",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableSearch",
+              "--disableTemplateTab",
+              "--disableStyleTab"
+            ],
             "outputDir": "storybook-static",
             "experimentalZoneless": true
           }

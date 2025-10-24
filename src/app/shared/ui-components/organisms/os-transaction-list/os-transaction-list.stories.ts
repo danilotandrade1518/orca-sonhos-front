@@ -32,7 +32,7 @@ const meta: Meta<OsTransactionListComponent> = {
     },
     variant: {
       control: { type: 'select' },
-      options: ['default', 'compact', 'detailed'],
+      options: ['default', 'compact', 'detailed', 'card'],
       description: 'Variante da lista',
     },
     theme: {
@@ -130,6 +130,8 @@ const sampleTransactions = [
     status: 'completed' as const,
     account: 'Conta Corrente',
     tags: ['salário', 'trabalho'],
+    priority: 'high' as const,
+    icon: 'money',
   },
   {
     id: '2',
@@ -141,6 +143,8 @@ const sampleTransactions = [
     status: 'completed' as const,
     account: 'Cartão de Crédito',
     tags: ['compras', 'alimentação'],
+    priority: 'medium' as const,
+    icon: 'shopping-cart',
   },
   {
     id: '3',
@@ -152,6 +156,8 @@ const sampleTransactions = [
     status: 'completed' as const,
     account: 'Conta Corrente',
     tags: ['poupança', 'investimento'],
+    priority: 'high' as const,
+    icon: 'piggy-bank',
   },
   {
     id: '4',
@@ -163,6 +169,8 @@ const sampleTransactions = [
     status: 'pending' as const,
     account: 'Cartão de Débito',
     tags: ['combustível', 'transporte'],
+    priority: 'low' as const,
+    icon: 'car',
   },
   {
     id: '5',
@@ -174,6 +182,8 @@ const sampleTransactions = [
     status: 'completed' as const,
     account: 'Conta Corrente',
     tags: ['freelance', 'trabalho'],
+    priority: 'medium' as const,
+    icon: 'briefcase',
   },
 ];
 
@@ -320,6 +330,18 @@ export const Variants: Story = {
             subtitle="Lista detalhada de transações"
             variant="detailed"
             size="large"
+            [filterOptions]="sampleFilterOptions"
+          ></os-transaction-list>
+        </div>
+
+        <div>
+          <h4>Card</h4>
+          <os-transaction-list
+            [transactions]="sampleTransactions"
+            title="Transações"
+            subtitle="Lista em formato de cards"
+            variant="card"
+            size="medium"
             [filterOptions]="sampleFilterOptions"
           ></os-transaction-list>
         </div>
@@ -704,6 +726,12 @@ export const Interactive: Story = {
     lastUpdated: new Date(),
     noDataTitle: 'Nenhuma transação encontrada',
     noDataText: 'Não há transações para exibir no momento.',
+    layout: 'table',
+    sortBy: 'date',
+    enableInfiniteScroll: false,
+    enableCategoryColors: true,
+    enablePriorityIndicators: true,
+    enableHapticFeedback: true,
   },
   render: (args) => ({
     props: args,
@@ -733,6 +761,12 @@ export const Interactive: Story = {
         [lastUpdated]="lastUpdated"
         [noDataTitle]="noDataTitle"
         [noDataText]="noDataText"
+        [layout]="layout"
+        [sortBy]="sortBy"
+        [enableInfiniteScroll]="enableInfiniteScroll"
+        [enableCategoryColors]="enableCategoryColors"
+        [enablePriorityIndicators]="enablePriorityIndicators"
+        [enableHapticFeedback]="enableHapticFeedback"
         (rowClick)="rowClick($event)"
         (tableActionClick)="tableActionClick($event)"
         (refresh)="refresh()"

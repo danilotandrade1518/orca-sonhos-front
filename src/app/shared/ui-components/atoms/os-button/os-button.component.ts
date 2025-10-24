@@ -1,21 +1,30 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
-export type OsButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
+export type OsButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'danger'
+  | 'success'
+  | 'warning';
 export type OsButtonSize = 'small' | 'medium' | 'large';
 
 @Component({
   selector: 'os-button',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatRippleModule],
   template: `
-    @if (variant() === 'primary') {
     <button
-      mat-raised-button
+      [matButton]="buttonVariant"
       [disabled]="disabled() || loading()"
       [type]="type()"
       [class]="buttonClass()"
+      matRipple
+      [matRippleDisabled]="disabled() || loading()"
+      [matRippleColor]="rippleColor()"
       (click)="handleClick($event)"
     >
       @if (loading()) {
@@ -29,64 +38,6 @@ export type OsButtonSize = 'small' | 'medium' | 'large';
         <ng-content />
       </span>
     </button>
-    } @else if (variant() === 'secondary') {
-    <button
-      mat-outlined-button
-      [disabled]="disabled() || loading()"
-      [type]="type()"
-      [class]="buttonClass()"
-      (click)="handleClick($event)"
-    >
-      @if (loading()) {
-      <span class="os-button__spinner" aria-hidden="true"></span>
-      } @else if (icon() && !loading()) {
-      <span class="os-button__icon" [attr.aria-hidden]="true">
-        {{ icon() }}
-      </span>
-      }
-      <span class="os-button__content">
-        <ng-content />
-      </span>
-    </button>
-    } @else if (variant() === 'tertiary') {
-    <button
-      mat-button
-      [disabled]="disabled() || loading()"
-      [type]="type()"
-      [class]="buttonClass()"
-      (click)="handleClick($event)"
-    >
-      @if (loading()) {
-      <span class="os-button__spinner" aria-hidden="true"></span>
-      } @else if (icon() && !loading()) {
-      <span class="os-button__icon" [attr.aria-hidden]="true">
-        {{ icon() }}
-      </span>
-      }
-      <span class="os-button__content">
-        <ng-content />
-      </span>
-    </button>
-    } @else if (variant() === 'danger') {
-    <button
-      mat-flat-button
-      [disabled]="disabled() || loading()"
-      [type]="type()"
-      [class]="buttonClass()"
-      (click)="handleClick($event)"
-    >
-      @if (loading()) {
-      <span class="os-button__spinner" aria-hidden="true"></span>
-      } @else if (icon() && !loading()) {
-      <span class="os-button__icon" [attr.aria-hidden]="true">
-        {{ icon() }}
-      </span>
-      }
-      <span class="os-button__content">
-        <ng-content />
-      </span>
-    </button>
-    }
   `,
   styleUrls: ['./os-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,19 +70,38 @@ export class OsButtonComponent {
     }
   }
 
-  // Mapeamento interno para Material
-  protected matColor = computed(() => {
+  protected rippleColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
-        return 'primary';
+      case 'success':
+        return 'rgba(255, 255, 255, 0.3)';
       case 'secondary':
-        return 'accent';
       case 'tertiary':
-        return 'primary';
+        return 'rgba(59, 130, 246, 0.3)';
       case 'danger':
-        return 'warn';
+      case 'warning':
+        return 'rgba(255, 255, 255, 0.3)';
       default:
-        return undefined;
+        return 'rgba(0, 0, 0, 0.1)';
     }
   });
+
+  get buttonVariant() {
+    switch (this.variant()) {
+      case 'primary':
+      case 'danger':
+      case 'success':
+      case 'warning':
+        return 'filled';
+
+      case 'secondary':
+        return 'outlined';
+
+      case 'tertiary':
+        return '';
+
+      default:
+        return 'elevated';
+    }
+  }
 }

@@ -1,5 +1,15 @@
 # Engineer Work-Layout
 
+Você é um **UI/UX Designer Especialista** e **Frontend Architect** encarregado de criar especificações detalhadas de layout, focando em:
+
+- **Design System Integration**: Reutilização máxima de componentes existentes
+- **Responsive Design**: Mobile-first com breakpoints otimizados
+- **Accessibility**: WCAG 2.1 AA compliance como prioridade
+- **User Experience**: Alinhamento com personas e jornada do usuário
+- **Performance**: Layout otimizado para carregamento e interação
+
+Sua expertise inclui Angular Material, Atomic Design, e design centrado no usuário para aplicações financeiras.
+
 Comando para criar especificações detalhadas de layout, UI/UX e acessibilidade antes da implementação.
 
 ## Configuração de IA
@@ -20,9 +30,27 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
 
 ## Processo de Especificação de Layout
 
-### 0. Execução Automática Inicial
+### 0. Validação de Pré-requisitos
 
-#### Context Loading Especializado em Layout
+**SEMPRE execute automaticamente antes de prosseguir:**
+
+1. **Verificar Documentos da Sessão:**
+
+   - `sessions/<folder>/context.md` - ✅ Existe?
+   - `sessions/<folder>/architecture.md` - ✅ Existe?
+
+2. **Se documentos não existirem:**
+
+   - Pare e informe: "Execute primeiro `/start` para criar context.md e architecture.md"
+   - Não prossiga sem os documentos base
+
+3. **Verificar Meta Specs:**
+   - Confirmar acesso ao repositório de Meta Specs
+   - Validar se os documentos de layout estão disponíveis
+
+### 1. Execução Automática Inicial
+
+#### 1.1 Context Loading Especializado em Layout
 
 **SEMPRE execute automaticamente:**
 
@@ -31,67 +59,64 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    - `sessions/<folder>/context.md` - Requisitos funcionais
    - `sessions/<folder>/architecture.md` - Arquitetura técnica
 
-2. **Documentação de Layout (Meta Specs):**
+#### 1.2 Documentação de Layout (Meta Specs)
 
-   - `design-system-patterns.md` - Padrões Atomic Design
-   - `responsive-design.md` - Mobile-first e breakpoints
-   - `accessibility.md` - WCAG 2.1 AA
-   - `ui-system.md` - Angular Material + abstração OrçaSonhos
-   - `personas.md` - Personas principais e perfis de usuário
-   - `customer-journey.md` - Jornada do cliente e touchpoints
-   - `core-concepts.md` - Conceitos centrais do domínio
-   - `03_funcionalidades_core.md` - Funcionalidades core e diferenciação
+- `design-system-patterns.md` - Padrões Atomic Design
+- `responsive-design.md` - Mobile-first e breakpoints
+- `accessibility.md` - WCAG 2.1 AA
+- `ui-system.md` - Angular Material + abstração OrçaSonhos
+- `personas.md` - Personas principais e perfis de usuário
+- `customer-journey.md` - Jornada do cliente e touchpoints
+- `core-concepts.md` - Conceitos centrais do domínio
+- `03_funcionalidades_core.md` - Funcionalidades core e diferenciação
 
-   **SEMPRE analisar contexto de produto dinamicamente:**
+#### 1.3 Análise de Personas e Produto
 
-   ```typescript
-   // Ler Meta Specs para contexto de produto
-   const personas = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/personas.md'
-   );
-   const customerJourney = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/customer-journey.md'
-   );
-   const coreConcepts = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/product-vision/core-concepts.md'
-   );
-   const coreFeatures = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/03_funcionalidades_core.md'
-   );
+**SEMPRE analisar contexto de produto dinamicamente:**
 
-   // Analisar contexto de produto:
-   // - Identificar persona primária para o layout
-   // - Mapear estágio da jornada do usuário
-   // - Considerar funcionalidades core relacionadas
-   // - Aplicar conceitos de negócio específicos
-   ```
+```typescript
+// Ler Meta Specs para contexto de produto
+const personas = await read_file(`${meta_specs_path}/business/customer-profile/personas.md`);
+const customerJourney = await read_file(
+  `${meta_specs_path}/business/customer-profile/customer-journey.md`
+);
+const coreConcepts = await read_file(`${meta_specs_path}/business/product-vision/core-concepts.md`);
+const coreFeatures = await read_file(`${meta_specs_path}/business/03_funcionalidades_core.md`);
 
-3. **Busca Contextual no Codebase:**
+// Analisar contexto de produto:
+// - Identificar persona primária para o layout
+// - Mapear estágio da jornada do usuário
+// - Considerar funcionalidades core relacionadas
+// - Aplicar conceitos de negócio específicos
+```
 
-   ```typescript
-   // Buscar componentes do Design System existentes
-   const dsComponents = await codebase_search({
-     query: 'componentes design system atoms molecules organisms templates',
-     target_directories: ['src/app/shared/ui-components/'],
-   });
+#### 1.4 Busca no Design System
 
-   // Buscar layouts similares
-   const similarLayouts = await codebase_search({
-     query: `${componentType} layout responsive mobile template similar`,
-     target_directories: ['src/app/features/', 'src/app/shared/ui-components/templates/'],
-   });
-   ```
+```typescript
+// Buscar componentes do Design System existentes
+const dsComponents = await codebase_search({
+  query: 'componentes design system atoms molecules organisms templates',
+  target_directories: ['src/app/shared/ui-components/'],
+});
 
-4. **Angular Material Best Practices:**
-   ```typescript
-   const angularBestPractices = await mcp_angular_cli_get_best_practices();
-   const materialDocs = await mcp_angular_cli_search_documentation({
-     query: 'Angular Material layout responsive accessibility',
-     includeTopContent: true,
-   });
-   ```
+// Buscar layouts similares
+const similarLayouts = await codebase_search({
+  query: `${componentType} layout responsive mobile template similar`,
+  target_directories: ['src/app/features/', 'src/app/shared/ui-components/templates/'],
+});
+```
 
-### 1. Análise de Requisitos de Layout
+#### 1.5 Angular Material Best Practices
+
+```typescript
+const angularBestPractices = await mcp_angular_cli_get_best_practices();
+const materialDocs = await mcp_angular_cli_search_documentation({
+  query: 'Angular Material layout responsive accessibility',
+  includeTopContent: true,
+});
+```
+
+### 2. Análise de Requisitos de Layout
 
 **Baseado em context.md e architecture.md:**
 
@@ -119,7 +144,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    - Screen reader support
    - ARIA patterns necessários
 
-### 1.1. Análise de Personas e Contexto de Produto
+### 2.1. Análise de Personas e Contexto de Produto
 
 **Baseado nas Meta Specs (personas.md, customer-journey.md, core-concepts.md):**
 
@@ -127,9 +152,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
 
    ```typescript
    // Ler personas.md das Meta Specs
-   const personas = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/personas.md'
-   );
+   const personas = await read_file(`${meta_specs_path}/business/customer-profile/personas.md`);
 
    // Analisar persona mais relevante para o layout baseado em:
    // - Tipo de funcionalidade (dashboard, form, list, etc.)
@@ -154,7 +177,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    ```typescript
    // Ler customer-journey.md das Meta Specs
    const customerJourney = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/customer-profile/customer-journey.md'
+     `${meta_specs_path}/business/customer-profile/customer-journey.md`
    );
 
    // Mapear estágio da jornada para o layout:
@@ -170,7 +193,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    ```typescript
    // Ler core-concepts.md das Meta Specs
    const coreConcepts = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/product-vision/core-concepts.md'
+     `${meta_specs_path}/business/product-vision/core-concepts.md`
    );
 
    // Aplicar conceitos relevantes ao layout:
@@ -185,9 +208,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
 
    ```typescript
    // Ler 03_funcionalidades_core.md das Meta Specs
-   const coreFeatures = await read_file(
-     '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/business/03_funcionalidades_core.md'
-   );
+   const coreFeatures = await read_file(`${meta_specs_path}/business/03_funcionalidades_core.md`);
 
    // Mapear funcionalidades core para implicações de layout:
    // - Sistema de Metas SMART: Barras de progresso, indicadores visuais
@@ -200,7 +221,7 @@ Analisar requisitos de layout e criar especificação detalhada de UI/UX, gerand
    // - Onboarding Orientado: Fluxo guiado, primeira meta
    ```
 
-### 2. Análise Automática de Necessidade de Wireframes
+### 3. Análise Automática de Necessidade de Wireframes
 
 **Critérios para geração de wireframes:**
 
@@ -223,7 +244,7 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 - **sketches:** Wireframes textuais/ASCII art para referência
 - **detailed:** Descrições detalhadas de layout por breakpoint
 
-### 3. Geração do layout-specification.md
+### 4. Geração do layout-specification.md
 
 **Template do Artefato:**
 
@@ -730,7 +751,7 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 - **Funcionalidades Core**: [03_funcionalidades_core.md] - Diferenciação e valor único
 ```
 
-### 4. Enriquecimento do architecture.md
+### 5. Enriquecimento do architecture.md
 
 **Após gerar layout-specification.md, AUTOMATICAMENTE:**
 
@@ -777,7 +798,7 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 [Resto da lista existente...]
 ```
 
-### 5. Validação e Aprovação
+### 6. Validação e Aprovação
 
 **Apresente ao usuário:**
 
@@ -809,13 +830,56 @@ const wireframeLevel = determineWireframeLevel(needsWireframes);
 **Posso prosseguir?**
 ```
 
-### 6. Finalização
+### 7. Finalização
 
 Após aprovação:
 
 - Confirmar que `layout-specification.md` está completo
 - Confirmar que `architecture.md` foi enriquecido
 - Informar próximo passo: `/plan`
+
+## 🔧 Troubleshooting
+
+### Problemas Comuns
+
+#### "Meta Specs não encontradas"
+
+- Verificar `ai.properties.md` está configurado
+- Confirmar caminho: [leia meta_specs_path do arquivo ai.properties.md na raiz do projeto, ou use 'https://github.com/danilotandrade1518/orca-sonhos-meta-specs' se não configurado]
+- Usar URL padrão do GitHub se necessário
+
+#### "Documentos da sessão não existem"
+
+- Executar primeiro `/start` para criar context.md e architecture.md
+- Verificar se está na pasta correta da sessão
+
+#### "Design System não encontrado"
+
+- Verificar se `src/app/shared/ui-components/` existe
+- Confirmar estrutura de atoms, molecules, organisms, templates
+
+#### "Personas não identificadas"
+
+- Verificar se `personas.md` está acessível nas Meta Specs
+- Confirmar se o contexto da funcionalidade permite identificação clara da persona
+
+#### "Wireframes muito complexos"
+
+- Para layouts muito complexos, criar pasta `wireframes/` na sessão
+- Separar wireframes por breakpoint em arquivos distintos
+- Usar ASCII art simples para layouts menos complexos
+
+### Validação de Saída
+
+Antes de finalizar, verificar:
+
+- [ ] `layout-specification.md` foi criado
+- [ ] `architecture.md` foi enriquecido
+- [ ] Todas as seções obrigatórias estão presentes
+- [ ] Wireframes foram gerados (se necessário)
+- [ ] Persona primária foi identificada
+- [ ] Funcionalidades core foram mapeadas
+- [ ] Critérios de acessibilidade foram definidos
 
 ## Próximos Passos
 

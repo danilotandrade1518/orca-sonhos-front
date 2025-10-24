@@ -64,6 +64,18 @@ const meta: Meta<OsFormSectionComponent> = {
       control: { type: 'boolean' },
       description: 'Seção colapsada',
     },
+    validation: {
+      control: { type: 'object' },
+      description: 'Estado de validação da seção',
+    },
+    hapticFeedback: {
+      control: { type: 'boolean' },
+      description: 'Feedback háptico em dispositivos móveis',
+    },
+    animated: {
+      control: { type: 'boolean' },
+      description: 'Animações habilitadas',
+    },
   },
   tags: ['autodocs'],
 };
@@ -564,6 +576,134 @@ export const ComplexForm: Story = {
   },
 };
 
+export const WithValidation: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Seção Válida</h4>
+          <os-form-section
+            title="Informações Válidas"
+            description="Todos os campos estão corretos"
+            [validation]="{ isValid: true, errors: [], touched: true, dirty: true }"
+          >
+            <os-form-field label="Nome" placeholder="Digite seu nome" value="João Silva"></os-form-field>
+            <os-form-field label="Email" placeholder="Digite seu email" type="email" value="joao@email.com"></os-form-field>
+          </os-form-section>
+        </div>
+
+        <div>
+          <h4>Seção com Erros</h4>
+          <os-form-section
+            title="Informações com Erros"
+            description="Alguns campos precisam ser corrigidos"
+            [validation]="{
+              isValid: false,
+              errors: ['Nome é obrigatório', 'Email inválido'],
+              touched: true,
+              dirty: true
+            }"
+          >
+            <os-form-field label="Nome" placeholder="Digite seu nome" error="Nome é obrigatório"></os-form-field>
+            <os-form-field label="Email" placeholder="Digite seu email" type="email" error="Email inválido"></os-form-field>
+          </os-form-section>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Seção de formulário com estados de validação.',
+      },
+    },
+  },
+};
+
+export const MobileOptimized: Story = {
+  render: () => ({
+    template: `
+      <div style="max-width: 375px; margin: 0 auto; padding: 16px;">
+        <h4>Otimizado para Mobile</h4>
+        <os-form-section
+          title="Configurações Mobile"
+          description="Interface otimizada para dispositivos móveis"
+          variant="card"
+          size="small"
+          [hapticFeedback]="true"
+          [animated]="true"
+        >
+          <os-form-field label="Notificações" placeholder="Configurar notificações" size="small"></os-form-field>
+          <os-form-field label="Tema" placeholder="Selecionar tema" size="small"></os-form-field>
+          <os-form-field label="Idioma" placeholder="Selecionar idioma" size="small"></os-form-field>
+
+          <div slot="actions">
+            <os-button variant="primary" size="small">Salvar</os-button>
+            <os-button variant="secondary" size="small">Cancelar</os-button>
+          </div>
+        </os-form-section>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Seção de formulário otimizada para dispositivos móveis.',
+      },
+    },
+  },
+};
+
+export const AccessibilityDemo: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Com Acessibilidade Completa</h4>
+          <os-form-section
+            title="Formulário Acessível"
+            description="Implementa todas as práticas de acessibilidade WCAG 2.1 AA"
+            [required]="true"
+            [collapsible]="true"
+            [collapsed]="false"
+            [validation]="{ isValid: true, errors: [], touched: false, dirty: false }"
+          >
+            <os-form-field
+              label="Nome Completo"
+              placeholder="Digite seu nome completo"
+              required="true"
+              aria-describedby="name-help"
+            ></os-form-field>
+            <div id="name-help" style="font-size: 12px; color: #666; margin-top: -8px;">
+              Inclua seu nome e sobrenome
+            </div>
+
+            <os-form-field
+              label="Email"
+              placeholder="Digite seu email"
+              type="email"
+              required="true"
+            ></os-form-field>
+
+            <div slot="actions">
+              <os-button variant="primary">Salvar</os-button>
+              <os-button variant="secondary">Cancelar</os-button>
+            </div>
+          </os-form-section>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstração de acessibilidade WCAG 2.1 AA com ARIA attributes e navegação por teclado.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     title: 'Informações Pessoais',
@@ -578,6 +718,8 @@ export const Interactive: Story = {
     required: true,
     collapsible: false,
     collapsed: false,
+    hapticFeedback: true,
+    animated: true,
   },
   render: (args) => ({
     props: args,
@@ -595,6 +737,8 @@ export const Interactive: Story = {
         [required]="required"
         [collapsible]="collapsible"
         [collapsed]="collapsed"
+        [hapticFeedback]="hapticFeedback"
+        [animated]="animated"
       >
         <os-form-field label="Nome" placeholder="Digite seu nome" required="true"></os-form-field>
         <os-form-field label="Email" placeholder="Digite seu email" type="email" required="true"></os-form-field>

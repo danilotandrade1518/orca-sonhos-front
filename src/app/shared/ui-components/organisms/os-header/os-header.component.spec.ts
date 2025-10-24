@@ -134,7 +134,7 @@ describe('OsHeaderComponent', () => {
         By.directive(OsNavigationItemComponent)
       );
       const firstNav = navigationComponents[0];
-      firstNav.triggerEventHandler('itemClick', new MouseEvent('click'));
+      firstNav.triggerEventHandler('itemClicked', new MouseEvent('click'));
 
       expect(spy).toHaveBeenCalled();
     });
@@ -364,7 +364,7 @@ describe('OsHeaderComponent', () => {
       // Encontrar o item dentro do mobile navigation
       const mobileNav = fixture.debugElement.query(By.css('.os-header__mobile-navigation'));
       const mobileNavItems = mobileNav.queryAll(By.directive(OsNavigationItemComponent));
-      mobileNavItems[0].triggerEventHandler('itemClick', new MouseEvent('click'));
+      mobileNavItems[0].triggerEventHandler('itemClicked', new MouseEvent('click'));
 
       expect(spy).toHaveBeenCalled();
     });
@@ -381,7 +381,7 @@ describe('OsHeaderComponent', () => {
       // Encontrar o item dentro do mobile navigation
       const mobileNav = fixture.debugElement.query(By.css('.os-header__mobile-navigation'));
       const mobileNavItems = mobileNav.queryAll(By.directive(OsNavigationItemComponent));
-      mobileNavItems[0].triggerEventHandler('itemClick', new MouseEvent('click'));
+      mobileNavItems[0].triggerEventHandler('itemClicked', new MouseEvent('click'));
 
       expect(component.mobileMenuOpen()).toBe(false);
     });

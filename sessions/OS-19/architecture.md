@@ -1,5 +1,7 @@
 # Design System Base - Atomic Design até Templates - Arquitetura Técnica
 
+Antes de executar este comando, leia o arquivo `ai.properties.md` na raiz do projeto para obter configurações locais.
+
 ## 🏗️ Visão Geral da Implementação
 
 ### Estado Atual
@@ -611,8 +613,8 @@ export class OsButtonComponent {
 
 ## 📚 Referências
 
-- **Meta Specs**: /home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs
-- **Code Standards**: /home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs/technical/code-standards/
+- **Meta Specs**: meta_specs_path
+- **Code Standards**: meta_specs_path/technical/code-standards/
 - **Angular Material**: https://material.angular.dev/
 - **Atomic Design**: https://bradfrost.com/blog/post/atomic-web-design/
 - **Angular Best Practices**: Configuração atual do projeto

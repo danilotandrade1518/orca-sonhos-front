@@ -51,37 +51,37 @@ const sampleSections = [
   {
     title: 'Produto',
     links: [
-      { label: 'Recursos', routerLink: '/features' },
-      { label: 'Preços', routerLink: '/pricing' },
-      { label: 'API', routerLink: '/api' },
-      { label: 'Integrações', routerLink: '/integrations' },
+      { label: 'Recursos', routerLink: '/features', icon: '🚀' },
+      { label: 'Preços', routerLink: '/pricing', icon: '💰' },
+      { label: 'API', routerLink: '/api', icon: '⚡' },
+      { label: 'Integrações', routerLink: '/integrations', icon: '🔗' },
     ],
   },
   {
     title: 'Empresa',
     links: [
-      { label: 'Sobre', routerLink: '/about' },
-      { label: 'Blog', routerLink: '/blog' },
-      { label: 'Carreiras', routerLink: '/careers' },
-      { label: 'Imprensa', routerLink: '/press' },
+      { label: 'Sobre', routerLink: '/about', icon: '🏢' },
+      { label: 'Blog', routerLink: '/blog', icon: '📝' },
+      { label: 'Carreiras', routerLink: '/careers', icon: '👥' },
+      { label: 'Imprensa', routerLink: '/press', icon: '📰' },
     ],
   },
   {
     title: 'Suporte',
     links: [
-      { label: 'Central de Ajuda', routerLink: '/help' },
-      { label: 'Documentação', routerLink: '/docs' },
-      { label: 'Contato', routerLink: '/contact' },
-      { label: 'Status', href: 'https://status.orcasonhos.com', external: true },
+      { label: 'Central de Ajuda', routerLink: '/help', icon: '❓' },
+      { label: 'Documentação', routerLink: '/docs', icon: '📚' },
+      { label: 'Contato', routerLink: '/contact', icon: '📞' },
+      { label: 'Status', href: 'https://status.orcasonhos.com', external: true, icon: '📊' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Termos de Uso', routerLink: '/terms' },
-      { label: 'Política de Privacidade', routerLink: '/privacy' },
-      { label: 'Cookies', routerLink: '/cookies' },
-      { label: 'LGPD', routerLink: '/lgpd' },
+      { label: 'Termos de Uso', routerLink: '/terms', icon: '📄' },
+      { label: 'Política de Privacidade', routerLink: '/privacy', icon: '🔒' },
+      { label: 'Cookies', routerLink: '/cookies', icon: '🍪' },
+      { label: 'LGPD', routerLink: '/lgpd', icon: '⚖️' },
     ],
   },
 ];

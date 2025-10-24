@@ -27,6 +27,10 @@ const meta: Meta<OsAvatarComponent> = {
       control: { type: 'text' },
       description: 'URL da imagem do avatar',
     },
+    images: {
+      control: { type: 'object' },
+      description: 'Array de URLs de imagens para carousel',
+    },
     initials: {
       control: { type: 'text' },
       description: 'Iniciais para exibir quando não há imagem',
@@ -34,6 +38,24 @@ const meta: Meta<OsAvatarComponent> = {
     alt: {
       control: { type: 'text' },
       description: 'Texto alternativo para a imagem',
+    },
+    status: {
+      control: { type: 'select' },
+      options: ['online', 'offline', 'away', 'busy', 'invisible'],
+      description: 'Status do usuário',
+    },
+    role: {
+      control: { type: 'select' },
+      options: ['img', 'button', 'presentation'],
+      description: 'Role de acessibilidade',
+    },
+    loading: {
+      control: { type: 'boolean' },
+      description: 'Estado de carregamento',
+    },
+    clickable: {
+      control: { type: 'boolean' },
+      description: 'Avatar clicável',
     },
     ariaLabel: {
       control: { type: 'text' },
@@ -239,6 +261,108 @@ export const AllVariants: Story = {
     docs: {
       description: {
         story: 'Demonstração de todas as variantes disponíveis do avatar.',
+      },
+    },
+  },
+};
+
+export const WithStatus: Story = {
+  args: {
+    variant: 'circle',
+    size: 'lg',
+    initials: 'JS',
+    status: 'online',
+    ariaLabel: 'Avatar com status online',
+  },
+};
+
+export const WithLoading: Story = {
+  args: {
+    variant: 'circle',
+    size: 'lg',
+    loading: true,
+    ariaLabel: 'Avatar carregando',
+  },
+};
+
+export const Clickable: Story = {
+  args: {
+    variant: 'circle',
+    size: 'lg',
+    initials: 'CL',
+    clickable: true,
+    ariaLabel: 'Avatar clicável',
+  },
+};
+
+export const WithMultipleImages: Story = {
+  args: {
+    variant: 'circle',
+    size: 'lg',
+    images: [
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    ],
+    ariaLabel: 'Avatar com múltiplas imagens',
+  },
+};
+
+export const StatusVariants: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="ON" status="online" [badge]="true" badgeText="✓" badgeVariant="success"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Online</div>
+        </div>
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="OF" status="offline" [badge]="true" badgeText="○" badgeVariant="default"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Offline</div>
+        </div>
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="AW" status="away" [badge]="true" badgeText="!" badgeVariant="warning"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Away</div>
+        </div>
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="BU" status="busy" [badge]="true" badgeText="×" badgeVariant="error"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Busy</div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração de todos os status disponíveis do avatar.',
+      },
+    },
+  },
+};
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="AR" role="img" ariaLabel="Avatar de usuário" title="Usuário ativo"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Role: img</div>
+        </div>
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="BU" role="button" clickable="true" ariaLabel="Botão de avatar" title="Clique para abrir perfil"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Role: button</div>
+        </div>
+        <div style="text-align: center;">
+          <os-avatar size="lg" initials="PR" role="presentation" ariaLabel="Avatar decorativo"></os-avatar>
+          <div style="font-size: 12px; margin-top: 4px;">Role: presentation</div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração de diferentes roles de acessibilidade do avatar.',
       },
     },
   },

@@ -35,6 +35,13 @@
     min-width: 24px;
   }
 
+  &--xl {
+    padding: 8px var(--os-spacing-lg);
+    font-size: var(--os-font-size-lg);
+    min-height: 32px;
+    min-width: 32px;
+  }
+
   &--default {
     background-color: var(--os-color-neutral-100);
     color: var(--os-color-neutral-700);
@@ -54,27 +61,46 @@
   }
 
   &--success {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: var(--os-border-width-thin) solid #a7f3d0;
+    background-color: var(--os-color-success-100);
+    color: var(--os-color-success-700);
+    border: var(--os-border-width-thin) solid var(--os-color-success-200);
   }
 
   &--warning {
-    background-color: #fef3c7;
-    color: #92400e;
-    border: var(--os-border-width-thin) solid #fde68a;
+    background-color: var(--os-color-warning-100);
+    color: var(--os-color-warning-700);
+    border: var(--os-border-width-thin) solid var(--os-color-warning-200);
   }
 
   &--error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: var(--os-border-width-thin) solid #fecaca;
+    background-color: var(--os-color-error-100);
+    color: var(--os-color-error-700);
+    border: var(--os-border-width-thin) solid var(--os-color-error-200);
   }
 
   &--info {
-    background-color: #dbeafe;
-    color: #1e40af;
-    border: var(--os-border-width-thin) solid #93c5fd;
+    background-color: var(--os-color-info-100);
+    color: var(--os-color-info-700);
+    border: var(--os-border-width-thin) solid var(--os-color-info-200);
+  }
+
+  // Variants específicos para metas
+  &--goal-active {
+    background-color: var(--os-color-primary-100);
+    color: var(--os-color-primary-700);
+    border: var(--os-border-width-thin) solid var(--os-color-primary-200);
+  }
+
+  &--goal-completed {
+    background-color: var(--os-color-success-100);
+    color: var(--os-color-success-700);
+    border: var(--os-border-width-thin) solid var(--os-color-success-200);
+  }
+
+  &--goal-overdue {
+    background-color: var(--os-color-warning-100);
+    color: var(--os-color-warning-700);
+    border: var(--os-border-width-thin) solid var(--os-color-warning-200);
   }
 
   &--outlined {
@@ -96,23 +122,38 @@
     }
 
     &.os-badge--success {
-      color: #059669;
-      border-color: #34d399;
+      color: var(--os-color-success-600);
+      border-color: var(--os-color-success-300);
     }
 
     &.os-badge--warning {
-      color: #d97706;
-      border-color: #fbbf24;
+      color: var(--os-color-warning-600);
+      border-color: var(--os-color-warning-300);
     }
 
     &.os-badge--error {
-      color: #dc2626;
-      border-color: #f87171;
+      color: var(--os-color-error-600);
+      border-color: var(--os-color-error-300);
     }
 
     &.os-badge--info {
-      color: #2563eb;
-      border-color: #60a5fa;
+      color: var(--os-color-info-600);
+      border-color: var(--os-color-info-300);
+    }
+
+    &.os-badge--goal-active {
+      color: var(--os-color-primary-600);
+      border-color: var(--os-color-primary-300);
+    }
+
+    &.os-badge--goal-completed {
+      color: var(--os-color-success-600);
+      border-color: var(--os-color-success-300);
+    }
+
+    &.os-badge--goal-overdue {
+      color: var(--os-color-warning-600);
+      border-color: var(--os-color-warning-300);
     }
   }
 
@@ -140,6 +181,11 @@
     &.os-badge--lg {
       min-width: 10px;
       min-height: 10px;
+    }
+
+    &.os-badge--xl {
+      min-width: 12px;
+      min-height: 12px;
     }
   }
 
@@ -191,6 +237,11 @@
     border-radius: var(--os-border-radius-full);
   }
 
+  // Animação de entrada
+  &--animated {
+    animation: os-badge-enter 0.3s ease-out;
+  }
+
   &:hover {
     opacity: 0.9;
     transform: scale(1.05);
@@ -199,6 +250,18 @@
   &:focus {
     outline: 2px solid var(--os-color-primary-500);
     outline-offset: 2px;
+  }
+}
+
+// Animação de entrada
+@keyframes os-badge-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -217,6 +280,11 @@
     &--lg {
       min-height: 26px;
       min-width: 26px;
+    }
+
+    &--xl {
+      min-height: 30px;
+      min-width: 30px;
     }
   }
 }
@@ -241,6 +309,48 @@
       border-color: var(--os-color-secondary-700);
     }
 
+    &--success {
+      background-color: var(--os-color-success-900);
+      color: var(--os-color-success-100);
+      border-color: var(--os-color-success-700);
+    }
+
+    &--warning {
+      background-color: var(--os-color-warning-900);
+      color: var(--os-color-warning-100);
+      border-color: var(--os-color-warning-700);
+    }
+
+    &--error {
+      background-color: var(--os-color-error-900);
+      color: var(--os-color-error-100);
+      border-color: var(--os-color-error-700);
+    }
+
+    &--info {
+      background-color: var(--os-color-info-900);
+      color: var(--os-color-info-100);
+      border-color: var(--os-color-info-700);
+    }
+
+    &--goal-active {
+      background-color: var(--os-color-primary-900);
+      color: var(--os-color-primary-100);
+      border-color: var(--os-color-primary-700);
+    }
+
+    &--goal-completed {
+      background-color: var(--os-color-success-900);
+      color: var(--os-color-success-100);
+      border-color: var(--os-color-success-700);
+    }
+
+    &--goal-overdue {
+      background-color: var(--os-color-warning-900);
+      color: var(--os-color-warning-100);
+      border-color: var(--os-color-warning-700);
+    }
+
     &--outlined {
       &.os-badge--default {
         color: var(--os-color-neutral-300);
@@ -255,6 +365,41 @@
       &.os-badge--secondary {
         color: var(--os-color-secondary-300);
         border-color: var(--os-color-secondary-500);
+      }
+
+      &.os-badge--success {
+        color: var(--os-color-success-300);
+        border-color: var(--os-color-success-500);
+      }
+
+      &.os-badge--warning {
+        color: var(--os-color-warning-300);
+        border-color: var(--os-color-warning-500);
+      }
+
+      &.os-badge--error {
+        color: var(--os-color-error-300);
+        border-color: var(--os-color-error-500);
+      }
+
+      &.os-badge--info {
+        color: var(--os-color-info-300);
+        border-color: var(--os-color-info-500);
+      }
+
+      &.os-badge--goal-active {
+        color: var(--os-color-primary-300);
+        border-color: var(--os-color-primary-500);
+      }
+
+      &.os-badge--goal-completed {
+        color: var(--os-color-success-300);
+        border-color: var(--os-color-success-500);
+      }
+
+      &.os-badge--goal-overdue {
+        color: var(--os-color-warning-300);
+        border-color: var(--os-color-warning-500);
       }
     }
   }
@@ -271,7 +416,10 @@
     &--success,
     &--warning,
     &--error,
-    &--info {
+    &--info,
+    &--goal-active,
+    &--goal-completed,
+    &--goal-overdue {
       border-width: var(--os-border-width-medium);
     }
   }
@@ -280,6 +428,10 @@
 @media (prefers-reduced-motion: reduce) {
   .os-badge {
     transition: none;
+
+    &--animated {
+      animation: none;
+    }
 
     &:hover {
       transform: none;

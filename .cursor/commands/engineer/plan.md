@@ -20,6 +20,7 @@ Leia os seguintes arquivos na pasta `sessions/<feature_slug>`:
 
 - **context.md**: Entendimento dos requisitos e objetivos
 - **architecture.md**: Design técnico e decisões arquiteturais
+- **layout-specification.md**: Especificações de layout
 
 ### 2. Desenvolvimento do Plano
 
@@ -55,17 +56,16 @@ Crie o arquivo `sessions/<feature_slug>/plan.md` usando o template:
 
 [Descrição breve do que será implementado]
 
-## 🎯 Objetivos da Implementação
+## 🎯 Objetivos
 
 - [Objetivo principal]
-- [Objetivo secundário]
 - [Critérios de sucesso]
 
 ---
 
 ## 📅 FASE 1: [NOME DA FASE] [Status: ⏳]
 
-### 🎯 Objetivo da Fase
+### 🎯 Objetivo
 
 [O que esta fase alcançará]
 
@@ -74,14 +74,12 @@ Crie o arquivo `sessions/<feature_slug>/plan.md` usando o template:
 #### [Nome da Tarefa] [⏳]
 
 **Descrição**: [O que precisa ser feito]
-**Arquivos**: [Lista de arquivos afetados]
 **Critério de Conclusão**: [Como saber que está completo]
 
 #### [Outra Tarefa] [⏳]
 
 **Descrição**: [Detalhes da implementação]
 **Dependências**: [Tarefas que devem ser completadas antes]
-**Validação**: [Como testar]
 
 ### 🧪 Critérios de Validação
 
@@ -96,7 +94,7 @@ _[Espaço para anotações durante desenvolvimento]_
 
 ## 📅 FASE 2: [NOME DA FASE] [Status: ⏳]
 
-### 🎯 Objetivo da Fase
+### 🎯 Objetivo
 
 [Próximo conjunto de funcionalidades]
 
@@ -106,17 +104,10 @@ _[Espaço para anotações durante desenvolvimento]_
 
 **Descrição**: [Implementação específica]
 **Dependências**: [Fase 1 completa]
-**Complexidade**: [Alta/Média/Baixa]
-
-#### [Outra Tarefa] [⏳]
-
-**Descrição**: [Detalhes técnicos]
-**Testes Necessários**: [Tipos de teste]
 
 ### 🔄 Dependências
 
 - ✅ Fase 1 completada
-- [Outras dependências externas]
 
 ### 📝 Comentários da Fase
 
@@ -126,7 +117,7 @@ _[Observações sobre decisões tomadas]_
 
 ## 📅 FASE 3: [NOME DA FASE] [Status: ⏳]
 
-### 🎯 Objetivo da Fase
+### 🎯 Objetivo
 
 [Finalização e polimento]
 
@@ -135,87 +126,12 @@ _[Observações sobre decisões tomadas]_
 #### [Tarefa Final] [⏳]
 
 **Descrição**: [Últimos ajustes]
-**Foco**: [Qualidade, performance, docs]
 
 ### 🏁 Entrega Final
 
 - [ ] Todos os testes passando
 - [ ] Documentação atualizada
-- [ ] Code review interno realizado
 - [ ] Pronto para PR
-
----
-
-## 🔀 Estratégia de Desenvolvimento
-
-### Ordem de Execução
-
-1. **Sequencial**: Fases 1 → 2 → 3 (dependências claras)
-2. **Paralelo**: [Tarefas que podem ser feitas simultaneamente]
-
-### Pontos de Validação
-
-- **Após Fase 1**: [Validação específica]
-- **Após Fase 2**: [Teste de integração]
-- **Final**: [Validação completa]
-
-### Contingências
-
-- **Se Fase X falhar**: [Plano alternativo]
-- **Se dependência atrasar**: [Como contornar]
-
-## 🧪 Estratégia de Testes
-
-### Testes por Fase
-
-- **Fase 1**: [Tipos de teste específicos]
-- **Fase 2**: [Testes de integração]
-- **Fase 3**: [Testes end-to-end]
-
-### Dados de Teste
-
-[Fixtures, mocks ou dados necessários]
-
-## 📚 Referências e Pesquisas
-
-### Documentação Consultada
-
-- [API/Biblioteca]: [Link ou fonte]
-- [Padrão/Convenção]: [Referência]
-
-### Decisões Arquiteturais Durante Planejamento
-
-- **Decisão**: [Escolha feita]
-- **Motivo**: [Justificativa baseada em pesquisa]
-- **Impacto**: [Como afeta o plano]
-
-## 🚨 Riscos Identificados
-
-### Riscos Técnicos
-
-- **Risco**: [Possível problema]
-- **Probabilidade**: [Alta/Média/Baixa]
-- **Mitigação**: [Como lidar]
-
-### Riscos de Dependência
-
-- **Dependência Externa**: [Sistema/API]
-- **Impacto se Indisponível**: [Consequências]
-- **Plano B**: [Alternativa]
-
-## 📈 Métricas de Progresso
-
-### Por Fase
-
-- Fase 1: [X tarefas, ~Y horas estimadas]
-- Fase 2: [X tarefas, ~Y horas estimadas]
-- Fase 3: [X tarefas, ~Y horas estimadas]
-
-### Total
-
-- **Tarefas**: [Número total]
-- **Tempo Estimado**: [Horas totais]
-- **Marcos**: [Principais entregas]
 ```
 
 ### 4. Validação e Refinamento
@@ -239,7 +155,7 @@ Se durante o planejamento surgirem dúvidas:
 Se o planejamento revelar necessidade de ajustes:
 
 - Atualize **architecture.md** se necessário
-- Revise **context.md** para esclarecimentos
+- Revise **context.md** e **layout-specification.md** para esclarecimentos
 - Documente mudanças e justificativas
 
 ### 5. Aprovação Final

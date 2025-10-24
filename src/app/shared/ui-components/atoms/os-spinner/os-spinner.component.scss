@@ -1,5 +1,230 @@
+// Spinner wrapper with overlay support
+.os-spinner-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  // Overlay type for full page loading
+  &--overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--os-color-background-overlay, rgba(0, 0, 0, 0.5));
+    z-index: var(--os-z-index-overlay, 1000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Responsive sizes
+  &--xs {
+    min-height: var(--os-touch-target-min, 44px);
+    min-width: var(--os-touch-target-min, 44px);
+  }
+
+  &--sm {
+    min-height: var(--os-touch-target-min, 44px);
+    min-width: var(--os-touch-target-min, 44px);
+  }
+
+  &--md {
+    min-height: var(--os-touch-target-min, 44px);
+    min-width: var(--os-touch-target-min, 44px);
+  }
+
+  &--lg {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  &--xl {
+    min-height: 56px;
+    min-width: 56px;
+  }
+
+  // Animations
+  &--animated {
+    animation: os-spinner-fade-in 0.3s ease-in-out;
+  }
+
+  &--fade-in {
+    animation: os-spinner-fade-in 0.3s ease-in-out;
+  }
+
+  &--fade-out {
+    animation: os-spinner-fade-out 0.3s ease-in-out;
+  }
+}
+
+// Spinner base styles
 .os-spinner {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+
+  // GPU acceleration for performance
+  transform: translateZ(0);
+  will-change: transform;
+
+  // Responsive sizing
+  &--xs {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--sm {
+    width: 20px;
+    height: 20px;
+  }
+
+  &--md {
+    width: 24px;
+    height: 24px;
+  }
+
+  &--lg {
+    width: 32px;
+    height: 32px;
+  }
+
+  &--xl {
+    width: 40px;
+    height: 40px;
+  }
+
+  // Variants with design tokens
+  &--default {
+    color: var(--os-color-primary-500, #1976d2);
+  }
+
+  &--primary {
+    color: var(--os-color-primary-500, #1976d2);
+  }
+
+  &--secondary {
+    color: var(--os-color-secondary-500, #9c27b0);
+  }
+
+  &--success {
+    color: var(--os-color-success-500, #4caf50);
+  }
+
+  &--warning {
+    color: var(--os-color-warning-500, #ff9800);
+  }
+
+  &--error {
+    color: var(--os-color-error-500, #f44336);
+  }
+
+  &--info {
+    color: var(--os-color-info-500, #2196f3);
+  }
+
+  // Animation support
+  &--animated {
+    animation: os-spinner-rotate 1s linear infinite;
+  }
+
+  // Mobile optimizations
+  @media (max-width: 575px) {
+    &--xs,
+    &--sm,
+    &--md {
+      min-width: var(--os-touch-target-min, 44px);
+      min-height: var(--os-touch-target-min, 44px);
+    }
+  }
+
+  // Reduced motion support
+  @media (prefers-reduced-motion: reduce) {
+    &--animated {
+      animation: none;
+    }
+  }
+}
+
+// Keyframe animations
+@keyframes os-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes os-spinner-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes os-spinner-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .os-spinner {
+    &--default {
+      color: var(--os-color-primary-300, #64b5f6);
+    }
+
+    &--primary {
+      color: var(--os-color-primary-300, #64b5f6);
+    }
+
+    &--secondary {
+      color: var(--os-color-secondary-300, #ce93d8);
+    }
+
+    &--success {
+      color: var(--os-color-success-300, #81c784);
+    }
+
+    &--warning {
+      color: var(--os-color-warning-300, #ffb74d);
+    }
+
+    &--error {
+      color: var(--os-color-error-300, #e57373);
+    }
+
+    &--info {
+      color: var(--os-color-info-300, #64b5f6);
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .os-spinner {
+    &--default,
+    &--primary,
+    &--secondary,
+    &--success,
+    &--warning,
+    &--error,
+    &--info {
+      color: var(--os-color-text-primary, #000000);
+      filter: contrast(2);
+    }
+  }
 }

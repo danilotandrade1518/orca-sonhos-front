@@ -55,7 +55,7 @@ const meta: Meta<OsNavigationItemComponent> = {
       control: { type: 'text' },
       description: 'Label de acessibilidade',
     },
-    itemClick: {
+    itemClicked: {
       action: 'itemClick',
       description: 'Evento de clique no item',
     },
@@ -80,7 +80,7 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <os-navigation-item 
+      <os-navigation-item
         [routerLink]="routerLink"
         [queryParams]="queryParams"
         [fragment]="fragment"
@@ -109,21 +109,21 @@ export const Variants: Story = {
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Primary</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" variant="primary">
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Secondary</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" variant="secondary">
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Accent</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" variant="accent">
@@ -152,14 +152,14 @@ export const Sizes: Story = {
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Medium</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" size="medium">
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Large</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" size="large">
@@ -185,23 +185,23 @@ export const WithIcons: Story = {
         <os-navigation-item routerLink="/dashboard" icon="fa fa-home">
           Dashboard
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/transactions" icon="fa fa-list">
           Transações
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/budgets" icon="fa fa-chart-pie">
           Orçamentos
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/goals" icon="fa fa-target">
           Metas
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/reports" icon="fa fa-chart-bar">
           Relatórios
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/settings" icon="fa fa-cog">
           Configurações
         </os-navigation-item>
@@ -224,19 +224,19 @@ export const WithBadges: Story = {
         <os-navigation-item routerLink="/dashboard" icon="fa fa-home" [badge]="0">
           Dashboard
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/transactions" icon="fa fa-list" [badge]="5">
           Transações
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/notifications" icon="fa fa-bell" [badge]="12">
           Notificações
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/messages" icon="fa fa-envelope" [badge]="99">
           Mensagens
         </os-navigation-item>
-        
+
         <os-navigation-item routerLink="/alerts" icon="fa fa-exclamation-triangle" [badge]="150">
           Alertas
         </os-navigation-item>
@@ -262,14 +262,14 @@ export const States: Story = {
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Ativo</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" [active]="true">
             Dashboard
           </os-navigation-item>
         </div>
-        
+
         <div>
           <h4>Desabilitado</h4>
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" [disabled]="true">
@@ -292,32 +292,32 @@ export const WithQueryParams: Story = {
   render: () => ({
     template: `
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <os-navigation-item 
-          routerLink="/transactions" 
+        <os-navigation-item
+          routerLink="/transactions"
           icon="fa fa-list"
           [queryParams]="{ filter: 'income' }"
         >
           Receitas
         </os-navigation-item>
-        
-        <os-navigation-item 
-          routerLink="/transactions" 
+
+        <os-navigation-item
+          routerLink="/transactions"
           icon="fa fa-list"
           [queryParams]="{ filter: 'expense' }"
         >
           Despesas
         </os-navigation-item>
-        
-        <os-navigation-item 
-          routerLink="/reports" 
+
+        <os-navigation-item
+          routerLink="/reports"
           icon="fa fa-chart-bar"
           [queryParams]="{ period: 'month', year: '2024' }"
         >
           Relatório Mensal
         </os-navigation-item>
-        
-        <os-navigation-item 
-          routerLink="/settings" 
+
+        <os-navigation-item
+          routerLink="/settings"
           icon="fa fa-cog"
           [fragment]="'notifications'"
         >
@@ -342,15 +342,15 @@ export const ButtonMode: Story = {
         <os-navigation-item icon="fa fa-search" (itemClick)="onSearchClick($event)">
           Buscar
         </os-navigation-item>
-        
+
         <os-navigation-item icon="fa fa-plus" (itemClick)="onAddClick($event)">
           Adicionar
         </os-navigation-item>
-        
+
         <os-navigation-item icon="fa fa-download" (itemClick)="onDownloadClick($event)">
           Exportar
         </os-navigation-item>
-        
+
         <os-navigation-item icon="fa fa-print" (itemClick)="onPrintClick($event)">
           Imprimir
         </os-navigation-item>
@@ -377,34 +377,34 @@ export const NavigationMenu: Story = {
     template: `
       <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; max-width: 300px;">
         <h3 style="margin: 0 0 16px 0; color: #333;">Menu Principal</h3>
-        
+
         <div style="display: flex; flex-direction: column; gap: 4px;">
           <os-navigation-item routerLink="/dashboard" icon="fa fa-home" [active]="true">
             Dashboard
           </os-navigation-item>
-          
+
           <os-navigation-item routerLink="/transactions" icon="fa fa-list" [badge]="3">
             Transações
           </os-navigation-item>
-          
+
           <os-navigation-item routerLink="/budgets" icon="fa fa-chart-pie">
             Orçamentos
           </os-navigation-item>
-          
+
           <os-navigation-item routerLink="/goals" icon="fa fa-target">
             Metas
           </os-navigation-item>
-          
+
           <os-navigation-item routerLink="/reports" icon="fa fa-chart-bar">
             Relatórios
           </os-navigation-item>
-          
+
           <div style="height: 1px; background: #dee2e6; margin: 8px 0;"></div>
-          
+
           <os-navigation-item routerLink="/settings" icon="fa fa-cog">
             Configurações
           </os-navigation-item>
-          
+
           <os-navigation-item routerLink="/help" icon="fa fa-question-circle">
             Ajuda
           </os-navigation-item>
@@ -435,7 +435,7 @@ export const Interactive: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <os-navigation-item 
+      <os-navigation-item
         [routerLink]="routerLink"
         [queryParams]="queryParams"
         [fragment]="fragment"
@@ -460,4 +460,3 @@ export const Interactive: Story = {
     },
   },
 };
-

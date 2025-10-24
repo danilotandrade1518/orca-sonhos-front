@@ -43,6 +43,10 @@ export type OsMoneyInputSize = 'small' | 'medium' | 'large';
           (focus)="handleFocus($event)"
           [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
           [attr.aria-invalid]="hasError()"
+          [attr.aria-label]="ariaLabel()"
+          [attr.aria-valuenow]="value()"
+          [attr.aria-valuemin]="0"
+          [attr.aria-valuemax]="999999999.99"
         />
 
         @if (helperText() || hasError()) {
@@ -73,6 +77,8 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   readonly = input(false);
   required = input(false);
   value = model<number>(0);
+  allowNegative = input<boolean>(false);
+  isFormatting = model<boolean>(false);
 
   valueChange = output<number>();
   blurEvent = output<FocusEvent>();
@@ -94,6 +100,8 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
       `os-money-input-container--${this.size()}`,
       this.hasError() ? 'os-money-input-container--error' : '',
       this.disabled() ? 'os-money-input-container--disabled' : '',
+      this.isFormatting() ? 'os-money-input-container--formatting' : '',
+      this.isLargeValue() ? 'os-money-input-container--success' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -118,6 +126,8 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
       this.hasError() ? 'os-money-input--error' : '',
       this.disabled() ? 'os-money-input--disabled' : '',
       this.readonly() ? 'os-money-input--readonly' : '',
+      this.isLargeValue() ? 'os-money-input--large-value' : '',
+      this.isAnimating() ? 'os-money-input--animating' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -153,6 +163,23 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
     return this.formatCurrency(value);
   });
 
+  isLargeValue = computed(() => {
+    return Math.abs(this.value()) >= 10000;
+  });
+
+  isAnimating = computed(() => {
+    return this.isFormatting();
+  });
+
+  ariaLabel = computed(() => {
+    const label = this.label();
+    const value = this.value();
+    if (label && value !== 0) {
+      return `${label}: ${this.formatCurrency(value)}`;
+    }
+    return label || 'Valor monetário';
+  });
+
   private formatCurrency(value: number): string {
     return new Intl.NumberFormat('pt-BR', {
       minimumFractionDigits: 2,
@@ -161,18 +188,83 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   private parseCurrency(value: string): number {
-    const cleanValue = value.replace(/[^\d]/g, '');
+    // Handle negative values first
+    const isNegative = value.includes('-');
+
+    // Remove all non-digit characters except decimal separators
+    const cleanValue = value.replace(/[^\d,.-]/g, '');
     if (!cleanValue) return 0;
-    return parseFloat(cleanValue) / 100;
+
+    // Simple approach: if comma exists, treat it as decimal separator
+    if (cleanValue.includes(',')) {
+      const normalizedValue = cleanValue.replace(',', '.');
+      const numericValue = parseFloat(normalizedValue);
+
+      if (isNaN(numericValue)) return 0;
+
+      // Apply negative sign if needed
+      const finalValue = isNegative ? -Math.abs(numericValue) : Math.abs(numericValue);
+
+      // Validate negative values
+      if (finalValue < 0 && !this.allowNegative()) {
+        return 0;
+      }
+
+      return finalValue;
+    }
+
+    // For values without comma, treat as cents (quick entry)
+    const numericValue = parseFloat(cleanValue);
+    if (isNaN(numericValue)) return 0;
+
+    // Convert cents to currency (divide by 100)
+    const currencyValue = numericValue / 100;
+
+    // Apply negative sign if needed
+    const finalValue = isNegative ? -Math.abs(currencyValue) : Math.abs(currencyValue);
+
+    // Validate negative values
+    if (finalValue < 0 && !this.allowNegative()) {
+      return 0;
+    }
+
+    return finalValue;
+  }
+
+  private applyInputMask(value: string): string {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '');
+
+    if (!digits) return '';
+
+    // Convert to number and format
+    const numericValue = parseFloat(digits) / 100;
+    return this.formatCurrency(numericValue);
   }
 
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     const rawValue = target.value;
+
+    // Set formatting state
+    this.isFormatting.set(true);
+
+    // Parse the numeric value first
     const numericValue = this.parseCurrency(rawValue);
 
+    // Apply input mask for real-time formatting only if needed
+    const maskedValue = this.applyInputMask(rawValue);
+    target.value = maskedValue;
+
+    // Update value
+    this.value.set(numericValue);
     this._onChange(numericValue);
     this.valueChange.emit(numericValue);
+
+    // Clear formatting state after a short delay
+    setTimeout(() => {
+      this.isFormatting.set(false);
+    }, 100);
   }
 
   handleBlur(event: FocusEvent): void {

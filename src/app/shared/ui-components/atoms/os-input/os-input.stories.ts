@@ -237,3 +237,124 @@ export const Interactive: Story = {
     },
   },
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+        <os-input
+          label="Campo Obrigatório"
+          placeholder="Digite aqui..."
+          required="true"
+          helperText="Este campo é obrigatório"
+        ></os-input>
+        <os-input
+          label="Campo com Erro"
+          placeholder="Digite aqui..."
+          errorMessage="Este campo é obrigatório"
+        ></os-input>
+        <os-input
+          label="Campo Desabilitado"
+          placeholder="Campo desabilitado"
+          disabled="true"
+        ></os-input>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Inputs com diferentes estados de acessibilidade WCAG 2.1 AA.',
+      },
+    },
+  },
+};
+
+export const Responsive: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="max-width: 200px;">
+          <os-input size="small" label="Mobile (Small)" placeholder="Tamanho pequeno"></os-input>
+        </div>
+        <div style="max-width: 300px;">
+          <os-input size="medium" label="Tablet (Medium)" placeholder="Tamanho médio"></os-input>
+        </div>
+        <div style="max-width: 400px;">
+          <os-input size="large" label="Desktop (Large)" placeholder="Tamanho grande"></os-input>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Inputs responsivos para diferentes breakpoints (mobile, tablet, desktop).',
+      },
+    },
+  },
+};
+
+export const MicroInteractions: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+        <os-input
+          label="Hover Effect"
+          placeholder="Passe o mouse sobre mim"
+          helperText="Observe o efeito hover"
+        ></os-input>
+        <os-input
+          label="Focus Effect"
+          placeholder="Clique para focar"
+          helperText="Observe o efeito de foco"
+        ></os-input>
+        <os-input
+          label="Clearable"
+          placeholder="Digite algo e limpe"
+          clearable="true"
+          value="Texto para limpar"
+          helperText="Use o botão X para limpar"
+        ></os-input>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Inputs demonstrando micro-interações e animações.',
+      },
+    },
+  },
+};
+
+export const DesignTokens: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+        <os-input
+          label="Primary Colors"
+          placeholder="Usando tokens primários"
+          helperText="Cores do sistema de design"
+        ></os-input>
+        <os-input
+          label="Error State"
+          placeholder="Estado de erro"
+          errorMessage="Mensagem de erro"
+        ></os-input>
+        <os-input
+          label="Success State"
+          placeholder="Estado de sucesso"
+          helperText="Campo válido"
+        ></os-input>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Inputs demonstrando integração com design tokens do sistema.',
+      },
+    },
+  },
+};

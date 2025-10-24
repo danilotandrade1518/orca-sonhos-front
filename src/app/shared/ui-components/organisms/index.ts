@@ -83,6 +83,14 @@ export {
   type ProgressHistory,
 } from './os-goal-tracker/os-goal-tracker.component';
 
+export {
+  OsDashboardWidgetsComponent,
+  type DashboardWidget,
+  type TransactionData,
+  type AccountBalanceData,
+  type DashboardState,
+} from './os-dashboard-widgets/os-dashboard-widgets.component';
+
 // Temporarily commented out due to compilation errors
 // export {
 //   OsDataGridComponent,

@@ -43,6 +43,26 @@ const meta: Meta<OsBudgetSummaryComponent> = {
       control: { type: 'boolean' },
       description: 'Card clicável',
     },
+    showChart: {
+      control: { type: 'boolean' },
+      description: 'Mostrar gráfico de distribuição',
+    },
+    loading: {
+      control: { type: 'boolean' },
+      description: 'Estado de carregamento com skeleton',
+    },
+    highlightTotals: {
+      control: { type: 'boolean' },
+      description: 'Destacar totais com typography maior',
+    },
+    animated: {
+      control: { type: 'boolean' },
+      description: 'Animações de entrada',
+    },
+    ariaLabel: {
+      control: { type: 'text' },
+      description: 'Label personalizado para acessibilidade',
+    },
   },
   tags: ['autodocs'],
 };
@@ -115,11 +135,16 @@ export const Default: Story = {
     showStatus: true,
     showDates: false,
     clickable: false,
+    showChart: true,
+    loading: false,
+    highlightTotals: true,
+    animated: true,
+    ariaLabel: '',
   },
   render: (args) => ({
     props: args,
     template: `
-      <os-budget-summary 
+      <os-budget-summary
         [budgetData]="budgetData"
         [variant]="variant"
         [size]="size"
@@ -127,8 +152,19 @@ export const Default: Story = {
         [showStatus]="showStatus"
         [showDates]="showDates"
         [clickable]="clickable"
+        [showChart]="showChart"
+        [loading]="loading"
+        [highlightTotals]="highlightTotals"
+        [animated]="animated"
+        [ariaLabel]="ariaLabel"
+        (cardClicked)="onCardClicked($event)"
+        (chartClicked)="onChartClicked($event)"
       ></os-budget-summary>
     `,
+    methods: {
+      onCardClicked: (data: unknown) => console.log('Card clicked:', data),
+      onChartClicked: (event: unknown) => console.log('Chart clicked:', event),
+    },
   }),
 };
 
@@ -138,23 +174,23 @@ export const Variants: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Default</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Compact</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="compact"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Detailed</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="detailed"
             [showDates]="true"
@@ -181,23 +217,23 @@ export const Sizes: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Small</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             size="small"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Medium</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             size="medium"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Large</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             size="large"
           ></os-budget-summary>
@@ -223,31 +259,31 @@ export const BudgetStatuses: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>No Prazo</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Acima do Orçamento</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="overBudgetData"
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Abaixo do Orçamento</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="underBudgetData"
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Concluído</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="completedBudgetData"
             variant="default"
           ></os-budget-summary>
@@ -276,15 +312,15 @@ export const WithProgress: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Com Barra de Progresso</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [showProgress]="true"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Sem Barra de Progresso</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [showProgress]="false"
           ></os-budget-summary>
@@ -310,15 +346,15 @@ export const WithStatus: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Com Status</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [showStatus]="true"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Sem Status</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [showStatus]="false"
           ></os-budget-summary>
@@ -344,25 +380,25 @@ export const WithDates: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Com Datas (Detailed)</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="detailed"
             [showDates]="true"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Sem Datas (Detailed)</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="detailed"
             [showDates]="false"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Com Datas (Default - não exibe)</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             variant="default"
             [showDates]="true"
@@ -389,15 +425,15 @@ export const Clickable: Story = {
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div>
           <h4>Card Clicável</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [clickable]="true"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Card Não Clicável</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="sampleBudgetData"
             [clickable]="false"
           ></os-budget-summary>
@@ -423,7 +459,7 @@ export const DifferentCategories: Story = {
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
         <div>
           <h4>Alimentação</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="{
               id: '1',
               name: 'Orçamento Alimentação',
@@ -440,10 +476,10 @@ export const DifferentCategories: Story = {
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Transporte</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="{
               id: '2',
               name: 'Orçamento Transporte',
@@ -460,10 +496,10 @@ export const DifferentCategories: Story = {
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Lazer</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="{
               id: '3',
               name: 'Orçamento Lazer',
@@ -480,10 +516,10 @@ export const DifferentCategories: Story = {
             variant="default"
           ></os-budget-summary>
         </div>
-        
+
         <div>
           <h4>Saúde</h4>
-          <os-budget-summary 
+          <os-budget-summary
             [budgetData]="{
               id: '4',
               name: 'Orçamento Saúde',
@@ -512,6 +548,195 @@ export const DifferentCategories: Story = {
   },
 };
 
+export const WithCharts: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Bar Chart (Default)</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            variant="default"
+            [showChart]="true"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Pie Chart (Compact)</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            variant="compact"
+            [showChart]="true"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Sem Gráfico</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            variant="default"
+            [showChart]="false"
+          ></os-budget-summary>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBudgetData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Resumo de orçamento com diferentes tipos de gráficos.',
+      },
+    },
+  },
+};
+
+export const WithLoading: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Estado Normal</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [loading]="false"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Estado de Carregamento</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [loading]="true"
+          ></os-budget-summary>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBudgetData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Resumo de orçamento com e sem estado de carregamento (skeleton).',
+      },
+    },
+  },
+};
+
+export const WithHighlightedTotals: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Totais Destacados</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [highlightTotals]="true"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Totais Normais</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [highlightTotals]="false"
+          ></os-budget-summary>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBudgetData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Resumo de orçamento com e sem destaque dos totais.',
+      },
+    },
+  },
+};
+
+export const WithAnimations: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Com Animações</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [animated]="true"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Sem Animações</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [animated]="false"
+          ></os-budget-summary>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBudgetData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Resumo de orçamento com e sem animações de entrada.',
+      },
+    },
+  },
+};
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Label Automático</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            ariaLabel=""
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Label Personalizado</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            ariaLabel="Resumo personalizado do orçamento mensal"
+          ></os-budget-summary>
+        </div>
+
+        <div>
+          <h4>Com Loading (ARIA Live)</h4>
+          <os-budget-summary
+            [budgetData]="sampleBudgetData"
+            [loading]="true"
+          ></os-budget-summary>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleBudgetData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Resumo de orçamento com diferentes configurações de acessibilidade.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     budgetData: sampleBudgetData,
@@ -521,11 +746,16 @@ export const Interactive: Story = {
     showStatus: true,
     showDates: false,
     clickable: false,
+    showChart: true,
+    loading: false,
+    highlightTotals: true,
+    animated: true,
+    ariaLabel: '',
   },
   render: (args) => ({
     props: args,
     template: `
-      <os-budget-summary 
+      <os-budget-summary
         [budgetData]="budgetData"
         [variant]="variant"
         [size]="size"
@@ -533,8 +763,19 @@ export const Interactive: Story = {
         [showStatus]="showStatus"
         [showDates]="showDates"
         [clickable]="clickable"
+        [showChart]="showChart"
+        [loading]="loading"
+        [highlightTotals]="highlightTotals"
+        [animated]="animated"
+        [ariaLabel]="ariaLabel"
+        (cardClicked)="onCardClicked($event)"
+        (chartClicked)="onChartClicked($event)"
       ></os-budget-summary>
     `,
+    methods: {
+      onCardClicked: (data: unknown) => console.log('Card clicked:', data),
+      onChartClicked: (event: unknown) => console.log('Chart clicked:', event),
+    },
   }),
   parameters: {
     docs: {
@@ -544,4 +785,3 @@ export const Interactive: Story = {
     },
   },
 };
-

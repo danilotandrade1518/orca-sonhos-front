@@ -1,4 +1,5 @@
-<div class="os-goal-tracker" [class]="goalClasses()" [attr.aria-label]="ariaLabel()">
+<div class="os-goal-tracker" [class]="goalClasses()" [attr.aria-label]="ariaLabel()"
+    [attr.role]="accessibilityAttributes().role" [attr.aria-live]="accessibilityAttributes()['aria-live']">
     @if (loading()) {
     <div class="os-goal-tracker__loading">
         <os-spinner [size]="iconSize()" />
@@ -11,9 +12,21 @@
         <!-- Header -->
         <div class="os-goal-tracker__header">
             <div class="os-goal-tracker__title-section">
-                <h3 class="os-goal-tracker__title">{{ goalData()!.title }}</h3>
+                <div class="os-goal-tracker__title-row">
+                    <h3 class="os-goal-tracker__title">{{ goalData()!.title }}</h3>
+                    @if (showPriority() && priorityVisual().level > 0) {
+                    <div class="os-goal-tracker__priority-indicator" [style.color]="priorityVisual().color"
+                        [attr.aria-label]="'Prioridade ' + priorityInfo().label">
+                        @for (i of [1, 2, 3]; track i) {
+                        <os-icon [name]="i <= priorityVisual().level ? priorityVisual().icon : 'remove'"
+                            [size]="iconSize()" />
+                        }
+                    </div>
+                    }
+                </div>
                 @if (goalData()!.description && variant() !== 'compact') {
-                <p class="os-goal-tracker__description">{{ goalData()!.description }}</p>
+                <p class="os-goal-tracker__description" [id]="'goal-' + goalData()!.id + '-description'">{{
+                    goalData()!.description }}</p>
                 }
             </div>
 
@@ -24,9 +37,17 @@
                 </os-badge>
                 }
 
+                @if (showPriority()) {
                 <os-badge variant="info" [size]="badgeSize()" [style.color]="priorityInfo().color">
                     {{ priorityInfo().label }} Prioridade
                 </os-badge>
+                }
+
+                @if (isUrgent()) {
+                <os-badge variant="error" [size]="badgeSize()" icon="warning">
+                    Urgente
+                </os-badge>
+                }
 
                 @if (goalData()!.category) {
                 <os-badge variant="default" [size]="badgeSize()">
@@ -180,6 +201,50 @@
                     </div>
                     }
                 </div>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Filters Section -->
+        @if (showFilters()) {
+        <div class="os-goal-tracker__filters">
+            <div class="os-goal-tracker__filter-group">
+                <label class="os-goal-tracker__filter-label" for="status-filter">Filtrar por Status:</label>
+                <os-dropdown id="status-filter" [options]="statusFilterOptions()" [selectedValue]="selectedStatus()"
+                    (valueChange)="onStatusFilterChange($event)" placeholder="Selecionar status" size="small"
+                    [aria-label]="'Filtrar metas por status'">
+                </os-dropdown>
+            </div>
+
+            <div class="os-goal-tracker__filter-group">
+                <label class="os-goal-tracker__filter-label" for="priority-filter">Filtrar por Prioridade:</label>
+                <os-dropdown id="priority-filter" [options]="priorityFilterOptions()"
+                    [selectedValue]="selectedPriority()" (valueChange)="onPriorityFilterChange($event)"
+                    placeholder="Selecionar prioridade" size="small" [aria-label]="'Filtrar metas por prioridade'">
+                </os-dropdown>
+            </div>
+        </div>
+        }
+
+        <!-- Quick Actions -->
+        @if (showQuickActions() && quickActions().length > 0) {
+        <div class="os-goal-tracker__quick-actions">
+            <h4 class="os-goal-tracker__quick-actions-title">
+                <os-icon name="flash_on" [size]="iconSize()" />
+                Ações Rápidas
+            </h4>
+
+            <div class="os-goal-tracker__quick-actions-grid">
+                @for (action of quickActions(); track action.id) {
+                <os-button [variant]="action.variant" [size]="isMobile() ? 'small' : 'medium'"
+                    (click)="onQuickAction(action.id)"
+                    [attr.aria-label]="action.label + ' para meta ' + goalData()!.title">
+                    <os-icon [name]="action.icon" [size]="iconSize()" />
+                    @if (!isMobile()) {
+                    {{ action.label }}
+                    }
+                </os-button>
                 }
             </div>
         </div>

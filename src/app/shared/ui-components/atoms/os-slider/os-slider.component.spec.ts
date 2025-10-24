@@ -56,6 +56,7 @@ describe('OsSliderComponent', () => {
     it('should show value display when enabled', () => {
       fixture.componentRef.setInput('showValue', true);
       fixture.componentRef.setInput('value', 50);
+      fixture.componentRef.setInput('decimals', 0);
       fixture.detectChanges();
 
       const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
@@ -74,6 +75,7 @@ describe('OsSliderComponent', () => {
       fixture.componentRef.setInput('showMinMax', true);
       fixture.componentRef.setInput('min', 0);
       fixture.componentRef.setInput('max', 100);
+      fixture.componentRef.setInput('decimals', 0);
       fixture.detectChanges();
 
       const minValue = fixture.debugElement.query(By.css('.os-slider__min-value'));
@@ -322,16 +324,206 @@ describe('OsSliderComponent', () => {
       const slider = fixture.debugElement.query(By.css('mat-slider'));
       expect(slider.nativeElement.getAttribute('aria-label')).toBe('Custom slider label');
     });
+
+    it('should have proper ARIA value attributes', () => {
+      fixture.componentRef.setInput('value', 50);
+      fixture.componentRef.setInput('min', 0);
+      fixture.componentRef.setInput('max', 100);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      const sliderInput = fixture.debugElement.query(By.css('input[matSliderThumb]'));
+
+      expect(slider.nativeElement.getAttribute('aria-valuenow')).toBe('50');
+      expect(slider.nativeElement.getAttribute('aria-valuemin')).toBe('0');
+      expect(slider.nativeElement.getAttribute('aria-valuemax')).toBe('100');
+      expect(sliderInput.nativeElement.getAttribute('aria-valuenow')).toBe('50');
+      expect(sliderInput.nativeElement.getAttribute('aria-valuemin')).toBe('0');
+      expect(sliderInput.nativeElement.getAttribute('aria-valuemax')).toBe('100');
+    });
+
+    it('should have proper role attribute', () => {
+      fixture.componentRef.setInput('role', 'progressbar');
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      expect(slider.nativeElement.getAttribute('role')).toBe('progressbar');
+    });
+
+    it('should have proper tabindex for disabled state', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      expect(slider.nativeElement.getAttribute('tabindex')).toBe('-1');
+    });
   });
 
   describe('value display positioning', () => {
     it('should position value display correctly', () => {
       fixture.componentRef.setInput('showValue', true);
       fixture.componentRef.setInput('value', 50);
+      fixture.componentRef.setInput('decimals', 0);
       fixture.detectChanges();
 
       const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
       expect(valueDisplay.nativeElement.textContent.trim()).toBe('50');
+    });
+  });
+
+  describe('value formatting', () => {
+    it('should format currency values correctly', () => {
+      fixture.componentRef.setInput('format', 'currency');
+      fixture.componentRef.setInput('value', 1234.56);
+      fixture.componentRef.setInput('currency', 'BRL');
+      fixture.detectChanges();
+
+      const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
+      // Intl.NumberFormat uses non-breaking space (\u00A0) instead of regular space
+      expect(valueDisplay.nativeElement.textContent.trim()).toBe(
+        'R$ 1.234,56'.replace(' ', '\u00A0')
+      );
+    });
+
+    it('should format percentage values correctly', () => {
+      fixture.componentRef.setInput('format', 'percentage');
+      fixture.componentRef.setInput('value', 75);
+      fixture.componentRef.setInput('decimals', 0);
+      fixture.detectChanges();
+
+      const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
+      expect(valueDisplay.nativeElement.textContent.trim()).toBe('75%');
+    });
+
+    it('should format number values correctly', () => {
+      fixture.componentRef.setInput('format', 'number');
+      fixture.componentRef.setInput('value', 1234.56);
+      fixture.componentRef.setInput('decimals', 2);
+      fixture.detectChanges();
+
+      const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
+      expect(valueDisplay.nativeElement.textContent.trim()).toBe('1.234,56');
+    });
+  });
+
+  describe('tooltip functionality', () => {
+    it('should show tooltip when enabled', () => {
+      fixture.componentRef.setInput('showTooltip', true);
+      fixture.componentRef.setInput('value', 50);
+      fixture.componentRef.setInput('decimals', 0);
+      fixture.detectChanges();
+
+      const tooltip = fixture.debugElement.query(By.css('.os-slider__tooltip'));
+      expect(tooltip).toBeTruthy();
+      expect(tooltip.nativeElement.textContent.trim()).toBe('50');
+    });
+
+    it('should hide tooltip when disabled', () => {
+      fixture.componentRef.setInput('showTooltip', false);
+      fixture.detectChanges();
+
+      const tooltip = fixture.debugElement.query(By.css('.os-slider__tooltip'));
+      expect(tooltip).toBeFalsy();
+    });
+  });
+
+  describe('haptic feedback', () => {
+    it('should trigger haptic feedback on input', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      const changeEvent = new Event('change');
+      Object.defineProperty(changeEvent, 'target', {
+        value: { value: '75' },
+        writable: false,
+      });
+      slider.nativeElement.dispatchEvent(changeEvent);
+
+      expect(vibrateSpy).toHaveBeenCalledWith(50);
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vi.fn(),
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', false);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      const changeEvent = new Event('change');
+      Object.defineProperty(changeEvent, 'target', {
+        value: { value: '75' },
+        writable: false,
+      });
+      slider.nativeElement.dispatchEvent(changeEvent);
+
+      expect(navigator.vibrate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('focus and hover states', () => {
+    it('should track focus state', () => {
+      fixture.componentRef.setInput('value', 50);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      slider.nativeElement.dispatchEvent(new FocusEvent('focus'));
+
+      expect(component.isFocused()).toBe(true);
+    });
+
+    it('should track blur state', () => {
+      fixture.componentRef.setInput('value', 50);
+      fixture.detectChanges();
+
+      const slider = fixture.debugElement.query(By.css('mat-slider'));
+      slider.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(component.isFocused()).toBe(false);
+    });
+  });
+
+  describe('animation states', () => {
+    it('should apply animated class when enabled', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.os-slider-container'));
+      expect(container.nativeElement.classList.contains('os-slider-container--animated')).toBe(
+        true
+      );
+    });
+
+    it('should not apply animated class when disabled', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.os-slider-container'));
+      expect(container.nativeElement.classList.contains('os-slider-container--animated')).toBe(
+        false
+      );
+    });
+  });
+
+  describe('range change output', () => {
+    it('should emit range change when min/max change', () => {
+      vi.spyOn(component.rangeChange, 'emit');
+      fixture.componentRef.setInput('min', 10);
+      fixture.componentRef.setInput('max', 90);
+      fixture.detectChanges();
+
+      expect(component.rangeChange.emit).toHaveBeenCalledWith({ min: 10, max: 90 });
     });
   });
 });

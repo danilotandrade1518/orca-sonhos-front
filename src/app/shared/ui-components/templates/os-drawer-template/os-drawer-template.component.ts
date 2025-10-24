@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, output, ChangeDetectionStrategy, signal } from '@angular/core';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export interface DrawerTemplateConfig {
@@ -27,13 +27,28 @@ export interface DrawerTemplateConfig {
 @Component({
   selector: 'os-drawer-template',
   template: `
-    <div [class]="drawerClass()" [attr.aria-label]="ariaLabel()">
+    <div
+      [class]="drawerClass()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-modal]="true"
+      [attr.role]="'dialog'"
+      [attr.tabindex]="-1"
+      [attr.aria-describedby]="subtitleId()"
+    >
       @if (config().showHeader ?? true) {
-      <div class="os-drawer-template__header" [class]="headerClass()">
+      <header class="os-drawer-template__header" [class]="headerClass()">
         <div class="os-drawer-template__header-content">
-          <h2 class="os-drawer-template__title">{{ config().title }}</h2>
+          <h2 class="os-drawer-template__title" [id]="titleId()" [attr.aria-level]="2">
+            {{ config().title }}
+          </h2>
           @if (config().subtitle) {
-          <p class="os-drawer-template__subtitle">{{ config().subtitle }}</p>
+          <p
+            class="os-drawer-template__subtitle"
+            [id]="subtitleId()"
+            [attr.aria-describedby]="titleId()"
+          >
+            {{ config().subtitle }}
+          </p>
           }
         </div>
         @if (config().showCloseButton ?? true) {
@@ -43,23 +58,30 @@ export interface DrawerTemplateConfig {
           [icon]="'close'"
           (click)="onClose()"
           [attr.aria-label]="'Fechar drawer'"
+          [attr.aria-describedby]="titleId()"
         />
         }
-      </div>
+      </header>
       }
 
-      <div class="os-drawer-template__content" [class]="contentClass()">
+      <main
+        class="os-drawer-template__content"
+        [class]="contentClass()"
+        [attr.aria-labelledby]="titleId()"
+        [attr.aria-describedby]="subtitleId()"
+      >
         <ng-content />
-      </div>
+      </main>
 
       @if (config().showActions ?? true) {
-      <div class="os-drawer-template__actions" [class]="actionsClass()">
+      <footer class="os-drawer-template__actions" [class]="actionsClass()">
         @if (config().showCancelButton ?? true) {
         <os-button
           [variant]="'secondary'"
           [size]="size()"
           [disabled]="disabled()"
           (click)="onCancel()"
+          [attr.aria-label]="config().cancelButtonText || 'Cancelar'"
         >
           {{ config().cancelButtonText || 'Cancelar' }}
         </os-button>
@@ -70,6 +92,7 @@ export interface DrawerTemplateConfig {
           [disabled]="disabled() || !isValid()"
           [loading]="loading()"
           (click)="onConfirm()"
+          [attr.aria-label]="config().confirmButtonText || 'Confirmar'"
         >
           {{ config().confirmButtonText || 'Confirmar' }}
         </os-button>
@@ -81,11 +104,12 @@ export interface DrawerTemplateConfig {
           [loading]="action.loading || false"
           [icon]="action.icon || ''"
           (click)="onActionClick(action)"
+          [attr.aria-label]="action.label"
         >
           {{ action.label }}
         </os-button>
         }
-      </div>
+      </footer>
       }
     </div>
   `,
@@ -114,6 +138,8 @@ export class OsDrawerTemplateComponent {
     loading?: boolean;
     icon?: string;
   }>();
+
+  private readonly componentId = signal(`drawer-${Math.random().toString(36).substr(2, 9)}`);
 
   drawerClass = computed(() => {
     return [
@@ -167,6 +193,14 @@ export class OsDrawerTemplateComponent {
 
   ariaLabel = computed(() => {
     return `Drawer: ${this.config().title}`;
+  });
+
+  titleId = computed(() => {
+    return `${this.componentId()}-title`;
+  });
+
+  subtitleId = computed(() => {
+    return `${this.componentId()}-subtitle`;
   });
 
   onClose(): void {

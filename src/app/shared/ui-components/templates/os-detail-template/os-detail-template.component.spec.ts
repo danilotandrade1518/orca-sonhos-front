@@ -37,7 +37,7 @@ describe('OsDetailTemplateComponent', () => {
       expect(component.loading()).toBe(false);
       expect(component.showHeader()).toBe(true);
       expect(component.showBreadcrumb()).toBe(false);
-      expect(component.breadcrumbItems()).toEqual([]);
+      expect(component.breadcrumbs()).toEqual([]);
       expect(component.headerActions()).toEqual([]);
       expect(component.sections()).toEqual([]);
       expect(component.actions()).toEqual([]);

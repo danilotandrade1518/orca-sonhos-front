@@ -1,105 +1,147 @@
-@use '../../theme/variables' as *;
-
 .os-filter-bar {
+  // Layout
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-sm;
-  background: $color-background-secondary;
-  border-radius: $border-radius-md;
-  border: 1px solid $color-border;
+  gap: var(--os-spacing-md);
+  padding: var(--os-spacing-sm);
+
+  // Appearance
+  background: var(--os-color-background-secondary);
+  border-radius: var(--os-border-radius-md);
+  border: 1px solid var(--os-color-border);
+
+  // Animations
+  transition: background-color var(--os-animation-duration-fast) var(--os-animation-easing-standard),
+    border-color var(--os-animation-duration-fast) var(--os-animation-easing-standard);
 
   &__content {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: $spacing-sm;
+    gap: var(--os-spacing-sm);
     flex-wrap: wrap;
+    min-height: var(--os-touch-target-min);
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: $spacing-xs;
+    gap: var(--os-spacing-xs);
     flex-shrink: 0;
-  }
-
-  &__clear {
-    color: $color-text-secondary;
-
-    &:hover:not(:disabled) {
-      color: $color-text-primary;
-      background: $color-background-hover;
-    }
-  }
-
-  &__apply {
-    background: $color-primary;
-    color: $color-on-primary;
-
-    &:hover:not(:disabled) {
-      background: $color-primary-dark;
-    }
+    min-height: var(--os-touch-target-min);
   }
 
   // Variants
   &--compact {
-    padding: $spacing-xs;
-    gap: $spacing-sm;
+    padding: var(--os-spacing-xs);
+    gap: var(--os-spacing-sm);
 
     .os-filter-bar__content {
-      gap: $spacing-xs;
+      gap: var(--os-spacing-xs);
     }
   }
 
   &--expanded {
-    padding: $spacing-md;
-    gap: $spacing-lg;
+    padding: var(--os-spacing-md);
+    gap: var(--os-spacing-lg);
 
     .os-filter-bar__content {
-      gap: $spacing-md;
+      gap: var(--os-spacing-md);
     }
   }
 
   // Sizes
   &--small {
-    padding: $spacing-xs;
-    gap: $spacing-xs;
+    padding: var(--os-spacing-xs);
+    gap: var(--os-spacing-xs);
 
     .os-filter-bar__content {
-      gap: $spacing-xs;
+      gap: var(--os-spacing-xs);
     }
 
     .os-filter-bar__actions {
-      gap: $spacing-xs;
+      gap: var(--os-spacing-xs);
     }
   }
 
   &--large {
-    padding: $spacing-md;
-    gap: $spacing-lg;
+    padding: var(--os-spacing-md);
+    gap: var(--os-spacing-lg);
 
     .os-filter-bar__content {
-      gap: $spacing-md;
+      gap: var(--os-spacing-md);
     }
 
     .os-filter-bar__actions {
-      gap: $spacing-sm;
+      gap: var(--os-spacing-sm);
     }
   }
 
-  // Responsive
-  @media (max-width: 768px) {
+  // Mobile
+  &--mobile {
     flex-direction: column;
     align-items: stretch;
 
     .os-filter-bar__content {
       flex-direction: column;
       align-items: stretch;
+
+      // Touch targets >= 44px em mobile
+      > * {
+        min-height: var(--os-touch-target-min);
+      }
     }
 
     .os-filter-bar__actions {
-      justify-content: center;
+      justify-content: stretch;
+      flex-direction: column;
+      gap: var(--os-spacing-sm);
+
+      // Botões full width em mobile
+      ::ng-deep os-button {
+        width: 100%;
+      }
     }
+  }
+
+  // Responsive breakpoint (fallback caso signal falhe)
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .os-filter-bar__content {
+      flex-direction: column;
+      align-items: stretch;
+
+      > * {
+        min-height: var(--os-touch-target-min);
+      }
+    }
+
+    .os-filter-bar__actions {
+      justify-content: stretch;
+      flex-direction: column;
+      gap: var(--os-spacing-sm);
+
+      ::ng-deep os-button {
+        width: 100%;
+      }
+    }
+  }
+
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    background: var(--os-color-background-secondary-dark, var(--os-color-background-secondary));
+    border-color: var(--os-color-border-dark, var(--os-color-border));
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    border-width: 2px;
+  }
+
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }

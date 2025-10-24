@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
-import { OsNavigationComponent } from './os-navigation.component';
+import { OsNavigationComponent, NavigationItem } from './os-navigation.component';
 
 const meta: Meta<OsNavigationComponent> = {
   title: 'Design System/Organisms/Navigation',
@@ -52,26 +52,93 @@ const meta: Meta<OsNavigationComponent> = {
 export default meta;
 type Story = StoryObj<OsNavigationComponent>;
 
-const sampleItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
-  { id: 'budgets', label: 'Orçamentos', icon: 'account_balance_wallet', route: '/budgets' },
-  { id: 'goals', label: 'Metas', icon: 'flag', route: '/goals' },
-  { id: 'transactions', label: 'Transações', icon: 'receipt', route: '/transactions' },
-  { id: 'reports', label: 'Relatórios', icon: 'bar_chart', route: '/reports' },
+const sampleItems: NavigationItem[] = [
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: 'dashboard',
+    route: '/dashboard',
+    description: 'Visão geral do sistema',
+    priority: 'high',
+  },
+  {
+    id: 'budgets',
+    label: 'Orçamentos',
+    icon: 'account_balance_wallet',
+    route: '/budgets',
+    description: 'Gerenciar orçamentos',
+    priority: 'high',
+  },
+  {
+    id: 'goals',
+    label: 'Metas',
+    icon: 'flag',
+    route: '/goals',
+    description: 'Definir e acompanhar metas',
+    priority: 'medium',
+  },
+  {
+    id: 'transactions',
+    label: 'Transações',
+    icon: 'receipt',
+    route: '/transactions',
+    description: 'Registrar transações',
+    priority: 'medium',
+  },
+  {
+    id: 'reports',
+    label: 'Relatórios',
+    icon: 'bar_chart',
+    route: '/reports',
+    description: 'Visualizar relatórios',
+    priority: 'low',
+  },
 ];
 
 const itemsWithBadges = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: 'dashboard',
+    route: '/dashboard',
+    description: 'Visão geral do sistema',
+    priority: 'high',
+  },
   {
     id: 'budgets',
     label: 'Orçamentos',
     icon: 'account_balance_wallet',
     route: '/budgets',
     badge: '3',
+    description: 'Gerenciar orçamentos',
+    priority: 'high',
   },
-  { id: 'goals', label: 'Metas', icon: 'flag', route: '/goals', badge: '12' },
-  { id: 'transactions', label: 'Transações', icon: 'receipt', route: '/transactions' },
-  { id: 'reports', label: 'Relatórios', icon: 'bar_chart', route: '/reports', badge: '!' },
+  {
+    id: 'goals',
+    label: 'Metas',
+    icon: 'flag',
+    route: '/goals',
+    badge: '12',
+    description: 'Definir e acompanhar metas',
+    priority: 'medium',
+  },
+  {
+    id: 'transactions',
+    label: 'Transações',
+    icon: 'receipt',
+    route: '/transactions',
+    description: 'Registrar transações',
+    priority: 'medium',
+  },
+  {
+    id: 'reports',
+    label: 'Relatórios',
+    icon: 'bar_chart',
+    route: '/reports',
+    badge: '!',
+    description: 'Visualizar relatórios',
+    priority: 'low',
+  },
 ];
 
 const itemsWithDisabled = [
@@ -476,6 +543,10 @@ export const Interactive: Story = {
     activeItemId: signal('dashboard'),
     ariaLabel: 'Navegação principal',
     showCustomContent: signal(false),
+    isLoading: signal(false),
+    hapticFeedback: signal(true),
+    enableKeyboardNavigation: signal(true),
+    autoFocus: signal(false),
   },
   render: (args) => ({
     props: args,
@@ -488,6 +559,48 @@ export const Interactive: Story = {
         [activeItemId]="activeItemId"
         [ariaLabel]="ariaLabel"
         [showCustomContent]="showCustomContent"
+        [isLoading]="isLoading"
+        [hapticFeedback]="hapticFeedback"
+        [enableKeyboardNavigation]="enableKeyboardNavigation"
+        [autoFocus]="autoFocus"
+        (itemClick)="itemClick($event)"
+        (navigate)="navigate($event)"
+        (mobileDetected)="mobileDetected($event)"
+      ></os-navigation>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Navegação interativa com controles para testar todas as propriedades.',
+      },
+    },
+  },
+};
+
+export const WithLoadingState: Story = {
+  args: {
+    items: signal(sampleItems),
+    variant: signal('default'),
+    size: signal('medium'),
+    orientation: signal('horizontal'),
+    activeItemId: signal('dashboard'),
+    ariaLabel: 'Navegação principal',
+    showCustomContent: signal(false),
+    isLoading: signal(true),
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <os-navigation
+        [items]="items"
+        [variant]="variant"
+        [size]="size"
+        [orientation]="orientation"
+        [activeItemId]="activeItemId"
+        [ariaLabel]="ariaLabel"
+        [showCustomContent]="showCustomContent"
+        [isLoading]="isLoading"
         (itemClick)="itemClick($event)"
         (navigate)="navigate($event)"
       ></os-navigation>
@@ -496,7 +609,93 @@ export const Interactive: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Navegação interativa com controles para testar todas as propriedades.',
+        story: 'Navegação com estado de loading ativo.',
+      },
+    },
+  },
+};
+
+export const MobileOptimized: Story = {
+  args: {
+    items: signal(sampleItems),
+    variant: signal('default'),
+    size: signal('large'),
+    orientation: signal('horizontal'),
+    activeItemId: signal('dashboard'),
+    ariaLabel: 'Navegação principal',
+    showCustomContent: signal(false),
+    hapticFeedback: signal(true),
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="max-width: 375px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;">
+        <h4 style="margin: 0 0 16px 0; font-size: 14px;">Mobile Navigation</h4>
+        <os-navigation
+          [items]="items"
+          [variant]="variant"
+          [size]="size"
+          [orientation]="orientation"
+          [activeItemId]="activeItemId"
+          [ariaLabel]="ariaLabel"
+          [showCustomContent]="showCustomContent"
+          [hapticFeedback]="hapticFeedback"
+          (itemClick)="itemClick($event)"
+          (navigate)="navigate($event)"
+          (mobileDetected)="mobileDetected($event)"
+        ></os-navigation>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Navegação otimizada para dispositivos móveis com touch targets adequados.',
+      },
+    },
+  },
+};
+
+export const WithPriorityItems: Story = {
+  args: {
+    items: signal(sampleItems),
+    variant: signal('sidebar'),
+    size: signal('medium'),
+    orientation: signal('vertical'),
+    activeItemId: signal('dashboard'),
+    ariaLabel: 'Navegação principal',
+    showCustomContent: signal(false),
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="display: flex; gap: 24px; min-height: 400px;">
+        <div style="width: 250px; background: #f8f9fa; padding: 16px; border-radius: 8px;">
+          <h4 style="margin: 0 0 16px 0;">Navegação com Prioridades</h4>
+          <os-navigation
+            [items]="items"
+            [variant]="variant"
+            [size]="size"
+            [orientation]="orientation"
+            [activeItemId]="activeItemId"
+            [ariaLabel]="ariaLabel"
+            [showCustomContent]="showCustomContent"
+            (itemClick)="itemClick($event)"
+            (navigate)="navigate($event)"
+          ></os-navigation>
+        </div>
+        <div style="flex: 1; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0;">
+          <h4 style="margin: 0 0 16px 0;">Conteúdo Principal</h4>
+          <p>Esta navegação demonstra itens com diferentes prioridades (high, medium, low).</p>
+          <p>Os itens são organizados por prioridade para melhor experiência do usuário.</p>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Navegação com itens organizados por prioridade para melhor UX.',
       },
     },
   },

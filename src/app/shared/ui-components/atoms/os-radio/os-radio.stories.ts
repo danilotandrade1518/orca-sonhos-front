@@ -47,6 +47,15 @@ const meta: Meta<OsRadioComponent> = {
       control: { type: 'boolean' },
       description: 'Campo obrigatório',
     },
+    animated: {
+      control: { type: 'boolean' },
+      description: 'Habilitar animações',
+    },
+    role: {
+      control: { type: 'select' },
+      options: ['radio', 'switch'],
+      description: 'Role de acessibilidade',
+    },
     ariaDescribedBy: {
       control: { type: 'text' },
       description: 'ID do elemento que descreve o radio button',
@@ -54,6 +63,10 @@ const meta: Meta<OsRadioComponent> = {
     ariaLabel: {
       control: { type: 'text' },
       description: 'Label de acessibilidade',
+    },
+    ariaLabelledBy: {
+      control: { type: 'text' },
+      description: 'ID do elemento que rotula o radio button',
     },
     radioChange: {
       action: 'radioChange',
@@ -219,6 +232,133 @@ export const WithAccessibility: Story = {
     checked: false,
     ariaLabel: 'Opção com acessibilidade',
     ariaDescribedBy: 'radio-description',
+  },
+};
+
+export const WithAnimations: Story = {
+  args: {
+    size: 'medium',
+    variant: 'primary',
+    name: 'radio-group',
+    value: 'option1',
+    label: 'Opção com animações',
+    checked: true,
+    animated: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Radio button com animações habilitadas para demonstrar micro-interactions.',
+      },
+    },
+  },
+};
+
+export const WithoutAnimations: Story = {
+  args: {
+    size: 'medium',
+    variant: 'primary',
+    name: 'radio-group',
+    value: 'option1',
+    label: 'Opção sem animações',
+    checked: true,
+    animated: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Radio button com animações desabilitadas para usuários que preferem movimento reduzido.',
+      },
+    },
+  },
+};
+
+export const SwitchRole: Story = {
+  args: {
+    size: 'medium',
+    variant: 'primary',
+    name: 'switch-group',
+    value: 'option1',
+    label: 'Opção como switch',
+    checked: false,
+    role: 'switch',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Radio button com role de switch para casos específicos de acessibilidade.',
+      },
+    },
+  },
+};
+
+export const TouchTargets: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Touch Targets (44px mínimo):</h3>
+        <os-radio
+          size="small"
+          variant="primary"
+          name="touch-group"
+          value="small"
+          label="Pequeno (44px)">
+        </os-radio>
+        <os-radio
+          size="medium"
+          variant="primary"
+          name="touch-group"
+          value="medium"
+          label="Médio (44px)">
+        </os-radio>
+        <os-radio
+          size="large"
+          variant="primary"
+          name="touch-group"
+          value="large"
+          label="Grande (48px)">
+        </os-radio>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração dos touch targets adequados para mobile (mínimo 44px).',
+      },
+    },
+  },
+};
+
+export const AccessibilityRoles: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Roles de Acessibilidade:</h3>
+        <os-radio
+          role="radio"
+          variant="primary"
+          name="role-group"
+          value="radio"
+          label="Role: radio (padrão)">
+        </os-radio>
+        <os-radio
+          role="switch"
+          variant="secondary"
+          name="role-group"
+          value="switch"
+          label="Role: switch">
+        </os-radio>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração dos diferentes roles de acessibilidade disponíveis.',
+      },
+    },
   },
 };
 

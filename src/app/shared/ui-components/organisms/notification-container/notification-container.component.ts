@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsAlertComponent } from '../../molecules/os-alert/os-alert.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
@@ -9,16 +9,19 @@ import { NotificationService } from '../../../../core/services/notification/noti
   standalone: true,
   imports: [CommonModule, OsAlertComponent, OsSpinnerComponent],
   template: `
-    <!-- Global Loading Spinner -->
-    @if (notificationService.isLoading()) {
-    <div class="os-notification-container__loading">
+    @if (isLoading()) {
+    <div class="os-notification-container__loading" role="status" aria-live="polite">
       <os-spinner size="md" variant="primary" ariaLabel="Carregando..." />
     </div>
     }
 
-    <!-- Notifications -->
-    <div class="os-notification-container__notifications">
-      @for (notification of notificationService.notifications(); track notification.id) {
+    <div
+      class="os-notification-container__notifications"
+      role="alert"
+      aria-live="polite"
+      aria-label="Notificações"
+    >
+      @for (notification of notifications(); track notification.id) {
       <os-alert
         [type]="notification.type"
         [title]="notification.title || ''"
@@ -35,7 +38,10 @@ import { NotificationService } from '../../../../core/services/notification/noti
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationContainerComponent {
-  protected readonly notificationService = inject(NotificationService);
+  private readonly notificationService = inject(NotificationService);
+
+  protected readonly isLoading = computed(() => this.notificationService.isLoading());
+  protected readonly notifications = computed(() => this.notificationService.notifications());
 
   onDismiss(notificationId: string): void {
     this.notificationService.dismissNotification(notificationId);

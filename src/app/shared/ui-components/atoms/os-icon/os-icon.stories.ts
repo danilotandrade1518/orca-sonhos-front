@@ -27,9 +27,10 @@ const meta: Meta<OsIconComponent> = {
       options: ['default', 'primary', 'secondary', 'success', 'warning', 'error', 'info'],
       description: 'Variante visual do ícone',
     },
-    ariaHidden: {
-      control: { type: 'boolean' },
-      description: 'Ocultar do leitor de tela',
+    role: {
+      control: { type: 'select' },
+      options: ['decorative', 'informative', 'interactive'],
+      description: 'Papel do ícone para acessibilidade',
     },
     ariaLabel: {
       control: { type: 'text' },
@@ -58,6 +59,18 @@ const meta: Meta<OsIconComponent> = {
     inline: {
       control: { type: 'boolean' },
       description: 'Ícone inline',
+    },
+    svgContent: {
+      control: { type: 'text' },
+      description: 'Conteúdo SVG inline',
+    },
+    svgUrl: {
+      control: { type: 'text' },
+      description: 'URL do arquivo SVG',
+    },
+    fallbackIcon: {
+      control: { type: 'text' },
+      description: 'Ícone de fallback',
     },
   },
   tags: ['autodocs'],
@@ -169,7 +182,7 @@ export const WithAccessibility: Story = {
     name: 'user',
     size: 'md',
     variant: 'default',
-    ariaHidden: false,
+    role: 'informative',
     ariaLabel: 'Ícone de usuário',
     title: 'Usuário',
   },
@@ -352,6 +365,108 @@ export const AnimatedIcons: Story = {
     docs: {
       description: {
         story: 'Demonstração de ícones com animações.',
+      },
+    },
+  },
+};
+
+export const AccessibilityRoles: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <os-icon name="star" size="lg" variant="primary" role="decorative"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Decorative</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="warning" size="lg" variant="warning" role="informative" ariaLabel="Aviso importante"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Informative</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="settings" size="lg" variant="primary" role="interactive" ariaLabel="Configurações" title="Abrir configurações"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Interactive</div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração dos diferentes papéis de acessibilidade dos ícones.',
+      },
+    },
+  },
+};
+
+export const SVGSupport: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <os-icon
+            size="lg"
+            variant="primary"
+            svgContent="<svg width='24' height='24' viewBox='0 0 24 24' fill='currentColor'><circle cx='12' cy='12' r='10'/></svg>"
+            ariaLabel="Círculo SVG"
+          ></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">SVG Inline</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon
+            name="home"
+            size="lg"
+            variant="success"
+            fallbackIcon="help"
+          ></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Fallback</div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração de suporte a SVG e fallback para ícones não encontrados.',
+      },
+    },
+  },
+};
+
+export const ContrastExamples: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div style="background: #ffffff; padding: 16px; border-radius: 8px;">
+          <h4 style="margin: 0 0 8px 0; color: #333;">Background Claro</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <os-icon name="home" size="md" variant="default" data-background="light"></os-icon>
+            <os-icon name="user" size="md" variant="primary" data-background="light"></os-icon>
+            <os-icon name="settings" size="md" variant="secondary" data-background="light"></os-icon>
+          </div>
+        </div>
+        <div style="background: #1a1a1a; padding: 16px; border-radius: 8px;">
+          <h4 style="margin: 0 0 8px 0; color: #fff;">Background Escuro</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <os-icon name="home" size="md" variant="default" data-background="dark"></os-icon>
+            <os-icon name="user" size="md" variant="primary" data-background="dark"></os-icon>
+            <os-icon name="settings" size="md" variant="secondary" data-background="dark"></os-icon>
+          </div>
+        </div>
+        <div style="background: #e3f2fd; padding: 16px; border-radius: 8px;">
+          <h4 style="margin: 0 0 8px 0; color: #1976d2;">Background Colorido</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <os-icon name="home" size="md" variant="default" data-background="colored"></os-icon>
+            <os-icon name="user" size="md" variant="primary" data-background="colored"></os-icon>
+            <os-icon name="settings" size="md" variant="secondary" data-background="colored"></os-icon>
+          </div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração de contraste automático em diferentes backgrounds.',
       },
     },
   },

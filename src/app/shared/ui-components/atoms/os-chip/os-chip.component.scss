@@ -12,6 +12,9 @@
   transition: all var(--os-transition-duration-fast) var(--os-transition-easing-standard);
   user-select: none;
   border: 1px solid transparent;
+  position: relative;
+  min-height: 44px; // Touch target minimum
+  min-width: 44px; // Touch target minimum
 
   // Override Material chip styles
   ::ng-deep .mat-mdc-chip {
@@ -40,25 +43,48 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 2px;
+    padding: var(--os-spacing-xs);
     border-radius: 50%;
     transition: all var(--os-transition-duration-fast) var(--os-transition-easing-standard);
     flex-shrink: 0;
+    min-width: 32px;
+    min-height: 32px;
+    margin-left: var(--os-spacing-xs);
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 1px;
     }
   }
 
   &__remove-icon {
     font-size: 1.2em;
     line-height: 1;
+    font-weight: var(--os-font-weight-bold);
+  }
+
+  &__remove-help {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
   &--small {
-    padding: 2px var(--os-spacing-xs);
+    padding: var(--os-spacing-xs) var(--os-spacing-sm);
     font-size: var(--os-font-size-xs);
-    min-height: 20px;
+    min-height: 44px; // Touch target minimum
+    min-width: 44px;
 
     .os-chip__icon {
       font-size: var(--os-font-size-xs);
@@ -66,9 +92,10 @@
   }
 
   &--medium {
-    padding: var(--os-spacing-xs) var(--os-spacing-sm);
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
     font-size: var(--os-font-size-sm);
-    min-height: 24px;
+    min-height: 44px; // Touch target minimum
+    min-width: 44px;
 
     .os-chip__icon {
       font-size: var(--os-font-size-sm);
@@ -76,9 +103,10 @@
   }
 
   &--large {
-    padding: var(--os-spacing-sm) var(--os-spacing-md);
+    padding: var(--os-spacing-md) var(--os-spacing-lg);
     font-size: var(--os-font-size-base);
-    min-height: 32px;
+    min-height: 48px; // Larger touch target
+    min-width: 48px;
 
     .os-chip__icon {
       font-size: var(--os-font-size-base);
@@ -173,6 +201,21 @@
     padding-right: var(--os-spacing-xs);
   }
 
+  &--focused {
+    outline: 2px solid var(--os-color-primary-500);
+    outline-offset: 2px;
+    box-shadow: var(--os-shadow-md);
+  }
+
+  &--hovered:not(.os-chip--disabled) {
+    box-shadow: var(--os-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  &--animated {
+    transition: all var(--os-transition-duration-standard) var(--os-transition-easing-standard);
+  }
+
   &:hover:not(.os-chip--disabled) {
     box-shadow: var(--os-shadow-md);
     transform: translateY(-1px);
@@ -186,5 +229,160 @@
   &:focus-within {
     outline: 2px solid var(--os-color-primary-300);
     outline-offset: 2px;
+  }
+}
+
+// Responsive design
+@media (max-width: 575px) {
+  .os-chip {
+    min-height: 48px; // Larger touch target on mobile
+    min-width: 48px;
+
+    &--small {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    &--medium {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    &--large {
+      min-height: 52px;
+      min-width: 52px;
+    }
+
+    &__remove {
+      min-width: 36px;
+      min-height: 36px;
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .os-chip {
+    &--primary {
+      background-color: var(--os-color-primary-900);
+      color: var(--os-color-primary-100);
+      border-color: var(--os-color-primary-700);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-primary-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-primary-600);
+      }
+    }
+
+    &--secondary {
+      background-color: var(--os-color-secondary-900);
+      color: var(--os-color-secondary-100);
+      border-color: var(--os-color-secondary-700);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-secondary-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-secondary-600);
+      }
+    }
+
+    &--success {
+      background-color: var(--os-color-success-900);
+      color: var(--os-color-success-100);
+      border-color: var(--os-color-success-700);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-success-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-success-600);
+      }
+    }
+
+    &--warning {
+      background-color: var(--os-color-warning-900);
+      color: var(--os-color-warning-100);
+      border-color: var(--os-color-warning-700);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-warning-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-warning-600);
+      }
+    }
+
+    &--danger {
+      background-color: var(--os-color-danger-900);
+      color: var(--os-color-danger-100);
+      border-color: var(--os-color-danger-700);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-danger-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-danger-600);
+      }
+    }
+
+    &--neutral {
+      background-color: var(--os-color-neutral-800);
+      color: var(--os-color-neutral-100);
+      border-color: var(--os-color-neutral-600);
+
+      &.os-chip--selected {
+        background-color: var(--os-color-neutral-600);
+        color: var(--os-color-white);
+        border-color: var(--os-color-neutral-600);
+      }
+    }
+
+    &--disabled {
+      background-color: var(--os-color-neutral-800);
+      color: var(--os-color-neutral-500);
+      border-color: var(--os-color-neutral-600);
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .os-chip {
+    border-width: 2px;
+
+    &--focused {
+      outline-width: 3px;
+    }
+
+    &__remove:focus {
+      outline-width: 3px;
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .os-chip {
+    &--animated {
+      transition: none;
+    }
+
+    &:hover:not(.os-chip--disabled) {
+      transform: none;
+    }
+
+    &--hovered:not(.os-chip--disabled) {
+      transform: none;
+    }
+
+    &__remove {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
+
+      &:active {
+        transform: none;
+      }
+    }
   }
 }

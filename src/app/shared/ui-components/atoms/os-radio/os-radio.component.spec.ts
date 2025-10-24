@@ -42,6 +42,14 @@ describe('OsRadioComponent', () => {
     it('should not be required by default', () => {
       expect(component.required()).toBe(false);
     });
+
+    it('should be animated by default', () => {
+      expect(component.animated()).toBe(true);
+    });
+
+    it('should have default role', () => {
+      expect(component.role()).toBe('radio');
+    });
   });
 
   describe('class generation', () => {
@@ -62,14 +70,14 @@ describe('OsRadioComponent', () => {
       fixture.componentRef.setInput('variant', 'primary');
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio');
+      expect(classes).toContain('os-radio--primary');
     });
 
     it('should include checked class when checked', () => {
       fixture.componentRef.setInput('checked', true);
       fixture.detectChanges();
       const classes = component.radioClass();
-      expect(classes).toContain('os-radio');
+      expect(classes).toContain('os-radio--checked');
     });
 
     it('should include disabled class when disabled', () => {
@@ -77,6 +85,20 @@ describe('OsRadioComponent', () => {
       fixture.detectChanges();
       const classes = component.radioClass();
       expect(classes).toContain('os-radio--disabled');
+    });
+
+    it('should include animated class when animated', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      const classes = component.radioClass();
+      expect(classes).toContain('os-radio--animated');
+    });
+
+    it('should not include animated class when animated is false', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      const classes = component.radioClass();
+      expect(classes).not.toContain('os-radio--animated');
     });
   });
 
@@ -144,6 +166,26 @@ describe('OsRadioComponent', () => {
       expect(radioElement.getAttribute('aria-label')).toBe('Custom radio');
     });
 
+    it('should set aria-labelledby attribute', () => {
+      fixture.componentRef.setInput('ariaLabelledBy', 'label-id');
+      fixture.detectChanges();
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('aria-labelledby')).toBe('label-id');
+    });
+
+    it('should set aria-required attribute', () => {
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should set role attribute', () => {
+      fixture.componentRef.setInput('role', 'switch');
+      fixture.detectChanges();
+      expect(component.radioRole()).toBe('switch');
+    });
+
     it('should have unique input id', () => {
       const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
       expect(radioElement.id).toMatch(/^os-radio-/);
@@ -209,6 +251,82 @@ describe('OsRadioComponent', () => {
       const event = new FocusEvent('blur');
       component.handleBlur(event);
       expect(onTouchedCalled).toBe(true);
+    });
+
+    it('should update value when writeValue is called', () => {
+      component.writeValue('new-value');
+      expect(component.value()).toBe('new-value');
+    });
+
+    it('should not update value if same value is written', () => {
+      component.value.set('existing-value');
+      component.writeValue('existing-value');
+      expect(component.value()).toBe('existing-value');
+    });
+
+    it('should update disabled state when setDisabledState is called', () => {
+      component.setDisabledState(true);
+      expect(component.disabled()).toBe(true);
+    });
+  });
+
+  describe('animations and interactions', () => {
+    it('should include animated class when animated is true', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      const classes = component.radioClass();
+      expect(classes).toContain('os-radio--animated');
+    });
+
+    it('should not include animated class when animated is false', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      const classes = component.radioClass();
+      expect(classes).not.toContain('os-radio--animated');
+    });
+
+    it('should include checked class when checked', () => {
+      fixture.componentRef.setInput('checked', true);
+      fixture.detectChanges();
+      const classes = component.radioClass();
+      expect(classes).toContain('os-radio--checked');
+    });
+  });
+
+  describe('roles', () => {
+    it('should support radio role', () => {
+      fixture.componentRef.setInput('role', 'radio');
+      fixture.detectChanges();
+      expect(component.radioRole()).toBe('radio');
+    });
+
+    it('should support switch role', () => {
+      fixture.componentRef.setInput('role', 'switch');
+      fixture.detectChanges();
+      expect(component.radioRole()).toBe('switch');
+    });
+  });
+
+  describe('data attributes', () => {
+    it('should set data-animated attribute', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('data-animated')).toBe('true');
+    });
+
+    it('should set data-size attribute', () => {
+      fixture.componentRef.setInput('size', 'large');
+      fixture.detectChanges();
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('data-size')).toBe('large');
+    });
+
+    it('should set data-variant attribute', () => {
+      fixture.componentRef.setInput('variant', 'primary');
+      fixture.detectChanges();
+      const radioElement = fixture.nativeElement.querySelector('mat-radio-button');
+      expect(radioElement.getAttribute('data-variant')).toBe('primary');
     });
   });
 });

@@ -5,16 +5,43 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  position: relative;
 
   &--small {
     .os-date-input__form-field {
       font-size: var(--os-font-size-sm);
+      min-height: 44px; // Touch target minimum
+    }
+  }
+
+  &--medium {
+    .os-date-input__form-field {
+      min-height: 44px; // Touch target minimum
     }
   }
 
   &--large {
     .os-date-input__form-field {
       font-size: var(--os-font-size-lg);
+      min-height: 48px; // Larger touch target
+    }
+  }
+
+  &--focused {
+    .os-date-input__form-field {
+      --mdc-outlined-text-field-focus-outline-color: var(--os-color-primary-500);
+    }
+  }
+
+  &--hovered:not(&--disabled) {
+    .os-date-input__form-field {
+      --mdc-outlined-text-field-hover-outline-color: var(--os-color-primary-400);
+    }
+  }
+
+  &--animated {
+    .os-date-input__form-field {
+      transition: all var(--os-transition-duration-standard) var(--os-transition-easing-standard);
     }
   }
 }
@@ -48,5 +75,52 @@
 .os-date-input__helper {
   &--error {
     color: var(--os-color-error-600);
+  }
+}
+
+// Responsive design
+@media (max-width: 575px) {
+  .os-date-input-container {
+    &--small,
+    &--medium,
+    &--large {
+      .os-date-input__form-field {
+        min-height: 48px; // Larger touch target on mobile
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .os-date-input__prefix-icon,
+  .os-date-input__suffix-icon {
+    color: var(--os-color-text-secondary-dark);
+  }
+
+  .os-date-input__helper {
+    color: var(--os-color-text-secondary-dark);
+
+    &--error {
+      color: var(--os-color-error-400);
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .os-date-input__form-field {
+    .mat-mdc-form-field {
+      --mdc-outlined-text-field-outline-width: 2px;
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .os-date-input-container--animated {
+    .os-date-input__form-field {
+      transition: none;
+    }
   }
 }

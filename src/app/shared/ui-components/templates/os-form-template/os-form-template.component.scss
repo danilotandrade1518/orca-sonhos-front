@@ -7,6 +7,11 @@
   background-color: var(--os-color-background-primary);
   color: var(--os-color-text-primary);
 
+  /* Mobile-first approach */
+  @media (max-width: 575.98px) {
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+
   &--small {
     .os-form-template__content {
       max-width: 600px;
@@ -65,41 +70,128 @@
     }
   }
 
+  /* Persona-specific optimizations */
+  &--persona-ana {
+    .os-form-template__form {
+      gap: var(--os-spacing-lg);
+    }
+
+    .os-form-template__actions {
+      gap: var(--os-spacing-md);
+    }
+  }
+
+  &--persona-carlos {
+    .os-form-template__form {
+      gap: var(--os-spacing-md);
+    }
+
+    .os-form-template__content {
+      max-width: 600px; /* Simpler layout for beginners */
+    }
+
+    .os-form-template__actions {
+      flex-direction: column;
+      gap: var(--os-spacing-sm);
+
+      @media (min-width: 576px) {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+  }
+
+  &--persona-roberto-maria {
+    .os-form-template__form {
+      gap: var(--os-spacing-xl);
+    }
+
+    .os-form-template__content {
+      max-width: 1000px; /* More space for complex forms */
+    }
+
+    .os-form-template__actions {
+      gap: var(--os-spacing-lg);
+    }
+  }
+
+  &--persona-julia {
+    .os-form-template__form {
+      gap: var(--os-spacing-lg);
+    }
+
+    .os-form-template__content {
+      max-width: 800px; /* Balanced for business forms */
+    }
+
+    .os-form-template__actions {
+      gap: var(--os-spacing-md);
+    }
+  }
+
   &__content {
     flex: 1;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding: var(--os-spacing-lg);
+    padding: var(--os-spacing-md);
     width: 100%;
+
+    /* Mobile-first responsive padding */
+    @media (min-width: 576px) {
+      padding: var(--os-spacing-lg);
+    }
+
+    @media (min-width: 992px) {
+      padding: var(--os-spacing-xl);
+    }
   }
 
   &__progress {
-    margin-bottom: var(--os-spacing-lg);
-    padding: var(--os-spacing-md);
+    margin-bottom: var(--os-spacing-md);
+    padding: var(--os-spacing-sm);
     background-color: var(--os-color-background-secondary);
     border-radius: var(--os-border-radius-md);
+
+    /* Mobile-first responsive spacing */
+    @media (min-width: 576px) {
+      margin-bottom: var(--os-spacing-lg);
+      padding: var(--os-spacing-md);
+    }
   }
 
   &__form {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--os-spacing-lg);
+    gap: var(--os-spacing-md);
+
+    /* Mobile-first responsive gap */
+    @media (min-width: 576px) {
+      gap: var(--os-spacing-lg);
+    }
   }
 
   &__actions {
     display: flex;
-    gap: var(--os-spacing-md);
+    gap: var(--os-spacing-sm);
     justify-content: flex-end;
     align-items: center;
-    padding-top: var(--os-spacing-lg);
+    padding-top: var(--os-spacing-md);
     border-top: 1px solid var(--os-color-border-primary);
-    margin-top: var(--os-spacing-lg);
+    margin-top: var(--os-spacing-md);
 
-    @media (max-width: 768px) {
+    /* Mobile-first responsive actions */
+    @media (max-width: 575.98px) {
       flex-direction: column;
       gap: var(--os-spacing-sm);
+      justify-content: stretch;
+    }
+
+    @media (min-width: 576px) {
+      gap: var(--os-spacing-md);
+      padding-top: var(--os-spacing-lg);
+      margin-top: var(--os-spacing-lg);
     }
   }
 
@@ -122,35 +214,37 @@
   }
 }
 
-@media (max-width: 768px) {
-  .os-form-template {
-    &__content {
-      padding: var(--os-spacing-md);
-    }
+/* Accessibility improvements */
+.os-form-template {
+  /* Focus management */
+  &:focus-within {
+    outline: 2px solid var(--os-color-primary);
+    outline-offset: 2px;
+  }
 
-    &__form {
-      padding: var(--os-spacing-md);
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    border: 2px solid;
 
     &__actions {
-      flex-direction: column;
-      gap: var(--os-spacing-sm);
+      border-top: 2px solid;
     }
   }
-}
 
-@media (max-width: 1024px) {
-  .os-form-template {
-    &__content {
-      padding: var(--os-spacing-md);
-    }
-  }
-}
-
-@media (min-width: 1200px) {
-  .os-form-template {
-    &__content {
-      padding: var(--os-spacing-xl);
+  /* Touch target improvements for mobile */
+  @media (max-width: 575.98px) {
+    .os-button {
+      min-height: 44px; /* WCAG AA touch target */
+      min-width: 44px;
     }
   }
 }

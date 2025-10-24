@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: var(--os-spacing-xs);
   width: 100%;
+  position: relative;
 
   &--small {
     gap: var(--os-spacing-xxs);
@@ -18,12 +19,34 @@
     .mat-mdc-slider {
       --mdc-slider-track-color: var(--os-color-error-100);
       --mdc-slider-handle-color: var(--os-color-error-500);
+      --mdc-slider-focus-handle-color: var(--os-color-error-600);
+      --mdc-slider-hover-handle-color: var(--os-color-error-600);
+      --mdc-slider-active-track-color: var(--os-color-error-500);
     }
   }
 
   &--disabled {
     opacity: 0.6;
     pointer-events: none;
+  }
+
+  &--focused {
+    .mat-mdc-slider {
+      --mdc-slider-focus-handle-color: var(--os-color-primary-600);
+    }
+  }
+
+  &--hovered {
+    .mat-mdc-slider {
+      --mdc-slider-hover-handle-color: var(--os-color-primary-600);
+    }
+  }
+
+  &--animated {
+    .os-slider__value-display,
+    .os-slider__tooltip {
+      transition: all 0.2s ease-in-out;
+    }
   }
 }
 
@@ -45,6 +68,7 @@
   display: flex;
   align-items: center;
   gap: var(--os-spacing-sm);
+  min-height: 44px; // Touch target minimum
 
   &--with-labels {
     gap: var(--os-spacing-md);
@@ -57,6 +81,8 @@
   display: flex;
   align-items: center;
   height: 20px;
+  min-height: 44px; // Touch target minimum
+  padding: 12px 0; // Extra touch area
 
   &--with-value {
     margin-bottom: var(--os-spacing-sm);
@@ -66,6 +92,7 @@
 // Material Slider customizations
 .mat-mdc-slider {
   width: 100%;
+  min-height: 44px; // Touch target minimum
 
   // Customize Material colors to match OrçaSonhos theme
   --mdc-slider-track-color: var(--os-color-background-secondary);
@@ -78,21 +105,44 @@
   --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
   --mdc-slider-disabled-active-track-color: var(--os-color-background-disabled);
   --mdc-slider-disabled-inactive-track-color: var(--os-color-background-disabled);
+
+  // Focus ring using design tokens
+  --mdc-slider-focus-ring-width: var(--os-focus-ring-width);
+  --mdc-slider-focus-ring-color: var(--os-focus-ring-color);
+
+  // Hover and focus states
+  &:hover {
+    --mdc-slider-hover-handle-color: var(--os-color-primary-600);
+  }
+
+  &:focus-within {
+    --mdc-slider-focus-handle-color: var(--os-color-primary-600);
+  }
 }
 
 .os-slider {
   // Size variants for Material slider
   &--small {
     .mat-mdc-slider {
-      --mdc-slider-handle-size: 16px;
+      --mdc-slider-handle-size: 20px;
       --mdc-slider-track-height: 4px;
+      min-height: 44px; // Touch target minimum
+    }
+  }
+
+  &--medium {
+    .mat-mdc-slider {
+      --mdc-slider-handle-size: 24px;
+      --mdc-slider-track-height: 6px;
+      min-height: 44px; // Touch target minimum
     }
   }
 
   &--large {
     .mat-mdc-slider {
-      --mdc-slider-handle-size: 24px;
+      --mdc-slider-handle-size: 28px;
       --mdc-slider-track-height: 8px;
+      min-height: 48px; // Larger touch target
     }
   }
 
@@ -112,6 +162,24 @@
       --mdc-slider-disabled-handle-color: var(--os-color-text-disabled);
     }
   }
+
+  &--focused {
+    .mat-mdc-slider {
+      --mdc-slider-focus-handle-color: var(--os-color-primary-600);
+    }
+  }
+
+  &--hovered {
+    .mat-mdc-slider {
+      --mdc-slider-hover-handle-color: var(--os-color-primary-600);
+    }
+  }
+
+  &--animated {
+    .mat-mdc-slider {
+      transition: all 0.2s ease-in-out;
+    }
+  }
 }
 
 .os-slider__value-display {
@@ -128,6 +196,7 @@
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
+  box-shadow: var(--os-shadow-sm);
 
   &--small {
     font-size: var(--os-font-size-xxs);
@@ -138,6 +207,42 @@
     font-size: var(--os-font-size-sm);
     padding: var(--os-spacing-sm) var(--os-spacing-md);
   }
+
+  &--animated {
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.os-slider__tooltip {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--os-color-background-elevated);
+  color: var(--os-color-text-primary);
+  padding: var(--os-spacing-xs) var(--os-spacing-sm);
+  border-radius: var(--os-border-radius-sm);
+  font-size: var(--os-font-size-xs);
+  font-weight: var(--os-font-weight-medium);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: var(--os-shadow-md);
+  border: 1px solid var(--os-color-border);
+
+  &--small {
+    font-size: var(--os-font-size-xxs);
+    padding: var(--os-spacing-xxs) var(--os-spacing-xs);
+  }
+
+  &--large {
+    font-size: var(--os-font-size-sm);
+    padding: var(--os-spacing-sm) var(--os-spacing-md);
+  }
+
+  &--animated {
+    transition: all 0.2s ease-in-out;
+  }
 }
 
 .os-slider__min-value,
@@ -147,6 +252,7 @@
   font-weight: var(--os-font-weight-medium);
   min-width: 20px;
   text-align: center;
+  user-select: none;
 }
 
 .os-slider__helper {
@@ -162,4 +268,61 @@
 .os-slider__required {
   color: var(--os-color-error-500);
   font-weight: var(--os-font-weight-bold);
+}
+
+// Responsive design
+@media (max-width: 575px) {
+  .os-slider-container {
+    gap: var(--os-spacing-xxs);
+  }
+
+  .os-slider__wrapper {
+    min-height: 48px; // Larger touch target on mobile
+  }
+
+  .os-slider__track {
+    min-height: 48px;
+    padding: 14px 0; // Extra touch area on mobile
+  }
+
+  .os-slider {
+    &--small,
+    &--medium,
+    &--large {
+      .mat-mdc-slider {
+        min-height: 48px; // Larger touch target on mobile
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .os-slider__tooltip {
+    background: var(--os-color-background-elevated-dark);
+    color: var(--os-color-text-primary-dark);
+    border-color: var(--os-color-border-dark);
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .os-slider__value-display {
+    border: 2px solid var(--os-color-text-primary);
+  }
+
+  .os-slider__tooltip {
+    border: 2px solid var(--os-color-text-primary);
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .os-slider-container--animated {
+    .os-slider__value-display,
+    .os-slider__tooltip,
+    .mat-mdc-slider {
+      transition: none;
+    }
+  }
 }

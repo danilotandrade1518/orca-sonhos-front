@@ -772,3 +772,158 @@ export const Interactive: Story = {
     },
   },
 };
+
+export const WithInfiniteScroll: Story = {
+  args: {
+    ...Default.args,
+    infiniteScroll: {
+      enabled: true,
+      threshold: 0.8,
+      loadMoreText: 'Carregar mais itens',
+      loadingText: 'Carregando mais itens...',
+      noMoreText: 'Todos os itens foram carregados',
+    },
+    title: 'Lista com Infinite Scroll',
+    subtitle: 'Scroll infinito para carregar mais dados automaticamente',
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <os-list-template
+        [variant]="variant"
+        [size]="size"
+        [theme]="theme"
+        [title]="title"
+        [subtitle]="subtitle"
+        [data]="data"
+        [columns]="columns"
+        [infiniteScroll]="infiniteScroll"
+        [showFilters]="true"
+        [showFooter]="true"
+        (loadMore)="onLoadMore()"
+      />
+    `,
+    methods: {
+      onLoadMore: () => {
+        console.log('Loading more items...');
+      },
+    },
+  }),
+};
+
+export const WithMobileFilters: Story = {
+  args: {
+    ...Default.args,
+    mobileFilters: {
+      enabled: true,
+      overlay: true,
+      position: 'left',
+      width: '300px',
+    },
+    title: 'Lista com Filtros Mobile',
+    subtitle: 'Filtros otimizados para dispositivos móveis',
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <os-list-template
+        [variant]="variant"
+        [size]="size"
+        [theme]="theme"
+        [title]="title"
+        [subtitle]="subtitle"
+        [data]="data"
+        [columns]="columns"
+        [mobileFilters]="mobileFilters"
+        [showFilters]="true"
+        [showFooter]="true"
+        (mobileFiltersToggle)="onMobileFiltersToggle($event)"
+      />
+    `,
+    methods: {
+      onMobileFiltersToggle: (isOpen: boolean) => {
+        console.log('Mobile filters toggled:', isOpen);
+      },
+    },
+  }),
+};
+
+export const EnhancedEmptyState: Story = {
+  args: {
+    ...Default.args,
+    data: [],
+    emptyTitle: 'Nenhuma transação encontrada',
+    emptyDescription:
+      'Você ainda não possui transações registradas. Comece adicionando sua primeira transação para acompanhar seus gastos.',
+    emptyAction: {
+      id: 'add-transaction',
+      label: 'Adicionar Transação',
+      icon: 'add',
+      variant: 'primary',
+      size: 'medium',
+    },
+    title: 'Estado Vazio Aprimorado',
+    subtitle: 'Empty state com ação e descrição detalhada',
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <os-list-template
+        [variant]="variant"
+        [size]="size"
+        [theme]="theme"
+        [title]="title"
+        [subtitle]="subtitle"
+        [data]="data"
+        [columns]="columns"
+        [emptyTitle]="emptyTitle"
+        [emptyDescription]="emptyDescription"
+        [emptyAction]="emptyAction"
+        [showFilters]="false"
+        [showFooter]="false"
+        (emptyActionClick)="onEmptyActionClick($event)"
+      />
+    `,
+    methods: {
+      onEmptyActionClick: (event: MouseEvent) => {
+        console.log('Empty action clicked:', event);
+      },
+    },
+  }),
+};
+
+export const AccessibilityDemo: Story = {
+  args: {
+    ...Default.args,
+    title: 'Demonstração de Acessibilidade',
+    subtitle: 'Template com foco em acessibilidade WCAG 2.1 AA',
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: 1rem;">
+        <h2>Funcionalidades de Acessibilidade</h2>
+        <ul>
+          <li><strong>ARIA Labels:</strong> Todos os elementos têm labels apropriados</li>
+          <li><strong>Keyboard Navigation:</strong> Navegação completa por teclado</li>
+          <li><strong>Screen Reader:</strong> Suporte completo a leitores de tela</li>
+          <li><strong>Focus Management:</strong> Gerenciamento de foco adequado</li>
+          <li><strong>High Contrast:</strong> Suporte a modo de alto contraste</li>
+          <li><strong>Reduced Motion:</strong> Respeita preferências de movimento</li>
+        </ul>
+
+        <os-list-template
+          [variant]="variant"
+          [size]="size"
+          [theme]="theme"
+          [title]="title"
+          [subtitle]="subtitle"
+          [data]="data"
+          [columns]="columns"
+          [showFilters]="true"
+          [showFooter]="true"
+        />
+      </div>
+    `,
+  }),
+};

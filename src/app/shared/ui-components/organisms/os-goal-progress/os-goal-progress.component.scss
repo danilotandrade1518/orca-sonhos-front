@@ -1,4 +1,5 @@
 @use '../../theme/variables' as *;
+@use '../../theme/tokens' as *;
 
 .os-goal-progress {
   display: flex;
@@ -143,6 +144,122 @@
 
   &__progress {
     width: 100%;
+    position: relative;
+  }
+
+  &__milestone {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    margin-top: $spacing-sm;
+    padding: $spacing-xs $spacing-sm;
+    background: rgba($color-success, 0.1);
+    border: 1px solid rgba($color-success, 0.3);
+    border-radius: $border-radius-sm;
+    animation: milestone-entrance 0.5s ease-out;
+  }
+
+  &__milestone-text {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-success;
+  }
+
+  &__celebration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($color-success, 0.05);
+    border-radius: $border-radius-lg;
+    z-index: 10;
+    animation: celebration-entrance 0.6s ease-out;
+  }
+
+  &__celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
+    text-align: center;
+  }
+
+  &__celebration-text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-success;
+    animation: celebration-pulse 1s ease-in-out infinite;
+  }
+
+  &__confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  &__confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: $color-success;
+    border-radius: 50%;
+    animation: confetti-fall 3s ease-out infinite;
+
+    &:nth-child(1) {
+      left: 10%;
+      animation-delay: 0s;
+      background: $color-success;
+    }
+
+    &:nth-child(2) {
+      left: 20%;
+      animation-delay: 0.1s;
+      background: $color-warning;
+    }
+
+    &:nth-child(3) {
+      left: 30%;
+      animation-delay: 0.2s;
+      background: $color-error;
+    }
+
+    &:nth-child(4) {
+      left: 40%;
+      animation-delay: 0.3s;
+      background: $color-info;
+    }
+
+    &:nth-child(5) {
+      left: 50%;
+      animation-delay: 0.4s;
+      background: $color-success;
+    }
+
+    &:nth-child(6) {
+      left: 60%;
+      animation-delay: 0.5s;
+      background: $color-warning;
+    }
+
+    &:nth-child(7) {
+      left: 70%;
+      animation-delay: 0.6s;
+      background: $color-error;
+    }
+
+    &:nth-child(8) {
+      left: 80%;
+      animation-delay: 0.7s;
+      background: $color-info;
+    }
   }
 
   &__stats {
@@ -183,7 +300,6 @@
     border-top: 1px solid $color-border;
   }
 
-  // Responsive Design
   @media (max-width: 768px) {
     &__header {
       flex-direction: column;
@@ -222,7 +338,6 @@
     }
   }
 
-  // Dark theme adjustments
   &--dark {
     .os-goal-progress__title {
       color: $color-on-surface;
@@ -250,7 +365,6 @@
     }
   }
 
-  // Hover effects
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
@@ -261,9 +375,64 @@
     transform: none;
   }
 
-  // Focus styles
   &:focus-within {
     outline: 2px solid $color-primary;
     outline-offset: 2px;
+  }
+}
+
+@keyframes milestone-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes celebration-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes celebration-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .os-goal-progress__milestone,
+  .os-goal-progress__celebration,
+  .os-goal-progress__celebration-text,
+  .os-goal-progress__confetti-piece {
+    animation: none;
   }
 }

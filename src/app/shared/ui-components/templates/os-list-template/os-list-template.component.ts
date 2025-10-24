@@ -1,6 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  inject,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -42,10 +55,25 @@ export interface ListTemplateAction {
   disabled?: boolean;
 }
 
+export interface ListTemplateInfiniteScroll {
+  enabled: boolean;
+  threshold: number;
+  loadMoreText: string;
+  loadingText: string;
+  noMoreText: string;
+}
+
+export interface ListTemplateMobileFilters {
+  enabled: boolean;
+  overlay: boolean;
+  position: 'left' | 'right';
+  width: string;
+}
+
 @Component({
   selector: 'os-list-template',
   template: `
-    <div [class]="templateClass()">
+    <div [class]="templateClass()" role="main" [attr.aria-label]="title()">
       <!-- Header Section -->
       <os-page-header
         [variant]="headerVariant()"
@@ -57,9 +85,31 @@ export interface ListTemplateAction {
         (actionClick)="onHeaderActionClick($event)"
       />
 
+      <!-- Mobile Filter Toggle -->
+      @if (showFilters() && isMobile() && mobileFilters().enabled) {
+      <div class="os-list-template__mobile-filter-toggle">
+        <os-button
+          variant="secondary"
+          size="medium"
+          [icon]="mobileFiltersOpen() ? 'close' : 'filter_list'"
+          (click)="toggleMobileFilters()"
+          [attr.aria-expanded]="mobileFiltersOpen()"
+          aria-controls="mobile-filters"
+        >
+          {{ mobileFiltersOpen() ? 'Fechar Filtros' : 'Filtros' }}
+        </os-button>
+      </div>
+      }
+
       <!-- Filters Section -->
       @if (showFilters()) {
-      <div class="os-list-template__filters">
+      <div
+        class="os-list-template__filters"
+        [class.os-list-template__filters--mobile]="isMobile() && mobileFilters().enabled"
+        [class.os-list-template__filters--mobile-open]="isMobile() && mobileFiltersOpen()"
+        [id]="isMobile() ? 'mobile-filters' : null"
+        [attr.aria-hidden]="isMobile() && !mobileFiltersOpen()"
+      >
         <os-filter-bar
           [variant]="filterVariant()"
           [size]="filterSize()"
@@ -70,14 +120,14 @@ export interface ListTemplateAction {
       }
 
       <!-- Content Section -->
-      <div class="os-list-template__content">
-        @if (loading()) {
+      <div class="os-list-template__content" role="region" aria-label="Lista de dados">
+        @if (loading() && !infiniteScrollLoading()) {
         <div class="os-list-template__loading">
           <os-spinner [variant]="spinnerVariant()" [size]="spinnerSize()" />
           <span class="os-list-template__loading-text">{{ loadingText() }}</span>
         </div>
         } @else if (isEmpty()) {
-        <div class="os-list-template__empty">
+        <div class="os-list-template__empty" role="status" aria-live="polite">
           <os-icon [name]="emptyIcon()" [variant]="emptyIconVariant()" [size]="emptyIconSize()" />
           <h3 class="os-list-template__empty-title">{{ emptyTitle() }}</h3>
           <p class="os-list-template__empty-description">{{ emptyDescription() }}</p>
@@ -93,27 +143,59 @@ export interface ListTemplateAction {
           }
         </div>
         } @else {
-        <os-data-grid
-          [variant]="gridVariant()"
-          [size]="gridSize()"
-          [data]="data()"
-          [columns]="columns()"
-          [filterOptions]="filterOptions()"
-          [tableActions]="gridActions()"
-          [title]="title()"
-          [subtitle]="subtitle()"
-          [showHeaderActions]="showGridHeader()"
-          [showFooter]="showGridFooter()"
-          [isLoading]="loading()"
-          (rowClick)="onRowClick($event)"
-          (tableActionClick)="onGridActionClick($event)"
-          (filterChange)="onFilterChange($event)"
-          (sortChange)="onSortChange($event)"
-          (pageChange)="onPageChange($event)"
-          (refresh)="onRefresh()"
-          (export)="onExport()"
-          (add)="onAdd()"
-        />
+        <div class="os-list-template__grid-container">
+          <os-data-grid
+            [variant]="gridVariant()"
+            [size]="gridSize()"
+            [data]="data()"
+            [columns]="columns()"
+            [filterOptions]="filterOptions()"
+            [tableActions]="gridActions()"
+            [title]="title()"
+            [subtitle]="subtitle()"
+            [showHeaderActions]="showGridHeader()"
+            [showFooter]="showGridFooter()"
+            [isLoading]="loading()"
+            (rowClick)="onRowClick($event)"
+            (tableActionClick)="onGridActionClick($event)"
+            (filterChange)="onFilterChange($event)"
+            (sortChange)="onSortChange($event)"
+            (pageChange)="onPageChange($event)"
+            (refresh)="onRefresh()"
+            (export)="onExport()"
+            (add)="onAdd()"
+          />
+
+          <!-- Infinite Scroll Trigger -->
+          @if (infiniteScroll().enabled && !isEmpty() && !loading()) {
+          <div
+            class="os-list-template__infinite-trigger"
+            #infiniteTrigger
+            [attr.aria-live]="infiniteScrollLoading() ? 'polite' : 'off'"
+          >
+            @if (infiniteScrollLoading()) {
+            <div class="os-list-template__infinite-loading">
+              <os-spinner size="sm" />
+              <span>{{ infiniteScroll().loadingText }}</span>
+            </div>
+            } @else if (hasMoreItems()) {
+            <os-button
+              variant="secondary"
+              size="medium"
+              [icon]="'expand_more'"
+              (click)="loadMoreItems()"
+            >
+              {{ infiniteScroll().loadMoreText }}
+            </os-button>
+            } @else {
+            <div class="os-list-template__infinite-end">
+              <os-icon name="check_circle" size="sm" />
+              <span>{{ infiniteScroll().noMoreText }}</span>
+            </div>
+            }
+          </div>
+          }
+        </div>
         }
       </div>
 
@@ -158,7 +240,21 @@ export interface ListTemplateAction {
     OsSpinnerComponent,
   ],
 })
-export class OsListTemplateComponent {
+export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
+  // Services
+  private breakpointObserver = inject(BreakpointObserver);
+  private elementRef = inject(ElementRef);
+
+  // ViewChild
+  @ViewChild('infiniteTrigger') infiniteTrigger?: ElementRef;
+
+  // Signals
+  mobileFiltersOpen = signal(false);
+  infiniteScrollLoading = signal(false);
+  hasMoreItems = signal(true);
+  private currentPage = signal(1);
+  private intersectionObserver?: IntersectionObserver;
+
   // Inputs
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -224,6 +320,21 @@ export class OsListTemplateComponent {
   footerText = input<string>('');
   lastUpdate = input<Date>(new Date());
 
+  // New Features
+  infiniteScroll = input<ListTemplateInfiniteScroll>({
+    enabled: false,
+    threshold: 0.8,
+    loadMoreText: 'Carregar mais',
+    loadingText: 'Carregando...',
+    noMoreText: 'Todos os itens foram carregados',
+  });
+  mobileFilters = input<ListTemplateMobileFilters>({
+    enabled: true,
+    overlay: true,
+    position: 'left',
+    width: '300px',
+  });
+
   // Outputs
   rowClick = output<{ item: ListTemplateData; index: number; event: MouseEvent }>();
   headerActionClick = output<{
@@ -249,6 +360,10 @@ export class OsListTemplateComponent {
   add = output<void>();
   backClick = output<MouseEvent>();
   emptyActionClick = output<MouseEvent>();
+
+  // New Outputs
+  loadMore = output<void>();
+  mobileFiltersToggle = output<boolean>();
 
   // Computed Properties
   templateClass = computed(() => {
@@ -336,6 +451,11 @@ export class OsListTemplateComponent {
   emptyActionIcon = computed(() => {
     const action = this.emptyAction();
     return action?.icon || '';
+  });
+
+  // New Computed Properties
+  isMobile = computed(() => {
+    return this.breakpointObserver.isMatched(Breakpoints.Handset);
   });
 
   // Convert ListTemplateFilter[] to OsFilterOption[]
@@ -451,5 +571,67 @@ export class OsListTemplateComponent {
     // Filter application logic can be implemented here
     // For now, just emit the current filters
     this.filterChange.emit(this.filters());
+  }
+
+  // New Methods
+  toggleMobileFilters() {
+    const newState = !this.mobileFiltersOpen();
+    this.mobileFiltersOpen.set(newState);
+    this.mobileFiltersToggle.emit(newState);
+  }
+
+  loadMoreItems() {
+    if (this.infiniteScroll().enabled && !this.infiniteScrollLoading()) {
+      this.infiniteScrollLoading.set(true);
+      this.loadMore.emit();
+
+      // Simulate loading delay
+      setTimeout(() => {
+        this.infiniteScrollLoading.set(false);
+        this.currentPage.set(this.currentPage() + 1);
+
+        // Check if we have more items (this would be determined by the parent component)
+        // For now, we'll assume we always have more items
+        this.hasMoreItems.set(this.currentPage() < 10); // Example limit
+      }, 1000);
+    }
+  }
+
+  // Lifecycle Methods
+  ngAfterViewInit() {
+    // Setup intersection observer for infinite scroll
+    if (this.infiniteScroll().enabled && this.infiniteTrigger) {
+      this.setupIntersectionObserver();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
+  }
+
+  private setupIntersectionObserver() {
+    if (!this.infiniteTrigger) return;
+
+    this.intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (
+            entry.isIntersecting &&
+            this.infiniteScroll().enabled &&
+            !this.infiniteScrollLoading()
+          ) {
+            this.loadMoreItems();
+          }
+        });
+      },
+      {
+        threshold: this.infiniteScroll().threshold,
+        rootMargin: '50px',
+      }
+    );
+
+    this.intersectionObserver.observe(this.infiniteTrigger.nativeElement);
   }
 }

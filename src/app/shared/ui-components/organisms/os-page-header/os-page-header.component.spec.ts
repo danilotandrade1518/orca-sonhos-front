@@ -301,7 +301,7 @@ describe('OsPageHeaderComponent', () => {
       fixture.detectChanges();
 
       const breadcrumbNav = fixture.nativeElement.querySelector('.os-page-header__breadcrumbs');
-      expect(breadcrumbNav.getAttribute('aria-label')).toBe('Breadcrumb');
+      expect(breadcrumbNav.getAttribute('aria-label')).toBe('Navegação: Home > Current Page');
 
       const currentBreadcrumb = fixture.nativeElement.querySelector('[aria-current="page"]');
       expect(currentBreadcrumb).toBeTruthy();

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { OsFormFieldComponent } from './os-form-field.component';
 import { vi } from 'vitest';
 
@@ -155,7 +155,8 @@ describe('OsFormFieldComponent', () => {
       fixture.componentRef.setInput('hintText', 'We will never share your email');
       fixture.detectChanges();
 
-      const hintElement = fixture.nativeElement.querySelector('os-label');
+      const hintElement = fixture.nativeElement.querySelector('.os-form-field__hint');
+      expect(hintElement).toBeTruthy();
       expect(hintElement.textContent.trim()).toBe('We will never share your email');
     });
 
@@ -316,6 +317,186 @@ describe('OsFormFieldComponent', () => {
 
       expect(component.required()).toBe(true);
       expect(component.errorMessage()).toBe('This field is required');
+    });
+  });
+
+  describe('new features', () => {
+    it('should display character count when maxLength is set', () => {
+      fixture.componentRef.setInput('maxLength', 100);
+      fixture.componentRef.setInput('value', 'test');
+      fixture.detectChanges();
+
+      expect(component.showCharacterCount()).toBe(true);
+      expect(component.characterCount()).toBe(4);
+    });
+
+    it('should show validation icon when showValidationIcon is true', () => {
+      fixture.componentRef.setInput('showValidationIcon', true);
+      fixture.componentRef.setInput('value', 'test');
+      fixture.detectChanges();
+
+      expect(component.showValidationIcon()).toBe(true);
+    });
+
+    it('should hide validation icon when showValidationIcon is false', () => {
+      fixture.componentRef.setInput('showValidationIcon', false);
+      fixture.detectChanges();
+
+      expect(component.showValidationIcon()).toBe(false);
+    });
+
+    it('should display error message with icon', () => {
+      fixture.componentRef.setInput('errorMessage', 'This field is required');
+      fixture.detectChanges();
+
+      const errorElement = fixture.nativeElement.querySelector('.os-form-field__error-message');
+      expect(errorElement).toBeTruthy();
+      expect(errorElement.textContent.trim()).toContain('This field is required');
+    });
+
+    it('should not display hint when error message is present', () => {
+      fixture.componentRef.setInput('hintText', 'This is a hint');
+      fixture.componentRef.setInput('errorMessage', 'This is an error');
+      fixture.detectChanges();
+
+      const hintElement = fixture.nativeElement.querySelector('.os-form-field__hint');
+      expect(hintElement).toBeNull();
+    });
+
+    it('should display hint when no error message', () => {
+      fixture.componentRef.setInput('hintText', 'This is a hint');
+      fixture.detectChanges();
+
+      const hintElement = fixture.nativeElement.querySelector('.os-form-field__hint');
+      expect(hintElement).toBeTruthy();
+      expect(hintElement.textContent.trim()).toBe('This is a hint');
+    });
+  });
+
+  describe('validation states', () => {
+    it('should track touched state', () => {
+      expect(component.isTouched()).toBe(false);
+
+      component.onBlur(new FocusEvent('blur'));
+      expect(component.isTouched()).toBe(true);
+    });
+
+    it('should track dirty state', () => {
+      expect(component.isDirty()).toBe(false);
+
+      component.onValueChange('test');
+      expect(component.isDirty()).toBe(true);
+    });
+
+    it('should emit validation change events', () => {
+      const validationChangeSpy = vi.fn();
+      component.validationChange.subscribe(validationChangeSpy);
+
+      component.onValueChange('test');
+      expect(validationChangeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should have proper ARIA attributes', () => {
+      fixture.componentRef.setInput('label', 'Test Label');
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+
+      const containerElement = fixture.nativeElement.querySelector('.os-form-field');
+      expect(containerElement.getAttribute('role')).toBe('group');
+      expect(containerElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should have proper aria-describedby when hint is present', () => {
+      fixture.componentRef.setInput('hintText', 'This is a hint');
+      fixture.detectChanges();
+
+      const containerElement = fixture.nativeElement.querySelector('.os-form-field');
+      const describedBy = containerElement.getAttribute('aria-describedby');
+      expect(describedBy).toContain('-hint');
+    });
+
+    it('should have proper aria-describedby when error is present', () => {
+      fixture.componentRef.setInput('errorMessage', 'This is an error');
+      fixture.detectChanges();
+
+      const containerElement = fixture.nativeElement.querySelector('.os-form-field');
+      const describedBy = containerElement.getAttribute('aria-describedby');
+      expect(describedBy).toContain('-error');
+    });
+
+    it('should have proper aria-describedby when character count is present', () => {
+      fixture.componentRef.setInput('maxLength', 100);
+      fixture.detectChanges();
+
+      const containerElement = fixture.nativeElement.querySelector('.os-form-field');
+      const describedBy = containerElement.getAttribute('aria-describedby');
+      expect(describedBy).toContain('-count');
+    });
+  });
+
+  describe('reactive forms integration', () => {
+    it('should work with FormControl', () => {
+      const control = new FormControl('', Validators.required);
+      fixture.componentRef.setInput('control', control);
+      fixture.detectChanges();
+
+      expect(component.control()).toBe(control);
+    });
+
+    it('should work with FormControl validation', () => {
+      const control = new FormControl('', Validators.required);
+      fixture.componentRef.setInput('control', control);
+      fixture.detectChanges();
+
+      expect(component.control()).toBe(control);
+      expect(component.hasError()).toBe(false);
+    });
+  });
+
+  describe('computed properties', () => {
+    it('should compute validation icon name correctly', () => {
+      expect(component.validationIconName()).toBe('');
+
+      fixture.componentRef.setInput('value', 'test');
+      fixture.detectChanges();
+      expect(component.validationIconName()).toBe('check_circle');
+
+      fixture.componentRef.setInput('errorMessage', 'Error');
+      fixture.detectChanges();
+      expect(component.validationIconName()).toBe('error');
+    });
+
+    it('should compute validation icon size correctly', () => {
+      fixture.componentRef.setInput('size', 'small');
+      fixture.detectChanges();
+      expect(component.validationIconSize()).toBe('xs');
+
+      fixture.componentRef.setInput('size', 'medium');
+      fixture.detectChanges();
+      expect(component.validationIconSize()).toBe('sm');
+    });
+
+    it('should compute validation icon variant correctly', () => {
+      expect(component.validationIconVariant()).toBe('default');
+
+      fixture.componentRef.setInput('value', 'test');
+      fixture.detectChanges();
+      expect(component.validationIconVariant()).toBe('success');
+
+      fixture.componentRef.setInput('errorMessage', 'Error');
+      fixture.detectChanges();
+      expect(component.validationIconVariant()).toBe('error');
+    });
+
+    it('should compute hint class correctly', () => {
+      fixture.componentRef.setInput('size', 'large');
+      fixture.detectChanges();
+
+      const hintClass = component.hintClass();
+      expect(hintClass).toContain('os-form-field__hint');
+      expect(hintClass).toContain('os-form-field__hint--large');
     });
   });
 });

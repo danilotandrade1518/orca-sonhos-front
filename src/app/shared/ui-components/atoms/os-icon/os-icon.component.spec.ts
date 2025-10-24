@@ -35,7 +35,7 @@ describe('OsIconComponent', () => {
     it('should display custom icon when name not in map', () => {
       fixture.componentRef.setInput('name', 'custom-icon');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('custom-icon');
+      expect(component.iconContent()).toBe('?');
     });
   });
 
@@ -120,12 +120,19 @@ describe('OsIconComponent', () => {
   });
 
   describe('accessibility', () => {
-    it('should have aria-hidden true by default', () => {
+    it('should have aria-hidden true by default for decorative role', () => {
+      expect(component.role()).toBe('decorative');
       expect(component.ariaHidden()).toBe(true);
     });
 
-    it('should have aria-hidden false when set', () => {
-      fixture.componentRef.setInput('ariaHidden', false);
+    it('should have aria-hidden false for informative role', () => {
+      fixture.componentRef.setInput('role', 'informative');
+      fixture.detectChanges();
+      expect(component.ariaHidden()).toBe(false);
+    });
+
+    it('should have aria-hidden false for interactive role', () => {
+      fixture.componentRef.setInput('role', 'interactive');
       fixture.detectChanges();
       expect(component.ariaHidden()).toBe(false);
     });
@@ -148,6 +155,24 @@ describe('OsIconComponent', () => {
       fixture.componentRef.setInput('title', 'Go to home');
       fixture.detectChanges();
       expect(component.title()).toBe('Go to home');
+    });
+
+    it('should have correct role for informative icon', () => {
+      fixture.componentRef.setInput('role', 'informative');
+      fixture.detectChanges();
+      expect(component.iconRole()).toBe('img');
+    });
+
+    it('should have correct role for interactive icon', () => {
+      fixture.componentRef.setInput('role', 'interactive');
+      fixture.detectChanges();
+      expect(component.iconRole()).toBe('button');
+    });
+
+    it('should have null role for decorative icon', () => {
+      fixture.componentRef.setInput('role', 'decorative');
+      fixture.detectChanges();
+      expect(component.iconRole()).toBe(null);
     });
   });
 
@@ -227,11 +252,67 @@ describe('OsIconComponent', () => {
     });
   });
 
+  describe('SVG support', () => {
+    it('should support SVG content', () => {
+      fixture.componentRef.setInput('svgContent', '<svg><circle cx="12" cy="12" r="10"/></svg>');
+      fixture.detectChanges();
+      expect(component.svgContent()).toBe('<svg><circle cx="12" cy="12" r="10"/></svg>');
+    });
+
+    it('should support SVG URL', () => {
+      fixture.componentRef.setInput('svgUrl', '/assets/icons/custom.svg');
+      fixture.detectChanges();
+      expect(component.svgUrl()).toBe('/assets/icons/custom.svg');
+    });
+  });
+
+  describe('fallback functionality', () => {
+    it('should use fallback icon for unsupported icon', () => {
+      fixture.componentRef.setInput('name', 'unsupported-icon');
+      fixture.detectChanges();
+      expect(component.iconContent()).toBe('?');
+    });
+
+    it('should use custom fallback icon', () => {
+      fixture.componentRef.setInput('fallbackIcon', 'error');
+      fixture.componentRef.setInput('name', 'unsupported-icon');
+      fixture.detectChanges();
+      expect(component.iconContent()).toBe('❌');
+    });
+
+    it('should use fallback when name is empty', () => {
+      fixture.componentRef.setInput('name', '');
+      fixture.detectChanges();
+      expect(component.iconContent()).toBe('help');
+    });
+  });
+
+  describe('role-based functionality', () => {
+    it('should apply decorative role class', () => {
+      fixture.componentRef.setInput('role', 'decorative');
+      fixture.detectChanges();
+      expect(component.iconClass()).toContain('os-icon--decorative');
+    });
+
+    it('should apply informative role class', () => {
+      fixture.componentRef.setInput('role', 'informative');
+      fixture.detectChanges();
+      expect(component.iconClass()).toContain('os-icon--informative');
+    });
+
+    it('should apply interactive role class', () => {
+      fixture.componentRef.setInput('role', 'interactive');
+      fixture.detectChanges();
+      expect(component.iconClass()).toContain('os-icon--interactive');
+    });
+  });
+
   describe('component integration', () => {
     it('should handle multiple input changes', () => {
       fixture.componentRef.setInput('name', 'home');
       fixture.componentRef.setInput('size', 'lg');
       fixture.componentRef.setInput('variant', 'primary');
+      fixture.componentRef.setInput('role', 'interactive');
       fixture.componentRef.setInput('spin', true);
       fixture.componentRef.setInput('ariaLabel', 'Home icon');
       fixture.detectChanges();
@@ -239,10 +320,12 @@ describe('OsIconComponent', () => {
       expect(component.name()).toBe('home');
       expect(component.size()).toBe('lg');
       expect(component.variant()).toBe('primary');
+      expect(component.role()).toBe('interactive');
       expect(component.spin()).toBe(true);
       expect(component.ariaLabel()).toBe('Home icon');
       expect(component.iconClass()).toContain('os-icon--lg');
       expect(component.iconClass()).toContain('os-icon--primary');
+      expect(component.iconClass()).toContain('os-icon--interactive');
       expect(component.iconClass()).toContain('os-icon--spin');
     });
 
@@ -250,11 +333,13 @@ describe('OsIconComponent', () => {
       expect(component.name()).toBe('');
       expect(component.size()).toBe('md');
       expect(component.variant()).toBe('default');
+      expect(component.role()).toBe('decorative');
       expect(component.ariaHidden()).toBe(true);
       expect(component.ariaLabel()).toBe('');
       expect(component.title()).toBe('');
       expect(component.spin()).toBe(false);
       expect(component.pulse()).toBe(false);
+      expect(component.fallbackIcon()).toBe('help');
     });
   });
 });

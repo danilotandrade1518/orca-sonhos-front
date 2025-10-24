@@ -235,6 +235,10 @@ describe('OsModalComponent', () => {
 
   describe('Event Handlers', () => {
     it('should emit closed event when onClose is called', () => {
+      // Configurar para não usar animação para que o evento seja emitido imediatamente
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+
       const emitSpy = vi.spyOn(component.closed, 'emit');
       component.onClose();
       expect(emitSpy).toHaveBeenCalled();
@@ -422,6 +426,10 @@ describe('OsModalComponent', () => {
 
   describe('Integration with MatDialog', () => {
     it('should call dialogRef.close when onClose is called', () => {
+      // Configurar para não usar animação para que o evento seja emitido imediatamente
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+
       const dialogRef = TestBed.inject(MatDialogRef);
       component.onClose();
       expect(dialogRef.close).toHaveBeenCalled();

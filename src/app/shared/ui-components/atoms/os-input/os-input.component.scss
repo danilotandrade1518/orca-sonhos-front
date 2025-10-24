@@ -1,3 +1,6 @@
+// OS-INPUT - Layout Specification Implementation
+// Seguindo especificação detalhada para alinhamento com visão de produto
+
 .os-input-container {
   display: flex;
   flex-direction: column;
@@ -13,9 +16,14 @@
   }
 
   &--error {
-    .os-input {
-      border-color: var(--os-color-error);
-      box-shadow: 0 0 0 1px var(--os-color-error);
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-outline {
+        color: var(--os-color-error-500);
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background-color: var(--os-color-error-50);
+      }
     }
   }
 
@@ -25,210 +33,305 @@
   }
 }
 
-.os-input__label {
-  font-size: var(--os-font-size-sm);
-  font-weight: var(--os-font-weight-medium);
-  color: var(--os-color-on-surface);
-  margin-bottom: var(--os-spacing-xs);
-
-  &--required {
-    .os-input__required {
-      color: var(--os-color-error);
-      margin-left: var(--os-spacing-xs);
-    }
-  }
-}
-
-.os-input__wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
+.os-input__form-field {
   width: 100%;
 
-  &--with-prefix {
-    .os-input {
-      padding-left: calc(var(--os-spacing-lg) + var(--os-spacing-sm));
+  // Override Material Design styles to prevent conflicts
+  .mat-mdc-form-field {
+    font-family: var(--os-font-family-primary);
+
+    // Remove default Material focus styles
+    .mat-mdc-form-field-focus-overlay {
+      opacity: 0 !important;
+    }
+
+    // Custom outline styles
+    .mat-mdc-form-field-outline {
+      color: var(--os-color-neutral-300);
+      transition: color 200ms ease-in-out;
+    }
+
+    // Focus state
+    &.mat-focused .mat-mdc-form-field-outline {
+      color: var(--os-color-primary-500);
+    }
+
+    // Error state
+    &.mat-form-field-invalid .mat-mdc-form-field-outline {
+      color: var(--os-color-error-500);
+    }
+
+    // Input styles
+    .mat-mdc-input-element {
+      font-family: var(--os-font-family-primary);
+      color: var(--os-color-text-primary);
+
+      &::placeholder {
+        color: var(--os-color-neutral-500);
+        opacity: 1;
+      }
+    }
+
+    // Label styles
+    .mat-mdc-form-field-label {
+      color: var(--os-color-text-secondary);
+      font-family: var(--os-font-family-primary);
+    }
+
+    // Hint styles
+    .mat-mdc-form-field-hint {
+      color: var(--os-color-text-muted);
+      font-family: var(--os-font-family-primary);
     }
   }
-
-  &--with-suffix {
-    .os-input {
-      padding-right: calc(var(--os-spacing-lg) + var(--os-spacing-sm));
-    }
-  }
-
-  &--clearable {
-    .os-input {
-      padding-right: calc(var(--os-spacing-lg) + var(--os-spacing-sm));
-    }
-  }
-}
-
-.os-input {
-  width: 100%;
-  border: var(--os-border-width-thin) solid var(--os-color-neutral-300);
-  border-radius: var(--os-border-radius-md);
-  background-color: var(--os-color-surface);
-  color: var(--os-color-on-surface);
-  font-family: var(--os-font-family-primary);
-  transition: all var(--os-transition-fast) ease-in-out;
-  outline: none;
 
   &--small {
-    padding: var(--os-spacing-xs) var(--os-spacing-sm);
-    font-size: var(--os-font-size-sm);
-    min-height: 32px;
+    .mat-mdc-form-field {
+      font-size: var(--os-font-size-sm);
+
+      .mat-mdc-input-element {
+        font-size: var(--os-font-size-sm);
+        padding: 8px 12px;
+        min-height: 32px;
+      }
+    }
   }
 
   &--medium {
-    padding: var(--os-spacing-sm) var(--os-spacing-md);
-    font-size: var(--os-font-size-base);
-    min-height: 40px;
+    .mat-mdc-form-field {
+      font-size: var(--os-font-size-base);
+
+      .mat-mdc-input-element {
+        font-size: var(--os-font-size-base);
+        padding: 12px 16px;
+        min-height: 40px;
+      }
+    }
   }
 
   &--large {
-    padding: var(--os-spacing-md) var(--os-spacing-lg);
-    font-size: var(--os-font-size-lg);
-    min-height: 48px;
+    .mat-mdc-form-field {
+      font-size: var(--os-font-size-lg);
+
+      .mat-mdc-input-element {
+        font-size: var(--os-font-size-lg);
+        padding: 16px 20px;
+        min-height: 48px;
+      }
+    }
   }
 
   &--error {
-    border-color: var(--os-color-error);
-    box-shadow: 0 0 0 1px var(--os-color-error);
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-outline {
+        color: var(--os-color-error-500);
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background-color: var(--os-color-error-50);
+        opacity: 0.1 !important;
+      }
+    }
   }
 
   &--disabled {
-    background-color: var(--os-color-neutral-100);
+    .mat-mdc-form-field {
+      opacity: 0.6;
+
+      .mat-mdc-input-element {
+        color: var(--os-color-neutral-500);
+      }
+    }
+  }
+}
+
+// Removed .os-input styles as they conflict with Material Design Form Field
+// All input styling is now handled through .os-input__form-field
+
+// Icon styles are now handled by Material Design mat-icon
+// Custom styling for icons within Material Form Field
+.os-input__form-field {
+  .mat-mdc-form-field-icon-prefix,
+  .mat-mdc-form-field-icon-suffix {
     color: var(--os-color-neutral-500);
-    cursor: not-allowed;
+    transition: color 200ms ease-in-out;
   }
 
-  &--readonly {
-    background-color: var(--os-color-neutral-50);
-    cursor: default;
-  }
-
-  &:focus {
-    border-color: var(--os-color-primary-500);
-    box-shadow: 0 0 0 2px var(--os-color-primary-100);
-  }
-
-  &::placeholder {
-    color: var(--os-color-neutral-500);
-    opacity: 1;
-  }
-
-  &:disabled::placeholder {
-    color: var(--os-color-neutral-400);
-  }
-}
-
-.os-input__prefix-icon,
-.os-input__suffix-icon {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--os-color-neutral-500);
-  font-size: var(--os-font-size-lg);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.os-input__prefix-icon {
-  left: var(--os-spacing-sm);
-}
-
-.os-input__suffix-icon {
-  right: var(--os-spacing-sm);
-}
-
-.os-input__clear {
-  position: absolute;
-  right: var(--os-spacing-sm);
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--os-color-neutral-500);
-  cursor: pointer;
-  font-size: var(--os-font-size-lg);
-  line-height: 1;
-  padding: var(--os-spacing-xs);
-  border-radius: var(--os-border-radius-sm);
-  transition: all var(--os-transition-fast) ease-in-out;
-  z-index: 2;
-
-  &:hover {
-    background-color: var(--os-color-neutral-100);
+  // Hover state for icons
+  &:hover .mat-mdc-form-field-icon-prefix,
+  &:hover .mat-mdc-form-field-icon-suffix {
     color: var(--os-color-neutral-700);
   }
 
-  &:focus {
-    outline: 2px solid var(--os-color-primary-500);
-    outline-offset: 2px;
+  // Focus state for icons
+  &.mat-focused .mat-mdc-form-field-icon-prefix,
+  &.mat-focused .mat-mdc-form-field-icon-suffix {
+    color: var(--os-color-primary-500);
   }
 }
 
-.os-input__helper {
-  font-size: var(--os-font-size-sm);
-  color: var(--os-color-neutral-600);
-  margin-top: var(--os-spacing-xs);
+// Clear button styles are now handled by Material Design mat-icon-button
+// Custom styling for clear button within Material Form Field
+.os-input__form-field {
+  .mat-mdc-icon-button {
+    color: var(--os-color-neutral-500);
+    transition: all 200ms ease-in-out;
+    min-width: 44px;
+    min-height: 44px;
 
-  &--error {
-    color: var(--os-color-error);
-  }
-}
-
-@media (max-width: 768px) {
-  .os-input {
-    &--small {
-      min-height: 36px;
-    }
-
-    &--medium {
-      min-height: 44px;
-    }
-
-    &--large {
-      min-height: 52px;
-    }
-  }
-}
-
-[data-theme='dark'] {
-  .os-input {
-    background-color: var(--os-color-surface);
-    border-color: var(--os-color-neutral-600);
-    color: var(--os-color-on-surface);
-
-    &::placeholder {
-      color: var(--os-color-neutral-400);
+    &:hover {
+      background-color: var(--os-color-neutral-100);
+      color: var(--os-color-neutral-700);
     }
 
     &:focus {
-      border-color: var(--os-color-primary-400);
-      box-shadow: 0 0 0 2px var(--os-color-primary-900);
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
     }
 
-    &--disabled {
-      background-color: var(--os-color-neutral-800);
-      color: var(--os-color-neutral-500);
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+// Helper text styles are now handled by Material Design mat-hint
+// Custom styling for helper text within Material Form Field
+.os-input__form-field {
+  .mat-mdc-form-field-hint {
+    font-size: var(--os-font-size-sm);
+    color: var(--os-color-neutral-600);
+    line-height: 1.5;
+    font-family: var(--os-font-family-primary);
+
+    &.mat-mdc-form-field-hint-error {
+      color: var(--os-color-error-500);
+      font-weight: var(--os-font-weight-medium);
+    }
+  }
+}
+
+// Responsividade Mobile-First
+@media (max-width: 575px) {
+  .os-input__form-field {
+    .mat-mdc-form-field {
+      .mat-mdc-input-element {
+        min-height: 44px;
+        padding: 12px 16px;
+      }
     }
 
-    &--readonly {
-      background-color: var(--os-color-neutral-800);
+    &--small .mat-mdc-form-field .mat-mdc-input-element {
+      min-height: 44px;
+      padding: 12px 16px;
+    }
+
+    &--medium .mat-mdc-form-field .mat-mdc-input-element {
+      min-height: 44px;
+      padding: 12px 16px;
+    }
+
+    &--large .mat-mdc-form-field .mat-mdc-input-element {
+      min-height: 48px;
+      padding: 14px 18px;
     }
   }
 
-  .os-input__label {
-    color: var(--os-color-on-surface);
+  .mat-mdc-icon-button {
+    min-width: 44px;
+    min-height: 44px;
   }
+}
 
-  .os-input__helper {
-    color: var(--os-color-neutral-400);
+// Hover states are now handled by Material Design Form Field
+// No additional hover styles needed for tablet and desktop
 
-    &--error {
-      color: var(--os-color-error);
+// Dark Mode Support
+[data-theme='dark'] {
+  .os-input__form-field {
+    .mat-mdc-form-field {
+      .mat-mdc-input-element {
+        background-color: var(--os-color-surface);
+        color: var(--os-color-on-surface);
+
+        &::placeholder {
+          color: var(--os-color-neutral-400);
+        }
+      }
+
+      .mat-mdc-form-field-outline {
+        color: var(--os-color-neutral-600);
+      }
+
+      &.mat-focused .mat-mdc-form-field-outline {
+        color: var(--os-color-primary-400);
+      }
+
+      &.mat-form-field-invalid .mat-mdc-form-field-outline {
+        color: var(--os-color-error-500);
+      }
+
+      .mat-mdc-form-field-label {
+        color: var(--os-color-neutral-400);
+      }
+
+      .mat-mdc-form-field-hint {
+        color: var(--os-color-neutral-400);
+
+        &.mat-mdc-form-field-hint-error {
+          color: var(--os-color-error-400);
+        }
+      }
+    }
+
+    .mat-mdc-form-field-icon-prefix,
+    .mat-mdc-form-field-icon-suffix {
+      color: var(--os-color-neutral-400);
+    }
+
+    .mat-mdc-icon-button {
+      color: var(--os-color-neutral-400);
+
+      &:hover {
+        background-color: var(--os-color-neutral-700);
+        color: var(--os-color-neutral-200);
+      }
+    }
+  }
+}
+
+// High Contrast Mode Support
+@media (prefers-contrast: high) {
+  .os-input__form-field {
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-outline {
+        border-width: 2px;
+      }
+
+      &.mat-focused .mat-mdc-form-field-outline {
+        border-width: 3px;
+      }
+    }
+
+    .mat-mdc-icon-button {
+      border: 1px solid currentColor;
+    }
+  }
+}
+
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  .os-input__form-field {
+    .mat-mdc-form-field,
+    .mat-mdc-input-element,
+    .mat-mdc-form-field-icon-prefix,
+    .mat-mdc-form-field-icon-suffix,
+    .mat-mdc-icon-button {
+      transition: none;
+    }
+
+    .mat-mdc-icon-button:active {
+      transform: none;
     }
   }
 }

@@ -115,6 +115,26 @@ const meta: Meta<OsDataGridComponent> = {
       control: { type: 'date' },
       description: 'Data da última atualização',
     },
+    useVirtualScrolling: {
+      control: { type: 'boolean' },
+      description: 'Usar virtual scrolling para grandes datasets',
+    },
+    virtualScrollThreshold: {
+      control: { type: 'number' },
+      description: 'Limite de itens para ativar virtual scrolling',
+    },
+    virtualScrollItemSize: {
+      control: { type: 'number' },
+      description: 'Altura de cada item no virtual scrolling',
+    },
+    virtualScrollMinBuffer: {
+      control: { type: 'number' },
+      description: 'Buffer mínimo do virtual scrolling',
+    },
+    virtualScrollMaxBuffer: {
+      control: { type: 'number' },
+      description: 'Buffer máximo do virtual scrolling',
+    },
   },
   tags: ['autodocs'],
 };
@@ -693,6 +713,110 @@ export const EmptyState: Story = {
   },
 };
 
+export const VirtualScrolling: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Com Virtual Scrolling (Grande Dataset)</h4>
+          <os-data-grid
+            [data]="largeDataset"
+            [columns]="sampleColumns"
+            [tableActions]="sampleTableActions"
+            title="Usuários"
+            subtitle="Dataset grande com virtual scrolling"
+            [useVirtualScrolling]="true"
+            [virtualScrollThreshold]="50"
+            [virtualScrollItemSize]="48"
+            [virtualScrollMinBuffer]="200"
+            [virtualScrollMaxBuffer]="400"
+            [showPagination]="false"
+          ></os-data-grid>
+        </div>
+
+        <div>
+          <h4>Sem Virtual Scrolling (Dataset Pequeno)</h4>
+          <os-data-grid
+            [data]="sampleData"
+            [columns]="sampleColumns"
+            [tableActions]="sampleTableActions"
+            title="Usuários"
+            subtitle="Dataset pequeno sem virtual scrolling"
+            [useVirtualScrolling]="false"
+            [showPagination]="true"
+          ></os-data-grid>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleData,
+      sampleColumns,
+      sampleTableActions,
+      largeDataset: Array.from({ length: 1000 }, (_, i) => ({
+        id: i + 1,
+        name: `Usuário ${i + 1}`,
+        email: `usuario${i + 1}@email.com`,
+        status: ['Ativo', 'Inativo', 'Pendente'][i % 3],
+        role: ['Admin', 'User', 'Moderator'][i % 3],
+        createdAt: new Date(2024, 0, 1 + (i % 30)).toISOString().split('T')[0],
+      })),
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Grid com virtual scrolling para grandes datasets e sem virtual scrolling para datasets pequenos.',
+      },
+    },
+  },
+};
+
+export const Responsive: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Layout Responsivo</h4>
+          <p>Redimensione a janela para ver o comportamento responsivo do grid.</p>
+          <os-data-grid
+            [data]="sampleData"
+            [columns]="sampleColumns"
+            [filterOptions]="sampleFilterOptions"
+            [tableActions]="sampleTableActions"
+            title="Usuários"
+            subtitle="Layout adaptativo para diferentes tamanhos de tela"
+            [showHeaderActions]="true"
+            [showRefreshButton]="true"
+            [showExportButton]="true"
+            [showAddButton]="true"
+            addButtonText="Adicionar Usuário"
+            [showFilters]="true"
+            [showPagination]="true"
+            [showFooter]="true"
+            [showItemCount]="true"
+            [showLastUpdated]="true"
+          ></os-data-grid>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleData,
+      sampleColumns,
+      sampleFilterOptions,
+      sampleTableActions,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Grid responsivo que se adapta a diferentes tamanhos de tela, otimizado para mobile.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     data: sampleData,
@@ -720,6 +844,11 @@ export const Interactive: Story = {
     showFirstLastButtons: true,
     isLoading: false,
     lastUpdated: new Date(),
+    useVirtualScrolling: false,
+    virtualScrollThreshold: 100,
+    virtualScrollItemSize: 48,
+    virtualScrollMinBuffer: 200,
+    virtualScrollMaxBuffer: 400,
   },
   render: (args) => ({
     props: args,
@@ -750,6 +879,11 @@ export const Interactive: Story = {
         [showFirstLastButtons]="showFirstLastButtons"
         [isLoading]="isLoading"
         [lastUpdated]="lastUpdated"
+        [useVirtualScrolling]="useVirtualScrolling"
+        [virtualScrollThreshold]="virtualScrollThreshold"
+        [virtualScrollItemSize]="virtualScrollItemSize"
+        [virtualScrollMinBuffer]="virtualScrollMinBuffer"
+        [virtualScrollMaxBuffer]="virtualScrollMaxBuffer"
         (rowClick)="rowClick($event)"
         (tableActionClick)="tableActionClick($event)"
         (refresh)="refresh()"
@@ -764,7 +898,8 @@ export const Interactive: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Grid interativo com controles para testar todas as propriedades.',
+        story:
+          'Grid interativo com controles para testar todas as propriedades, incluindo virtual scrolling e responsividade.',
       },
     },
   },

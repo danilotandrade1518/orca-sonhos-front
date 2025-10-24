@@ -48,6 +48,22 @@ const meta: Meta<OsGoalTrackerComponent> = {
       control: { type: 'boolean' },
       description: 'Mostrar status da meta',
     },
+    showQuickActions: {
+      control: { type: 'boolean' },
+      description: 'Mostrar ações rápidas',
+    },
+    showFilters: {
+      control: { type: 'boolean' },
+      description: 'Mostrar filtros por status e prioridade',
+    },
+    showPriority: {
+      control: { type: 'boolean' },
+      description: 'Mostrar indicador visual de prioridade',
+    },
+    enableHapticFeedback: {
+      control: { type: 'boolean' },
+      description: 'Habilitar feedback háptico em dispositivos móveis',
+    },
     loading: {
       control: { type: 'boolean' },
       description: 'Estado de carregamento',
@@ -178,6 +194,10 @@ export const Default: Story = {
     showHistory: true,
     showContribution: true,
     showStatus: true,
+    showQuickActions: true,
+    showFilters: true,
+    showPriority: true,
+    enableHapticFeedback: true,
     loading: false,
     clickable: false,
     ariaLabel: null,
@@ -583,6 +603,201 @@ export const DifferentPriorities: Story = {
   },
 };
 
+export const QuickActions: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Meta Ativa - Ações Disponíveis</h4>
+          <os-goal-tracker
+            [goalData]="sampleGoalData"
+            [showQuickActions]="true"
+            (actionClick)="onActionClick($event)"
+          ></os-goal-tracker>
+        </div>
+
+        <div>
+          <h4>Meta Pausada - Ações Disponíveis</h4>
+          <os-goal-tracker
+            [goalData]="pausedGoalData"
+            [showQuickActions]="true"
+            (actionClick)="onActionClick($event)"
+          ></os-goal-tracker>
+        </div>
+
+        <div>
+          <h4>Meta Concluída - Ações Limitadas</h4>
+          <os-goal-tracker
+            [goalData]="completedGoalData"
+            [showQuickActions]="true"
+            (actionClick)="onActionClick($event)"
+          ></os-goal-tracker>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleGoalData,
+      pausedGoalData,
+      completedGoalData,
+      onActionClick: (event: { action: string; goal: GoalTrackerData }) =>
+        console.log('Action clicked:', event),
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Ações rápidas disponíveis para diferentes status de metas.',
+      },
+    },
+  },
+};
+
+export const PriorityVisualization: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Alta Prioridade - Urgente</h4>
+          <os-goal-tracker
+            [goalData]="{
+              id: '1',
+              title: 'Meta Urgente - Alta Prioridade',
+              targetAmount: 10000,
+              currentAmount: 2000,
+              currency: 'BRL',
+              deadline: new Date('2024-02-15'),
+              startDate: new Date('2024-01-01'),
+              lastUpdated: new Date('2024-01-20'),
+              status: 'active',
+              priority: 'high',
+              category: 'Urgente',
+              monthlyContribution: 1000,
+              progressHistory: []
+            }"
+            [showPriority]="true"
+          ></os-goal-tracker>
+        </div>
+
+        <div>
+          <h4>Média Prioridade</h4>
+          <os-goal-tracker
+            [goalData]="{
+              id: '2',
+              title: 'Meta Média Prioridade',
+              targetAmount: 5000,
+              currentAmount: 2000,
+              currency: 'BRL',
+              deadline: new Date('2024-12-31'),
+              startDate: new Date('2024-01-01'),
+              lastUpdated: new Date('2024-01-20'),
+              status: 'active',
+              priority: 'medium',
+              category: 'Normal',
+              monthlyContribution: 500,
+              progressHistory: []
+            }"
+            [showPriority]="true"
+          ></os-goal-tracker>
+        </div>
+
+        <div>
+          <h4>Baixa Prioridade</h4>
+          <os-goal-tracker
+            [goalData]="{
+              id: '3',
+              title: 'Meta Baixa Prioridade',
+              targetAmount: 2000,
+              currentAmount: 500,
+              currency: 'BRL',
+              deadline: new Date('2025-12-31'),
+              startDate: new Date('2024-01-01'),
+              lastUpdated: new Date('2024-01-20'),
+              status: 'active',
+              priority: 'low',
+              category: 'Baixa',
+              monthlyContribution: 200,
+              progressHistory: []
+            }"
+            [showPriority]="true"
+          ></os-goal-tracker>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Visualização de prioridades com indicadores visuais e badges de urgência.',
+      },
+    },
+  },
+};
+
+export const Filters: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4>Com Filtros Ativos</h4>
+          <os-goal-tracker
+            [goalData]="sampleGoalData"
+            [showFilters]="true"
+            (filterChange)="onFilterChange($event)"
+          ></os-goal-tracker>
+        </div>
+
+        <div>
+          <h4>Sem Filtros</h4>
+          <os-goal-tracker
+            [goalData]="sampleGoalData"
+            [showFilters]="false"
+          ></os-goal-tracker>
+        </div>
+      </div>
+    `,
+    props: {
+      sampleGoalData,
+      onFilterChange: (event: { status: string; priority: string }) =>
+        console.log('Filter changed:', event),
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Filtros por status e prioridade para organizar metas.',
+      },
+    },
+  },
+};
+
+export const MobileOptimized: Story = {
+  render: () => ({
+    template: `
+      <div style="max-width: 375px; margin: 0 auto;">
+        <h4>Otimizado para Mobile</h4>
+        <os-goal-tracker
+          [goalData]="sampleGoalData"
+          [showQuickActions]="true"
+          [showFilters]="true"
+          [showPriority]="true"
+          [enableHapticFeedback]="true"
+          size="small"
+        ></os-goal-tracker>
+      </div>
+    `,
+    props: {
+      sampleGoalData,
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Versão otimizada para dispositivos móveis com touch targets adequados.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     goalData: sampleGoalData,
@@ -593,6 +808,10 @@ export const Interactive: Story = {
     showHistory: true,
     showContribution: true,
     showStatus: true,
+    showQuickActions: true,
+    showFilters: true,
+    showPriority: true,
+    enableHapticFeedback: true,
     loading: false,
     clickable: false,
     ariaLabel: null,
@@ -609,19 +828,26 @@ export const Interactive: Story = {
         [showHistory]="showHistory"
         [showContribution]="showContribution"
         [showStatus]="showStatus"
+        [showQuickActions]="showQuickActions"
+        [showFilters]="showFilters"
+        [showPriority]="showPriority"
+        [enableHapticFeedback]="enableHapticFeedback"
         [loading]="loading"
         [clickable]="clickable"
         [ariaLabel]="ariaLabel"
         (goalClick)="goalClick($event)"
         (refreshClick)="refreshClick()"
         (actionClick)="actionClick($event)"
+        (filterChange)="filterChange($event)"
+        (priorityChange)="priorityChange($event)"
       ></os-goal-tracker>
     `,
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Rastreador de metas interativo com controles para testar todas as propriedades.',
+        story:
+          'Rastreador de metas interativo com controles para testar todas as propriedades refinadas.',
       },
     },
   },

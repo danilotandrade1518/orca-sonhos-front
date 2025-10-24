@@ -2,6 +2,7 @@
 
 .os-progress-bar {
   width: 100%;
+  position: relative;
 
   &__label {
     display: flex;
@@ -22,6 +23,11 @@
     color: var(--os-color-text-secondary);
   }
 
+  &__container {
+    position: relative;
+    width: 100%;
+  }
+
   &__material {
     width: 100%;
     border-radius: var(--os-border-radius-full);
@@ -29,36 +35,30 @@
     &--small {
       height: 4px;
     }
-
     &--medium {
       height: 6px;
     }
-
     &--large {
       height: 8px;
     }
 
-    &--striped {
-      ::ng-deep .mat-progress-bar-fill::after {
-        background-image: linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.15) 25%,
-          transparent 25%,
-          transparent 50%,
-          rgba(255, 255, 255, 0.15) 50%,
-          rgba(255, 255, 255, 0.15) 75%,
-          transparent 75%,
-          transparent
-        );
-        background-size: 1rem 1rem;
-        animation: progress-bar-stripes 1s linear infinite;
-      }
+    &--striped ::ng-deep .mat-progress-bar-fill::after {
+      background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 1rem 1rem;
+      animation: progress-bar-stripes 1s linear infinite;
     }
 
-    &--animated {
-      ::ng-deep .mat-progress-bar-fill::after {
-        animation: progress-bar-pulse 2s ease-in-out infinite;
-      }
+    &--animated ::ng-deep .mat-progress-bar-fill::after {
+      animation: progress-bar-pulse 2s ease-in-out infinite;
     }
   }
 
@@ -69,12 +69,19 @@
     color: var(--os-color-text-secondary);
   }
 
+  &__celebration {
+    margin-top: var(--os-spacing-xs);
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-success);
+    text-align: center;
+  }
+
   &--small {
     .os-progress-bar__text,
     .os-progress-bar__percentage {
       font-size: var(--os-font-size-xs);
     }
-
     .os-progress-bar__hint {
       font-size: var(--os-font-size-xs);
     }
@@ -85,7 +92,6 @@
     .os-progress-bar__percentage {
       font-size: var(--os-font-size-sm);
     }
-
     .os-progress-bar__hint {
       font-size: var(--os-font-size-sm);
     }
@@ -96,7 +102,6 @@
     .os-progress-bar__percentage {
       font-size: var(--os-font-size-base);
     }
-
     .os-progress-bar__hint {
       font-size: var(--os-font-size-base);
     }

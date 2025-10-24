@@ -8,7 +8,7 @@ const meta: Meta<OsSpinnerComponent> = {
     docs: {
       description: {
         component:
-          'Spinner do Design System Orca Sonhos com 3 variantes, 3 tamanhos e animações suaves.',
+          'Spinner do Design System Orca Sonhos com variantes semânticas, tamanhos responsivos, acessibilidade WCAG 2.1 AA e suporte a overlay para loading de página.',
       },
     },
   },
@@ -23,6 +23,16 @@ const meta: Meta<OsSpinnerComponent> = {
       options: ['xs', 'sm', 'md', 'lg', 'xl'],
       description: 'Tamanho do spinner',
     },
+    type: {
+      control: { type: 'select' },
+      options: ['default', 'overlay'],
+      description: 'Tipo do spinner (default ou overlay para página)',
+    },
+    role: {
+      control: { type: 'select' },
+      options: ['status', 'progressbar', 'presentation'],
+      description: 'Role de acessibilidade',
+    },
     ariaLabel: {
       control: { type: 'text' },
       description: 'Label de acessibilidade',
@@ -30,6 +40,18 @@ const meta: Meta<OsSpinnerComponent> = {
     ariaHidden: {
       control: { type: 'boolean' },
       description: 'Ocultar do leitor de tela',
+    },
+    animated: {
+      control: { type: 'boolean' },
+      description: 'Ativar animações',
+    },
+    fadeIn: {
+      control: { type: 'boolean' },
+      description: 'Ativar fade in',
+    },
+    fadeOut: {
+      control: { type: 'boolean' },
+      description: 'Ativar fade out',
     },
   },
   tags: ['autodocs'],
@@ -42,13 +64,18 @@ export const Default: Story = {
   args: {
     variant: 'default',
     size: 'md',
+    type: 'default',
+    role: 'status',
     ariaLabel: 'Loading',
     ariaHidden: false,
+    animated: true,
+    fadeIn: true,
+    fadeOut: true,
   },
   render: (args) => ({
     props: args,
     template:
-      '<os-spinner [variant]="variant" [size]="size" [ariaLabel]="ariaLabel" [ariaHidden]="ariaHidden"></os-spinner>',
+      '<os-spinner [variant]="variant" [size]="size" [type]="type" [role]="role" [ariaLabel]="ariaLabel" [ariaHidden]="ariaHidden" [animated]="animated" [fadeIn]="fadeIn" [fadeOut]="fadeOut"></os-spinner>',
   }),
 };
 
@@ -208,17 +235,152 @@ export const InButtons: Story = {
   },
 };
 
+export const OverlayType: Story = {
+  args: {
+    variant: 'primary',
+    size: 'lg',
+    type: 'overlay',
+    role: 'status',
+    ariaLabel: 'Loading page',
+    animated: true,
+    fadeIn: true,
+    fadeOut: true,
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="position: relative; height: 200px; background: #f5f5f5; border: 1px solid #ddd;">
+        <p style="padding: 20px;">Conteúdo da página</p>
+        <os-spinner
+          [variant]="variant"
+          [size]="size"
+          [type]="type"
+          [role]="role"
+          [ariaLabel]="ariaLabel"
+          [animated]="animated"
+          [fadeIn]="fadeIn"
+          [fadeOut]="fadeOut">
+        </os-spinner>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Spinner tipo overlay para loading de página completa.',
+      },
+    },
+  },
+};
+
+export const AccessibilityRoles: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner role="status" ariaLabel="Loading data" size="sm"></os-spinner>
+          <span>Status role - anuncia mudanças</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner role="progressbar" ariaLabel="Progress: 50%" size="sm"></os-spinner>
+          <span>Progressbar role - indica progresso</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner role="presentation" ariaHidden="true" size="sm"></os-spinner>
+          <span>Presentation role - decorativo</span>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Diferentes roles de acessibilidade para diferentes contextos de uso.',
+      },
+    },
+  },
+};
+
+export const AnimationStates: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner animated="true" fadeIn="true" size="md"></os-spinner>
+          <span>Com animações (padrão)</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner animated="false" fadeIn="false" fadeOut="false" size="md"></os-spinner>
+          <span>Sem animações</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <os-spinner animated="true" fadeIn="false" fadeOut="true" size="md"></os-spinner>
+          <span>Apenas fade out</span>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Diferentes estados de animação do spinner.',
+      },
+    },
+  },
+};
+
+export const ResponsiveSizes: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <os-spinner size="xs"></os-spinner>
+          <span>XS (16px)</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <os-spinner size="sm"></os-spinner>
+          <span>SM (20px)</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <os-spinner size="md"></os-spinner>
+          <span>MD (24px) - Padrão</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <os-spinner size="lg"></os-spinner>
+          <span>LG (32px)</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <os-spinner size="xl"></os-spinner>
+          <span>XL (40px)</span>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Todos os tamanhos responsivos disponíveis com touch targets >= 44px em mobile.',
+      },
+    },
+  },
+};
+
 export const Interactive: Story = {
   args: {
     variant: 'default',
     size: 'md',
+    type: 'default',
+    role: 'status',
     ariaLabel: 'Loading',
     ariaHidden: false,
+    animated: true,
+    fadeIn: true,
+    fadeOut: true,
   },
   render: (args) => ({
     props: args,
     template:
-      '<os-spinner [variant]="variant" [size]="size" [ariaLabel]="ariaLabel" [ariaHidden]="ariaHidden"></os-spinner>',
+      '<os-spinner [variant]="variant" [size]="size" [type]="type" [role]="role" [ariaLabel]="ariaLabel" [ariaHidden]="ariaHidden" [animated]="animated" [fadeIn]="fadeIn" [fadeOut]="fadeOut"></os-spinner>',
   }),
   parameters: {
     docs: {

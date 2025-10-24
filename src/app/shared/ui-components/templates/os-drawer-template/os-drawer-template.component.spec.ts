@@ -45,8 +45,8 @@ describe('OsDrawerTemplateComponent', () => {
     const subtitle = fixture.debugElement.query(By.css('.os-drawer-template__subtitle'));
 
     expect(header).toBeTruthy();
-    expect(title.nativeElement.textContent).toBe('Test Drawer');
-    expect(subtitle.nativeElement.textContent).toBe('Test subtitle');
+    expect(title.nativeElement.textContent.trim()).toBe('Test Drawer');
+    expect(subtitle.nativeElement.textContent.trim()).toBe('Test subtitle');
   });
 
   it('should render close button when showCloseButton is true', () => {

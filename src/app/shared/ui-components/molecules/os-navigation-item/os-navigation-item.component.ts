@@ -5,13 +5,20 @@ import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type OsNavigationItemSize = 'small' | 'medium' | 'large';
 export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'accent';
+export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
 
 @Component({
   selector: 'os-navigation-item',
   standalone: true,
   imports: [CommonModule, RouterModule, OsIconComponent],
   template: `
-    <div [class]="containerClass()" [attr.data-variant]="variant()" [attr.data-size]="size()">
+    <div
+      [class]="containerClass()"
+      [attr.data-variant]="variant()"
+      [attr.data-size]="size()"
+      [attr.role]="role()"
+      [attr.aria-describedby]="ariaDescribedBy()"
+    >
       @if (routerLink()) {
       <a
         [routerLink]="routerLink()!"
@@ -19,17 +26,33 @@ export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'acc
         [fragment]="fragment()"
         [class]="linkClass()"
         [attr.aria-current]="isActive() ? 'page' : null"
-        [attr.aria-label]="ariaLabel()"
+        [attr.aria-label]="effectiveAriaLabel()"
+        [attr.aria-expanded]="hasSubNav() ? isExpanded() : null"
+        [attr.tabindex]="disabled() ? -1 : 0"
         (click)="handleClick($event)"
+        (keydown.enter)="handleKeyDown($any($event))"
+        (keydown.space)="handleKeyDown($any($event))"
       >
         @if (icon()) {
-        <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
+        <os-icon
+          [name]="icon()"
+          [size]="getIconSize()"
+          [variant]="getIconVariant()"
+          [attr.aria-hidden]="true"
+        />
         }
         <span [class]="textClass()">
           <ng-content />
         </span>
-        @if (badge() && badge()! > 0) {
-        <span [class]="badgeClass()" [attr.aria-label]="badge()! + ' notifications'">
+        @if (hasSubNav()) {
+        <os-icon
+          [name]="isExpanded() ? 'expand_less' : 'expand_more'"
+          [size]="'sm'"
+          [attr.aria-hidden]="true"
+          class="os-navigation-item__expand-icon"
+        />
+        } @if (badge() && badge()! > 0) {
+        <span [class]="badgeClass()" [attr.aria-label]="getBadgeAriaLabel()" role="status">
           {{ badge()! > 99 ? '99+' : badge()! }}
         </span>
         }
@@ -38,22 +61,42 @@ export type OsNavigationItemVariant = 'default' | 'primary' | 'secondary' | 'acc
       <button
         [class]="buttonClass()"
         [disabled]="disabled()"
-        [attr.aria-label]="ariaLabel()"
+        [attr.aria-label]="effectiveAriaLabel()"
         [attr.aria-current]="isActive() ? 'page' : null"
+        [attr.aria-expanded]="hasSubNav() ? isExpanded() : null"
+        [attr.type]="'button'"
         (click)="handleClick($event)"
+        (keydown.enter)="handleKeyDown($any($event))"
+        (keydown.space)="handleKeyDown($any($event))"
       >
         @if (icon()) {
-        <os-icon [name]="icon()" [size]="getIconSize()" [variant]="getIconVariant()" />
+        <os-icon
+          [name]="icon()"
+          [size]="getIconSize()"
+          [variant]="getIconVariant()"
+          [attr.aria-hidden]="true"
+        />
         }
         <span [class]="textClass()">
           <ng-content />
         </span>
-        @if (badge() && badge()! > 0) {
-        <span [class]="badgeClass()" [attr.aria-label]="badge()! + ' notifications'">
+        @if (hasSubNav()) {
+        <os-icon
+          [name]="isExpanded() ? 'expand_less' : 'expand_more'"
+          [size]="'sm'"
+          [attr.aria-hidden]="true"
+          class="os-navigation-item__expand-icon"
+        />
+        } @if (badge() && badge()! > 0) {
+        <span [class]="badgeClass()" [attr.aria-label]="getBadgeAriaLabel()" role="status">
           {{ badge()! > 99 ? '99+' : badge()! }}
         </span>
         }
       </button>
+      } @if (hasSubNav() && isExpanded()) {
+      <div class="os-navigation-item__subnav" role="group">
+        <ng-content select="[osSubNav]" />
+      </div>
       }
     </div>
   `,
@@ -75,8 +118,13 @@ export class OsNavigationItemComponent {
   active = input(false);
   badge = input<number | null>(null);
   ariaLabel = input<string>('');
+  ariaDescribedBy = input<string>('');
+  role = input<OsNavigationItemRole>('navigation');
+  hasSubNav = input(false);
+  isExpanded = input(false);
 
-  itemClick = output<MouseEvent>();
+  itemClicked = output<MouseEvent>();
+  toggleExpanded = output<void>();
 
   isActive = computed(() => this.active());
 
@@ -173,9 +221,48 @@ export class OsNavigationItemComponent {
     return classes.join(' ');
   });
 
+  effectiveAriaLabel = computed(() => {
+    if (this.ariaLabel()) {
+      return this.ariaLabel();
+    }
+    const badgeText =
+      this.badge() && this.badge()! > 0
+        ? ` (${this.badge()! > 99 ? '99+' : this.badge()!} notifications)`
+        : '';
+    return `${this.label()}${badgeText}`;
+  });
+
+  getBadgeAriaLabel(): string {
+    const count = this.badge()!;
+    return count > 99
+      ? 'More than 99 notifications'
+      : `${count} notification${count > 1 ? 's' : ''}`;
+  }
+
   handleClick(event: MouseEvent): void {
     if (!this.disabled()) {
-      this.itemClick.emit(event);
+      if (this.hasSubNav()) {
+        event.preventDefault();
+        this.toggleExpanded.emit();
+      }
+      this.itemClicked.emit(event);
+    }
+  }
+
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (!this.disabled()) {
+        if (this.hasSubNav()) {
+          this.toggleExpanded.emit();
+        }
+        const mouseEvent = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        });
+        this.itemClicked.emit(mouseEvent);
+      }
     }
   }
 }

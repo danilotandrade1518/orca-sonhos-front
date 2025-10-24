@@ -13,6 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
 export type OsRadioSize = 'small' | 'medium' | 'large';
 export type OsRadioVariant = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
+export type OsRadioRole = 'radio' | 'switch';
 
 @Component({
   selector: 'os-radio',
@@ -32,6 +33,12 @@ export type OsRadioVariant = 'default' | 'primary' | 'secondary' | 'success' | '
       (focus)="handleFocus($event)"
       [attr.aria-describedby]="ariaDescribedBy() || null"
       [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-labelledby]="ariaLabelledBy() || null"
+      [attr.aria-required]="required()"
+      [attr.role]="radioRole()"
+      [attr.data-animated]="animated()"
+      [attr.data-size]="size()"
+      [attr.data-variant]="variant()"
     >
       @if (label()) {
       {{ label() }}
@@ -57,8 +64,11 @@ export class OsRadioComponent implements ControlValueAccessor {
   checked = input(false);
   disabled = model(false);
   required = input(false);
+  animated = input(true);
+  role = input<OsRadioRole>('radio');
   ariaDescribedBy = input<string>('');
   ariaLabel = input<string>('');
+  ariaLabelledBy = input<string>('');
 
   radioChange = output<string>();
   radioBlurEvent = output<FocusEvent>();
@@ -92,9 +102,20 @@ export class OsRadioComponent implements ControlValueAccessor {
   });
 
   radioClass = computed(() => {
-    return ['os-radio', `os-radio--${this.size()}`, this.disabled() ? 'os-radio--disabled' : '']
+    return [
+      'os-radio',
+      `os-radio--${this.size()}`,
+      `os-radio--${this.variant()}`,
+      this.disabled() ? 'os-radio--disabled' : '',
+      this.checked() ? 'os-radio--checked' : '',
+      this.animated() ? 'os-radio--animated' : '',
+    ]
       .filter(Boolean)
       .join(' ');
+  });
+
+  radioRole = computed(() => {
+    return this.role();
   });
 
   handleChange(event: { value: string }): void {

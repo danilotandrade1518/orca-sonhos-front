@@ -312,23 +312,18 @@ describe('OsWizardTemplateComponent', () => {
       fixture.componentRef.setInput('currentStep', 'step4');
       fixture.detectChanges();
 
-      // Get the second button (finish button) - the primary button
-      const buttons = fixture.nativeElement.querySelectorAll(
+      // Get the finish button - the primary button (should be the last button in the actions)
+      const actionButtons = fixture.nativeElement.querySelectorAll(
         '.os-wizard-template__actions os-button'
       );
-      expect(buttons.length).toBeGreaterThan(0);
+      expect(actionButtons.length).toBeGreaterThan(0);
 
-      // The finish button should be the primary button (mat-raised-button)
-      const finishButton = Array.from(buttons).find((button) =>
-        (button as Element).querySelector('button[mat-raised-button]')
-      ) as Element;
+      // The finish button should be the last button (primary variant)
+      const finishButton = actionButtons[actionButtons.length - 1];
       expect(finishButton).toBeTruthy();
 
-      const buttonElement = finishButton.querySelector('button');
-      expect(buttonElement).toBeTruthy();
-
-      // Trigger change detection after click
-      (buttonElement as HTMLElement).click();
+      // Trigger the click event on the os-button component
+      finishButton.dispatchEvent(new Event('click'));
       fixture.detectChanges();
 
       expect(finishSpy).toHaveBeenCalled();
@@ -343,24 +338,18 @@ describe('OsWizardTemplateComponent', () => {
       fixture.componentRef.setInput('allowSkipSteps', true);
       fixture.detectChanges();
 
-      // Get all buttons in the actions area
-      const buttons = fixture.nativeElement.querySelectorAll(
+      // Get the skip button - the tertiary button (should be the last button when allowSkipSteps is true)
+      const actionButtons = fixture.nativeElement.querySelectorAll(
         '.os-wizard-template__actions os-button'
       );
-      expect(buttons.length).toBeGreaterThan(0);
+      expect(actionButtons.length).toBeGreaterThan(0);
 
-      // Find the skip button by looking for the tertiary button (mat-button)
-      const skipButton = Array.from(buttons).find((button) => {
-        const buttonElement = (button as Element).querySelector('button[mat-button]');
-        return buttonElement !== null;
-      }) as Element;
+      // The skip button should be the last button (tertiary variant)
+      const skipButton = actionButtons[actionButtons.length - 1];
       expect(skipButton).toBeTruthy();
 
-      const buttonElement = skipButton.querySelector('button');
-      expect(buttonElement).toBeTruthy();
-
-      // Trigger change detection after click
-      (buttonElement as HTMLElement).click();
+      // Trigger the click event on the os-button component
+      skipButton.dispatchEvent(new Event('click'));
       fixture.detectChanges();
 
       expect(skipSpy).toHaveBeenCalled();

@@ -9,13 +9,14 @@
     "build:prod": "ng build --configuration production",
     "build:test": "ng build --configuration test",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --watch=false",
-    "test:watch": "ng test",
-    "test:coverage": "ng test --code-coverage --watch=false",
+    "test": "ng test",
+    "test:coverage": "ng test --code-coverage",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "storybook": "ng run orca-sonhos-front:storybook",
-    "build-storybook": "ng run orca-sonhos-front:build-storybook"
+    "build-storybook": "ng run orca-sonhos-front:build-storybook",
+    "docs:json": "npx @compodoc/compodoc -p .storybook/tsconfig.doc.json -e json -d . --disableSourceCode --disableGraph --disableCoverage --disablePrivate --disableInternal --disableLifeCycleHooks --disableRoutesGraph --disableSearch --disableTemplateTab --disableStyleTab",
+    "docs:clean": "rm -f documentation.json"
   },
   "prettier": {
     "printWidth": 100,

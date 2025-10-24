@@ -15,8 +15,15 @@
     <div class="os-budget-tracker__header">
         <div class="os-budget-tracker__title-section">
             <h3 class="os-budget-tracker__title">{{ data.name }}</h3>
-            @if (data.category) {
-            <span class="os-budget-tracker__category">{{ data.category }}</span>
+            @if (data.category && categoryInfo(); as category) {
+            <div class="os-budget-tracker__category" [class.os-budget-tracker__category--clickable]="category.clickable"
+                [style.background-color]="category.color + '20'" [style.border-color]="category.color"
+                (click)="onCategoryClick()" (keydown.enter)="onCategoryClick()" (keydown.space)="onCategoryClick()"
+                [attr.tabindex]="category.clickable ? 0 : -1" [attr.role]="category.clickable ? 'button' : null"
+                [attr.aria-label]="category.clickable ? 'Ver detalhes da categoria ' + category.name : null">
+                <os-icon [name]="category.icon" size="sm" [style.color]="category.color"></os-icon>
+                <span [style.color]="category.color">{{ category.name }}</span>
+            </div>
             }
         </div>
 
@@ -40,6 +47,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Alert Section -->
+    @if (alertInfo(); as alert) {
+    <div class="os-budget-tracker__alert" [class.os-budget-tracker__alert--urgent]="alert.urgent"
+        [style.border-color]="alert.color" (click)="onAlertClick()" (keydown.enter)="onAlertClick()"
+        (keydown.space)="onAlertClick()" [attr.tabindex]="0" role="button"
+        [attr.aria-label]="'Alerta: ' + alert.message">
+        <os-icon [name]="alert.icon" [size]="size() === 'large' ? 'md' : 'sm'" [style.color]="alert.color"></os-icon>
+        <span class="os-budget-tracker__alert-message" [style.color]="alert.color">{{ alert.message }}</span>
+        @if (alert.urgent) {
+        <os-icon name="priority_high" size="sm" [style.color]="alert.color"></os-icon>
+        }
+    </div>
+    }
 
     <!-- Progress Section -->
     <div class="os-budget-tracker__progress">
@@ -115,24 +136,32 @@
     }
 
     <!-- Monthly Chart (only for detailed variant) -->
-    @if (variant() === 'detailed' && showCharts() && monthlyData().length > 0) {
+    @if (variant() === 'detailed' && chartData(); as chart) {
     <div class="os-budget-tracker__chart">
         <div class="os-budget-tracker__chart-header">
             <os-icon name="bar_chart" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
             <span class="os-budget-tracker__chart-label">Gastos Mensais (Últimos 6 meses)</span>
+            <span class="os-budget-tracker__chart-average">Média: {{ chart.average.toFixed(1) }}%</span>
         </div>
 
         <div class="os-budget-tracker__chart-bars">
-            @for (month of monthlyData(); track month.month + month.year) {
-            <div class="os-budget-tracker__chart-bar">
-                <div class="os-budget-tracker__chart-bar-fill" [style.height.%]="month.percentage"
-                    [class.os-budget-tracker__chart-bar-fill--high]="month.percentage > 80">
+            @for (bar of chart.bars; track bar.month + bar.year) {
+            <div class="os-budget-tracker__chart-bar"
+                [class.os-budget-tracker__chart-bar--clickable]="enableDrillDown()"
+                [class.os-budget-tracker__chart-bar--urgent]="bar.visualState === 'urgent'"
+                [class.os-budget-tracker__chart-bar--high]="bar.visualState === 'high'" (click)="onBarClick()"
+                [attr.aria-label]="'Gastos de ' + getMonthName(bar.month) + '/' + bar.year + ': ' + bar.percentage.toFixed(1) + '%'"
+                role="button" [attr.tabindex]="enableDrillDown() ? 0 : -1">
+                <div class="os-budget-tracker__chart-bar-fill" [style.height.%]="bar.height"
+                    [style.background-color]="getBarColor(bar.percentage, categoryInfo()?.color)"
+                    [class.os-budget-tracker__chart-bar-fill--urgent]="bar.visualState === 'urgent'"
+                    [class.os-budget-tracker__chart-bar-fill--high]="bar.visualState === 'high'">
                 </div>
                 <span class="os-budget-tracker__chart-bar-label">
-                    {{ getMonthName(month.month) }}/{{ month.year.toString().slice(-2) }}
+                    {{ getMonthName(bar.month) }}/{{ bar.year.toString().slice(-2) }}
                 </span>
                 <span class="os-budget-tracker__chart-bar-value">
-                    {{ month.percentage.toFixed(0) }}%
+                    {{ bar.percentage.toFixed(0) }}%
                 </span>
             </div>
             }

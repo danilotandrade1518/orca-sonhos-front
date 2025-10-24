@@ -97,6 +97,7 @@ describe('OsMoneyDisplayComponent', () => {
 
     it('should apply success variant', () => {
       fixture.componentRef.setInput('variant', 'success');
+      fixture.componentRef.setInput('autoVariant', false);
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
@@ -105,6 +106,7 @@ describe('OsMoneyDisplayComponent', () => {
 
     it('should apply warning variant', () => {
       fixture.componentRef.setInput('variant', 'warning');
+      fixture.componentRef.setInput('autoVariant', false);
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
@@ -113,6 +115,7 @@ describe('OsMoneyDisplayComponent', () => {
 
     it('should apply error variant', () => {
       fixture.componentRef.setInput('variant', 'error');
+      fixture.componentRef.setInput('autoVariant', false);
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
@@ -121,6 +124,7 @@ describe('OsMoneyDisplayComponent', () => {
 
     it('should apply info variant', () => {
       fixture.componentRef.setInput('variant', 'info');
+      fixture.componentRef.setInput('autoVariant', false);
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
@@ -129,24 +133,40 @@ describe('OsMoneyDisplayComponent', () => {
   });
 
   describe('Size', () => {
-    it('should apply medium size by default', () => {
-      expect(component.size()).toBe('medium');
+    it('should apply md size by default', () => {
+      expect(component.size()).toBe('md');
     });
 
-    it('should apply small size', () => {
-      fixture.componentRef.setInput('size', 'small');
+    it('should apply xs size', () => {
+      fixture.componentRef.setInput('size', 'xs');
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
-      expect(displayElement.classList.contains('os-money-display--small')).toBe(true);
+      expect(displayElement.classList.contains('os-money-display--xs')).toBe(true);
     });
 
-    it('should apply large size', () => {
-      fixture.componentRef.setInput('size', 'large');
+    it('should apply sm size', () => {
+      fixture.componentRef.setInput('size', 'sm');
       fixture.detectChanges();
 
       const displayElement = fixture.nativeElement.querySelector('.os-money-display');
-      expect(displayElement.classList.contains('os-money-display--large')).toBe(true);
+      expect(displayElement.classList.contains('os-money-display--sm')).toBe(true);
+    });
+
+    it('should apply lg size', () => {
+      fixture.componentRef.setInput('size', 'lg');
+      fixture.detectChanges();
+
+      const displayElement = fixture.nativeElement.querySelector('.os-money-display');
+      expect(displayElement.classList.contains('os-money-display--lg')).toBe(true);
+    });
+
+    it('should apply xl size', () => {
+      fixture.componentRef.setInput('size', 'xl');
+      fixture.detectChanges();
+
+      const displayElement = fixture.nativeElement.querySelector('.os-money-display');
+      expect(displayElement.classList.contains('os-money-display--xl')).toBe(true);
     });
   });
 
@@ -207,6 +227,103 @@ describe('OsMoneyDisplayComponent', () => {
 
       const currencyElement = fixture.nativeElement.querySelector('.os-money-display__currency');
       expect(currencyElement.textContent).toBe('');
+    });
+  });
+
+  describe('Auto Variant', () => {
+    it('should use positive variant for positive values when autoVariant is true', () => {
+      fixture.componentRef.setInput('value', 100);
+      fixture.componentRef.setInput('autoVariant', true);
+      fixture.detectChanges();
+
+      expect(component.effectiveVariant()).toBe('positive');
+    });
+
+    it('should use negative variant for negative values when autoVariant is true', () => {
+      fixture.componentRef.setInput('value', -100);
+      fixture.componentRef.setInput('autoVariant', true);
+      fixture.detectChanges();
+
+      expect(component.effectiveVariant()).toBe('negative');
+    });
+
+    it('should use neutral variant for zero values when autoVariant is true', () => {
+      fixture.componentRef.setInput('value', 0);
+      fixture.componentRef.setInput('autoVariant', true);
+      fixture.detectChanges();
+
+      expect(component.effectiveVariant()).toBe('neutral');
+    });
+
+    it('should use manual variant when autoVariant is false', () => {
+      fixture.componentRef.setInput('value', 100);
+      fixture.componentRef.setInput('autoVariant', false);
+      fixture.componentRef.setInput('variant', 'error');
+      fixture.detectChanges();
+
+      expect(component.effectiveVariant()).toBe('error');
+    });
+  });
+
+  describe('Large Value Highlighting', () => {
+    it('should highlight large values by default', () => {
+      fixture.componentRef.setInput('value', 15000);
+      fixture.detectChanges();
+
+      expect(component.isLargeValue()).toBe(true);
+      expect(component.effectiveSize()).toBe('xl');
+    });
+
+    it('should not highlight large values when highlightLarge is false', () => {
+      fixture.componentRef.setInput('value', 15000);
+      fixture.componentRef.setInput('highlightLarge', false);
+      fixture.detectChanges();
+
+      expect(component.isLargeValue()).toBe(false);
+      expect(component.effectiveSize()).toBe('md');
+    });
+
+    it('should use custom threshold for large values', () => {
+      fixture.componentRef.setInput('value', 5000);
+      fixture.componentRef.setInput('largeThreshold', 3000);
+      fixture.detectChanges();
+
+      expect(component.isLargeValue()).toBe(true);
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should have default role', () => {
+      expect(component.role()).toBe('text');
+    });
+
+    it('should set custom role', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+
+      expect(component.role()).toBe('status');
+    });
+
+    it('should set aria-label', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Total de receitas');
+      fixture.detectChanges();
+
+      expect(component.ariaLabel()).toBe('Total de receitas');
+    });
+
+    it('should set aria-describedby', () => {
+      fixture.componentRef.setInput('ariaDescribedBy', 'money-description');
+      fixture.detectChanges();
+
+      expect(component.ariaDescribedBy()).toBe('money-description');
+    });
+
+    it('should hide currency from screen readers when showCurrency is false', () => {
+      fixture.componentRef.setInput('showCurrency', false);
+      fixture.detectChanges();
+
+      const currencyElement = fixture.nativeElement.querySelector('.os-money-display__currency');
+      expect(currencyElement.getAttribute('aria-hidden')).toBe('true');
     });
   });
 

@@ -45,6 +45,8 @@ export type OsInputSize = 'small' | 'medium' | 'large';
           (focus)="handleFocus($event)"
           [attr.aria-describedby]="helperText() ? inputId + '-helper' : null"
           [attr.aria-invalid]="hasError()"
+          [attr.aria-required]="required()"
+          [attr.aria-disabled]="disabled()"
         />
 
         @if (suffixIcon()) {
@@ -61,7 +63,7 @@ export type OsInputSize = 'small' | 'medium' | 'large';
           <mat-icon>close</mat-icon>
         </button>
         } @if (helperText() || hasError()) {
-        <mat-hint [class]="helperClass()">
+        <mat-hint [class]="helperClass()" [id]="inputId + '-helper'">
           {{ errorMessage() || helperText() }}
         </mat-hint>
         }
@@ -97,9 +99,9 @@ export class OsInputComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _onChange = (value: string) => {
     // This will be set by registerOnChange
-    console.debug('onChange called with:', value);
   };
   private _onTouched = () => {
     // This will be set by registerOnTouched
@@ -113,23 +115,6 @@ export class OsInputComponent implements ControlValueAccessor {
       `os-input-container--${this.size()}`,
       this.hasError() ? 'os-input-container--error' : '',
       this.disabled() ? 'os-input-container--disabled' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  labelClass = computed(() => {
-    return ['os-input__label', this.required() ? 'os-input__label--required' : '']
-      .filter(Boolean)
-      .join(' ');
-  });
-
-  inputWrapperClass = computed(() => {
-    return [
-      'os-input__wrapper',
-      this.prefixIcon() ? 'os-input__wrapper--with-prefix' : '',
-      this.suffixIcon() ? 'os-input__wrapper--with-suffix' : '',
-      this.clearable() ? 'os-input__wrapper--clearable' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -157,7 +142,6 @@ export class OsInputComponent implements ControlValueAccessor {
     return !!this.errorMessage();
   });
 
-  // Mapeamento interno para Material
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -205,7 +189,6 @@ export class OsInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    // Update the model signal when FormControl value changes programmatically
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -220,7 +203,6 @@ export class OsInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
     this.disabled.set(isDisabled);
   }
 }

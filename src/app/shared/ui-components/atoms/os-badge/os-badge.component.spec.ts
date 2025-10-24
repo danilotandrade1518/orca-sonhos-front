@@ -87,6 +87,24 @@ describe('OsBadgeComponent', () => {
       fixture.detectChanges();
       expect(component.badgeClass()).toContain('os-badge--info');
     });
+
+    it('should apply goal-active variant', () => {
+      fixture.componentRef.setInput('variant', 'goal-active');
+      fixture.detectChanges();
+      expect(component.badgeClass()).toContain('os-badge--goal-active');
+    });
+
+    it('should apply goal-completed variant', () => {
+      fixture.componentRef.setInput('variant', 'goal-completed');
+      fixture.detectChanges();
+      expect(component.badgeClass()).toContain('os-badge--goal-completed');
+    });
+
+    it('should apply goal-overdue variant', () => {
+      fixture.componentRef.setInput('variant', 'goal-overdue');
+      fixture.detectChanges();
+      expect(component.badgeClass()).toContain('os-badge--goal-overdue');
+    });
   });
 
   describe('size', () => {
@@ -105,6 +123,12 @@ describe('OsBadgeComponent', () => {
       fixture.componentRef.setInput('size', 'lg');
       fixture.detectChanges();
       expect(component.badgeClass()).toContain('os-badge--lg');
+    });
+
+    it('should apply extra large size', () => {
+      fixture.componentRef.setInput('size', 'xl');
+      fixture.detectChanges();
+      expect(component.badgeClass()).toContain('os-badge--xl');
     });
   });
 
@@ -193,6 +217,62 @@ describe('OsBadgeComponent', () => {
     });
   });
 
+  describe('role', () => {
+    it('should have decorative role by default', () => {
+      expect(component.role()).toBe('decorative');
+    });
+
+    it('should have status role when set', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+      expect(component.role()).toBe('status');
+    });
+
+    it('should have alert role when set', () => {
+      fixture.componentRef.setInput('role', 'alert');
+      fixture.detectChanges();
+      expect(component.role()).toBe('alert');
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should be aria-hidden when role is decorative', () => {
+      fixture.componentRef.setInput('role', 'decorative');
+      fixture.detectChanges();
+      expect(component.ariaHidden()).toBe(true);
+    });
+
+    it('should not be aria-hidden when role is status', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+      expect(component.ariaHidden()).toBe(false);
+    });
+
+    it('should not be aria-hidden when role is alert', () => {
+      fixture.componentRef.setInput('role', 'alert');
+      fixture.detectChanges();
+      expect(component.ariaHidden()).toBe(false);
+    });
+
+    it('should have status role when role is status', () => {
+      fixture.componentRef.setInput('role', 'status');
+      fixture.detectChanges();
+      expect(component.badgeRole()).toBe('status');
+    });
+
+    it('should have alert role when role is alert', () => {
+      fixture.componentRef.setInput('role', 'alert');
+      fixture.detectChanges();
+      expect(component.badgeRole()).toBe('alert');
+    });
+
+    it('should have null role when role is decorative', () => {
+      fixture.componentRef.setInput('role', 'decorative');
+      fixture.detectChanges();
+      expect(component.badgeRole()).toBeNull();
+    });
+  });
+
   describe('icon size mapping', () => {
     it('should map sm size to xs icon', () => {
       fixture.componentRef.setInput('size', 'sm');
@@ -211,6 +291,12 @@ describe('OsBadgeComponent', () => {
       fixture.detectChanges();
       expect(component.iconSize()).toBe('md');
     });
+
+    it('should map xl size to lg icon', () => {
+      fixture.componentRef.setInput('size', 'xl');
+      fixture.detectChanges();
+      expect(component.iconSize()).toBe('lg');
+    });
   });
 
   describe('icon variant mapping', () => {
@@ -227,6 +313,27 @@ describe('OsBadgeComponent', () => {
       fixture.detectChanges();
       expect(component.iconVariant()).toBe('primary');
     });
+
+    it('should map goal-active to primary icon variant when outlined', () => {
+      fixture.componentRef.setInput('variant', 'goal-active');
+      fixture.componentRef.setInput('outlined', true);
+      fixture.detectChanges();
+      expect(component.iconVariant()).toBe('primary');
+    });
+
+    it('should map goal-completed to success icon variant when outlined', () => {
+      fixture.componentRef.setInput('variant', 'goal-completed');
+      fixture.componentRef.setInput('outlined', true);
+      fixture.detectChanges();
+      expect(component.iconVariant()).toBe('success');
+    });
+
+    it('should map goal-overdue to warning icon variant when outlined', () => {
+      fixture.componentRef.setInput('variant', 'goal-overdue');
+      fixture.componentRef.setInput('outlined', true);
+      fixture.detectChanges();
+      expect(component.iconVariant()).toBe('warning');
+    });
   });
 
   describe('text class', () => {
@@ -238,6 +345,60 @@ describe('OsBadgeComponent', () => {
       fixture.componentRef.setInput('outlined', true);
       fixture.detectChanges();
       expect(component.textClass()).toBe('os-badge__text os-badge__text--outlined');
+    });
+  });
+
+  describe('displayText', () => {
+    it('should return original text when under maxValue', () => {
+      fixture.componentRef.setInput('text', '50');
+      fixture.componentRef.setInput('maxValue', 99);
+      fixture.detectChanges();
+      expect(component.displayText()).toBe('50');
+    });
+
+    it('should return maxValue+ when over maxValue', () => {
+      fixture.componentRef.setInput('text', '150');
+      fixture.componentRef.setInput('maxValue', 99);
+      fixture.detectChanges();
+      expect(component.displayText()).toBe('99+');
+    });
+
+    it('should return original text when not a number', () => {
+      fixture.componentRef.setInput('text', 'New');
+      fixture.componentRef.setInput('maxValue', 99);
+      fixture.detectChanges();
+      expect(component.displayText()).toBe('New');
+    });
+
+    it('should return empty string when no text', () => {
+      fixture.componentRef.setInput('text', '');
+      fixture.componentRef.setInput('maxValue', 99);
+      fixture.detectChanges();
+      expect(component.displayText()).toBe('');
+    });
+  });
+
+  describe('animated', () => {
+    it('should be animated by default', () => {
+      expect(component.animated()).toBe(true);
+    });
+
+    it('should not be animated when set to false', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      expect(component.animated()).toBe(false);
+    });
+
+    it('should include animated class when animated', () => {
+      fixture.componentRef.setInput('animated', true);
+      fixture.detectChanges();
+      expect(component.badgeClass()).toContain('os-badge--animated');
+    });
+
+    it('should not include animated class when not animated', () => {
+      fixture.componentRef.setInput('animated', false);
+      fixture.detectChanges();
+      expect(component.badgeClass()).not.toContain('os-badge--animated');
     });
   });
 
@@ -270,7 +431,11 @@ describe('OsBadgeComponent', () => {
       expect(component.dot()).toBe(false);
       expect(component.pill()).toBe(false);
       expect(component.outlined()).toBe(false);
+      expect(component.role()).toBe('decorative');
       expect(component.ariaLabel()).toBe('');
+      expect(component.title()).toBe('');
+      expect(component.animated()).toBe(true);
+      expect(component.maxValue()).toBe(99);
     });
   });
 });

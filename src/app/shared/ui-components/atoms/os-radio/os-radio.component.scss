@@ -6,18 +6,28 @@
   gap: var(--os-spacing-sm);
   cursor: pointer;
   user-select: none;
+  min-height: 44px; // Touch target mínimo
+  padding: var(--os-spacing-xs);
 
   &--small {
     gap: var(--os-spacing-xs);
+    min-height: 44px; // Touch target mínimo
+    padding: var(--os-spacing-xs);
   }
 
   &--large {
     gap: var(--os-spacing-md);
+    min-height: 48px;
+    padding: var(--os-spacing-sm);
   }
 
   &--disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+
+  &--animated {
+    transition: all var(--os-transition-fast) ease;
   }
 
   &__input {
@@ -46,22 +56,24 @@
     border: 2px solid var(--os-color-outline);
     border-radius: 50%;
     background-color: var(--os-color-surface);
-    transition: var(--os-transition-fast);
+    transition: all var(--os-transition-fast) ease;
     flex-shrink: 0;
+    min-width: 44px; // Touch target mínimo
+    min-height: 44px; // Touch target mínimo
 
     &--small {
-      width: 16px;
-      height: 16px;
+      width: 44px; // Touch target mínimo
+      height: 44px; // Touch target mínimo
     }
 
     &--medium {
-      width: 20px;
-      height: 20px;
+      width: 44px; // Touch target mínimo
+      height: 44px; // Touch target mínimo
     }
 
     &--large {
-      width: 24px;
-      height: 24px;
+      width: 48px;
+      height: 48px;
     }
 
     &--default {
@@ -120,11 +132,13 @@
   }
 
   &__dot {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background-color: var(--os-color-primary);
-    transition: var(--os-transition-fast);
+    transition: all var(--os-transition-fast) ease;
+    transform: scale(0);
+    opacity: 0;
 
     .os-radio__circle--primary & {
       background-color: var(--os-color-primary);
@@ -147,13 +161,18 @@
     }
 
     .os-radio--small & {
-      width: 6px;
-      height: 6px;
+      width: 10px;
+      height: 10px;
     }
 
     .os-radio--large & {
-      width: 10px;
-      height: 10px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .os-radio--checked & {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
@@ -180,13 +199,69 @@
     .os-radio__circle:not(.os-radio__circle--checked) {
       border-color: var(--os-color-primary);
       background-color: var(--os-color-primary-container);
+      transform: scale(1.02);
     }
   }
 
   &:focus-within {
     .os-radio__circle {
-      outline: 2px solid var(--os-color-primary);
+      outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
       outline-offset: 2px;
+    }
+  }
+
+  // Active effects
+  &:active:not(&--disabled) {
+    .os-radio__circle {
+      transform: scale(0.98);
+    }
+  }
+
+  // Animações de seleção
+  &--animated {
+    .os-radio__dot {
+      animation: os-radio-select var(--os-transition-fast) ease-out;
+    }
+  }
+}
+
+// Keyframes para animações
+@keyframes os-radio-select {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Suporte para prefers-reduced-motion
+@media (prefers-reduced-motion: reduce) {
+  .os-radio {
+    &--animated {
+      transition: none;
+    }
+
+    .os-radio__circle {
+      transition: none;
+    }
+
+    .os-radio__dot {
+      transition: none;
+    }
+  }
+
+  @keyframes os-radio-select {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

@@ -22,7 +22,7 @@ const meta: Meta<OsDashboardTemplateComponent> = {
     docs: {
       description: {
         component:
-          'Template de dashboard do Design System Orca Sonhos com widgets organizados em grid.',
+          'Template de dashboard refinado do Design System Orca Sonhos com widgets organizados em grid responsivo, acessibilidade WCAG 2.1 AA e design tokens otimizados.',
       },
     },
   },
@@ -278,6 +278,92 @@ export const Default: Story = {
         (footerLinkClick)="footerLinkClick($event)"
         (footerSocialClick)="footerSocialClick($event)"
       ></os-dashboard-template>
+    `,
+  }),
+};
+
+export const AccessibilityFeatures: Story = {
+  args: {
+    layout: {
+      variant: 'default',
+      size: 'medium',
+      theme: 'light',
+      showHeader: true,
+      showSidebar: true,
+      showFooter: true,
+      sidebarCollapsed: false,
+    },
+    widgets: sampleWidgets,
+    loading: false,
+    emptyState: null,
+    headerLogo: 'OrçaSonhos',
+    headerNavigation: sampleHeaderNavigation,
+    headerUser: sampleHeaderUser,
+    headerActions: sampleHeaderActions,
+    headerMobileMenu: sampleHeaderNavigation,
+    sidebarNavigation: sampleSidebarNavigation,
+    sidebarTitle: 'Menu Principal',
+    sidebarLogo: 'OS',
+    sidebarShowHeader: true,
+    sidebarShowFooter: false,
+    sidebarShowToggleButton: true,
+    footerLinks: sampleFooterLinks,
+    footerCopyright: '© 2024 OrçaSonhos. Todos os direitos reservados.',
+    footerSocial: sampleFooterSocial,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstração dos recursos de acessibilidade WCAG 2.1 AA implementados no template.',
+      },
+    },
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: 16px; background: #f5f5f5;">
+        <h3>Recursos de Acessibilidade Implementados</h3>
+        <ul>
+          <li>✅ Roles semânticos (main, banner, navigation, contentinfo)</li>
+          <li>✅ ARIA labels e descriptions</li>
+          <li>✅ Navegação por teclado (tabindex)</li>
+          <li>✅ Estados de loading com aria-live</li>
+          <li>✅ Focus management</li>
+          <li>✅ Suporte a reduced motion</li>
+          <li>✅ High contrast mode</li>
+          <li>✅ Touch targets >= 44px</li>
+        </ul>
+        <os-dashboard-template
+          [layout]="layout"
+          [widgets]="widgets"
+          [loading]="loading"
+          [emptyState]="emptyState"
+          [headerLogo]="headerLogo"
+          [headerNavigation]="headerNavigation"
+          [headerUser]="headerUser"
+          [headerActions]="headerActions"
+          [headerMobileMenu]="headerMobileMenu"
+          [sidebarNavigation]="sidebarNavigation"
+          [sidebarTitle]="sidebarTitle"
+          [sidebarLogo]="sidebarLogo"
+          [sidebarShowHeader]="sidebarShowHeader"
+          [sidebarShowFooter]="sidebarShowFooter"
+          [sidebarShowToggleButton]="sidebarShowToggleButton"
+          [footerLinks]="footerLinks"
+          [footerCopyright]="footerCopyright"
+          [footerSocial]="footerSocial"
+          (navigationClick)="navigationClick($event)"
+          (userMenuClick)="userMenuClick($event)"
+          (actionClick)="actionClick($event)"
+          (mobileMenuToggle)="mobileMenuToggle($event)"
+          (sidebarNavigationClick)="sidebarNavigationClick($event)"
+          (sidebarToggleClick)="sidebarToggleClick($event)"
+          (widgetClick)="widgetClick($event)"
+          (emptyStateActionClick)="emptyStateActionClick($event)"
+          (footerLinkClick)="footerLinkClick($event)"
+          (footerSocialClick)="footerSocialClick($event)"
+        ></os-dashboard-template>
+      </div>
     `,
   }),
 };

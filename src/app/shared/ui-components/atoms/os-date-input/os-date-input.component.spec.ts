@@ -44,6 +44,10 @@ describe('OsDateInputComponent', () => {
       expect(component.size()).toBe('medium');
       expect(component.disabled()).toBe(false);
       expect(component.required()).toBe(false);
+      expect(component.ariaLabel()).toBe('');
+      expect(component.ariaDescribedBy()).toBe('');
+      expect(component.animated()).toBe(true);
+      expect(component.hapticFeedback()).toBe(true);
     });
 
     it('should render with custom props', () => {
@@ -332,6 +336,106 @@ describe('OsDateInputComponent', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       // Material datepicker uses text input with datepicker directive
       expect(input.nativeElement.type).toBe('text');
+    });
+
+    it('should have proper ARIA attributes', () => {
+      fixture.componentRef.setInput('label', 'Birth Date');
+      fixture.componentRef.setInput('ariaLabel', 'Custom label');
+      fixture.componentRef.setInput('ariaDescribedBy', 'description');
+      fixture.componentRef.setInput('required', true);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.getAttribute('aria-label')).toBe('Custom label');
+      expect(input.nativeElement.getAttribute('aria-describedby')).toBe('description');
+      expect(input.nativeElement.getAttribute('aria-required')).toBe('true');
+      // aria-disabled is only set when disabled is true, otherwise it's null
+      expect(input.nativeElement.getAttribute('aria-disabled')).toBeNull();
+      expect(input.nativeElement.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should have proper tabindex for disabled state', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should have proper aria-describedby with helper text', () => {
+      fixture.componentRef.setInput('helperText', 'Helper text');
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      expect(input.nativeElement.getAttribute('aria-describedby')).toContain('helper');
+    });
+  });
+
+  describe('haptic feedback', () => {
+    it('should trigger haptic feedback on input', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', true);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.value = '2024-03-15';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(vibrateSpy).toHaveBeenCalledWith(50);
+    });
+
+    it('should not trigger haptic feedback when disabled', () => {
+      // Mock navigator.vibrate
+      const vibrateSpy = vi.fn();
+      Object.defineProperty(navigator, 'vibrate', {
+        value: vibrateSpy,
+        writable: true,
+      });
+
+      fixture.componentRef.setInput('hapticFeedback', false);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.value = '2024-03-15';
+      input.nativeElement.dispatchEvent(new Event('input'));
+
+      expect(vibrateSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('focus and state tracking', () => {
+    it('should track focus state', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.dispatchEvent(new FocusEvent('focus'));
+
+      expect(component.isFocused()).toBe(true);
+    });
+
+    it('should track blur state', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+      expect(component.isFocused()).toBe(false);
+    });
+
+    it('should track hover state', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
+
+      expect(component.isHovered()).toBe(true);
+    });
+
+    it('should track mouse leave state', () => {
+      const input = fixture.debugElement.query(By.css('input[matInput]'));
+      input.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+
+      expect(component.isHovered()).toBe(false);
     });
   });
 });

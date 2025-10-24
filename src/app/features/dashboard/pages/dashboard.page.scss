@@ -5,15 +5,35 @@
   background-color: var(--os-color-background-secondary);
   display: flex;
   flex-direction: row;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .dashboard-sidebar {
   flex-shrink: 0;
   width: 240px;
   transition: width var(--os-transition-normal) var(--os-ease-in-out);
+  background-color: var(--os-color-background-primary);
+  border-right: var(--os-border-width-1) solid var(--os-color-border);
+  box-shadow: var(--os-shadow-sm);
 
   &.os-sidebar--collapsed {
     width: 64px;
+  }
+
+  @media (max-width: 991px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: var(--os-z-index-modal);
+    transform: translateX(-100%);
+    transition: transform var(--os-transition-normal) var(--os-ease-in-out);
+    box-shadow: var(--os-shadow-lg);
+
+    &.os-sidebar--open {
+      transform: translateX(0);
+    }
   }
 }
 
@@ -22,6 +42,13 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  background-color: var(--os-color-background-secondary);
+  transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
+
+  @media (max-width: 991px) {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 // Skip Links for Accessibility
@@ -58,6 +85,8 @@
   position: sticky;
   top: 0;
   z-index: var(--os-z-index-sticky);
+  backdrop-filter: blur(8px);
+  background-color: rgba(var(--os-color-background-primary-rgb), 0.95);
 }
 
 .dashboard-header__container {
@@ -121,24 +150,6 @@
 // Mobile-first responsive design
 // Tablet: 576-991px
 @media (max-width: 991px) {
-  .dashboard-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: var(--os-z-index-modal);
-    transform: translateX(-100%);
-    transition: transform var(--os-transition-normal) var(--os-ease-in-out);
-
-    &.os-sidebar--open {
-      transform: translateX(0);
-    }
-  }
-
-  .dashboard-content {
-    width: 100%;
-  }
-
   .dashboard-header__container {
     padding: 0 var(--os-spacing-3);
   }
@@ -195,5 +206,86 @@
 
   .dashboard-main__container {
     padding: 0 var(--os-spacing-3);
+  }
+}
+
+// Persona-specific optimizations
+.dashboard-page {
+  // Ana (Organizadora Familiar) - Interface intuitiva, compartilhamento simples
+  &--persona-ana {
+    .dashboard-header__actions {
+      gap: var(--os-spacing-2);
+    }
+
+    .dashboard-main__title {
+      text-align: left;
+      margin-bottom: var(--os-spacing-4);
+    }
+  }
+
+  // Carlos (Jovem Planejador) - Onboarding educativo, simplicidade
+  &--persona-carlos {
+    .dashboard-main {
+      padding: var(--os-spacing-6) 0;
+    }
+
+    .dashboard-main__title {
+      font-size: var(--os-font-size-xl);
+      margin-bottom: var(--os-spacing-4);
+    }
+  }
+
+  // Roberto & Maria (Casal Experiente) - Múltiplas metas, relatórios avançados
+  &--persona-roberto-maria {
+    .dashboard-header__container {
+      max-width: var(--os-container-2xl);
+    }
+
+    .dashboard-main__container {
+      max-width: var(--os-container-2xl);
+    }
+  }
+
+  // Júlia (Empreendedora Iniciante) - Flexibilidade, renda variável
+  &--persona-julia {
+    .dashboard-main {
+      padding: var(--os-spacing-4) 0;
+    }
+
+    .dashboard-main__title {
+      font-size: var(--os-font-size-lg);
+      margin-bottom: var(--os-spacing-3);
+    }
+  }
+}
+
+// Enhanced accessibility for all personas
+.dashboard-page {
+  // High contrast mode support
+  @media (prefers-contrast: high) {
+    .dashboard-header {
+      border-bottom-width: 2px;
+    }
+
+    .dashboard-sidebar {
+      border-right-width: 2px;
+    }
+  }
+
+  // Reduced motion support
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--os-color-background-primary-dark);
+
+    .dashboard-content {
+      background-color: var(--os-color-background-secondary-dark);
+    }
   }
 }
