@@ -13,7 +13,7 @@ Migrar usos diretos de `<mat-icon>` para `os-icon` nos componentes mapeados (`os
 
 ---
 
-## 📅 FASE 1: Migração no `os-input` [Status: ⏳]
+## 📅 FASE 1: Migração no `os-input` [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -21,30 +21,34 @@ Substituir ícones de prefixo, sufixo e botão clear para usar `os-icon`.
 
 ### 📋 Tarefas
 
-#### Migrar prefix/suffix para `os-icon` [⏳]
+#### Migrar prefix/suffix para `os-icon` [✅]
 
 **Descrição**: Trocar `<mat-icon matPrefix|matSuffix>` por `<os-icon>` mantendo classes.
 **Critério de Conclusão**: Renderização idêntica e testes passando.
 
-#### Migrar botão clear para `os-icon` [⏳]
+#### Migrar botão clear para `os-icon` [✅]
 
 **Descrição**: Trocar `<mat-icon>close</mat-icon>` por `<os-icon name="close">` dentro do `mat-icon-button`.
 **Critério de Conclusão**: Acessibilidade preservada (`aria-label`), função clear ok.
 
-#### Ajustar imports (se possível) [⏳]
+#### Ajustar imports (se possível) [✅]
 
 **Descrição**: Remover `MatIconModule` se não houver mais uso direto.
 **Critério de Conclusão**: Build sem quebras.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Ícones renderizando corretamente (prefix/suffix/clear)
-- [ ] Sem regressão visual ou funcional
-- [ ] Tests do componente passando
+- [x] Ícones renderizando corretamente (prefix/suffix/clear)
+- [x] Sem regressão visual ou funcional
+- [x] Tests do componente passando
 
 ### 📝 Comentários da Fase
 
-\_
+- **Migração concluída**: Todos os usos de `<mat-icon>` foram substituídos por `<os-icon>` no `os-input`
+- **Testes atualizados**: Ajustados para usar nomes de ícones ao invés de emojis diretos
+- **Ícones adicionados**: Adicionado suporte ao ícone `eye` no `os-icon`
+- **Funcionalidade preservada**: Prefix, suffix e clear button funcionando corretamente
+- **Acessibilidade mantida**: `aria-label` do botão clear preservado
 
 ---
 
