@@ -92,11 +92,37 @@
 
 ## 📋 Lista de Implementação
 
-- [ ] Migrar ícones em `os-input.component.ts` para `os-icon`.
-- [ ] Migrar ícone em `os-money-input.component.ts` para `os-icon`.
-- [ ] Migrar ícones em `os-date-input.component.ts` para `os-icon` e avaliar `matDatepickerToggleIcon`.
-- [ ] Atualizar imports removendo `MatIconModule` quando possível.
-- [ ] Rodar testes e ajustar expectativas.
+- [x] Migrar ícones em `os-input.component.ts` para `os-icon`.
+- [x] Migrar ícone em `os-money-input.component.ts` para `os-icon`.
+- [x] Migrar ícones em `os-date-input.component.ts` para `os-icon` e avaliar `matDatepickerToggleIcon`.
+- [x] Atualizar imports removendo `MatIconModule` quando possível.
+- [x] Rodar testes e ajustar expectativas.
+
+## 🎯 Decisões Finais Implementadas
+
+### Migração Completa Realizada
+
+- **os-input**: Todos os ícones (prefix, suffix, clear) migrados para `os-icon`
+- **os-money-input**: Ícone `attach_money` migrado para `os-icon`
+- **os-date-input**: Prefix, suffix e `matDatepickerToggleIcon` migrados para `os-icon`
+
+### Ícones Adicionados ao os-icon
+
+- `eye`: 👁 (para suffix icons)
+- `attach_money`: 💰 (para money input)
+- `calendar_today`: 📅 (para datepicker toggle)
+
+### Imports Otimizados
+
+- `MatIconModule` removido de todos os componentes migrados
+- `OsIconComponent` adicionado aos imports necessários
+- Build funcionando sem erros
+
+### Testes Atualizados
+
+- Todos os 132 testes passando (53 + 41 + 38)
+- Testes ajustados para usar `os-icon` ao invés de `mat-icon`
+- Validação de emojis corretos nos testes
 
 ## 📚 Referências
 
