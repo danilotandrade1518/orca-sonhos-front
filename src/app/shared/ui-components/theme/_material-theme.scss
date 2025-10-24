@@ -106,17 +106,6 @@
   }
 }
 
-.mat-mdc-form-field.mat-focused {
-  .mat-mdc-text-field-wrapper {
-    .mat-mdc-form-field-flex {
-      .mat-mdc-form-field-infix {
-        border-color: var(--os-color-primary);
-        box-shadow: var(--os-shadow-focus);
-      }
-    }
-  }
-}
-
 // ===== CARDS ACESSÍVEIS =====
 .mat-mdc-card {
   background-color: var(--os-color-surface);
@@ -239,7 +228,7 @@
 
   .mat-mdc-form-field {
     .mat-mdc-text-field-wrapper {
-      border: var(--os-border-width-2) solid var(--os-color-border);
+      // border: var(--os-border-width-2) solid var(--os-color-border);
     }
   }
 
