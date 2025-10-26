@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { OsIconComponent } from '../os-icon/os-icon.component';
 
 export type OsInputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
 export type OsInputSize = 'small' | 'medium' | 'large';
@@ -20,14 +20,14 @@ export type OsInputSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-input',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatButtonModule, OsIconComponent],
   template: `
     <div [class]="containerClass()">
       <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
         @if (label()) {
         <mat-label>{{ label() }}</mat-label>
         } @if (prefixIcon()) {
-        <mat-icon matPrefix [class]="prefixIconClass()">{{ prefixIcon() }}</mat-icon>
+        <os-icon [name]="prefixIcon()" matPrefix [class]="prefixIconClass()"></os-icon>
         }
 
         <input
@@ -50,7 +50,7 @@ export type OsInputSize = 'small' | 'medium' | 'large';
         />
 
         @if (suffixIcon()) {
-        <mat-icon matSuffix [class]="suffixIconClass()">{{ suffixIcon() }}</mat-icon>
+        <os-icon [name]="suffixIcon()" matSuffix [class]="suffixIconClass()"></os-icon>
         } @if (clearable() && value() && !disabled()) {
         <button
           matSuffix
@@ -60,7 +60,7 @@ export type OsInputSize = 'small' | 'medium' | 'large';
           (click)="handleClear()"
           [attr.aria-label]="'Clear ' + (label() || 'input')"
         >
-          <mat-icon>close</mat-icon>
+          <os-icon name="close"></os-icon>
         </button>
         } @if (helperText() || hasError()) {
         <mat-hint [class]="helperClass()" [id]="inputId + '-helper'">

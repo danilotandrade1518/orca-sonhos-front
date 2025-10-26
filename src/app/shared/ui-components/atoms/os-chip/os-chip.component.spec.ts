@@ -25,7 +25,7 @@ describe('OsChipComponent', () => {
   describe('rendering', () => {
     it('should render with default values', () => {
       expect(component.text()).toBe('');
-      expect(component.icon()).toBe(null);
+      expect(component.icon()).toBe('');
       expect(component.removable()).toBe(false);
       expect(component.disabled()).toBe(false);
       expect(component.selected()).toBe(false);
@@ -47,11 +47,12 @@ describe('OsChipComponent', () => {
     });
 
     it('should render with custom icon', () => {
-      fixture.componentRef.setInput('icon', '★');
+      fixture.componentRef.setInput('icon', 'home');
       fixture.detectChanges();
 
-      const iconElement = fixture.nativeElement.querySelector('.os-chip__icon');
-      expect(iconElement.textContent.trim()).toBe('★');
+      const iconElement = fixture.nativeElement.querySelector('mat-icon');
+      expect(iconElement).toBeTruthy();
+      expect(iconElement.getAttribute('fontIcon')).toBe('home');
     });
 
     it('should render with custom size', () => {

@@ -207,11 +207,10 @@ export const WithIcons: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-        <os-chip text="Favorito" icon="fas fa-heart" variant="danger" size="medium"></os-chip>
-        <os-chip text="Estrela" icon="fas fa-star" variant="warning" size="medium"></os-chip>
-        <os-chip text="Check" icon="fas fa-check" variant="success" size="medium"></os-chip>
-        <os-chip text="Info" icon="fas fa-info" variant="primary" size="medium"></os-chip>
-        <os-chip text="Tag" icon="fas fa-tag" variant="secondary" size="medium"></os-chip>
+        <os-chip text="Favorito" icon="heart" variant="danger" size="medium"></os-chip>
+        <os-chip text="Estrela" icon="star" variant="warning" size="medium"></os-chip>
+        <os-chip text="Check" icon="check" variant="success" size="medium"></os-chip>
+        <os-chip text="Info" icon="info" variant="primary" size="medium"></os-chip>
       </div>
     `,
   }),

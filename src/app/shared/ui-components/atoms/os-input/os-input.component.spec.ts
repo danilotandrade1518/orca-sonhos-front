@@ -3,7 +3,6 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { OsInputComponent } from './os-input.component';
 
@@ -18,7 +17,6 @@ describe('OsInputComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         MatFormFieldModule,
-        MatIconModule,
         MatButtonModule,
       ],
       providers: [provideZonelessChangeDetection()],
@@ -173,15 +171,15 @@ describe('OsInputComponent', () => {
     });
 
     it('should show prefix icon when provided', () => {
-      fixture.componentRef.setInput('prefixIcon', '🔍');
+      fixture.componentRef.setInput('prefixIcon', 'search');
       fixture.detectChanges();
-      expect(component.prefixIcon()).toBe('🔍');
+      expect(component.prefixIcon()).toBe('search');
     });
 
     it('should show suffix icon when provided', () => {
-      fixture.componentRef.setInput('suffixIcon', '👁');
+      fixture.componentRef.setInput('suffixIcon', 'eye');
       fixture.detectChanges();
-      expect(component.suffixIcon()).toBe('👁');
+      expect(component.suffixIcon()).toBe('eye');
     });
   });
 

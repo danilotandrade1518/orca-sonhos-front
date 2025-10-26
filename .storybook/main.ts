@@ -18,11 +18,6 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
   typescript: {
     check: false,
-    reactDocgen: 'react-docgen-typescript',
-    reactDocgenTypescriptOptions: {
-      shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
-    },
   },
   webpackFinal: async (config) => {
     if (config.resolve) {
@@ -36,6 +31,7 @@ const config: StorybookConfig = {
         '@dtos': '/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-front/src/dtos',
       };
     }
+
     return config;
   },
 };

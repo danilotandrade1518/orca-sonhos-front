@@ -340,7 +340,6 @@ describe('DashboardWidgetsComponent', () => {
   it('should emit widgetClick when widget is clicked', () => {
     const emitSpy = vi.spyOn(component.widgetClick, 'emit');
     const widget = mockWidgets[0];
-    const data = { test: 'data' };
 
     component.onWidgetClick(widget);
 

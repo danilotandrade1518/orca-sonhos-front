@@ -4,124 +4,154 @@
 
 O componente `os-icon` suporta três tipos de ícones:
 
-1. **Ícones Emoji** (padrão) - 147 ícones mapeados
+1. **Material Icons** (padrão) - 147+ ícones mapeados para Material Design
 2. **Font Awesome** - Suporte completo via `fontSet` e `fontIcon`
 3. **Ícones SVG Customizados** - Suporte para SVG inline
 
-## 🎯 Ícones Emoji Disponíveis (147 ícones)
+## 🎯 Ícones Material Disponíveis (147+ ícones)
 
 ### Navegação e Interface
 
-- `home` - 🏠 Casa
-- `menu` - ☰ Menu
-- `close` - ✕ Fechar
-- `back` - ← Voltar
-- `forward` - → Avançar
-- `up` - ↑ Cima
-- `down` - ↓ Baixo
-- `left` - ← Esquerda
-- `right` - → Direita
-- `add` - + Adicionar
-- `remove` - − Remover
-- `edit` - ✏ Editar
-- `delete` - 🗑 Deletar
-- `save` - 💾 Salvar
-- `cancel` - ✕ Cancelar
-- `confirm` - ✓ Confirmar
-- `search` - 🔍 Buscar
-- `filter` - 🔽 Filtrar
-- `sort` - ⇅ Ordenar
-- `refresh` - ↻ Atualizar
-- `settings` - ⚙ Configurações
-- `help` - ? Ajuda
-- `info` - ℹ Informação
+- `home` - home (Casa)
+- `menu` - menu (Menu)
+- `close` - close (Fechar)
+- `back` - arrow_back (Voltar)
+- `forward` - arrow_forward (Avançar)
+- `up` - keyboard_arrow_up (Cima)
+- `down` - keyboard_arrow_down (Baixo)
+- `left` - keyboard_arrow_left (Esquerda)
+- `right` - keyboard_arrow_right (Direita)
+- `add` - add (Adicionar)
+- `remove` - remove (Remover)
+- `edit` - edit (Editar)
+- `delete` - delete (Deletar)
+- `save` - save (Salvar)
+- `cancel` - cancel (Cancelar)
+- `confirm` - check (Confirmar)
+- `search` - search (Buscar)
+- `filter` - filter_list (Filtrar)
+- `sort` - sort (Ordenar)
+- `refresh` - refresh (Atualizar)
+- `settings` - settings (Configurações)
+- `help` - help (Ajuda)
+- `info` - info (Informação)
 
 ### Status e Feedback
 
-- `warning` - ⚠ Aviso
-- `error` - ❌ Erro
-- `success` - ✅ Sucesso
-- `loading` - ⟳ Carregando
-- `spinner` - ⟳ Spinner
-- `check` - ✓ Check
-- `cross` - ✕ Cruz
-- `plus` - + Mais
-- `minus` - − Menos
+- `warning` - warning (Aviso)
+- `error` - error (Erro)
+- `success` - check_circle (Sucesso)
+- `loading` - autorenew (Carregando)
+- `spinner` - autorenew (Spinner)
+- `check` - check (Check)
+- `cross` - close (Cruz)
+- `plus` - add (Mais)
+- `minus` - remove (Menos)
 
 ### Usuários e Perfis
 
-- `user` - 👤 Usuário
-- `users` - 👥 Usuários
-- `profile` - 👤 Perfil
-- `logout` - ↪ Sair
-- `login` - ↩ Entrar
+- `user` - person (Usuário)
+- `users` - people (Usuários)
+- `profile` - account_circle (Perfil)
+- `logout` - logout (Sair)
+- `login` - login (Entrar)
 
 ### Financeiro
 
-- `money` - 💰 Dinheiro
-- `wallet` - 👛 Carteira
-- `credit-card` - 💳 Cartão de Crédito
-- `bank` - 🏦 Banco
-- `chart` - 📊 Gráfico
-- `trending-up` - 📈 Tendência Alta
-- `trending-down` - 📉 Tendência Baixa
-- `calculator` - 🧮 Calculadora
+- `money` - attach_money (Dinheiro)
+- `wallet` - account_balance_wallet (Carteira)
+- `credit-card` - credit_card (Cartão de Crédito)
+- `bank` - account_balance (Banco)
+- `chart` - bar_chart (Gráfico)
+- `trending-up` - trending_up (Tendência Alta)
+- `trending-down` - trending_down (Tendência Baixa)
+- `calculator` - calculate (Calculadora)
 
 ### Comunicação
 
-- `mail` - ✉ Email
-- `phone` - 📞 Telefone
-- `message` - 💬 Mensagem
-- `notification` - 🔔 Notificação
-- `bell` - 🔔 Sino
+- `mail` - mail (Email)
+- `phone` - phone (Telefone)
+- `message` - message (Mensagem)
+- `notification` - notifications (Notificação)
+- `bell` - notifications (Sino)
 
 ### Arquivos e Documentos
 
-- `file` - 📄 Arquivo
-- `folder` - 📁 Pasta
-- `download` - ⬇ Download
-- `upload` - ⬆ Upload
-- `attachment` - 📎 Anexo
+- `file` - description (Arquivo)
+- `folder` - folder (Pasta)
+- `download` - download (Download)
+- `upload` - upload (Upload)
+- `attachment` - attach_file (Anexo)
 
 ### Tempo e Data
 
-- `calendar` - 📅 Calendário
-- `clock` - 🕐 Relógio
-- `time` - ⏰ Tempo
-- `date` - 📅 Data
+- `calendar` - calendar_today (Calendário)
+- `clock` - access_time (Relógio)
+- `time` - schedule (Tempo)
+- `date` - event (Data)
 
-### Mídia
+## 🆕 Ícones Adicionais (Encontrados nos Componentes)
 
-- `play` - ▶ Play
-- `pause` - ⏸ Pausar
-- `stop` - ⏹ Parar
-- `volume` - 🔊 Volume
-- `mute` - 🔇 Mudo
+### Categorias e Gestão
 
-### Interação Social
+- `category` - category (Categoria)
+- `check_circle` - check_circle (Círculo de Check)
+- `trending_flat` - trending_flat (Tendência Plana)
+- `bar_chart` - bar_chart (Gráfico de Barras)
+- `event` - event (Evento)
+- `update` - update (Atualizar)
 
-- `like` - 👍 Curtir
-- `dislike` - 👎 Não Curtir
-- `share` - 📤 Compartilhar
-- `star` - ⭐ Estrela
-- `heart` - ❤ Coração
+### Utensílios e Ações
 
-### Setas e Navegação
+- `utensils` - restaurant (Utensílios)
+- `trash` - delete (Lixeira)
+- `money-bill` - attach_money (Nota de Dinheiro)
+- `exchange-alt` - swap_horiz (Trocar)
+- `folder-open` - folder_open (Pasta Aberta)
 
-- `arrow-up` - ↑ Seta Cima
-- `arrow-down` - ↓ Seta Baixo
-- `arrow-left` - ← Seta Esquerda
-- `arrow-right` - → Seta Direita
-- `chevron-up` - ⌃ Chevron Cima
-- `chevron-down` - ⌄ Chevron Baixo
-- `chevron-left` - ⌃ Chevron Esquerda
-- `chevron-right` - ⌄ Chevron Direita
+### Navegação e Interface Avançada
 
-### Interface
+- `account_balance_wallet` - account_balance_wallet (Carteira de Conta)
+- `analytics` - analytics (Analytics)
+- `people` - people (Pessoas)
+- `keyboard_arrow_down` - keyboard_arrow_down (Seta para Baixo)
+- `inbox` - inbox (Caixa de Entrada)
 
-- `dots` - ⋯ Pontos
-- `more` - ⋯ Mais
-- `menu-dots` - ⋯ Menu Pontos
+### Transações e Receitas
+
+- `receipt` - receipt (Recibo)
+- `celebration` - celebration (Celebração)
+- `schedule` - schedule (Agenda)
+- `play_arrow` - play_arrow (Seta de Play)
+- `flag` - flag (Bandeira)
+- `savings` - savings (Poupança)
+- `history` - history (Histórico)
+- `flash_on` - flash_on (Flash Ligado)
+
+## 📖 Como Usar
+
+```html
+<!-- Ícone básico -->
+<os-icon name="home"></os-icon>
+
+<!-- Ícone com tamanho personalizado -->
+<os-icon name="search" size="lg"></os-icon>
+
+<!-- Ícone com variante de cor -->
+<os-icon name="success" variant="success"></os-icon>
+
+<!-- Ícone com acessibilidade -->
+<os-icon name="info" role="informative" ariaLabel="Informação importante"></os-icon>
+```
+
+## 🔧 Propriedades
+
+- `name`: Nome do ícone (obrigatório)
+- `size`: Tamanho ('xs', 'sm', 'md', 'lg', 'xl', '2xl')
+- `variant`: Variante de cor ('default', 'primary', 'secondary', 'success', 'warning', 'error', 'info')
+- `role`: Papel de acessibilidade ('decorative', 'informative', 'interactive')
+- `ariaLabel`: Label para acessibilidade
+- `title`: Título do ícone
 
 ## 🎨 Font Awesome Support
 
@@ -260,8 +290,8 @@ O componente `os-icon` suporta três tipos de ícones:
 
 ### 1. Escolha do Tipo de Ícone
 
-- **Emoji**: Para ícones simples e universais
-- **Font Awesome**: Para ícones profissionais e consistentes
+- **Material Icons**: Para ícones consistentes e profissionais (padrão)
+- **Font Awesome**: Para ícones específicos não disponíveis no Material
 - **SVG Customizado**: Para ícones únicos do produto
 
 ### 2. Acessibilidade
@@ -272,9 +302,9 @@ O componente `os-icon` suporta três tipos de ícones:
 
 ### 3. Performance
 
-- Prefira ícones emoji para melhor performance
-- Use Font Awesome para consistência visual
-- Use SVG customizado apenas quando necessário
+- Prefira Material Icons para melhor performance e consistência
+- Use Font Awesome apenas quando necessário
+- Use SVG customizado apenas para ícones únicos
 
 ### 4. Responsividade
 

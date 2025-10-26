@@ -67,19 +67,21 @@ describe('OsDateInputComponent', () => {
     });
 
     it('should show prefix icon', () => {
-      fixture.componentRef.setInput('prefixIcon', '📅');
+      fixture.componentRef.setInput('prefixIcon', 'calendar');
       fixture.detectChanges();
 
-      const prefixIcon = fixture.debugElement.query(By.css('mat-icon[matPrefix]'));
-      expect(prefixIcon.nativeElement.textContent.trim()).toBe('📅');
+      const prefixIcon = fixture.debugElement.query(By.css('os-icon[matPrefix]'));
+      expect(prefixIcon).toBeTruthy();
+      expect(prefixIcon.componentInstance.name()).toBe('calendar');
     });
 
     it('should show suffix icon', () => {
-      fixture.componentRef.setInput('suffixIcon', '📅');
+      fixture.componentRef.setInput('suffixIcon', 'calendar');
       fixture.detectChanges();
 
-      const suffixIcon = fixture.debugElement.query(By.css('mat-icon[matSuffix]'));
-      expect(suffixIcon.nativeElement.textContent.trim()).toBe('📅');
+      const suffixIcon = fixture.debugElement.query(By.css('os-icon[matSuffix]'));
+      expect(suffixIcon).toBeTruthy();
+      expect(suffixIcon.componentInstance.name()).toBe('calendar');
     });
   });
 

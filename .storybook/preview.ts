@@ -1,14 +1,21 @@
 import { setCompodocJson } from '@storybook/addon-docs/angular';
 
 import type { Preview } from '@storybook/angular';
-// Import global styles - commented out due to SCSS parsing issues
+// Import global styles - temporarily disabled due to SCSS processing issues
 // import '../src/styles.scss';
+
+// Add Material Icons font directly
+const materialIconsLink = document.createElement('link');
+materialIconsLink.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+materialIconsLink.rel = 'stylesheet';
+document.head.appendChild(materialIconsLink);
 
 // Import Compodoc documentation if available
 try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const docJson = require('../documentation.json');
   setCompodocJson(docJson);
-} catch (e) {
+} catch {
   console.warn('Compodoc documentation not found. Run "npm run docs:json" to generate it.');
 }
 
