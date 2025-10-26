@@ -233,7 +233,6 @@ export class OsDetailTemplateComponent implements OnDestroy {
     effect(() => {
       const tabs = this.tabs();
       const activeTabId = this.activeTabId();
-      const size = this.size();
 
       this.navigationItems.set(
         tabs.map((tab) => ({
