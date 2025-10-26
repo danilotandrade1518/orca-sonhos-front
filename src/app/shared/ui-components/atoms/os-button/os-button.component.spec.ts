@@ -205,12 +205,12 @@ describe('OsButtonComponent', () => {
     });
 
     it('should show icon when provided', () => {
-      fixture.componentRef.setInput('icon', '★');
+      fixture.componentRef.setInput('icon', 'home');
       fixture.detectChanges();
 
-      const iconElement = fixture.nativeElement.querySelector('.os-button__icon');
+      const iconElement = fixture.nativeElement.querySelector('mat-icon');
       expect(iconElement).toBeTruthy();
-      expect(iconElement.textContent.trim()).toBe('★');
+      expect(iconElement.getAttribute('fontIcon')).toBe('home');
     });
 
     it('should not show icon when loading', () => {
