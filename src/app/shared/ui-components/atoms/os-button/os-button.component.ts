@@ -2,6 +2,7 @@ import { Component, input, output, computed, ChangeDetectionStrategy } from '@an
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
+import { OsIconComponent } from '../os-icon';
 
 export type OsButtonVariant =
   | 'primary'
@@ -15,7 +16,7 @@ export type OsButtonSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-button',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatRippleModule],
+  imports: [CommonModule, MatButtonModule, MatRippleModule, OsIconComponent],
   template: `
     <button
       [matButton]="buttonVariant"
@@ -30,9 +31,7 @@ export type OsButtonSize = 'small' | 'medium' | 'large';
       @if (loading()) {
       <span class="os-button__spinner" aria-hidden="true"></span>
       } @else if (icon() && !loading()) {
-      <span class="os-button__icon" [attr.aria-hidden]="true">
-        {{ icon() }}
-      </span>
+      <os-icon [name]="icon()" [ariaHidden]="true" />
       }
       <span class="os-button__content">
         <ng-content />

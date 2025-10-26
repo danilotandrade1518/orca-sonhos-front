@@ -57,7 +57,8 @@ describe('OsMoneyInputComponent', () => {
 
     it('should show currency symbol', () => {
       const currency = fixture.debugElement.query(By.css('.os-money-input__currency-icon'));
-      expect(currency.nativeElement.textContent.trim()).toBe('💰');
+      expect(currency).toBeTruthy();
+      expect(currency.componentInstance.name()).toBe('attach_money');
     });
   });
 

@@ -8,7 +8,7 @@ const meta: Meta<OsIconComponent> = {
     docs: {
       description: {
         component:
-          'Ícone do Design System Orca Sonhos com 7 variantes, 6 tamanhos, suporte a animações e Font Awesome.',
+          'Ícone do Design System Orca Sonhos com 7 variantes, 6 tamanhos, suporte a animações e Material Icons. Centraliza a renderização de ícones para garantir consistência visual e facilitar manutenção.',
       },
     },
   },
@@ -303,7 +303,7 @@ export const CommonIcons: Story = {
           <div style="font-size: 12px; margin-top: 4px;">Search</div>
         </div>
         <div style="text-align: center;">
-          <os-icon name="money" size="lg" variant="success"></os-icon>
+          <os-icon name="attach_money" size="lg" variant="success"></os-icon>
           <div style="font-size: 12px; margin-top: 4px;">Money</div>
         </div>
         <div style="text-align: center;">
@@ -311,8 +311,12 @@ export const CommonIcons: Story = {
           <div style="font-size: 12px; margin-top: 4px;">Chart</div>
         </div>
         <div style="text-align: center;">
-          <os-icon name="calendar" size="lg" variant="primary"></os-icon>
+          <os-icon name="calendar_today" size="lg" variant="primary"></os-icon>
           <div style="font-size: 12px; margin-top: 4px;">Calendar</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="eye" size="lg" variant="secondary"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Eye</div>
         </div>
         <div style="text-align: center;">
           <os-icon name="notification" size="lg" variant="warning"></os-icon>
@@ -326,13 +330,18 @@ export const CommonIcons: Story = {
           <os-icon name="star" size="lg" variant="warning"></os-icon>
           <div style="font-size: 12px; margin-top: 4px;">Star</div>
         </div>
+        <div style="text-align: center;">
+          <os-icon name="close" size="lg" variant="default"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Close</div>
+        </div>
       </div>
     `,
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Demonstração de ícones comuns do sistema.',
+        story:
+          'Demonstração de ícones comuns do sistema, incluindo os novos ícones adicionados na migração OS-224.',
       },
     },
   },
@@ -427,6 +436,47 @@ export const SVGSupport: Story = {
     docs: {
       description: {
         story: 'Demonstração de suporte a SVG e fallback para ícones não encontrados.',
+      },
+    },
+  },
+};
+
+export const FormIcons: Story = {
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+        <div style="text-align: center;">
+          <os-icon name="eye" size="lg" variant="primary"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Eye (Suffix)</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="attach_money" size="lg" variant="success"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Money (Prefix)</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="calendar_today" size="lg" variant="primary"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Calendar (Toggle)</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="close" size="lg" variant="default"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Close (Clear)</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="search" size="lg" variant="primary"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Search</div>
+        </div>
+        <div style="text-align: center;">
+          <os-icon name="filter" size="lg" variant="secondary"></os-icon>
+          <div style="font-size: 12px; margin-top: 4px;">Filter</div>
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Ícones específicos para formulários e inputs, incluindo os novos ícones adicionados na migração OS-224.',
       },
     },
   },

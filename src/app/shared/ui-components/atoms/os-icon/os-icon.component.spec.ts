@@ -29,13 +29,13 @@ describe('OsIconComponent', () => {
     it('should display icon content when name provided', () => {
       fixture.componentRef.setInput('name', 'home');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('🏠');
+      expect(component.iconContent()).toBe('home');
     });
 
     it('should display custom icon when name not in map', () => {
       fixture.componentRef.setInput('name', 'custom-icon');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('?');
+      expect(component.iconContent()).toBe('help');
     });
   });
 
@@ -206,49 +206,49 @@ describe('OsIconComponent', () => {
     it('should map home icon correctly', () => {
       fixture.componentRef.setInput('name', 'home');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('🏠');
+      expect(component.iconContent()).toBe('home');
     });
 
     it('should map search icon correctly', () => {
       fixture.componentRef.setInput('name', 'search');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('🔍');
+      expect(component.iconContent()).toBe('search');
     });
 
     it('should map user icon correctly', () => {
       fixture.componentRef.setInput('name', 'user');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('👤');
+      expect(component.iconContent()).toBe('person');
     });
 
     it('should map money icon correctly', () => {
       fixture.componentRef.setInput('name', 'money');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('💰');
+      expect(component.iconContent()).toBe('attach_money');
     });
 
     it('should map settings icon correctly', () => {
       fixture.componentRef.setInput('name', 'settings');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('⚙');
+      expect(component.iconContent()).toBe('settings');
     });
 
     it('should map check icon correctly', () => {
       fixture.componentRef.setInput('name', 'check');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('✓');
+      expect(component.iconContent()).toBe('check');
     });
 
     it('should map close icon correctly', () => {
       fixture.componentRef.setInput('name', 'close');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('✕');
+      expect(component.iconContent()).toBe('close');
     });
 
     it('should map loading icon correctly', () => {
       fixture.componentRef.setInput('name', 'loading');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('⟳');
+      expect(component.iconContent()).toBe('autorenew');
     });
   });
 
@@ -270,14 +270,14 @@ describe('OsIconComponent', () => {
     it('should use fallback icon for unsupported icon', () => {
       fixture.componentRef.setInput('name', 'unsupported-icon');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('?');
+      expect(component.iconContent()).toBe('help');
     });
 
     it('should use custom fallback icon', () => {
       fixture.componentRef.setInput('fallbackIcon', 'error');
       fixture.componentRef.setInput('name', 'unsupported-icon');
       fixture.detectChanges();
-      expect(component.iconContent()).toBe('❌');
+      expect(component.iconContent()).toBe('error');
     });
 
     it('should use fallback when name is empty', () => {

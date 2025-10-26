@@ -165,3 +165,44 @@ Garantir qualidade, acessibilidade e atualização de documentos.
 - **Funcionalidade preservada**: Todos os componentes funcionando corretamente
 - **Acessibilidade mantida**: `aria-label` e `aria-hidden` preservados
 - **Responsividade validada**: Touch targets e alinhamento mantidos
+
+---
+
+## 📅 FASE 5: Atualização do Storybook [Status: ✅]
+
+### 🎯 Objetivo
+
+Atualizar o storybook story do `os-icon` para refletir as melhorias e novos ícones adicionados na migração.
+
+### 📋 Tarefas
+
+#### Atualizar descrição do componente [✅]
+
+**Descrição**: Corrigir descrição para mencionar Material Icons ao invés de Font Awesome.
+**Critério de Conclusão**: Descrição precisa e atualizada.
+
+#### Adicionar nova story FormIcons [✅]
+
+**Descrição**: Criar story específica para demonstrar ícones de formulário incluindo os novos ícones (`eye`, `attach_money`, `calendar_today`).
+**Critério de Conclusão**: Story funcional com documentação adequada.
+
+#### Atualizar story CommonIcons [✅]
+
+**Descrição**: Incluir os novos ícones adicionados na migração OS-224 na demonstração de ícones comuns.
+**Critério de Conclusão**: Todos os novos ícones representados.
+
+### 🧪 Critérios de Validação
+
+- [x] Storybook stories funcionando corretamente
+- [x] Novos ícones visíveis nas stories
+- [x] Documentação atualizada
+- [x] Todos os testes passando (2153 testes)
+
+### 📝 Comentários da Fase
+
+- **Descrição corrigida**: Atualizada para mencionar Material Icons corretamente
+- **Nova story FormIcons**: Criada para demonstrar ícones específicos de formulário
+- **CommonIcons atualizada**: Incluídos os novos ícones `eye`, `attach_money`, `calendar_today`, `close`
+- **Documentação melhorada**: Descrições mais precisas e informativas
+- **Testes validados**: Todos os 2153 testes passando sem regressões
+- **Storybook funcional**: Stories renderizando corretamente com os novos ícones

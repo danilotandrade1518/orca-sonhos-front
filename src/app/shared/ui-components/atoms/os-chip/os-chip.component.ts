@@ -1,6 +1,7 @@
 import { Component, input, output, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
+import { OsIconComponent } from '../os-icon';
 
 export type OsChipSize = 'small' | 'medium' | 'large';
 export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -8,7 +9,7 @@ export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'd
 @Component({
   selector: 'os-chip',
   standalone: true,
-  imports: [CommonModule, MatChipsModule],
+  imports: [CommonModule, MatChipsModule, OsIconComponent],
   template: `
     <mat-chip
       [id]="chipId"
@@ -29,7 +30,7 @@ export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'd
       (blur)="onBlur($event)"
     >
       @if (icon()) {
-      <span class="os-chip__icon" [attr.aria-hidden]="true">{{ icon() }}</span>
+      <os-icon [name]="icon()" [ariaLabel]="ariaLabel()"></os-icon>
       }
       <span class="os-chip__text">{{ text() }}</span>
       @if (removable()) {
@@ -54,7 +55,7 @@ export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'd
 })
 export class OsChipComponent {
   readonly text = input<string>('');
-  readonly icon = input<string | null>(null);
+  readonly icon = input<string>('');
   readonly removable = input(false);
   readonly disabled = input(false);
   readonly selected = input(false);
