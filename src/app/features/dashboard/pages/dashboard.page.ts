@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
-import { BudgetDto } from '@dtos/budget';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';

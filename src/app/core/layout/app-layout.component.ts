@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   inject,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -61,7 +60,7 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterModule, OsAppShellTemplateComponent, BudgetSelectorComponent],
 })
-export class AppLayoutComponent implements OnInit, OnDestroy {
+export class AppLayoutComponent implements OnInit {
   private readonly router = inject(Router);
 
   // State signals
@@ -205,9 +204,5 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
     // Initialize with current route
     this.currentRoute.set(this.router.url);
-  }
-
-  ngOnDestroy(): void {
-    // Cleanup handled by async pipe
   }
 }
