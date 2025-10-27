@@ -4,288 +4,90 @@
   min-height: 100vh;
   background-color: var(--os-color-background-secondary);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   position: relative;
   overflow-x: hidden;
 }
 
-.dashboard-sidebar {
-  flex-shrink: 0;
-  width: 240px;
-  transition: width var(--os-transition-normal) var(--os-ease-in-out);
-  background-color: var(--os-color-background-primary);
-  border-right: var(--os-border-width-1) solid var(--os-color-border);
-  box-shadow: var(--os-shadow-sm);
-
-  &.os-sidebar--collapsed {
-    width: 64px;
-  }
-
-  @media (max-width: 991px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: var(--os-z-index-modal);
-    transform: translateX(-100%);
-    transition: transform var(--os-transition-normal) var(--os-ease-in-out);
-    box-shadow: var(--os-shadow-lg);
-
-    &.os-sidebar--open {
-      transform: translateX(0);
-    }
-  }
-}
-
-.dashboard-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  background-color: var(--os-color-background-secondary);
-  transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
-
-  @media (max-width: 991px) {
-    width: 100%;
-    margin-left: 0;
-  }
-}
-
-// Skip Links for Accessibility
-.dashboard-skip-link {
-  position: absolute;
-  top: -40px;
-  left: 6px;
-  background: var(--os-color-primary);
-  color: var(--os-color-text-inverse);
-  padding: var(--os-spacing-2) var(--os-spacing-4);
-  text-decoration: none;
-  border-radius: var(--os-border-radius-md);
-  font-size: var(--os-font-size-sm);
-  font-weight: var(--os-font-weight-medium);
-  z-index: var(--os-z-index-tooltip);
-  transition: var(--os-transition-all);
-
-  &:focus {
-    top: 6px;
-    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
-    outline-offset: var(--os-focus-ring-offset);
-  }
-
-  &:hover {
-    background: var(--os-color-primary-hover);
-  }
-}
-
-.dashboard-header {
+.dashboard-page__header {
+  padding: var(--os-spacing-6) 0 var(--os-spacing-4);
+  text-align: center;
   background-color: var(--os-color-background-primary);
   border-bottom: var(--os-border-width-1) solid var(--os-color-border);
-  padding: var(--os-spacing-4) 0;
-  box-shadow: var(--os-shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: var(--os-z-index-sticky);
-  backdrop-filter: blur(8px);
-  background-color: rgba(var(--os-color-background-primary-rgb), 0.95);
 }
 
-.dashboard-header__container {
-  max-width: var(--os-container-xl);
-  margin: 0 auto;
-  padding: 0 var(--os-spacing-4);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--os-spacing-4);
-}
-
-.dashboard-header__brand {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.dashboard-header__logo {
-  margin: 0;
-  font-size: var(--os-font-size-2xl);
+.dashboard-page__title {
+  margin: 0 0 var(--os-spacing-2) 0;
+  font-size: var(--os-font-size-3xl);
   font-weight: var(--os-font-weight-bold);
   color: var(--os-color-text-primary);
-  white-space: nowrap;
 }
 
-.dashboard-header__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--os-spacing-4);
-  flex: 1;
-  justify-content: flex-end;
-  min-width: 0;
+.dashboard-page__subtitle {
+  margin: 0;
+  font-size: var(--os-font-size-lg);
+  color: var(--os-color-text-secondary);
+  font-weight: var(--os-font-weight-normal);
 }
 
-.dashboard-main {
+.dashboard-page__main {
   flex: 1;
   padding: var(--os-spacing-8) 0;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 200px);
 }
 
-.dashboard-main__container {
+.dashboard-page__container {
   max-width: var(--os-container-xl);
   margin: 0 auto;
   padding: 0 var(--os-spacing-4);
 }
 
-.dashboard-main__title {
-  margin: 0 0 var(--os-spacing-6) 0;
-  font-size: var(--os-font-size-2xl);
-  font-weight: var(--os-font-weight-bold);
-  color: var(--os-color-text-primary);
-  text-align: center;
-
-  @media (max-width: 575px) {
-    font-size: var(--os-font-size-xl);
-    margin-bottom: var(--os-spacing-4);
-  }
+// Contextual Actions Slot Styles
+.dashboard-contextual-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--os-spacing-2) 0;
+  background-color: var(--os-color-background-primary);
+  border-bottom: var(--os-border-width-1) solid var(--os-color-border);
 }
 
 // Mobile-first responsive design
 // Tablet: 576-991px
 @media (max-width: 991px) {
-  .dashboard-header__container {
+  .dashboard-page__container {
     padding: 0 var(--os-spacing-3);
   }
 
-  .dashboard-main__container {
-    padding: 0 var(--os-spacing-3);
+  .dashboard-page__main {
+    padding: var(--os-spacing-6) 0;
   }
 }
 
 // Mobile: 0-575px
 @media (max-width: 575px) {
-  .dashboard-header {
-    padding: var(--os-spacing-3) 0;
+  .dashboard-page__header {
+    padding: var(--os-spacing-4) 0 var(--os-spacing-3);
   }
 
-  .dashboard-header__container {
-    flex-direction: column;
-    gap: var(--os-spacing-3);
-    padding: 0 var(--os-spacing-4);
+  .dashboard-page__title {
+    font-size: var(--os-font-size-2xl);
+    margin-bottom: var(--os-spacing-1);
   }
 
-  .dashboard-header__brand {
-    width: 100%;
-    justify-content: center;
+  .dashboard-page__subtitle {
+    font-size: var(--os-font-size-base);
   }
 
-  .dashboard-header__logo {
-    font-size: var(--os-font-size-xl);
+  .dashboard-page__main {
+    padding: var(--os-spacing-4) 0;
   }
 
-  .dashboard-header__actions {
-    width: 100%;
-    justify-content: center;
+  .dashboard-page__container {
+    padding: 0 var(--os-spacing-2);
   }
 
-  .dashboard-main {
-    padding: var(--os-spacing-6) 0;
-  }
-
-  .dashboard-main__container {
-    padding: 0 var(--os-spacing-4);
-  }
-}
-
-// Small mobile adjustments
-@media (max-width: 480px) {
-  .dashboard-header__container {
-    padding: 0 var(--os-spacing-3);
-  }
-
-  .dashboard-header__logo {
-    font-size: var(--os-font-size-lg);
-  }
-
-  .dashboard-main__container {
-    padding: 0 var(--os-spacing-3);
-  }
-}
-
-// Persona-specific optimizations
-.dashboard-page {
-  // Ana (Organizadora Familiar) - Interface intuitiva, compartilhamento simples
-  &--persona-ana {
-    .dashboard-header__actions {
-      gap: var(--os-spacing-2);
-    }
-
-    .dashboard-main__title {
-      text-align: left;
-      margin-bottom: var(--os-spacing-4);
-    }
-  }
-
-  // Carlos (Jovem Planejador) - Onboarding educativo, simplicidade
-  &--persona-carlos {
-    .dashboard-main {
-      padding: var(--os-spacing-6) 0;
-    }
-
-    .dashboard-main__title {
-      font-size: var(--os-font-size-xl);
-      margin-bottom: var(--os-spacing-4);
-    }
-  }
-
-  // Roberto & Maria (Casal Experiente) - Múltiplas metas, relatórios avançados
-  &--persona-roberto-maria {
-    .dashboard-header__container {
-      max-width: var(--os-container-2xl);
-    }
-
-    .dashboard-main__container {
-      max-width: var(--os-container-2xl);
-    }
-  }
-
-  // Júlia (Empreendedora Iniciante) - Flexibilidade, renda variável
-  &--persona-julia {
-    .dashboard-main {
-      padding: var(--os-spacing-4) 0;
-    }
-
-    .dashboard-main__title {
-      font-size: var(--os-font-size-lg);
-      margin-bottom: var(--os-spacing-3);
-    }
-  }
-}
-
-// Enhanced accessibility for all personas
-.dashboard-page {
-  // High contrast mode support
-  @media (prefers-contrast: high) {
-    .dashboard-header {
-      border-bottom-width: 2px;
-    }
-
-    .dashboard-sidebar {
-      border-right-width: 2px;
-    }
-  }
-
-  // Reduced motion support
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      transition: none !important;
-      animation: none !important;
-    }
-  }
-
-  // Dark mode support
-  @media (prefers-color-scheme: dark) {
-    background-color: var(--os-color-background-primary-dark);
-
-    .dashboard-content {
-      background-color: var(--os-color-background-secondary-dark);
-    }
+  .dashboard-contextual-actions {
+    padding: var(--os-spacing-1) 0;
   }
 }

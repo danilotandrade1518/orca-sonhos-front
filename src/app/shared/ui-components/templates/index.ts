@@ -36,3 +36,6 @@ export type { DrawerTemplateConfig } from './os-drawer-template/os-drawer-templa
 
 export { OsPanelTemplateComponent } from './os-panel-template/os-panel-template.component';
 export type { PanelTemplateConfig } from './os-panel-template/os-panel-template.component';
+
+export { OsAppShellTemplateComponent } from './os-app-shell-template/os-app-shell-template.component';
+export type { AppShellLayout } from './os-app-shell-template/os-app-shell-template.component';

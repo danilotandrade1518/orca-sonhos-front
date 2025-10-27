@@ -1,79 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal, HostListener } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
-import { BudgetDto } from '@dtos/budget';
-import { BudgetSelectorComponent } from '@features/dashboard/components/budget-selector/budget-selector.component';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
-import {
-  OsSidebarComponent,
-  SidebarItem,
-} from '@shared/ui-components/organisms/os-sidebar/os-sidebar.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, BudgetSelectorComponent, DashboardWidgetsComponent, OsSidebarComponent],
+  imports: [CommonModule, DashboardWidgetsComponent],
   template: `
-    <div [class]="pageClass()">
-      <!-- Skip Links for Accessibility -->
-      <a href="#main-content" class="dashboard-skip-link">Pular para conteúdo principal</a>
-      <a href="#budget-selector" class="dashboard-skip-link">Pular para seletor de orçamento</a>
-
-      <!-- Sidebar -->
-      <os-sidebar
-        [items]="sidebarItems()"
-        [variant]="'default'"
-        [size]="'medium'"
-        [collapsed]="sidebarCollapsed()"
-        [title]="'OrçaSonhos'"
-        [showHeader]="true"
-        [showToggleButton]="true"
-        [ariaLabel]="'Navegação principal'"
-        (itemClick)="onSidebarItemClick($event)"
-        (collapseChange)="onSidebarToggle($event)"
-        class="dashboard-sidebar"
-      />
-
-      <!-- Main Content Area -->
-      <div class="dashboard-content">
-        <!-- Header with Budget Selector -->
-        <header class="dashboard-header" role="banner">
-          <div class="dashboard-header__container">
-            <div class="dashboard-header__brand">
-              <h1 class="dashboard-header__logo">OrçaSonhos</h1>
-            </div>
-
-            <div class="dashboard-header__actions">
-              <os-dashboard-budget-selector
-                id="budget-selector"
-                [variant]="'primary'"
-                [size]="'medium'"
-                [placeholder]="'Selecionar orçamento'"
-                [showCreateButton]="true"
-                [ariaLabel]="'Seletor de orçamento'"
-                (budgetSelected)="onBudgetSelected($event)"
-                (createBudgetRequested)="onCreateBudgetRequested()"
-              />
-            </div>
-          </div>
-        </header>
-
-        <!-- Main Content -->
-        <main id="main-content" class="dashboard-main" role="main" aria-label="Dashboard principal">
-          <div class="dashboard-main__container">
-            <h2 class="dashboard-main__title" id="dashboard-title">Dashboard</h2>
-            <os-dashboard-widgets-container
-              [widgets]="dashboardWidgets()"
-              [variant]="'default'"
-              [size]="'medium'"
-              (widgetClick)="onWidgetClick($event)"
-              (retryRequested)="onRetryRequested()"
-            />
-          </div>
-        </main>
+    <div class="dashboard-page">
+      <!-- Page Header -->
+      <div class="dashboard-page__header">
+        <h1 class="dashboard-page__title">Dashboard</h1>
+        <p class="dashboard-page__subtitle">Visão geral do seu orçamento e metas</p>
       </div>
+
+      <!-- Main Content -->
+      <main class="dashboard-page__main" role="main" aria-label="Dashboard principal">
+        <div class="dashboard-page__container">
+          <os-dashboard-widgets-container
+            [widgets]="dashboardWidgets()"
+            [variant]="'default'"
+            [size]="'medium'"
+            (widgetClick)="onWidgetClick($event)"
+            (retryRequested)="onRetryRequested()"
+          />
+        </div>
+      </main>
     </div>
   `,
   styleUrl: './dashboard.page.scss',
@@ -84,48 +39,7 @@ export class DashboardPage implements OnInit {
 
   // Signals
   readonly isLoading = signal(false);
-  readonly sidebarCollapsed = signal(false);
   readonly currentPersona = signal<'ana' | 'carlos' | 'roberto-maria' | 'julia'>('ana');
-
-  // Computed properties
-  readonly sidebarItems = computed((): SidebarItem[] => [
-    {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: 'dashboard',
-      route: '/dashboard',
-    },
-    {
-      id: 'budgets',
-      label: 'Orçamentos',
-      icon: 'account_balance',
-      route: '/budgets',
-    },
-    {
-      id: 'goals',
-      label: 'Metas',
-      icon: 'flag',
-      route: '/goals',
-    },
-    {
-      id: 'transactions',
-      label: 'Transações',
-      icon: 'receipt',
-      route: '/transactions',
-    },
-    {
-      id: 'reports',
-      label: 'Relatórios',
-      icon: 'analytics',
-      route: '/reports',
-    },
-    {
-      id: 'settings',
-      label: 'Configurações',
-      icon: 'settings',
-      route: '/settings',
-    },
-  ]);
 
   readonly dashboardWidgets = computed((): WidgetConfiguration[] => [
     {
@@ -162,12 +76,6 @@ export class DashboardPage implements OnInit {
     },
   ]);
 
-  readonly pageClass = computed(() => {
-    const baseClass = 'dashboard-page';
-    const persona = this.currentPersona();
-    return `${baseClass} ${baseClass}--persona-${persona}`;
-  });
-
   ngOnInit(): void {
     this.loadDashboardData();
   }
@@ -195,60 +103,12 @@ export class DashboardPage implements OnInit {
     }
   }
 
-  onBudgetSelected(budget: BudgetDto): void {
-    console.log('Orçamento selecionado:', budget);
-    // O BudgetSelectionService já foi atualizado pelo componente
-    // Recarregar dados do dashboard para o novo orçamento
-    this.loadDashboardData();
-  }
-
-  onCreateBudgetRequested(): void {
-    console.log('Criar novo orçamento solicitado');
-    // Implementar navegação para criação de orçamento
-  }
-
   onWidgetClick(widget: WidgetConfiguration): void {
     console.log('Widget clicado:', widget);
   }
 
   onRetryRequested(): void {
-    console.log('Tentar novamente solicitado');
     this.loadDashboardData();
-  }
-
-  onSidebarItemClick(item: SidebarItem): void {
-    console.log('Sidebar item clicked:', item);
-    // Future: implement navigation logic
-  }
-
-  onSidebarToggle(collapsed: boolean): void {
-    this.sidebarCollapsed.set(collapsed);
-    console.log('Sidebar toggled:', collapsed);
-  }
-
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
-    // Alt + B: Focus budget selector
-    if (event.altKey && event.key === 'b') {
-      event.preventDefault();
-      const budgetSelector = document.getElementById('budget-selector');
-      if (budgetSelector) {
-        budgetSelector.focus();
-      }
-    }
-
-    // /: Focus search (if implemented)
-    if (event.key === '/' && !event.ctrlKey && !event.altKey && !event.metaKey) {
-      event.preventDefault();
-      // Future: implement search functionality
-      console.log('Search shortcut triggered');
-    }
-
-    // Escape: Close any open modals/dropdowns
-    if (event.key === 'Escape') {
-      // Future: implement modal/dropdown closing
-      console.log('Escape key pressed');
-    }
   }
 
   // Persona management methods

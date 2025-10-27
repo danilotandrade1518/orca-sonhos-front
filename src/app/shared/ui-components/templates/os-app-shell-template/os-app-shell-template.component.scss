@@ -1,0 +1,275 @@
+@use '../../theme/_tokens.scss' as *;
+
+.os-app-shell-template {
+  min-height: 100vh;
+  background-color: var(--os-color-background-secondary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+
+  &--compact {
+    .os-app-shell-template__main {
+      padding: var(--os-spacing-4) 0;
+    }
+  }
+
+  &--dark {
+    background-color: var(--os-color-background-secondary-dark);
+  }
+
+  &--mobile {
+    .os-app-shell-template__content {
+      flex-direction: column;
+    }
+  }
+}
+
+// Skip Links for Accessibility
+.os-app-shell-template__skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--os-color-primary);
+  color: var(--os-color-text-inverse);
+  padding: var(--os-spacing-2) var(--os-spacing-4);
+  text-decoration: none;
+  border-radius: var(--os-border-radius-md);
+  font-size: var(--os-font-size-sm);
+  font-weight: var(--os-font-weight-medium);
+  z-index: var(--os-z-index-tooltip);
+  transition: var(--os-transition-all);
+
+  &:focus {
+    top: 6px;
+    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+    outline-offset: var(--os-focus-ring-offset);
+  }
+
+  &:hover {
+    background: var(--os-color-primary-hover);
+  }
+}
+
+.os-app-shell-template__content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  background-color: var(--os-color-background-secondary);
+  transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.os-app-shell-template__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--os-spacing-8) 0;
+  min-height: calc(100vh - 80px);
+  background-color: var(--os-color-background-secondary);
+
+  &--with-sidebar {
+    margin-left: 280px;
+    transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
+
+    @media (max-width: 991px) {
+      margin-left: 0;
+    }
+  }
+
+  &--sidebar-collapsed {
+    margin-left: 60px;
+
+    @media (max-width: 991px) {
+      margin-left: 0;
+    }
+  }
+}
+
+.os-app-shell-template__contextual-actions {
+  padding: 0 var(--os-spacing-4);
+  margin-bottom: var(--os-spacing-4);
+  border-bottom: var(--os-border-width-1) solid var(--os-color-border);
+  padding-bottom: var(--os-spacing-4);
+
+  @media (max-width: 575px) {
+    padding: 0 var(--os-spacing-3);
+    margin-bottom: var(--os-spacing-3);
+    padding-bottom: var(--os-spacing-3);
+  }
+}
+
+.os-app-shell-template__theme-toggle {
+  display: flex;
+  align-items: center;
+  padding: var(--os-spacing-2);
+  margin-left: var(--os-spacing-2);
+  border-left: var(--os-border-width-1) solid var(--os-color-border);
+
+  @media (max-width: 575px) {
+    margin-left: var(--os-spacing-1);
+    padding: var(--os-spacing-1);
+  }
+}
+
+// Responsive breakpoints
+// Mobile: 0-575px
+@media (max-width: 575px) {
+  .os-app-shell-template__main {
+    padding: var(--os-spacing-4) 0;
+    min-height: calc(100vh - 60px);
+  }
+}
+
+// Tablet: 576-991px
+@media (min-width: 576px) and (max-width: 991px) {
+  .os-app-shell-template__main {
+    padding: var(--os-spacing-6) 0;
+  }
+}
+
+// Desktop: ≥992px
+@media (min-width: 992px) {
+  .os-app-shell-template__main {
+    padding: var(--os-spacing-8) 0;
+  }
+}
+
+// Loading State
+.os-app-shell-template__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--os-spacing-8);
+  min-height: 200px;
+  text-align: center;
+}
+
+.os-app-shell-template__spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--os-color-border);
+  border-top: 4px solid var(--os-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--os-spacing-4);
+}
+
+.os-app-shell-template__loading-text {
+  color: var(--os-color-text-secondary);
+  font-size: var(--os-font-size-base);
+  margin: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Error State
+.os-app-shell-template__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--os-spacing-8);
+  min-height: 200px;
+  text-align: center;
+  background-color: var(--os-color-background-error);
+  border: var(--os-border-width-1) solid var(--os-color-border-error);
+  border-radius: var(--os-border-radius-lg);
+  margin: var(--os-spacing-4);
+}
+
+.os-app-shell-template__error-icon {
+  font-size: var(--os-font-size-2xl);
+  margin-bottom: var(--os-spacing-4);
+}
+
+.os-app-shell-template__error-title {
+  color: var(--os-color-text-error);
+  font-size: var(--os-font-size-lg);
+  font-weight: var(--os-font-weight-semibold);
+  margin: 0 0 var(--os-spacing-2) 0;
+}
+
+.os-app-shell-template__error-message {
+  color: var(--os-color-text-secondary);
+  font-size: var(--os-font-size-base);
+  margin: 0 0 var(--os-spacing-4) 0;
+  max-width: 400px;
+}
+
+.os-app-shell-template__retry-button {
+  min-height: var(--os-touch-target-min);
+  min-width: var(--os-touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--os-spacing-2);
+  font-size: var(--os-font-size-base);
+  line-height: var(--os-line-height-normal);
+  font-weight: var(--os-font-weight-medium);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--os-border-radius-md);
+  cursor: pointer;
+  transition: var(--os-transition-all);
+  background-color: var(--os-color-primary);
+  color: var(--os-color-text-inverse);
+  padding: var(--os-spacing-3) var(--os-spacing-6);
+
+  &:hover {
+    background-color: var(--os-color-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+    outline-offset: var(--os-focus-ring-offset);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Dark theme adjustments
+.os-app-shell-template--dark {
+  .os-app-shell-template__contextual-actions {
+    border-bottom-color: var(--os-color-border-dark);
+  }
+
+  .os-app-shell-template__loading-text {
+    color: var(--os-color-text-secondary-dark);
+  }
+
+  .os-app-shell-template__error {
+    background-color: var(--os-color-background-error-dark);
+    border-color: var(--os-color-border-error-dark);
+  }
+
+  .os-app-shell-template__error-title {
+    color: var(--os-color-text-error-dark);
+  }
+
+  .os-app-shell-template__error-message {
+    color: var(--os-color-text-secondary-dark);
+  }
+}
