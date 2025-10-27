@@ -35,6 +35,12 @@ export interface HeaderAction {
   loading?: boolean;
 }
 
+export interface BreadcrumbItem {
+  label: string;
+  route?: string;
+  icon?: string;
+}
+
 @Component({
   selector: 'os-header',
   standalone: true,
@@ -90,6 +96,34 @@ export interface HeaderAction {
             </ul>
           </nav>
           }
+
+          <!-- Breadcrumbs -->
+          @if (breadcrumbs().length > 0) {
+          <nav class="os-header__breadcrumbs" aria-label="Breadcrumb">
+            <ul class="os-header__breadcrumb-list">
+              @for (crumb of breadcrumbs(); track crumb.label; let isLast = $last) {
+              <li class="os-header__breadcrumb-item">
+                @if (isLast) {
+                <span class="os-header__breadcrumb-current">{{ crumb.label }}</span>
+                } @else { @if (crumb.route) {
+                <a class="os-header__breadcrumb-link" [routerLink]="crumb.route">
+                  {{ crumb.label }}
+                </a>
+                } @else {
+                <span class="os-header__breadcrumb-label">{{ crumb.label }}</span>
+                }
+                <os-icon name="chevron-right" size="xs" class="os-header__breadcrumb-separator" />
+                }
+              </li>
+              }
+            </ul>
+          </nav>
+          }
+
+          <!-- Custom Header Content Slot -->
+          <div class="os-header__custom-content">
+            <ng-content select="[slot=header-content]"></ng-content>
+          </div>
 
           <div class="os-header__actions">
             @if (actions().length > 0) {
@@ -245,6 +279,9 @@ export class OsHeaderComponent implements OnDestroy {
 
   // Actions inputs
   readonly actions = input<HeaderAction[]>([]);
+
+  // Breadcrumbs
+  readonly breadcrumbs = input<BreadcrumbItem[]>([]);
 
   // Mobile menu inputs
   readonly showMobileMenu = input(false);

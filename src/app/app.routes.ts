@@ -7,8 +7,15 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
-      import('./features/dashboard/pages/dashboard.page').then((m) => m.DashboardPage),
+      import('./core/layout/app-layout.component').then((m) => m.AppLayoutComponent),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard.page').then((m) => m.DashboardPage),
+      },
+    ],
   },
 ];
