@@ -93,7 +93,6 @@ describe('OsModalComponent', () => {
     });
 
     it('should show header when title, subtitle, or closable is true', () => {
-      
       expect(component.showHeader()).toBe(true);
 
       fixture.componentRef.setInput('closable', false);
@@ -118,7 +117,7 @@ describe('OsModalComponent', () => {
         {
           label: 'Test',
           variant: 'primary',
-          action: () => {}, 
+          action: () => {},
         },
       ]);
       expect(component.showActions()).toBe(true);
@@ -197,12 +196,12 @@ describe('OsModalComponent', () => {
         {
           label: 'Action 1',
           variant: 'primary',
-          action: () => {}, 
+          action: () => {},
         },
         {
           label: 'Action 2',
           variant: 'secondary',
-          action: () => {}, 
+          action: () => {},
         },
       ]);
 
@@ -214,17 +213,17 @@ describe('OsModalComponent', () => {
         {
           label: 'Action 1',
           variant: 'primary',
-          action: () => {}, 
+          action: () => {},
         },
         {
           label: 'Action 2',
           variant: 'secondary',
-          action: () => {}, 
+          action: () => {},
         },
         {
           label: 'Action 3',
           variant: 'tertiary',
-          action: () => {}, 
+          action: () => {},
         },
       ]);
 
@@ -235,7 +234,6 @@ describe('OsModalComponent', () => {
 
   describe('Event Handlers', () => {
     it('should emit closed event when onClose is called', () => {
-      
       fixture.componentRef.setInput('animated', false);
       fixture.detectChanges();
 
@@ -279,7 +277,7 @@ describe('OsModalComponent', () => {
 
       fixture.componentRef.setInput('closeOnEscape', true);
       const event = new KeyboardEvent('keydown', { key: 'Escape' });
-      
+
       const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
 
       component.onEscapeKey(event);
@@ -363,12 +361,12 @@ describe('OsModalComponent', () => {
         {
           label: 'Save',
           variant: 'primary',
-          action: () => {}, 
+          action: () => {},
         },
         {
           label: 'Cancel',
           variant: 'secondary',
-          action: () => {}, 
+          action: () => {},
         },
       ];
 
@@ -377,7 +375,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-      
+
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
     });
@@ -388,7 +386,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-      
+
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
     });
@@ -423,7 +421,6 @@ describe('OsModalComponent', () => {
 
   describe('Integration with MatDialog', () => {
     it('should call dialogRef.close when onClose is called', () => {
-      
       fixture.componentRef.setInput('animated', false);
       fixture.detectChanges();
 

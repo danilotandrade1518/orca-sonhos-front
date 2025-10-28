@@ -59,7 +59,7 @@ describe('OsDateInputComponent', () => {
 
       const label = fixture.debugElement.query(By.css('mat-label'));
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      
+
       expect(label.nativeElement.textContent.trim()).toBe('Birth Date');
       expect(input.nativeElement.placeholder).toBe('Select date');
       expect(input.nativeElement.required).toBe(true);
@@ -86,12 +86,12 @@ describe('OsDateInputComponent', () => {
 
   describe('date formatting', () => {
     it('should format date correctly for input', () => {
-      const testDate = new Date(2024, 2, 15); 
+      const testDate = new Date(2024, 2, 15);
       fixture.componentRef.setInput('value', testDate);
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      
+
       expect(input.nativeElement.value).toContain('2024');
     });
 
@@ -252,12 +252,8 @@ describe('OsDateInputComponent', () => {
     it('should work with reactive forms', () => {
       const testDate = new Date('2024-03-15');
       fixture.componentRef.setInput('value', testDate);
-      component.registerOnChange(() => {
-        
-      });
-      component.registerOnTouched(() => {
-        
-      });
+      component.registerOnChange(() => {});
+      component.registerOnTouched(() => {});
 
       expect(component.value()).toEqual(testDate);
     });
@@ -319,7 +315,7 @@ describe('OsDateInputComponent', () => {
       const label = fixture.debugElement.query(By.css('mat-label'));
 
       expect(input.nativeElement.getAttribute('aria-describedby')).toContain('helper');
-      
+
       expect(label).toBeTruthy();
     });
 
@@ -327,14 +323,14 @@ describe('OsDateInputComponent', () => {
       fixture.componentRef.setInput('label', 'Test Label');
       fixture.componentRef.setInput('required', true);
       fixture.detectChanges();
-      
+
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.required).toBe(true);
     });
 
     it('should have proper input type', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      
+
       expect(input.nativeElement.type).toBe('text');
     });
 
@@ -349,7 +345,7 @@ describe('OsDateInputComponent', () => {
       expect(input.nativeElement.getAttribute('aria-label')).toBe('Custom label');
       expect(input.nativeElement.getAttribute('aria-describedby')).toBe('description');
       expect(input.nativeElement.getAttribute('aria-required')).toBe('true');
-      
+
       expect(input.nativeElement.getAttribute('aria-disabled')).toBeNull();
       expect(input.nativeElement.getAttribute('tabindex')).toBe('0');
     });
@@ -373,7 +369,6 @@ describe('OsDateInputComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on input', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -391,7 +386,6 @@ describe('OsDateInputComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

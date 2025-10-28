@@ -145,20 +145,16 @@ export class OsSliderComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
   rangeChange = output<{ min: number; max: number }>();
-  
-  private _onChange = (value: number) => {
-    
-  };
-  private _onTouched = () => {
-    
-  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private _onChange = (value: number) => {};
+  private _onTouched = () => {};
 
   sliderId = `os-slider-${Math.random().toString(36).substr(2, 9)}`;
   isFocused = signal(false);
   isHovered = signal(false);
 
   constructor() {
-    
     effect(() => {
       const minValue = this.min();
       const maxValue = this.max();
@@ -266,7 +262,7 @@ export class OsSliderComponent implements ControlValueAccessor {
     const describedBy = this.ariaDescribedBy();
     return describedBy || helperId;
   });
-  
+
   protected matColor = computed(() => {
     if (this.hasError()) {
       return 'warn';
@@ -303,7 +299,7 @@ export class OsSliderComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); 
+      navigator.vibrate(50);
     }
   }
 
@@ -328,7 +324,6 @@ export class OsSliderComponent implements ControlValueAccessor {
   }
 
   writeValue(value: number): void {
-    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -343,7 +338,6 @@ export class OsSliderComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }

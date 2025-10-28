@@ -96,12 +96,9 @@ export class OsSelectComponent implements ControlValueAccessor {
   openedChange = output<boolean>();
 
   private _onChange = (value: string | number) => {
-    
     console.debug('onChange called with:', value);
   };
-  private _onTouched = () => {
-    
-  };
+  private _onTouched = () => {};
 
   selectId = `os-select-${Math.random().toString(36).substr(2, 9)}`;
   isFocused = signal(false);
@@ -161,7 +158,7 @@ export class OsSelectComponent implements ControlValueAccessor {
     const describedBy = this.ariaDescribedBy();
     return describedBy || helperId;
   });
-  
+
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -200,12 +197,11 @@ export class OsSelectComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); 
+      navigator.vibrate(50);
     }
   }
 
   writeValue(value: string | number): void {
-    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -220,7 +216,6 @@ export class OsSelectComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }

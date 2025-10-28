@@ -85,12 +85,9 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (value: number) => {
-    
     console.debug('onChange called with:', value);
   };
-  private _onTouched = () => {
-    
-  };
+  private _onTouched = () => {};
 
   inputId = `os-money-input-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -142,7 +139,7 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   hasError = computed(() => {
     return !!this.errorMessage();
   });
-  
+
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -187,34 +184,33 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   private parseCurrency(value: string): number {
-    
     const isNegative = value.includes('-');
-    
+
     const cleanValue = value.replace(/[^\d,.-]/g, '');
     if (!cleanValue) return 0;
-    
+
     if (cleanValue.includes(',')) {
       const normalizedValue = cleanValue.replace(',', '.');
       const numericValue = parseFloat(normalizedValue);
 
       if (isNaN(numericValue)) return 0;
-      
+
       const finalValue = isNegative ? -Math.abs(numericValue) : Math.abs(numericValue);
-      
+
       if (finalValue < 0 && !this.allowNegative()) {
         return 0;
       }
 
       return finalValue;
     }
-    
+
     const numericValue = parseFloat(cleanValue);
     if (isNaN(numericValue)) return 0;
-    
+
     const currencyValue = numericValue / 100;
-    
+
     const finalValue = isNegative ? -Math.abs(currencyValue) : Math.abs(currencyValue);
-    
+
     if (finalValue < 0 && !this.allowNegative()) {
       return 0;
     }
@@ -223,11 +219,10 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   private applyInputMask(value: string): string {
-    
     const digits = value.replace(/\D/g, '');
 
     if (!digits) return '';
-    
+
     const numericValue = parseFloat(digits) / 100;
     return this.formatCurrency(numericValue);
   }
@@ -235,18 +230,18 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     const rawValue = target.value;
-    
+
     this.isFormatting.set(true);
-    
+
     const numericValue = this.parseCurrency(rawValue);
-    
+
     const maskedValue = this.applyInputMask(rawValue);
     target.value = maskedValue;
-    
+
     this.value.set(numericValue);
     this._onChange(numericValue);
     this.valueChange.emit(numericValue);
-    
+
     setTimeout(() => {
       this.isFormatting.set(false);
     }, 100);
@@ -262,7 +257,6 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: number): void {
-    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -277,7 +271,6 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }

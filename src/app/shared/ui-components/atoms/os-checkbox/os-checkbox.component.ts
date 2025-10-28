@@ -77,14 +77,11 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   checkboxFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-checkbox-${Math.random().toString(36).substr(2, 9)}`;
-  
-  private onChange = (value: boolean) => {
-    
-  };
-  private onTouched = () => {
-    
-  };
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (value: boolean) => {};
+  private onTouched = () => {};
+
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
@@ -142,7 +139,6 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   }
 
   writeValue(value: boolean): void {
-    
     if (value !== this.checked()) {
       this.checked.set(value);
     }
@@ -157,7 +153,6 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }

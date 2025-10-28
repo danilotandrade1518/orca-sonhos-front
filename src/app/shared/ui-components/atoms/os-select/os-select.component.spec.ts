@@ -65,7 +65,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should render options', () => {
-      
       expect(component.options().length).toBe(3);
     });
 
@@ -77,7 +76,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should show arrow indicator', () => {
-      
       const select = fixture.debugElement.query(By.css('mat-select'));
       expect(select).toBeTruthy();
     });
@@ -85,12 +83,10 @@ describe('OsSelectComponent', () => {
 
   describe('option handling', () => {
     it('should render all options', () => {
-      
       expect(component.options().length).toBe(3);
     });
 
     it('should handle disabled options', () => {
-      
       const disabledOptions = component.options().filter((option) => option.disabled);
       expect(disabledOptions.length).toBe(1);
     });
@@ -107,7 +103,7 @@ describe('OsSelectComponent', () => {
     it('should emit value change on selection', () => {
       vi.spyOn(component.valueChange, 'emit');
       const select = fixture.debugElement.query(By.css('mat-select'));
-      
+
       const changeEvent = { value: 'option2' };
       select.triggerEventHandler('selectionChange', changeEvent);
 
@@ -196,12 +192,8 @@ describe('OsSelectComponent', () => {
   describe('form integration', () => {
     it('should work with reactive forms', () => {
       fixture.componentRef.setInput('value', 'option1');
-      component.registerOnChange(() => {
-        
-      });
-      component.registerOnTouched(() => {
-        
-      });
+      component.registerOnChange(() => {});
+      component.registerOnTouched(() => {});
 
       expect(component.value()).toBe('option1');
     });
@@ -232,7 +224,7 @@ describe('OsSelectComponent', () => {
     it('should register onChange callback', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
-      
+
       const changeEvent = { value: 'option2' };
       component.handleChange(changeEvent);
 
@@ -286,14 +278,14 @@ describe('OsSelectComponent', () => {
 
       fixture.componentRef.setInput('options', newOptions);
       fixture.detectChanges();
-      
+
       expect(component.options().length).toBe(2);
     });
 
     it('should handle empty options', () => {
       fixture.componentRef.setInput('options', []);
       fixture.detectChanges();
-      
+
       expect(component.options().length).toBe(0);
     });
   });
@@ -333,7 +325,6 @@ describe('OsSelectComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on selection change', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -350,7 +341,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

@@ -97,6 +97,13 @@ export default tseslint.config(
       'no-comments-plugin/no-comments': 'warn',
       // Remove linhas em branco múltiplas
       'no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0, maxBOF: 0 }],
+      // Permitir métodos vazios para ControlValueAccessor
+      '@typescript-eslint/no-empty-function': [
+        'error',
+        {
+          allow: ['arrowFunctions', 'functions', 'methods'],
+        },
+      ],
     },
     ignores: ['src/app/core/mocks/**/*.ts'],
   },

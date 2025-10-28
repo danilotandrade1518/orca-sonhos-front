@@ -116,12 +116,9 @@ export class OsDateInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (value: Date | null) => {
-    
     console.debug('onChange called with:', value);
   };
-  private _onTouched = () => {
-    
-  };
+  private _onTouched = () => {};
 
   inputId = `os-date-input-${Math.random().toString(36).substr(2, 9)}`;
   isFocused = signal(false);
@@ -190,7 +187,7 @@ export class OsDateInputComponent implements ControlValueAccessor {
     const describedBy = this.ariaDescribedBy();
     return describedBy || helperId;
   });
-  
+
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -259,12 +256,11 @@ export class OsDateInputComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); 
+      navigator.vibrate(50);
     }
   }
 
   writeValue(value: Date | null): void {
-    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -279,7 +275,6 @@ export class OsDateInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }

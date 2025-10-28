@@ -11,7 +11,7 @@ import { OsTransactionListComponent, Transaction } from './os-transaction-list.c
 
 const mockResizeObserver = vi.fn();
 
-mockResizeObserver.mockImplementation((callback: ResizeObserverCallback) => ({
+mockResizeObserver.mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),

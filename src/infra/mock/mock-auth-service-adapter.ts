@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   ExternalAuthServiceAdapter,
   AuthUser,
-  AuthCredentials,
   AuthResult,
 } from '../../app/core/adapters/external-auth-service.adapter';
 
@@ -25,15 +24,13 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
   private currentUser: AuthUser | null = null;
 
   initializeAuthState(callback: (user: AuthUser | null) => void): void {
-    
     setTimeout(() => {
       this.currentUser = this.mockUser;
       callback(this.mockUser);
     }, 100);
   }
-  
-  async signIn(credentials: AuthCredentials): Promise<AuthResult> {
-    
+
+  async signIn(): Promise<AuthResult> {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     this.currentUser = this.mockUser;
@@ -46,21 +43,18 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
   }
 
   async signOut(): Promise<void> {
-    
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     this.currentUser = null;
   }
 
   async getToken(): Promise<string | null> {
-    
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     return this.currentUser ? this.mockToken : null;
   }
 
   async refreshToken(): Promise<string | null> {
-    
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     return this.currentUser ? this.mockToken : null;

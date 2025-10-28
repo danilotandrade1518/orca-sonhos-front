@@ -75,14 +75,11 @@ export class OsRadioComponent implements ControlValueAccessor {
   radioFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-radio-${Math.random().toString(36).substr(2, 9)}`;
-  
-  private onChange = (value: string) => {
-    
-  };
-  private onTouched = () => {
-    
-  };
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (value: string) => {};
+  private onTouched = () => {};
+
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
@@ -134,7 +131,6 @@ export class OsRadioComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -149,7 +145,6 @@ export class OsRadioComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    
     this.disabled.set(isDisabled);
   }
 }
