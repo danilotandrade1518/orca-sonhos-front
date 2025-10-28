@@ -148,11 +148,10 @@ export class OsChipComponent {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); // 50ms vibration
+      navigator.vibrate(50); 
     }
   }
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':

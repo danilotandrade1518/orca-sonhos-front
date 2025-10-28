@@ -281,7 +281,7 @@ export const WithPagination: Story = {
       ></os-data-table>
     `,
     props: {
-      data: sampleData.slice(0, 2), // Mostrar apenas 2 itens por página
+      data: sampleData.slice(0, 2), 
       columns: sampleColumns,
     },
     methods: {

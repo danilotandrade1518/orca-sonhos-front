@@ -83,8 +83,7 @@ export class OsSpinnerComponent {
   ariaLive = computed(() => {
     return this.role() === 'status' ? 'polite' : null;
   });
-
-  // Mapeamento interno para Angular Material
+  
   protected matDiameter = computed(() => {
     switch (this.size()) {
       case 'xs':
@@ -109,15 +108,15 @@ export class OsSpinnerComponent {
       case 'secondary':
         return 'accent';
       case 'success':
-        return 'primary'; // Material não tem success, usar primary
+        return 'primary'; 
       case 'warning':
-        return 'accent'; // Material não tem warning, usar accent
+        return 'accent'; 
       case 'error':
         return 'warn';
       case 'info':
-        return 'primary'; // Material não tem info, usar primary
+        return 'primary'; 
       default:
-        return undefined; // Usar cor padrão do Material
+        return undefined; 
     }
   });
 }

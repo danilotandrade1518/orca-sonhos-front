@@ -213,14 +213,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    // Verificar se o state está sendo passado corretamente para o OsDashboardWidgetsComponent
+    
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-
-    // Verificar se o componente interno tem as classes corretas
-    // O elemento com as classes CSS está dentro do OsDashboardWidgetsComponent
+    
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--loading');
@@ -249,14 +246,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    // Verificar se o state está sendo passado corretamente para o OsDashboardWidgetsComponent
+    
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-
-    // Verificar se o componente interno tem as classes corretas
-    // O elemento com as classes CSS está dentro do OsDashboardWidgetsComponent
+    
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--error');
@@ -288,14 +282,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    // Verificar se o state está sendo passado corretamente para o OsDashboardWidgetsComponent
+    
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-
-    // Verificar se o componente interno tem as classes corretas
-    // O elemento com as classes CSS está dentro do OsDashboardWidgetsComponent
+    
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--empty');

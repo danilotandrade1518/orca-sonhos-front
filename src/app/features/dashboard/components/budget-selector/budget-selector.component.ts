@@ -45,8 +45,7 @@ import { BudgetDto } from '../../../../../dtos/budget/budget-types';
 })
 export class BudgetSelectorComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
-
-  // Inputs
+  
   readonly variant = input<'default' | 'primary' | 'secondary' | 'accent'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly placeholder = input<string>('Selecionar orçamento');
@@ -55,17 +54,14 @@ export class BudgetSelectorComponent {
   readonly showQuickActions = input<boolean>(true);
   readonly ariaLabel = input<string>('Seletor de orçamento');
   readonly emptyMessage = input<string>('Nenhum orçamento disponível');
-
-  // Outputs
+  
   readonly budgetSelected = output<BudgetDto>();
   readonly createBudgetRequested = output<void>();
   readonly shareBudgetRequested = output<BudgetDto>();
   readonly budgetInfoRequested = output<BudgetDto>();
-
-  // Signals for internal state
+  
   private readonly errorSignal = signal<string | null>(null);
-
-  // Computed properties
+  
   readonly selectedBudgetId = computed(() => this.budgetSelectionService.selectedBudgetId());
   readonly availableBudgets = computed(() => this.budgetSelectionService.availableBudgets());
   readonly isLoading = computed(() => this.budgetSelectionService.isLoading());

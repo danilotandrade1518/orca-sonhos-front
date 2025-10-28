@@ -324,7 +324,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsDashboardWidgetsComponent {
-  // Inputs
+  
   readonly widgets = input<DashboardWidget[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -333,8 +333,7 @@ export class OsDashboardWidgetsComponent {
   readonly showCreateActions = input<boolean>(true);
   readonly errorMessage = input<string>('Erro ao carregar dados do dashboard');
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
-
-  // Outputs
+  
   readonly widgetClick = output<DashboardWidget>();
   readonly widgetConfigure = output<DashboardWidget>();
   readonly widgetClose = output<DashboardWidget>();
@@ -345,8 +344,7 @@ export class OsDashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<GoalProgressData>();
   readonly goalCardExpand = output<GoalProgressData>();
-
-  // Computed properties
+  
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error');
   readonly isEmpty = computed(() => this.state() === 'empty');
@@ -380,8 +378,7 @@ export class OsDashboardWidgetsComponent {
 
     return classes.join(' ');
   });
-
-  // Methods
+  
   getWidgetClass(widget: DashboardWidget): string {
     const classes = ['os-dashboard-widgets__widget'];
 
@@ -408,16 +405,16 @@ export class OsDashboardWidgetsComponent {
   }
 
   getWidgetGridRow(widget: DashboardWidget): string {
-    // Baseado no tipo e tamanho do widget, define quantas linhas ele deve ocupar
+    
     switch (widget.type) {
       case 'budget-summary':
         return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
       case 'goal-progress':
         return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
       case 'transaction-list':
-        return 'span 3'; // Lista de transações precisa de mais espaço vertical
+        return 'span 3'; 
       case 'monthly-trends':
-        return 'span 2'; // Gráficos precisam de mais altura
+        return 'span 2'; 
       case 'account-balance':
         return 'span 1';
       case 'quick-actions':
@@ -461,7 +458,7 @@ export class OsDashboardWidgetsComponent {
   }
 
   getBudgetSummary(): BudgetSummaryData | null {
-    // Mock data - em implementação real, viria de um service
+    
     return {
       totalBalance: 25000.5,
       monthlyIncome: 8000.0,
@@ -479,7 +476,7 @@ export class OsDashboardWidgetsComponent {
   }
 
   getRecentTransactions(): TransactionData[] {
-    // Mock data - em implementação real, viria de um service
+    
     return [
       {
         id: '1',
@@ -509,7 +506,7 @@ export class OsDashboardWidgetsComponent {
   }
 
   getAccountBalances(): AccountBalanceData[] {
-    // Mock data - em implementação real, viria de um service
+    
     return [
       {
         accountName: 'Conta Corrente',
@@ -551,8 +548,7 @@ export class OsDashboardWidgetsComponent {
       currency: 'BRL',
     }).format(value);
   }
-
-  // Event handlers
+  
   onWidgetClick(widget: DashboardWidget): void {
     this.widgetClick.emit(widget);
   }

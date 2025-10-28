@@ -51,7 +51,6 @@ const meta: Meta<OsCategoryManagerComponent> = {
 export default meta;
 type Story = StoryObj<OsCategoryManagerComponent>;
 
-// Sample data for stories
 const sampleCategories: Category[] = [
   {
     id: '1',

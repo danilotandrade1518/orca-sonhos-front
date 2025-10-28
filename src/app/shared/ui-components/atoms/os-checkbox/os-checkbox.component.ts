@@ -77,15 +77,14 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   checkboxFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-checkbox-${Math.random().toString(36).substr(2, 9)}`;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   private onChange = (value: boolean) => {
-    // This will be set by registerOnChange
+    
   };
   private onTouched = () => {
-    // This will be set by registerOnTouched
+    
   };
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
@@ -143,7 +142,7 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   }
 
   writeValue(value: boolean): void {
-    // Update the model signal when FormControl value changes programmatically
+    
     if (value !== this.checked()) {
       this.checked.set(value);
     }
@@ -158,7 +157,7 @@ export class OsCheckboxComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
+    
     this.disabled.set(isDisabled);
   }
 }

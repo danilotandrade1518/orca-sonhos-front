@@ -206,8 +206,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 })
 export class OsBudgetSelectorComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);
-
-  // Inputs
+  
   readonly budgets = input<BudgetOption[]>([]);
   readonly selectedBudgetId = input<string | null>(null);
   readonly variant = input<'default' | 'primary' | 'secondary' | 'accent'>('default');
@@ -219,18 +218,15 @@ export class OsBudgetSelectorComponent {
   readonly ariaLabel = input<string>('Seletor de orçamento melhorado');
   readonly emptyMessage = input<string>('Nenhum orçamento disponível');
   readonly state = input<BudgetSelectorState>('default');
-
-  // Outputs
+  
   readonly budgetSelected = output<BudgetOption>();
   readonly createBudgetRequested = output<void>();
   readonly shareBudgetRequested = output<BudgetOption>();
   readonly budgetInfoRequested = output<BudgetOption>();
-
-  // Signals for internal state
+  
   private readonly isDropdownOpenSignal = signal(false);
   private readonly errorSignal = signal<string | null>(null);
-
-  // Computed properties
+  
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error' || !!this.errorSignal());
   readonly isEmpty = computed(() => this.state() === 'empty' || this.budgets().length === 0);
@@ -291,8 +287,7 @@ export class OsBudgetSelectorComponent {
 
     return classes.join(' ');
   });
-
-  // Methods
+  
   getParticipantsText(): string {
     const budget = this.selectedBudget();
     if (!budget) return '';
@@ -358,7 +353,7 @@ export class OsBudgetSelectorComponent {
       case 'ArrowDown':
         if (!this.isDropdownOpen()) {
           event.preventDefault();
-          // Trigger dropdown open
+          
         }
         break;
       case 'Escape':

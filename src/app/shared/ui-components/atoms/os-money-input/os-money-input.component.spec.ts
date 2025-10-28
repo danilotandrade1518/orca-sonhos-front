@@ -200,8 +200,7 @@ describe('OsMoneyInputComponent', () => {
     it('should register onChange callback', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
-
-      // Simulate user input
+      
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.value = '123,45';
       input.nativeElement.dispatchEvent(new Event('input'));
@@ -212,8 +211,7 @@ describe('OsMoneyInputComponent', () => {
     it('should register onTouched callback', () => {
       const onTouchedSpy = vi.fn();
       component.registerOnTouched(onTouchedSpy);
-
-      // Simulate blur event
+      
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.dispatchEvent(new FocusEvent('blur'));
 
@@ -233,8 +231,7 @@ describe('OsMoneyInputComponent', () => {
     it('should not update value if writeValue receives same value', () => {
       const currentValue = 100.5;
       component.value.set(currentValue);
-
-      // Spy on the set method to ensure it's not called
+      
       const setSpy = vi.spyOn(component.value, 'set');
 
       component.writeValue(currentValue);
@@ -257,10 +254,10 @@ describe('OsMoneyInputComponent', () => {
     it('should work with reactive forms', () => {
       fixture.componentRef.setInput('value', 100.5);
       component.registerOnChange(() => {
-        // Mock onChange callback
+        
       });
       component.registerOnTouched(() => {
-        // Mock onTouched callback
+        
       });
 
       expect(component.value()).toBe(100.5);
@@ -268,8 +265,7 @@ describe('OsMoneyInputComponent', () => {
 
     it('should handle form control changes through writeValue', () => {
       const formControl = new FormControl(0);
-
-      // Simulate FormControl setting value programmatically
+      
       formControl.setValue(250.75);
       component.writeValue(250.75);
       fixture.detectChanges();
@@ -279,15 +275,13 @@ describe('OsMoneyInputComponent', () => {
 
     it('should handle form control disabled state', () => {
       const formControl = new FormControl(100);
-
-      // Simulate FormControl being disabled
+      
       formControl.disable();
       component.setDisabledState(true);
       fixture.detectChanges();
 
       expect(component.disabled()).toBe(true);
-
-      // Simulate FormControl being enabled
+      
       formControl.enable();
       component.setDisabledState(false);
       fixture.detectChanges();
@@ -297,20 +291,17 @@ describe('OsMoneyInputComponent', () => {
 
     it('should integrate with FormControl bidirectionally', () => {
       const formControl = new FormControl(50.25);
-
-      // Register the component with the form control
+      
       component.registerOnChange((value: number) => {
         formControl.setValue(value, { emitEvent: false });
       });
       component.registerOnTouched(() => {
-        // Mock onTouched callback
+        
       });
-
-      // Test FormControl -> Component
+      
       component.writeValue(75.5);
       expect(component.value()).toBe(75.5);
-
-      // Test Component -> FormControl
+      
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.value = '100,75';
       input.nativeElement.dispatchEvent(new Event('input'));
@@ -345,8 +336,7 @@ describe('OsMoneyInputComponent', () => {
     it('should support quick entry for cents', () => {
       vi.spyOn(component.valueChange, 'emit');
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-
-      // Simulate typing "100" which should become "1,00"
+      
       input.nativeElement.value = '100';
       input.nativeElement.dispatchEvent(new Event('input'));
 
@@ -363,12 +353,10 @@ describe('OsMoneyInputComponent', () => {
 
     it('should apply real-time input mask', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-
-      // Simulate typing "1234" which should be formatted as "12,34"
+      
       input.nativeElement.value = '1234';
       input.nativeElement.dispatchEvent(new Event('input'));
-
-      // The display value should be formatted
+      
       expect(input.nativeElement.value).toBe('12,34');
     });
 
@@ -392,8 +380,7 @@ describe('OsMoneyInputComponent', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       input.nativeElement.value = '-100,50';
       input.nativeElement.dispatchEvent(new Event('input'));
-
-      // Should not emit negative value
+      
       expect(component.valueChange.emit).not.toHaveBeenCalledWith(-100.5);
     });
   });
@@ -439,12 +426,10 @@ describe('OsMoneyInputComponent', () => {
 
     it('should animate value changes', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-
-      // Simulate value change
+      
       input.nativeElement.value = '1000,00';
       input.nativeElement.dispatchEvent(new Event('input'));
-
-      // Check if formatting state is active (which triggers animation)
+      
       expect(component.isFormatting()).toBe(true);
     });
 
@@ -473,7 +458,7 @@ describe('OsMoneyInputComponent', () => {
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      expect(input.nativeElement.value).toBe('123,46'); // Should round to 2 decimals
+      expect(input.nativeElement.value).toBe('123,46'); 
     });
 
     it('should handle zero values correctly', () => {

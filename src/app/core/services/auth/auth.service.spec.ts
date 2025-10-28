@@ -108,11 +108,9 @@ describe('AuthService', () => {
       const password = 'password123';
 
       expect(service.isLoading()).toBeFalsy();
-
-      // Start the sign in process
+      
       const signInPromise = service.signInWithEmail(email, password);
-
-      // Check loading state immediately after starting
+      
       expect(service.isLoading()).toBeTruthy();
 
       await signInPromise;
@@ -152,11 +150,9 @@ describe('AuthService', () => {
 
     it('should set loading state during sign out', async () => {
       expect(service.isLoading()).toBeFalsy();
-
-      // Start the sign out process
+      
       const signOutPromise = service.signOut();
-
-      // Check loading state immediately after starting
+      
       expect(service.isLoading()).toBeTruthy();
 
       await signOutPromise;

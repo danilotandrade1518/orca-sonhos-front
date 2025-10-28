@@ -85,11 +85,11 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (value: number) => {
-    // This will be set by registerOnChange
+    
     console.debug('onChange called with:', value);
   };
   private _onTouched = () => {
-    // This will be set by registerOnTouched
+    
   };
 
   inputId = `os-money-input-${Math.random().toString(36).substr(2, 9)}`;
@@ -142,8 +142,7 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   hasError = computed(() => {
     return !!this.errorMessage();
   });
-
-  // Mapeamento interno para Material
+  
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -188,42 +187,34 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   private parseCurrency(value: string): number {
-    // Handle negative values first
+    
     const isNegative = value.includes('-');
-
-    // Remove all non-digit characters except decimal separators
+    
     const cleanValue = value.replace(/[^\d,.-]/g, '');
     if (!cleanValue) return 0;
-
-    // Simple approach: if comma exists, treat it as decimal separator
+    
     if (cleanValue.includes(',')) {
       const normalizedValue = cleanValue.replace(',', '.');
       const numericValue = parseFloat(normalizedValue);
 
       if (isNaN(numericValue)) return 0;
-
-      // Apply negative sign if needed
+      
       const finalValue = isNegative ? -Math.abs(numericValue) : Math.abs(numericValue);
-
-      // Validate negative values
+      
       if (finalValue < 0 && !this.allowNegative()) {
         return 0;
       }
 
       return finalValue;
     }
-
-    // For values without comma, treat as cents (quick entry)
+    
     const numericValue = parseFloat(cleanValue);
     if (isNaN(numericValue)) return 0;
-
-    // Convert cents to currency (divide by 100)
+    
     const currencyValue = numericValue / 100;
-
-    // Apply negative sign if needed
+    
     const finalValue = isNegative ? -Math.abs(currencyValue) : Math.abs(currencyValue);
-
-    // Validate negative values
+    
     if (finalValue < 0 && !this.allowNegative()) {
       return 0;
     }
@@ -232,12 +223,11 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   private applyInputMask(value: string): string {
-    // Remove all non-digit characters
+    
     const digits = value.replace(/\D/g, '');
 
     if (!digits) return '';
-
-    // Convert to number and format
+    
     const numericValue = parseFloat(digits) / 100;
     return this.formatCurrency(numericValue);
   }
@@ -245,23 +235,18 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     const rawValue = target.value;
-
-    // Set formatting state
+    
     this.isFormatting.set(true);
-
-    // Parse the numeric value first
+    
     const numericValue = this.parseCurrency(rawValue);
-
-    // Apply input mask for real-time formatting only if needed
+    
     const maskedValue = this.applyInputMask(rawValue);
     target.value = maskedValue;
-
-    // Update value
+    
     this.value.set(numericValue);
     this._onChange(numericValue);
     this.valueChange.emit(numericValue);
-
-    // Clear formatting state after a short delay
+    
     setTimeout(() => {
       this.isFormatting.set(false);
     }, 100);
@@ -277,7 +262,7 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: number): void {
-    // Update the model signal when FormControl value changes programmatically
+    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -292,7 +277,7 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
+    
     this.disabled.set(isDisabled);
   }
 }

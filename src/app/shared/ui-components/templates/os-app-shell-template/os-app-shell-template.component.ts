@@ -191,8 +191,7 @@ export interface AppShellLayout {
 export class OsAppShellTemplateComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);
   readonly themeService = inject(ThemeService);
-
-  // Layout configuration
+  
   layout = input<AppShellLayout>({
     variant: 'default',
     size: 'medium',
@@ -201,14 +200,12 @@ export class OsAppShellTemplateComponent {
     showSidebar: true,
     sidebarCollapsed: false,
   });
-
-  // Computed layout with theme from service
+  
   computedLayout = computed(() => ({
     ...this.layout(),
     theme: this.themeService.currentTheme() as 'light' | 'dark',
   }));
-
-  // Header inputs
+  
   headerLogo = input<string>('');
   headerLogoText = input<string>('OrçaSonhos');
   headerLogoRoute = input<string>('/dashboard');
@@ -218,28 +215,23 @@ export class OsAppShellTemplateComponent {
   headerUser = input<{ name: string; avatar?: string; email?: string; role?: string } | null>(null);
   headerUserMenuItems = input<HeaderUserMenu[]>([]);
   headerMobileMenuItems = input<HeaderNavigationItem[]>([]);
-
-  // Sidebar inputs
+  
   sidebarItems = input<SidebarItem[]>([]);
   sidebarTitle = input<string>('OrçaSonhos');
   sidebarLogo = input<string>('');
   sidebarShowHeader = input<boolean>(true);
   sidebarShowToggleButton = input<boolean>(true);
-
-  // Accessibility
+  
   ariaLabel = input<string>('Shell principal do aplicativo');
-
-  // Loading and Error states
+  
   loading = input<boolean>(false);
   error = input<string | null>(null);
   loadingText = input<string>('Carregando...');
   errorText = input<string>('Ocorreu um erro');
-
-  // State signals
+  
   private readonly isMobileSignal = signal(false);
   private readonly sidebarOpenSignal = signal(false);
-
-  // Outputs
+  
   headerNavigationClick = output<{ item: string; route?: string; href?: string }>();
   headerUserMenuClick = output<{ action: string; user: { name: string; email?: string } }>();
   headerActionClick = output<{ action: string; label: string }>();
@@ -250,8 +242,7 @@ export class OsAppShellTemplateComponent {
   sidebarOpenChange = output<boolean>();
   sidebarBackdropClick = output<void>();
   retry = output<void>();
-
-  // Computed properties
+  
   appShellClass = computed(() => {
     const classes = ['os-app-shell-template'];
 
@@ -271,7 +262,7 @@ export class OsAppShellTemplateComponent {
   });
 
   headerVariant = computed(() => {
-    // In mobile, always use compact variant
+    
     if (this.isMobileSignal()) {
       return 'compact';
     }
@@ -313,13 +304,12 @@ export class OsAppShellTemplateComponent {
   });
 
   constructor() {
-    // Observe breakpoint changes for responsive behavior
+    
     this.breakpointObserver.observe(['(max-width: 767px)']).subscribe((result) => {
       this.isMobileSignal.set(result.matches);
     });
   }
-
-  // Helper methods
+  
   getUserInitials(): string {
     const user = this.headerUser();
     if (!user?.name) return '';
@@ -331,8 +321,7 @@ export class OsAppShellTemplateComponent {
       .toUpperCase()
       .slice(0, 2);
   }
-
-  // Event handlers
+  
   onHeaderNavigationClick(event: { item: HeaderNavigationItem; event: MouseEvent }): void {
     this.headerNavigationClick.emit({
       item: event.item.label,
@@ -361,8 +350,7 @@ export class OsAppShellTemplateComponent {
   onHeaderMobileMenuToggle(open: boolean): void {
     this.headerMobileMenuToggle.emit({ open });
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   onHeaderLogoClick(_event: Event): void {
     this.headerLogoClick.emit();
   }
@@ -383,8 +371,7 @@ export class OsAppShellTemplateComponent {
   onSidebarBackdropClick(): void {
     this.sidebarBackdropClick.emit();
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   onThemeToggle(_isDark: boolean): void {
     this.themeService.toggleTheme();
   }

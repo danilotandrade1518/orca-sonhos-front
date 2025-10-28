@@ -7,7 +7,6 @@ import {
 } from '../../../../core/services/notification/notification.service';
 import { OsAlertType } from '../../molecules/os-alert/os-alert.component';
 
-// Mock do NotificationService para o Storybook
 class MockNotificationService {
   private _notifications = signal<Notification[]>([]);
   private _isLoading = signal<boolean>(false);
@@ -46,7 +45,6 @@ const meta: Meta<NotificationContainerComponent> = {
 export default meta;
 type Story = StoryObj<NotificationContainerComponent>;
 
-// Story base - sem notificações e sem loading
 export const Default: Story = {
   decorators: [
     (story) => {
@@ -68,7 +66,6 @@ export const Default: Story = {
   },
 };
 
-// Story com loading ativo
 export const Loading: Story = {
   decorators: [
     (story) => {
@@ -91,7 +88,6 @@ export const Loading: Story = {
   },
 };
 
-// Story com uma notificação de sucesso
 export const SingleSuccessNotification: Story = {
   decorators: [
     (story) => {
@@ -123,7 +119,6 @@ export const SingleSuccessNotification: Story = {
   },
 };
 
-// Story com uma notificação de erro
 export const SingleErrorNotification: Story = {
   decorators: [
     (story) => {
@@ -155,7 +150,6 @@ export const SingleErrorNotification: Story = {
   },
 };
 
-// Story com uma notificação de warning
 export const SingleWarningNotification: Story = {
   decorators: [
     (story) => {
@@ -187,7 +181,6 @@ export const SingleWarningNotification: Story = {
   },
 };
 
-// Story com uma notificação de info
 export const SingleInfoNotification: Story = {
   decorators: [
     (story) => {
@@ -219,7 +212,6 @@ export const SingleInfoNotification: Story = {
   },
 };
 
-// Story com notificação sem título
 export const NotificationWithoutTitle: Story = {
   decorators: [
     (story) => {
@@ -250,7 +242,6 @@ export const NotificationWithoutTitle: Story = {
   },
 };
 
-// Story com notificação não dismissível
 export const NonDismissibleNotification: Story = {
   decorators: [
     (story) => {
@@ -282,7 +273,6 @@ export const NonDismissibleNotification: Story = {
   },
 };
 
-// Story com múltiplas notificações
 export const MultipleNotifications: Story = {
   decorators: [
     (story) => {
@@ -330,7 +320,6 @@ export const MultipleNotifications: Story = {
   },
 };
 
-// Story com loading e notificações simultâneas
 export const LoadingWithNotifications: Story = {
   decorators: [
     (story) => {
@@ -364,7 +353,6 @@ export const LoadingWithNotifications: Story = {
   },
 };
 
-// Story com muitas notificações (teste de scroll)
 export const ManyNotifications: Story = {
   decorators: [
     (story) => {
@@ -396,7 +384,6 @@ export const ManyNotifications: Story = {
   },
 };
 
-// Story com notificações de diferentes durações
 export const DifferentDurations: Story = {
   decorators: [
     (story) => {
@@ -453,7 +440,6 @@ export const DifferentDurations: Story = {
   },
 };
 
-// Story com mensagens longas
 export const LongMessages: Story = {
   decorators: [
     (story) => {

@@ -168,7 +168,7 @@ export class OsBudgetTrackerComponent {
     const data = this.budgetData();
     if (!data || !this.showCharts()) return [];
 
-    return data.monthlySpending.slice(-6); // Last 6 months
+    return data.monthlySpending.slice(-6); 
   });
 
   readonly formattedDates = computed(() => {
@@ -408,7 +408,7 @@ export class OsBudgetTrackerComponent {
   }
 
   getBarHeight(percentage: number, maxValue: number): number {
-    return Math.max((percentage / maxValue) * 100, 4); // Minimum 4px height
+    return Math.max((percentage / maxValue) * 100, 4); 
   }
 
   onBarClick(): void {

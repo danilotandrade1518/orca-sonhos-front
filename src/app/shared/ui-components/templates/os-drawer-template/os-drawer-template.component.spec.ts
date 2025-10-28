@@ -136,9 +136,9 @@ describe('OsDrawerTemplateComponent', () => {
 
   it('should emit cancel event when cancel button is clicked', () => {
     vi.spyOn(component.cancelled, 'emit');
-    // Usar o segundo botão (índice 1) que é o botão de cancelar
+    
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    const cancelButton = buttons[1]; // Segundo botão é o cancelar
+    const cancelButton = buttons[1]; 
     cancelButton?.triggerEventHandler('click', null);
 
     expect(component.cancelled.emit).toHaveBeenCalled();
@@ -146,9 +146,9 @@ describe('OsDrawerTemplateComponent', () => {
 
   it('should emit confirm event when confirm button is clicked', () => {
     vi.spyOn(component.confirmed, 'emit');
-    // Usar o terceiro botão (índice 2) que é o botão de confirmar
+    
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    const confirmButton = buttons[2]; // Terceiro botão é o confirmar
+    const confirmButton = buttons[2]; 
     confirmButton?.triggerEventHandler('click', null);
 
     expect(component.confirmed.emit).toHaveBeenCalled();
@@ -168,7 +168,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // Deve ter 4 botões: close, cancel, confirm + 1 custom action
+    
     expect(buttons.length).toBe(4);
   });
 
@@ -187,7 +187,7 @@ describe('OsDrawerTemplateComponent', () => {
 
     vi.spyOn(component.actionClick, 'emit');
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // O último botão (índice 3) é a ação customizada
+    
     const customButton = buttons[3];
     customButton?.triggerEventHandler('click', null);
 
@@ -199,7 +199,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    const confirmButton = buttons[2]; // Terceiro botão é o confirmar
+    const confirmButton = buttons[2]; 
     expect(confirmButton?.componentInstance.disabled()).toBe(true);
   });
 
@@ -208,7 +208,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    const confirmButton = buttons[2]; // Terceiro botão é o confirmar
+    const confirmButton = buttons[2]; 
     expect(confirmButton?.componentInstance.loading()).toBe(true);
   });
 
@@ -240,7 +240,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // Deve ter apenas 2 botões: close e confirm (sem o cancel)
+    
     expect(buttons.length).toBe(2);
   });
 
@@ -249,7 +249,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // Deve ter apenas 2 botões: close e cancel (sem o confirm)
+    
     expect(buttons.length).toBe(2);
   });
 
@@ -262,7 +262,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // Deve ter 3 botões: close, cancel e confirm
+    
     expect(buttons.length).toBe(3);
   });
 
@@ -284,7 +284,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // Deve ter 5 botões: close, cancel, confirm + 2 custom actions
+    
     expect(buttons.length).toBe(5);
   });
 
@@ -302,7 +302,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // O último botão (índice 3) é a ação customizada
+    
     const disabledButton = buttons[3];
     expect(disabledButton?.componentInstance.disabled()).toBe(true);
   });
@@ -321,7 +321,7 @@ describe('OsDrawerTemplateComponent', () => {
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('os-button'));
-    // O último botão (índice 3) é a ação customizada
+    
     const loadingButton = buttons[3];
     expect(loadingButton?.componentInstance.loading()).toBe(true);
   });

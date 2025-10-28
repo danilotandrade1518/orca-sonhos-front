@@ -127,8 +127,7 @@ export class OsNavigationItemComponent {
   toggleExpanded = output<void>();
 
   isActive = computed(() => this.active());
-
-  // Mapeamento interno para Atoms
+  
   protected getIconSize = () => {
     const sizeMap: Record<OsNavigationItemSize, 'sm' | 'md' | 'lg'> = {
       small: 'sm',

@@ -107,7 +107,7 @@ describe('OsSearchBoxComponent', () => {
       clearButton.click();
       expect(component.valueChange.emit).toHaveBeenCalledWith('');
     } else {
-      // If clear button is not found, skip this test
+      
       expect(true).toBe(true);
     }
   });
@@ -122,8 +122,7 @@ describe('OsSearchBoxComponent', () => {
     fixture.componentRef.setInput('showSuggestions', true);
     fixture.componentRef.setInput('value', 'Suggestion');
     fixture.detectChanges();
-
-    // Check if filteredSuggestions returns the expected suggestions
+    
     const filteredSuggestions = component.filteredSuggestions();
     expect(filteredSuggestions.length).toBe(2);
 
@@ -153,8 +152,7 @@ describe('OsSearchBoxComponent', () => {
 
     fixture.componentRef.setInput('suggestions', suggestions);
     fixture.detectChanges();
-
-    // Manually call the onSuggestionClick method since the button click might not work in tests
+    
     component.onSuggestionClick(suggestions[0]);
 
     expect(component.suggestionSelect.emit).toHaveBeenCalledWith(suggestions[0]);
@@ -175,7 +173,7 @@ describe('OsSearchBoxComponent', () => {
     if (categoryElement) {
       expect(categoryElement.textContent.trim()).toBe('Category 1');
     } else {
-      // If category element is not found, skip this test
+      
       expect(true).toBe(true);
     }
   });
@@ -201,8 +199,7 @@ describe('OsSearchBoxComponent', () => {
     input.dispatchEvent(new FocusEvent('blur'));
     expect(component.blurEvent.emit).toHaveBeenCalled();
   });
-
-  // New tests for enhanced functionality
+  
   it('should have correct default values for new inputs', () => {
     expect(component.debounceTime()).toBe(300);
     expect(component.role()).toBe('searchbox');
@@ -247,19 +244,18 @@ describe('OsSearchBoxComponent', () => {
     fixture.componentRef.setInput('suggestions', suggestions);
     fixture.componentRef.setInput('value', 'Suggestion');
     fixture.detectChanges();
-
-    // Verify we have filtered suggestions
+    
     const filteredSuggestions = component.filteredSuggestions();
     expect(filteredSuggestions.length).toBe(2);
 
     const keydownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 
     component.onKeydown(keydownEvent);
-    // Test that keyboard navigation works by checking if active suggestion is set
+    
     expect(component.activeSuggestionId()).toBe('suggestion-1');
 
     component.onKeydown(keydownEvent);
-    // Test that navigation continues to work
+    
     expect(component.activeSuggestionId()).toBe('suggestion-2');
   });
 
@@ -272,12 +268,10 @@ describe('OsSearchBoxComponent', () => {
     fixture.componentRef.setInput('suggestions', suggestions);
     fixture.componentRef.setInput('value', 'Suggestion');
     fixture.detectChanges();
-
-    // Verify we have filtered suggestions
+    
     const filteredSuggestions = component.filteredSuggestions();
     expect(filteredSuggestions.length).toBe(1);
-
-    // Simulate having an active suggestion by calling onSuggestionHover
+    
     component.onSuggestionHover(suggestions[0], 0);
     const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 
@@ -293,12 +287,10 @@ describe('OsSearchBoxComponent', () => {
     fixture.componentRef.setInput('suggestions', suggestions);
     fixture.componentRef.setInput('value', 'Suggestion');
     fixture.detectChanges();
-
-    // Verify we have filtered suggestions
+    
     const filteredSuggestions = component.filteredSuggestions();
     expect(filteredSuggestions.length).toBe(1);
-
-    // Set an active suggestion first
+    
     component.onSuggestionHover(suggestions[0], 0);
     expect(component.activeSuggestionId()).toBe('suggestion-1');
 
@@ -315,8 +307,7 @@ describe('OsSearchBoxComponent', () => {
     component.onValueChange('test');
     component.onValueChange('test2');
     component.onValueChange('test3');
-
-    // Wait for debounce time (300ms) plus some buffer
+    
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     expect(debouncedSearchSpy).toHaveBeenCalledWith('test3');
@@ -359,8 +350,7 @@ describe('OsSearchBoxComponent', () => {
 
     fixture.componentRef.setInput('suggestions', suggestions);
     fixture.detectChanges();
-
-    // Simulate selecting suggestions to add to history
+    
     component.onSuggestionClick(suggestions[0]);
     component.onSuggestionClick(suggestions[1]);
     component.onSuggestionClick(suggestions[2]);

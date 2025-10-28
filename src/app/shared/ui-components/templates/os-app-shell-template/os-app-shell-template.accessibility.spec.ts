@@ -113,20 +113,17 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
       const skipLinks = fixture.nativeElement.querySelectorAll('.os-app-shell-template__skip-link');
 
       skipLinks.forEach((link: Element) => {
-        // Skip links should be focusable but not in normal tab order
-        // They become focusable when focused (tabindex is set dynamically)
+        
         expect(link).toBeTruthy();
       });
     });
 
     it('should show skip links when focused', () => {
       const skipLink = fixture.nativeElement.querySelector('.os-app-shell-template__skip-link');
-
-      // Simulate focus
+      
       skipLink.focus();
       fixture.detectChanges();
-
-      // Skip link should be visible when focused
+      
       const computedStyle = window.getComputedStyle(skipLink);
       expect(computedStyle.top).not.toBe('-40px');
     });
@@ -134,13 +131,12 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     it('should have proper focus management', () => {
       const themeToggle = fixture.nativeElement.querySelector('os-toggle');
       expect(themeToggle).toBeTruthy();
-
-      // Theme toggle should be focusable (focus management is handled by Angular)
+      
       expect(themeToggle).toBeTruthy();
     });
 
     it('should handle Escape key for closing overlays', () => {
-      // This would be tested in integration with sidebar component
+      
       const sidebar = fixture.nativeElement.querySelector('os-sidebar');
       expect(sidebar).toBeTruthy();
     });
@@ -185,22 +181,21 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     it('should have proper theme toggle labels', () => {
       const themeToggle = fixture.nativeElement.querySelector('os-toggle');
       expect(themeToggle).toBeTruthy();
-      // The aria-label is set in the template, not as an attribute on the component
+      
     });
   });
 
   describe('Color Contrast and Visual Accessibility', () => {
     it('should apply proper CSS classes for theme switching', () => {
-      // Test that the component renders correctly
+      
       const container = fixture.nativeElement.querySelector('.os-app-shell-template');
       expect(container).toBeTruthy();
-      // CSS classes are applied based on computed layout
+      
     });
 
     it('should have proper focus indicators', () => {
       const skipLink = fixture.nativeElement.querySelector('.os-app-shell-template__skip-link');
-
-      // Check if focus styles are defined in CSS
+      
       const computedStyle = window.getComputedStyle(skipLink, ':focus');
       expect(computedStyle.outline).toBeDefined();
     });
@@ -208,12 +203,10 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
   describe('Reduced Motion Support', () => {
     it('should respect prefers-reduced-motion', () => {
-      // This would be tested with CSS media queries
-      // The component should have CSS that respects @media (prefers-reduced-motion: reduce)
+      
       const container = fixture.nativeElement.querySelector('.os-app-shell-template');
       expect(container).toBeTruthy();
-
-      // In a real test, you would check if animations are disabled when reduced motion is preferred
+      
     });
   });
 
@@ -223,8 +216,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
         '.os-app-shell-template__retry-button'
       );
       const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-
-      // Check if elements exist (touch target size is handled by CSS)
+      
       if (retryButton) {
         expect(retryButton).toBeTruthy();
       }
@@ -266,8 +258,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
       const loadingElement = fixture.nativeElement.querySelector('.os-app-shell-template__loading');
       expect(loadingElement.getAttribute('aria-live')).toBe('polite');
-
-      // Simulate loading completion
+      
       fixture.componentRef.setInput('loading', false);
       fixture.detectChanges();
 
@@ -280,8 +271,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
       const errorElement = fixture.nativeElement.querySelector('.os-app-shell-template__error');
       expect(errorElement.getAttribute('aria-live')).toBe('assertive');
-
-      // Simulate error resolution
+      
       fixture.componentRef.setInput('error', null);
       fixture.detectChanges();
 
@@ -301,8 +291,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     it('should have proper navigation structure', () => {
       const nav = fixture.nativeElement.querySelector('nav[role="navigation"]');
       expect(nav).toBeTruthy();
-
-      // Navigation should have proper aria-label
+      
       expect(nav.getAttribute('aria-label')).toBeDefined();
     });
   });

@@ -119,7 +119,7 @@ export interface OsModalAction {
   },
 })
 export class OsModalComponent {
-  // Input signals
+  
   readonly title = input<string | null>(null);
   readonly subtitle = input<string | null>(null);
   readonly variant = input<OsModalVariant>('default');
@@ -137,26 +137,22 @@ export class OsModalComponent {
   readonly centered = input<boolean>(true);
   readonly animated = input<boolean>(true);
   readonly hapticFeedback = input<boolean>(true);
-
-  // Output signals
+  
   readonly closed = output<void>();
   readonly confirmed = output<void>();
   readonly backdropClicked = output<void>();
   readonly opened = output<void>();
   readonly animationEnd = output<'enter' | 'leave'>();
-
-  // Private properties
+  
   private readonly elementRef = inject(ElementRef);
   private readonly dialogRef = inject(MatDialogRef<OsModalComponent>, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
-
-  // Internal state
+  
   private readonly isVisible = signal(false);
   private readonly isAnimating = signal(false);
   private readonly focusableElements: HTMLElement[] = [];
   private readonly previousActiveElement: HTMLElement | null = null;
-
-  // Computed values
+  
   readonly titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
   readonly descriptionId = computed(
     () => `modal-description-${Math.random().toString(36).substr(2, 9)}`
@@ -281,8 +277,7 @@ export class OsModalComponent {
 
     return classes.join(' ');
   });
-
-  // Private methods
+  
   private initializeModal(): void {
     this.isVisible.set(true);
     this.onOpen();
@@ -383,8 +378,7 @@ export class OsModalComponent {
       navigator.vibrate(50);
     }
   }
-
-  // Event handlers
+  
   onClose(): void {
     this.triggerHapticFeedback();
     this.animateOut();

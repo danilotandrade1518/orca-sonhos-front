@@ -478,4 +478,3 @@ export const Interactive: Story = {
     },
   },
 };
-

@@ -83,7 +83,6 @@ const meta: Meta<OsBudgetSelectorComponent> = {
 export default meta;
 type Story = StoryObj<OsBudgetSelectorComponent>;
 
-// Sample data
 const sampleBudgets: BudgetOption[] = [
   {
     id: 'budget-1',
@@ -118,7 +117,6 @@ const sampleBudgets: BudgetOption[] = [
 
 const emptyBudgets: BudgetOption[] = [];
 
-// Stories
 export const Default: Story = {
   args: {
     budgets: sampleBudgets,
@@ -303,7 +301,7 @@ export const WithoutCreateButton: Story = {
 
 export const PersonalBudget: Story = {
   args: {
-    budgets: [sampleBudgets[1]], // Apenas orçamento pessoal
+    budgets: [sampleBudgets[1]], 
     selectedBudgetId: 'budget-2',
     variant: 'default',
     size: 'medium',
@@ -318,7 +316,7 @@ export const PersonalBudget: Story = {
 
 export const SharedBudget: Story = {
   args: {
-    budgets: [sampleBudgets[0]], // Apenas orçamento compartilhado
+    budgets: [sampleBudgets[0]], 
     selectedBudgetId: 'budget-1',
     variant: 'default',
     size: 'medium',

@@ -145,13 +145,12 @@ export class OsSliderComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
   rangeChange = output<{ min: number; max: number }>();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   private _onChange = (value: number) => {
-    // This will be set by registerOnChange
+    
   };
   private _onTouched = () => {
-    // This will be set by registerOnTouched
+    
   };
 
   sliderId = `os-slider-${Math.random().toString(36).substr(2, 9)}`;
@@ -159,7 +158,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   isHovered = signal(false);
 
   constructor() {
-    // Watch for min/max changes and emit range change
+    
     effect(() => {
       const minValue = this.min();
       const maxValue = this.max();
@@ -267,8 +266,7 @@ export class OsSliderComponent implements ControlValueAccessor {
     const describedBy = this.ariaDescribedBy();
     return describedBy || helperId;
   });
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     if (this.hasError()) {
       return 'warn';
@@ -305,7 +303,7 @@ export class OsSliderComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); // 50ms vibration
+      navigator.vibrate(50); 
     }
   }
 
@@ -330,7 +328,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   }
 
   writeValue(value: number): void {
-    // Update the model signal when FormControl value changes programmatically
+    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -345,7 +343,7 @@ export class OsSliderComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
+    
     this.disabled.set(isDisabled);
   }
 }

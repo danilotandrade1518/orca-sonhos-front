@@ -75,15 +75,14 @@ export class OsRadioComponent implements ControlValueAccessor {
   radioFocusEvent = output<FocusEvent>();
 
   protected inputId = `os-radio-${Math.random().toString(36).substr(2, 9)}`;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   private onChange = (value: string) => {
-    // This will be set by registerOnChange
+    
   };
   private onTouched = () => {
-    // This will be set by registerOnTouched
+    
   };
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
@@ -135,7 +134,7 @@ export class OsRadioComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    // Update the model signal when FormControl value changes programmatically
+    
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -150,7 +149,7 @@ export class OsRadioComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
+    
     this.disabled.set(isDisabled);
   }
 }

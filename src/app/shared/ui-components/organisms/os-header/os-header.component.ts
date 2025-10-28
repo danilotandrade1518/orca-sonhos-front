@@ -255,19 +255,16 @@ export interface BreadcrumbItem {
 })
 export class OsHeaderComponent implements OnDestroy {
   private readonly breakpointObserver = inject(BreakpointObserver);
-
-  // Logo/Brand inputs
+  
   readonly logo = input<string | null>(null);
   readonly logoText = input<string | null>(null);
   readonly logoImage = input<string | null>(null);
   readonly logoRoute = input<string>('/');
   readonly logoAlt = input<string>('Logo');
-
-  // Navigation inputs
+  
   readonly navigationItems = input<HeaderNavigationItem[]>([]);
   readonly navigationAriaLabel = input<string>('Main navigation');
-
-  // User menu inputs
+  
   readonly showUserMenu = input(false);
   readonly userName = input<string | null>(null);
   readonly userRole = input<string | null>(null);
@@ -276,39 +273,32 @@ export class OsHeaderComponent implements OnDestroy {
   readonly userMenuItems = input<HeaderUserMenu[]>([]);
   readonly userMenuDisabled = input(false);
   readonly userMenuAriaLabel = input<string>('User menu');
-
-  // Actions inputs
+  
   readonly actions = input<HeaderAction[]>([]);
-
-  // Breadcrumbs
+  
   readonly breadcrumbs = input<BreadcrumbItem[]>([]);
-
-  // Mobile menu inputs
+  
   readonly showMobileMenu = input(false);
   readonly mobileMenuAriaLabel = input<string>('Mobile menu');
   readonly mobileNavigationAriaLabel = input<string>('Mobile navigation');
-
-  // Styling inputs
+  
   readonly variant = input<'default' | 'compact' | 'extended' | 'minimal'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly theme = input<'light' | 'dark'>('light');
   readonly sticky = input(false);
   readonly ariaLabel = input<string | null>(null);
-
-  // Performance and animation inputs
+  
   readonly enableAnimations = input(true);
   readonly enableHapticFeedback = input(false);
   readonly mobileMenuAnimation = input<'slide' | 'fade' | 'scale'>('slide');
   readonly stickyThreshold = input(0);
-
-  // State signals
+  
   readonly userMenuOpen = signal(false);
   readonly mobileMenuOpen = signal(false);
   readonly isSticky = signal(false);
   readonly isMobile = signal(false);
   readonly scrollY = signal(0);
-
-  // Outputs
+  
   readonly logoClick = output<MouseEvent>();
   readonly navigationClick = output<{ item: HeaderNavigationItem; event: MouseEvent }>();
   readonly actionClick = output<{ action: HeaderAction; event: MouseEvent }>();

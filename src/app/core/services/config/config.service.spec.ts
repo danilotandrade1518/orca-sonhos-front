@@ -83,8 +83,8 @@ describe('ConfigService', () => {
     });
 
     it('should return false for undefined feature in production mode', () => {
-      // This test is simplified to avoid environment modification issues
-      expect(service.isFeatureEnabled('undefined-feature')).toBe(true); // In development mode
+      
+      expect(service.isFeatureEnabled('undefined-feature')).toBe(true); 
     });
 
     it('should return feature value from environment in production mode', () => {
@@ -124,7 +124,7 @@ describe('ConfigService', () => {
 
   describe('signals are readonly', () => {
     it('should have readonly signals', () => {
-      // Test that signals exist and are accessible
+      
       expect(service.isDevelopment).toBeDefined();
       expect(service.apiConfig).toBeDefined();
       expect(service.firebaseConfig).toBeDefined();

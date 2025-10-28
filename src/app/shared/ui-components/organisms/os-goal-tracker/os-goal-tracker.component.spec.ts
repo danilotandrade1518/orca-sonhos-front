@@ -16,7 +16,7 @@ describe('OsGoalTrackerComponent', () => {
     targetAmount: 50000,
     currentAmount: 15000,
     currency: 'BRL',
-    deadline: new Date('2025-12-31'), // Data futura para evitar atraso
+    deadline: new Date('2025-12-31'), 
     startDate: new Date('2024-01-01'),
     lastUpdated: new Date('2024-06-15'),
     status: 'active',
@@ -146,7 +146,7 @@ describe('OsGoalTrackerComponent', () => {
     it('should provide timeline info when enabled', () => {
       const timelineInfo = component.timelineInfo();
       expect(timelineInfo).toBeTruthy();
-      // Verifica se as datas estão formatadas corretamente (pode variar por timezone)
+      
       expect(timelineInfo!.start).toMatch(/\d{2}\/\d{2}\/\d{4}/);
       expect(timelineInfo!.deadline).toMatch(/\d{2}\/\d{2}\/\d{4}/);
       expect(timelineInfo!.lastUpdated).toMatch(/\d{2}\/\d{2}\/\d{4}/);
@@ -155,9 +155,9 @@ describe('OsGoalTrackerComponent', () => {
     it('should provide recent history when enabled', () => {
       const recentHistory = component.recentHistory();
       expect(recentHistory.length).toBe(2);
-      // O slice(-3).reverse() pega os últimos 3 e inverte, então o primeiro é o mais antigo
-      expect(recentHistory[0].amount).toBe(10000); // Primeiro item (mais antigo após reverse)
-      expect(recentHistory[1].amount).toBe(15000); // Segundo item (mais recente)
+      
+      expect(recentHistory[0].amount).toBe(10000); 
+      expect(recentHistory[1].amount).toBe(15000); 
     });
 
     it('should provide contribution info when enabled', () => {
@@ -247,7 +247,7 @@ describe('OsGoalTrackerComponent', () => {
     });
 
     it('should return warning variant for high priority goals', () => {
-      // Para metas de alta prioridade que não estão completas nem atrasadas
+      
       expect(component.progressVariant()).toBe('warning');
     });
 
@@ -262,12 +262,12 @@ describe('OsGoalTrackerComponent', () => {
   describe('Methods', () => {
     it('should calculate days remaining correctly', () => {
       const daysRemaining = component.getDaysRemaining();
-      expect(daysRemaining).toBeGreaterThan(0); // Com deadline em 2025-12-31
+      expect(daysRemaining).toBeGreaterThan(0); 
     });
 
     it('should format history date correctly', () => {
       const formattedDate = component.formatHistoryDate(new Date('2024-06-15'));
-      // Verifica se a data está formatada corretamente (pode variar por timezone)
+      
       expect(formattedDate).toMatch(/\d{2}\/\d{2}\/\d{4}/);
     });
 
@@ -364,7 +364,7 @@ describe('OsGoalTrackerComponent', () => {
   describe('Accessibility', () => {
     it('should have proper ARIA attributes', () => {
       const trackerElement = fixture.debugElement.query(By.css('.os-goal-tracker'));
-      // Como o template não está implementado, vamos testar se o componente existe
+      
       expect(trackerElement).toBeTruthy();
     });
 

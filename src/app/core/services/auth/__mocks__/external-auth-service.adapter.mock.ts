@@ -17,7 +17,7 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
   }
 
   async signIn(credentials: AuthCredentials): Promise<AuthResult> {
-    // Add a small delay to simulate async behavior
+    
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     const user: AuthUser = {
@@ -43,7 +43,7 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
   }
 
   async signOut(): Promise<void> {
-    // Add a small delay to simulate async behavior
+    
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     this._currentUser = null;

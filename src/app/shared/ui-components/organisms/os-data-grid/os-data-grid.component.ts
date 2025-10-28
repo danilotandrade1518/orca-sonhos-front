@@ -246,10 +246,9 @@ export interface OsDataGridPagination {
   },
 })
 export class OsDataGridComponent {
-  // Dependencies
+  
   private readonly breakpointObserver = inject(BreakpointObserver);
-
-  // Inputs
+  
   data = input<Record<string, unknown>[]>([]);
   columns = input<OsDataTableColumn[]>([]);
   filterOptions = input<OsFilterOption[]>([]);
@@ -258,15 +257,13 @@ export class OsDataGridComponent {
   subtitle = input<string>('');
   size = input<OsDataGridSize>('medium');
   variant = input<OsDataGridVariant>('default');
-
-  // Virtual scrolling options
+  
   useVirtualScrolling = input<boolean>(false);
   virtualScrollThreshold = input<number>(100);
   virtualScrollItemSize = input<number>(48);
   virtualScrollMinBuffer = input<number>(200);
   virtualScrollMaxBuffer = input<number>(400);
-
-  // Display options
+  
   showHeaderActions = input<boolean>(true);
   showRefreshButton = input<boolean>(true);
   showExportButton = input<boolean>(true);
@@ -280,16 +277,13 @@ export class OsDataGridComponent {
   showItemCount = input<boolean>(true);
   showLastUpdated = input<boolean>(true);
   showFooterActions = input<boolean>(false);
-
-  // Pagination
+  
   pageSizeOptions = input<number[]>([5, 10, 25, 50]);
   showFirstLastButtons = input<boolean>(true);
-
-  // Loading state
+  
   isLoading = input<boolean>(false);
   lastUpdated = input<Date>(new Date());
-
-  // Outputs
+  
   rowClick = output<Record<string, unknown>>();
   tableActionClick = output<OsDataTableAction>();
   refresh = output<void>();
@@ -298,8 +292,7 @@ export class OsDataGridComponent {
   filterChange = output<OsDataGridFilter[]>();
   sortChange = output<OsDataGridSort>();
   pageChange = output<OsDataGridPagination>();
-
-  // Internal state
+  
   private filters = signal<OsDataGridFilter[]>([]);
   private sort = signal<OsDataGridSort | null>(null);
   protected pagination = signal<OsDataGridPagination>({
@@ -307,12 +300,11 @@ export class OsDataGridComponent {
     pageSize: 10,
     total: 0,
   });
-
-  // Mobile detection
+  
   private isMobile = signal<boolean>(false);
 
   constructor() {
-    // Mobile detection effect
+    
     effect(() => {
       this.breakpointObserver
         .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
@@ -321,12 +313,10 @@ export class OsDataGridComponent {
         });
     });
   }
-
-  // Computed properties
+  
   filteredData = computed(() => {
     let result = [...this.data()];
-
-    // Apply filters
+    
     const activeFilters = this.filters().filter(
       (f) => f.value !== null && f.value !== undefined && f.value !== ''
     );
@@ -338,24 +328,20 @@ export class OsDataGridComponent {
         });
       });
     }
-
-    // Apply sorting
+    
     if (this.sort()) {
       result = this.applySorting(result, this.sort()!);
     }
-
-    // Apply pagination
+    
     const startIndex = this.pagination().page * this.pagination().pageSize;
     const endIndex = startIndex + this.pagination().pageSize;
 
     return result.slice(startIndex, endIndex);
   });
-
-  // Computed for total items
+  
   totalItems = computed(() => {
     let result = [...this.data()];
-
-    // Apply filters
+    
     const activeFilters = this.filters().filter(
       (f) => f.value !== null && f.value !== undefined && f.value !== ''
     );
@@ -374,16 +360,13 @@ export class OsDataGridComponent {
   hasActiveFilters = computed(() => {
     return this.filters().some((f) => f.value !== null && f.value !== undefined && f.value !== '');
   });
-
-  // Mobile-specific computed properties
+  
   isMobileDevice = computed(() => this.isMobile());
-
-  // Virtual scrolling computed properties
+  
   shouldUseVirtualScrolling = computed(() => {
     return this.useVirtualScrolling() && this.filteredData().length > this.virtualScrollThreshold();
   });
-
-  // Methods
+  
   dataGridClasses = () => {
     const classes = ['os-data-grid'];
 
@@ -471,13 +454,11 @@ export class OsDataGridComponent {
 
     return `Mostrando ${start}-${end} de ${total} itens`;
   };
-
-  // Virtual scrolling methods
+  
   getVirtualScrollItemSize = () => this.virtualScrollItemSize();
   getVirtualScrollMinBuffer = () => this.virtualScrollMinBuffer();
   getVirtualScrollMaxBuffer = () => this.virtualScrollMaxBuffer();
-
-  // Event handlers
+  
   onRefresh(): void {
     this.refresh.emit();
   }
@@ -530,8 +511,7 @@ export class OsDataGridComponent {
     }));
     this.pageChange.emit(this.pagination());
   }
-
-  // Helper methods
+  
   private updateFilter(
     key: string,
     value: string | number | Date | boolean | null | undefined

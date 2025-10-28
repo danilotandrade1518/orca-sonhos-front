@@ -93,7 +93,7 @@ describe('OsModalComponent', () => {
     });
 
     it('should show header when title, subtitle, or closable is true', () => {
-      // Default closable is true, so header should be shown by default
+      
       expect(component.showHeader()).toBe(true);
 
       fixture.componentRef.setInput('closable', false);
@@ -118,7 +118,7 @@ describe('OsModalComponent', () => {
         {
           label: 'Test',
           variant: 'primary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
       ]);
       expect(component.showActions()).toBe(true);
@@ -197,12 +197,12 @@ describe('OsModalComponent', () => {
         {
           label: 'Action 1',
           variant: 'primary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
         {
           label: 'Action 2',
           variant: 'secondary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
       ]);
 
@@ -214,17 +214,17 @@ describe('OsModalComponent', () => {
         {
           label: 'Action 1',
           variant: 'primary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
         {
           label: 'Action 2',
           variant: 'secondary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
         {
           label: 'Action 3',
           variant: 'tertiary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
       ]);
 
@@ -235,7 +235,7 @@ describe('OsModalComponent', () => {
 
   describe('Event Handlers', () => {
     it('should emit closed event when onClose is called', () => {
-      // Configurar para não usar animação para que o evento seja emitido imediatamente
+      
       fixture.componentRef.setInput('animated', false);
       fixture.detectChanges();
 
@@ -279,8 +279,7 @@ describe('OsModalComponent', () => {
 
       fixture.componentRef.setInput('closeOnEscape', true);
       const event = new KeyboardEvent('keydown', { key: 'Escape' });
-
-      // Mock preventDefault to track if it was called
+      
       const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
 
       component.onEscapeKey(event);
@@ -364,12 +363,12 @@ describe('OsModalComponent', () => {
         {
           label: 'Save',
           variant: 'primary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
         {
           label: 'Cancel',
           variant: 'secondary',
-          action: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          action: () => {}, 
         },
       ];
 
@@ -378,8 +377,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-
-      // Just verify that the buttons are rendered
+      
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
     });
@@ -390,8 +388,7 @@ describe('OsModalComponent', () => {
 
       const actionButtons = fixture.nativeElement.querySelectorAll('os-button');
       expect(actionButtons.length).toBe(2);
-
-      // Just verify that the buttons are rendered
+      
       expect(actionButtons[0]).toBeTruthy();
       expect(actionButtons[1]).toBeTruthy();
     });
@@ -426,7 +423,7 @@ describe('OsModalComponent', () => {
 
   describe('Integration with MatDialog', () => {
     it('should call dialogRef.close when onClose is called', () => {
-      // Configurar para não usar animação para que o evento seja emitido imediatamente
+      
       fixture.componentRef.setInput('animated', false);
       fixture.detectChanges();
 

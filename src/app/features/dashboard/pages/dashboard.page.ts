@@ -36,8 +36,7 @@ import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
-
-  // Signals
+  
   readonly isLoading = signal(false);
   readonly currentPersona = signal<'ana' | 'carlos' | 'roberto-maria' | 'julia'>('ana');
 
@@ -84,16 +83,14 @@ export class DashboardPage implements OnInit {
     this.isLoading.set(true);
 
     try {
-      // Carregar orçamentos disponíveis
+      
       await firstValueFrom(this.dashboardDataService.loadBudgets());
-
-      // Se houver orçamentos, selecionar o primeiro
+      
       const budgets = this.dashboardDataService.budgets();
       if (budgets.length > 0) {
         this.budgetSelectionService.setAvailableBudgets(budgets);
         this.budgetSelectionService.setSelectedBudget(budgets[0]);
-
-        // Carregar visão geral do orçamento selecionado
+        
         await firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgets[0].id));
       }
     } catch (error) {
@@ -110,8 +107,7 @@ export class DashboardPage implements OnInit {
   onRetryRequested(): void {
     this.loadDashboardData();
   }
-
-  // Persona management methods
+  
   setPersona(persona: 'ana' | 'carlos' | 'roberto-maria' | 'julia'): void {
     this.currentPersona.set(persona);
   }

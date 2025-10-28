@@ -163,12 +163,10 @@ describe('OsFormSectionComponent', () => {
 
       const sectionElement = fixture.nativeElement.querySelector('section');
       expect(sectionElement).toBeTruthy();
-
-      // Verificar se o elemento tem a estrutura correta para acessibilidade
+      
       expect(sectionElement.tagName.toLowerCase()).toBe('section');
       expect(sectionElement.getAttribute('aria-labelledby')).toBeDefined();
-
-      // Verificar se o título está sendo referenciado corretamente
+      
       const titleElement = sectionElement.querySelector('h2');
       expect(titleElement).toBeTruthy();
       expect(titleElement.getAttribute('id')).toBeDefined();

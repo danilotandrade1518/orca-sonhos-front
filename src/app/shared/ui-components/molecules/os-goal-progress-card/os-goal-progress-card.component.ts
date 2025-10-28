@@ -120,18 +120,16 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsGoalProgressCardComponent {
-  // Inputs
+  
   readonly goalData = input<GoalProgressData | null>(null);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly state = input<GoalProgressState>('default');
   readonly ariaLabel = input<string>('Card de progresso da meta');
-
-  // Outputs
+  
   readonly cardClick = output<GoalProgressData>();
   readonly cardExpand = output<GoalProgressData>();
-
-  // Computed properties
+  
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly isCompleted = computed(() => this.state() === 'completed');
   readonly isOverdue = computed(() => this.state() === 'overdue');
@@ -175,8 +173,7 @@ export class OsGoalProgressCardComponent {
   });
 
   readonly descriptionId = computed(() => `goal-description-${this.goalData()?.id || 'default'}`);
-
-  // Methods
+  
   getPriorityIcon(): string {
     const priority = this.goalData()?.priority;
     switch (priority) {

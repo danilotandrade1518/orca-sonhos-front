@@ -21,13 +21,12 @@ describe('OsAppShellTemplateComponent', () => {
   };
 
   beforeEach(async () => {
-    // Mock BreakpointObserver
+    
     mockBreakpointObserver = {
       observe: vi.fn().mockReturnValue(of(mockBreakpointState)),
       isMatched: vi.fn().mockReturnValue(false),
     };
-
-    // Mock ThemeService
+    
     mockThemeService = {
       isDark: signal(false),
       currentTheme: signal('light'),
@@ -195,7 +194,7 @@ describe('OsAppShellTemplateComponent', () => {
 
   describe('contextual actions slot', () => {
     it('should render contextual actions slot when content is projected', () => {
-      // Set header actions to make showContextualActions return true
+      
       fixture.componentRef.setInput('headerActions', [
         { label: 'Ação 1', icon: 'add', action: 'add-item' },
         { label: 'Ação 2', icon: 'edit', action: 'edit-item' },
@@ -213,7 +212,7 @@ describe('OsAppShellTemplateComponent', () => {
     it('should integrate theme toggle', () => {
       const themeToggle = fixture.nativeElement.querySelector('os-toggle');
       expect(themeToggle).toBeTruthy();
-      // The aria-label is set in the template, not as an attribute on the component
+      
     });
 
     it('should call themeService.toggleTheme when theme toggle is clicked', () => {
@@ -224,7 +223,7 @@ describe('OsAppShellTemplateComponent', () => {
     });
 
     it('should show correct label based on theme', () => {
-      // Mock the computed signal to return dark theme
+      
       vi.spyOn(component, 'computedLayout').mockReturnValue({
         variant: 'default',
         size: 'medium',
@@ -236,14 +235,14 @@ describe('OsAppShellTemplateComponent', () => {
       fixture.detectChanges();
 
       const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      // The label is computed in the template, not as an attribute
+      
       expect(themeToggle).toBeTruthy();
     });
   });
 
   describe('computed layout', () => {
     it('should merge layout with theme from service', () => {
-      // Mock the computed signal to return dark theme
+      
       vi.spyOn(component, 'computedLayout').mockReturnValue({
         variant: 'default',
         size: 'medium',
@@ -297,7 +296,7 @@ describe('OsAppShellTemplateComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-app-shell-template');
-      // The CSS classes are applied based on the computed layout, not directly from input
+      
       expect(container).toBeTruthy();
     });
   });
@@ -330,8 +329,7 @@ describe('OsAppShellTemplateComponent', () => {
       };
 
       mockBreakpointObserver.observe = vi.fn().mockReturnValue(of(mobileBreakpointState));
-
-      // Recreate component to trigger new breakpoint observation
+      
       fixture = TestBed.createComponent(OsAppShellTemplateComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();

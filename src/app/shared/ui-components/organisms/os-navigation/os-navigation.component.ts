@@ -204,10 +204,10 @@ export class OsNavigationComponent implements OnInit, OnDestroy {
   }
 
   private focusFirstItem(): void {
-    // Focus first enabled item
+    
     const firstEnabledItem = this.items().find((item) => !item.disabled);
     if (firstEnabledItem) {
-      // Focus will be handled by the os-navigation-item component
+      
       setTimeout(() => {
         const firstItemElement = document.querySelector(
           `[data-navigation-item="${firstEnabledItem.id}"]`

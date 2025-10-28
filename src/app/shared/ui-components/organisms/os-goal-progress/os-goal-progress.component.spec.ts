@@ -492,7 +492,7 @@ describe('OsGoalProgressComponent', () => {
   describe('Accessibility', () => {
     it('should have correct ARIA attributes', () => {
       fixture.detectChanges();
-      // Host binding attributes are applied to the component host element, not the inner div
+      
       const hostElement = fixture.nativeElement;
       expect(hostElement.getAttribute('role')).toBe('region');
       expect(hostElement.getAttribute('aria-labelledby')).toBeTruthy();

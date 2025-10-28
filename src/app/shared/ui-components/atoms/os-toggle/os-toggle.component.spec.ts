@@ -167,7 +167,7 @@ describe('OsToggleComponent', () => {
       fixture.detectChanges();
 
       const inputElement = fixture.nativeElement.querySelector('mat-slide-toggle');
-      // Angular Material slide toggle doesn't set tabindex by default when enabled
+      
       expect(inputElement.getAttribute('tabindex')).toBeNull();
     });
 
@@ -263,7 +263,7 @@ describe('OsToggleComponent', () => {
 
       const toggleElement = fixture.nativeElement.querySelector('.os-toggle');
       const computedStyle = getComputedStyle(toggleElement);
-      // CSS custom properties are not resolved in test environment
+      
       expect(computedStyle.minHeight).toBe('var(--os-touch-target-min)');
     });
 
@@ -273,7 +273,7 @@ describe('OsToggleComponent', () => {
 
       const toggleElement = fixture.nativeElement.querySelector('.os-toggle');
       const computedStyle = getComputedStyle(toggleElement);
-      // CSS custom properties are not resolved in test environment
+      
       expect(computedStyle.minHeight).toBe('var(--os-touch-target-min)');
     });
 

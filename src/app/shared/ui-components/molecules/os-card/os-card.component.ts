@@ -47,7 +47,7 @@ export type OsCardSize = 'small' | 'medium' | 'large';
   },
 })
 export class OsCardComponent {
-  // ===== INPUTS =====
+  
   variant = input<OsCardVariant>('default');
   size = input<OsCardSize>('medium');
   header = input<boolean>(false);
@@ -58,25 +58,20 @@ export class OsCardComponent {
   selected = input<boolean>(false);
   ariaLabel = input<string | null>(null);
   ariaDescribedBy = input<string | null>(null);
-
-  // ===== OUTPUTS =====
+  
   cardClick = output<void>();
-
-  // ===== COMPUTED PROPERTIES =====
+  
   cardClasses = computed(() => {
     const classes = ['os-card'];
-
-    // Variant
+    
     if (this.variant() !== 'default') {
       classes.push(`os-card--${this.variant()}`);
     }
-
-    // Size
+    
     if (this.size() !== 'medium') {
       classes.push(`os-card--${this.size()}`);
     }
-
-    // States
+    
     if (this.clickable()) {
       classes.push('os-card--clickable');
     }
@@ -87,8 +82,7 @@ export class OsCardComponent {
 
     return classes.join(' ');
   });
-
-  // ===== METHODS =====
+  
   onCardClick(): void {
     if (this.clickable() && !this.disabled() && !this.loading()) {
       this.cardClick.emit();

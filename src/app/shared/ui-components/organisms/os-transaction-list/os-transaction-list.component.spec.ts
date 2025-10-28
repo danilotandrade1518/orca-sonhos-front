@@ -9,16 +9,14 @@ import { OsDataTableComponent } from '../../molecules/os-data-table/os-data-tabl
 import { OsFilterBarComponent } from '../../molecules/os-filter-bar/os-filter-bar.component';
 import { OsTransactionListComponent, Transaction } from './os-transaction-list.component';
 
-// Mock do ResizeObserver para este teste
 const mockResizeObserver = vi.fn();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 mockResizeObserver.mockImplementation((callback: ResizeObserverCallback) => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 }));
 
-// Mock global do ResizeObserver
 Object.defineProperty(window, 'ResizeObserver', {
   writable: true,
   configurable: true,

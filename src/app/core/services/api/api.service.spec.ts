@@ -17,7 +17,7 @@ describe('ApiService', () => {
   };
 
   beforeEach(async () => {
-    // Reset TestBed before each test
+    
     TestBed.resetTestingModule();
 
     configSpy = {
@@ -72,7 +72,7 @@ describe('ApiService', () => {
 
   describe('utility methods', () => {
     it('should clear error manually', () => {
-      // Testa o método clearError diretamente
+      
       service.setLoading(true);
       expect(service.isLoading()).toBe(true);
 
@@ -93,7 +93,7 @@ describe('ApiService', () => {
 
   describe('headers', () => {
     it('should create headers with default Content-Type', () => {
-      // Testa através de uma requisição real
+      
       service.get('/test-endpoint').subscribe();
       const req = httpMock.expectOne('http://localhost:3000/api/test-endpoint');
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
@@ -101,7 +101,7 @@ describe('ApiService', () => {
     });
 
     it('should create headers with custom Content-Type', () => {
-      // Testa através de uma requisição real
+      
       service.post('/test-endpoint', {}).subscribe();
       const req = httpMock.expectOne('http://localhost:3000/api/test-endpoint');
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
@@ -111,7 +111,7 @@ describe('ApiService', () => {
 
   describe('signals are readonly', () => {
     it('should have readonly signals', () => {
-      // Test that signals exist and are accessible
+      
       expect(service.isLoading).toBeDefined();
       expect(service.error).toBeDefined();
     });

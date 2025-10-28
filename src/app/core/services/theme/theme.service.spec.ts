@@ -11,7 +11,7 @@ describe('ThemeService', () => {
   let mockMatchMedia: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    // Mock localStorage
+    
     mockLocalStorage = {};
     Object.defineProperty(window, 'localStorage', {
       value: {
@@ -25,8 +25,7 @@ describe('ThemeService', () => {
       },
       writable: true,
     });
-
-    // Mock matchMedia
+    
     mockMatchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
@@ -62,7 +61,7 @@ describe('ThemeService', () => {
     });
 
     it('should initialize with light theme when system prefers light', () => {
-      // Reset the service and mock matchMedia before creating new instance
+      
       TestBed.resetTestingModule();
       mockMatchMedia.mockImplementation((query: string) => ({
         matches: query === '(prefers-color-scheme: light)',
@@ -88,7 +87,7 @@ describe('ThemeService', () => {
     });
 
     it('should initialize with dark theme when system prefers dark', () => {
-      // Reset the service and mock matchMedia before creating new instance
+      
       TestBed.resetTestingModule();
       mockMatchMedia.mockImplementation((query: string) => ({
         matches: query === '(prefers-color-scheme: dark)',
@@ -114,7 +113,7 @@ describe('ThemeService', () => {
     });
 
     it('should load theme from localStorage if available', () => {
-      // Reset the service and set localStorage before creating new instance
+      
       TestBed.resetTestingModule();
       mockLocalStorage['orca-sonhos-theme'] = 'dark';
 
@@ -167,7 +166,7 @@ describe('ThemeService', () => {
       service.setThemeMode('system');
 
       expect(service.themeMode()).toBe('system');
-      // Should follow system preference - mockMatchMedia returns true for dark theme
+      
       expect(service.isDark()).toBe(true);
     });
 
@@ -273,8 +272,7 @@ describe('ThemeService', () => {
   describe('system theme listener', () => {
     it('should update theme when system preference changes', () => {
       service.setThemeMode('system');
-
-      // Simulate system theme change
+      
       const mockAddEventListener = vi.fn();
       const mockMediaQuery = {
         matches: true,
@@ -286,11 +284,9 @@ describe('ThemeService', () => {
         removeEventListener: vi.fn(),
         dispatchEvent: vi.fn(),
       };
-
-      // Mock matchMedia to return our mock
+      
       mockMatchMedia.mockReturnValue(mockMediaQuery);
-
-      // Reset and recreate service to trigger listener setup
+      
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -302,8 +298,7 @@ describe('ThemeService', () => {
 
       const newService = TestBed.inject(ThemeService);
       newService.setThemeMode('system');
-
-      // The addEventListener should be called during setup
+      
       expect(mockAddEventListener).toHaveBeenCalled();
     });
   });
@@ -325,8 +320,7 @@ describe('ThemeService', () => {
 
     it('should apply system theme to document', () => {
       service.setThemeMode('system');
-
-      // mockMatchMedia returns true for dark theme by default
+      
       const expectedTheme = 'dark';
       expect(document.documentElement.getAttribute('data-theme')).toBe(expectedTheme);
     });
@@ -336,13 +330,12 @@ describe('ThemeService', () => {
     it('should handle invalid theme mode gracefully', () => {
       const invalidMode = 'invalid' as ThemeMode;
       service.setThemeMode(invalidMode);
-
-      // Should not throw error and maintain current state
+      
       expect(service.themeMode()).toBe(invalidMode);
     });
 
     it('should handle localStorage errors gracefully', () => {
-      // Mock localStorage to throw error
+      
       Object.defineProperty(window, 'localStorage', {
         value: {
           getItem: vi.fn(() => {
@@ -355,8 +348,7 @@ describe('ThemeService', () => {
         },
         writable: true,
       });
-
-      // Reset TestBed to use new localStorage mock
+      
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -365,8 +357,7 @@ describe('ThemeService', () => {
           provideZonelessChangeDetection(),
         ],
       });
-
-      // Should not throw error during initialization
+      
       expect(() => {
         const newService = TestBed.inject(ThemeService);
         newService.setThemeMode('dark');
@@ -374,13 +365,12 @@ describe('ThemeService', () => {
     });
 
     it('should handle missing matchMedia gracefully', () => {
-      // Remove matchMedia
+      
       Object.defineProperty(window, 'matchMedia', {
         value: undefined,
         writable: true,
       });
-
-      // Should not throw error during initialization
+      
       expect(() => {
         TestBed.inject(ThemeService);
       }).not.toThrow();

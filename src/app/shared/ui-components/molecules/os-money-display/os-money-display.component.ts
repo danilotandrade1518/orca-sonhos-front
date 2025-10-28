@@ -96,8 +96,7 @@ export class OsMoneyDisplayComponent {
 
   effectiveSize = computed(() => {
     if (this.isLargeValue()) return 'xl';
-
-    // Map legacy sizes to new sizes for backward compatibility
+    
     const sizeMapping: Record<string, string> = {
       small: 'sm',
       medium: 'md',

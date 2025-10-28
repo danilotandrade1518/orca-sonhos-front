@@ -168,7 +168,7 @@ describe('OsLabelComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on click', () => {
-      // Mock navigator.vibrate
+      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -185,7 +185,7 @@ describe('OsLabelComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      // Mock navigator.vibrate
+      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -203,7 +203,7 @@ describe('OsLabelComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      // Mock navigator.vibrate
+      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

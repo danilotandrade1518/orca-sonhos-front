@@ -78,7 +78,7 @@ describe('OsFooterComponent', () => {
     fixture.detectChanges();
 
     const links = fixture.nativeElement.querySelectorAll('.os-footer__link');
-    // Router link is handled by Angular Router, we just verify the element exists
+    
     expect(links[0]).toBeTruthy();
     expect(links[1].getAttribute('href')).toBe('https://example.com');
     expect(links[1].getAttribute('target')).toBe('_blank');
@@ -152,7 +152,7 @@ describe('OsFooterComponent', () => {
     fixture.detectChanges();
 
     const footer = fixture.nativeElement.querySelector('.os-footer');
-    // ARIA attributes are set via host binding, we verify the element exists
+    
     expect(footer).toBeTruthy();
     expect(footer.tagName.toLowerCase()).toBe('footer');
   });
@@ -218,8 +218,7 @@ describe('OsFooterComponent', () => {
 
     const content = fixture.nativeElement.querySelector('.os-footer__content');
     expect(content).toBeTruthy();
-
-    // Mobile should have single column layout
+    
     const computedStyle = window.getComputedStyle(content);
     expect(computedStyle.display).toBe('grid');
   });
@@ -236,8 +235,7 @@ describe('OsFooterComponent', () => {
 
     const socialLinksContainer = fixture.nativeElement.querySelector('.os-footer__social-links');
     expect(socialLinksContainer).toBeTruthy();
-
-    // Verify flex-wrap is applied via CSS
+    
     const computedStyle = window.getComputedStyle(socialLinksContainer);
     expect(computedStyle.flexWrap).toBe('wrap');
   });
