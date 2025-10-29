@@ -190,7 +190,7 @@ Construir os componentes reutilizáveis conforme DS e a11y.
 
 ---
 
-## 📅 FASE 4: Integrações (Dashboard e AppBar) [Status: ⏳]
+## 📅 FASE 4: Integrações (Dashboard e AppBar) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -198,24 +198,46 @@ Conectar navegação contextual e criação via AppBar.
 
 ### 📋 Tarefas
 
-#### DashboardWidgetsComponent.onWidgetClick [⏳]
+#### DashboardWidgetsComponent.onWidgetClick [✅]
 
 **Descrição**: Ao `type === 'budget-summary'`, obter `selectedBudgetId` e navegar para `/budgets/:id`.
 **Dependências**: Fases 1 e 2.
+**Implementado**:
 
-#### AppLayoutComponent (createBudgetRequested) [⏳]
+- Método `onWidgetClick` atualizado na `DashboardPage`
+- Verificação de `widget.type === 'budget-summary'`
+- Navegação para `/budgets/:id` usando `selectedBudgetId` do `BudgetSelectionService`
+- Router injetado e configurado
+
+#### AppLayoutComponent (createBudgetRequested) [✅]
 
 **Descrição**: Tratar evento do seletor para abrir `/budgets/new` (modal).
 **Critério de Conclusão**: Fluxos navegáveis a partir do Dashboard e AppBar.
+**Implementado**:
+
+- Handler `onCreateBudgetRequested()` adicionado ao `AppLayoutComponent`
+- Event binding `(createBudgetRequested)` conectado ao `BudgetSelectorComponent`
+- `showCreateButton="true"` habilitado no seletor
+- Navegação para `/budgets/new` implementada
+- Método `onHeaderLogoClick()` atualizado para navegar para `/dashboard`
 
 ### 🧪 Critérios de Validação
 
-- [ ] Clique no widget abre detalhe do orçamento selecionado
-- [ ] Botão criar do seletor abre modal de criação
+- [✅] Clique no widget abre detalhe do orçamento selecionado
+- [✅] Botão criar do seletor abre modal de criação
 
 ### 📝 Comentários da Fase
 
-\_
+**Decisões**:
+
+- Navegação condicional apenas para widget `budget-summary` (outros widgets podem ser implementados no futuro)
+- Botão criar habilitado no seletor da AppBar conforme especificado
+- Usar Router para navegação programática ao invés de links HTML para manter consistência
+
+**Arquivos Modificados**:
+
+- `src/app/features/dashboard/pages/dashboard/dashboard.page.ts`
+- `src/app/core/layout/app-layout.component.ts`
 
 ---
 

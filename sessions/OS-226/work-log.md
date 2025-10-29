@@ -164,9 +164,41 @@
 
 ---
 
+### 🗓️ Sessão 30/10/2025 - FASE 4 Concluída ✅
+
+**Fase**: FASE 4 - Integrações (Dashboard e AppBar)
+**Objetivo**: Conectar navegação contextual e criação via AppBar
+
+#### ✅ Trabalho Realizado
+
+- ✅ Implementado `onWidgetClick` na `DashboardPage`:
+  - Verificação de `widget.type === 'budget-summary'`
+  - Obtenção de `selectedBudgetId` via `BudgetSelectionService`
+  - Navegação para `/budgets/:id` quando widget é clicado
+- ✅ Implementado `onCreateBudgetRequested` no `AppLayoutComponent`:
+  - Handler conectado ao evento `(createBudgetRequested)` do `BudgetSelectorComponent`
+  - Botão criar habilitado (`showCreateButton="true"`)
+  - Navegação para `/budgets/new` para abrir modal de criação
+- ✅ Atualizado `onHeaderLogoClick` para navegar para `/dashboard`
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Navegação condicional apenas para widget `budget-summary`
+  - **Motivo**: Outros tipos de widget podem ter comportamentos diferentes no futuro
+- **Decisão**: Usar Router para navegação programática
+  - **Motivo**: Manter consistência com padrões Angular e facilitar testes
+
+#### 🧪 Validações
+
+- ✅ Nenhum erro de lint nos arquivos modificados
+- ✅ TypeScript compilando sem erros
+- ✅ Integrações funcionando: widget clica navega e botão criar abre modal
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-226
-**Fase Atual**: FASE 3 - CONCLUÍDA ✅
-**Última Modificação**: Testes unitários implementados para BudgetCardComponent e BudgetFormComponent
-**Próxima Tarefa**: FASE 4 - Integrações (Dashboard e AppBar)
+**Fase Atual**: FASE 4 - CONCLUÍDA ✅
+**Última Modificação**: Integrações com Dashboard e AppBar implementadas
+**Próxima Tarefa**: FASE 5 - Polimento, A11y e Testes Finais
