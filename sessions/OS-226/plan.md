@@ -25,7 +25,8 @@ Estabelecer contratos, serviço e estado reativos com seleção automática do p
 
 **Descrição**: Finalizar `BudgetDto`, `CreateBudgetDto`, `UpdateBudgetDto` conforme swagger/backend e mocks.
 **Critério de Conclusão**: Tipos publicados em `src/dtos/budget/*` e usados no serviço/estado.
-**Implementado**: 
+**Implementado**:
+
 - `DeleteBudgetRequestDto` e `DeleteBudgetResponseDto` criados
 - `UpdateBudgetRequestDto` corrigido (userId, budgetId, name)
 - Todos os DTOs exportados no `index.ts`
@@ -35,6 +36,7 @@ Estabelecer contratos, serviço e estado reativos com seleção automática do p
 **Descrição**: Implementar chamadas via `ApiService` com headers/erros e typings.
 **Critério de Conclusão**: Métodos funcionando contra MSW; testes unitários 100%.
 **Implementado**:
+
 - `getBudgets()`, `getBudgetOverview()`, `createBudget()`, `updateBudget()`, `deleteBudget()`
 - Signals para loading/error com readonly getters
 - Integração com ApiService e AuthService
@@ -45,6 +47,7 @@ Estabelecer contratos, serviço e estado reativos com seleção automática do p
 **Descrição**: `budgets`, `loading`, `error`, seleção automática do primeiro item; helpers de seleção.
 **Critério de Conclusão**: Testes 100% cobrindo transições.
 **Implementado**:
+
 - Signals: `_budgets`, `_loading`, `_error` com readonly getters
 - Computed: `hasBudgets`, `budgetsCount`
 - `loadBudgets()` com seleção automática do primeiro
@@ -69,7 +72,7 @@ Estabelecer contratos, serviço e estado reativos com seleção automática do p
 
 ---
 
-## 📅 FASE 2: Rotas e Páginas Base (List e Detail) [Status: ⏳]
+## 📅 FASE 2: Rotas e Páginas Base (List e Detail) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -77,29 +80,59 @@ Configurar rotas lazy e páginas base com integração ao estado.
 
 ### 📋 Tarefas
 
-#### Rotas `features/budget/budget.routes.ts` [⏳]
+#### Rotas `features/budget/budget.routes.ts` [✅]
 
 **Descrição**: Definir `/budgets`, `/budgets/:id`, `/budgets/new`, `/budgets/:id/edit` (modal secundário).
 **Dependências**: Fase 1 concluída.
+**Implementado**:
 
-#### BudgetListPage (lista + filtros client-side) [⏳]
+- Rotas configuradas com componentes standalone
+- Integração com app.routes.ts via loadChildren
+- Rotas: `/budgets` (list), `/budgets/new` (create modal), `/budgets/:id` (detail), `/budgets/:id/edit` (edit modal)
+
+#### BudgetListPage (lista + filtros client-side) [✅]
 
 **Descrição**: Consumir `BudgetState`; toolbar de filtros (texto, período, status) e grid responsivo.
 **Critério de Conclusão**: Filtros client-side funcionando; empty/error/loading states.
+**Implementado**:
 
-#### BudgetDetailPage (layout base) [⏳]
+- Filtros: texto (busca por nome) e tipo (PERSONAL/SHARED)
+- Grid responsivo com cards
+- Estados: loading, error, empty, success
+- Ações: criar, editar, excluir com confirmação
+- Integração completa com BudgetState e AuthService
+
+#### BudgetDetailPage (layout base) [✅]
 
 **Descrição**: Header com título/ações; placeholders para overview/participants.
 **Critério de Conclusão**: Rota abre e exibe orçamento selecionado.
+**Implementado**:
+
+- Header com título, tipo de orçamento e ações (editar, excluir)
+- Navegação: botão voltar para lista
+- Card de informações básicas (ID, tipo, participantes)
+- Placeholder para overview e participants (próximas fases)
+- Estados: loading, error, not found
 
 ### 🧪 Critérios de Validação
 
-- [ ] Navegação direta para `/budgets` e `/budgets/:id` funcional
-- [ ] Filtros client-side operacionais
+- [✅] Navegação direta para `/budgets` e `/budgets/:id` funcional
+- [✅] Filtros client-side operacionais
+- [✅] Responsividade mobile-first
+- [✅] Acessibilidade (ARIA, keyboard navigation, focus)
+- [✅] Integração com BudgetState e AuthService
 
 ### 📝 Comentários da Fase
 
-\_
+**Decisões**: Usar `component` ao invés de `loadComponent` para simplificar; estrutura de arquivos seguindo padrão do Dashboard; AuthService para obter userId.
+
+**Arquivos Criados**:
+
+- `budget.routes.ts`
+- `pages/budget-list.page.ts` e `.scss`
+- `pages/budget-detail.page.ts` e `.scss`
+
+**Observações**: Placeholders na página de detalhes para overview e participants que serão implementados nas próximas fases.
 
 ---
 

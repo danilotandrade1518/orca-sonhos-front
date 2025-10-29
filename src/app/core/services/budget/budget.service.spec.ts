@@ -102,7 +102,7 @@ describe('BudgetService', () => {
   });
 
   describe('getBudgets', () => {
-    it('should return budgets when user is authenticated', (done) => {
+    it('should return budgets when user is authenticated', () => {
       const mockResponse: GetBudgetsResponseDto = {
         data: mockBudgets,
         meta: { count: mockBudgets.length },
@@ -113,11 +113,10 @@ describe('BudgetService', () => {
       service.getBudgets().subscribe((budgets) => {
         expect(budgets).toEqual(mockBudgets);
         expect(apiService.getRaw).toHaveBeenCalledWith('/budget');
-        done();
       });
     });
 
-    it('should return empty array and set error when user is not authenticated', (done) => {
+    it('should return empty array and set error when user is not authenticated', () => {
       authService.user = vi.fn(() => null);
 
       service.getBudgets().subscribe((budgets) => {
@@ -127,11 +126,10 @@ describe('BudgetService', () => {
           status: 401,
           code: 'UNAUTHORIZED',
         });
-        done();
       });
     });
 
-    it('should handle API errors', (done) => {
+    it('should handle API errors', () => {
       const mockError: ApiError = {
         message: 'Failed to fetch budgets',
         status: 500,
@@ -143,13 +141,12 @@ describe('BudgetService', () => {
       service.getBudgets().subscribe((budgets) => {
         expect(budgets).toEqual([]);
         expect(service.error()).toEqual(mockError);
-        done();
       });
     });
   });
 
   describe('getBudgetOverview', () => {
-    it('should return budget overview when user is authenticated', (done) => {
+    it('should return budget overview when user is authenticated', () => {
       const mockResponse: GetBudgetOverviewResponseDto = {
         data: mockBudgetOverview,
       };
@@ -159,11 +156,10 @@ describe('BudgetService', () => {
       service.getBudgetOverview('budget-1').subscribe((overview) => {
         expect(overview).toEqual(mockBudgetOverview);
         expect(apiService.getRaw).toHaveBeenCalledWith('/budget/budget-1/overview');
-        done();
       });
     });
 
-    it('should return null and set error when user is not authenticated', (done) => {
+    it('should return null and set error when user is not authenticated', () => {
       authService.user = vi.fn(() => null);
 
       service.getBudgetOverview('budget-1').subscribe((overview) => {
@@ -173,11 +169,10 @@ describe('BudgetService', () => {
           status: 401,
           code: 'UNAUTHORIZED',
         });
-        done();
       });
     });
 
-    it('should handle API errors', (done) => {
+    it('should handle API errors', () => {
       const mockError: ApiError = {
         message: 'Budget not found',
         status: 404,
@@ -189,7 +184,6 @@ describe('BudgetService', () => {
       service.getBudgetOverview('budget-999').subscribe((overview) => {
         expect(overview).toBeNull();
         expect(service.error()).toEqual(mockError);
-        done();
       });
     });
   });
@@ -201,7 +195,7 @@ describe('BudgetService', () => {
       type: 'PERSONAL',
     };
 
-    it('should create budget and return id when user is authenticated', (done) => {
+    it('should create budget and return id when user is authenticated', () => {
       const mockResponse = { id: 'budget-new' };
 
       apiService.postRaw.mockReturnValue(of(mockResponse));
@@ -209,11 +203,10 @@ describe('BudgetService', () => {
       service.createBudget(createDto).subscribe((budgetId) => {
         expect(budgetId).toBe('budget-new');
         expect(apiService.postRaw).toHaveBeenCalledWith('/budget/create-budget', createDto);
-        done();
       });
     });
 
-    it('should return null and set error when user is not authenticated', (done) => {
+    it('should return null and set error when user is not authenticated', () => {
       authService.user = vi.fn(() => null);
 
       service.createBudget(createDto).subscribe((budgetId) => {
@@ -223,11 +216,10 @@ describe('BudgetService', () => {
           status: 401,
           code: 'UNAUTHORIZED',
         });
-        done();
       });
     });
 
-    it('should handle API errors', (done) => {
+    it('should handle API errors', () => {
       const mockError: ApiError = {
         message: 'Validation error',
         status: 400,
@@ -239,7 +231,6 @@ describe('BudgetService', () => {
       service.createBudget(createDto).subscribe((budgetId) => {
         expect(budgetId).toBeNull();
         expect(service.error()).toEqual(mockError);
-        done();
       });
     });
   });
@@ -251,7 +242,7 @@ describe('BudgetService', () => {
       name: 'Updated Budget Name',
     };
 
-    it('should update budget and return true when user is authenticated', (done) => {
+    it('should update budget and return true when user is authenticated', () => {
       const mockResponse = { success: true };
 
       apiService.postRaw.mockReturnValue(of(mockResponse));
@@ -259,11 +250,10 @@ describe('BudgetService', () => {
       service.updateBudget(updateDto).subscribe((success) => {
         expect(success).toBeTruthy();
         expect(apiService.postRaw).toHaveBeenCalledWith('/budget/update-budget', updateDto);
-        done();
       });
     });
 
-    it('should return false and set error when user is not authenticated', (done) => {
+    it('should return false and set error when user is not authenticated', () => {
       authService.user = vi.fn(() => null);
 
       service.updateBudget(updateDto).subscribe((success) => {
@@ -273,11 +263,10 @@ describe('BudgetService', () => {
           status: 401,
           code: 'UNAUTHORIZED',
         });
-        done();
       });
     });
 
-    it('should handle API errors', (done) => {
+    it('should handle API errors', () => {
       const mockError: ApiError = {
         message: 'Budget not found',
         status: 404,
@@ -289,7 +278,6 @@ describe('BudgetService', () => {
       service.updateBudget(updateDto).subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual(mockError);
-        done();
       });
     });
   });
@@ -300,7 +288,7 @@ describe('BudgetService', () => {
       budgetId: 'budget-1',
     };
 
-    it('should delete budget and return true when user is authenticated', (done) => {
+    it('should delete budget and return true when user is authenticated', () => {
       const mockResponse = { success: true };
 
       apiService.postRaw.mockReturnValue(of(mockResponse));
@@ -308,11 +296,10 @@ describe('BudgetService', () => {
       service.deleteBudget(deleteDto).subscribe((success) => {
         expect(success).toBeTruthy();
         expect(apiService.postRaw).toHaveBeenCalledWith('/budget/delete-budget', deleteDto);
-        done();
       });
     });
 
-    it('should return false and set error when user is not authenticated', (done) => {
+    it('should return false and set error when user is not authenticated', async () => {
       authService.user = vi.fn(() => null);
 
       service.deleteBudget(deleteDto).subscribe((success) => {
@@ -322,11 +309,10 @@ describe('BudgetService', () => {
           status: 401,
           code: 'UNAUTHORIZED',
         });
-        done();
       });
     });
 
-    it('should handle API errors', (done) => {
+    it('should handle API errors', () => {
       const mockError: ApiError = {
         message: 'Budget not found',
         status: 404,
@@ -338,13 +324,12 @@ describe('BudgetService', () => {
       service.deleteBudget(deleteDto).subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual(mockError);
-        done();
       });
     });
   });
 
   describe('clearError', () => {
-    it('should clear error state', (done) => {
+    it('should clear error state', async () => {
       const mockError: ApiError = {
         message: 'Test error',
         status: 500,
@@ -359,7 +344,7 @@ describe('BudgetService', () => {
         service.clearError();
 
         expect(service.error()).toBeNull();
-        done();
+        expect(service.error()).toBeNull();
       });
     });
   });

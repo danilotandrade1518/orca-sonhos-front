@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BudgetDto } from '../../../../dtos/budget';
@@ -11,6 +11,7 @@ import { BudgetService } from './budget.service';
 export class BudgetState {
   private readonly budgetService = inject(BudgetService);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly _budgets = signal<BudgetDto[]>([]);
   private readonly _loading = signal<boolean>(false);
@@ -32,7 +33,7 @@ export class BudgetState {
 
     this.budgetService
       .getBudgets()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (budgets) => {
           this._budgets.set(budgets);
@@ -71,7 +72,7 @@ export class BudgetState {
 
     this.budgetService
       .createBudget({ name, type, ownerId })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (budgetId) => {
           if (budgetId) {
@@ -94,7 +95,7 @@ export class BudgetState {
 
     this.budgetService
       .updateBudget({ userId, budgetId, name })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (success) => {
           if (success) {
@@ -117,7 +118,7 @@ export class BudgetState {
 
     this.budgetService
       .deleteBudget({ userId, budgetId })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (success) => {
           if (success) {

@@ -14,7 +14,13 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/dashboard/pages/dashboard.page').then((m) => m.DashboardPage),
+          import('./features/dashboard/pages/dashboard/dashboard.page').then(
+            (m) => m.DashboardPage
+          ),
+      },
+      {
+        path: 'budgets',
+        loadChildren: () => import('./features/budget/budget.routes').then((m) => m.BUDGET_ROUTES),
       },
     ],
   },
