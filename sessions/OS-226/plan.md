@@ -328,4 +328,5 @@ Garantir qualidade visual, responsividade e acessibilidade; concluir cobertura d
 - [✅] Lint sem erros (apenas warnings não críticos)
 - [✅] Build compilando sem erros
 - [✅] Todas as fases concluídas (Fases 1-5)
-- [✅] Pronto para `/pre-pr` e posterior `/pr`
+- [✅] Pull Request criado: [PR #16](https://github.com/danilotandrade1518/orca-sonhos-front/pull/16)
+- [✅] Pronto para revisão humana
