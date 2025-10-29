@@ -43,10 +43,11 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
           [variant]="'primary'"
           [size]="'small'"
           [placeholder]="'Selecionar orçamento'"
-          [showCreateButton]="false"
+          [showCreateButton]="true"
           [showShareButton]="false"
           [showQuickActions]="false"
           [ariaLabel]="'Seletor de orçamento'"
+          (createBudgetRequested)="onCreateBudgetRequested()"
           class="app-layout__budget-selector"
         />
       </div>
@@ -63,11 +64,9 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
 export class AppLayoutComponent implements OnInit {
   private readonly router = inject(Router);
 
-  // State signals
   private readonly sidebarCollapsed = signal(false);
   private readonly currentRoute = signal<string>('/');
 
-  // Layout configuration
   layoutConfig = computed(() => ({
     variant: 'default' as const,
     size: 'medium' as const,
@@ -77,7 +76,6 @@ export class AppLayoutComponent implements OnInit {
     sidebarCollapsed: this.sidebarCollapsed(),
   }));
 
-  // Sidebar navigation items
   sidebarItems = computed((): SidebarItem[] => [
     {
       id: 'dashboard',
@@ -117,7 +115,6 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  // Header navigation items
   headerNavigation = computed((): HeaderNavigationItem[] => [
     {
       label: 'Dashboard',
@@ -133,7 +130,6 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  // Route to breadcrumb mapping
   private readonly routeMap = {
     '/dashboard': [{ label: 'Dashboard', route: '/dashboard' }],
     '/budgets': [{ label: 'Orçamentos', route: '/budgets' }],
@@ -143,7 +139,6 @@ export class AppLayoutComponent implements OnInit {
     '/settings': [{ label: 'Configurações', route: '/settings' }],
   };
 
-  // Header breadcrumbs - dynamic based on current route
   headerBreadcrumbs = computed(() => {
     const route = this.currentRoute();
     return (
@@ -153,14 +148,12 @@ export class AppLayoutComponent implements OnInit {
     );
   });
 
-  // Header user configuration
   headerUser = computed(() => ({
     name: 'Usuário',
     email: 'usuario@orca-sonhos.com',
     role: 'Administrador',
   }));
 
-  // Header user menu items
   headerUserMenuItems = computed((): HeaderUserMenu[] => [
     {
       label: 'Perfil',
@@ -176,9 +169,7 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  // Event handlers
   onSidebarItemClick(item: SidebarItem): void {
-    // Navigation will be handled by router
     console.log('Sidebar item clicked:', item);
   }
 
@@ -188,12 +179,14 @@ export class AppLayoutComponent implements OnInit {
   }
 
   onHeaderLogoClick(): void {
-    // Navigate to dashboard
-    console.log('Header logo clicked');
+    this.router.navigate(['/dashboard']);
+  }
+
+  onCreateBudgetRequested(): void {
+    this.router.navigate(['/budgets/new']);
   }
 
   ngOnInit(): void {
-    // Update breadcrumbs on route change
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe({
       next: (event) => {
         if (event instanceof NavigationEnd) {
@@ -202,7 +195,6 @@ export class AppLayoutComponent implements OnInit {
       },
     });
 
-    // Initialize with current route
     this.currentRoute.set(this.router.url);
   }
 }

@@ -328,8 +328,7 @@ describe('OsBudgetTrackerComponent', () => {
 
     const chartBars = fixture.debugElement.queryAll(By.css('.os-budget-tracker__chart-bar-fill'));
     expect(chartBars.length).toBe(6);
-
-    // Check if bars have correct height percentages based on chartData calculation
+    
     const chartData = component.chartData();
     expect(chartData).toBeTruthy();
 

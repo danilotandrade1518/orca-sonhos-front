@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
@@ -36,8 +37,8 @@ import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly router = inject(Router);
 
-  // Signals
   readonly isLoading = signal(false);
   readonly currentPersona = signal<'ana' | 'carlos' | 'roberto-maria' | 'julia'>('ana');
 
@@ -84,16 +85,13 @@ export class DashboardPage implements OnInit {
     this.isLoading.set(true);
 
     try {
-      // Carregar orçamentos disponíveis
       await firstValueFrom(this.dashboardDataService.loadBudgets());
 
-      // Se houver orçamentos, selecionar o primeiro
       const budgets = this.dashboardDataService.budgets();
       if (budgets.length > 0) {
         this.budgetSelectionService.setAvailableBudgets(budgets);
         this.budgetSelectionService.setSelectedBudget(budgets[0]);
 
-        // Carregar visão geral do orçamento selecionado
         await firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgets[0].id));
       }
     } catch (error) {
@@ -104,14 +102,18 @@ export class DashboardPage implements OnInit {
   }
 
   onWidgetClick(widget: WidgetConfiguration): void {
-    console.log('Widget clicado:', widget);
+    if (widget.type === 'budget-summary') {
+      const selectedBudgetId = this.budgetSelectionService.selectedBudgetId();
+      if (selectedBudgetId) {
+        this.router.navigate(['/budgets', selectedBudgetId]);
+      }
+    }
   }
 
   onRetryRequested(): void {
     this.loadDashboardData();
   }
 
-  // Persona management methods
   setPersona(persona: 'ana' | 'carlos' | 'roberto-maria' | 'julia'): void {
     this.currentPersona.set(persona);
   }

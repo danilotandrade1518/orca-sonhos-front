@@ -136,8 +136,7 @@ describe('OsDataGridComponent', () => {
     it('should filter data correctly', () => {
       fixture.componentRef.setInput('data', mockData);
       fixture.detectChanges();
-
-      // Simulate filter change
+      
       component['onFilterChange']('name', { target: { value: 'Item 1' } });
       fixture.detectChanges();
 
@@ -149,12 +148,10 @@ describe('OsDataGridComponent', () => {
     it('should handle multiple filters', () => {
       fixture.componentRef.setInput('data', mockData);
       fixture.detectChanges();
-
-      // Apply first filter
+      
       component['onFilterChange']('category', { target: { value: 'A' } });
       fixture.detectChanges();
-
-      // Apply second filter
+      
       component['onFilterChange']('value', { target: { value: '100' } });
       fixture.detectChanges();
 
@@ -167,12 +164,10 @@ describe('OsDataGridComponent', () => {
     it('should clear filters', () => {
       fixture.componentRef.setInput('data', mockData);
       fixture.detectChanges();
-
-      // Apply filter
+      
       component['onFilterChange']('name', { target: { value: 'Item 1' } });
       fixture.detectChanges();
-
-      // Clear filters
+      
       component.onClearFilters();
       fixture.detectChanges();
 
@@ -185,8 +180,7 @@ describe('OsDataGridComponent', () => {
       fixture.detectChanges();
 
       expect(component.hasActiveFilters()).toBe(false);
-
-      // Apply filter
+      
       component['onFilterChange']('name', { target: { value: 'Item 1' } });
       fixture.detectChanges();
 
@@ -198,8 +192,7 @@ describe('OsDataGridComponent', () => {
     it('should sort data correctly', () => {
       fixture.componentRef.setInput('data', mockData);
       fixture.detectChanges();
-
-      // Apply sorting
+      
       component['onSortChange']({ active: 'name', direction: 'asc' });
       fixture.detectChanges();
 
@@ -212,8 +205,7 @@ describe('OsDataGridComponent', () => {
     it('should sort in descending order', () => {
       fixture.componentRef.setInput('data', mockData);
       fixture.detectChanges();
-
-      // Apply sorting
+      
       component['onSortChange']({ active: 'name', direction: 'desc' });
       fixture.detectChanges();
 
@@ -235,8 +227,7 @@ describe('OsDataGridComponent', () => {
 
       fixture.componentRef.setInput('data', largeData);
       fixture.detectChanges();
-
-      // Set page size to 10
+      
       component['onPageChange']({ pageIndex: 0, pageSize: 10 });
       fixture.detectChanges();
 
@@ -256,8 +247,7 @@ describe('OsDataGridComponent', () => {
 
       fixture.componentRef.setInput('data', largeData);
       fixture.detectChanges();
-
-      // Go to page 2
+      
       component['onPageChange']({ pageIndex: 1, pageSize: 10 });
       fixture.detectChanges();
 

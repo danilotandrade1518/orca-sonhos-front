@@ -251,14 +251,11 @@ describe('BudgetSelectorComponent', () => {
     fixture = TestBed.createComponent(BudgetSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    // Verificar se o state está sendo passado corretamente para o OsBudgetSelectorComponent
+    
     const osBudgetSelectorElement =
       fixture.debugElement.nativeElement.querySelector('os-budget-selector');
     expect(osBudgetSelectorElement).toBeTruthy();
-
-    // Verificar se o componente interno tem as classes corretas
-    // O elemento com as classes CSS está dentro do OsBudgetSelectorComponent
+    
     const internalSelector = osBudgetSelectorElement.querySelector('.os-budget-selector');
     expect(internalSelector).toBeTruthy();
     expect(internalSelector.className).toContain('os-budget-selector--loading');
@@ -288,14 +285,11 @@ describe('BudgetSelectorComponent', () => {
     fixture = TestBed.createComponent(BudgetSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    // Verificar se o state está sendo passado corretamente para o OsBudgetSelectorComponent
+    
     const osBudgetSelectorElement =
       fixture.debugElement.nativeElement.querySelector('os-budget-selector');
     expect(osBudgetSelectorElement).toBeTruthy();
-
-    // Verificar se o componente interno tem as classes corretas
-    // O elemento com as classes CSS está dentro do OsBudgetSelectorComponent
+    
     const internalSelector = osBudgetSelectorElement.querySelector('.os-budget-selector');
     expect(internalSelector).toBeTruthy();
     expect(internalSelector.className).toContain('os-budget-selector--empty');

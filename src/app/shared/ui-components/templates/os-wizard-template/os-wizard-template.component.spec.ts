@@ -184,7 +184,7 @@ describe('OsWizardTemplateComponent', () => {
 
       const progressBar = fixture.nativeElement.querySelector('os-progress-bar');
       expect(progressBar).toBeTruthy();
-      // Check the actual value attribute instead of ng-reflect-value
+      
       const matProgressBar = progressBar.querySelector('mat-progress-bar');
       expect(matProgressBar.getAttribute('aria-valuenow')).toBe('25');
     });
@@ -219,12 +219,10 @@ describe('OsWizardTemplateComponent', () => {
         '.os-wizard-template__actions os-button'
       );
       expect(nextButton).toBeTruthy();
-      // Check if the button exists and has the correct structure
+      
       const buttonElement = nextButton.querySelector('button');
       expect(buttonElement).toBeTruthy();
-
-      // The text should be in the button's label - check if the button exists
-      // The actual text content might be empty due to interpolation issues
+      
       expect(buttonElement).toBeTruthy();
     });
 
@@ -311,18 +309,15 @@ describe('OsWizardTemplateComponent', () => {
       fixture.componentRef.setInput('config', mockConfig);
       fixture.componentRef.setInput('currentStep', 'step4');
       fixture.detectChanges();
-
-      // Get the finish button - the primary button (should be the last button in the actions)
+      
       const actionButtons = fixture.nativeElement.querySelectorAll(
         '.os-wizard-template__actions os-button'
       );
       expect(actionButtons.length).toBeGreaterThan(0);
-
-      // The finish button should be the last button (primary variant)
+      
       const finishButton = actionButtons[actionButtons.length - 1];
       expect(finishButton).toBeTruthy();
-
-      // Trigger the click event on the os-button component
+      
       finishButton.dispatchEvent(new Event('click'));
       fixture.detectChanges();
 
@@ -337,18 +332,15 @@ describe('OsWizardTemplateComponent', () => {
       fixture.componentRef.setInput('currentStep', 'step1');
       fixture.componentRef.setInput('allowSkipSteps', true);
       fixture.detectChanges();
-
-      // Get the skip button - the tertiary button (should be the last button when allowSkipSteps is true)
+      
       const actionButtons = fixture.nativeElement.querySelectorAll(
         '.os-wizard-template__actions os-button'
       );
       expect(actionButtons.length).toBeGreaterThan(0);
-
-      // The skip button should be the last button (tertiary variant)
+      
       const skipButton = actionButtons[actionButtons.length - 1];
       expect(skipButton).toBeTruthy();
-
-      // Trigger the click event on the os-button component
+      
       skipButton.dispatchEvent(new Event('click'));
       fixture.detectChanges();
 

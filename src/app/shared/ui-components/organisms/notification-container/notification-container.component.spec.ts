@@ -22,7 +22,7 @@ describe('NotificationContainerComponent', () => {
   let mockNotificationService: MockNotificationService;
 
   beforeEach(async () => {
-    // Criar signals mutáveis para os testes
+    
     const notificationsSignal = signal<Notification[]>([]);
     const isLoadingSignal = signal<boolean>(false);
 
@@ -275,12 +275,10 @@ describe('NotificationContainerComponent', () => {
       fixture.detectChanges();
 
       const alertElements = fixture.nativeElement.querySelectorAll('os-alert');
-
-      // Dismiss first notification
+      
       alertElements[0].dispatchEvent(new CustomEvent('dismiss'));
       expect(mockNotificationService.dismissNotification).toHaveBeenCalledWith('test-1');
-
-      // Dismiss second notification
+      
       alertElements[1].dispatchEvent(new CustomEvent('dismiss'));
       expect(mockNotificationService.dismissNotification).toHaveBeenCalledWith('test-2');
     });
@@ -330,8 +328,7 @@ describe('NotificationContainerComponent', () => {
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelectorAll('os-alert').length).toBe(0);
-
-      // Add notification
+      
       mockNotificationService.setNotifications([
         {
           id: 'test-1',
@@ -353,8 +350,7 @@ describe('NotificationContainerComponent', () => {
       expect(
         fixture.nativeElement.querySelector('.os-notification-container__loading')
       ).toBeFalsy();
-
-      // Set loading to true
+      
       mockNotificationService.setLoading(true);
       fixture.detectChanges();
 

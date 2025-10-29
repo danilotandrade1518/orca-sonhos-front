@@ -69,12 +69,10 @@ export class OsToggleComponent {
   readonly toggled = output<boolean>();
   readonly focused = output<boolean>();
   readonly blurred = output<boolean>();
-
-  // Computed properties para acessibilidade
+  
   readonly toggleRole = computed(() => this.role());
   readonly descriptionId = computed(() => (this.description() ? `${this.id()}-description` : null));
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':

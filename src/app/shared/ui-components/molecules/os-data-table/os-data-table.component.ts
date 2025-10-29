@@ -149,8 +149,7 @@ export class OsDataTableComponent {
   protected sort = true;
 
   displayedColumns = computed(() => this.columns().map((col) => col.key));
-
-  // Mapeamento interno para Atoms
+  
   protected getButtonVariant = (color?: string) => {
     const colorMap: Record<string, 'primary' | 'secondary' | 'tertiary' | 'danger'> = {
       primary: 'primary',

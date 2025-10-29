@@ -157,8 +157,7 @@ export class OsAvatarComponent {
   optimizedInitials = computed(() => {
     const initials = this.initials();
     if (!initials) return '';
-
-    // Algoritmo otimizado para fallback de initials
+    
     const words = initials.trim().split(/\s+/);
     if (words.length === 1) {
       return words[0].substring(0, 2).toUpperCase();
@@ -208,7 +207,7 @@ export class OsAvatarComponent {
 
   handleClick(): void {
     if (this.clickable()) {
-      // Emitir evento de click se necessário
+      
       console.log('Avatar clicked');
     }
   }

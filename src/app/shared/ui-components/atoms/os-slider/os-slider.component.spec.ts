@@ -110,7 +110,6 @@ describe('OsSliderComponent', () => {
       vi.spyOn(component.valueChange, 'emit');
       const slider = fixture.debugElement.query(By.css('mat-slider'));
 
-      // Simular evento de mudança do Material slider
       const changeEvent = new Event('change');
       Object.defineProperty(changeEvent, 'target', {
         value: { value: '75' },
@@ -230,12 +229,8 @@ describe('OsSliderComponent', () => {
   describe('form integration', () => {
     it('should work with reactive forms', () => {
       fixture.componentRef.setInput('value', 50);
-      component.registerOnChange(() => {
-        // Mock onChange callback
-      });
-      component.registerOnTouched(() => {
-        // Mock onTouched callback
-      });
+      component.registerOnChange(() => {});
+      component.registerOnTouched(() => {});
 
       expect(component.value()).toBe(50);
     });
@@ -268,7 +263,7 @@ describe('OsSliderComponent', () => {
       component.registerOnChange(onChangeSpy);
 
       const slider = fixture.debugElement.query(By.css('mat-slider'));
-      // Simular evento de mudança do Material slider
+
       const changeEvent = new Event('change');
       Object.defineProperty(changeEvent, 'target', {
         value: { value: '30' },
@@ -379,7 +374,7 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
-      // Intl.NumberFormat uses non-breaking space (\u00A0) instead of regular space
+
       expect(valueDisplay.nativeElement.textContent.trim()).toBe(
         'R$ 1.234,56'.replace(' ', '\u00A0')
       );
@@ -429,7 +424,6 @@ describe('OsSliderComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on input', () => {
-      // Mock navigator.vibrate
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -451,7 +445,6 @@ describe('OsSliderComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      // Mock navigator.vibrate
       Object.defineProperty(navigator, 'vibrate', {
         value: vi.fn(),
         writable: true,

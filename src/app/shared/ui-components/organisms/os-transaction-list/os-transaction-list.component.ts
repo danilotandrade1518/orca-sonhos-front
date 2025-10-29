@@ -340,20 +340,18 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private isDestroyed = false;
 
   constructor() {
-    // Update pagination total when filtered transactions change
+    
     effect(() => {
       const filteredLength = this.filteredTransactions().length;
       this.pagination.update((p) => ({ ...p, total: filteredLength }));
     });
-
-    // Mobile detection
+    
     effect(() => {
       const isMobile = this.breakpointObserver.isMatched(Breakpoints.Handset);
       this.isMobile.set(isMobile);
     });
   }
-
-  // Inputs
+  
   transactions = input<Transaction[]>([]);
   title = input<string>('');
   subtitle = input<string>('');
@@ -366,8 +364,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   enableCategoryColors = input<boolean>(true);
   enablePriorityIndicators = input<boolean>(true);
   enableHapticFeedback = input<boolean>(true);
-
-  // Display options
+  
   showHeaderActions = input<boolean>(true);
   showRefreshButton = input<boolean>(true);
   showExportButton = input<boolean>(true);
@@ -379,23 +376,18 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   showItemCount = input<boolean>(true);
   showLastUpdated = input<boolean>(true);
   showFooterActions = input<boolean>(false);
-
-  // Filter options
+  
   filterOptions = input<OsFilterOption[]>([]);
-
-  // Pagination
+  
   pageSizeOptions = input<number[]>([5, 10, 25, 50]);
   showFirstLastButtons = input<boolean>(true);
-
-  // Loading state
+  
   isLoading = input<boolean>(false);
   lastUpdated = input<Date>(new Date());
-
-  // No data state
+  
   noDataTitle = input<string>('Nenhuma transação encontrada');
   noDataText = input<string>('Não há transações para exibir no momento.');
-
-  // Outputs
+  
   rowClick = output<Transaction>();
   tableActionClick = output<OsDataTableAction>();
   refresh = output<void>();
@@ -404,8 +396,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   filterChange = output<TransactionListFilter[]>();
   sortChange = output<TransactionListSort>();
   pageChange = output<TransactionListPagination>();
-
-  // Internal state
+  
   private filters = signal<TransactionListFilter[]>([]);
   private sort = signal<TransactionListSort | null>(null);
   private isMobile = signal<boolean>(false);
@@ -424,8 +415,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     pageSize: 10,
     total: 0,
   });
-
-  // Computed properties
+  
   transactionListClasses = computed(() => {
     const base = 'os-transaction-list';
     const variant = `os-transaction-list--${this.variant()}`;
@@ -439,8 +429,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
   filteredTransactions = computed(() => {
     let filtered = [...this.transactions()];
-
-    // Apply filters
+    
     const activeFilters = this.filters();
     if (activeFilters.length > 0) {
       filtered = filtered.filter((transaction) => {
@@ -450,8 +439,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
         });
       });
     }
-
-    // Apply sorting
+    
     const sortConfig = this.sort();
     if (sortConfig) {
       filtered.sort((a, b) => {
@@ -555,8 +543,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
     return actions;
   });
-
-  // Helper methods
+  
   getTransactionValue(transaction: Transaction, key: string): string | number | Date {
     switch (key) {
       case 'description':
@@ -613,8 +600,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
     return `${start}-${end} de ${total} transações`;
   }
-
-  // Size mappings
+  
   getButtonSize() {
     const sizeMap: Record<TransactionListSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -670,8 +656,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     };
     return sizeMap[this.size()];
   }
-
-  // Event handlers
+  
   onRefresh(): void {
     this.refresh.emit();
   }
@@ -735,8 +720,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
       total: this.totalItems(),
     });
   }
-
-  // Lifecycle methods
+  
   ngAfterViewInit(): void {
     this.setupInfiniteScroll();
     this.setupResizeObserver();
@@ -748,8 +732,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     this.scrollObserver?.disconnect();
     this.resizeObserver?.disconnect();
   }
-
-  // New methods for enhanced functionality
+  
   private setupInfiniteScroll(): void {
     if (!this.enableInfiniteScroll() || !this.scrollContainer) return;
 
@@ -804,12 +787,11 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     if (this.isLoadingMore() || !this.hasMoreData()) return;
 
     this.isLoadingMore.set(true);
-
-    // Simulate loading delay
+    
     setTimeout(() => {
       if (!this.isDestroyed) {
         this.isLoadingMore.set(false);
-        // Emit event to parent to load more data
+        
         this.pageChange.emit({
           page: this.pagination().page + 1,
           pageSize: this.pagination().pageSize,

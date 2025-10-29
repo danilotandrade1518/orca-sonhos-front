@@ -532,8 +532,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
   filteredCategories = computed(() => {
     let filtered = this.categories();
-
-    // Filter by search term
+    
     const searchTerm = this.searchTermSignal().toLowerCase();
     if (searchTerm) {
       filtered = filtered.filter(
@@ -542,14 +541,12 @@ export class OsCategoryManagerComponent implements AfterViewInit {
           (category.description && category.description.toLowerCase().includes(searchTerm))
       );
     }
-
-    // Filter by type
+    
     const filterType = this.filterTypeSignal();
     if (filterType) {
       filtered = filtered.filter((category) => category.type === filterType);
     }
-
-    // Filter by status
+    
     const filterStatus = this.filterStatusSignal();
     if (filterStatus) {
       const isActive = filterStatus === 'active';
@@ -558,8 +555,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
     return filtered;
   });
-
-  // Getters for template
+  
   get searchTerm(): string {
     return this.searchTermSignal();
   }
@@ -583,8 +579,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
   set filterStatus(value: string) {
     this.filterStatusSignal.set(value);
   }
-
-  // Methods
+  
   onAddCategory(): void {
     this.editingCategorySignal.set(null);
     this.categoryForm.reset({

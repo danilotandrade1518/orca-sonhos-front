@@ -343,8 +343,7 @@ describe('OsHeaderComponent', () => {
       fixture.componentRef.setInput('navigationItems', mockNavigationItems);
       component.mobileMenuOpen.set(true);
       fixture.detectChanges();
-
-      // Contar apenas os itens dentro do mobile navigation
+      
       const mobileNav = fixture.debugElement.query(By.css('.os-header__mobile-navigation'));
       const mobileNavItems = mobileNav.queryAll(By.directive(OsNavigationItemComponent));
       expect(mobileNavItems.length).toBe(2);
@@ -360,8 +359,7 @@ describe('OsHeaderComponent', () => {
       fixture.componentRef.setInput('navigationItems', mockNavigationItems);
       component.mobileMenuOpen.set(true);
       fixture.detectChanges();
-
-      // Encontrar o item dentro do mobile navigation
+      
       const mobileNav = fixture.debugElement.query(By.css('.os-header__mobile-navigation'));
       const mobileNavItems = mobileNav.queryAll(By.directive(OsNavigationItemComponent));
       mobileNavItems[0].triggerEventHandler('itemClicked', new MouseEvent('click'));
@@ -377,8 +375,7 @@ describe('OsHeaderComponent', () => {
       fixture.componentRef.setInput('navigationItems', mockNavigationItems);
       component.mobileMenuOpen.set(true);
       fixture.detectChanges();
-
-      // Encontrar o item dentro do mobile navigation
+      
       const mobileNav = fixture.debugElement.query(By.css('.os-header__mobile-navigation'));
       const mobileNavItems = mobileNav.queryAll(By.directive(OsNavigationItemComponent));
       mobileNavItems[0].triggerEventHandler('itemClicked', new MouseEvent('click'));

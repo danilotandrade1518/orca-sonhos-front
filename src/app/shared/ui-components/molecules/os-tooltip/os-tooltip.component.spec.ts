@@ -124,7 +124,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // Para medium, não há classe específica (é o padrão)
+      
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
       expect(container.classList.contains('os-tooltip--medium')).toBeFalsy();
     });
@@ -189,8 +189,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -239,8 +238,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -250,8 +248,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -261,8 +258,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -272,8 +268,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -283,8 +278,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });
@@ -295,8 +289,7 @@ describe('OsTooltipComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-tooltip');
-      // As diretivas matTooltip não aparecem como atributos HTML
-      // Verificamos se o container existe e tem as classes corretas
+      
       expect(container).toBeTruthy();
       expect(container.classList.contains('os-tooltip')).toBeTruthy();
     });

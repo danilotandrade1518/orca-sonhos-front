@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   ExternalAuthServiceAdapter,
   AuthUser,
-  AuthCredentials,
   AuthResult,
 } from '../../app/core/adapters/external-auth-service.adapter';
 
@@ -25,16 +24,13 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
   private currentUser: AuthUser | null = null;
 
   initializeAuthState(callback: (user: AuthUser | null) => void): void {
-    // Simular inicialização assíncrona
     setTimeout(() => {
       this.currentUser = this.mockUser;
       callback(this.mockUser);
     }, 100);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async signIn(credentials: AuthCredentials): Promise<AuthResult> {
-    // Simular delay de rede
+  async signIn(): Promise<AuthResult> {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     this.currentUser = this.mockUser;
@@ -47,21 +43,18 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
   }
 
   async signOut(): Promise<void> {
-    // Simular delay de rede
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     this.currentUser = null;
   }
 
   async getToken(): Promise<string | null> {
-    // Simular delay de rede
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     return this.currentUser ? this.mockToken : null;
   }
 
   async refreshToken(): Promise<string | null> {
-    // Simular delay de rede
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     return this.currentUser ? this.mockToken : null;

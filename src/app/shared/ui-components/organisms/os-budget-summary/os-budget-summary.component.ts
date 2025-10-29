@@ -35,7 +35,7 @@ export interface BudgetSummaryData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsBudgetSummaryComponent {
-  // Inputs
+  
   budgetData = input.required<BudgetSummaryData | null>();
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -49,12 +49,10 @@ export class OsBudgetSummaryComponent {
   animated = input<boolean>(true);
   ariaLabel = input<string>('');
   ariaDescribedBy = input<string>('');
-
-  // Outputs
+  
   cardClicked = output<BudgetSummaryData>();
   chartClicked = output<{ type: 'pie' | 'bar'; data: BudgetSummaryData }>();
-
-  // Computed properties
+  
   readonly progressPercentage = computed(() => {
     const data = this.budgetData();
     return data ? Math.min(Math.max(data.percentage, 0), 100) : 0;
@@ -154,8 +152,7 @@ export class OsBudgetSummaryComponent {
       .filter(Boolean)
       .join(' ');
   });
-
-  // Methods
+  
   onCardClick(): void {
     if (this.clickable() && this.budgetData()) {
       this.cardClicked.emit(this.budgetData()!);

@@ -96,12 +96,9 @@ export class OsSelectComponent implements ControlValueAccessor {
   openedChange = output<boolean>();
 
   private _onChange = (value: string | number) => {
-    // This will be set by registerOnChange
     console.debug('onChange called with:', value);
   };
-  private _onTouched = () => {
-    // This will be set by registerOnTouched
-  };
+  private _onTouched = () => {};
 
   selectId = `os-select-${Math.random().toString(36).substr(2, 9)}`;
   isFocused = signal(false);
@@ -162,7 +159,6 @@ export class OsSelectComponent implements ControlValueAccessor {
     return describedBy || helperId;
   });
 
-  // Mapeamento interno para Material
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -201,12 +197,11 @@ export class OsSelectComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); // 50ms vibration
+      navigator.vibrate(50);
     }
   }
 
   writeValue(value: string | number): void {
-    // Update the model signal when FormControl value changes programmatically
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -221,7 +216,6 @@ export class OsSelectComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
     this.disabled.set(isDisabled);
   }
 }

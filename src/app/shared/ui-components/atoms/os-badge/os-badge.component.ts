@@ -93,8 +93,7 @@ export class OsBadgeComponent {
       .filter(Boolean)
       .join(' ');
   });
-
-  // Computed properties para acessibilidade
+  
   ariaHidden = computed(() => {
     return this.role() === 'decorative';
   });
@@ -109,13 +108,11 @@ export class OsBadgeComponent {
         return null;
     }
   });
-
-  // Formatação de números grandes
+  
   displayText = computed(() => {
     const text = this.text();
     if (!text) return '';
-
-    // Verificar se é um número
+    
     const numValue = parseInt(text, 10);
     if (!isNaN(numValue) && numValue > this.maxValue()) {
       return `${this.maxValue()}+`;
@@ -142,7 +139,7 @@ export class OsBadgeComponent {
 
   iconVariant = computed(() => {
     if (this.outlined()) {
-      // Mapear variants específicos para variants de ícone suportados
+      
       switch (this.variant()) {
         case 'goal-active':
           return 'primary';
@@ -163,8 +160,7 @@ export class OsBadgeComponent {
     }
     return 'default';
   });
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':

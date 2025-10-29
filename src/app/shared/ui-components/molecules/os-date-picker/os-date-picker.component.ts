@@ -112,12 +112,10 @@ export interface QuickDateOption {
   },
 })
 export class OsDatePickerComponent implements ControlValueAccessor {
-  // Models
   value = model<Date | null>(null);
   disabled = model<boolean>(false);
   endDate = signal<Date | null>(null);
 
-  // Basic Inputs
   label = input<string>('');
   placeholder = input<string>('Selecionar data');
   helperText = input<string>('');
@@ -131,7 +129,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   opened = input<boolean>(false);
   calendarIcon = input<string>('calendar_today');
 
-  // New Inputs for Enhancements
   mobileFriendly = input<boolean>(true);
   showQuickSelection = input<boolean>(false);
   showTodayIndicator = input<boolean>(true);
@@ -142,15 +139,12 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   endDateHelperText = input<string>('');
   role = input<OsDatePickerRole>('group');
 
-  // Quick date options as a signal (mutable)
   quickDateOptions = signal<QuickDateOption[]>([]);
 
-  // Accessibility Inputs
   ariaLabel = input<string>('');
   ariaDescribedBy = input<string>('');
   endDateAriaLabel = input<string>('');
 
-  // Outputs
   valueChange = output<Date | null>();
   dateChange = output<Date | null>();
   openedChange = output<boolean>();
@@ -163,12 +157,10 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   endDateBlurEvent = output<FocusEvent>();
   quickDateSelected = output<QuickDateOption>();
 
-  // Computed Properties
   effectiveHelperText = computed(() => {
     const helper = this.helperText();
     if (helper) return helper;
 
-    // Auto-generate helper text with format
     const format = this.getDateFormat();
     return `Formato: ${format}`;
   });
@@ -203,17 +195,11 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     return classes.join(' ');
   });
 
-  // ControlValueAccessor
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _onChange = (value: Date | null) => {
-    // This will be set by registerOnChange
-  };
-  private _onTouched = () => {
-    // This will be set by registerOnTouched
-  };
+  private _onChange = (value: Date | null) => {};
+  private _onTouched = () => {};
 
   constructor() {
-    // Initialize default quick date options if none provided
     effect(
       () => {
         if (this.showQuickSelection() && this.quickDateOptions().length === 0) {
@@ -223,7 +209,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
       { allowSignalWrites: true }
     );
 
-    // Validate range dates
     effect(() => {
       if (this.isRangePicker() && this.value() && this.endDate()) {
         const start = this.value();
@@ -235,7 +220,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     });
   }
 
-  // Public Methods
   selectQuickDate(option: QuickDateOption): void {
     if (this.disabled()) return;
 
@@ -255,7 +239,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     );
   }
 
-  // Internal Methods (public for testing)
   getInputSize(): 'small' | 'medium' | 'large' {
     const sizeMap: Record<OsDatePickerSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -266,7 +249,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   }
 
   getDateFormat(): string {
-    // Return localized date format
     return 'DD/MM/AAAA';
   }
 
@@ -307,7 +289,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     ];
   }
 
-  // Event Handlers
   onValueChange(value: Date | null): void {
     this.value.set(value);
     this.valueChange.emit(value);
@@ -338,7 +319,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
     this.endDateFocusEvent.emit(event);
   }
 
-  // ControlValueAccessor Implementation
   writeValue(value: Date | null): void {
     if (value !== this.value()) {
       this.value.set(value);

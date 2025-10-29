@@ -107,15 +107,14 @@ export interface FooterSection {
   },
 })
 export class OsFooterComponent {
-  // Inputs
+  
   sections = input<FooterSection[]>([]);
   copyrightText = input('© 2024 OrçaSonhos. Todos os direitos reservados.');
   socialLinks = input<FooterLink[]>([]);
   variant = input<'default' | 'minimal' | 'extended'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
   theme = input<'light' | 'dark'>('light');
-
-  // Computed properties
+  
   footerClasses = computed(() => {
     return [
       `os-footer--${this.variant()}`,

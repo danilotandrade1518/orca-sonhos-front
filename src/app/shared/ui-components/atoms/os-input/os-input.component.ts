@@ -100,12 +100,8 @@ export class OsInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _onChange = (value: string) => {
-    // This will be set by registerOnChange
-  };
-  private _onTouched = () => {
-    // This will be set by registerOnTouched
-  };
+  private _onChange = (value: string) => {};
+  private _onTouched = () => {};
 
   inputId = `os-input-${Math.random().toString(36).substr(2, 9)}`;
 

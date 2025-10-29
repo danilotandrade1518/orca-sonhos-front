@@ -89,10 +89,9 @@ describe('OsDataTableComponent', () => {
   it('should render actions when provided', () => {
     fixture.componentRef.setInput('actions', mockActions);
     fixture.componentRef.setInput('showActions', true);
-    fixture.componentRef.setInput('title', 'Test Table'); // Adicionar título para renderizar header
+    fixture.componentRef.setInput('title', 'Test Table'); 
     fixture.detectChanges();
-
-    // Verificar se o container de ações existe
+    
     const actionsContainer = fixture.nativeElement.querySelector('.os-data-table__actions');
     expect(actionsContainer).toBeTruthy();
 
@@ -114,7 +113,7 @@ describe('OsDataTableComponent', () => {
 
     fixture.componentRef.setInput('actions', mockActions);
     fixture.componentRef.setInput('showActions', true);
-    fixture.componentRef.setInput('title', 'Test Table'); // Adicionar título para renderizar header
+    fixture.componentRef.setInput('title', 'Test Table'); 
     fixture.detectChanges();
 
     const actionButton = fixture.nativeElement.querySelector('.os-data-table__actions button');

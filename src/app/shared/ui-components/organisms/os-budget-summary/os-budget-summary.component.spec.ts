@@ -150,15 +150,13 @@ describe('OsBudgetSummaryComponent', () => {
   describe('Methods', () => {
     it('should handle card click when clickable is true', () => {
       fixture.componentRef.setInput('clickable', true);
-
-      // Should not throw error
+      
       expect(() => component.onCardClick()).not.toThrow();
     });
 
     it('should not handle card click when clickable is false', () => {
       fixture.componentRef.setInput('clickable', false);
-
-      // Should not throw error
+      
       expect(() => component.onCardClick()).not.toThrow();
     });
 
@@ -260,7 +258,7 @@ describe('OsBudgetSummaryComponent', () => {
 
   describe('Responsive Behavior', () => {
     it('should handle different screen sizes', () => {
-      // Test is mainly for CSS coverage
+      
       const compiled = fixture.nativeElement;
       expect(compiled.querySelector('.os-budget-summary')).toBeTruthy();
     });

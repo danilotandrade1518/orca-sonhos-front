@@ -90,7 +90,7 @@ export interface OsSearchSuggestion {
   },
 })
 export class OsSearchBoxComponent {
-  // Inputs
+  
   value = input<string>('');
   placeholder = input<string>('Buscar...');
   disabled = input<boolean>(false);
@@ -106,8 +106,7 @@ export class OsSearchBoxComponent {
   enableHighlight = input<boolean>(true);
   enableKeyboardNavigation = input<boolean>(true);
   enableAdvancedFilters = input<boolean>(false);
-
-  // Outputs
+  
   valueChange = output<string>();
   suggestionSelect = output<OsSearchSuggestion>();
   searchEvent = output<string>();
@@ -115,8 +114,7 @@ export class OsSearchBoxComponent {
   blurEvent = output<FocusEvent>();
   debouncedSearch = output<string>();
   suggestionHover = output<OsSearchSuggestion>();
-
-  // Internal signals
+  
   private searchSubject = new Subject<string>();
   protected activeSuggestionIndex = signal<number>(-1);
   private isFocused = signal<boolean>(false);
@@ -125,15 +123,14 @@ export class OsSearchBoxComponent {
   private readonly instanceId = OsSearchBoxComponent.nextId++;
 
   constructor() {
-    // Setup debounced search
+    
     this.searchSubject
       .pipe(debounceTime(this.debounceTime()), distinctUntilChanged())
       .subscribe((value) => {
         this.debouncedSearch.emit(value);
       });
   }
-
-  // Computed properties
+  
   protected inputSize = computed(() => {
     const sizeMap: Record<OsSearchBoxSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -227,8 +224,7 @@ export class OsSearchBoxComponent {
 
     return classes.join(' ');
   });
-
-  // Event handlers
+  
   onValueChange(value: string): void {
     this.valueChange.emit(value);
     this.searchSubject.next(value);
@@ -299,8 +295,7 @@ export class OsSearchBoxComponent {
     this.activeSuggestionIndex.set(index);
     this.suggestionHover.emit(suggestion);
   }
-
-  // Helper methods
+  
   private selectSuggestion(suggestion: OsSearchSuggestion): void {
     this.suggestionSelect.emit(suggestion);
     this.valueChange.emit(suggestion.text);
@@ -324,11 +319,10 @@ export class OsSearchBoxComponent {
 
     const history = this.searchHistory();
     const filtered = history.filter((term) => term !== searchTerm);
-    const newHistory = [searchTerm, ...filtered].slice(0, 10); // Keep last 10 searches
+    const newHistory = [searchTerm, ...filtered].slice(0, 10); 
     this.searchHistory.set(newHistory);
   }
-
-  // Public methods for external access
+  
   getSearchHistory(): string[] {
     return this.searchHistory();
   }
@@ -338,8 +332,7 @@ export class OsSearchBoxComponent {
   }
 
   focus(): void {
-    // This would need to be implemented with ViewChild to access the input element
-    // For now, we'll emit a focus event
+    
     this.isFocused.set(true);
   }
 

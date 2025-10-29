@@ -102,7 +102,7 @@ export class OsLabelComponent {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); // 50ms vibration
+      navigator.vibrate(50); 
     }
   }
 }

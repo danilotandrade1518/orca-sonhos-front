@@ -51,7 +51,6 @@ const meta: Meta<OsGoalProgressCardComponent> = {
 export default meta;
 type Story = StoryObj<OsGoalProgressCardComponent>;
 
-// Sample data
 const sampleGoalData: GoalProgressData = {
   id: 'goal-1',
   title: 'Casa Própria',
@@ -88,7 +87,6 @@ const overdueGoalData: GoalProgressData = {
   category: 'Lazer',
 };
 
-// Stories
 export const Default: Story = {
   args: {
     goalData: sampleGoalData,

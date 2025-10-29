@@ -60,7 +60,6 @@ describe('OsDateInputComponent', () => {
       const label = fixture.debugElement.query(By.css('mat-label'));
       const input = fixture.debugElement.query(By.css('input[matInput]'));
 
-      // Material handles required indication differently
       expect(label.nativeElement.textContent.trim()).toBe('Birth Date');
       expect(input.nativeElement.placeholder).toBe('Select date');
       expect(input.nativeElement.required).toBe(true);
@@ -87,12 +86,12 @@ describe('OsDateInputComponent', () => {
 
   describe('date formatting', () => {
     it('should format date correctly for input', () => {
-      const testDate = new Date(2024, 2, 15); // March 15, 2024 (month is 0-indexed)
+      const testDate = new Date(2024, 2, 15);
       fixture.componentRef.setInput('value', testDate);
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      // Material datepicker may format differently, so we check if the date is present
+
       expect(input.nativeElement.value).toContain('2024');
     });
 
@@ -253,12 +252,8 @@ describe('OsDateInputComponent', () => {
     it('should work with reactive forms', () => {
       const testDate = new Date('2024-03-15');
       fixture.componentRef.setInput('value', testDate);
-      component.registerOnChange(() => {
-        // Mock onChange callback
-      });
-      component.registerOnTouched(() => {
-        // Mock onTouched callback
-      });
+      component.registerOnChange(() => {});
+      component.registerOnTouched(() => {});
 
       expect(component.value()).toEqual(testDate);
     });
@@ -320,7 +315,7 @@ describe('OsDateInputComponent', () => {
       const label = fixture.debugElement.query(By.css('mat-label'));
 
       expect(input.nativeElement.getAttribute('aria-describedby')).toContain('helper');
-      // Material handles label association automatically
+
       expect(label).toBeTruthy();
     });
 
@@ -329,14 +324,13 @@ describe('OsDateInputComponent', () => {
       fixture.componentRef.setInput('required', true);
       fixture.detectChanges();
 
-      // Material handles required indication automatically
       const input = fixture.debugElement.query(By.css('input[matInput]'));
       expect(input.nativeElement.required).toBe(true);
     });
 
     it('should have proper input type', () => {
       const input = fixture.debugElement.query(By.css('input[matInput]'));
-      // Material datepicker uses text input with datepicker directive
+
       expect(input.nativeElement.type).toBe('text');
     });
 
@@ -351,7 +345,7 @@ describe('OsDateInputComponent', () => {
       expect(input.nativeElement.getAttribute('aria-label')).toBe('Custom label');
       expect(input.nativeElement.getAttribute('aria-describedby')).toBe('description');
       expect(input.nativeElement.getAttribute('aria-required')).toBe('true');
-      // aria-disabled is only set when disabled is true, otherwise it's null
+
       expect(input.nativeElement.getAttribute('aria-disabled')).toBeNull();
       expect(input.nativeElement.getAttribute('tabindex')).toBe('0');
     });
@@ -375,7 +369,6 @@ describe('OsDateInputComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on input', () => {
-      // Mock navigator.vibrate
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -393,7 +386,6 @@ describe('OsDateInputComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      // Mock navigator.vibrate
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

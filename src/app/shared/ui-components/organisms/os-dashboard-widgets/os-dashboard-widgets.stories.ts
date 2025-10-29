@@ -99,7 +99,6 @@ const meta: Meta<OsDashboardWidgetsComponent> = {
 export default meta;
 type Story = StoryObj<OsDashboardWidgetsComponent>;
 
-// Sample data
 const sampleGoalData: GoalProgressData = {
   id: 'goal-1',
   title: 'Casa Própria',
@@ -158,7 +157,6 @@ const sampleWidgets: DashboardWidget[] = [
 
 const emptyWidgets: DashboardWidget[] = [];
 
-// Stories
 export const Default: Story = {
   args: {
     widgets: sampleWidgets,
@@ -265,7 +263,7 @@ export const WithoutCreateActions: Story = {
 
 export const SingleWidget: Story = {
   args: {
-    widgets: [sampleWidgets[0]], // Apenas widget de progresso de metas
+    widgets: [sampleWidgets[0]], 
     variant: 'default',
     size: 'medium',
     state: 'success',

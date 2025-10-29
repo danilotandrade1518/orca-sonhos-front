@@ -438,7 +438,7 @@ describe('OsAvatarComponent', () => {
         component.nextImage(new Event('click'));
         expect(component.currentImageIndex()).toBe(2);
         component.nextImage(new Event('click'));
-        expect(component.currentImageIndex()).toBe(0); // Should wrap around
+        expect(component.currentImageIndex()).toBe(0); 
       });
 
       it('should navigate to previous image', () => {
@@ -447,7 +447,7 @@ describe('OsAvatarComponent', () => {
 
         expect(component.currentImageIndex()).toBe(0);
         component.previousImage(new Event('click'));
-        expect(component.currentImageIndex()).toBe(2); // Should wrap around
+        expect(component.currentImageIndex()).toBe(2); 
         component.previousImage(new Event('click'));
         expect(component.currentImageIndex()).toBe(1);
       });

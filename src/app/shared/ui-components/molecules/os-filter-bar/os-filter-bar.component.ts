@@ -75,7 +75,7 @@ export interface OsFilterOption {
   },
 })
 export class OsFilterBarComponent {
-  // --- INPUTS ---
+  
   variant = input<OsFilterBarVariant>('default');
   size = input<OsFilterBarSize>('medium');
   showActions = input<boolean>(true);
@@ -84,26 +84,21 @@ export class OsFilterBarComponent {
   clearButtonText = input<string>('Limpar');
   applyButtonText = input<string>('Aplicar');
   hasActiveFilters = input<boolean>(false);
-
-  // Persistência em localStorage
+  
   persistKey = input<string | null>(null);
   persistFilters = input<boolean>(false);
-
-  // Acessibilidade
+  
   ariaLabel = input<string>('Barra de filtros');
   ariaDescribedBy = input<string>('');
   clearButtonAriaLabel = input<string>('Limpar todos os filtros');
   applyButtonAriaLabel = input<string>('Aplicar filtros');
-
-  // --- OUTPUTS ---
+  
   clear = output<void>();
   apply = output<void>();
   filtersRestored = output<Record<string, unknown>>();
-
-  // --- SIGNALS INTERNOS ---
+  
   private isMobile = signal<boolean>(false);
-
-  // --- COMPUTED PROPERTIES ---
+  
   filterBarClasses = computed(() => {
     const classes = ['os-filter-bar'];
 
@@ -121,10 +116,9 @@ export class OsFilterBarComponent {
 
     return classes.join(' ');
   });
-
-  // --- CONSTRUCTOR ---
+  
   constructor() {
-    // Effect para detectar mobile
+    
     effect(
       () => {
         if (typeof window !== 'undefined') {
@@ -137,8 +131,7 @@ export class OsFilterBarComponent {
       },
       { allowSignalWrites: true }
     );
-
-    // Effect para restaurar filtros persistidos
+    
     effect(
       () => {
         if (this.persistFilters() && this.persistKey()) {
@@ -148,12 +141,7 @@ export class OsFilterBarComponent {
       { allowSignalWrites: true }
     );
   }
-
-  // --- MÉTODOS PÚBLICOS ---
-
-  /**
-   * Retorna o tamanho do botão baseado no tamanho da filter bar
-   */
+  
   getButtonSize(): 'small' | 'medium' | 'large' {
     const sizeMap: Record<OsFilterBarSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -162,27 +150,18 @@ export class OsFilterBarComponent {
     };
     return sizeMap[this.size()];
   }
-
-  /**
-   * Handler para evento de limpar filtros
-   */
+  
   onClear(): void {
     if (this.persistFilters() && this.persistKey()) {
       this.clearPersistedFilters();
     }
     this.clear.emit();
   }
-
-  /**
-   * Handler para evento de aplicar filtros
-   */
+  
   onApply(): void {
     this.apply.emit();
   }
-
-  /**
-   * Persiste os filtros atuais no localStorage
-   */
+  
   saveFilters(filters: Record<string, unknown>): void {
     if (!this.persistFilters() || !this.persistKey() || typeof window === 'undefined') {
       return;
@@ -195,10 +174,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao persistir filtros:', error);
     }
   }
-
-  /**
-   * Restaura os filtros do localStorage
-   */
+  
   restoreFilters(): void {
     if (!this.persistFilters() || !this.persistKey() || typeof window === 'undefined') {
       return;
@@ -216,10 +192,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao restaurar filtros:', error);
     }
   }
-
-  /**
-   * Limpa os filtros persistidos do localStorage
-   */
+  
   clearPersistedFilters(): void {
     if (!this.persistKey() || typeof window === 'undefined') {
       return;
@@ -232,12 +205,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao limpar filtros persistidos:', error);
     }
   }
-
-  // --- MÉTODOS PRIVADOS ---
-
-  /**
-   * Retorna a chave completa para o localStorage
-   */
+  
   private getStorageKey(): string {
     return `os-filter-bar:${this.persistKey()}`;
   }

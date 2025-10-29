@@ -70,7 +70,7 @@ export class OsIconComponent {
   svgContent = input<string>('');
   svgUrl = input<string>('');
   fallbackIcon = input<string>('help');
-  // Computed properties para acessibilidade
+  
   ariaHidden = computed(() => {
     return this.role() === 'decorative';
   });
@@ -98,8 +98,7 @@ export class OsIconComponent {
       .filter(Boolean)
       .join(' ');
   });
-
-  // Validação de ícones suportados
+  
   private readonly supportedIcons = new Set([
     'home',
     'menu',
@@ -184,7 +183,7 @@ export class OsIconComponent {
     'dots',
     'more',
     'menu-dots',
-    // Ícones adicionais encontrados nos testes
+    
     'category',
     'check_circle',
     'trending_flat',
@@ -215,8 +214,7 @@ export class OsIconComponent {
   iconContent = computed(() => {
     const iconName = this.name();
     if (!iconName) return this.fallbackIcon();
-
-    // Verificar se o ícone é suportado
+    
     if (!this.supportedIcons.has(iconName)) {
       console.warn(`Ícone "${iconName}" não é suportado. Usando fallback "${this.fallbackIcon()}"`);
       return this.getIconContent(this.fallbackIcon());
@@ -310,7 +308,7 @@ export class OsIconComponent {
       dots: 'more_horiz',
       more: 'more_vert',
       'menu-dots': 'more_vert',
-      // Ícones adicionais encontrados nos testes
+      
       category: 'category',
       check_circle: 'check_circle',
       trending_flat: 'trending_flat',
@@ -340,8 +338,7 @@ export class OsIconComponent {
 
     return iconMap[iconName] || this.fallbackIcon();
   }
-
-  // Mapeamento interno para Material
+  
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':

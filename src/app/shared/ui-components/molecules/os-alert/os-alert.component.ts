@@ -97,8 +97,7 @@ export class OsAlertComponent {
       { allowSignalWrites: true }
     );
   }
-
-  // Mapeamento interno para Atoms
+  
   protected iconName = computed(() => {
     const iconMap: Record<OsAlertType, string> = {
       success: 'check_circle',

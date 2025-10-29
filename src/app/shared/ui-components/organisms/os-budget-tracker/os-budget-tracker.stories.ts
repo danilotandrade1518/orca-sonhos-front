@@ -88,7 +88,6 @@ const meta: Meta<OsBudgetTrackerComponent> = {
 export default meta;
 type Story = StoryObj<OsBudgetTrackerComponent>;
 
-// Mock data
 const mockBudgetData: BudgetTrackerData = {
   id: 'budget-001',
   name: 'Orçamento Familiar',

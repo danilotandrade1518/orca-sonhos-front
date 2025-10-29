@@ -65,8 +65,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should render options', () => {
-      // Material select doesn't render options until opened
-      // We can only test that the component has the options data
       expect(component.options().length).toBe(3);
     });
 
@@ -78,7 +76,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should show arrow indicator', () => {
-      // Material provides the arrow automatically
       const select = fixture.debugElement.query(By.css('mat-select'));
       expect(select).toBeTruthy();
     });
@@ -86,14 +83,10 @@ describe('OsSelectComponent', () => {
 
   describe('option handling', () => {
     it('should render all options', () => {
-      // Material select doesn't render options until opened
-      // We can only test that the component has the options data
       expect(component.options().length).toBe(3);
     });
 
     it('should handle disabled options', () => {
-      // Material select doesn't render options until opened
-      // We can only test that the component has disabled options data
       const disabledOptions = component.options().filter((option) => option.disabled);
       expect(disabledOptions.length).toBe(1);
     });
@@ -111,7 +104,6 @@ describe('OsSelectComponent', () => {
       vi.spyOn(component.valueChange, 'emit');
       const select = fixture.debugElement.query(By.css('mat-select'));
 
-      // Simulate Material select change event
       const changeEvent = { value: 'option2' };
       select.triggerEventHandler('selectionChange', changeEvent);
 
@@ -200,12 +192,8 @@ describe('OsSelectComponent', () => {
   describe('form integration', () => {
     it('should work with reactive forms', () => {
       fixture.componentRef.setInput('value', 'option1');
-      component.registerOnChange(() => {
-        // Mock onChange callback
-      });
-      component.registerOnTouched(() => {
-        // Mock onTouched callback
-      });
+      component.registerOnChange(() => {});
+      component.registerOnTouched(() => {});
 
       expect(component.value()).toBe('option1');
     });
@@ -237,7 +225,6 @@ describe('OsSelectComponent', () => {
       const onChangeSpy = vi.fn();
       component.registerOnChange(onChangeSpy);
 
-      // Simulate Material select change event
       const changeEvent = { value: 'option2' };
       component.handleChange(changeEvent);
 
@@ -292,8 +279,6 @@ describe('OsSelectComponent', () => {
       fixture.componentRef.setInput('options', newOptions);
       fixture.detectChanges();
 
-      // Material select doesn't render options until opened
-      // We can only test that the component has the new options data
       expect(component.options().length).toBe(2);
     });
 
@@ -301,8 +286,6 @@ describe('OsSelectComponent', () => {
       fixture.componentRef.setInput('options', []);
       fixture.detectChanges();
 
-      // Material select doesn't render options until opened
-      // We can only test that the component has empty options data
       expect(component.options().length).toBe(0);
     });
   });
@@ -342,7 +325,6 @@ describe('OsSelectComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on selection change', () => {
-      // Mock navigator.vibrate
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -359,7 +341,6 @@ describe('OsSelectComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      // Mock navigator.vibrate
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

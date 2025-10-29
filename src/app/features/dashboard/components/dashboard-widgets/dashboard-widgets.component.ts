@@ -42,16 +42,14 @@ import {
 export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
-
-  // Inputs
+  
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly showWidgetActions = input<boolean>(true);
   readonly showCreateActions = input<boolean>(true);
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
-
-  // Outputs
+  
   readonly widgetClick = output<WidgetConfiguration>();
   readonly widgetConfigure = output<WidgetConfiguration>();
   readonly widgetClose = output<WidgetConfiguration>();
@@ -62,8 +60,7 @@ export class DashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<unknown>();
   readonly goalCardExpand = output<unknown>();
-
-  // Computed properties
+  
   readonly selectedBudget = computed(() => this.budgetSelectionService.selectedBudget());
   readonly hasSelectedBudget = computed(() => this.budgetSelectionService.hasSelectedBudget());
   readonly budgetOverview = computed(() => this.dashboardDataService.budgetOverview());
@@ -149,10 +146,10 @@ export class DashboardWidgetsComponent {
         this.onWidgetClick(widget);
         break;
       case 'Tab':
-        // Allow default tab behavior
+        
         break;
       default:
-        // Handle other keys if needed
+        
         break;
     }
   }

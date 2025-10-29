@@ -462,7 +462,7 @@ describe('OsSidebarComponent', () => {
 
   describe('Responsive Behavior', () => {
     it('should handle different screen sizes', () => {
-      // Test that component doesn't break with different configurations
+      
       fixture.componentRef.setInput('size', 'small');
       fixture.componentRef.setInput('variant', 'compact');
       fixture.detectChanges();

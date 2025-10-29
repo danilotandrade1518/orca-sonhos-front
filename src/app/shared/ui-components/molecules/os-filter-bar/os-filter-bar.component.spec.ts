@@ -8,7 +8,7 @@ describe('OsFilterBarComponent', () => {
   let fixture: ComponentFixture<OsFilterBarComponent>;
 
   beforeEach(async () => {
-    // Limpar localStorage antes de cada teste
+    
     if (typeof window !== 'undefined') {
       localStorage.clear();
     }
@@ -29,8 +29,6 @@ describe('OsFilterBarComponent', () => {
       localStorage.clear();
     }
   });
-
-  // --- TESTES BÁSICOS ---
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -102,7 +100,7 @@ describe('OsFilterBarComponent', () => {
       expect(clearButton.getAttribute('ng-reflect-disabled')).toBe('true');
       expect(applyButton.getAttribute('ng-reflect-disabled')).toBe('true');
     } else {
-      // If buttons are not found, skip this test
+      
       expect(true).toBe(true);
     }
   });
@@ -118,15 +116,14 @@ describe('OsFilterBarComponent', () => {
       expect(clearButton.getAttribute('ng-reflect-disabled')).toBe('false');
       expect(applyButton.getAttribute('ng-reflect-disabled')).toBe('false');
     } else {
-      // If buttons are not found, skip this test
+      
       expect(true).toBe(true);
     }
   });
 
   it('should emit clear event when clear button is clicked', () => {
     vi.spyOn(component.clear, 'emit');
-
-    // Manually call the onClear method since the button click might not work in tests
+    
     component.onClear();
 
     expect(component.clear.emit).toHaveBeenCalled();
@@ -134,8 +131,7 @@ describe('OsFilterBarComponent', () => {
 
   it('should emit apply event when apply button is clicked', () => {
     vi.spyOn(component.apply, 'emit');
-
-    // Manually call the onApply method since the button click might not work in tests
+    
     component.onApply();
 
     expect(component.apply.emit).toHaveBeenCalled();
@@ -153,7 +149,7 @@ describe('OsFilterBarComponent', () => {
       expect(clearButton.textContent.trim()).toContain('Custom Clear');
       expect(applyButton.textContent.trim()).toContain('Custom Apply');
     } else {
-      // If buttons are not found, skip this test
+      
       expect(true).toBe(true);
     }
   });
@@ -180,8 +176,6 @@ describe('OsFilterBarComponent', () => {
     expect(contentElement).toBeTruthy();
     expect(contentElement.textContent).toBe('Test Filter');
   });
-
-  // --- TESTES DE ACESSIBILIDADE ---
 
   it('should have correct ARIA role', () => {
     const filterBarElement = fixture.nativeElement.querySelector('.os-filter-bar');
@@ -222,8 +216,6 @@ describe('OsFilterBarComponent', () => {
 
     expect(component.applyButtonAriaLabel()).toBe('Custom Apply');
   });
-
-  // --- TESTES DE PERSISTÊNCIA ---
 
   it('should save filters to localStorage when persistFilters is true', () => {
     fixture.componentRef.setInput('persistKey', 'test-filters');
@@ -336,7 +328,7 @@ describe('OsFilterBarComponent', () => {
 
   it('should not throw error when localStorage is unavailable', () => {
     const originalLocalStorage = window.localStorage;
-    // Simular localStorage indisponível
+    
     Object.defineProperty(window, 'localStorage', {
       value: undefined,
       writable: true,
@@ -349,15 +341,12 @@ describe('OsFilterBarComponent', () => {
     expect(() => component.saveFilters({ test: 'data' })).not.toThrow();
     expect(() => component.restoreFilters()).not.toThrow();
     expect(() => component.clearPersistedFilters()).not.toThrow();
-
-    // Restaurar localStorage
+    
     Object.defineProperty(window, 'localStorage', {
       value: originalLocalStorage,
       writable: true,
     });
   });
-
-  // --- TESTES DE RESPONSIVIDADE ---
 
   it('should add mobile class when isMobile signal is true', () => {
     component['isMobile'].set(true);
@@ -375,8 +364,6 @@ describe('OsFilterBarComponent', () => {
     expect(filterBarElement.classList.contains('os-filter-bar--mobile')).toBe(false);
   });
 
-  // --- TESTES DE DATA ATTRIBUTES ---
-
   it('should set data-variant attribute', () => {
     fixture.componentRef.setInput('variant', 'compact');
     fixture.detectChanges();
@@ -392,8 +379,6 @@ describe('OsFilterBarComponent', () => {
     const hostElement = fixture.nativeElement;
     expect(hostElement.getAttribute('data-size')).toBe('large');
   });
-
-  // --- TESTES DE COMPUTED PROPERTIES ---
 
   it('should compute filterBarClasses correctly with default values', () => {
     const classes = component.filterBarClasses();

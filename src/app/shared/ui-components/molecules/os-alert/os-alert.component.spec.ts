@@ -277,8 +277,7 @@ describe('OsAlertComponent', () => {
       vi.advanceTimersByTime(101);
 
       expect(component.visible()).toBe(false);
-
-      // Aguardar o setTimeout interno do onDismiss (300ms para animação)
+      
       vi.advanceTimersByTime(300);
       expect(dismissSpy).toHaveBeenCalled();
 

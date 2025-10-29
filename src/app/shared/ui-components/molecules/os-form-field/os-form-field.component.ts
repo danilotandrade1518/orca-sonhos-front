@@ -116,7 +116,6 @@ export type OsFormFieldValidationState = 'pristine' | 'dirty' | 'touched' | 'inv
   ],
 })
 export class OsFormFieldComponent implements ControlValueAccessor {
-  // Input properties
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
   readonly helperText = input<string>('');
@@ -142,21 +141,15 @@ export class OsFormFieldComponent implements ControlValueAccessor {
   readonly focusEvent = output<FocusEvent>();
   readonly validationChange = output<OsFormFieldValidationState>();
 
-  // Internal state
   private readonly _touched = signal(false);
   private readonly _dirty = signal(false);
 
   protected fieldId = computed(() => `field-${Math.random().toString(36).substr(2, 9)}`);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _onChange = (value: string) => {
-    // This will be set by registerOnChange
-  };
-  private _onTouched = () => {
-    // This will be set by registerOnTouched
-  };
+  private _onChange = (value: string) => {};
+  private _onTouched = () => {};
 
-  // Computed properties
   protected labelVariant = computed(() => {
     if (this.hasError()) return 'error';
     return 'default';

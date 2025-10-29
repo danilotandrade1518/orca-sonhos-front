@@ -241,33 +241,28 @@ export interface ListTemplateMobileFilters {
   ],
 })
 export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
-  // Services
+  
   private breakpointObserver = inject(BreakpointObserver);
   private elementRef = inject(ElementRef);
-
-  // ViewChild
+  
   @ViewChild('infiniteTrigger') infiniteTrigger?: ElementRef;
-
-  // Signals
+  
   mobileFiltersOpen = signal(false);
   infiniteScrollLoading = signal(false);
   hasMoreItems = signal(true);
   private currentPage = signal(1);
   private intersectionObserver?: IntersectionObserver;
-
-  // Inputs
+  
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
   theme = input<'light' | 'dark'>('light');
-
-  // Header
+  
   title = input<string>('');
   subtitle = input<string>('');
   breadcrumbs = input<{ label: string; url?: string }[]>([]);
   showBackButton = input<boolean>(false);
   backUrl = input<string>('');
-
-  // Data
+  
   data = input<ListTemplateData[]>([]);
   columns = input<{ key: string; label: string; sortable?: boolean }[]>([]);
   filters = input<ListTemplateFilter[]>([]);
@@ -275,13 +270,11 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   page = input<number>(1);
   pageSize = input<number>(10);
   totalItems = input<number>(0);
-
-  // States
+  
   loading = input<boolean>(false);
   disabled = input<boolean>(false);
   loadingText = input<string>('Carregando...');
-
-  // Empty State
+  
   emptyTitle = input<string>('Nenhum item encontrado');
   emptyDescription = input<string>('Não há dados para exibir no momento.');
   emptyIcon = input<string>('list');
@@ -292,15 +285,13 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     variant?: string;
     size?: string;
   } | null>(null);
-
-  // Visibility
+  
   showFilters = input<boolean>(true);
   showFooter = input<boolean>(true);
   showGridHeader = input<boolean>(true);
   showGridFooter = input<boolean>(true);
   showLastUpdate = input<boolean>(true);
-
-  // Actions
+  
   headerActions = input<
     {
       label: string;
@@ -315,12 +306,10 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     { key: string; label: string; icon?: string; color?: 'primary' | 'secondary' | 'warn' }[]
   >([]);
   footerActions = input<ListTemplateAction[]>([]);
-
-  // Footer
+  
   footerText = input<string>('');
   lastUpdate = input<Date>(new Date());
-
-  // New Features
+  
   infiniteScroll = input<ListTemplateInfiniteScroll>({
     enabled: false,
     threshold: 0.8,
@@ -334,8 +323,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     position: 'left',
     width: '300px',
   });
-
-  // Outputs
+  
   rowClick = output<{ item: ListTemplateData; index: number; event: MouseEvent }>();
   headerActionClick = output<{
     label: string;
@@ -360,12 +348,10 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   add = output<void>();
   backClick = output<MouseEvent>();
   emptyActionClick = output<MouseEvent>();
-
-  // New Outputs
+  
   loadMore = output<void>();
   mobileFiltersToggle = output<boolean>();
-
-  // Computed Properties
+  
   templateClass = computed(() => {
     return [
       'os-list-template',
@@ -452,13 +438,11 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     const action = this.emptyAction();
     return action?.icon || '';
   });
-
-  // New Computed Properties
+  
   isMobile = computed(() => {
     return this.breakpointObserver.isMatched(Breakpoints.Handset);
   });
-
-  // Convert ListTemplateFilter[] to OsFilterOption[]
+  
   filterOptions = computed(() => {
     return this.filters().map((filter) => ({
       key: filter.field,
@@ -486,8 +470,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     if (typeof value === 'object' && value.from && value.to) return 'date';
     return 'text';
   }
-
-  // Event Handlers
+  
   onRowClick(item: Record<string, unknown>) {
     this.rowClick.emit({
       item: item as ListTemplateData,
@@ -521,7 +504,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   }
 
   onFilterChange(filters: { field?: string; operator?: string; value?: unknown }[]) {
-    // Convert OsDataGridFilter[] to ListTemplateFilter[]
+    
     const convertedFilters: ListTemplateFilter[] = filters.map((filter) => ({
       field: filter.field || '',
       operator: (filter.operator as ListTemplateFilter['operator']) || 'equals',
@@ -531,7 +514,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   }
 
   onSortChange(sort: { field?: string; direction?: 'asc' | 'desc' }) {
-    // Convert OsDataGridSort to our format
+    
     const convertedSort = {
       field: sort.field || '',
       direction: sort.direction || 'asc',
@@ -568,12 +551,10 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   }
 
   onApplyFilters() {
-    // Filter application logic can be implemented here
-    // For now, just emit the current filters
+    
     this.filterChange.emit(this.filters());
   }
-
-  // New Methods
+  
   toggleMobileFilters() {
     const newState = !this.mobileFiltersOpen();
     this.mobileFiltersOpen.set(newState);
@@ -584,22 +565,18 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
     if (this.infiniteScroll().enabled && !this.infiniteScrollLoading()) {
       this.infiniteScrollLoading.set(true);
       this.loadMore.emit();
-
-      // Simulate loading delay
+      
       setTimeout(() => {
         this.infiniteScrollLoading.set(false);
         this.currentPage.set(this.currentPage() + 1);
-
-        // Check if we have more items (this would be determined by the parent component)
-        // For now, we'll assume we always have more items
-        this.hasMoreItems.set(this.currentPage() < 10); // Example limit
+        
+        this.hasMoreItems.set(this.currentPage() < 10); 
       }, 1000);
     }
   }
-
-  // Lifecycle Methods
+  
   ngAfterViewInit() {
-    // Setup intersection observer for infinite scroll
+    
     if (this.infiniteScroll().enabled && this.infiniteTrigger) {
       this.setupIntersectionObserver();
     }

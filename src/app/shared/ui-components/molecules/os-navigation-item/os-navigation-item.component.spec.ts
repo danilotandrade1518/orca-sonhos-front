@@ -118,7 +118,7 @@ describe('OsNavigationItemComponent', () => {
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.os-navigation-item');
-      // Para medium, não há classe específica (é o padrão)
+      
       expect(container.classList.contains('os-navigation-item')).toBeTruthy();
       expect(container.classList.contains('os-navigation-item--medium')).toBeFalsy();
     });

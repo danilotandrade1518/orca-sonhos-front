@@ -583,13 +583,13 @@ describe('OsListTemplateComponent', () => {
       fixture.detectChanges();
 
       const templateElement = fixture.debugElement.query(By.css('.os-list-template'));
-      expect(templateElement.nativeElement.getAttribute('role')).toBe('main'); // Template has main role
+      expect(templateElement.nativeElement.getAttribute('role')).toBe('main'); 
     });
 
     it('should support keyboard navigation', () => {
       fixture.detectChanges();
       const templateElement = fixture.debugElement.query(By.css('.os-list-template'));
-      expect(templateElement.nativeElement.tabIndex).toBe(-1); // No tabIndex needed for template
+      expect(templateElement.nativeElement.tabIndex).toBe(-1); 
     });
   });
 });

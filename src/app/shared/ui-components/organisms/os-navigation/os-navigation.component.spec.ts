@@ -189,7 +189,7 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should handle disabled item click without errors', () => {
-      const disabledItem = mockItems[3]; // settings item is disabled
+      const disabledItem = mockItems[3]; 
       expect(() => component.onItemClick(disabledItem)).not.toThrow();
     });
 

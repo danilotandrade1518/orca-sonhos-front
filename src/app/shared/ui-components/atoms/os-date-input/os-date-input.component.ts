@@ -116,12 +116,9 @@ export class OsDateInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (value: Date | null) => {
-    // This will be set by registerOnChange
     console.debug('onChange called with:', value);
   };
-  private _onTouched = () => {
-    // This will be set by registerOnTouched
-  };
+  private _onTouched = () => {};
 
   inputId = `os-date-input-${Math.random().toString(36).substr(2, 9)}`;
   isFocused = signal(false);
@@ -191,7 +188,6 @@ export class OsDateInputComponent implements ControlValueAccessor {
     return describedBy || helperId;
   });
 
-  // Mapeamento interno para Material
   protected appearance = computed((): MatFormFieldAppearance => 'outline');
 
   protected formFieldClass = computed(() => {
@@ -260,12 +256,11 @@ export class OsDateInputComponent implements ControlValueAccessor {
 
   triggerHapticFeedback(): void {
     if (this.hapticFeedback() && 'vibrate' in navigator) {
-      navigator.vibrate(50); // 50ms vibration
+      navigator.vibrate(50);
     }
   }
 
   writeValue(value: Date | null): void {
-    // Update the model signal when FormControl value changes programmatically
     if (value !== this.value()) {
       this.value.set(value);
     }
@@ -280,7 +275,6 @@ export class OsDateInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Update the disabled state when called by Angular Forms
     this.disabled.set(isDisabled);
   }
 }
