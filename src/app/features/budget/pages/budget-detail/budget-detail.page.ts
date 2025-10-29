@@ -21,14 +21,24 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   template: `
     <div class="budget-detail-page">
       @switch (currentState()) { @case ('loading') {
-      <div class="budget-detail-page__loading">
-        <div class="spinner"></div>
+      <div
+        class="budget-detail-page__loading"
+        role="status"
+        aria-live="polite"
+        aria-label="Carregando detalhes do orçamento"
+      >
+        <div class="spinner" aria-hidden="true"></div>
         <p>Carregando detalhes do orçamento...</p>
       </div>
       } @case ('error') {
-      <div class="budget-detail-page__error">
+      <div class="budget-detail-page__error" role="alert" aria-live="assertive">
         <p class="error-message">{{ errorMessage() }}</p>
-        <button type="button" class="button button--secondary" (click)="navigateToList()">
+        <button
+          type="button"
+          class="button button--secondary"
+          (click)="navigateToList()"
+          aria-label="Voltar para lista de orçamentos"
+        >
           Voltar para Lista
         </button>
       </div>
@@ -57,10 +67,20 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         </div>
 
         <div class="budget-detail-page__actions">
-          <button type="button" class="button button--secondary" (click)="navigateToEdit()">
+          <button
+            type="button"
+            class="button button--secondary"
+            (click)="navigateToEdit()"
+            [attr.aria-label]="'Editar orçamento ' + budget.name"
+          >
             Editar
           </button>
-          <button type="button" class="button button--danger" (click)="confirmDelete()">
+          <button
+            type="button"
+            class="button button--danger"
+            (click)="confirmDelete()"
+            [attr.aria-label]="'Excluir orçamento ' + budget.name"
+          >
             Excluir
           </button>
         </div>
@@ -104,10 +124,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         </section>
       </main>
       } @else {
-      <div class="budget-detail-page__not-found">
+      <div class="budget-detail-page__not-found" role="alert" aria-live="polite">
         <h2>Orçamento não encontrado</h2>
         <p>O orçamento que você está procurando não existe ou foi removido.</p>
-        <button type="button" class="button button--primary" (click)="navigateToList()">
+        <button
+          type="button"
+          class="button button--primary"
+          (click)="navigateToList()"
+          aria-label="Voltar para lista de orçamentos"
+        >
           Voltar para Lista
         </button>
       </div>

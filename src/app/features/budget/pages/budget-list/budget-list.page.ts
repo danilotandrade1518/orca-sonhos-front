@@ -26,7 +26,12 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         <h1 class="budget-list-page__title">Orçamentos</h1>
         <p class="budget-list-page__subtitle">Gerencie seus orçamentos pessoais e compartilhados</p>
 
-        <button class="budget-list-page__create-button" (click)="navigateToCreate()" type="button">
+        <button
+          class="budget-list-page__create-button"
+          (click)="navigateToCreate()"
+          type="button"
+          aria-label="Criar novo orçamento"
+        >
           <span>+ Novo Orçamento</span>
         </button>
       </header>
@@ -39,12 +44,16 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             placeholder="Buscar orçamentos..."
             [value]="searchTerm()"
             (input)="updateSearchTerm($event)"
+            aria-label="Buscar orçamentos por nome"
+            id="budget-search-input"
           />
 
           <select
             class="budget-list-page__type-filter"
             [value]="selectedType()"
             (change)="updateTypeFilter($event)"
+            aria-label="Filtrar orçamentos por tipo"
+            id="budget-type-filter"
           >
             <option value="all">Todos os tipos</option>
             <option value="PERSONAL">Pessoal</option>
@@ -55,20 +64,37 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 
       <main class="budget-list-page__content">
         @switch (currentState()) { @case ('loading') {
-        <div class="budget-list-page__loading">
-          <div class="spinner"></div>
+        <div
+          class="budget-list-page__loading"
+          role="status"
+          aria-live="polite"
+          aria-label="Carregando orçamentos"
+        >
+          <div class="spinner" aria-hidden="true"></div>
           <p>Carregando orçamentos...</p>
         </div>
         } @case ('error') {
-        <div class="budget-list-page__error">
+        <div class="budget-list-page__error" role="alert" aria-live="assertive">
           <p class="error-message">{{ errorMessage() }}</p>
-          <button type="button" class="retry-button" (click)="retry()">Tentar Novamente</button>
+          <button
+            type="button"
+            class="retry-button"
+            (click)="retry()"
+            aria-label="Tentar carregar orçamentos novamente"
+          >
+            Tentar Novamente
+          </button>
         </div>
         } @case ('empty') {
-        <div class="budget-list-page__empty">
+        <div class="budget-list-page__empty" role="status" aria-live="polite">
           <p>Nenhum orçamento encontrado</p>
           <p class="empty-subtitle">Crie seu primeiro orçamento para começar</p>
-          <button type="button" class="create-button" (click)="navigateToCreate()">
+          <button
+            type="button"
+            class="create-button"
+            (click)="navigateToCreate()"
+            aria-label="Criar primeiro orçamento"
+          >
             Criar Orçamento
           </button>
         </div>
