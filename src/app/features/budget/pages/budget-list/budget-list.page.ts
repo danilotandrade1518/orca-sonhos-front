@@ -12,11 +12,13 @@ import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BudgetCardComponent } from '../../components/budget-card/budget-card.component';
 import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
+import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-list-page',
   standalone: true,
-  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent],
+  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent, OsModalTemplateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-list-page">
@@ -87,6 +89,18 @@ import { BudgetFormComponent } from '../../components/budget-form/budget-form.co
 
       @if (showCreateModal()) {
       <os-budget-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
+      } @if (showDeleteConfirmModal()) {
+      <os-modal-template
+        [config]="deleteModalConfig()"
+        [variant]="'compact'"
+        [size]="'small'"
+        [disabled]="loading()"
+        [loading]="loading()"
+        [valid]="true"
+        (actionClick)="onDeleteActionClick($event)"
+        (cancelled)="onDeleteCancelled()"
+        (closed)="onDeleteCancelled()"
+      />
       }
     </div>
   `,
@@ -101,6 +115,9 @@ export class BudgetListPage implements OnInit {
   readonly searchTerm = signal('');
   readonly selectedType = signal<'all' | 'PERSONAL' | 'SHARED'>('all');
 
+  readonly deleteBudgetId = signal<string | null>(null);
+  readonly deleteBudgetName = signal<string | null>(null);
+
   readonly currentUser = this.authService.currentUser;
 
   readonly budgets = this.budgetState.budgets;
@@ -110,6 +127,33 @@ export class BudgetListPage implements OnInit {
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
+  });
+
+  readonly showDeleteConfirmModal = computed(() => {
+    return this.deleteBudgetId() !== null;
+  });
+
+  readonly deleteModalConfig = computed<ModalTemplateConfig>(() => {
+    const budgetName = this.deleteBudgetName();
+    return {
+      title: 'Excluir Orçamento',
+      subtitle: budgetName
+        ? `Tem certeza que deseja excluir o orçamento "${budgetName}"? Esta ação não pode ser desfeita.`
+        : 'Tem certeza que deseja excluir este orçamento? Esta ação não pode ser desfeita.',
+      showActions: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      cancelButtonText: 'Cancelar',
+      actions: [
+        {
+          label: 'Excluir',
+          variant: 'danger',
+          size: 'medium',
+          disabled: this.loading(),
+          loading: this.loading(),
+        },
+      ],
+    };
   });
 
   readonly filteredBudgets = computed(() => {
@@ -165,12 +209,42 @@ export class BudgetListPage implements OnInit {
   }
 
   confirmDelete(budgetId: string): void {
-    const user = this.currentUser();
-    if (!user) return;
+    const budgets = this.budgets();
+    const budget = budgets.find((b) => b.id === budgetId);
+    if (!budget) return;
 
-    if (confirm('Tem certeza que deseja excluir este orçamento?')) {
-      this.budgetState.deleteBudget(user.id, budgetId);
+    this.deleteBudgetId.set(budgetId);
+    this.deleteBudgetName.set(budget.name);
+  }
+
+  onDeleteActionClick(action: {
+    label: string;
+    variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
+    size: 'small' | 'medium' | 'large';
+    disabled?: boolean;
+    loading?: boolean;
+    icon?: string;
+  }): void {
+    if (action.variant === 'danger' || action.label === 'Excluir') {
+      this.onDeleteConfirmed();
     }
+  }
+
+  onDeleteConfirmed(): void {
+    const budgetId = this.deleteBudgetId();
+    const user = this.currentUser();
+    if (!budgetId || !user) {
+      this.onDeleteCancelled();
+      return;
+    }
+
+    this.budgetState.deleteBudget(user.id, budgetId);
+    this.onDeleteCancelled();
+  }
+
+  onDeleteCancelled(): void {
+    this.deleteBudgetId.set(null);
+    this.deleteBudgetName.set(null);
   }
 
   retry(): void {

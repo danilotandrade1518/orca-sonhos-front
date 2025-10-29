@@ -202,3 +202,81 @@
 **Fase Atual**: FASE 4 - CONCLUÍDA ✅
 **Última Modificação**: Integrações com Dashboard e AppBar implementadas
 **Próxima Tarefa**: FASE 5 - Polimento, A11y e Testes Finais
+
+---
+
+### 🗓️ Sessão 29/10/2025 - FASE 5 Iniciada ⏰
+
+**Fase**: FASE 5 - Polimento, A11y e Testes Finais
+**Objetivo**: Iniciar polimento final, acessibilidade e estratégia de testes/cobertura
+
+#### ✅ Trabalho Realizado
+
+- Carregado contexto das Meta Specs (índices de code-standards e frontend-architecture)
+- Best Practices Angular obtidas via MCP angular-cli
+- Analisado `plan.md` e definida Fase 5 como atual (modo Standard)
+- Identificado uso atual de `window.confirm` em exclusão:
+  - `pages/budget-list/budget-list.page.ts` (`confirmDelete`) e `pages/budget-detail/budget-detail.page.ts`
+  - Plano: substituir por `os-modal` (variant confirmation), alinhado ao layout-specification
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Implementar confirmação de exclusão com `os-modal` ao invés de `window.confirm`
+  - **Motivo**: Aderência ao Design System e acessibilidade
+- **Observação**: Manter seleção consistente após delete (já coberto no `BudgetState`)
+
+#### 🧪 Validações
+
+- Compilação OK após análise estática
+- Sem mudanças funcionais ainda nesta sessão
+
+#### ⏭️ Próximos Passos
+
+- ✅ Implementar `os-modal` de confirmação nos pontos de exclusão (CONCLUÍDO)
+- Passada de a11y (aria-live em mensagens de erro, foco em modais)
+- Ajustar/estender testes para cenários de confirmação de exclusão
+
+---
+
+### 🗓️ Sessão 29/10/2025 - Modal de Confirmação Implementado ✅
+
+**Fase**: FASE 5 - Polimento, A11y e Testes Finais
+**Objetivo**: Implementar modal de confirmação de exclusão substituindo window.confirm
+
+#### ✅ Trabalho Realizado
+
+- ✅ Implementado modal de confirmação em `BudgetListPage`:
+  - Substituído `window.confirm` por `os-modal-template` com variant `'compact'`
+  - Signals para controlar visibilidade (`deleteBudgetId`, `deleteBudgetName`)
+  - Computed para config do modal com mensagem personalizada incluindo nome do orçamento
+  - Action customizada com variant `'danger'` para botão de exclusão
+  - Handlers: `confirmDelete()`, `onDeleteActionClick()`, `onDeleteConfirmed()`, `onDeleteCancelled()`
+- ✅ Implementado modal de confirmação em `BudgetDetailPage`:
+  - Mesma estrutura usando `os-modal-template`
+  - Signal `showDeleteConfirm` para controlar visibilidade
+  - Navegação para lista após exclusão bem-sucedida
+- ✅ Corrigida estrutura do template em `BudgetDetailPage`:
+  - Reformatação do `@switch` para sintaxe correta (@case/@default com chaves)
+  - Modal posicionado corretamente fora do `@switch` mas dentro do div principal
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `(actionClick)` ao invés de `(confirmed)` quando usando actions customizadas
+  - **Motivo**: `os-modal-template` emite `actionClick` para actions customizadas, não `confirmed`
+- **Decisão**: Usar variant `'compact'` no modal de confirmação
+  - **Motivo**: `os-modal-template` converte automaticamente `'compact'` para `'confirmation'` no `os-modal` interno
+- **Problema**: Erro de lint devido a estrutura incorreta do template (`@switch` com `@default`)
+  - **Solução**: Reformatação para sintaxe correta do Angular com chaves `{}`
+
+#### 🧪 Validações
+
+- ✅ Build Angular compilando sem erros
+- ✅ Sem erros de lint nos arquivos modificados
+- ✅ Modal implementado seguindo padrão do Design System (`os-modal-template`)
+- ✅ Acessibilidade mantida (ARIA labels já presentes no `os-modal-template`)
+
+#### ⏭️ Próximos Passos
+
+- Passada de a11y (aria-live em mensagens de erro, focus management)
+- Ajustar/estender testes para cenários de confirmação de exclusão
+- Verificar cobertura de testes final (serviço/estado 100%, componentes ≥80%)

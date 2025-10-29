@@ -241,7 +241,7 @@ Conectar navegação contextual e criação via AppBar.
 
 ---
 
-## 📅 FASE 5: Polimento, A11y e Testes Finais [Status: ⏳]
+## 📅 FASE 5: Polimento, A11y e Testes Finais [Status: ⏰]
 
 ### 🎯 Objetivo
 
@@ -253,9 +253,16 @@ Garantir qualidade visual, responsividade e acessibilidade; concluir cobertura d
 
 **Descrição**: Ajustes de spacing, breakpoints, focus management, aria-live em erros.
 
-#### Confirmação de Exclusão [⏳]
+#### Confirmação de Exclusão [✅]
 
 **Descrição**: Modal de confirmação para delete; manter seleção consistente (selecionar primeiro restante).
+**Implementado**:
+
+- Substituído `window.confirm` por `os-modal-template` em `BudgetListPage` e `BudgetDetailPage`
+- Modal de confirmação com variant `'compact'` (convertido para `'confirmation'` internamente)
+- Mensagem personalizada incluindo nome do orçamento
+- Botão de exclusão com variant `'danger'`
+- Seleção consistente mantida (já implementado no `BudgetState.deleteBudget()`)
 
 #### Cobertura e qualidade [⏳]
 

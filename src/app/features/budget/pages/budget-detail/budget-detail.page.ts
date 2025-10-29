@@ -10,11 +10,13 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
+import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-detail-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, OsModalTemplateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-detail-page">
@@ -109,7 +111,19 @@ import { AuthService } from '@core/services/auth/auth.service';
           Voltar para Lista
         </button>
       </div>
-      } } }
+      } } } @if (showDeleteConfirmModal()) {
+      <os-modal-template
+        [config]="deleteModalConfig()"
+        [variant]="'compact'"
+        [size]="'small'"
+        [disabled]="loading()"
+        [loading]="loading()"
+        [valid]="true"
+        (actionClick)="onDeleteActionClick($event)"
+        (cancelled)="onDeleteCancelled()"
+        (closed)="onDeleteCancelled()"
+      />
+      }
     </div>
   `,
   styleUrl: './budget-detail.page.scss',
@@ -126,6 +140,7 @@ export class BudgetDetailPage implements OnInit {
   readonly currentUser = this.authService.currentUser;
 
   readonly budgetId = signal<string | null>(null);
+  readonly showDeleteConfirm = signal(false);
 
   readonly budget = computed(() => {
     const id = this.budgetId();
@@ -142,6 +157,33 @@ export class BudgetDetailPage implements OnInit {
   });
 
   readonly errorMessage = computed(() => this.error() || 'Erro ao carregar orçamento');
+
+  readonly showDeleteConfirmModal = computed(() => {
+    return this.showDeleteConfirm();
+  });
+
+  readonly deleteModalConfig = computed<ModalTemplateConfig>(() => {
+    const budget = this.budget();
+    return {
+      title: 'Excluir Orçamento',
+      subtitle: budget
+        ? `Tem certeza que deseja excluir o orçamento "${budget.name}"? Esta ação não pode ser desfeita.`
+        : 'Tem certeza que deseja excluir este orçamento? Esta ação não pode ser desfeita.',
+      showActions: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      cancelButtonText: 'Cancelar',
+      actions: [
+        {
+          label: 'Excluir',
+          variant: 'danger',
+          size: 'medium',
+          disabled: this.loading(),
+          loading: this.loading(),
+        },
+      ],
+    };
+  });
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -168,13 +210,36 @@ export class BudgetDetailPage implements OnInit {
   }
 
   confirmDelete(): void {
+    this.showDeleteConfirm.set(true);
+  }
+
+  onDeleteActionClick(action: {
+    label: string;
+    variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
+    size: 'small' | 'medium' | 'large';
+    disabled?: boolean;
+    loading?: boolean;
+    icon?: string;
+  }): void {
+    if (action.variant === 'danger' || action.label === 'Excluir') {
+      this.onDeleteConfirmed();
+    }
+  }
+
+  onDeleteConfirmed(): void {
     const budget = this.budget();
     const user = this.currentUser();
-    if (!budget || !user) return;
-
-    if (confirm(`Tem certeza que deseja excluir o orçamento "${budget.name}"?`)) {
-      this.budgetState.deleteBudget(user.id, budget.id);
-      this.navigateToList();
+    if (!budget || !user) {
+      this.onDeleteCancelled();
+      return;
     }
+
+    this.budgetState.deleteBudget(user.id, budget.id);
+    this.onDeleteCancelled();
+    this.navigateToList();
+  }
+
+  onDeleteCancelled(): void {
+    this.showDeleteConfirm.set(false);
   }
 }
