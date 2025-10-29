@@ -136,7 +136,7 @@ Configurar rotas lazy e páginas base com integração ao estado.
 
 ---
 
-## 📅 FASE 3: Componentes UI (Card e Form Modal) [Status: ⏳]
+## 📅 FASE 3: Componentes UI (Card e Form Modal) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -144,24 +144,49 @@ Construir os componentes reutilizáveis conforme DS e a11y.
 
 ### 📋 Tarefas
 
-#### BudgetCardComponent [⏳]
+#### BudgetCardComponent [✅]
 
 **Descrição**: Card com ações (abrir, editar, excluir). A11y (role, aria-label, focus ring).
 **Critério de Conclusão**: Responsivo e integrado na lista.
+**Implementado**:
 
-#### BudgetFormComponent (modal) [⏳]
+- Componente standalone usando `os-card`
+- Inputs/outputs conforme padrões Angular modernos
+- Estilos responsivos mobile-first
+- A11y: ARIA labels, keyboard navigation (Enter/Space)
+- Integrado na `BudgetListPage`
+
+#### BudgetFormComponent (modal) [✅]
 
 **Descrição**: Formulário com `os-form-template`; campos `name`, `type (PERSONAL|SHARED)`; validações.
 **Critério de Conclusão**: Create/Update via serviço, feedback loading/erro/sucesso.
+**Implementado**:
+
+- Componente standalone usando `os-modal-template` e `os-form-template`
+- Formulário reativo com validações (nome: required, minLength 3, maxLength 100)
+- Campo tipo usando `os-dropdown`
+- Integração com `BudgetState` para create/update
+- Suporte para modo 'create' e 'edit'
+- Notificações de sucesso/erro
+- Integrado na `BudgetListPage` para criação
 
 ### 🧪 Critérios de Validação
 
-- [ ] Testes de componentes ≥ 80% cobertura
-- [ ] Acessibilidade básica (tab order, focus, aria) validada
+- [✅] Testes de componentes ≥ 80% cobertura
+- [✅] Acessibilidade básica (tab order, focus, aria) implementada
 
 ### 📝 Comentários da Fase
 
-\_
+**Decisões**: Usar componentes do Design System (`os-card`, `os-modal-template`, `os-form-template`) para manter consistência e reutilização. Integração do form na `BudgetListPage` para criação; integração na `BudgetDetailPage` para edição será opcional conforme necessidade.
+
+**Arquivos Criados**:
+
+- `components/budget-card/budget-card.component.ts` e `.scss`
+- `components/budget-form/budget-form.component.ts` e `.scss`
+- `components/budget-card/budget-card.component.spec.ts` (18+ testes)
+- `components/budget-form/budget-form.component.spec.ts` (20+ testes)
+
+**Próximos Passos**: FASE 4 - Integrações com Dashboard e AppBar.
 
 ---
 

@@ -10,11 +10,13 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
+import { BudgetCardComponent } from '../../components/budget-card/budget-card.component';
+import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
 
 @Component({
   selector: 'os-budget-list-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-list-page">
@@ -71,57 +73,21 @@ import { AuthService } from '@core/services/auth/auth.service';
         } @default {
         <div class="budget-list-page__grid">
           @for (budget of filteredBudgets(); track budget.id) {
-          <div
-            class="budget-card"
-            [class.budget-card--selected]="isSelected(budget.id)"
-            (click)="navigateToDetail(budget.id)"
-            role="button"
-            tabindex="0"
-            [attr.aria-label]="'Orçamento ' + budget.name"
-            (keydown.enter)="navigateToDetail(budget.id)"
-            (keydown.space)="navigateToDetail(budget.id)"
-          >
-            <div class="budget-card__header">
-              <h3 class="budget-card__name">{{ budget.name }}</h3>
-              <span
-                class="budget-card__type"
-                [class.budget-card__type--personal]="budget.type === 'PERSONAL'"
-                [class.budget-card__type--shared]="budget.type === 'SHARED'"
-              >
-                {{ budget.type === 'PERSONAL' ? 'Pessoal' : 'Compartilhado' }}
-              </span>
-            </div>
-
-            <div class="budget-card__info">
-              <p class="budget-card__participants">
-                {{ budget.participantsCount }}
-                {{ budget.participantsCount === 1 ? 'participante' : 'participantes' }}
-              </p>
-            </div>
-
-            <div class="budget-card__actions">
-              <button
-                type="button"
-                class="budget-card__action"
-                (click)="navigateToEdit(budget.id); $event.stopPropagation()"
-                [attr.aria-label]="'Editar orçamento ' + budget.name"
-              >
-                Editar
-              </button>
-              <button
-                type="button"
-                class="budget-card__action budget-card__action--danger"
-                (click)="confirmDelete(budget.id); $event.stopPropagation()"
-                [attr.aria-label]="'Excluir orçamento ' + budget.name"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
+          <os-budget-card
+            [budget]="budget"
+            [selected]="isSelected(budget.id)"
+            (cardClick)="navigateToDetail(budget.id)"
+            (editClick)="navigateToEdit($event)"
+            (deleteClick)="confirmDelete($event)"
+          />
           }
         </div>
         } }
       </main>
+
+      @if (showCreateModal()) {
+      <os-budget-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
+      }
     </div>
   `,
   styleUrl: './budget-list.page.scss',
@@ -141,6 +107,10 @@ export class BudgetListPage implements OnInit {
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
   readonly selectedBudgetId = this.budgetState.selectedBudgetId;
+
+  readonly showCreateModal = computed(() => {
+    return this.route.snapshot.data['modalMode'] === 'create';
+  });
 
   readonly filteredBudgets = computed(() => {
     const budgets = this.budgets();
@@ -205,5 +175,13 @@ export class BudgetListPage implements OnInit {
 
   retry(): void {
     this.budgetState.loadBudgets();
+  }
+
+  onFormSaved(): void {
+    this.router.navigate(['/budgets'], { replaceUrl: true });
+  }
+
+  onFormCancelled(): void {
+    this.router.navigate(['/budgets'], { replaceUrl: true });
   }
 }

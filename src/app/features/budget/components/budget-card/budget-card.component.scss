@@ -1,0 +1,56 @@
+@use '../../../../shared/ui-components/theme/variables' as *;
+
+.budget-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--os-spacing-sm, 8px);
+  margin-bottom: var(--os-spacing-md, 16px);
+}
+
+.budget-card__name {
+  font-size: var(--os-font-size-lg, 18px);
+  font-weight: 600;
+  color: var(--os-text-primary, #212121);
+  margin: 0;
+  flex: 1;
+}
+
+.budget-card__type {
+  padding: var(--os-spacing-xs, 4px) var(--os-spacing-sm, 8px);
+  font-size: var(--os-font-size-sm, 14px);
+  font-weight: 500;
+  border-radius: var(--os-border-radius-sm, 4px);
+  white-space: nowrap;
+
+  &--personal {
+    background-color: var(--os-info-color-light, #e3f2fd);
+    color: var(--os-info-color, #1976d2);
+  }
+
+  &--shared {
+    background-color: var(--os-success-color-light, #e8f5e9);
+    color: var(--os-success-color, #388e3c);
+  }
+}
+
+.budget-card__info {
+  margin-bottom: var(--os-spacing-md, 16px);
+}
+
+.budget-card__participants {
+  font-size: var(--os-font-size-sm, 14px);
+  color: var(--os-text-secondary, #757575);
+  margin: 0;
+}
+
+.budget-card__actions {
+  display: flex;
+  gap: var(--os-spacing-sm, 8px);
+}
+
+@media (max-width: 575px) {
+  .budget-card__actions {
+    flex-direction: column;
+  }
+}
