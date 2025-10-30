@@ -14,7 +14,7 @@ Implementar a feature de Transações com DTOs alinhados ao backend, serviço de
 
 ---
 
-## 📅 FASE 1: Fundamentos e Infra da Feature [Status: ⏳]
+## 📅 FASE 1: Fundamentos e Infra da Feature [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -22,22 +22,22 @@ Criar estrutura base da feature (rotas, DTOs, serviço de API) e preparar mocks/
 
 ### 📋 Tarefas
 
-#### Criar DTOs e contratos [⏳]
+#### Criar DTOs e contratos [✅]
 
 **Descrição**: `CreateTransactionDto`, `UpdateTransactionDto`, `TransactionDto`, `ListTransactionsResponseDto` em `src/dtos/transaction/`.
 **Critério de Conclusão**: Tipos exportados, alinhados ao backend, usados no serviço.
 
-#### Criar serviço de API da feature [⏳]
+#### Criar serviço de API da feature [✅]
 
 **Descrição**: `services/transactions-api.service.ts` injetando `ApiService` com endpoints: list, create, update, delete, cancel scheduled, mark late.
 **Critério de Conclusão**: Métodos implementados, tipados com DTOs, tratamento via Either.
 
-#### Adicionar rota lazy e página base [⏳]
+#### Adicionar rota lazy e página base [✅]
 
 **Descrição**: Adicionar rota `/transactions` (lazy) e `pages/transactions/transactions.page.ts` com template mínimo e header.
 **Critério de Conclusão**: Navegação para a página funciona; lazy confirmada.
 
-#### MSW/Contrato e fixtures [⏳]
+#### MSW/Contrato e fixtures [✅]
 
 **Descrição**: Validar/ajustar handlers MSW para transações; fixtures mínimas para lista/paginação.
 **Critério de Conclusão**: Dev server retorna dados coerentes com DTOs e paginação.
@@ -50,7 +50,10 @@ Criar estrutura base da feature (rotas, DTOs, serviço de API) e preparar mocks/
 
 ### 📝 Comentários da Fase
 
-\_
+- DTOs criados em `src/dtos/transaction/` com barrel exportado em `src/dtos/index.ts`.
+- Serviço `TransactionsApiService` implementado na feature com endpoints list/create/update/delete/cancel/markLate.
+- Rota lazy `/transactions` adicionada em `app.routes.ts` e `TransactionsPage` criada.
+- Build validado com sucesso (`ng build`), gerando chunks lazy da página/rotas.
 
 ---
 
