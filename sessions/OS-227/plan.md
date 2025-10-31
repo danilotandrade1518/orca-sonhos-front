@@ -172,7 +172,7 @@ Implementar ações rápidas: marcar atrasada, cancelar agendada, excluir; confi
 
 ---
 
-## 📅 FASE 5: Responsividade, A11y e Integrações [Status: ⏳]
+## 📅 FASE 5: Responsividade, A11y e Integrações [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -180,30 +180,39 @@ Refinar responsividade, acessibilidade e integrações de navegação.
 
 ### 📋 Tarefas
 
-#### Responsividade por breakpoint [⏳]
+#### Responsividade por breakpoint [✅]
 
 **Descrição**: Aplicar ajustes mobile/tablet/desktop conforme `layout-specification.md` (gaps, colunas, filtros visíveis/colapsáveis).
 **Critério de Conclusão**: Sem scroll horizontal; touch targets >= 44px; grid por breakpoint.
 
-#### Acessibilidade avançada [⏳]
+#### Acessibilidade avançada [✅]
 
 **Descrição**: Landmarks, foco visível, ordem de tab, `aria-live` para loading/erros, atalhos (Esc, `/`).
 **Critério de Conclusão**: WCAG 2.1 AA atendido nos principais fluxos.
 
-#### Integrações de navegação [⏳]
+#### Integrações de navegação [✅]
 
 **Descrição**: Link/atalho no Dashboard e Budget Detail; item na Sidebar.
 **Critério de Conclusão**: Navegação contextual funcionando com `budgetId`.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Mobile-first e breakpoints validados
-- [ ] Navegação e atalhos funcionais
-- [ ] Checagem de contraste e foco
+- [x] Mobile-first e breakpoints validados
+- [x] Navegação e atalhos funcionais
+- [x] Checagem de contraste e foco
 
 ### 📝 Comentários da Fase
 
-\_
+- Responsividade implementada com breakpoints corretos (0-575px mobile, 576-991px tablet, 992px+ desktop).
+- Grid system aplicado: 1 coluna mobile, 2 colunas tablet, 3 colunas desktop na listagem de cards.
+- Touch targets >= 44px garantidos em mobile.
+- Acessibilidade avançada: skip links, ARIA landmarks, aria-live regions, keyboard navigation (Esc para fechar modais).
+- Focus visible implementado com outline 2px.
+- Link adicionado no Budget Detail para transações com budgetId.
+- Navegação adicionada no Dashboard: widget 'transaction-list' navega para `/transactions` com budgetId.
+- Sidebar já possui item de Transações ✅.
+- Respeitando `prefers-reduced-motion` para usuários com sensibilidade a movimento.
+- Build validado com sucesso.
 
 ---
 

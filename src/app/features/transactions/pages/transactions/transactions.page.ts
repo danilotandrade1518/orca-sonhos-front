@@ -6,6 +6,10 @@ import {
   effect,
   inject,
   signal,
+  HostListener,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 import {
@@ -40,7 +44,23 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
     OsModalTemplateComponent,
   ],
   template: `
-    <section class="os-transactions" role="main">
+    <section class="os-transactions" role="main" aria-label="Página de transações">
+      <a href="#main-content" class="os-transactions__skip-link">Pular para conteúdo principal</a>
+      <div
+        class="os-transactions__live-region"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        [attr.aria-label]="isLoading() ? 'Carregando transações' : ''"
+      >
+        {{ isLoading() ? 'Carregando transações...' : '' }}
+      </div>
+      <div
+        class="os-transactions__live-region os-transactions__live-region--error"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      ></div>
       <os-page-header
         title="Transações"
         [actions]="headerActions()"
@@ -52,23 +72,27 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
         [accountOptions]="accountOptions()"
         [categoryOptions]="categoryOptions()"
         (filtersChange)="onFiltersChange($event)"
+        [attr.aria-label]="'Filtros de transações'"
       />
 
-      <os-transaction-list
-        [title]="'Lista'"
-        [transactions]="filteredTransactions()"
-        [isLoading]="isLoading()"
-        [lastUpdated]="lastUpdated()"
-        [layout]="'card'"
-        [variant]="'default'"
-        [size]="'medium'"
-        [enableInfiniteScroll]="true"
-        [showFilters]="false"
-        [cardActions]="cardActions()"
-        (refresh)="onRefresh()"
-        (pageChange)="onPageChange($event)"
-        (cardActionClick)="onCardActionClick($event)"
-      />
+      <div id="main-content" tabindex="-1">
+        <os-transaction-list
+          [title]="'Lista'"
+          [transactions]="filteredTransactions()"
+          [isLoading]="isLoading()"
+          [lastUpdated]="lastUpdated()"
+          [layout]="'card'"
+          [variant]="'default'"
+          [size]="'medium'"
+          [enableInfiniteScroll]="true"
+          [showFilters]="false"
+          [cardActions]="cardActions()"
+          (refresh)="onRefresh()"
+          (pageChange)="onPageChange($event)"
+          (cardActionClick)="onCardActionClick($event)"
+          [attr.aria-label]="'Lista de transações'"
+        />
+      </div>
 
       @if (showCreateModal()) {
       <os-transaction-form
@@ -100,21 +124,15 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
       }
     </section>
   `,
-  styles: [
-    `
-      .os-transactions {
-        padding: 16px;
-        display: block;
-      }
-    `,
-  ],
+  styleUrl: './transactions.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransactionsPage {
+export class TransactionsPage implements AfterViewInit, OnDestroy {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly api = inject(TransactionsApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly authService = inject(AuthService);
+  private readonly elementRef = inject(ElementRef);
 
   readonly isLoading = signal<boolean>(false);
   readonly lastUpdated = signal<Date>(new Date());
@@ -276,6 +294,45 @@ export class TransactionsPage {
         this.clearData();
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    const skipLink = this.elementRef.nativeElement.querySelector(
+      '.os-transactions__skip-link'
+    ) as HTMLAnchorElement;
+    if (skipLink) {
+      skipLink.addEventListener('click', this.handleSkipLinkClick);
+    }
+  }
+
+  ngOnDestroy(): void {
+    const skipLink = this.elementRef.nativeElement.querySelector(
+      '.os-transactions__skip-link'
+    ) as HTMLAnchorElement;
+    if (skipLink) {
+      skipLink.removeEventListener('click', this.handleSkipLinkClick);
+    }
+  }
+
+  private readonly handleSkipLinkClick = (e: Event): void => {
+    e.preventDefault();
+    const mainContent = this.elementRef.nativeElement.querySelector('#main-content') as HTMLElement;
+    if (mainContent) {
+      mainContent.focus();
+    }
+  };
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      if (this.showCreateModal()) {
+        this.onFormCancelled();
+      } else if (this.showEditModal()) {
+        this.onFormCancelled();
+      } else if (this.showConfirmModal()) {
+        this.onConfirmCancelled();
+      }
+    }
   }
 
   onFiltersChange(filters: TransactionsFilters): void {

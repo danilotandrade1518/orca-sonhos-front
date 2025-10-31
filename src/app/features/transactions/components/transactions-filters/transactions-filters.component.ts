@@ -113,17 +113,43 @@ export interface TransactionsFilters {
         font-size: 14px;
         background-color: var(--os-color-surface);
         color: var(--os-color-text-primary);
+        min-height: 44px;
+
+        &:focus {
+          outline: 2px solid var(--os-color-primary);
+          outline-offset: 2px;
+        }
+
+        &:focus:not(:focus-visible) {
+          outline: none;
+        }
       }
 
-      .os-transactions-filters__input:focus,
-      .os-transactions-filters__select:focus {
-        outline: 2px solid var(--os-color-primary);
-        outline-offset: 2px;
+      @media (prefers-reduced-motion: reduce) {
+        .os-transactions-filters__input,
+        .os-transactions-filters__select {
+          transition: none;
+        }
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 575px) {
         .os-transactions-filters__content {
           grid-template-columns: 1fr;
+          gap: 12px;
+        }
+      }
+
+      @media (min-width: 576px) and (max-width: 991px) {
+        .os-transactions-filters__content {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .os-transactions-filters__content {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
         }
       }
     `,

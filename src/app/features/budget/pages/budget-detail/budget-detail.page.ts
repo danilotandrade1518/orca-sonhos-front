@@ -121,6 +121,16 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           <p class="budget-detail-page__placeholder-subtitle">
             Aguarde a implementação dos componentes de overview e participants.
           </p>
+          <div class="budget-detail-page__actions-section">
+            <button
+              type="button"
+              class="button button--primary"
+              (click)="navigateToTransactions()"
+              [attr.aria-label]="'Ver transações do orçamento ' + budget.name"
+            >
+              Ver Transações
+            </button>
+          </div>
         </section>
       </main>
       } @else {
@@ -225,6 +235,13 @@ export class BudgetDetailPage implements OnInit {
 
   navigateToList(): void {
     this.router.navigate(['/budgets']);
+  }
+
+  navigateToTransactions(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.router.navigate(['/transactions'], { queryParams: { budgetId: id } });
+    }
   }
 
   navigateToEdit(): void {

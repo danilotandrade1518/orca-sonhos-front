@@ -106,6 +106,13 @@ export class DashboardPage implements OnInit {
       if (selectedBudgetId) {
         this.router.navigate(['/budgets', selectedBudgetId]);
       }
+    } else if (widget.type === 'transaction-list') {
+      const selectedBudgetId = this.budgetSelectionService.selectedBudgetId();
+      if (selectedBudgetId) {
+        this.router.navigate(['/transactions'], { queryParams: { budgetId: selectedBudgetId } });
+      } else {
+        this.router.navigate(['/transactions']);
+      }
     }
   }
 
