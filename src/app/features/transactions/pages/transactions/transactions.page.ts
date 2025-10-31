@@ -12,6 +12,7 @@ import {
   OsTransactionListComponent,
   type Transaction as UiTransaction,
   type TransactionListPagination,
+  type TransactionCardAction,
 } from '../../../../shared/ui-components/organisms/os-transaction-list/os-transaction-list.component';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { TransactionsApiService } from '../../../transactions/services/transactions-api.service';
@@ -23,6 +24,10 @@ import {
 } from '../../components/transactions-filters/transactions-filters.component';
 import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
 import type { PageHeaderAction } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
+import { OsModalTemplateComponent } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import type { ModalTemplateConfig } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'os-transactions-page',
@@ -32,6 +37,7 @@ import type { PageHeaderAction } from '../../../../shared/ui-components/organism
     OsTransactionListComponent,
     TransactionsFiltersComponent,
     TransactionFormComponent,
+    OsModalTemplateComponent,
   ],
   template: `
     <section class="os-transactions" role="main">
@@ -58,8 +64,10 @@ import type { PageHeaderAction } from '../../../../shared/ui-components/organism
         [size]="'medium'"
         [enableInfiniteScroll]="true"
         [showFilters]="false"
+        [cardActions]="cardActions()"
         (refresh)="onRefresh()"
         (pageChange)="onPageChange($event)"
+        (cardActionClick)="onCardActionClick($event)"
       />
 
       @if (showCreateModal()) {
@@ -77,6 +85,18 @@ import type { PageHeaderAction } from '../../../../shared/ui-components/organism
         (saved)="onFormSaved()"
         (cancelled)="onFormCancelled()"
       />
+      } @if (showConfirmModal()) {
+      <os-modal-template
+        [config]="confirmModalConfig()"
+        [variant]="'compact'"
+        [size]="'small'"
+        [disabled]="actionLoading()"
+        [loading]="actionLoading()"
+        [valid]="true"
+        (actionClick)="onConfirmActionClick($event)"
+        (cancelled)="onConfirmCancelled()"
+        (closed)="onConfirmCancelled()"
+      />
       }
     </section>
   `,
@@ -93,6 +113,8 @@ import type { PageHeaderAction } from '../../../../shared/ui-components/organism
 export class TransactionsPage {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly api = inject(TransactionsApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly authService = inject(AuthService);
 
   readonly isLoading = signal<boolean>(false);
   readonly lastUpdated = signal<Date>(new Date());
@@ -114,18 +136,135 @@ export class TransactionsPage {
 
   readonly showEditModal = computed(() => this._editingTransaction() !== null);
 
+  private readonly _confirmModalType = signal<'delete' | 'markLate' | 'cancelScheduled' | null>(
+    null
+  );
+  private readonly _confirmTransaction = signal<UiTransaction | null>(null);
+  readonly confirmModalType = this._confirmModalType.asReadonly();
+  readonly confirmTransaction = this._confirmTransaction.asReadonly();
+  readonly showConfirmModal = computed(() => this._confirmModalType() !== null);
+
+  private readonly _actionLoading = signal<boolean>(false);
+  readonly actionLoading = this._actionLoading.asReadonly();
+
   readonly filteredTransactions = computed(() => {
-    let items = this.allItems();
-
+    const items = this.allItems();
     const clientFiltersValue = this.clientFilters();
-    if (clientFiltersValue.type) {
-      items = items.filter((item) => item.type === clientFiltersValue.type);
-    }
-    if (clientFiltersValue.amount !== undefined && clientFiltersValue.amount !== null) {
-      items = items.filter((item) => item.amount === clientFiltersValue.amount);
+
+    if (!clientFiltersValue.type && clientFiltersValue.amount === undefined) {
+      return items;
     }
 
-    return items;
+    return items.filter((item) => {
+      if (clientFiltersValue.type && item.type !== clientFiltersValue.type) {
+        return false;
+      }
+      if (
+        clientFiltersValue.amount !== undefined &&
+        clientFiltersValue.amount !== null &&
+        item.amount !== clientFiltersValue.amount
+      ) {
+        return false;
+      }
+      return true;
+    });
+  });
+
+  trackByTransactionId(_index: number, transaction: UiTransaction): string {
+    return transaction.id;
+  }
+
+  readonly cardActions = computed<TransactionCardAction[]>(() => {
+    return [
+      {
+        id: 'mark-late',
+        label: 'Marcar como Atrasada',
+        icon: 'warning',
+        variant: 'default',
+      },
+      {
+        id: 'cancel-scheduled',
+        label: 'Cancelar Agendada',
+        icon: 'cancel',
+        variant: 'default',
+      },
+      {
+        id: 'delete',
+        label: 'Excluir',
+        icon: 'delete',
+        variant: 'danger',
+      },
+    ];
+  });
+
+  readonly confirmModalConfig = computed<ModalTemplateConfig>(() => {
+    const type = this._confirmModalType();
+    const transaction = this._confirmTransaction();
+
+    if (!type || !transaction) {
+      return {
+        title: 'Confirmar ação',
+        subtitle: '',
+        showActions: true,
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar',
+        actions: [],
+      };
+    }
+
+    const actions: ModalTemplateConfig['actions'] = [
+      {
+        label: 'Confirmar',
+        variant: type === 'delete' ? 'danger' : 'primary',
+        size: 'medium',
+        loading: this._actionLoading(),
+        disabled: this._actionLoading(),
+      },
+    ];
+
+    switch (type) {
+      case 'delete':
+        return {
+          title: 'Excluir Transação',
+          subtitle: `Tem certeza que deseja excluir a transação "${transaction.description}"? Esta ação não pode ser desfeita.`,
+          showActions: true,
+          showCancelButton: true,
+          showConfirmButton: false,
+          cancelButtonText: 'Cancelar',
+          actions,
+        };
+      case 'markLate':
+        return {
+          title: 'Marcar como Atrasada',
+          subtitle: `Deseja marcar a transação "${transaction.description}" como atrasada?`,
+          showActions: true,
+          showCancelButton: true,
+          showConfirmButton: false,
+          cancelButtonText: 'Cancelar',
+          actions,
+        };
+      case 'cancelScheduled':
+        return {
+          title: 'Cancelar Transação Agendada',
+          subtitle: `Deseja cancelar a transação agendada "${transaction.description}"?`,
+          showActions: true,
+          showCancelButton: true,
+          showConfirmButton: false,
+          cancelButtonText: 'Cancelar',
+          actions,
+        };
+      default:
+        return {
+          title: 'Confirmar ação',
+          subtitle: '',
+          showActions: true,
+          showCancelButton: true,
+          showConfirmButton: false,
+          cancelButtonText: 'Cancelar',
+          actions,
+        };
+    }
   });
 
   constructor() {
@@ -212,7 +351,7 @@ export class TransactionsPage {
     const budgetId = this.budgetSelection.selectedBudgetId();
     if (!budgetId) return;
 
-    const nextRequestedPage = p.page + 1; // componente é 0-based; backend 1-based
+    const nextRequestedPage = p.page + 1;
     if (nextRequestedPage > this.loadedPages() && this.hasNext()) {
       await this.loadPage(budgetId, nextRequestedPage);
     }
@@ -251,12 +390,121 @@ export class TransactionsPage {
         meta: { hasNext: boolean; page: number; pageSize: number };
       };
       const mapped = dto.data.map((t) => this.mapToUiTransaction(t));
-      this.allItems.update((items) => [...items, ...mapped]);
+      this.allItems.update((items) => {
+        const existingIds = new Set(items.map((item) => item.id));
+        const newItems = mapped.filter((item) => !existingIds.has(item.id));
+        return [...items, ...newItems];
+      });
       this.loadedPages.set(page);
       this.hasNext.set(dto.meta?.hasNext ?? false);
       this.lastUpdated.set(new Date());
     } finally {
       this.isLoading.set(false);
+    }
+  }
+
+  onCardActionClick(event: { transaction: UiTransaction; action: TransactionCardAction }): void {
+    const { transaction, action } = event;
+
+    switch (action.id) {
+      case 'delete':
+        this._confirmModalType.set('delete');
+        this._confirmTransaction.set(transaction);
+        break;
+      case 'mark-late':
+        this._confirmModalType.set('markLate');
+        this._confirmTransaction.set(transaction);
+        break;
+      case 'cancel-scheduled':
+        this._confirmModalType.set('cancelScheduled');
+        this._confirmTransaction.set(transaction);
+        break;
+    }
+  }
+
+  onConfirmActionClick(event: {
+    label: string;
+    variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
+    size: 'small' | 'medium' | 'large';
+    disabled?: boolean;
+    loading?: boolean;
+    icon?: string;
+  }): void {
+    if (event.label === 'Confirmar') {
+      this.executeAction();
+    }
+  }
+
+  onConfirmCancelled(): void {
+    this._confirmModalType.set(null);
+    this._confirmTransaction.set(null);
+  }
+
+  async executeAction(): Promise<void> {
+    const type = this._confirmModalType();
+    const transaction = this._confirmTransaction();
+
+    if (!type || !transaction) return;
+
+    this._actionLoading.set(true);
+
+    try {
+      const user = this.authService.currentUser();
+      if (!user) {
+        this.notificationService.showError('Usuário não autenticado');
+        return;
+      }
+
+      const budgetId = this.budgetSelection.selectedBudgetId();
+      if (!budgetId) {
+        this.notificationService.showError('Nenhum orçamento selecionado');
+        return;
+      }
+
+      switch (type) {
+        case 'delete':
+          await lastValueFrom(
+            this.api.delete({
+              userId: user.id,
+              id: transaction.id,
+            })
+          );
+          this.notificationService.showSuccess('Transação excluída com sucesso!');
+          break;
+
+        case 'markLate':
+          await lastValueFrom(
+            this.api.markLate({
+              transactionId: transaction.id,
+            })
+          );
+          this.notificationService.showSuccess('Transação marcada como atrasada!');
+          break;
+
+        case 'cancelScheduled':
+          await lastValueFrom(
+            this.api.cancelScheduled({
+              userId: user.id,
+              budgetId,
+              transactionId: transaction.id,
+              cancellationReason: 'Cancelado pelo usuário',
+            })
+          );
+          this.notificationService.showSuccess('Transação agendada cancelada com sucesso!');
+          break;
+      }
+
+      this.onConfirmCancelled();
+
+      if (budgetId) {
+        await this.resetAndLoad(budgetId);
+      }
+    } catch (error) {
+      this.notificationService.showError(
+        `Erro ao executar ação: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+      );
+    } finally {
+      this._actionLoading.set(false);
     }
   }
 

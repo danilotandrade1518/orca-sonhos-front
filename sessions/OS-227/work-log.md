@@ -87,9 +87,45 @@
 
 ---
 
+### 🗓️ Sessão 2025-10-31 - 90min
+
+**Fase**: FASE 4 - Ações de Mutações e UX
+**Objetivo**: Implementar ações rápidas (marcar atrasada, cancelar agendada, excluir) com confirmações e otimizações
+
+#### ✅ Trabalho Realizado
+
+- Menu de contexto implementado no `os-transaction-list` usando Material Menu (`MatMenuModule`)
+- Três ações rápidas nos cards: "Marcar como Atrasada", "Cancelar Agendada", "Excluir"
+- Modais de confirmação usando `os-modal-template` com variant `'compact'` e mensagens personalizadas
+- Handlers implementados para `delete`, `markLate` e `cancelScheduled` com validação completa
+- Notificações de sucesso/erro integradas via `NotificationService`
+- Otimizações de performance: prevenção de duplicatas ao carregar páginas, early return no computed de filtros
+- Estilos CSS adicionados para menu de contexto e botão de ações
+- Atualização automática da lista após ações bem-sucedidas
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Estender `os-transaction-list` com input `cardActions` e output `cardActionClick` para suportar ações customizadas
+- **Decisão**: Usar Material Menu ao invés de componente customizado para manter consistência com Angular Material
+- **Decisão**: Separar modais de confirmação por tipo de ação com mensagens personalizadas
+- **Problema**: DTO de delete requer `userId` e `id` → **Solução**: Usar `AuthService` para obter userId
+- **Problema**: Redeclaração de `budgetId` → **Solução**: Reutilizar variável já declarada
+
+#### 🧪 Validações
+
+- Build: ok (`ng build --configuration development`) sem erros
+- Lint: sem erros TypeScript ou ESLint
+- Componente `os-transaction-list` estendido sem quebrar API existente
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 5: Responsividade, A11y e Integrações
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-227
-**Fase Atual**: FASE 3 - Formulário Reativo (Modal)
-**Última Modificação**: Fase 2 concluída - estado, listagem e filtros implementados
-**Próxima Tarefa**: Implementar formulário reativo em modal para criar/editar transações
+**Fase Atual**: FASE 4 - Ações de Mutações e UX [✅ Completada]
+**Última Modificação**: Ações rápidas, modais de confirmação e otimizações implementadas
+**Próxima Tarefa**: FASE 5 - Responsividade, A11y e Integrações

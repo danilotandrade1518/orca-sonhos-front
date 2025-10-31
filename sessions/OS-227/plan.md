@@ -136,7 +136,7 @@ Implementar criação/edição com formulário reativo acessível em modal (`os-
 
 ---
 
-## 📅 FASE 4: Ações de Mutações e UX [Status: ⏳]
+## 📅 FASE 4: Ações de Mutações e UX [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -144,24 +144,31 @@ Implementar ações rápidas: marcar atrasada, cancelar agendada, excluir; confi
 
 ### 📋 Tarefas
 
-#### Ações rápidas nos cards [⏳]
+#### Ações rápidas nos cards [✅]
 
 **Descrição**: Menu de contexto/ações no `os-transaction-list`; confirmações com `os-modal-template`.
 **Critério de Conclusão**: Ações executam chamadas, atualizam estado, feedbacks visíveis.
 
-#### Otimizações de estado/performance [⏳]
+#### Otimizações de estado/performance [✅]
 
 **Descrição**: Evitar re-renders; memoização/computed; evitar over-fetch; debounce em filtros.
 **Critério de Conclusão**: Perf fluida em listas com muitos itens.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Ações executadas com confirmações e feedback
-- [ ] Estado consistente após sucesso/erro
+- [x] Ações executadas com confirmações e feedback
+- [x] Estado consistente após sucesso/erro
 
 ### 📝 Comentários da Fase
 
-\_
+- Menu de contexto implementado no `os-transaction-list` usando Material Menu com botão de três pontos.
+- Três ações rápidas: "Marcar como Atrasada", "Cancelar Agendada", "Excluir".
+- Modais de confirmação usando `os-modal-template` com variant `'compact'` e mensagens personalizadas por tipo.
+- Handlers implementados para `delete`, `markLate` e `cancelScheduled` com validação de autenticação e orçamento.
+- Notificações de sucesso/erro usando `NotificationService`.
+- Otimizações: prevenção de duplicatas ao carregar páginas, early return no computed de filtros, trackBy function.
+- Atualização automática da lista após ações bem-sucedidas.
+- Build validado com sucesso.
 
 ---
 
