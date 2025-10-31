@@ -57,7 +57,7 @@ Criar estrutura base da feature (rotas, DTOs, serviço de API) e preparar mocks/
 
 ---
 
-## 📅 FASE 2: Estado e Listagem (Cards) [Status: ⏳]
+## 📅 FASE 2: Estado e Listagem (Cards) [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -65,30 +65,35 @@ Implementar estado com signals/computed e listagem em cards reutilizando `os-tra
 
 ### 📋 Tarefas
 
-#### Implementar estado da feature [⏳]
+#### Implementar estado da feature [✅]
 
 **Descrição**: Signals para dados, loading, error; computed para totais/contagens/status; persistência leve de filtros na sessão.
 **Critério de Conclusão**: Derivações corretas, sem mutações diretas, `OnPush` pronto.
 
-#### Listagem com paginação/infinite [⏳]
+#### Listagem com paginação/infinite [✅]
 
 **Descrição**: Integrar `os-transaction-list` com dados e paginação do backend; fallback de "Carregar mais"; estados loading/empty/error.
 **Critério de Conclusão**: Lista carrega, paginação funciona, estados exibidos conforme spec.
 
-#### Filtros server-side + client-side [⏳]
+#### Filtros server-side + client-side [✅]
 
 **Descrição**: Campos: `budgetId` (obrigatório), `accountId`, `categoryId`, `dateFrom`, `dateTo`; client-side: `type`, `amount`.
 **Critério de Conclusão**: Query string correta; filtros locais aplicados sem re-fetch desnecessário.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `os-transaction-list` renderiza e responde a paginação
-- [ ] Filtros server-side e client-side operacionais
-- [ ] Estados loading/empty/error conforme layout-spec
+- [x] `os-transaction-list` renderiza e responde a paginação
+- [x] Filtros server-side e client-side operacionais
+- [x] Estados loading/empty/error conforme layout-spec
 
 ### 📝 Comentários da Fase
 
-\_
+- Estado implementado com signals/computed: `allItems`, `isLoading`, `serverFilters`, `clientFilters`, `filteredTransactions`.
+- Componente `TransactionsFiltersComponent` criado com filtros persistidos em localStorage.
+- Integração com `os-transaction-list` em layout 'card' com infinite scroll habilitado.
+- Filtros server-side (`accountId`, `categoryId`, `dateFrom`, `dateTo`) aplicados na query string da API.
+- Filtros client-side (`type`, `amount`) aplicados via computed no estado local.
+- Build validado com sucesso (`ng build`).
 
 ---
 
