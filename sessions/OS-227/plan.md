@@ -97,7 +97,7 @@ Implementar estado com signals/computed e listagem em cards reutilizando `os-tra
 
 ---
 
-## 📅 FASE 3: Formulário Reativo (Modal) [Status: ⏳]
+## 📅 FASE 3: Formulário Reativo (Modal) [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -105,25 +105,34 @@ Implementar criação/edição com formulário reativo acessível em modal (`os-
 
 ### 📋 Tarefas
 
-#### Componentizar `transaction-form` [⏳]
+#### Componentizar `transaction-form` [✅]
 
 **Descrição**: Reactive Forms, validações, mensagens de erro, máscaras/formatadores de `amount`.
 **Critério de Conclusão**: Validações e mensagens acessíveis, integração com DS.
 
-#### Fluxos de criar/editar [⏳]
+#### Fluxos de criar/editar [✅]
 
 **Descrição**: Abrir modal, salvar/cancelar, atualizar lista/estado, toasts de sucesso/erro.
 **Critério de Conclusão**: CRUD de create/update funcional e testável.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Form acessível (labels, aria, foco, `aria-live` para erros)
-- [ ] Estados de loading em botão/ação
-- [ ] Atualização da lista/estado após salvar
+- [x] Form acessível (labels, aria, foco, `aria-live` para erros)
+- [x] Estados de loading em botão/ação
+- [x] Atualização da lista/estado após salvar
 
 ### 📝 Comentários da Fase
 
-\_
+- Componente `TransactionFormComponent` criado com Reactive Forms e validações completas.
+- Integração com `os-modal-template` e `os-form-template` conforme padrão do projeto.
+- Campos implementados: description, amount, type, accountId, categoryId, transactionDate.
+- Validações implementadas com mensagens de erro acessíveis via `os-form-field`.
+- Fluxos de criar/editar funcionais com chamadas à API e notificações de sucesso/erro.
+- Atualização automática da lista após criar/editar transação.
+- Campo amount usando tipo `number` com validação `min(0.01)`.
+- Dropdowns para type, accountId e categoryId com fallback quando não há opções disponíveis.
+- DatePicker para transactionDate opcional.
+- Build validado com sucesso.
 
 ---
 

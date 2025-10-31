@@ -21,6 +21,8 @@ import {
   TransactionsFiltersComponent,
   type TransactionsFilters,
 } from '../../components/transactions-filters/transactions-filters.component';
+import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
+import type { PageHeaderAction } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 
 @Component({
   selector: 'os-transactions-page',
@@ -29,10 +31,16 @@ import {
     OsPageHeaderComponent,
     OsTransactionListComponent,
     TransactionsFiltersComponent,
+    TransactionFormComponent,
   ],
   template: `
     <section class="os-transactions" role="main">
-      <os-page-header title="Transações" [actions]="headerActions()" [breadcrumbs]="[]" />
+      <os-page-header
+        title="Transações"
+        [actions]="headerActions()"
+        [breadcrumbs]="[]"
+        (actionClick)="onHeaderActionClick($event)"
+      />
 
       <os-transactions-filters
         [accountOptions]="accountOptions()"
@@ -53,6 +61,23 @@ import {
         (refresh)="onRefresh()"
         (pageChange)="onPageChange($event)"
       />
+
+      @if (showCreateModal()) {
+      <os-transaction-form
+        [accountOptions]="accountOptions()"
+        [categoryOptions]="categoryOptions()"
+        (saved)="onFormSaved()"
+        (cancelled)="onFormCancelled()"
+      />
+      } @if (showEditModal() && editingTransaction()) {
+      <os-transaction-form
+        [transaction]="editingTransaction()"
+        [accountOptions]="accountOptions()"
+        [categoryOptions]="categoryOptions()"
+        (saved)="onFormSaved()"
+        (cancelled)="onFormCancelled()"
+      />
+      }
     </section>
   `,
   styles: [
@@ -80,6 +105,14 @@ export class TransactionsPage {
 
   readonly accountOptions = signal<{ value: string; label: string }[]>([]);
   readonly categoryOptions = signal<{ value: string; label: string }[]>([]);
+
+  private readonly _showCreateModal = signal<boolean>(false);
+  readonly showCreateModal = this._showCreateModal.asReadonly();
+
+  private readonly _editingTransaction = signal<TransactionDto | null>(null);
+  readonly editingTransaction = this._editingTransaction.asReadonly();
+
+  readonly showEditModal = computed(() => this._editingTransaction() !== null);
 
   readonly filteredTransactions = computed(() => {
     let items = this.allItems();
@@ -128,7 +161,7 @@ export class TransactionsPage {
     }
   }
 
-  headerActions() {
+  headerActions(): PageHeaderAction[] {
     return [
       {
         label: 'Atualizar',
@@ -136,8 +169,38 @@ export class TransactionsPage {
         variant: 'tertiary' as const,
         loading: this.isLoading(),
       },
-      { label: 'Nova Transação', icon: 'add', variant: 'primary' as const },
+      {
+        label: 'Nova Transação',
+        icon: 'add',
+        variant: 'primary' as const,
+      },
     ];
+  }
+
+  onHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Nova Transação') {
+      this.onNewTransaction();
+    } else if (action.label === 'Atualizar') {
+      this.onRefresh();
+    }
+  }
+
+  onNewTransaction(): void {
+    this._showCreateModal.set(true);
+  }
+
+  onFormSaved(): void {
+    this._showCreateModal.set(false);
+    this._editingTransaction.set(null);
+    const budgetId = this.budgetSelection.selectedBudgetId();
+    if (budgetId) {
+      this.resetAndLoad(budgetId);
+    }
+  }
+
+  onFormCancelled(): void {
+    this._showCreateModal.set(false);
+    this._editingTransaction.set(null);
   }
 
   onRefresh(): void {
