@@ -544,6 +544,8 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--os-color-text-primary);
   transform: scale(1);
+  flex-shrink: 0;
+  order: -1;
 
   &:hover {
     background: var(--os-color-surface-hover);

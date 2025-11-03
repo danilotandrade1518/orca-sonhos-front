@@ -48,6 +48,21 @@ export interface BreadcrumbItem {
     <div [class]="stickyClasses()">
       <header class="os-header" [class]="headerClasses()" [attr.aria-label]="ariaLabel()">
         <div class="os-header__container">
+          @if (showMobileMenu()) {
+          <button
+            class="os-header__mobile-toggle"
+            [class]="mobileToggleClasses()"
+            [attr.aria-label]="mobileMenuAriaLabel()"
+            [attr.aria-expanded]="mobileMenuOpen()"
+            (click)="toggleMobileMenu()"
+          >
+              <os-icon
+                [name]="mobileMenuOpen() ? 'menu_open' : 'menu'"
+                size="md"
+                [attr.aria-hidden]="true"
+              />
+          </button>
+          }
           <div class="os-header__brand">
             @if (logo()) {
             <a
@@ -149,20 +164,6 @@ export interface BreadcrumbItem {
               </div>
               }
             </div>
-            } @if (showMobileMenu()) {
-            <button
-              class="os-header__mobile-toggle"
-              [class]="mobileToggleClasses()"
-              [attr.aria-label]="mobileMenuAriaLabel()"
-              [attr.aria-expanded]="mobileMenuOpen()"
-              (click)="toggleMobileMenu()"
-            >
-              <os-icon
-                [name]="mobileMenuOpen() ? 'close' : 'menu'"
-                size="md"
-                [attr.aria-hidden]="true"
-              />
-            </button>
             }
           </div>
         </div>
@@ -412,6 +413,13 @@ export class OsHeaderComponent implements OnDestroy {
 
     if (this.enableHapticFeedback()) {
       this.triggerHapticFeedback();
+    }
+  }
+
+  setMobileMenuOpen(open: boolean): void {
+    if (this.mobileMenuOpen() !== open) {
+      this.mobileMenuOpen.set(open);
+      this.mobileMenuToggle.emit(open);
     }
   }
 

@@ -7,6 +7,7 @@ import {
   output,
   signal,
   ChangeDetectionStrategy,
+  ViewChild,
 } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -54,6 +55,7 @@ export interface AppShellLayout {
           class="os-app-shell-template__sidebar-wrapper"
         >
           <os-sidebar
+            #sidebarRef
             [items]="sidebarItems()"
             [variant]="sidebarVariant()"
             [size]="computedLayout().size"
@@ -89,6 +91,7 @@ export interface AppShellLayout {
           @if (computedLayout().showHeader) {
           <header role="banner" class="os-app-shell-template__header-wrapper">
             <os-header
+              #headerRef
               [variant]="headerVariant()"
               [size]="computedLayout().size"
               [theme]="computedLayout().theme"
@@ -102,7 +105,7 @@ export interface AppShellLayout {
               [userInitials]="getUserInitials()"
               [userMenuItems]="headerUserMenuItems()"
               [showUserMenu]="!!headerUser()"
-              [showMobileMenu]="headerMobileMenuItems().length > 0"
+              [showMobileMenu]="computedLayout().showSidebar && isMobile()"
               [ariaLabel]="'Cabeçalho principal'"
               (navigationClick)="onHeaderNavigationClick($event)"
               (userMenuItemClick)="onHeaderUserMenuClick($event)"
@@ -195,6 +198,8 @@ export interface AppShellLayout {
 export class OsAppShellTemplateComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);
   readonly themeService = inject(ThemeService);
+  @ViewChild('sidebarRef') sidebarComponent?: OsSidebarComponent;
+  @ViewChild('headerRef') headerComponent?: OsHeaderComponent;
 
   layout = input<AppShellLayout>({
     variant: 'default',
@@ -229,8 +234,10 @@ export class OsAppShellTemplateComponent {
   loadingText = input<string>('Carregando...');
   errorText = input<string>('Ocorreu um erro');
 
-  private readonly isMobileSignal = signal(false);
+  readonly isMobileSignal = signal(false);
   private readonly sidebarOpenSignal = signal(false);
+
+  isMobile = computed(() => this.isMobileSignal());
 
   headerNavigationClick = output<{ item: string; route?: string; href?: string }>();
   headerUserMenuClick = output<{ action: string; user: { name: string; email?: string } }>();
@@ -362,6 +369,13 @@ export class OsAppShellTemplateComponent {
 
   onHeaderMobileMenuToggle(open: boolean): void {
     this.headerMobileMenuToggle.emit({ open });
+    if (this.computedLayout().showSidebar && this.isMobileSignal() && this.sidebarComponent) {
+      if (open) {
+        this.sidebarComponent.openSidebar();
+      } else {
+        this.sidebarComponent.closeSidebar();
+      }
+    }
   }
 
   onHeaderLogoClick(): void {
@@ -379,6 +393,9 @@ export class OsAppShellTemplateComponent {
   onSidebarOpenChange(open: boolean): void {
     this.sidebarOpenSignal.set(open);
     this.sidebarOpenChange.emit(open);
+    if (this.computedLayout().showSidebar && this.isMobileSignal() && this.headerComponent) {
+      this.headerComponent.setMobileMenuOpen(open);
+    }
   }
 
   onSidebarExpandedChange(expanded: boolean): void {

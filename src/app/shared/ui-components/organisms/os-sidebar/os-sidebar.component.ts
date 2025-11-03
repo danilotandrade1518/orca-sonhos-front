@@ -203,7 +203,13 @@ export class OsSidebarComponent implements OnDestroy, AfterViewInit {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
         this.currentUrlSignal.set(event.urlAfterRedirects || event.url);
-        if (!this.isMobileSignal() && this.isExpanded()) {
+        if (this.isMobileSignal() && this.isOpen()) {
+          setTimeout(() => {
+            if (this.isMobileSignal() && this.isOpen()) {
+              this.closeSidebar();
+            }
+          }, 50);
+        } else if (!this.isMobileSignal() && this.isExpanded()) {
           setTimeout(() => {
             if (!this.isMobileSignal() && this.isExpanded()) {
               this.collapseExpanded();
@@ -342,7 +348,11 @@ export class OsSidebarComponent implements OnDestroy, AfterViewInit {
     }
 
     if (this.isMobile()) {
-      this.closeSidebar();
+      setTimeout(() => {
+        if (this.isMobile() && this.isOpen()) {
+          this.closeSidebar();
+        }
+      }, 100);
     }
   }
 
