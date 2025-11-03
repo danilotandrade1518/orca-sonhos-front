@@ -70,7 +70,7 @@ export class OsIconComponent {
   svgContent = input<string>('');
   svgUrl = input<string>('');
   fallbackIcon = input<string>('help');
-  
+
   ariaHidden = computed(() => {
     return this.role() === 'decorative';
   });
@@ -98,7 +98,7 @@ export class OsIconComponent {
       .filter(Boolean)
       .join(' ');
   });
-  
+
   private readonly supportedIcons = new Set([
     'home',
     'menu',
@@ -183,7 +183,7 @@ export class OsIconComponent {
     'dots',
     'more',
     'menu-dots',
-    
+
     'category',
     'check_circle',
     'trending_flat',
@@ -209,12 +209,13 @@ export class OsIconComponent {
     'savings',
     'history',
     'flash_on',
+    'clear',
   ]);
 
   iconContent = computed(() => {
     const iconName = this.name();
     if (!iconName) return this.fallbackIcon();
-    
+
     if (!this.supportedIcons.has(iconName)) {
       console.warn(`Ícone "${iconName}" não é suportado. Usando fallback "${this.fallbackIcon()}"`);
       return this.getIconContent(this.fallbackIcon());
@@ -308,7 +309,7 @@ export class OsIconComponent {
       dots: 'more_horiz',
       more: 'more_vert',
       'menu-dots': 'more_vert',
-      
+
       category: 'category',
       check_circle: 'check_circle',
       trending_flat: 'trending_flat',
@@ -334,11 +335,12 @@ export class OsIconComponent {
       savings: 'savings',
       history: 'history',
       flash_on: 'flash_on',
+      clear: 'close',
     };
 
     return iconMap[iconName] || this.fallbackIcon();
   }
-  
+
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':
