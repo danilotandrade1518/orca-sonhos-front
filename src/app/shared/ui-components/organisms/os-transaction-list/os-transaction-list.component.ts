@@ -447,7 +447,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private sort = signal<TransactionListSort | null>(null);
   private isMobile = signal<boolean>(false);
   protected isLoadingMore = signal<boolean>(false);
-  private hasMoreData = signal<boolean>(true);
+  hasMoreData = input<boolean>(false);
   private categoryColors = signal<Record<string, string>>({});
   private priorityColors = signal<Record<string, string>>({
     low: 'var(--os-color-success)',
@@ -784,7 +784,12 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
     this.scrollObserver = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && this.hasMoreData() && !this.isLoadingMore()) {
+        if (
+          entries[0].isIntersecting &&
+          this.hasMoreData() &&
+          !this.isLoadingMore() &&
+          !this.isLoading()
+        ) {
           this.loadMoreTransactions();
         }
       },
@@ -830,7 +835,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   }
 
   private loadMoreTransactions(): void {
-    if (this.isLoadingMore() || !this.hasMoreData()) return;
+    if (this.isLoadingMore() || !this.hasMoreData() || this.isLoading()) return;
 
     this.isLoadingMore.set(true);
 

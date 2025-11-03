@@ -98,6 +98,16 @@
   --os-color-border-focus: var(--os-color-primary-500);
 }
 
+:root {
+  --os-spacing-xs: var(--os-spacing-2);
+  --os-spacing-sm: var(--os-spacing-3);
+  --os-spacing-md: var(--os-spacing-4);
+  --os-spacing-lg: var(--os-spacing-6);
+  --os-spacing-xl: var(--os-spacing-8);
+  --os-spacing-2xl: var(--os-spacing-12);
+  --os-spacing-3xl: var(--os-spacing-16);
+}
+
 // =============================================================================
 // TYPOGRAPHY - ACESSÍVEL WCAG 2.1 AA
 // =============================================================================

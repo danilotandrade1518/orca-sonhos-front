@@ -11,6 +11,7 @@ import {
   AfterViewInit,
   OnDestroy,
   OnInit,
+  untracked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
@@ -87,6 +88,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
           [variant]="'default'"
           [size]="'medium'"
           [enableInfiniteScroll]="true"
+          [hasMoreData]="hasMore()"
           [showFilters]="false"
           [cardActions]="cardActions()"
           (refresh)="onRefresh()"
@@ -142,6 +144,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly loadedPages = signal<number>(0);
   private readonly pageSize = signal<number>(20);
   private readonly hasNext = signal<boolean>(true);
+  readonly hasMore = computed(() => this.hasNext());
   private readonly allItems = signal<UiTransaction[]>([]);
   private readonly serverFilters = signal<Partial<TransactionsFilters>>({});
   private readonly clientFilters = signal<Partial<TransactionsFilters>>({});
@@ -291,11 +294,13 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   constructor() {
     effect(() => {
       const budgetId = this.budgetSelection.selectedBudgetId();
-      if (budgetId) {
-        this.resetAndLoad(budgetId);
-      } else {
-        this.clearData();
-      }
+      untracked(() => {
+        if (budgetId) {
+          this.resetAndLoad(budgetId);
+        } else {
+          this.clearData();
+        }
+      });
     });
   }
 
