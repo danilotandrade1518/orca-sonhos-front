@@ -205,11 +205,18 @@ export class OsIconComponent {
     'celebration',
     'schedule',
     'play_arrow',
+    'play_circle',
+    'pause_circle',
     'flag',
     'savings',
     'history',
     'flash_on',
     'clear',
+    'filter_list',
+    'priority_high',
+    'trending_up',
+    'account_balance',
+    'palette',
   ]);
 
   iconContent = computed(() => {
@@ -245,6 +252,7 @@ export class OsIconComponent {
       search: 'search',
       eye: 'visibility',
       filter: 'filter_list',
+      filter_list: 'filter_list',
       sort: 'sort',
       refresh: 'refresh',
       settings: 'settings',
@@ -265,6 +273,7 @@ export class OsIconComponent {
       bank: 'account_balance',
       chart: 'bar_chart',
       'trending-up': 'trending_up',
+      trending_up: 'trending_up',
       'trending-down': 'trending_down',
       calculator: 'calculate',
       mail: 'mail',
@@ -284,6 +293,8 @@ export class OsIconComponent {
       date: 'event',
       play: 'play_arrow',
       pause: 'pause',
+      play_circle: 'play_circle',
+      pause_circle: 'pause_circle',
       stop: 'stop',
       volume: 'volume_up',
       mute: 'volume_off',
@@ -322,6 +333,7 @@ export class OsIconComponent {
       'exchange-alt': 'swap_horiz',
       'folder-open': 'folder_open',
       account_balance_wallet: 'account_balance_wallet',
+      account_balance: 'account_balance',
       analytics: 'analytics',
       people: 'people',
       keyboard_arrow_down: 'keyboard_arrow_down',
@@ -336,6 +348,8 @@ export class OsIconComponent {
       history: 'history',
       flash_on: 'flash_on',
       clear: 'close',
+      priority_high: 'priority_high',
+      palette: 'palette',
     };
 
     return iconMap[iconName] || this.fallbackIcon();

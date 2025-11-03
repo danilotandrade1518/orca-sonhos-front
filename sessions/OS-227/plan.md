@@ -216,7 +216,7 @@ Refinar responsividade, acessibilidade e integrações de navegação.
 
 ---
 
-## 📅 FASE 6: Testes, Cobertura e Hardening [Status: ⏳]
+## 📅 FASE 6: Testes, Cobertura e Hardening [Status: ⏰]
 
 ### 🎯 Objetivo
 
@@ -224,7 +224,7 @@ Consolidar qualidade com testes, ajustes finais e documentação.
 
 ### 📋 Tarefas
 
-#### Testes de serviços (100%) [⏳]
+#### Testes de serviços (100%) [✅]
 
 **Descrição**: Sucesso/erro/paginação/filtros e mutações.
 **Critério de Conclusão**: 100% coverage em serviços.
