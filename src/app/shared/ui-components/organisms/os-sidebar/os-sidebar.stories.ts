@@ -8,7 +8,7 @@ const meta: Meta<OsSidebarComponent> = {
     docs: {
       description: {
         component:
-          'Sidebar do Design System Orca Sonhos com 4 variantes, 3 tamanhos e suporte a colapso e sub-itens.',
+          'Navigation Rail (Material 3) do Design System Orca Sonhos. Largura 80px, responsivo (overlay em mobile), foco em ícones com rótulo no ativo/foco e suporte a badges.',
       },
     },
   },
@@ -18,14 +18,14 @@ const meta: Meta<OsSidebarComponent> = {
       description: 'Lista de itens da sidebar',
     },
     variant: {
-      control: { type: 'select' },
-      options: ['default', 'minimal', 'compact', 'expanded'],
-      description: 'Variante da sidebar',
+      control: { disable: true },
+      table: { disable: true },
+      description: 'Não aplicável no Navigation Rail',
     },
     size: {
-      control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
-      description: 'Tamanho da sidebar',
+      control: { disable: true },
+      table: { disable: true },
+      description: 'Não aplicável no Navigation Rail',
     },
     theme: {
       control: { type: 'select' },
@@ -36,6 +36,10 @@ const meta: Meta<OsSidebarComponent> = {
       control: { type: 'boolean' },
       description: 'Sidebar colapsada',
     },
+    expanded: {
+      control: { type: 'boolean' },
+      description: 'Expanded Navigation Rail (M3)',
+    },
     activeItemId: {
       control: { type: 'text' },
       description: 'ID do item ativo',
@@ -44,30 +48,12 @@ const meta: Meta<OsSidebarComponent> = {
       control: { type: 'text' },
       description: 'Rótulo para acessibilidade',
     },
-    title: {
-      control: { type: 'text' },
-      description: 'Título da sidebar',
-    },
-    logo: {
-      control: { type: 'text' },
-      description: 'URL do logo',
-    },
-    logoAlt: {
-      control: { type: 'text' },
-      description: 'Texto alternativo do logo',
-    },
-    showHeader: {
-      control: { type: 'boolean' },
-      description: 'Mostrar cabeçalho',
-    },
+
     showFooter: {
       control: { type: 'boolean' },
       description: 'Mostrar rodapé',
     },
-    showToggleButton: {
-      control: { type: 'boolean' },
-      description: 'Mostrar botão de colapsar',
-    },
+
     showCustomContent: {
       control: { type: 'boolean' },
       description: 'Mostrar conteúdo personalizado',
@@ -145,18 +131,12 @@ const itemsWithBadges = [
 export const Default: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
-    size: 'medium',
     theme: 'light',
     collapsed: false,
+    expanded: false,
     activeItemId: 'dashboard',
     ariaLabel: 'Navegação lateral',
-    title: 'OrçaSonhos',
-    logo: null,
-    logoAlt: 'Logo',
-    showHeader: true,
     showFooter: false,
-    showToggleButton: true,
     showCustomContent: false,
   },
   render: (args) => ({
@@ -164,18 +144,12 @@ export const Default: Story = {
     template: `
       <os-sidebar
         [items]="items"
-        [variant]="variant"
-        [size]="size"
         [theme]="theme"
         [collapsed]="collapsed"
+        [expanded]="expanded"
         [activeItemId]="activeItemId"
         [ariaLabel]="ariaLabel"
-        [title]="title"
-        [logo]="logo"
-        [logoAlt]="logoAlt"
-        [showHeader]="showHeader"
         [showFooter]="showFooter"
-        [showToggleButton]="showToggleButton"
         [showCustomContent]="showCustomContent"
         (itemClick)="itemClick($event)"
         (navigate)="navigate($event)"
@@ -189,39 +163,17 @@ export const Variants: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 250px;">
-          <h4>Default</h4>
+        <div style="width: 80px;">
+          <h4>Navigation Rail</h4>
           <os-sidebar
             [items]="sampleItems"
-            variant="default"
-            title="OrçaSonhos"
           ></os-sidebar>
         </div>
-
-        <div style="width: 200px;">
-          <h4>Minimal</h4>
+        <div style="width: 256px;">
+          <h4>Expanded Rail</h4>
           <os-sidebar
             [items]="sampleItems"
-            variant="minimal"
-            title="OrçaSonhos"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 180px;">
-          <h4>Compact</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            variant="compact"
-            title="OrçaSonhos"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 300px;">
-          <h4>Expanded</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            variant="expanded"
-            title="OrçaSonhos"
+            [expanded]="true"
           ></os-sidebar>
         </div>
       </div>
@@ -243,30 +195,10 @@ export const Sizes: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 200px;">
-          <h4>Small</h4>
+        <div style="width: 80px;">
+          <h4>Rail</h4>
           <os-sidebar
             [items]="sampleItems"
-            size="small"
-            title="OrçaSonhos"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 250px;">
-          <h4>Medium</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            size="medium"
-            title="OrçaSonhos"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 300px;">
-          <h4>Large</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            size="large"
-            title="OrçaSonhos"
           ></os-sidebar>
         </div>
       </div>
@@ -288,23 +220,11 @@ export const WithSubItems: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 300px;">
+        <div style="width: 80px;">
           <h4>Com Sub-itens</h4>
           <os-sidebar
             [items]="itemsWithSubItems"
-            variant="expanded"
-            title="OrçaSonhos"
             activeItemId="budgets-list"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 250px;">
-          <h4>Com Sub-itens - Compact</h4>
-          <os-sidebar
-            [items]="itemsWithSubItems"
-            variant="compact"
-            title="OrçaSonhos"
-            activeItemId="goals-create"
           ></os-sidebar>
         </div>
       </div>
@@ -326,22 +246,11 @@ export const WithBadges: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 250px;">
+        <div style="width: 80px;">
           <h4>Com Badges</h4>
           <os-sidebar
             [items]="itemsWithBadges"
-            title="OrçaSonhos"
             activeItemId="budgets"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 200px;">
-          <h4>Com Badges - Minimal</h4>
-          <os-sidebar
-            [items]="itemsWithBadges"
-            variant="minimal"
-            title="OrçaSonhos"
-            activeItemId="goals"
           ></os-sidebar>
         </div>
       </div>
@@ -368,7 +277,6 @@ export const Collapsed: Story = {
           <os-sidebar
             [items]="sampleItems"
             [collapsed]="true"
-            title="OrçaSonhos"
           ></os-sidebar>
         </div>
 
@@ -377,7 +285,6 @@ export const Collapsed: Story = {
           <os-sidebar
             [items]="sampleItems"
             [collapsed]="false"
-            title="OrçaSonhos"
           ></os-sidebar>
         </div>
       </div>
@@ -399,21 +306,10 @@ export const WithLogo: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 250px;">
-          <h4>Com Logo</h4>
+        <div style="width: 80px;">
+          <h4>Rail</h4>
           <os-sidebar
             [items]="sampleItems"
-            title="OrçaSonhos"
-            logo="https://via.placeholder.com/120x40/0066CC/FFFFFF?text=OrçaSonhos"
-            logoAlt="OrçaSonhos Logo"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 250px;">
-          <h4>Apenas Título</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            title="OrçaSonhos"
           ></os-sidebar>
         </div>
       </div>
@@ -437,22 +333,11 @@ export const DarkTheme: Story = {
       <div style="background-color: #1a1a1a; padding: 20px; border-radius: 8px; min-height: 400px;">
         <h4 style="color: white; margin-bottom: 16px;">Tema Escuro</h4>
         <div style="display: flex; gap: 24px;">
-          <div style="width: 250px;">
+          <div style="width: 80px;">
             <os-sidebar
               [items]="sampleItems"
-              title="OrçaSonhos"
               theme="dark"
               activeItemId="budgets"
-            ></os-sidebar>
-          </div>
-
-          <div style="width: 200px;">
-            <os-sidebar
-              [items]="itemsWithSubItems"
-              variant="minimal"
-              title="OrçaSonhos"
-              theme="dark"
-              activeItemId="goals-list"
             ></os-sidebar>
           </div>
         </div>
@@ -480,7 +365,6 @@ export const WithFooter: Story = {
           <h4>Com Rodapé</h4>
           <os-sidebar
             [items]="sampleItems"
-            title="OrçaSonhos"
             [showFooter]="true"
           >
             <div slot="footer" style="padding: 16px; background: #f5f5f5; border-radius: 8px; margin: 16px;">
@@ -494,7 +378,6 @@ export const WithFooter: Story = {
           <h4>Com Conteúdo Personalizado</h4>
           <os-sidebar
             [items]="sampleItems"
-            title="OrçaSonhos"
             [showCustomContent]="true"
           >
             <div slot="custom" style="padding: 16px; background: #e3f2fd; border-radius: 8px; margin: 16px;">
@@ -522,20 +405,10 @@ export const WithoutHeader: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 24px; min-height: 400px;">
-        <div style="width: 250px;">
-          <h4>Sem Cabeçalho</h4>
+        <div style="width: 80px;">
+          <h4>Rail</h4>
           <os-sidebar
             [items]="sampleItems"
-            [showHeader]="false"
-          ></os-sidebar>
-        </div>
-
-        <div style="width: 250px;">
-          <h4>Sem Botão de Colapsar</h4>
-          <os-sidebar
-            [items]="sampleItems"
-            title="OrçaSonhos"
-            [showToggleButton]="false"
           ></os-sidebar>
         </div>
       </div>
@@ -556,18 +429,12 @@ export const WithoutHeader: Story = {
 export const Interactive: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
-    size: 'medium',
     theme: 'light',
     collapsed: false,
+    expanded: false,
     activeItemId: 'dashboard',
     ariaLabel: 'Navegação lateral',
-    title: 'OrçaSonhos',
-    logo: null,
-    logoAlt: 'Logo',
-    showHeader: true,
     showFooter: false,
-    showToggleButton: true,
     showCustomContent: false,
   },
   render: (args) => ({
@@ -575,18 +442,12 @@ export const Interactive: Story = {
     template: `
       <os-sidebar
         [items]="items"
-        [variant]="variant"
-        [size]="size"
         [theme]="theme"
         [collapsed]="collapsed"
+        [expanded]="expanded"
         [activeItemId]="activeItemId"
         [ariaLabel]="ariaLabel"
-        [title]="title"
-        [logo]="logo"
-        [logoAlt]="logoAlt"
-        [showHeader]="showHeader"
         [showFooter]="showFooter"
-        [showToggleButton]="showToggleButton"
         [showCustomContent]="showCustomContent"
         (itemClick)="itemClick($event)"
         (navigate)="navigate($event)"
@@ -606,18 +467,12 @@ export const Interactive: Story = {
 export const MobileOptimized: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
-    size: 'medium',
     theme: 'light',
     collapsed: false,
+    expanded: false,
     activeItemId: 'dashboard',
     ariaLabel: 'Navegação lateral',
-    title: 'OrçaSonhos',
-    logo: null,
-    logoAlt: 'Logo',
-    showHeader: true,
     showFooter: false,
-    showToggleButton: true,
     showCustomContent: false,
     animation: 'slide',
     mobileBreakpoint: 768,
@@ -629,18 +484,12 @@ export const MobileOptimized: Story = {
       <div style="height: 100vh; position: relative;">
         <os-sidebar
           [items]="items"
-          [variant]="variant"
-          [size]="size"
           [theme]="theme"
           [collapsed]="collapsed"
+          [expanded]="expanded"
           [activeItemId]="activeItemId"
           [ariaLabel]="ariaLabel"
-          [title]="title"
-          [logo]="logo"
-          [logoAlt]="logoAlt"
-          [showHeader]="showHeader"
           [showFooter]="showFooter"
-          [showToggleButton]="showToggleButton"
           [showCustomContent]="showCustomContent"
           [animation]="animation"
           [mobileBreakpoint]="mobileBreakpoint"
@@ -651,7 +500,7 @@ export const MobileOptimized: Story = {
           (openChange)="openChange($event)"
           (backdropClick)="backdropClick($event)"
         ></os-sidebar>
-        <div style="margin-left: 280px; padding: 20px;">
+        <div style="margin-left: 80px; padding: 20px;">
           <h2>Conteúdo Principal</h2>
           <p>Este é o conteúdo principal da página. Em dispositivos móveis, a sidebar será um overlay.</p>
         </div>

@@ -76,7 +76,8 @@
   background-color: var(--os-color-background-secondary);
 
   &--with-sidebar {
-    margin-left: 280px;
+    /* Acompanhar largura do Navigation Rail */
+    margin-left: var(--os-navigation-rail-width, 80px);
     transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
 
     @media (max-width: 991px) {
@@ -86,6 +87,14 @@
 
   &--sidebar-collapsed {
     margin-left: 60px;
+
+    @media (max-width: 991px) {
+      margin-left: 0;
+    }
+  }
+
+  &--sidebar-expanded {
+    margin-left: 256px;
 
     @media (max-width: 991px) {
       margin-left: 0;
@@ -104,6 +113,12 @@
     margin-bottom: var(--os-spacing-3);
     padding-bottom: var(--os-spacing-3);
   }
+}
+
+.os-app-shell-template__sidebar-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .os-app-shell-template__theme-toggle {

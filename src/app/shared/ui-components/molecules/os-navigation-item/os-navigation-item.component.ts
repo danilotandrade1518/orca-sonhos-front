@@ -41,9 +41,7 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
           [attr.aria-hidden]="true"
         />
         }
-        <span [class]="textClass()">
-          <ng-content />
-        </span>
+        <span [class]="textClass()">{{ label() }}</span>
         @if (hasSubNav()) {
         <os-icon
           [name]="isExpanded() ? 'expand_less' : 'expand_more'"
@@ -77,9 +75,7 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
           [attr.aria-hidden]="true"
         />
         }
-        <span [class]="textClass()">
-          <ng-content />
-        </span>
+        <span [class]="textClass()">{{ label() }}</span>
         @if (hasSubNav()) {
         <os-icon
           [name]="isExpanded() ? 'expand_less' : 'expand_more'"
@@ -127,7 +123,7 @@ export class OsNavigationItemComponent {
   toggleExpanded = output<void>();
 
   isActive = computed(() => this.active());
-  
+
   protected getIconSize = () => {
     const sizeMap: Record<OsNavigationItemSize, 'sm' | 'md' | 'lg'> = {
       small: 'sm',

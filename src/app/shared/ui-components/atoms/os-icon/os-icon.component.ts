@@ -102,6 +102,7 @@ export class OsIconComponent {
   private readonly supportedIcons = new Set([
     'home',
     'menu',
+    'menu_open',
     'close',
     'back',
     'forward',
@@ -235,6 +236,7 @@ export class OsIconComponent {
     const iconMap: Record<string, string> = {
       home: 'home',
       menu: 'menu',
+      menu_open: 'menu_open',
       close: 'close',
       back: 'arrow_back',
       forward: 'arrow_forward',

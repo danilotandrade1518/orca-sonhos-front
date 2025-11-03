@@ -55,9 +55,7 @@ export interface AppShellLayout {
           [logo]="headerLogo()"
           [logoText]="headerLogoText()"
           [logoRoute]="headerLogoRoute()"
-          [navigationItems]="headerNavigation()"
           [actions]="headerActions()"
-          [breadcrumbs]="headerBreadcrumbs()"
           [userName]="headerUser()?.name || null"
           [userRole]="headerUser()?.role || null"
           [userAvatar]="headerUser()?.avatar || null"
@@ -77,41 +75,40 @@ export interface AppShellLayout {
             <ng-content select="[slot=header-content]"></ng-content>
           </div>
         </os-header>
-
-        <!-- Theme Toggle -->
-        <div class="os-app-shell-template__theme-toggle">
-          <os-toggle
-            [checked]="themeService.isDark()"
-            [size]="'small'"
-            [variant]="'primary'"
-            [ariaLabel]="'Alternar tema'"
-            [label]="themeService.isDark() ? 'Modo escuro' : 'Modo claro'"
-            (toggled)="onThemeToggle()"
-          />
-        </div>
       </header>
       }
 
       <div class="os-app-shell-template__content">
         <!-- Sidebar -->
         @if (computedLayout().showSidebar) {
-        <nav role="navigation" [attr.aria-label]="sidebarAriaLabel()">
+        <nav role="navigation" [attr.aria-label]="'Navegação principal'">
           <os-sidebar
             [items]="sidebarItems()"
             [variant]="sidebarVariant()"
             [size]="computedLayout().size"
             [theme]="computedLayout().theme"
             [collapsed]="computedLayout().sidebarCollapsed"
-            [title]="sidebarTitle()"
-            [logo]="sidebarLogo()"
-            [showHeader]="sidebarShowHeader()"
-            [showToggleButton]="sidebarShowToggleButton()"
-            [ariaLabel]="sidebarAriaLabel()"
+            [expanded]="sidebarExpanded()"
+            [showExpandButton]="sidebarShowExpandButton()"
+            [showFooter]="true"
+            [ariaLabel]="'Navegação principal'"
             (itemClick)="onSidebarItemClick($event)"
             (collapseChange)="onSidebarCollapseChange($event)"
+            (expandedChange)="onSidebarExpandedChange($event)"
             (openChange)="onSidebarOpenChange($event)"
             (backdropClick)="onSidebarBackdropClick()"
-          />
+          >
+            <div slot="footer" class="os-app-shell-template__sidebar-theme-toggle">
+              <os-toggle
+                [checked]="themeService.isDark()"
+                [size]="'small'"
+                [variant]="'primary'"
+                [ariaLabel]="'Alternar tema'"
+                [label]="themeService.isDark() ? 'Modo escuro' : 'Modo claro'"
+                (toggled)="onThemeToggle()"
+              />
+            </div>
+          </os-sidebar>
         </nav>
         }
 
@@ -209,18 +206,14 @@ export class OsAppShellTemplateComponent {
   headerLogo = input<string>('');
   headerLogoText = input<string>('OrçaSonhos');
   headerLogoRoute = input<string>('/dashboard');
-  headerNavigation = input<HeaderNavigationItem[]>([]);
   headerActions = input<OsHeaderAction[]>([]);
-  headerBreadcrumbs = input<{ label: string; route?: string; icon?: string }[]>([]);
   headerUser = input<{ name: string; avatar?: string; email?: string; role?: string } | null>(null);
   headerUserMenuItems = input<HeaderUserMenu[]>([]);
   headerMobileMenuItems = input<HeaderNavigationItem[]>([]);
 
   sidebarItems = input<SidebarItem[]>([]);
-  sidebarTitle = input<string>('OrçaSonhos');
-  sidebarLogo = input<string>('');
-  sidebarShowHeader = input<boolean>(true);
-  sidebarShowToggleButton = input<boolean>(true);
+  sidebarExpanded = input<boolean>(false);
+  sidebarShowExpandButton = input<boolean>(true);
 
   ariaLabel = input<string>('Shell principal do aplicativo');
 
@@ -239,6 +232,7 @@ export class OsAppShellTemplateComponent {
   headerLogoClick = output<void>();
   sidebarItemClick = output<SidebarItem>();
   sidebarCollapseChange = output<boolean>();
+  sidebarExpandedChange = output<boolean>();
   sidebarOpenChange = output<boolean>();
   sidebarBackdropClick = output<void>();
   retry = output<void>();
@@ -288,14 +282,12 @@ export class OsAppShellTemplateComponent {
 
       if (this.computedLayout().sidebarCollapsed) {
         classes.push('os-app-shell-template__main-content--sidebar-collapsed');
+      } else if (this.sidebarExpanded()) {
+        classes.push('os-app-shell-template__main-content--sidebar-expanded');
       }
     }
 
     return classes.join(' ');
-  });
-
-  sidebarAriaLabel = computed(() => {
-    return this.sidebarTitle() || 'Navegação principal';
   });
 
   showContextualActions = computed(() => {
@@ -364,6 +356,10 @@ export class OsAppShellTemplateComponent {
   onSidebarOpenChange(open: boolean): void {
     this.sidebarOpenSignal.set(open);
     this.sidebarOpenChange.emit(open);
+  }
+
+  onSidebarExpandedChange(expanded: boolean): void {
+    this.sidebarExpandedChange.emit(expanded);
   }
 
   onSidebarBackdropClick(): void {

@@ -81,11 +81,7 @@ export interface DashboardLayout {
             [size]="layout().size"
             [theme]="layout().theme"
             [collapsed]="layout().sidebarCollapsed"
-            [title]="sidebarTitle()"
-            [logo]="sidebarLogo()"
-            [showHeader]="sidebarShowHeader()"
             [showFooter]="sidebarShowFooter()"
-            [showToggleButton]="sidebarShowToggleButton()"
             (itemClick)="onSidebarNavigationClick($event)"
             (collapseChange)="onSidebarToggleClick($event)"
           />

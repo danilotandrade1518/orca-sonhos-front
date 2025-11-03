@@ -25,10 +25,6 @@ const meta: Meta<OsHeaderComponent> = {
       control: { type: 'text' },
       description: 'Rota do logo',
     },
-    navigationItems: {
-      control: { type: 'object' },
-      description: 'Itens de navegação',
-    },
     showUserMenu: {
       control: { type: 'boolean' },
       description: 'Mostrar menu do usuário',
@@ -128,7 +124,6 @@ export const Default: Story = {
   args: {
     logoText: 'OrçaSonhos',
     logoRoute: '/',
-    navigationItems: sampleNavigationItems,
     showUserMenu: true,
     userName: 'João Silva',
     userRole: 'Administrador',
@@ -669,7 +664,6 @@ export const Interactive: Story = {
   args: {
     logoText: 'OrçaSonhos',
     logoRoute: '/',
-    navigationItems: sampleNavigationItems,
     showUserMenu: true,
     userName: 'João Silva',
     userRole: 'Administrador',

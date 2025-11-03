@@ -8,13 +8,12 @@ import {
   signal,
   inject,
   OnDestroy,
-  HostListener,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
-
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+
 import {
   OsNavigationItemComponent,
   OsNavigationItemSize,
@@ -41,6 +40,9 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
   selector: 'os-sidebar',
   standalone: true,
   imports: [CommonModule, RouterModule, OsNavigationItemComponent, OsIconComponent],
+  host: {
+    '(keydown.escape)': 'onEscapeKey()',
+  },
   template: `
     <!-- Mobile Backdrop -->
     @if (isMobile() && isOpen()) {
@@ -56,34 +58,26 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
       [class]="sidebarClasses()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="isMobile() ? !isOpen() : false"
-      [attr.aria-expanded]="isMobile() ? isOpen() : !isCollapsed()"
+      [attr.aria-expanded]="isMobile() ? isOpen() : isExpanded()"
       role="complementary"
       tabindex="-1"
     >
-      <!-- Header -->
-      @if (showHeader()) {
-      <div class="os-sidebar__header">
-        @if (logo()) {
-        <div class="os-sidebar__logo">
-          <img [src]="logo()" [alt]="logoAlt()" class="os-sidebar__logo-image" />
-        </div>
-        } @if (title()) {
-        <h2 class="os-sidebar__title">{{ title() }}</h2>
-        } @if (showToggleButton()) {
+      <!-- Rail actions (Expand button) -->
+      @if (!isMobile() && showExpandButton()) {
+      <div class="os-sidebar__rail-actions">
         <button
-          class="os-sidebar__toggle"
-          [attr.aria-label]="isCollapsed() ? 'Expandir sidebar' : 'Colapsar sidebar'"
-          [attr.aria-expanded]="!isCollapsed()"
-          (click)="toggleCollapse()"
-          (keydown.enter)="toggleCollapse()"
-          (keydown.space)="toggleCollapse()"
+          class="os-sidebar__expand"
+          type="button"
+          [attr.aria-label]="expanded() ? 'Recolher navegação' : 'Expandir navegação'"
+          [attr.aria-expanded]="expanded()"
+          (click)="toggleExpanded()"
+          (keydown.enter)="toggleExpanded()"
+          (keydown.space)="toggleExpanded()"
         >
-          <os-icon [name]="isCollapsed() ? 'chevron-right' : 'chevron-left'" size="sm" />
+          <os-icon [name]="isExpanded() ? 'menu_open' : 'menu'" />
         </button>
-        }
       </div>
       }
-
       <!-- Navigation -->
       <nav class="os-sidebar__nav" role="navigation">
         <ul class="os-sidebar__list" role="list">
@@ -101,7 +95,6 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
               [ariaLabel]="item.label"
               (itemClick)="onItemClick(item)"
             >
-              {{ item.label }}
             </os-navigation-item>
 
             <!-- Sub-items -->
@@ -121,7 +114,6 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
                   [ariaLabel]="subItem.label"
                   (itemClick)="onItemClick(subItem)"
                 >
-                  {{ subItem.label }}
                 </os-navigation-item>
               </li>
               }
@@ -152,23 +144,24 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
 })
 export class OsSidebarComponent implements OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
+  private router = inject(Router);
   private isOpenSignal = signal(false);
   private isMobileSignal = signal(false);
+  private currentUrlSignal = signal<string>('');
   private breakpointSubscription?: Subscription;
+  private routerSubscription?: Subscription;
   readonly items = input.required<SidebarItem[]>();
   readonly variant = input<SidebarVariant>('default');
   readonly size = input<SidebarSize>('medium');
   readonly theme = input<SidebarTheme>('light');
   readonly collapsed = input<boolean>(false);
+  readonly expanded = input<boolean>(false);
+  private localExpandedSignal = signal<boolean>(false);
   readonly activeItemId = input<string | null>(null);
   readonly ariaLabel = input<string>('Navegação lateral');
-  readonly title = input<string | null>(null);
-  readonly logo = input<string | null>(null);
-  readonly logoAlt = input<string>('Logo');
-  readonly showHeader = input<boolean>(true);
   readonly showFooter = input<boolean>(false);
-  readonly showToggleButton = input<boolean>(true);
   readonly showCustomContent = input<boolean>(false);
+  readonly showExpandButton = input<boolean>(true);
   readonly animation = input<SidebarAnimation>('slide');
   readonly mobileBreakpoint = input<number>(768);
   readonly hapticFeedback = input<boolean>(true);
@@ -176,6 +169,7 @@ export class OsSidebarComponent implements OnDestroy {
   readonly itemClick = output<SidebarItem>();
   readonly navigate = output<{ item: SidebarItem; route?: string; href?: string }>();
   readonly collapseChange = output<boolean>();
+  readonly expandedChange = output<boolean>();
   readonly openChange = output<boolean>();
   readonly backdropClick = output<void>();
 
@@ -185,10 +179,18 @@ export class OsSidebarComponent implements OnDestroy {
       .subscribe((result) => {
         this.isMobileSignal.set(result.matches);
       });
+
+    this.currentUrlSignal.set(this.router.url);
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.currentUrlSignal.set(event.urlAfterRedirects || event.url);
+      });
   }
 
   ngOnDestroy(): void {
     this.breakpointSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
   }
 
   sidebarClasses = computed(() => {
@@ -200,14 +202,16 @@ export class OsSidebarComponent implements OnDestroy {
     const mobile = this.isMobile() ? 'os-sidebar--mobile' : '';
     const open = this.isMobile() && this.isOpen() ? 'os-sidebar--open' : '';
     const animation = `os-sidebar--${this.animation()}`;
+    const expandedRail = !this.isMobile() && this.isExpanded() ? 'os-sidebar--expanded-rail' : '';
 
-    return `${base} ${variant} ${size} ${theme} ${collapsed} ${mobile} ${open} ${animation}`.trim();
+    return `${base} ${variant} ${size} ${theme} ${collapsed} ${mobile} ${open} ${animation} ${expandedRail}`.trim();
   });
 
   isMobile = computed(() => this.isMobileSignal());
   isOpen = computed(() => this.isOpenSignal());
 
   isCollapsed = computed(() => this.collapsed());
+  isExpanded = computed(() => this.expanded() || this.localExpandedSignal());
 
   itemVariant = computed(() => {
     const variantMap: Record<SidebarVariant, OsNavigationItemVariant> = {
@@ -248,8 +252,13 @@ export class OsSidebarComponent implements OnDestroy {
   });
 
   isActiveItem(item: SidebarItem): boolean {
-    const activeId = this.activeItemId();
-    return activeId === item.id;
+    const explicitActiveId = this.activeItemId();
+    if (explicitActiveId) return explicitActiveId === item.id;
+
+    if (!item.route) return false;
+    const current = this.currentUrlSignal();
+    if (!current) return false;
+    return current === item.route || current.startsWith(item.route + '/');
   }
 
   onItemClick(item: SidebarItem): void {
@@ -272,6 +281,13 @@ export class OsSidebarComponent implements OnDestroy {
     this.triggerHapticFeedback();
   }
 
+  toggleExpanded(): void {
+    const newExpanded = !this.isExpanded();
+    this.localExpandedSignal.set(newExpanded);
+    this.expandedChange.emit(newExpanded);
+    this.triggerHapticFeedback();
+  }
+
   openSidebar(): void {
     if (!this.isMobile()) return;
     this.isOpenSignal.set(true);
@@ -291,7 +307,6 @@ export class OsSidebarComponent implements OnDestroy {
     this.navigate.emit(event);
   }
 
-  @HostListener('keydown.escape')
   onEscapeKey(): void {
     if (this.isMobile() && this.isOpen()) {
       this.closeSidebar();
