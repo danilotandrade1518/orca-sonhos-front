@@ -198,9 +198,110 @@
 
 ---
 
+### 🗓️ Sessão 2025-11-03 - 30min
+
+**Fase**: Ajuste de Layout - Sidebar e Header
+**Objetivo**: Reorganizar layout para que sidebar chegue no topo e header fique ao lado dela
+
+#### ✅ Trabalho Realizado
+
+- Reorganizado template do `os-app-shell-template` para sidebar e header lado a lado
+- Sidebar agora é fixa no topo com altura 100vh (`position: fixed`, `top: 0`, `left: 0`)
+- Header e main content movidos para dentro de `header-main-wrapper` ao lado da sidebar
+- CSS ajustado para margin-left dinâmico baseado no estado da sidebar:
+  - Default: 80px (`--os-navigation-rail-width`)
+  - Collapsed: 60px
+  - Expanded: 256px (`--os-navigation-rail-expanded-width`)
+- Header com `position: sticky` e `top: 0` para ficar fixo no scroll
+- Responsividade mantida: em mobile (< 767px), sidebar volta a ser relativa e layout volta ao padrão
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `position: fixed` para sidebar ao invés de flexbox para garantir que fique no topo sempre
+- **Decisão**: Criar computed `headerMainWrapperClass()` para gerenciar classes dinâmicas baseadas no estado da sidebar
+- **Decisão**: Manter comportamento mobile onde sidebar volta a ser relativa para não quebrar UX mobile
+
+#### 🧪 Validações
+
+- Build: ok (`ng build`) sem erros TypeScript
+- Lint: sem erros
+- Layout funcionando corretamente com sidebar fixa no topo e header ao lado
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes tamanhos de tela
+- Atualizar documentação e hardening final
+
+---
+
+### 🗓️ Sessão 2025-11-03 - 20min
+
+**Fase**: Ajuste de UX - Recolhimento Automático do Sidebar
+**Objetivo**: Implementar recolhimento automático do sidebar quando expandido e ocorrer clique fora
+
+#### ✅ Trabalho Realizado
+
+- Adicionado backdrop para desktop quando sidebar está expandido (opacidade 0.2, z-index 98)
+- Implementado listener de clique fora do sidebar usando RxJS `fromEvent`
+- Criado método `collapseExpanded()` para recolher sidebar quando expandido
+- Adicionado `effect()` no `ngAfterViewInit` para monitorar mudanças no estado expandido
+- Listener ativado apenas quando sidebar está expandido e não é mobile
+- Suporte a tecla Escape para recolher sidebar expandido
+- Backdrop desktop cobre apenas área ao lado do sidebar (não sobrepõe)
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `effect()` ao invés de subscription manual para reagir a mudanças de estado
+- **Decisão**: Backdrop desktop com opacidade menor (0.2) que mobile (0.5) para feedback visual mais sutil
+- **Decisão**: Listener de clique verifica se o clique não está dentro do sidebar nem no backdrop (backdrop tem handler próprio)
+- **Decisão**: Usar `ViewChild` para referenciar elemento do sidebar e verificar se clique está dentro
+
+#### 🧪 Validações
+
+- Build: ok (`ng build`) sem erros TypeScript
+- Lint: sem erros
+- Listener de clique fora funcionando corretamente
+- Backdrop desktop exibido apenas quando expandido
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes tamanhos de tela
+- Atualizar documentação e hardening final
+
+---
+
+### 🗓️ Sessão 2025-11-03 - 5min
+
+**Fase**: Ajuste de UX - Recolhimento ao Clicar em Item do Menu
+**Objetivo**: Recolher sidebar automaticamente quando clicar em item do menu quando expandido
+
+#### ✅ Trabalho Realizado
+
+- Ajustado método `onItemClick()` para recolher sidebar quando expandido em desktop
+- Agora sidebar se comporta igual ao mobile: fecha após navegação
+- Mantido comportamento existente para mobile (sem mudanças)
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Recolher sidebar após clicar em item quando expandido, mantendo consistência com mobile
+- **Decisão**: Usar `collapseExpanded()` ao invés de `toggleExpanded()` para garantir que sempre recolhe
+
+#### 🧪 Validações
+
+- Build: ok (`ng build`) sem erros TypeScript
+- Lint: sem erros
+- Sidebar recolhe corretamente após clicar em item quando expandido
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes tamanhos de tela
+- Atualizar documentação e hardening final
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-227
 **Fase Atual**: FASE 6 - Testes, Cobertura e Hardening [⏰]
-**Última Modificação**: Testes de serviços e componentes implementados e suite validada
-**Próxima Tarefa**: Atualizar documentação e hardening final
+**Última Modificação**: Sidebar recolhe automaticamente ao clicar em item do menu quando expandido
+**Próxima Tarefa**: Validar visualmente e atualizar documentação

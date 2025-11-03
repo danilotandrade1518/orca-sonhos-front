@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,8 +8,12 @@ import {
   signal,
   inject,
   OnDestroy,
+  effect,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
-import { Subscription, filter } from 'rxjs';
+import { Subscription, filter, fromEvent } from 'rxjs';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -54,7 +58,18 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
     ></div>
     }
 
+    <!-- Desktop Backdrop when Expanded -->
+    @if (!isMobile() && isExpanded()) {
+    <div
+      class="os-sidebar__backdrop os-sidebar__backdrop--desktop"
+      [attr.aria-hidden]="true"
+      (click)="collapseExpanded()"
+      (keydown.escape)="collapseExpanded()"
+    ></div>
+    }
+
     <aside
+      #sidebarElement
       [class]="sidebarClasses()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="isMobile() ? !isOpen() : false"
@@ -142,14 +157,17 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
   styleUrls: ['./os-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OsSidebarComponent implements OnDestroy {
+export class OsSidebarComponent implements OnDestroy, AfterViewInit {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private document = inject(DOCUMENT);
+  @ViewChild('sidebarElement') sidebarElement?: ElementRef<HTMLElement>;
   private isOpenSignal = signal(false);
   private isMobileSignal = signal(false);
   private currentUrlSignal = signal<string>('');
   private breakpointSubscription?: Subscription;
   private routerSubscription?: Subscription;
+  private clickOutsideSubscription?: Subscription;
   readonly items = input.required<SidebarItem[]>();
   readonly variant = input<SidebarVariant>('default');
   readonly size = input<SidebarSize>('medium');
@@ -185,12 +203,65 @@ export class OsSidebarComponent implements OnDestroy {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
         this.currentUrlSignal.set(event.urlAfterRedirects || event.url);
+        if (!this.isMobileSignal() && this.isExpanded()) {
+          setTimeout(() => {
+            if (!this.isMobileSignal() && this.isExpanded()) {
+              this.collapseExpanded();
+            }
+          }, 50);
+        }
       });
+  }
+
+  ngAfterViewInit(): void {
+    effect(() => {
+      const isExpanded = this.isExpanded();
+      const isMobile = this.isMobileSignal();
+
+      if (!isMobile && isExpanded) {
+        this.setupClickOutsideListener();
+      } else {
+        this.removeClickOutsideListener();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.breakpointSubscription?.unsubscribe();
     this.routerSubscription?.unsubscribe();
+    this.removeClickOutsideListener();
+  }
+
+  private setupClickOutsideListener(): void {
+    if (this.clickOutsideSubscription) {
+      return;
+    }
+
+    setTimeout(() => {
+      this.clickOutsideSubscription = fromEvent<MouseEvent>(this.document, 'click').subscribe(
+        (event) => {
+          if (!this.sidebarElement?.nativeElement) {
+            return;
+          }
+
+          const sidebarEl = this.sidebarElement.nativeElement;
+          const target = event.target as HTMLElement;
+
+          if (sidebarEl.contains(target) || target.closest('.os-sidebar__backdrop')) {
+            return;
+          }
+
+          if (this.isExpanded()) {
+            this.collapseExpanded();
+          }
+        }
+      );
+    }, 0);
+  }
+
+  private removeClickOutsideListener(): void {
+    this.clickOutsideSubscription?.unsubscribe();
+    this.clickOutsideSubscription = undefined;
   }
 
   sidebarClasses = computed(() => {
@@ -288,6 +359,15 @@ export class OsSidebarComponent implements OnDestroy {
     this.triggerHapticFeedback();
   }
 
+  collapseExpanded(): void {
+    if (this.isMobileSignal() || !this.isExpanded()) {
+      return;
+    }
+    this.localExpandedSignal.set(false);
+    this.expandedChange.emit(false);
+    this.triggerHapticFeedback();
+  }
+
   openSidebar(): void {
     if (!this.isMobile()) return;
     this.isOpenSignal.set(true);
@@ -310,6 +390,8 @@ export class OsSidebarComponent implements OnDestroy {
   onEscapeKey(): void {
     if (this.isMobile() && this.isOpen()) {
       this.closeSidebar();
+    } else if (!this.isMobile() && this.isExpanded()) {
+      this.collapseExpanded();
     }
   }
 

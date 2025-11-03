@@ -45,43 +45,14 @@ export interface AppShellLayout {
         >Pular para seletor de orçamento</a
       >
 
-      <!-- Header -->
-      @if (computedLayout().showHeader) {
-      <header role="banner">
-        <os-header
-          [variant]="headerVariant()"
-          [size]="computedLayout().size"
-          [theme]="computedLayout().theme"
-          [logo]="headerLogo()"
-          [logoText]="headerLogoText()"
-          [logoRoute]="headerLogoRoute()"
-          [actions]="headerActions()"
-          [userName]="headerUser()?.name || null"
-          [userRole]="headerUser()?.role || null"
-          [userAvatar]="headerUser()?.avatar || null"
-          [userInitials]="getUserInitials()"
-          [userMenuItems]="headerUserMenuItems()"
-          [showUserMenu]="!!headerUser()"
-          [showMobileMenu]="headerMobileMenuItems().length > 0"
-          [ariaLabel]="'Cabeçalho principal'"
-          (navigationClick)="onHeaderNavigationClick($event)"
-          (userMenuItemClick)="onHeaderUserMenuClick($event)"
-          (actionClick)="onHeaderActionClick($event)"
-          (mobileMenuToggle)="onHeaderMobileMenuToggle($event)"
-          (logoClick)="onHeaderLogoClick()"
-        >
-          <!-- Header Content Slot (for Budget Selector) -->
-          <div slot="header-content">
-            <ng-content select="[slot=header-content]"></ng-content>
-          </div>
-        </os-header>
-      </header>
-      }
-
       <div class="os-app-shell-template__content">
         <!-- Sidebar -->
         @if (computedLayout().showSidebar) {
-        <nav role="navigation" [attr.aria-label]="'Navegação principal'">
+        <nav
+          role="navigation"
+          [attr.aria-label]="'Navegação principal'"
+          class="os-app-shell-template__sidebar-wrapper"
+        >
           <os-sidebar
             [items]="sidebarItems()"
             [variant]="sidebarVariant()"
@@ -112,65 +83,101 @@ export interface AppShellLayout {
         </nav>
         }
 
-        <!-- Main Content Area -->
-        <main
-          id="main-content"
-          class="os-app-shell-template__main"
-          [class]="mainClass()"
-          role="main"
-          [attr.aria-label]="'Área principal do aplicativo'"
-          [attr.aria-busy]="loading()"
-        >
-          <!-- Loading State -->
-          @if (loading()) {
-          <div
-            class="os-app-shell-template__loading"
-            role="status"
-            [attr.aria-live]="'polite'"
-            [attr.aria-label]="loadingText()"
-          >
-            <div class="os-app-shell-template__spinner" aria-hidden="true"></div>
-            <p class="os-app-shell-template__loading-text">{{ loadingText() }}</p>
-          </div>
-          }
-
-          <!-- Error State -->
-          @if (error() && !loading()) {
-          <div
-            class="os-app-shell-template__error"
-            role="alert"
-            [attr.aria-live]="'assertive'"
-            [attr.aria-label]="errorText()"
-          >
-            <div class="os-app-shell-template__error-icon" aria-hidden="true">⚠️</div>
-            <h2 class="os-app-shell-template__error-title">{{ errorText() }}</h2>
-            <p class="os-app-shell-template__error-message">{{ error() }}</p>
-            <button
-              class="os-app-shell-template__retry-button"
-              type="button"
-              (click)="onRetry()"
-              [attr.aria-label]="'Tentar novamente'"
+        <!-- Header and Main Content Area -->
+        <div [class]="headerMainWrapperClass()">
+          <!-- Header -->
+          @if (computedLayout().showHeader) {
+          <header role="banner" class="os-app-shell-template__header-wrapper">
+            <os-header
+              [variant]="headerVariant()"
+              [size]="computedLayout().size"
+              [theme]="computedLayout().theme"
+              [logo]="headerLogo()"
+              [logoText]="headerLogoText()"
+              [logoRoute]="headerLogoRoute()"
+              [actions]="headerActions()"
+              [userName]="headerUser()?.name || null"
+              [userRole]="headerUser()?.role || null"
+              [userAvatar]="headerUser()?.avatar || null"
+              [userInitials]="getUserInitials()"
+              [userMenuItems]="headerUserMenuItems()"
+              [showUserMenu]="!!headerUser()"
+              [showMobileMenu]="headerMobileMenuItems().length > 0"
+              [ariaLabel]="'Cabeçalho principal'"
+              (navigationClick)="onHeaderNavigationClick($event)"
+              (userMenuItemClick)="onHeaderUserMenuClick($event)"
+              (actionClick)="onHeaderActionClick($event)"
+              (mobileMenuToggle)="onHeaderMobileMenuToggle($event)"
+              (logoClick)="onHeaderLogoClick()"
             >
-              Tentar Novamente
-            </button>
-          </div>
+              <!-- Header Content Slot (for Budget Selector) -->
+              <div slot="header-content">
+                <ng-content select="[slot=header-content]"></ng-content>
+              </div>
+            </os-header>
+          </header>
           }
 
-          <!-- Normal Content -->
-          @if (!loading() && !error()) {
-          <!-- Contextual Actions Slot -->
-          @if (showContextualActions()) {
-          <div class="os-app-shell-template__contextual-actions">
-            <ng-content select="[slot=contextual-actions]"></ng-content>
-          </div>
-          }
+          <!-- Main Content Area -->
+          <main
+            id="main-content"
+            class="os-app-shell-template__main"
+            [class]="mainClass()"
+            role="main"
+            [attr.aria-label]="'Área principal do aplicativo'"
+            [attr.aria-busy]="loading()"
+          >
+            <!-- Loading State -->
+            @if (loading()) {
+            <div
+              class="os-app-shell-template__loading"
+              role="status"
+              [attr.aria-live]="'polite'"
+              [attr.aria-label]="loadingText()"
+            >
+              <div class="os-app-shell-template__spinner" aria-hidden="true"></div>
+              <p class="os-app-shell-template__loading-text">{{ loadingText() }}</p>
+            </div>
+            }
 
-          <!-- Router Outlet -->
-          <div class="os-app-shell-template__outlet">
-            <router-outlet />
-          </div>
-          }
-        </main>
+            <!-- Error State -->
+            @if (error() && !loading()) {
+            <div
+              class="os-app-shell-template__error"
+              role="alert"
+              [attr.aria-live]="'assertive'"
+              [attr.aria-label]="errorText()"
+            >
+              <div class="os-app-shell-template__error-icon" aria-hidden="true">⚠️</div>
+              <h2 class="os-app-shell-template__error-title">{{ errorText() }}</h2>
+              <p class="os-app-shell-template__error-message">{{ error() }}</p>
+              <button
+                class="os-app-shell-template__retry-button"
+                type="button"
+                (click)="onRetry()"
+                [attr.aria-label]="'Tentar novamente'"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+            }
+
+            <!-- Normal Content -->
+            @if (!loading() && !error()) {
+            <!-- Contextual Actions Slot -->
+            @if (showContextualActions()) {
+            <div class="os-app-shell-template__contextual-actions">
+              <ng-content select="[slot=contextual-actions]"></ng-content>
+            </div>
+            }
+
+            <!-- Router Outlet -->
+            <div class="os-app-shell-template__outlet">
+              <router-outlet />
+            </div>
+            }
+          </main>
+        </div>
       </div>
     </div>
   `,
@@ -272,6 +279,22 @@ export class OsAppShellTemplateComponent {
     }
 
     return 'default';
+  });
+
+  headerMainWrapperClass = computed(() => {
+    const classes = ['os-app-shell-template__header-main-wrapper'];
+
+    if (this.computedLayout().showSidebar && !this.isMobileSignal()) {
+      if (this.computedLayout().sidebarCollapsed) {
+        classes.push('os-app-shell-template__header-main-wrapper--sidebar-collapsed');
+      } else if (this.sidebarExpanded()) {
+        classes.push('os-app-shell-template__header-main-wrapper--sidebar-expanded');
+      } else {
+        classes.push('os-app-shell-template__header-main-wrapper--sidebar-default');
+      }
+    }
+
+    return classes.join(' ');
   });
 
   mainClass = computed(() => {

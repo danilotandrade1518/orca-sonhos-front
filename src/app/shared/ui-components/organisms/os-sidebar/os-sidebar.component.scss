@@ -11,6 +11,14 @@
   z-index: 999;
   animation: fadeIn 0.3s ease;
   cursor: pointer;
+
+  // Desktop backdrop (when sidebar is expanded)
+  &--desktop {
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 98;
+    // Only show backdrop on the right side (not covering sidebar)
+    left: var(--os-navigation-rail-expanded-width, 256px);
+  }
 }
 
 @keyframes fadeIn {

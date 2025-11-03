@@ -56,6 +56,7 @@
   display: flex;
   flex-direction: row;
   min-width: 0;
+  min-height: 100vh;
   background-color: var(--os-color-background-secondary);
   transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
 
@@ -63,7 +64,59 @@
     flex-direction: column;
     width: 100%;
     margin-left: 0;
+    min-height: auto;
   }
+}
+
+.os-app-shell-template__sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: var(--os-z-index-sidebar, 100);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (max-width: 767px) {
+    position: relative;
+    height: auto;
+    z-index: auto;
+    overflow: visible;
+  }
+}
+
+.os-app-shell-template__header-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
+
+  &--sidebar-default {
+    margin-left: var(--os-navigation-rail-width, 80px);
+  }
+
+  &--sidebar-collapsed {
+    margin-left: 60px;
+  }
+
+  &--sidebar-expanded {
+    margin-left: var(--os-navigation-rail-expanded-width, 256px);
+  }
+
+  @media (max-width: 767px) {
+    margin-left: 0 !important;
+  }
+}
+
+.os-app-shell-template__header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: var(--os-z-index-header, 90);
+  background-color: var(--os-color-background-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .os-app-shell-template__main {
@@ -76,29 +129,15 @@
   background-color: var(--os-color-background-secondary);
 
   &--with-sidebar {
-    /* Acompanhar largura do Navigation Rail */
-    margin-left: var(--os-navigation-rail-width, 80px);
-    transition: margin-left var(--os-transition-normal) var(--os-ease-in-out);
-
-    @media (max-width: 991px) {
-      margin-left: 0;
-    }
+    margin-left: 0;
   }
 
   &--sidebar-collapsed {
-    margin-left: 60px;
-
-    @media (max-width: 991px) {
-      margin-left: 0;
-    }
+    margin-left: 0;
   }
 
   &--sidebar-expanded {
-    margin-left: 256px;
-
-    @media (max-width: 991px) {
-      margin-left: 0;
-    }
+    margin-left: 0;
   }
 }
 
