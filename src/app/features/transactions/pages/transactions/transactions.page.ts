@@ -10,7 +10,9 @@ import {
   ElementRef,
   AfterViewInit,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 import {
   OsTransactionListComponent,
@@ -127,12 +129,13 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
   styleUrl: './transactions.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransactionsPage implements AfterViewInit, OnDestroy {
+export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly api = inject(TransactionsApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly authService = inject(AuthService);
   private readonly elementRef = inject(ElementRef);
+  private readonly route = inject(ActivatedRoute);
 
   readonly isLoading = signal<boolean>(false);
   readonly lastUpdated = signal<Date>(new Date());
@@ -296,6 +299,24 @@ export class TransactionsPage implements AfterViewInit, OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    const budgetIdFromQuery = this.route.snapshot.queryParamMap.get('budgetId');
+    if (budgetIdFromQuery) {
+      const wasSelected = this.budgetSelection.selectBudgetById(budgetIdFromQuery);
+      if (!wasSelected) {
+        this.resetAndLoad(budgetIdFromQuery);
+      }
+    } else {
+      const currentBudgetId = this.budgetSelection.selectedBudgetId();
+      if (!currentBudgetId) {
+        const availableBudgets = this.budgetSelection.availableBudgets();
+        if (availableBudgets.length > 0) {
+          this.budgetSelection.setSelectedBudget(availableBudgets[0]);
+        }
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
     const skipLink = this.elementRef.nativeElement.querySelector(
       '.os-transactions__skip-link'
@@ -442,10 +463,7 @@ export class TransactionsPage implements AfterViewInit, OnDestroy {
 
       const res = await lastValueFrom(this.api.list(params));
 
-      const dto = res as unknown as {
-        data: TransactionDto[];
-        meta: { hasNext: boolean; page: number; pageSize: number };
-      };
+      const dto = res.data;
       const mapped = dto.data.map((t) => this.mapToUiTransaction(t));
       this.allItems.update((items) => {
         const existingIds = new Set(items.map((item) => item.id));
@@ -455,6 +473,10 @@ export class TransactionsPage implements AfterViewInit, OnDestroy {
       this.loadedPages.set(page);
       this.hasNext.set(dto.meta?.hasNext ?? false);
       this.lastUpdated.set(new Date());
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar transações';
+      this.notificationService.showError(`Erro ${errorMessage}`);
+      console.error('Erro ao carregar transações:', error);
     } finally {
       this.isLoading.set(false);
     }
