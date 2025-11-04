@@ -1,9 +1,13 @@
 .os-notification-container {
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: fixed !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  bottom: auto !important;
+  left: auto !important;
   z-index: 9999;
   pointer-events: none;
+  width: auto;
+  height: auto;
 
   &__loading {
     position: fixed;
@@ -23,11 +27,12 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1rem;
+    padding: 0;
     max-width: 400px;
     pointer-events: auto;
-    max-height: 100vh;
+    max-height: calc(100vh - 2rem);
     overflow-y: auto;
+    align-items: flex-end;
     scrollbar-width: thin;
     scrollbar-color: var(--os-color-neutral-300) transparent;
 
@@ -49,6 +54,35 @@
     animation: slideInRight 0.3s ease-out;
     box-shadow: var(--os-shadow-md);
     will-change: transform, opacity;
+    min-width: 300px;
+    width: 100%;
+    
+    // Garantir background sólido para todos os alertas
+    ::ng-deep .os-alert {
+      background: var(--os-color-surface) !important;
+    }
+    
+    // Garantir background sólido para alertas de erro
+    ::ng-deep .os-alert--error {
+      background: var(--os-color-error-50) !important;
+      color: var(--os-color-error-700) !important;
+    }
+    
+    // Garantir background sólido para outros tipos de alerta
+    ::ng-deep .os-alert--success {
+      background: var(--os-color-success-50) !important;
+      color: var(--os-color-success-700) !important;
+    }
+    
+    ::ng-deep .os-alert--warning {
+      background: var(--os-color-warning-50) !important;
+      color: var(--os-color-warning-700) !important;
+    }
+    
+    ::ng-deep .os-alert--info {
+      background: var(--os-color-info-50) !important;
+      color: var(--os-color-info-700) !important;
+    }
   }
 }
 
@@ -65,10 +99,20 @@
 
 @media (max-width: 768px) {
   .os-notification-container {
+    top: 0.75rem !important;
+    right: 0.75rem !important;
+    bottom: auto !important;
+    left: auto !important;
+    
     &__notifications {
-      max-width: calc(100vw - 2rem);
-      padding: 0.75rem;
+      max-width: calc(100vw - 1.5rem);
+      max-height: calc(100vh - 1.5rem);
       gap: 0.5rem;
+    }
+    
+    &__alert {
+      min-width: auto;
+      width: 100%;
     }
   }
 }

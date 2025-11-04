@@ -327,7 +327,7 @@ export class OsAppShellTemplateComponent {
   });
 
   constructor() {
-    this.breakpointObserver.observe(['(max-width: 767px)']).subscribe((result) => {
+    this.breakpointObserver.observe(['(max-width: 768px)']).subscribe((result) => {
       this.isMobileSignal.set(result.matches);
     });
   }
