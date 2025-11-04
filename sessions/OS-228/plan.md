@@ -88,7 +88,7 @@ Implementar `GoalsState` com signals/computed e integração inicial com `GoalsA
 
 ---
 
-## 📅 FASE 3: UI de Lista (GoalList + Page) [Status: ⏳]
+## 📅 FASE 3: UI de Lista (GoalList + Page) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -96,25 +96,28 @@ Entregar a página de listagem `/goals` com estados de loading/empty/error e gri
 
 ### 📋 Tarefas
 
-#### Criar `GoalCard` e `GoalList` (feature) [⏳]
+#### Criar `GoalCard` e `GoalList` (feature) [✅]
 
 **Descrição**: Componentes de apresentação com barra de progresso, valores (restante, sugerido) e ações (aportar, editar, excluir). Aplicar thresholds (success/warning/error).
 **Critério de Conclusão**: Visual conforme `layout-specification.md`, testes ≥ 80%.
 
-#### Implementar `goals.page.ts` [⏳]
+#### Implementar `goals.page.ts` [✅]
 
 **Descrição**: Lista reativa alimentada por `GoalsState`; live regions, skip link, toolbar mínima.
 **Critério de Conclusão**: Acessibilidade validada; responsividade sem scroll horizontal.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Grid mobile (1 col), tablet (2 col), desktop (3–4 col)
-- [ ] Estados loading/empty/error funcionando
-- [ ] Ações acionam callbacks
+- [x] Grid mobile (1 col), tablet (2 col), desktop (3–4 col)
+- [x] Estados loading/empty/error funcionando
+- [x] Ações acionam callbacks
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: Criados `GoalCard` e `GoalList` com progresso, restante e aporte sugerido
+- **Página**: `goals.page.ts` integra `GoalsState`, skip link e live regions (status/erro)
+- **Responsividade**: Grid 1/2/3 col conforme breakpoints; sem scroll horizontal
+- **A11y**: Landmarks e ARIA aplicados; callbacks conectados às ações
 
 ---
 

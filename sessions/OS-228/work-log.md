@@ -4,6 +4,50 @@
 
 ## 📋 Sessões de Trabalho
 
+### 🗓️ Sessão 2025-11-04 - 1h
+
+**Fase**: Fase 3 - UI de Lista
+**Objetivo**: Entregar a página de listagem `/goals` com estados de loading/empty/error e grid responsivo.
+
+#### ✅ Trabalho Realizado
+
+- Criado `GoalCard` (apresentação com progresso, valores e ações)
+- Criado `GoalList` (grid responsivo + estados loading/empty/error)
+- Criada página `goals.page.ts` com integração ao `GoalsState`
+- Acessibilidade: skip link, live regions de status/erro
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Componentes de feature sem dependências diretas do DS para evitar acoplamento, mantendo classes e tokens prontos para integração
+- **Problema**: Ausência de fluxo de aporte/edição nesta fase - **Solução**: handlers placeholders; implementação completa na Fase 6/4
+
+#### 🧪 Validações
+
+- Render com lista vazia → exibe estado vazio
+- Loading true → live region e skeleton básico
+- Erro no estado → live region assertive
+
+#### ⏭️ Próximos Passos
+
+- Integrar `os-*` quando necessário para visual (Fase 8)
+- Implementar formulário `/goals/new` (Fase 4)
+- Implementar detalhe `/goals/:id` (Fase 5)
+
+---
+
+## 🔄 Estado Atual
+
+**Branch**: feature-OS-228
+**Fase Atual**: Fase 3 - UI de Lista
+**Última Modificação**: `goals.page.ts` — página de listagem integrada ao estado
+**Próxima Tarefa**: Formulário de criação/edição (Fase 4)
+
+# Metas (Goals) - Log de Desenvolvimento
+
+> **Propósito**: Registrar progresso essencial, decisões técnicas e próximos passos.
+
+## 📋 Sessões de Trabalho
+
 ### 🗓️ Sessão Inicial - FASE 1
 
 **Fase**: FASE 1 - Fundações de Contratos e Rotas

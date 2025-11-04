@@ -1,0 +1,29 @@
+.os-goal-list__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 576px) {
+  .os-goal-list__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 992px) {
+  .os-goal-list__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+.os-goal-list__empty,
+.os-goal-list__error,
+.os-goal-list__skeleton {
+  padding: 16px;
+  border: 1px dashed var(--os-border-color, #e0e0e0);
+  border-radius: 8px;
+}
+
+
