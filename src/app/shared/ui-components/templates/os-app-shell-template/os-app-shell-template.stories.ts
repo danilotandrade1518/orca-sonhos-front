@@ -34,7 +34,6 @@ export const Default: Story = {
       showSidebar: true,
       sidebarCollapsed: false,
     },
-    headerLogoRoute: '/dashboard',
     headerActions: [],
     headerUser: null,
     headerUserMenuItems: [],

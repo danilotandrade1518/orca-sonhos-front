@@ -56,31 +56,13 @@ export interface BreadcrumbItem {
             [attr.aria-expanded]="mobileMenuOpen()"
             (click)="toggleMobileMenu()"
           >
-              <os-icon
-                [name]="mobileMenuOpen() ? 'menu_open' : 'menu'"
-                size="md"
-                [attr.aria-hidden]="true"
-              />
+            <os-icon
+              [name]="mobileMenuOpen() ? 'menu_open' : 'menu'"
+              size="md"
+              [attr.aria-hidden]="true"
+            />
           </button>
           }
-          <div class="os-header__brand">
-            @if (logo()) {
-            <a
-              class="os-header__logo"
-              [routerLink]="logoRoute()"
-              [attr.aria-label]="logoAlt()"
-              (click)="onLogoClick($event)"
-            >
-              @if (logoImage()) {
-              <img [src]="logoImage()" [alt]="logoAlt()" class="os-header__logo-image" />
-              } @else {
-              <span class="os-header__logo-text">{{ logoText() }}</span>
-              }
-            </a>
-            } @else if (logoText()) {
-            <div class="os-header__logo-text-only">{{ logoText() }}</div>
-            }
-          </div>
 
           <!-- Custom Header Content Slot -->
           <div class="os-header__custom-content">
@@ -175,12 +157,6 @@ export interface BreadcrumbItem {
 })
 export class OsHeaderComponent implements OnDestroy {
   private readonly breakpointObserver = inject(BreakpointObserver);
-
-  readonly logo = input<string | null>(null);
-  readonly logoText = input<string | null>(null);
-  readonly logoImage = input<string | null>(null);
-  readonly logoRoute = input<string>('/');
-  readonly logoAlt = input<string>('Logo');
 
   readonly showUserMenu = input(false);
   readonly userName = input<string | null>(null);

@@ -103,9 +103,6 @@ export interface AppShellLayout {
               [variant]="headerVariant()"
               [size]="computedLayout().size"
               [theme]="computedLayout().theme"
-              [logo]="headerLogo()"
-              [logoText]="headerLogoText()"
-              [logoRoute]="headerLogoRoute()"
               [actions]="headerActions()"
               [userName]="headerUser()?.name || null"
               [userRole]="headerUser()?.role || null"
@@ -223,9 +220,6 @@ export class OsAppShellTemplateComponent {
     theme: this.themeService.currentTheme() as 'light' | 'dark',
   }));
 
-  headerLogo = input<string>('');
-  headerLogoText = input<string>('OrçaSonhos');
-  headerLogoRoute = input<string>('/dashboard');
   headerActions = input<OsHeaderAction[]>([]);
   headerUser = input<{ name: string; avatar?: string; email?: string; role?: string } | null>(null);
   headerUserMenuItems = input<HeaderUserMenu[]>([]);

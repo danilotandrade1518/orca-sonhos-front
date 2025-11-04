@@ -27,16 +27,9 @@ import { BudgetDto } from '../../../../../dtos/budget/budget-types';
       [variant]="variant()"
       [size]="size()"
       [placeholder]="placeholder()"
-      [showCreateButton]="showCreateButton()"
-      [showShareButton]="showShareButton()"
-      [showQuickActions]="showQuickActions()"
       [ariaLabel]="ariaLabel()"
-      [emptyMessage]="emptyMessage()"
       [state]="selectorState()"
       (budgetSelected)="onBudgetSelected($event)"
-      (createBudgetRequested)="onCreateBudgetRequested()"
-      (shareBudgetRequested)="onShareBudgetRequested($event)"
-      (budgetInfoRequested)="onBudgetInfoRequested($event)"
       class="os-budget-selector"
     />
   `,
@@ -49,16 +42,9 @@ export class BudgetSelectorComponent {
   readonly variant = input<'default' | 'primary' | 'secondary' | 'accent'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly placeholder = input<string>('Selecionar orçamento');
-  readonly showCreateButton = input<boolean>(true);
-  readonly showShareButton = input<boolean>(true);
-  readonly showQuickActions = input<boolean>(true);
   readonly ariaLabel = input<string>('Seletor de orçamento');
-  readonly emptyMessage = input<string>('Nenhum orçamento disponível');
   
   readonly budgetSelected = output<BudgetDto>();
-  readonly createBudgetRequested = output<void>();
-  readonly shareBudgetRequested = output<BudgetDto>();
-  readonly budgetInfoRequested = output<BudgetDto>();
   
   private readonly errorSignal = signal<string | null>(null);
   
@@ -87,7 +73,6 @@ export class BudgetSelectorComponent {
   readonly selectorState = computed(() => {
     if (this.isLoading()) return 'loading';
     if (this.hasError()) return 'error';
-    if (!this.hasAvailableBudgets()) return 'empty';
     return 'default';
   });
 
@@ -99,21 +84,5 @@ export class BudgetSelectorComponent {
     }
   }
 
-  onCreateBudgetRequested(): void {
-    this.createBudgetRequested.emit();
-  }
-
-  onShareBudgetRequested(budgetOption: BudgetOption): void {
-    const budget = this.availableBudgets().find((b) => b.id === budgetOption.id);
-    if (budget) {
-      this.shareBudgetRequested.emit(budget);
-    }
-  }
-
-  onBudgetInfoRequested(budgetOption: BudgetOption): void {
-    const budget = this.availableBudgets().find((b) => b.id === budgetOption.id);
-    if (budget) {
-      this.budgetInfoRequested.emit(budget);
-    }
-  }
+  // Eventos removidos no componente simplificado: criação/compartilhamento/info
 }

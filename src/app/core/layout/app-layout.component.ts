@@ -18,7 +18,6 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
   template: `
     <os-app-shell-template
       [layout]="layoutConfig()"
-      [headerLogoRoute]="'/dashboard'"
       [headerUser]="headerUser()"
       [headerUserMenuItems]="headerUserMenuItems()"
       [sidebarItems]="sidebarItems()"
@@ -34,11 +33,7 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
           [variant]="'primary'"
           [size]="'small'"
           [placeholder]="'Selecionar orçamento'"
-          [showCreateButton]="true"
-          [showShareButton]="false"
-          [showQuickActions]="false"
           [ariaLabel]="'Seletor de orçamento'"
-          (createBudgetRequested)="onCreateBudgetRequested()"
           class="app-layout__budget-selector"
         />
       </div>
@@ -138,10 +133,6 @@ export class AppLayoutComponent implements OnInit {
 
   onHeaderLogoClick(): void {
     this.router.navigate(['/dashboard']);
-  }
-
-  onCreateBudgetRequested(): void {
-    this.router.navigate(['/budgets/new']);
   }
 
   ngOnInit(): void {

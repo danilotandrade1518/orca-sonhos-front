@@ -100,6 +100,7 @@ export class OsIconComponent {
   });
 
   private readonly supportedIcons = new Set([
+    'dashboard',
     'home',
     'menu',
     'menu_open',
@@ -237,6 +238,7 @@ export class OsIconComponent {
 
   private getIconContent(iconName: string): string {
     const iconMap: Record<string, string> = {
+      dashboard: 'dashboard',
       home: 'home',
       menu: 'menu',
       menu_open: 'menu_open',

@@ -13,18 +13,6 @@ const meta: Meta<OsHeaderComponent> = {
     },
   },
   argTypes: {
-    logoText: {
-      control: { type: 'text' },
-      description: 'Texto do logo',
-    },
-    logoImage: {
-      control: { type: 'text' },
-      description: 'URL da imagem do logo',
-    },
-    logoRoute: {
-      control: { type: 'text' },
-      description: 'Rota do logo',
-    },
     showUserMenu: {
       control: { type: 'boolean' },
       description: 'Mostrar menu do usuário',
@@ -122,8 +110,6 @@ const sampleActions = [
 
 export const Default: Story = {
   args: {
-    logoText: 'OrçaSonhos',
-    logoRoute: '/',
     showUserMenu: true,
     userName: 'João Silva',
     userRole: 'Administrador',
@@ -144,8 +130,6 @@ export const Default: Story = {
     props: args,
     template: `
       <os-header
-        [logoText]="logoText"
-        [logoRoute]="logoRoute"
         [navigationItems]="navigationItems"
         [showUserMenu]="showUserMenu"
         [userName]="userName"
@@ -662,8 +646,6 @@ export const Sticky: Story = {
 
 export const Interactive: Story = {
   args: {
-    logoText: 'OrçaSonhos',
-    logoRoute: '/',
     showUserMenu: true,
     userName: 'João Silva',
     userRole: 'Administrador',
@@ -680,9 +662,6 @@ export const Interactive: Story = {
     props: args,
     template: `
       <os-header
-        [logoText]="logoText"
-        [logoRoute]="logoRoute"
-        [navigationItems]="navigationItems"
         [showUserMenu]="showUserMenu"
         [userName]="userName"
         [userRole]="userRole"
