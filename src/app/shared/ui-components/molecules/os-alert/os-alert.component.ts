@@ -84,20 +84,17 @@ export class OsAlertComponent {
   private autoDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
-    effect(
-      () => {
-        if (this.autoDismiss() && this.visible()) {
-          this.autoDismissTimer = setTimeout(() => {
-            if (this.visible()) {
-              this.onDismiss();
-            }
-          }, this.autoDismissDelay());
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      if (this.autoDismiss() && this.visible()) {
+        this.autoDismissTimer = setTimeout(() => {
+          if (this.visible()) {
+            this.onDismiss();
+          }
+        }, this.autoDismissDelay());
+      }
+    });
   }
-  
+
   protected iconName = computed(() => {
     const iconMap: Record<OsAlertType, string> = {
       success: 'check_circle',

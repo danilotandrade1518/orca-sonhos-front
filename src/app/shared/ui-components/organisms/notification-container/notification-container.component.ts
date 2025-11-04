@@ -9,29 +9,31 @@ import { NotificationService } from '../../../../core/services/notification/noti
   standalone: true,
   imports: [CommonModule, OsAlertComponent, OsSpinnerComponent],
   template: `
-    @if (isLoading()) {
-    <div class="os-notification-container__loading" role="status" aria-live="polite">
-      <os-spinner size="md" variant="primary" ariaLabel="Carregando..." />
-    </div>
-    }
-
-    <div
-      class="os-notification-container__notifications"
-      role="alert"
-      aria-live="polite"
-      aria-label="Notificações"
-    >
-      @for (notification of notifications(); track notification.id) {
-      <os-alert
-        [type]="notification.type"
-        [title]="notification.title || ''"
-        [dismissible]="notification.dismissible ?? true"
-        (dismiss)="onDismiss(notification.id)"
-        class="os-notification-container__alert"
-      >
-        {{ notification.message }}
-      </os-alert>
+    <div class="os-notification-container">
+      @if (isLoading()) {
+      <div class="os-notification-container__loading" role="status" aria-live="polite">
+        <os-spinner size="md" variant="primary" ariaLabel="Carregando..." />
+      </div>
       }
+
+      <div
+        class="os-notification-container__notifications"
+        role="alert"
+        aria-live="polite"
+        aria-label="Notificações"
+      >
+        @for (notification of notifications(); track notification.id) {
+        <os-alert
+          [type]="notification.type"
+          [title]="notification.title || ''"
+          [dismissible]="notification.dismissible ?? true"
+          (dismiss)="onDismiss(notification.id)"
+          class="os-notification-container__alert"
+        >
+          {{ notification.message }}
+        </os-alert>
+        }
+      </div>
     </div>
   `,
   styleUrl: './notification-container.component.scss',

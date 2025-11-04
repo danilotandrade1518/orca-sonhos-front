@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsAvatarComponent } from '../../atoms/os-avatar/os-avatar.component';
-import { OsNavigationItemComponent } from '../../molecules/os-navigation-item/os-navigation-item.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export interface HeaderNavigationItem {
@@ -44,80 +43,25 @@ export interface BreadcrumbItem {
 @Component({
   selector: 'os-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    OsButtonComponent,
-    OsAvatarComponent,
-    OsNavigationItemComponent,
-    OsIconComponent,
-  ],
+  imports: [CommonModule, RouterModule, OsButtonComponent, OsAvatarComponent, OsIconComponent],
   template: `
     <div [class]="stickyClasses()">
       <header class="os-header" [class]="headerClasses()" [attr.aria-label]="ariaLabel()">
         <div class="os-header__container">
-          <div class="os-header__brand">
-            @if (logo()) {
-            <a
-              class="os-header__logo"
-              [routerLink]="logoRoute()"
-              [attr.aria-label]="logoAlt()"
-              (click)="onLogoClick($event)"
-            >
-              @if (logoImage()) {
-              <img [src]="logoImage()" [alt]="logoAlt()" class="os-header__logo-image" />
-              } @else {
-              <span class="os-header__logo-text">{{ logoText() }}</span>
-              }
-            </a>
-            } @else if (logoText()) {
-            <div class="os-header__logo-text-only">{{ logoText() }}</div>
-            }
-          </div>
-
-          @if (navigationItems().length > 0) {
-          <nav class="os-header__navigation" [attr.aria-label]="navigationAriaLabel()">
-            <ul class="os-header__nav-list">
-              @for (item of navigationItems(); track item.label) {
-              <li class="os-header__nav-item">
-                <os-navigation-item
-                  [label]="item.label"
-                  [icon]="item.icon || ''"
-                  [routerLink]="item.route"
-                  [active]="item.active || false"
-                  [badge]="item.badge || null"
-                  [disabled]="item.disabled || false"
-                  [variant]="getNavigationVariant()"
-                  [size]="getNavigationSize()"
-                  (itemClicked)="onNavigationClick(item, $event)"
-                />
-              </li>
-              }
-            </ul>
-          </nav>
-          }
-
-          <!-- Breadcrumbs -->
-          @if (breadcrumbs().length > 0) {
-          <nav class="os-header__breadcrumbs" aria-label="Breadcrumb">
-            <ul class="os-header__breadcrumb-list">
-              @for (crumb of breadcrumbs(); track crumb.label; let isLast = $last) {
-              <li class="os-header__breadcrumb-item">
-                @if (isLast) {
-                <span class="os-header__breadcrumb-current">{{ crumb.label }}</span>
-                } @else { @if (crumb.route) {
-                <a class="os-header__breadcrumb-link" [routerLink]="crumb.route">
-                  {{ crumb.label }}
-                </a>
-                } @else {
-                <span class="os-header__breadcrumb-label">{{ crumb.label }}</span>
-                }
-                <os-icon name="chevron-right" size="xs" class="os-header__breadcrumb-separator" />
-                }
-              </li>
-              }
-            </ul>
-          </nav>
+          @if (showMobileMenu()) {
+          <button
+            class="os-header__mobile-toggle"
+            [class]="mobileToggleClasses()"
+            [attr.aria-label]="mobileMenuAriaLabel()"
+            [attr.aria-expanded]="mobileMenuOpen()"
+            (click)="toggleMobileMenu()"
+          >
+            <os-icon
+              [name]="mobileMenuOpen() ? 'menu_open' : 'menu'"
+              size="md"
+              [attr.aria-hidden]="true"
+            />
+          </button>
           }
 
           <!-- Custom Header Content Slot -->
@@ -202,51 +146,9 @@ export interface BreadcrumbItem {
               </div>
               }
             </div>
-            } @if (showMobileMenu()) {
-            <button
-              class="os-header__mobile-toggle"
-              [class]="mobileToggleClasses()"
-              [attr.aria-label]="mobileMenuAriaLabel()"
-              [attr.aria-expanded]="mobileMenuOpen()"
-              (click)="toggleMobileMenu()"
-            >
-              <os-icon
-                [name]="mobileMenuOpen() ? 'close' : 'menu'"
-                size="md"
-                [attr.aria-hidden]="true"
-              />
-            </button>
             }
           </div>
         </div>
-
-        @if (showMobileMenu() && mobileMenuOpen()) {
-        <div
-          class="os-header__mobile-navigation"
-          [class]="mobileNavigationClasses()"
-          [attr.role]="'navigation'"
-        >
-          <nav class="os-header__mobile-nav" [attr.aria-label]="mobileNavigationAriaLabel()">
-            <ul class="os-header__mobile-nav-list">
-              @for (item of navigationItems(); track item.label) {
-              <li class="os-header__mobile-nav-item">
-                <os-navigation-item
-                  [label]="item.label"
-                  [icon]="item.icon || ''"
-                  [routerLink]="item.route"
-                  [active]="item.active || false"
-                  [badge]="item.badge || null"
-                  [disabled]="item.disabled || false"
-                  [variant]="getMobileNavigationVariant()"
-                  [size]="getMobileNavigationSize()"
-                  (itemClicked)="onMobileNavigationClick(item, $event)"
-                />
-              </li>
-              }
-            </ul>
-          </nav>
-        </div>
-        }
       </header>
     </div>
   `,
@@ -255,16 +157,7 @@ export interface BreadcrumbItem {
 })
 export class OsHeaderComponent implements OnDestroy {
   private readonly breakpointObserver = inject(BreakpointObserver);
-  
-  readonly logo = input<string | null>(null);
-  readonly logoText = input<string | null>(null);
-  readonly logoImage = input<string | null>(null);
-  readonly logoRoute = input<string>('/');
-  readonly logoAlt = input<string>('Logo');
-  
-  readonly navigationItems = input<HeaderNavigationItem[]>([]);
-  readonly navigationAriaLabel = input<string>('Main navigation');
-  
+
   readonly showUserMenu = input(false);
   readonly userName = input<string | null>(null);
   readonly userRole = input<string | null>(null);
@@ -273,32 +166,30 @@ export class OsHeaderComponent implements OnDestroy {
   readonly userMenuItems = input<HeaderUserMenu[]>([]);
   readonly userMenuDisabled = input(false);
   readonly userMenuAriaLabel = input<string>('User menu');
-  
+
   readonly actions = input<HeaderAction[]>([]);
-  
-  readonly breadcrumbs = input<BreadcrumbItem[]>([]);
-  
+
   readonly showMobileMenu = input(false);
   readonly mobileMenuAriaLabel = input<string>('Mobile menu');
   readonly mobileNavigationAriaLabel = input<string>('Mobile navigation');
-  
+
   readonly variant = input<'default' | 'compact' | 'extended' | 'minimal'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly theme = input<'light' | 'dark'>('light');
   readonly sticky = input(false);
   readonly ariaLabel = input<string | null>(null);
-  
+
   readonly enableAnimations = input(true);
   readonly enableHapticFeedback = input(false);
   readonly mobileMenuAnimation = input<'slide' | 'fade' | 'scale'>('slide');
   readonly stickyThreshold = input(0);
-  
+
   readonly userMenuOpen = signal(false);
   readonly mobileMenuOpen = signal(false);
   readonly isSticky = signal(false);
   readonly isMobile = signal(false);
   readonly scrollY = signal(0);
-  
+
   readonly logoClick = output<MouseEvent>();
   readonly navigationClick = output<{ item: HeaderNavigationItem; event: MouseEvent }>();
   readonly actionClick = output<{ action: HeaderAction; event: MouseEvent }>();
@@ -327,10 +218,6 @@ export class OsHeaderComponent implements OnDestroy {
 
     if (this.isMobile()) {
       classes.push('os-header--mobile');
-    }
-
-    if (this.navigationItems().length > 0) {
-      classes.push('os-header--with-navigation');
     }
 
     if (this.actions().length > 0) {
@@ -502,6 +389,13 @@ export class OsHeaderComponent implements OnDestroy {
 
     if (this.enableHapticFeedback()) {
       this.triggerHapticFeedback();
+    }
+  }
+
+  setMobileMenuOpen(open: boolean): void {
+    if (this.mobileMenuOpen() !== open) {
+      this.mobileMenuOpen.set(open);
+      this.mobileMenuToggle.emit(open);
     }
   }
 

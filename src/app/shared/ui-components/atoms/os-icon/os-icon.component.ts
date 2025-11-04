@@ -70,7 +70,7 @@ export class OsIconComponent {
   svgContent = input<string>('');
   svgUrl = input<string>('');
   fallbackIcon = input<string>('help');
-  
+
   ariaHidden = computed(() => {
     return this.role() === 'decorative';
   });
@@ -98,10 +98,12 @@ export class OsIconComponent {
       .filter(Boolean)
       .join(' ');
   });
-  
+
   private readonly supportedIcons = new Set([
+    'dashboard',
     'home',
     'menu',
+    'menu_open',
     'close',
     'back',
     'forward',
@@ -183,7 +185,7 @@ export class OsIconComponent {
     'dots',
     'more',
     'menu-dots',
-    
+
     'category',
     'check_circle',
     'trending_flat',
@@ -205,16 +207,27 @@ export class OsIconComponent {
     'celebration',
     'schedule',
     'play_arrow',
+    'play_circle',
+    'pause_circle',
     'flag',
     'savings',
     'history',
     'flash_on',
+    'clear',
+    'filter_list',
+    'priority_high',
+    'trending_up',
+    'account_balance',
+    'palette',
+    'light_mode',
+    'dark_mode',
+    'brightness_auto',
   ]);
 
   iconContent = computed(() => {
     const iconName = this.name();
     if (!iconName) return this.fallbackIcon();
-    
+
     if (!this.supportedIcons.has(iconName)) {
       console.warn(`Ícone "${iconName}" não é suportado. Usando fallback "${this.fallbackIcon()}"`);
       return this.getIconContent(this.fallbackIcon());
@@ -225,8 +238,10 @@ export class OsIconComponent {
 
   private getIconContent(iconName: string): string {
     const iconMap: Record<string, string> = {
+      dashboard: 'dashboard',
       home: 'home',
       menu: 'menu',
+      menu_open: 'menu_open',
       close: 'close',
       back: 'arrow_back',
       forward: 'arrow_forward',
@@ -244,6 +259,7 @@ export class OsIconComponent {
       search: 'search',
       eye: 'visibility',
       filter: 'filter_list',
+      filter_list: 'filter_list',
       sort: 'sort',
       refresh: 'refresh',
       settings: 'settings',
@@ -264,6 +280,7 @@ export class OsIconComponent {
       bank: 'account_balance',
       chart: 'bar_chart',
       'trending-up': 'trending_up',
+      trending_up: 'trending_up',
       'trending-down': 'trending_down',
       calculator: 'calculate',
       mail: 'mail',
@@ -283,6 +300,8 @@ export class OsIconComponent {
       date: 'event',
       play: 'play_arrow',
       pause: 'pause',
+      play_circle: 'play_circle',
+      pause_circle: 'pause_circle',
       stop: 'stop',
       volume: 'volume_up',
       mute: 'volume_off',
@@ -308,7 +327,7 @@ export class OsIconComponent {
       dots: 'more_horiz',
       more: 'more_vert',
       'menu-dots': 'more_vert',
-      
+
       category: 'category',
       check_circle: 'check_circle',
       trending_flat: 'trending_flat',
@@ -321,6 +340,7 @@ export class OsIconComponent {
       'exchange-alt': 'swap_horiz',
       'folder-open': 'folder_open',
       account_balance_wallet: 'account_balance_wallet',
+      account_balance: 'account_balance',
       analytics: 'analytics',
       people: 'people',
       keyboard_arrow_down: 'keyboard_arrow_down',
@@ -334,11 +354,17 @@ export class OsIconComponent {
       savings: 'savings',
       history: 'history',
       flash_on: 'flash_on',
+      clear: 'close',
+      priority_high: 'priority_high',
+      palette: 'palette',
+      light_mode: 'light_mode',
+      dark_mode: 'dark_mode',
+      brightness_auto: 'brightness_auto',
     };
 
     return iconMap[iconName] || this.fallbackIcon();
   }
-  
+
   protected matColor = computed(() => {
     switch (this.variant()) {
       case 'primary':

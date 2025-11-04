@@ -70,65 +70,6 @@
     }
   }
 
-  /* Persona-specific optimizations */
-  &--persona-ana {
-    .os-form-template__form {
-      gap: var(--os-spacing-lg);
-    }
-
-    .os-form-template__actions {
-      gap: var(--os-spacing-md);
-    }
-  }
-
-  &--persona-carlos {
-    .os-form-template__form {
-      gap: var(--os-spacing-md);
-    }
-
-    .os-form-template__content {
-      max-width: 600px; /* Simpler layout for beginners */
-    }
-
-    .os-form-template__actions {
-      flex-direction: column;
-      gap: var(--os-spacing-sm);
-
-      @media (min-width: 576px) {
-        flex-direction: row;
-        justify-content: center;
-      }
-    }
-  }
-
-  &--persona-roberto-maria {
-    .os-form-template__form {
-      gap: var(--os-spacing-xl);
-    }
-
-    .os-form-template__content {
-      max-width: 1000px; /* More space for complex forms */
-    }
-
-    .os-form-template__actions {
-      gap: var(--os-spacing-lg);
-    }
-  }
-
-  &--persona-julia {
-    .os-form-template__form {
-      gap: var(--os-spacing-lg);
-    }
-
-    .os-form-template__content {
-      max-width: 800px; /* Balanced for business forms */
-    }
-
-    .os-form-template__actions {
-      gap: var(--os-spacing-md);
-    }
-  }
-
   &__content {
     flex: 1;
     display: flex;

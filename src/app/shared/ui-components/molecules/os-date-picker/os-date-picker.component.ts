@@ -200,14 +200,11 @@ export class OsDatePickerComponent implements ControlValueAccessor {
   private _onTouched = () => {};
 
   constructor() {
-    effect(
-      () => {
-        if (this.showQuickSelection() && this.quickDateOptions().length === 0) {
-          this.quickDateOptions.set(this.getDefaultQuickDateOptions());
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      if (this.showQuickSelection() && this.quickDateOptions().length === 0) {
+        this.quickDateOptions.set(this.getDefaultQuickDateOptions());
+      }
+    });
 
     effect(() => {
       if (this.isRangePicker() && this.value() && this.endDate()) {

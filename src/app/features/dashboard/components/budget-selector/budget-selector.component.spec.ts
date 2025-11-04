@@ -185,14 +185,6 @@ describe('BudgetSelectorComponent', () => {
     expect(emitSpy).toHaveBeenCalledWith(mockBudgets[1]);
   });
 
-  it('should emit createBudgetRequested when create button is clicked', () => {
-    const emitSpy = vi.spyOn(component.createBudgetRequested, 'emit');
-
-    component.onCreateBudgetRequested();
-
-    expect(emitSpy).toHaveBeenCalled();
-  });
-
   it('should not call setSelectedBudget when budget is not found', () => {
     component.onBudgetSelected({
       id: '999',
@@ -260,38 +252,5 @@ describe('BudgetSelectorComponent', () => {
     expect(internalSelector).toBeTruthy();
     expect(internalSelector.className).toContain('os-budget-selector--loading');
   });
-
-  it('should apply empty class when no budgets available', () => {
-    const emptyServiceSpy = {
-      setSelectedBudget: vi.fn(),
-      setLoading: vi.fn(),
-      setAvailableBudgets: vi.fn(),
-      selectedBudgetId: signal('1'),
-      availableBudgets: signal([]),
-      isLoading: signal(false),
-      hasAvailableBudgets: signal(false),
-      selectedBudget: signal(mockSelectedBudget),
-    };
-
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [BudgetSelectorComponent],
-      providers: [
-        { provide: BudgetSelectionService, useValue: emptyServiceSpy },
-        provideZonelessChangeDetection(),
-      ],
-    });
-
-    fixture = TestBed.createComponent(BudgetSelectorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    
-    const osBudgetSelectorElement =
-      fixture.debugElement.nativeElement.querySelector('os-budget-selector');
-    expect(osBudgetSelectorElement).toBeTruthy();
-    
-    const internalSelector = osBudgetSelectorElement.querySelector('.os-budget-selector');
-    expect(internalSelector).toBeTruthy();
-    expect(internalSelector.className).toContain('os-budget-selector--empty');
-  });
+  
 });

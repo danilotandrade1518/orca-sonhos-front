@@ -209,6 +209,24 @@
   }
 }
 
+// Align custom content and actions to the right
+// Push custom content and all subsequent elements (actions) to the right
+.os-header__custom-content {
+  margin-left: auto;
+}
+
+// Ensure actions stay grouped with custom content on the right
+.os-header__custom-content + .os-header__actions {
+  margin-left: 0;
+}
+
+// When there's no custom content, push actions to the right
+.os-header__container:not(:has(.os-header__custom-content)) {
+  .os-header__actions {
+    margin-left: auto;
+  }
+}
+
 .os-header__brand {
   display: flex;
   align-items: center;
@@ -340,8 +358,8 @@
 .os-header__custom-content {
   display: flex;
   align-items: center;
-  flex: 1;
-  justify-content: flex-start;
+  flex: 0 1 auto;
+  justify-content: flex-end;
   min-width: 0;
   gap: var(--os-spacing-sm);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -544,6 +562,8 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--os-color-text-primary);
   transform: scale(1);
+  flex-shrink: 0;
+  order: -1;
 
   &:hover {
     background: var(--os-color-surface-hover);

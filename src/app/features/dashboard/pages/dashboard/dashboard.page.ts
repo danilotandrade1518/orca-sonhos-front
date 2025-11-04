@@ -40,7 +40,6 @@ export class DashboardPage implements OnInit {
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
-  readonly currentPersona = signal<'ana' | 'carlos' | 'roberto-maria' | 'julia'>('ana');
 
   readonly dashboardWidgets = computed((): WidgetConfiguration[] => [
     {
@@ -107,25 +106,17 @@ export class DashboardPage implements OnInit {
       if (selectedBudgetId) {
         this.router.navigate(['/budgets', selectedBudgetId]);
       }
+    } else if (widget.type === 'transaction-list') {
+      const selectedBudgetId = this.budgetSelectionService.selectedBudgetId();
+      if (selectedBudgetId) {
+        this.router.navigate(['/transactions'], { queryParams: { budgetId: selectedBudgetId } });
+      } else {
+        this.router.navigate(['/transactions']);
+      }
     }
   }
 
   onRetryRequested(): void {
     this.loadDashboardData();
-  }
-
-  setPersona(persona: 'ana' | 'carlos' | 'roberto-maria' | 'julia'): void {
-    this.currentPersona.set(persona);
-  }
-
-  getPersonaDescription(): string {
-    const persona = this.currentPersona();
-    const descriptions = {
-      ana: 'Organizadora Familiar - Interface intuitiva para compartilhamento',
-      carlos: 'Jovem Planejador - Onboarding educativo e simplicidade',
-      'roberto-maria': 'Casal Experiente - Múltiplas metas e relatórios avançados',
-      julia: 'Empreendedora Iniciante - Flexibilidade para renda variável',
-    };
-    return descriptions[persona];
   }
 }

@@ -16,6 +16,9 @@ import {
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
@@ -70,6 +73,14 @@ export type TransactionListTheme = 'light' | 'dark';
 export type TransactionListLayout = 'table' | 'card' | 'list';
 export type TransactionListSortBy = 'date' | 'amount' | 'category' | 'type' | 'status' | 'priority';
 
+export interface TransactionCardAction {
+  id: string;
+  label: string;
+  icon?: string;
+  variant?: 'default' | 'danger';
+  disabled?: boolean;
+}
+
 @Component({
   selector: 'os-transaction-list',
   standalone: true,
@@ -80,6 +91,9 @@ export type TransactionListSortBy = 'date' | 'amount' | 'category' | 'type' | 's
     OsSpinnerComponent,
     OsDataTableComponent,
     OsFilterBarComponent,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
   ],
   template: `
     <div class="os-transaction-list" [class]="transactionListClasses()">
@@ -239,11 +253,41 @@ export type TransactionListSortBy = 'date' | 'amount' | 'category' | 'type' | 's
                 <h4 class="os-transaction-list__card-title">{{ transaction.description }}</h4>
                 <p class="os-transaction-list__card-category">{{ transaction.category }}</p>
               </div>
-              @if (enablePriorityIndicators() && transaction.priority) {
-              <div class="os-transaction-list__card-priority">
-                <os-icon [name]="getTransactionPriorityIcon(transaction)" [size]="'sm'" />
+              <div class="os-transaction-list__card-header-actions">
+                @if (enablePriorityIndicators() && transaction.priority) {
+                <div class="os-transaction-list__card-priority">
+                  <os-icon [name]="getTransactionPriorityIcon(transaction)" [size]="'sm'" />
+                </div>
+                } @if (cardActions().length > 0) {
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="cardMenu"
+                  class="os-transaction-list__card-menu-button"
+                  (click)="$event.stopPropagation()"
+                  [attr.aria-label]="'Ações para transação ' + transaction.description"
+                  type="button"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #cardMenu="matMenu" class="os-transaction-list__card-menu">
+                  @for (action of cardActions(); track action.id) {
+                  <button
+                    mat-menu-item
+                    [disabled]="action.disabled"
+                    [class.os-transaction-list__card-menu-item--danger]="
+                      action.variant === 'danger'
+                    "
+                    (click)="onCardActionClick(transaction, action); $event.stopPropagation()"
+                  >
+                    @if (action.icon) {
+                    <mat-icon>{{ action.icon }}</mat-icon>
+                    }
+                    <span>{{ action.label }}</span>
+                  </button>
+                  }
+                </mat-menu>
+                }
               </div>
-              }
             </div>
             <div class="os-transaction-list__card-body">
               <div
@@ -340,18 +384,17 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private isDestroyed = false;
 
   constructor() {
-    
     effect(() => {
       const filteredLength = this.filteredTransactions().length;
       this.pagination.update((p) => ({ ...p, total: filteredLength }));
     });
-    
+
     effect(() => {
       const isMobile = this.breakpointObserver.isMatched(Breakpoints.Handset);
       this.isMobile.set(isMobile);
     });
   }
-  
+
   transactions = input<Transaction[]>([]);
   title = input<string>('');
   subtitle = input<string>('');
@@ -364,7 +407,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   enableCategoryColors = input<boolean>(true);
   enablePriorityIndicators = input<boolean>(true);
   enableHapticFeedback = input<boolean>(true);
-  
+
   showHeaderActions = input<boolean>(true);
   showRefreshButton = input<boolean>(true);
   showExportButton = input<boolean>(true);
@@ -376,18 +419,20 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   showItemCount = input<boolean>(true);
   showLastUpdated = input<boolean>(true);
   showFooterActions = input<boolean>(false);
-  
+
   filterOptions = input<OsFilterOption[]>([]);
-  
+
   pageSizeOptions = input<number[]>([5, 10, 25, 50]);
   showFirstLastButtons = input<boolean>(true);
-  
+
   isLoading = input<boolean>(false);
   lastUpdated = input<Date>(new Date());
-  
+
   noDataTitle = input<string>('Nenhuma transação encontrada');
   noDataText = input<string>('Não há transações para exibir no momento.');
-  
+
+  cardActions = input<TransactionCardAction[]>([]);
+
   rowClick = output<Transaction>();
   tableActionClick = output<OsDataTableAction>();
   refresh = output<void>();
@@ -396,12 +441,13 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   filterChange = output<TransactionListFilter[]>();
   sortChange = output<TransactionListSort>();
   pageChange = output<TransactionListPagination>();
-  
+  cardActionClick = output<{ transaction: Transaction; action: TransactionCardAction }>();
+
   private filters = signal<TransactionListFilter[]>([]);
   private sort = signal<TransactionListSort | null>(null);
   private isMobile = signal<boolean>(false);
   protected isLoadingMore = signal<boolean>(false);
-  private hasMoreData = signal<boolean>(true);
+  hasMoreData = input<boolean>(false);
   private categoryColors = signal<Record<string, string>>({});
   private priorityColors = signal<Record<string, string>>({
     low: 'var(--os-color-success)',
@@ -415,7 +461,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     pageSize: 10,
     total: 0,
   });
-  
+
   transactionListClasses = computed(() => {
     const base = 'os-transaction-list';
     const variant = `os-transaction-list--${this.variant()}`;
@@ -429,7 +475,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
   filteredTransactions = computed(() => {
     let filtered = [...this.transactions()];
-    
+
     const activeFilters = this.filters();
     if (activeFilters.length > 0) {
       filtered = filtered.filter((transaction) => {
@@ -439,7 +485,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
         });
       });
     }
-    
+
     const sortConfig = this.sort();
     if (sortConfig) {
       filtered.sort((a, b) => {
@@ -543,7 +589,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
     return actions;
   });
-  
+
   getTransactionValue(transaction: Transaction, key: string): string | number | Date {
     switch (key) {
       case 'description':
@@ -600,7 +646,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
 
     return `${start}-${end} de ${total} transações`;
   }
-  
+
   getButtonSize() {
     const sizeMap: Record<TransactionListSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -656,7 +702,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     };
     return sizeMap[this.size()];
   }
-  
+
   onRefresh(): void {
     this.refresh.emit();
   }
@@ -720,7 +766,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
       total: this.totalItems(),
     });
   }
-  
+
   ngAfterViewInit(): void {
     this.setupInfiniteScroll();
     this.setupResizeObserver();
@@ -732,13 +778,18 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
     this.scrollObserver?.disconnect();
     this.resizeObserver?.disconnect();
   }
-  
+
   private setupInfiniteScroll(): void {
     if (!this.enableInfiniteScroll() || !this.scrollContainer) return;
 
     this.scrollObserver = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && this.hasMoreData() && !this.isLoadingMore()) {
+        if (
+          entries[0].isIntersecting &&
+          this.hasMoreData() &&
+          !this.isLoadingMore() &&
+          !this.isLoading()
+        ) {
           this.loadMoreTransactions();
         }
       },
@@ -784,14 +835,14 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   }
 
   private loadMoreTransactions(): void {
-    if (this.isLoadingMore() || !this.hasMoreData()) return;
+    if (this.isLoadingMore() || !this.hasMoreData() || this.isLoading()) return;
 
     this.isLoadingMore.set(true);
-    
+
     setTimeout(() => {
       if (!this.isDestroyed) {
         this.isLoadingMore.set(false);
-        
+
         this.pageChange.emit({
           page: this.pagination().page + 1,
           pageSize: this.pagination().pageSize,
@@ -900,5 +951,10 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   onTransactionActionClick(action: OsDataTableAction): void {
     this.triggerHapticFeedback();
     this.tableActionClick.emit(action);
+  }
+
+  onCardActionClick(transaction: Transaction, action: TransactionCardAction): void {
+    this.triggerHapticFeedback();
+    this.cardActionClick.emit({ transaction, action });
   }
 }

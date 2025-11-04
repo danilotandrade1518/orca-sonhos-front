@@ -112,12 +112,10 @@ export class BudgetFormComponent implements OnInit {
     showConfirmButton: true,
     cancelButtonText: 'Cancelar',
     confirmButtonText: this.mode() === 'create' ? 'Criar' : 'Salvar',
-    persona: 'ana' as const,
   }));
 
   readonly formConfig = computed(() => ({
     title: '',
-    persona: 'ana' as const,
     showHeader: false,
     showProgress: false,
     showActions: false,

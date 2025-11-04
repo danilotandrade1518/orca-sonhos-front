@@ -75,7 +75,6 @@ export interface OsFilterOption {
   },
 })
 export class OsFilterBarComponent {
-  
   variant = input<OsFilterBarVariant>('default');
   size = input<OsFilterBarSize>('medium');
   showActions = input<boolean>(true);
@@ -84,21 +83,21 @@ export class OsFilterBarComponent {
   clearButtonText = input<string>('Limpar');
   applyButtonText = input<string>('Aplicar');
   hasActiveFilters = input<boolean>(false);
-  
+
   persistKey = input<string | null>(null);
   persistFilters = input<boolean>(false);
-  
+
   ariaLabel = input<string>('Barra de filtros');
   ariaDescribedBy = input<string>('');
   clearButtonAriaLabel = input<string>('Limpar todos os filtros');
   applyButtonAriaLabel = input<string>('Aplicar filtros');
-  
+
   clear = output<void>();
   apply = output<void>();
   filtersRestored = output<Record<string, unknown>>();
-  
+
   private isMobile = signal<boolean>(false);
-  
+
   filterBarClasses = computed(() => {
     const classes = ['os-filter-bar'];
 
@@ -116,32 +115,25 @@ export class OsFilterBarComponent {
 
     return classes.join(' ');
   });
-  
+
   constructor() {
-    
-    effect(
-      () => {
-        if (typeof window !== 'undefined') {
-          const checkMobile = () => {
-            this.isMobile.set(window.innerWidth < 768);
-          };
-          checkMobile();
-          window.addEventListener('resize', checkMobile);
-        }
-      },
-      { allowSignalWrites: true }
-    );
-    
-    effect(
-      () => {
-        if (this.persistFilters() && this.persistKey()) {
-          this.restoreFilters();
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      if (typeof window !== 'undefined') {
+        const checkMobile = () => {
+          this.isMobile.set(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+      }
+    });
+
+    effect(() => {
+      if (this.persistFilters() && this.persistKey()) {
+        this.restoreFilters();
+      }
+    });
   }
-  
+
   getButtonSize(): 'small' | 'medium' | 'large' {
     const sizeMap: Record<OsFilterBarSize, 'small' | 'medium' | 'large'> = {
       small: 'small',
@@ -150,18 +142,18 @@ export class OsFilterBarComponent {
     };
     return sizeMap[this.size()];
   }
-  
+
   onClear(): void {
     if (this.persistFilters() && this.persistKey()) {
       this.clearPersistedFilters();
     }
     this.clear.emit();
   }
-  
+
   onApply(): void {
     this.apply.emit();
   }
-  
+
   saveFilters(filters: Record<string, unknown>): void {
     if (!this.persistFilters() || !this.persistKey() || typeof window === 'undefined') {
       return;
@@ -174,7 +166,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao persistir filtros:', error);
     }
   }
-  
+
   restoreFilters(): void {
     if (!this.persistFilters() || !this.persistKey() || typeof window === 'undefined') {
       return;
@@ -192,7 +184,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao restaurar filtros:', error);
     }
   }
-  
+
   clearPersistedFilters(): void {
     if (!this.persistKey() || typeof window === 'undefined') {
       return;
@@ -205,7 +197,7 @@ export class OsFilterBarComponent {
       console.warn('Falha ao limpar filtros persistidos:', error);
     }
   }
-  
+
   private getStorageKey(): string {
     return `os-filter-bar:${this.persistKey()}`;
   }

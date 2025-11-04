@@ -20,7 +20,6 @@ export interface FormTemplateConfig {
   showProgress?: boolean;
   progressValue?: number;
   showActions?: boolean;
-  persona?: 'ana' | 'carlos' | 'roberto-maria' | 'julia';
   actions?: {
     label: string;
     variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
@@ -44,7 +43,7 @@ export interface FormTemplateConfig {
       @if (showHeader()) {
       <os-page-header
         [variant]="headerVariant()"
-        [size]="personaOptimizedSize()"
+        [size]="size()"
         [title]="config().title"
         [subtitle]="config().subtitle || null"
         [actions]="headerActions()"
@@ -52,7 +51,7 @@ export interface FormTemplateConfig {
       }
 
       <div class="os-form-template__content">
-        <os-card [variant]="cardVariant()" [size]="personaOptimizedSize()" [class]="cardClass()">
+        <os-card [variant]="cardVariant()" [size]="size()" [class]="cardClass()">
           @if (showProgress() && progressValue() !== undefined) {
           <div
             class="os-form-template__progress"
@@ -64,7 +63,7 @@ export interface FormTemplateConfig {
           >
             <os-progress-bar
               [variant]="'primary'"
-              [size]="personaOptimizedSize()"
+              [size]="size()"
               [value]="progressValue()"
               [label]="progressLabel()"
             />
@@ -88,7 +87,7 @@ export interface FormTemplateConfig {
             @if (config().showCancelButton) {
             <os-button
               [variant]="'secondary'"
-              [size]="personaOptimizedSize()"
+              [size]="size()"
               [disabled]="disabled()"
               [ariaLabel]="cancelAriaLabel()"
               (click)="cancelClick.emit()"
@@ -98,7 +97,7 @@ export interface FormTemplateConfig {
             } @if (config().showSaveButton) {
             <os-button
               [variant]="'primary'"
-              [size]="personaOptimizedSize()"
+              [size]="size()"
               [disabled]="disabled() || !isFormValid()"
               [loading]="loading()"
               [ariaLabel]="saveAriaLabel()"
@@ -166,16 +165,11 @@ export class OsFormTemplateComponent {
   private uniqueId = signal(Math.random().toString(36).substr(2, 9));
 
   protected templateClass = computed(() => {
-    const persona = this.config().persona;
-    const optimizedVariant = this.personaOptimizedSpacing();
-    const optimizedSize = this.personaOptimizedSize();
-
     return [
       'os-form-template',
-      `os-form-template--${optimizedVariant}`,
-      `os-form-template--${optimizedSize}`,
+      `os-form-template--${this.variant()}`,
+      `os-form-template--${this.size()}`,
       `os-form-template--${this.theme()}`,
-      persona ? `os-form-template--persona-${persona}` : '',
       this.disabled() ? 'os-form-template--disabled' : '',
       this.loading() ? 'os-form-template--loading' : '',
     ]
@@ -253,21 +247,10 @@ export class OsFormTemplateComponent {
   });
 
   protected cancelAriaLabel = computed(() => {
-    const persona = this.config().persona;
-    const baseLabel = this.config().cancelButtonText || 'Cancelar';
-
-    if (persona === 'carlos') {
-      return `${baseLabel} - Voltar sem salvar alterações`;
-    }
-    if (persona === 'julia') {
-      return `${baseLabel} - Descartar alterações e voltar`;
-    }
-
-    return baseLabel;
+    return this.config().cancelButtonText || 'Cancelar';
   });
 
   protected saveAriaLabel = computed(() => {
-    const persona = this.config().persona;
     const baseLabel = this.config().saveButtonText || 'Salvar';
     const isValid = this.isFormValid();
     const loading = this.loading();
@@ -280,50 +263,6 @@ export class OsFormTemplateComponent {
       return `${baseLabel} - Preencha todos os campos obrigatórios`;
     }
 
-    if (persona === 'ana') {
-      return `${baseLabel} - Salvar informações da família`;
-    }
-    if (persona === 'carlos') {
-      return `${baseLabel} - Salvar e continuar`;
-    }
-    if (persona === 'roberto-maria') {
-      return `${baseLabel} - Salvar planejamento familiar`;
-    }
-    if (persona === 'julia') {
-      return `${baseLabel} - Salvar dados do negócio`;
-    }
-
     return baseLabel;
-  });
-
-  protected personaOptimizedSpacing = computed(() => {
-    const persona = this.config().persona;
-    const variant = this.variant();
-
-    if (persona === 'carlos') {
-      return variant === 'compact' ? 'compact' : 'default';
-    }
-    if (persona === 'julia') {
-      return 'detailed';
-    }
-    if (persona === 'roberto-maria') {
-      return 'detailed';
-    }
-
-    return variant;
-  });
-
-  protected personaOptimizedSize = computed(() => {
-    const persona = this.config().persona;
-    const size = this.size();
-
-    if (persona === 'carlos') {
-      return size === 'large' ? 'medium' : size;
-    }
-    if (persona === 'julia') {
-      return size === 'small' ? 'medium' : size;
-    }
-
-    return size;
   });
 }

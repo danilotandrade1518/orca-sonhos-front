@@ -10,10 +10,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { OsAppShellTemplateComponent } from '@shared/ui-components/templates/os-app-shell-template/os-app-shell-template.component';
 import { SidebarItem } from '@shared/ui-components/organisms/os-sidebar/os-sidebar.component';
-import {
-  HeaderNavigationItem,
-  HeaderUserMenu,
-} from '@shared/ui-components/organisms/os-header/os-header.component';
+import { HeaderUserMenu } from '@shared/ui-components/organisms/os-header/os-header.component';
 import { BudgetSelectorComponent } from '@features/dashboard/components/budget-selector/budget-selector.component';
 
 @Component({
@@ -21,16 +18,9 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
   template: `
     <os-app-shell-template
       [layout]="layoutConfig()"
-      [headerLogoText]="'OrçaSonhos'"
-      [headerLogoRoute]="'/dashboard'"
-      [headerNavigation]="headerNavigation()"
-      [headerBreadcrumbs]="headerBreadcrumbs()"
       [headerUser]="headerUser()"
       [headerUserMenuItems]="headerUserMenuItems()"
       [sidebarItems]="sidebarItems()"
-      [sidebarTitle]="'OrçaSonhos'"
-      [sidebarShowHeader]="true"
-      [sidebarShowToggleButton]="true"
       [ariaLabel]="'Layout principal do aplicativo'"
       (sidebarItemClick)="onSidebarItemClick($event)"
       (sidebarCollapseChange)="onSidebarCollapseChange($event)"
@@ -43,11 +33,7 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
           [variant]="'primary'"
           [size]="'small'"
           [placeholder]="'Selecionar orçamento'"
-          [showCreateButton]="true"
-          [showShareButton]="false"
-          [showQuickActions]="false"
           [ariaLabel]="'Seletor de orçamento'"
-          (createBudgetRequested)="onCreateBudgetRequested()"
           class="app-layout__budget-selector"
         />
       </div>
@@ -115,39 +101,6 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  headerNavigation = computed((): HeaderNavigationItem[] => [
-    {
-      label: 'Dashboard',
-      route: '/dashboard',
-    },
-    {
-      label: 'Orçamentos',
-      route: '/budgets',
-    },
-    {
-      label: 'Metas',
-      route: '/goals',
-    },
-  ]);
-
-  private readonly routeMap = {
-    '/dashboard': [{ label: 'Dashboard', route: '/dashboard' }],
-    '/budgets': [{ label: 'Orçamentos', route: '/budgets' }],
-    '/goals': [{ label: 'Metas', route: '/goals' }],
-    '/transactions': [{ label: 'Transações', route: '/transactions' }],
-    '/reports': [{ label: 'Relatórios', route: '/reports' }],
-    '/settings': [{ label: 'Configurações', route: '/settings' }],
-  };
-
-  headerBreadcrumbs = computed(() => {
-    const route = this.currentRoute();
-    return (
-      this.routeMap[route as keyof typeof this.routeMap] || [
-        { label: 'Dashboard', route: '/dashboard' },
-      ]
-    );
-  });
-
   headerUser = computed(() => ({
     name: 'Usuário',
     email: 'usuario@orca-sonhos.com',
@@ -175,15 +128,10 @@ export class AppLayoutComponent implements OnInit {
 
   onSidebarCollapseChange(collapsed: boolean): void {
     this.sidebarCollapsed.set(collapsed);
-    console.log('Sidebar collapsed:', collapsed);
   }
 
   onHeaderLogoClick(): void {
     this.router.navigate(['/dashboard']);
-  }
-
-  onCreateBudgetRequested(): void {
-    this.router.navigate(['/budgets/new']);
   }
 
   ngOnInit(): void {

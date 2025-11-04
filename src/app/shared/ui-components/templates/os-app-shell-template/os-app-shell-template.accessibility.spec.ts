@@ -113,30 +113,33 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
       const skipLinks = fixture.nativeElement.querySelectorAll('.os-app-shell-template__skip-link');
 
       skipLinks.forEach((link: Element) => {
-        
         expect(link).toBeTruthy();
       });
     });
 
     it('should show skip links when focused', () => {
       const skipLink = fixture.nativeElement.querySelector('.os-app-shell-template__skip-link');
-      
+
       skipLink.focus();
       fixture.detectChanges();
-      
+
       const computedStyle = window.getComputedStyle(skipLink);
       expect(computedStyle.top).not.toBe('-40px');
     });
 
     it('should have proper focus management', () => {
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      expect(themeToggle).toBeTruthy();
-      
-      expect(themeToggle).toBeTruthy();
+      fixture.componentRef.setInput('layout', { showSidebar: true } as unknown);
+      fixture.detectChanges();
+
+      const themeButton = fixture.nativeElement.querySelector(
+        '.os-app-shell-template__theme-button'
+      );
+      expect(themeButton).toBeTruthy();
+
+      expect(themeButton.tagName).toBe('BUTTON');
     });
 
     it('should handle Escape key for closing overlays', () => {
-      
       const sidebar = fixture.nativeElement.querySelector('os-sidebar');
       expect(sidebar).toBeTruthy();
     });
@@ -179,23 +182,29 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     });
 
     it('should have proper theme toggle labels', () => {
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      expect(themeToggle).toBeTruthy();
-      
+      fixture.componentRef.setInput('layout', { showSidebar: true } as unknown);
+      fixture.detectChanges();
+
+      const themeButton = fixture.nativeElement.querySelector(
+        '.os-app-shell-template__theme-button'
+      );
+      expect(themeButton).toBeTruthy();
+
+      const ariaLabel = themeButton.getAttribute('aria-label');
+      expect(ariaLabel).toBeTruthy();
+      expect(ariaLabel).toBe('Alternar tema');
     });
   });
 
   describe('Color Contrast and Visual Accessibility', () => {
     it('should apply proper CSS classes for theme switching', () => {
-      
       const container = fixture.nativeElement.querySelector('.os-app-shell-template');
       expect(container).toBeTruthy();
-      
     });
 
     it('should have proper focus indicators', () => {
       const skipLink = fixture.nativeElement.querySelector('.os-app-shell-template__skip-link');
-      
+
       const computedStyle = window.getComputedStyle(skipLink, ':focus');
       expect(computedStyle.outline).toBeDefined();
     });
@@ -203,26 +212,30 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
   describe('Reduced Motion Support', () => {
     it('should respect prefers-reduced-motion', () => {
-      
       const container = fixture.nativeElement.querySelector('.os-app-shell-template');
       expect(container).toBeTruthy();
-      
     });
   });
 
   describe('Touch Target Accessibility', () => {
     it('should have adequate touch targets', () => {
+      fixture.componentRef.setInput('error', 'Erro de conexão');
+      fixture.componentRef.setInput('layout', { showSidebar: true } as unknown);
+      fixture.detectChanges();
+
       const retryButton = fixture.nativeElement.querySelector(
         '.os-app-shell-template__retry-button'
       );
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      
+      const themeButton = fixture.nativeElement.querySelector(
+        '.os-app-shell-template__theme-button'
+      );
+
       if (retryButton) {
         expect(retryButton).toBeTruthy();
       }
 
-      if (themeToggle) {
-        expect(themeToggle).toBeTruthy();
+      if (themeButton) {
+        expect(themeButton).toBeTruthy();
       }
     });
   });
@@ -258,7 +271,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
       const loadingElement = fixture.nativeElement.querySelector('.os-app-shell-template__loading');
       expect(loadingElement.getAttribute('aria-live')).toBe('polite');
-      
+
       fixture.componentRef.setInput('loading', false);
       fixture.detectChanges();
 
@@ -271,7 +284,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
       const errorElement = fixture.nativeElement.querySelector('.os-app-shell-template__error');
       expect(errorElement.getAttribute('aria-live')).toBe('assertive');
-      
+
       fixture.componentRef.setInput('error', null);
       fixture.detectChanges();
 
@@ -291,7 +304,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     it('should have proper navigation structure', () => {
       const nav = fixture.nativeElement.querySelector('nav[role="navigation"]');
       expect(nav).toBeTruthy();
-      
+
       expect(nav.getAttribute('aria-label')).toBeDefined();
     });
   });

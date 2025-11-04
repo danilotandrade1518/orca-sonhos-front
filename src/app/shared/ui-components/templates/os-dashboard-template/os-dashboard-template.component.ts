@@ -63,7 +63,6 @@ export interface DashboardLayout {
           [variant]="headerVariant()"
           [size]="layout().size"
           [theme]="layout().theme"
-          [logo]="headerLogo()"
           (navigationClick)="onNavigationClick($event)"
           (userMenuItemClick)="onUserMenuClick($event)"
           (actionClick)="onActionClick($event)"
@@ -81,11 +80,7 @@ export interface DashboardLayout {
             [size]="layout().size"
             [theme]="layout().theme"
             [collapsed]="layout().sidebarCollapsed"
-            [title]="sidebarTitle()"
-            [logo]="sidebarLogo()"
-            [showHeader]="sidebarShowHeader()"
             [showFooter]="sidebarShowFooter()"
-            [showToggleButton]="sidebarShowToggleButton()"
             (itemClick)="onSidebarNavigationClick($event)"
             (collapseChange)="onSidebarToggleClick($event)"
           />
@@ -226,7 +221,6 @@ export class OsDashboardTemplateComponent {
   widgets = input<DashboardWidget[]>([]);
   loading = input<boolean>(false);
   emptyState = input<{ message: string; action?: { label: string; action: string } } | null>(null);
-  headerLogo = input<string>('');
   headerNavigation = input<{ label: string; route?: string; href?: string; icon?: string }[]>([]);
   headerUser = input<{ name: string; avatar?: string; email?: string } | null>(null);
   headerActions = input<{ label: string; icon?: string; action: string }[]>([]);

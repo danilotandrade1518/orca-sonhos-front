@@ -11,6 +11,14 @@
   z-index: 999;
   animation: fadeIn 0.3s ease;
   cursor: pointer;
+
+  // Desktop backdrop (when sidebar is expanded)
+  &--desktop {
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 98;
+    // Only show backdrop on the right side (not covering sidebar)
+    left: var(--os-navigation-rail-expanded-width, 256px);
+  }
 }
 
 @keyframes fadeIn {
@@ -23,6 +31,9 @@
 }
 
 .os-sidebar {
+  /* Navigation Rail base width per M3 */
+  --os-navigation-rail-width: 80px;
+  --os-navigation-rail-expanded-width: 256px;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -34,8 +45,100 @@
 
   // Variants
   &--default {
-    width: 280px;
-    min-width: 280px;
+    width: var(--os-navigation-rail-width);
+    min-width: var(--os-navigation-rail-width);
+  }
+  /* Expanded Navigation Rail */
+  &.os-sidebar--expanded-rail {
+    width: var(--os-navigation-rail-expanded-width);
+    min-width: var(--os-navigation-rail-expanded-width);
+
+    .os-sidebar__rail-actions {
+      justify-content: flex-start;
+      padding: 8px 8px;
+    }
+
+    .os-sidebar__list {
+      .os-navigation-item__link,
+      .os-navigation-item__button {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        min-height: 56px; /* M3 drawer row height */
+        border-radius: 28px; /* pill */
+      }
+
+      .os-navigation-item__text {
+        display: block;
+        font-size: var(--os-font-size-sm);
+        line-height: 1.25;
+        margin-top: 0;
+        font-weight: var(--os-font-weight-medium);
+        color: var(--os-color-text-primary);
+      }
+
+      /* Active indicator covers the row softly */
+      .os-navigation-item__link::before,
+      .os-navigation-item__button::before {
+        left: 8px;
+        transform: none;
+        width: calc(100% - 16px);
+        height: 40px;
+        border-radius: 20px;
+      }
+
+      /* Left active indicator bar */
+      .os-navigation-item--active .os-navigation-item__link::after,
+      .os-navigation-item--active .os-navigation-item__button::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 3px;
+        height: calc(100% - 16px);
+        border-radius: 2px;
+        background: var(--os-color-primary);
+      }
+
+      /* Text color treatments - padrão: preto para inativo, azul para ativo */
+      .os-navigation-item__text {
+        color: var(--os-color-text-primary);
+      }
+      .os-navigation-item--active .os-navigation-item__text {
+        color: var(--os-color-primary);
+      }
+
+      /* Icon color treatments - mesma cor do texto (preto inativo, azul ativo) */
+      .os-navigation-item .os-icon,
+      .os-navigation-item .os-icon.mat-icon,
+      .os-navigation-item__link .os-icon,
+      .os-navigation-item__button .os-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+      .os-navigation-item--active .os-icon,
+      .os-navigation-item--active .os-icon.mat-icon,
+      .os-navigation-item--active .os-navigation-item__link .os-icon,
+      .os-navigation-item--active .os-navigation-item__button .os-icon {
+        color: var(--os-color-primary) !important;
+      }
+
+      /* Garantir que link/button herdem a cor para ícones */
+      .os-navigation-item__link,
+      .os-navigation-item__button {
+        color: var(--os-color-text-primary);
+      }
+      .os-navigation-item--active .os-navigation-item__link,
+      .os-navigation-item--active .os-navigation-item__button {
+        color: var(--os-color-primary);
+      }
+      .os-navigation-item__link:focus-visible,
+      .os-navigation-item__button:focus-visible {
+        outline: 2px solid var(--os-color-primary);
+        outline-offset: 2px;
+      }
+    }
   }
 
   &--minimal {
@@ -187,14 +290,49 @@
     }
   }
 
-  // Header
+  // Header (não utilizado no Rail)
   &__header {
+    display: none;
+  }
+
+  // Rail actions (botão de expandir)
+  &__rail-actions {
     display: flex;
     align-items: center;
-    gap: var(--os-spacing-sm);
+    justify-content: center;
+    padding: var(--os-spacing-sm) 0;
     border-bottom: 1px solid var(--os-color-border);
     background-color: var(--os-color-surface-elevated);
+  }
+
+  &__expand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--os-color-text-secondary);
+    border-radius: var(--os-border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
     flex-shrink: 0;
+    touch-action: manipulation;
+
+    &:hover {
+      background-color: var(--os-color-surface-hover);
+      color: var(--os-color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--os-color-primary);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
 
   &__logo {
@@ -254,6 +392,8 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    /* Crucial for flex children to allow internal scrolling instead of page scroll */
+    min-height: 0;
   }
 
   &__list {
@@ -263,6 +403,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--os-spacing-xs);
+    align-items: stretch;
   }
 
   &__item {
@@ -270,16 +411,8 @@
   }
 
   &__sub-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    margin-left: var(--os-spacing-lg);
-    margin-top: var(--os-spacing-xs);
-    display: flex;
-    flex-direction: column;
-    gap: var(--os-spacing-xs);
-    border-left: 2px solid var(--os-color-border-light);
-    padding-left: var(--os-spacing-sm);
+    /* Navigation Rail não exibe subitens */
+    display: none !important;
   }
 
   &__sub-item {
@@ -291,6 +424,13 @@
     border-top: 1px solid var(--os-color-border);
     background-color: var(--os-color-surface-elevated);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--os-spacing-md);
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
   }
 
   // Custom content
@@ -308,6 +448,31 @@
     &--mobile {
       width: 280px;
       min-width: 280px;
+    }
+
+    /* Garantir cores corretas no mobile - ícones devem ter mesma cor do texto */
+    .os-sidebar__list {
+      .os-navigation-item .os-icon,
+      .os-navigation-item .os-icon.mat-icon,
+      .os-navigation-item__link .os-icon,
+      .os-navigation-item__button .os-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+
+      .os-navigation-item--active .os-icon,
+      .os-navigation-item--active .os-icon.mat-icon,
+      .os-navigation-item--active .os-navigation-item__link .os-icon,
+      .os-navigation-item--active .os-navigation-item__button .os-icon {
+        color: var(--os-color-primary) !important;
+      }
+
+      .os-navigation-item__text {
+        color: var(--os-color-text-primary);
+      }
+
+      .os-navigation-item--active .os-navigation-item__text {
+        color: var(--os-color-primary);
+      }
     }
   }
 }
@@ -385,6 +550,9 @@
 .os-sidebar__list {
   .os-navigation-item {
     transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    position: relative;
   }
 }
 
@@ -393,6 +561,92 @@
   .os-sidebar__list {
     .os-navigation-item:hover {
       background-color: var(--os-color-surface-hover);
+    }
+  }
+}
+
+/* Navigation Rail specific presentation */
+.os-sidebar {
+  .os-sidebar__list {
+    .os-navigation-item__link,
+    .os-navigation-item__button {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--os-spacing-xs);
+      padding: var(--os-spacing-sm) 0;
+      min-height: 64px;
+    }
+
+    /* Labels: ocultas por padrão, visíveis no ativo ou com foco */
+    .os-navigation-item__text {
+      display: none;
+      font-size: var(--os-font-size-xs);
+      line-height: 1;
+      text-align: center;
+      margin-top: 2px;
+      color: var(--os-color-text-primary);
+    }
+
+    .os-navigation-item--active .os-navigation-item__text,
+    .os-navigation-item__link:focus .os-navigation-item__text,
+    .os-navigation-item__button:focus .os-navigation-item__text {
+      display: block;
+    }
+
+    /* Text color treatments - padrão: preto para inativo, azul para ativo */
+    .os-navigation-item__text {
+      color: var(--os-color-text-primary);
+    }
+    .os-navigation-item--active .os-navigation-item__text {
+      color: var(--os-color-primary);
+    }
+
+    /* Icon color treatments - mesma cor do texto (preto inativo, azul ativo) */
+    .os-navigation-item .os-icon,
+    .os-navigation-item .os-icon.mat-icon,
+    .os-navigation-item__link .os-icon,
+    .os-navigation-item__button .os-icon {
+      color: var(--os-color-text-primary) !important;
+    }
+    .os-navigation-item--active .os-icon,
+    .os-navigation-item--active .os-icon.mat-icon,
+    .os-navigation-item--active .os-navigation-item__link .os-icon,
+    .os-navigation-item--active .os-navigation-item__button .os-icon {
+      color: var(--os-color-primary) !important;
+    }
+
+    /* Garantir que link/button herdem a cor para ícones */
+    .os-navigation-item__link,
+    .os-navigation-item__button {
+      color: var(--os-color-text-primary);
+    }
+    .os-navigation-item--active .os-navigation-item__link,
+    .os-navigation-item--active .os-navigation-item__button {
+      color: var(--os-color-primary);
+    }
+
+    /* Indicador ativo estilo pill atrás do ícone */
+    .os-navigation-item__link::before,
+    .os-navigation-item__button::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 32px;
+      border-radius: 16px;
+      background: transparent;
+      z-index: 0;
+      transition: background-color 0.2s ease;
+    }
+
+    .os-navigation-item--active .os-navigation-item__link::before,
+    .os-navigation-item--active .os-navigation-item__button::before {
+      background: color-mix(in srgb, var(--os-color-primary) 16%, transparent);
     }
   }
 }
