@@ -102,11 +102,35 @@
         background: var(--os-color-primary);
       }
 
-      /* Icon color treatments */
-      .os-navigation-item .os-icon {
-        color: var(--os-color-text-secondary);
+      /* Text color treatments - padrão: preto para inativo, azul para ativo */
+      .os-navigation-item__text {
+        color: var(--os-color-text-primary);
       }
-      .os-navigation-item--active .os-icon {
+      .os-navigation-item--active .os-navigation-item__text {
+        color: var(--os-color-primary);
+      }
+
+      /* Icon color treatments - mesma cor do texto (preto inativo, azul ativo) */
+      .os-navigation-item .os-icon,
+      .os-navigation-item .os-icon.mat-icon,
+      .os-navigation-item__link .os-icon,
+      .os-navigation-item__button .os-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+      .os-navigation-item--active .os-icon,
+      .os-navigation-item--active .os-icon.mat-icon,
+      .os-navigation-item--active .os-navigation-item__link .os-icon,
+      .os-navigation-item--active .os-navigation-item__button .os-icon {
+        color: var(--os-color-primary) !important;
+      }
+
+      /* Garantir que link/button herdem a cor para ícones */
+      .os-navigation-item__link,
+      .os-navigation-item__button {
+        color: var(--os-color-text-primary);
+      }
+      .os-navigation-item--active .os-navigation-item__link,
+      .os-navigation-item--active .os-navigation-item__button {
         color: var(--os-color-primary);
       }
       .os-navigation-item__link:focus-visible,
@@ -425,6 +449,31 @@
       width: 280px;
       min-width: 280px;
     }
+
+    /* Garantir cores corretas no mobile - ícones devem ter mesma cor do texto */
+    .os-sidebar__list {
+      .os-navigation-item .os-icon,
+      .os-navigation-item .os-icon.mat-icon,
+      .os-navigation-item__link .os-icon,
+      .os-navigation-item__button .os-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+
+      .os-navigation-item--active .os-icon,
+      .os-navigation-item--active .os-icon.mat-icon,
+      .os-navigation-item--active .os-navigation-item__link .os-icon,
+      .os-navigation-item--active .os-navigation-item__button .os-icon {
+        color: var(--os-color-primary) !important;
+      }
+
+      .os-navigation-item__text {
+        color: var(--os-color-text-primary);
+      }
+
+      .os-navigation-item--active .os-navigation-item__text {
+        color: var(--os-color-primary);
+      }
+    }
   }
 }
 
@@ -538,12 +587,45 @@
       line-height: 1;
       text-align: center;
       margin-top: 2px;
+      color: var(--os-color-text-primary);
     }
 
     .os-navigation-item--active .os-navigation-item__text,
     .os-navigation-item__link:focus .os-navigation-item__text,
     .os-navigation-item__button:focus .os-navigation-item__text {
       display: block;
+    }
+
+    /* Text color treatments - padrão: preto para inativo, azul para ativo */
+    .os-navigation-item__text {
+      color: var(--os-color-text-primary);
+    }
+    .os-navigation-item--active .os-navigation-item__text {
+      color: var(--os-color-primary);
+    }
+
+    /* Icon color treatments - mesma cor do texto (preto inativo, azul ativo) */
+    .os-navigation-item .os-icon,
+    .os-navigation-item .os-icon.mat-icon,
+    .os-navigation-item__link .os-icon,
+    .os-navigation-item__button .os-icon {
+      color: var(--os-color-text-primary) !important;
+    }
+    .os-navigation-item--active .os-icon,
+    .os-navigation-item--active .os-icon.mat-icon,
+    .os-navigation-item--active .os-navigation-item__link .os-icon,
+    .os-navigation-item--active .os-navigation-item__button .os-icon {
+      color: var(--os-color-primary) !important;
+    }
+
+    /* Garantir que link/button herdem a cor para ícones */
+    .os-navigation-item__link,
+    .os-navigation-item__button {
+      color: var(--os-color-text-primary);
+    }
+    .os-navigation-item--active .os-navigation-item__link,
+    .os-navigation-item--active .os-navigation-item__button {
+      color: var(--os-color-primary);
     }
 
     /* Indicador ativo estilo pill atrás do ícone */

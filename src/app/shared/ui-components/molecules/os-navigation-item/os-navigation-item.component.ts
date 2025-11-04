@@ -143,7 +143,9 @@ export class OsNavigationItemComponent {
       secondary: 'secondary',
       accent: 'info',
     };
-    return variantMap[this.variant()];
+
+    const iconVariant = this.isActive() ? 'primary' : 'default';
+    return variantMap[iconVariant];
   };
 
   containerClass = computed(() => {

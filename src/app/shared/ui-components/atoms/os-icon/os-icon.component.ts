@@ -218,6 +218,9 @@ export class OsIconComponent {
     'trending_up',
     'account_balance',
     'palette',
+    'light_mode',
+    'dark_mode',
+    'brightness_auto',
   ]);
 
   iconContent = computed(() => {
@@ -352,6 +355,9 @@ export class OsIconComponent {
       clear: 'close',
       priority_high: 'priority_high',
       palette: 'palette',
+      light_mode: 'light_mode',
+      dark_mode: 'dark_mode',
+      brightness_auto: 'brightness_auto',
     };
 
     return iconMap[iconName] || this.fallbackIcon();
