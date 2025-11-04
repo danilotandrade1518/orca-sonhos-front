@@ -19,7 +19,10 @@ describe('TransactionFormComponent', () => {
     update: ReturnType<typeof vi.fn>;
   };
   let authService: { currentUser: ReturnType<typeof vi.fn> };
-  let notificationService: { showSuccess: ReturnType<typeof vi.fn>; showError: ReturnType<typeof vi.fn> };
+  let notificationService: {
+    showSuccess: ReturnType<typeof vi.fn>;
+    showError: ReturnType<typeof vi.fn>;
+  };
   let budgetSelection: { selectedBudgetId: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
@@ -64,7 +67,6 @@ describe('TransactionFormComponent', () => {
 
     await component.onSubmit();
 
-    // remains invalid and no API calls
     expect(savedSpy).not.toHaveBeenCalled();
     expect(transactionsApi.create).not.toHaveBeenCalled();
   });
@@ -75,12 +77,11 @@ describe('TransactionFormComponent', () => {
     component.saved.subscribe(savedSpy);
     component.cancelled.subscribe(cancelledSpy);
 
-    // prepare valid form
     component['descriptionControl']()?.setValue('Compra no supermercado');
     component['descriptionControl']()?.markAsTouched();
     component['amountControl']()?.setValue(123.45);
     component['amountControl']()?.markAsTouched();
-    component['typeControl']()?.setValue('EXPENSE' as any);
+    component['typeControl']()?.setValue('EXPENSE' as unknown);
     component['typeControl']()?.markAsTouched();
     component['accountIdControl']()?.setValue('account-1');
     component['accountIdControl']()?.markAsTouched();
@@ -98,7 +99,6 @@ describe('TransactionFormComponent', () => {
   });
 
   it('should update a transaction successfully (edit mode)', async () => {
-    // set transaction input (edit mode)
     const tx = {
       id: 't1',
       description: 'Old desc',
@@ -106,14 +106,13 @@ describe('TransactionFormComponent', () => {
       type: 'EXPENSE',
       accountId: 'a1',
       categoryId: 'c1',
-    } as any;
+    } as unknown;
     fixture.componentRef.setInput('transaction', tx);
     fixture.detectChanges();
 
-    // form is initialized with transaction; update values
     component['descriptionControl']()?.setValue('Nova desc');
     component['amountControl']()?.setValue(99.99);
-    component['typeControl']()?.setValue('INCOME' as any);
+    component['typeControl']()?.setValue('INCOME' as unknown);
     component['accountIdControl']()?.setValue('account-1');
     component['categoryIdControl']()?.setValue('category-1');
 
@@ -132,11 +131,10 @@ describe('TransactionFormComponent', () => {
   it('should show error when user not authenticated', async () => {
     authService.currentUser = vi.fn(() => null);
 
-    // make form valid
     component['descriptionControl']()?.setValue('D');
     component['descriptionControl']()?.setValue('Compra teste');
     component['amountControl']()?.setValue(10);
-    component['typeControl']()?.setValue('EXPENSE' as any);
+    component['typeControl']()?.setValue('EXPENSE' as unknown);
     component['accountIdControl']()?.setValue('a1');
     component['categoryIdControl']()?.setValue('c1');
 
@@ -148,10 +146,9 @@ describe('TransactionFormComponent', () => {
   it('should show error when no budget selected', async () => {
     budgetSelection.selectedBudgetId = vi.fn(() => '');
 
-    // make form valid
     component['descriptionControl']()?.setValue('Compra');
     component['amountControl']()?.setValue(10);
-    component['typeControl']()?.setValue('EXPENSE' as any);
+    component['typeControl']()?.setValue('EXPENSE' as unknown);
     component['accountIdControl']()?.setValue('a1');
     component['categoryIdControl']()?.setValue('c1');
 
@@ -161,10 +158,9 @@ describe('TransactionFormComponent', () => {
   });
 
   it('should show error on API failure', async () => {
-    // make form valid
     component['descriptionControl']()?.setValue('Compra');
     component['amountControl']()?.setValue(10);
-    component['typeControl']()?.setValue('EXPENSE' as any);
+    component['typeControl']()?.setValue('EXPENSE' as unknown);
     component['accountIdControl']()?.setValue('a1');
     component['categoryIdControl']()?.setValue('c1');
 

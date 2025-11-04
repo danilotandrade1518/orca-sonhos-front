@@ -185,8 +185,6 @@ describe('BudgetSelectorComponent', () => {
     expect(emitSpy).toHaveBeenCalledWith(mockBudgets[1]);
   });
 
-  // Evento de criação removido no componente simplificado
-
   it('should not call setSelectedBudget when budget is not found', () => {
     component.onBudgetSelected({
       id: '999',
@@ -254,6 +252,5 @@ describe('BudgetSelectorComponent', () => {
     expect(internalSelector).toBeTruthy();
     expect(internalSelector.className).toContain('os-budget-selector--loading');
   });
-
-  // Estado vazio não adiciona mais classe específica; dropdown fica desabilitado quando sem orçamentos
+  
 });

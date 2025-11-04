@@ -200,10 +200,7 @@ describe('OsAppShellTemplateComponent', () => {
         { label: 'Ação 2', icon: 'edit', action: 'edit-item' },
       ]);
       fixture.detectChanges();
-
-      // O slot de contextual actions só aparece quando há conteúdo projetado
-      // Como não há conteúdo projetado no teste, o elemento não será renderizado
-      // Mas podemos verificar que o componente está configurado corretamente
+      
       expect(component.headerActions().length).toBe(2);
     });
   });
@@ -237,7 +234,6 @@ describe('OsAppShellTemplateComponent', () => {
       const themeButton = fixture.nativeElement.querySelector('.os-app-shell-template__theme-button');
       expect(themeButton).toBeTruthy();
       
-      // Verifica se o botão tem o atributo title correto
       const title = themeButton.getAttribute('title');
       expect(title).toBeTruthy();
     });

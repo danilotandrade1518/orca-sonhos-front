@@ -83,6 +83,5 @@ export class BudgetSelectorComponent {
       this.budgetSelected.emit(budget);
     }
   }
-
-  // Eventos removidos no componente simplificado: criação/compartilhamento/info
+  
 }

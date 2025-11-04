@@ -3,12 +3,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
-import {
-  OsHeaderComponent,
-  HeaderNavigationItem,
-  HeaderUserMenu,
-  HeaderAction,
-} from './os-header.component';
+import { OsHeaderComponent, HeaderUserMenu, HeaderAction } from './os-header.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsAvatarComponent } from '../../atoms/os-avatar/os-avatar.component';
 import { OsNavigationItemComponent } from '../../molecules/os-navigation-item/os-navigation-item.component';
@@ -41,21 +36,12 @@ describe('OsHeaderComponent', () => {
   });
 
   describe('Logo/Brand Section', () => {
-    // Nota: O componente atualmente não renderiza logo no template.
-    // O output logoClick existe mas não há implementação de logo no template.
-    // Estes testes foram removidos porque não há logo para testar.
-    // Se um logo for implementado no futuro, estes testes devem ser restaurados.
-    
     it('should have logoClick output available', () => {
       expect(component.logoClick).toBeDefined();
     });
   });
 
   describe('Navigation Section', () => {
-    // Nota: O componente atualmente não renderiza navegação desktop no template.
-    // Apenas navegação mobile está disponível através do mobile menu.
-    // Estes testes foram ajustados para refletir o estado atual do componente.
-    
     it('should have navigationClick output available', () => {
       expect(component.navigationClick).toBeDefined();
     });
@@ -243,10 +229,6 @@ describe('OsHeaderComponent', () => {
       expect(spy).toHaveBeenCalledWith(false);
     });
 
-    // Nota: O componente atualmente não renderiza navegação mobile no template.
-    // Apenas o toggle do menu mobile está implementado.
-    // Estes testes foram ajustados para refletir o estado atual do componente.
-    
     it('should have mobileNavigationClick output available', () => {
       expect(component.mobileNavigationClick).toBeDefined();
     });
@@ -309,7 +291,6 @@ describe('OsHeaderComponent', () => {
       expect(header.attributes['aria-label']).toBe('Main header');
     });
 
-    // Nota: O componente não renderiza navegação desktop no template
     it('should have navigationClick output for navigation handling', () => {
       expect(component.navigationClick).toBeDefined();
     });
@@ -356,7 +337,6 @@ describe('OsHeaderComponent', () => {
       expect(dropdown.attributes['role']).toBe('menu');
     });
 
-    // Nota: O componente não renderiza navegação mobile no template atualmente
     it('should have mobileNavigationClick output for mobile navigation handling', () => {
       expect(component.mobileNavigationClick).toBeDefined();
     });
@@ -430,7 +410,6 @@ describe('OsHeaderComponent', () => {
   });
 
   describe('Edge Cases', () => {
-    // Nota: O componente não tem input navigationItems nem renderiza navegação desktop
     it('should handle navigation outputs correctly', () => {
       expect(component.navigationClick).toBeDefined();
     });

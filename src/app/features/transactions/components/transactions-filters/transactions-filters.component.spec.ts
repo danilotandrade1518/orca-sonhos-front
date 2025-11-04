@@ -34,14 +34,12 @@ describe('TransactionsFiltersComponent', () => {
   it('should update filters on onFilterChange and emit on apply', () => {
     const spy = vi.fn();
     component.filtersChange.subscribe(spy);
-
-    // set accountId
+    
     const accountInput = { target: { value: 'acc-1' } } as unknown as Event;
     component.onFilterChange('accountId', accountInput);
     expect(component['filters']().accountId).toBe('acc-1');
     expect(component.hasActiveFilters()).toBe(true);
-
-    // set amount
+    
     const amountInput = { target: { value: '100' } } as unknown as Event;
     component.onFilterChange('amount', amountInput);
     expect(component['filters']().amount).toBe(100);

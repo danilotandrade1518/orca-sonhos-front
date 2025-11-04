@@ -21,16 +21,35 @@ const noCommentsPlugin = {
         return {
           Program(node) {
             node.comments.forEach((comment) => {
+              const commentText = comment.value.trim();
+
+              const eslintPatterns = [
+                'eslint-disable',
+                'eslint-enable',
+                'eslint-disable-next-line',
+                'eslint-disable-line',
+                '@ts-check',
+                '@ts-expect-error',
+                '@ts-ignore',
+                '@ts-nocheck',
+              ];
+
+              const isEslintDirective = eslintPatterns.some((pattern) =>
+                commentText.includes(pattern)
+              );
+
+              if (isEslintDirective) {
+                return;
+              }
+
               context.report({
                 node: comment,
                 message: 'Comentários no código devem ser evitados.',
                 fix(fixer) {
-                  // Remove o comentário e a linha inteira se o comentário estiver sozinho
                   const sourceCode = context.getSourceCode();
                   const lines = sourceCode.getLines();
-                  const commentLineIndex = comment.loc.start.line - 1; // linha do comentário (0-indexed)
+                  const commentLineIndex = comment.loc.start.line - 1;
 
-                  // Verifica se o comentário está sozinho na linha (sem código antes ou depois)
                   const commentLine = lines[commentLineIndex];
                   const commentOnly =
                     commentLine.trim() === comment.value.trim() ||
@@ -38,7 +57,6 @@ const noCommentsPlugin = {
                     commentLine.trim() === `/*${comment.value.trim()}*/`;
 
                   if (commentOnly) {
-                    // Remove a linha inteira incluindo quebras de linha
                     const lineStart = sourceCode.getIndexFromLoc({
                       line: commentLineIndex + 1,
                       column: 0,
@@ -50,7 +68,6 @@ const noCommentsPlugin = {
 
                     return fixer.removeRange([lineStart, lineEnd]);
                   } else {
-                    // Remove apenas o comentário
                     return fixer.remove(comment);
                   }
                 },

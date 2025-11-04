@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
-// BreakpointObserver removido: componente não muda mais por viewport
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 import {
   OsDropdownComponent,
@@ -33,12 +24,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 @Component({
   selector: 'os-budget-selector',
   standalone: true,
-  imports: [
-    CommonModule,
-    OsDropdownComponent,
-    OsIconComponent,
-    OsSpinnerComponent,
-  ],
+  imports: [CommonModule, OsDropdownComponent, OsIconComponent, OsSpinnerComponent],
   template: `
     <div
       class="os-budget-selector"
@@ -104,12 +90,12 @@ export class OsBudgetSelectorComponent {
   readonly placeholder = input<string>('Selecionar orçamento');
   readonly ariaLabel = input<string>('Seletor de orçamento melhorado');
   readonly state = input<BudgetSelectorState>('default');
-  
+
   readonly budgetSelected = output<BudgetOption>();
-  
+
   private readonly isDropdownOpenSignal = signal(false);
   private readonly errorSignal = signal<string | null>(null);
-  
+
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error' || !!this.errorSignal());
   readonly isDropdownOpen = computed(() => this.isDropdownOpenSignal());
@@ -179,7 +165,6 @@ export class OsBudgetSelectorComponent {
       case 'ArrowDown':
         if (!this.isDropdownOpen()) {
           event.preventDefault();
-          
         }
         break;
       case 'Escape':
@@ -188,8 +173,7 @@ export class OsBudgetSelectorComponent {
         }
         break;
       case 'Enter':
-      case ' ': // manter acessibilidade sem acionar criação
-        // Não aciona criação de orçamento neste componente simplificado
+      case ' ':
         break;
     }
   }
