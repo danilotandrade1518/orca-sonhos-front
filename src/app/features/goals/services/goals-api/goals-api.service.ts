@@ -46,4 +46,3 @@ export class GoalsApiService {
     return this.api.post<RemoveAmountFromGoalResponseDto>('goal/remove-amount-goal', body);
   }
 }
-

@@ -1,10 +1,10 @@
 export interface GoalDto {
   id: string;
   name: string;
-  targetAmount: number;
-  currentAmount: number;
-  dueDate: string | null;
+  totalAmount: number;
+  accumulatedAmount: number;
+  deadline: string | null;
   budgetId: string;
-  sourceAccountId: string;
+  sourceAccountId?: string;
 }
 

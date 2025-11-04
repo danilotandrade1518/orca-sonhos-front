@@ -49,9 +49,57 @@
 
 ---
 
+### 🗓️ Sessão - FASE 2
+
+**Fase**: FASE 2 - Estado (signals) e Cálculos
+**Objetivo**: Implementar GoalsState com signals/computed e integração com BudgetSelectionService
+
+#### ✅ Trabalho Realizado
+
+- ✅ Criado `GoalsState` com:
+  - Signals: `items`, `isLoading`, `lastUpdated`, `error`
+  - Computeds: `hasItems`, `itemsCount`, `progressById`, `remainingById`, `suggestedMonthlyById`
+  - Ações: `load`, `create`, `update`, `delete`, `addAmount`, `removeAmount`
+- ✅ Criado mapper `goal.mapper.ts` para converter entre nomenclaturas backend/frontend
+- ✅ Integração com `BudgetSelectionService`:
+  - `load()` usa `selectedBudgetId()` automaticamente se budgetId não fornecido
+  - Valida ausência de budget selecionado
+- ✅ Implementadas validações de não-negatividade:
+  - Impede `currentAmount < 0`
+  - Valida `amount > 0` em addAmount/removeAmount
+  - Rejeita remoção que resulte em saldo negativo
+- ✅ Ajustado `GoalsApiService` para mapear dados do backend corretamente
+- ✅ Testes unitários completos:
+  - Cálculos de progresso, restante e aporte mensal sugerido
+  - Validações de regras de negócio
+  - Integração com BudgetSelectionService
+  - Fluxos de CRUD e aportes
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Mapeamento de dados feito no `GoalsApiService.listByBudget()` ao invés do state
+  - **Motivo**: Centralizar conversão de nomenclatura e manter state limpo
+- **Decisão**: Cálculo de meses restantes considera dias para precisão
+  - **Motivo**: Se dia do deadline < dia atual, subtrai 1 mês
+- **Decisão**: Aporte mensal sugerido retorna `null` quando não há deadline ou deadline passou
+  - **Motivo**: Conforme especificação do context.md
+
+#### 🧪 Validações
+
+- ✅ Todos os testes unitários passando
+- ✅ Cálculos validados (progresso, restante, aporte mensal)
+- ✅ Validações de não-negatividade funcionando
+- ✅ Integração com BudgetSelectionService testada
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 3: UI de Lista (GoalList + Page)
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-228
-**Fase Atual**: FASE 1 - Fundações de Contratos e Rotas [Status: ✅]
-**Última Modificação**: DTOs, rotas e serviço de API criados
-**Próxima Tarefa**: FASE 2 - Estado (signals) e Cálculos
+**Fase Atual**: FASE 2 - Estado (signals) e Cálculos [Status: ✅]
+**Última Modificação**: GoalsState implementado com cálculos e validações
+**Próxima Tarefa**: FASE 3 - UI de Lista (GoalList + Page)

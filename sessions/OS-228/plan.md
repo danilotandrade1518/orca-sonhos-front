@@ -54,7 +54,7 @@ Definir contratos (DTOs), preparar rotas lazy e esqueleto do serviço de API.
 
 ---
 
-## 📅 FASE 2: Estado (signals) e Cálculos [Status: ⏳]
+## 📅 FASE 2: Estado (signals) e Cálculos [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -62,24 +62,29 @@ Implementar `GoalsState` com signals/computed e integração inicial com `GoalsA
 
 ### 📋 Tarefas
 
-#### Implementar GoalsState [⏳]
+#### Implementar GoalsState [✅]
 
 **Descrição**: Criar `features/goals/state/goals-state/goals.state.ts` com `items`, `isLoading`, `lastUpdated`, computeds `progressById`, `remainingById`, `suggestedMonthlyById` e ações `load/create/update/delete/addAmount/removeAmount`.
 **Critério de Conclusão**: Testes unitários cobrindo cálculos e regras de não-negatividade.
 
-#### Integração com BudgetSelectionService [⏳]
+#### Integração com BudgetSelectionService [✅]
 
 **Descrição**: Em `load(budgetId)`, obter `budgetId` do `BudgetSelectionService` e usar no `listByBudget`.
 **Critério de Conclusão**: `listByBudget` chamado com `budgetId` válido; testes validam ausência/presença de budget.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Cobertura de testes para cálculos e fluxo básico
-- [ ] Integração com `BudgetSelectionService` validada
+- [x] Cobertura de testes para cálculos e fluxo básico
+- [x] Integração com `BudgetSelectionService` validada
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: GoalsState criado com signals/computed seguindo padrão do BudgetState
+- **Cálculos**: Implementados progressById (%), remainingById (max(target - current, 0)), suggestedMonthlyById (remaining / months)
+- **Validações**: Regras de não-negatividade implementadas (impedir currentAmount < 0, validar amount > 0)
+- **Integração**: GoalsState integrado com BudgetSelectionService para obter budgetId automaticamente
+- **Mapper**: Criado mapper para converter entre nomenclaturas backend (totalAmount, accumulatedAmount) e frontend (targetAmount, currentAmount)
+- **Testes**: Cobertura completa de testes unitários incluindo cálculos, validações e integração
 
 ---
 
