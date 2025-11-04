@@ -128,7 +128,6 @@ export class AppLayoutComponent implements OnInit {
 
   onSidebarCollapseChange(collapsed: boolean): void {
     this.sidebarCollapsed.set(collapsed);
-    console.log('Sidebar collapsed:', collapsed);
   }
 
   onHeaderLogoClick(): void {
