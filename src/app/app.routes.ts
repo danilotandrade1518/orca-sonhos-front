@@ -27,6 +27,10 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/transactions/transactions.routes').then((m) => m.TRANSACTIONS_ROUTES),
       },
+      {
+        path: 'goals',
+        loadChildren: () => import('./features/goals/goals.routes').then((m) => m.GOALS_ROUTES),
+      },
     ],
   },
 ];

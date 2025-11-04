@@ -14,7 +14,7 @@ Implementar a feature de Metas (Goals) ponta a ponta com DTOs alinhados ao backe
 
 ---
 
-## 📅 FASE 1: Fundações de Contratos e Rotas [Status: ⏳]
+## 📅 FASE 1: Fundações de Contratos e Rotas [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -22,30 +22,35 @@ Definir contratos (DTOs), preparar rotas lazy e esqueleto do serviço de API.
 
 ### 📋 Tarefas
 
-#### Definir DTOs de Goal [⏳]
+#### Definir DTOs de Goal [✅]
 
 **Descrição**: Criar `src/dtos/goal/goal-types/goal-types.ts` com os tipos `GoalDto`, `CreateGoalDto`, `UpdateGoalDto`, `DeleteGoalDto`, `AddAmountToGoalDto`, `RemoveAmountFromGoalDto` e testes básicos.
 **Critério de Conclusão**: Tipos exportados, testes passando, mapeamentos `totalAmount↔targetAmount` e `accumulatedAmount↔currentAmount` documentados.
 
-#### Preparar rotas lazy de Goals [⏳]
+#### Preparar rotas lazy de Goals [✅]
 
 **Descrição**: Ajustar `app.routes.ts` adicionando `path: 'goals'` e subrotas `new` e `:id` com `loadComponent` (páginas placeholder).
 **Critério de Conclusão**: Navegação funcional entre `'/goals'`, `'/goals/new'` e `'/goals/:id'` com placeholders.
 
-#### Esqueleto do GoalsApiService [⏳]
+#### Esqueleto do GoalsApiService [✅]
 
 **Descrição**: Criar `features/goals/services/goals-api/goals-api.service.ts` com métodos assinaturas `create`, `update`, `delete`, `addAmount`, `removeAmount`, `listByBudget` e testes de assinatura.
 **Critério de Conclusão**: Serviço disponível via `inject()`, testes de assinatura compilam.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Tipos e testes criados
-- [ ] Rotas lazy carregam componentes placeholder
-- [ ] Service compila com assinaturas corretas
+- [x] Tipos e testes criados
+- [x] Rotas lazy carregam componentes placeholder
+- [x] Service compila com assinaturas corretas
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Decisão**: DTOs criados com mapeamento entre nomenclatura do backend (`totalAmount`, `accumulatedAmount`) e frontend (`targetAmount`, `currentAmount`)
+- **Decisão**: Rotas lazy configuradas seguindo padrão de `transactions.routes.ts` e `budget.routes.ts`
+- **Decisão**: GoalsApiService usa `ApiResponse<T>` como tipo de retorno para manter consistência com ApiService
+- **Implementação**: Páginas placeholder criadas para `/goals`, `/goals/new` e `/goals/:id`
+- **Testes**: Testes básicos de assinatura criados para GoalsApiService e GoalDto
+- **Correção**: Adicionado handler MSW para endpoint `remove-amount-goal` que estava faltando
 
 ---
 
@@ -242,4 +247,3 @@ Garantir OnPush, responsividade fina, tokens/thresholds, e cobertura de testes.
 - [ ] Todos os testes passando
 - [ ] Documentação atualizada (READMEs, comentários essenciais)
 - [ ] Pronto para PR
-

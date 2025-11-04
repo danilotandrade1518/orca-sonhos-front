@@ -144,4 +144,24 @@ export const goalHandlers = [
 
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
+
+  http.post('/goal/remove-amount-goal', async ({ request }) => {
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = (await request.json()) as any;
+
+    if (!body.id || !body.amount) {
+      return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (body.amount <= 0) {
+      return HttpResponse.json({ error: 'Amount must be positive' }, { status: 400 });
+    }
+
+    return HttpResponse.json({ success: true }, { status: 200 });
+  }),
 ];
