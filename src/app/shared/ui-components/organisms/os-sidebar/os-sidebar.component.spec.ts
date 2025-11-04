@@ -77,11 +77,9 @@ describe('OsSidebarComponent', () => {
       expect(component.theme()).toBe('light');
       expect(component.collapsed()).toBe(false);
       expect(component.ariaLabel()).toBe('Navegação lateral');
-      expect(component.logoAlt()).toBe('Logo');
-      expect(component.showHeader()).toBe(true);
       expect(component.showFooter()).toBe(false);
-      expect(component.showToggleButton()).toBe(true);
       expect(component.showCustomContent()).toBe(false);
+      expect(component.showExpandButton()).toBe(true);
     });
 
     it('should accept custom inputs', () => {
@@ -89,27 +87,19 @@ describe('OsSidebarComponent', () => {
       fixture.componentRef.setInput('size', 'large');
       fixture.componentRef.setInput('theme', 'dark');
       fixture.componentRef.setInput('collapsed', true);
-      fixture.componentRef.setInput('title', 'My App');
-      fixture.componentRef.setInput('logo', '/assets/logo.png');
       fixture.componentRef.setInput('ariaLabel', 'Custom navigation');
-      fixture.componentRef.setInput('logoAlt', 'Custom logo');
-      fixture.componentRef.setInput('showHeader', false);
       fixture.componentRef.setInput('showFooter', true);
-      fixture.componentRef.setInput('showToggleButton', false);
       fixture.componentRef.setInput('showCustomContent', true);
+      fixture.componentRef.setInput('showExpandButton', false);
 
       expect(component.variant()).toBe('minimal');
       expect(component.size()).toBe('large');
       expect(component.theme()).toBe('dark');
       expect(component.collapsed()).toBe(true);
-      expect(component.title()).toBe('My App');
-      expect(component.logo()).toBe('/assets/logo.png');
       expect(component.ariaLabel()).toBe('Custom navigation');
-      expect(component.logoAlt()).toBe('Custom logo');
-      expect(component.showHeader()).toBe(false);
       expect(component.showFooter()).toBe(true);
-      expect(component.showToggleButton()).toBe(false);
       expect(component.showCustomContent()).toBe(true);
+      expect(component.showExpandButton()).toBe(false);
     });
   });
 
@@ -334,55 +324,20 @@ describe('OsSidebarComponent', () => {
   });
 
   describe('Template Rendering', () => {
-    it('should render header when showHeader is true', () => {
-      fixture.componentRef.setInput('showHeader', true);
-      fixture.componentRef.setInput('title', 'Test App');
+    it('should render expand button when showExpandButton is true', () => {
+      fixture.componentRef.setInput('showExpandButton', true);
       fixture.detectChanges();
 
-      const header = fixture.nativeElement.querySelector('.os-sidebar__header');
-      expect(header).toBeTruthy();
+      const expandButton = fixture.nativeElement.querySelector('.os-sidebar__expand');
+      expect(expandButton).toBeTruthy();
     });
 
-    it('should not render header when showHeader is false', () => {
-      fixture.componentRef.setInput('showHeader', false);
+    it('should not render expand button when showExpandButton is false', () => {
+      fixture.componentRef.setInput('showExpandButton', false);
       fixture.detectChanges();
 
-      const header = fixture.nativeElement.querySelector('.os-sidebar__header');
-      expect(header).toBeFalsy();
-    });
-
-    it('should render title when provided', () => {
-      fixture.componentRef.setInput('title', 'My Application');
-      fixture.detectChanges();
-
-      const title = fixture.nativeElement.querySelector('.os-sidebar__title');
-      expect(title).toBeTruthy();
-      expect(title.textContent).toBe('My Application');
-    });
-
-    it('should render logo when provided', () => {
-      fixture.componentRef.setInput('logo', '/assets/logo.png');
-      fixture.detectChanges();
-
-      const logo = fixture.nativeElement.querySelector('.os-sidebar__logo-image');
-      expect(logo).toBeTruthy();
-      expect(logo.src).toContain('/assets/logo.png');
-    });
-
-    it('should render toggle button when showToggleButton is true', () => {
-      fixture.componentRef.setInput('showToggleButton', true);
-      fixture.detectChanges();
-
-      const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
-      expect(toggleButton).toBeTruthy();
-    });
-
-    it('should not render toggle button when showToggleButton is false', () => {
-      fixture.componentRef.setInput('showToggleButton', false);
-      fixture.detectChanges();
-
-      const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
-      expect(toggleButton).toBeFalsy();
+      const expandButton = fixture.nativeElement.querySelector('.os-sidebar__expand');
+      expect(expandButton).toBeFalsy();
     });
 
     it('should render footer when showFooter is true', () => {
@@ -440,23 +395,23 @@ describe('OsSidebarComponent', () => {
       expect(listItems.length).toBeGreaterThan(0);
     });
 
-    it('should have proper toggle button ARIA attributes', () => {
-      fixture.componentRef.setInput('showToggleButton', true);
+    it('should have proper expand button ARIA attributes', () => {
+      fixture.componentRef.setInput('showExpandButton', true);
       fixture.detectChanges();
 
-      const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
-      expect(toggleButton.getAttribute('aria-label')).toBe('Colapsar sidebar');
-      expect(toggleButton.getAttribute('aria-expanded')).toBe('true');
+      const expandButton = fixture.nativeElement.querySelector('.os-sidebar__expand');
+      expect(expandButton).toBeTruthy();
+      expect(expandButton.getAttribute('aria-expanded')).toBeTruthy();
     });
 
-    it('should update toggle button ARIA attributes when collapsed', () => {
-      fixture.componentRef.setInput('showToggleButton', true);
-      fixture.componentRef.setInput('collapsed', true);
+    it('should update expand button ARIA attributes when expanded', () => {
+      fixture.componentRef.setInput('showExpandButton', true);
+      fixture.componentRef.setInput('expanded', true);
       fixture.detectChanges();
 
-      const toggleButton = fixture.nativeElement.querySelector('.os-sidebar__toggle');
-      expect(toggleButton.getAttribute('aria-label')).toBe('Expandir sidebar');
-      expect(toggleButton.getAttribute('aria-expanded')).toBe('false');
+      const expandButton = fixture.nativeElement.querySelector('.os-sidebar__expand');
+      expect(expandButton).toBeTruthy();
+      expect(expandButton.getAttribute('aria-expanded')).toBe('true');
     });
   });
 

@@ -11,7 +11,9 @@ import {
   effect,
   ElementRef,
   ViewChild,
-  AfterViewInit,
+  afterNextRender,
+  Injector,
+  runInInjectionContext,
 } from '@angular/core';
 import { Subscription, filter, fromEvent } from 'rxjs';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
@@ -157,10 +159,11 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
   styleUrls: ['./os-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OsSidebarComponent implements OnDestroy, AfterViewInit {
+export class OsSidebarComponent implements OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
   private document = inject(DOCUMENT);
+  private injector = inject(Injector);
   @ViewChild('sidebarElement') sidebarElement?: ElementRef<HTMLElement>;
   private isOpenSignal = signal(false);
   private isMobileSignal = signal(false);
@@ -217,18 +220,20 @@ export class OsSidebarComponent implements OnDestroy, AfterViewInit {
           }, 50);
         }
       });
-  }
 
-  ngAfterViewInit(): void {
-    effect(() => {
-      const isExpanded = this.isExpanded();
-      const isMobile = this.isMobileSignal();
+    afterNextRender(() => {
+      runInInjectionContext(this.injector, () => {
+        effect(() => {
+          const isExpanded = this.isExpanded();
+          const isMobile = this.isMobileSignal();
 
-      if (!isMobile && isExpanded) {
-        this.setupClickOutsideListener();
-      } else {
-        this.removeClickOutsideListener();
-      }
+          if (!isMobile && isExpanded) {
+            this.setupClickOutsideListener();
+          } else {
+            this.removeClickOutsideListener();
+          }
+        });
+      });
     });
   }
 

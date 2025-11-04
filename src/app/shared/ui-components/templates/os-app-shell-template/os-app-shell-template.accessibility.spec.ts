@@ -129,10 +129,14 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     });
 
     it('should have proper focus management', () => {
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      expect(themeToggle).toBeTruthy();
+      fixture.componentRef.setInput('layout', { showSidebar: true } as any);
+      fixture.detectChanges();
       
-      expect(themeToggle).toBeTruthy();
+      const themeButton = fixture.nativeElement.querySelector('.os-app-shell-template__theme-button');
+      expect(themeButton).toBeTruthy();
+      
+      // Verifica que o botão é focável
+      expect(themeButton.tagName).toBe('BUTTON');
     });
 
     it('should handle Escape key for closing overlays', () => {
@@ -179,9 +183,16 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
     });
 
     it('should have proper theme toggle labels', () => {
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
-      expect(themeToggle).toBeTruthy();
+      fixture.componentRef.setInput('layout', { showSidebar: true } as any);
+      fixture.detectChanges();
       
+      const themeButton = fixture.nativeElement.querySelector('.os-app-shell-template__theme-button');
+      expect(themeButton).toBeTruthy();
+      
+      // Verifica que o botão tem aria-label
+      const ariaLabel = themeButton.getAttribute('aria-label');
+      expect(ariaLabel).toBeTruthy();
+      expect(ariaLabel).toBe('Alternar tema');
     });
   });
 
@@ -212,17 +223,21 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
 
   describe('Touch Target Accessibility', () => {
     it('should have adequate touch targets', () => {
+      fixture.componentRef.setInput('error', 'Erro de conexão');
+      fixture.componentRef.setInput('layout', { showSidebar: true } as any);
+      fixture.detectChanges();
+      
       const retryButton = fixture.nativeElement.querySelector(
         '.os-app-shell-template__retry-button'
       );
-      const themeToggle = fixture.nativeElement.querySelector('os-toggle');
+      const themeButton = fixture.nativeElement.querySelector('.os-app-shell-template__theme-button');
       
       if (retryButton) {
         expect(retryButton).toBeTruthy();
       }
 
-      if (themeToggle) {
-        expect(themeToggle).toBeTruthy();
+      if (themeButton) {
+        expect(themeButton).toBeTruthy();
       }
     });
   });
