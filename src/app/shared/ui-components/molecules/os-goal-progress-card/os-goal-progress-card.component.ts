@@ -59,13 +59,6 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-icon name="check" size="sm" variant="success" [ariaLabel]="'Meta concluída'" />
           } @else if (isOverdue()) {
           <os-icon name="warning" size="sm" variant="error" [ariaLabel]="'Meta atrasada'" />
-          } @else {
-          <os-icon
-            [name]="getPriorityIcon()"
-            size="sm"
-            [variant]="getPriorityVariant()"
-            [ariaLabel]="getPriorityLabel()"
-          />
           }
         </div>
       </div>
@@ -233,54 +226,7 @@ export class OsGoalProgressCardComponent {
 
   readonly descriptionId = computed(() => `goal-description-${this.goalData()?.id || 'default'}`);
 
-  getPriorityIcon(): string {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'flag';
-      case 'medium':
-        return 'star';
-      case 'low':
-        return 'bookmark';
-      default:
-        return 'flag';
-    }
-  }
-
-  getPriorityVariant():
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'info' {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      case 'low':
-        return 'info';
-      default:
-        return 'default';
-    }
-  }
-
-  getPriorityLabel(): string {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'Prioridade alta';
-      case 'medium':
-        return 'Prioridade média';
-      case 'low':
-        return 'Prioridade baixa';
-      default:
-        return 'Prioridade';
-    }
-  }
+  // Indicador de prioridade removido (não há funcionalidade de favoritar)
 
   getProgressVariant(): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
     const progress = this.progressPercentage();
