@@ -248,7 +248,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             </div>
             } @case ('account-balance') {
             <div class="os-dashboard-widgets__account-balance">
-              @for (account of getAccountBalances(); track account.accountName) {
+              @for (account of getAccountBalances(widget); track account.accountName) {
               <div class="os-dashboard-widgets__account-item">
                 <div class="os-dashboard-widgets__account-info">
                   <os-icon
@@ -492,7 +492,10 @@ export class OsDashboardWidgetsComponent {
     ];
   }
 
-  getAccountBalances(): AccountBalanceData[] {
+  getAccountBalances(widget: DashboardWidget): AccountBalanceData[] {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as AccountBalanceData[];
+    }
     return [
       {
         accountName: 'Conta Corrente',

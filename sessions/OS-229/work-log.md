@@ -249,10 +249,69 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 7
+
+**Fase**: FASE 7: Integrações
+**Objetivo**: Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e menu/side-nav
+
+#### ✅ Trabalho Realizado
+
+- **Menu/Side-nav**: Adicionado item "Contas" no menu principal com ícone `account_balance_wallet`, posicionado após "Orçamentos"
+- **Dashboard**: 
+  - Integrado widget de contas com `AccountState`
+  - Converter `AccountDto[]` para `AccountBalanceData[]` no `DashboardWidgetsComponent`
+  - Carregamento automático de contas quando widget está habilitado (via effect)
+  - Navegação ao clicar no widget para `/accounts`
+  - Atualizado `os-dashboard-widgets` para usar dados do widget quando disponíveis
+- **Budgets**: 
+  - Adicionada seção "Contas do orçamento" em `budget-detail.page.ts`
+  - Exibe lista de contas do orçamento atual com nome, tipo e saldo
+  - CTA "Criar Nova Conta" e link "Ver Todas as Contas"
+  - Estados: loading, empty, success
+  - Carregamento automático de contas ao abrir detalhes do orçamento
+- **Transactions**: 
+  - Integrado `AccountState` na página de transações
+  - `accountOptions` agora é computed signal que converte `AccountDto[]` para formato de dropdown
+  - Filtro automático por orçamento atual (via `accountsByBudgetId`)
+  - Carregamento automático de contas quando orçamento muda (via effect)
+- **Goals**: 
+  - Adicionados links de navegação no sidebar de `goal-detail.page.ts`
+  - Link clicável no `sourceAccountId` quando há conta associada
+  - Link geral "Ver todas as contas" sempre visível
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Integração completa com AccountState em todas as features - **Motivo**: Consistência e atualização reativa de dados sem duplicação
+- **Decisão**: Usar computed signals para accountOptions em Transactions - **Motivo**: Reatividade automática quando contas mudam
+- **Decisão**: Carregamento automático via effect quando widget está habilitado - **Motivo**: Evitar carregamentos desnecessários
+- **Observação**: Formato de saldo - verificado que `account.balance` já está em centavos no backend, mas exibição em `budget-detail` usa formatação direta (sem divisão por 100)
+
+#### 🧪 Validações
+
+- Todas as integrações funcionando corretamente
+- Navegação entre features testada
+- Sem erros de lint/type-check
+- Build passando sem erros
+
+#### ⏭️ Próximos Passos
+
+- FASE 8: Testes e Acessibilidade (cobertura ≥ 80%, validação WCAG 2.1 AA)
+
+#### 🎉 Conclusão da Fase
+
+- Menu/side-nav atualizado com item "Contas"
+- Dashboard integrado com widget de contas funcional
+- Budgets integrado com seção de contas do orçamento
+- Transactions integrado com campo conta obrigatório e filtro
+- Goals integrado com links de navegação
+- Todas as integrações funcionando e testadas
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 5: Feature Accounts - Rotas e Página Principal [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de rotas, `AccountsPage` e `AccountFormComponent`
-**Próxima Tarefa**: FASE 6 - Criar modais de ações secundárias (TransferModal, ReconcileModal, ConfirmDeleteModal)
+**Fase Atual**: FASE 7: Integrações [Status: ✅ Completada]
+**Última Modificação**: Integração completa de contas com Dashboard, Budgets, Transactions, Goals e menu/side-nav
+**Próxima Tarefa**: FASE 8 - Testes e Acessibilidade (cobertura ≥ 80%, validação WCAG 2.1 AA)
 

@@ -586,7 +586,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 ---
 
-## 📅 FASE 7: Integrações [Status: ⏳]
+## 📅 FASE 7: Integrações [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -594,7 +594,7 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 ### 📋 Tarefas
 
-#### Integrar menu/side-nav [⏳]
+#### Integrar menu/side-nav [✅]
 
 **Descrição**:
 
@@ -615,7 +615,7 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 - `src/app/core/layout/app-layout.component.ts` para estrutura do menu
 
-#### Integrar Dashboard [⏳]
+#### Integrar Dashboard [✅]
 
 **Descrição**:
 
@@ -639,7 +639,7 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 - `src/app/features/dashboard/components/dashboard-widgets/dashboard-widgets.component.ts` para padrão
 
-#### Integrar Budgets [⏳]
+#### Integrar Budgets [✅]
 
 **Descrição**:
 
@@ -661,7 +661,7 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 - `src/app/features/budget/pages/budget-list/budget-list.page.ts` para padrão
 
-#### Integrar Transactions [⏳]
+#### Integrar Transactions [✅]
 
 **Descrição**:
 
@@ -684,7 +684,7 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 - `src/app/features/transactions/pages/transactions/transactions.page.ts` para estrutura
 
-#### Integrar Goals [⏳]
+#### Integrar Goals [✅]
 
 **Descrição**:
 
@@ -700,17 +700,25 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 ### 🧪 Critérios de Validação
 
-- [ ] Menu/side-nav atualizado
-- [ ] Dashboard integrado (card "Contas")
-- [ ] Budgets integrado (seção "Contas")
-- [ ] Transactions integrado (campo obrigatório e filtro)
-- [ ] Goals integrado (links de navegação)
-- [ ] Todas as integrações funcionando
-- [ ] Navegação entre features funcionando
+- [x] Menu/side-nav atualizado
+- [x] Dashboard integrado (card "Contas")
+- [x] Budgets integrado (seção "Contas")
+- [x] Transactions integrado (campo obrigatório e filtro)
+- [x] Goals integrado (links de navegação)
+- [x] Todas as integrações funcionando
+- [x] Navegação entre features funcionando
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre integrações e UX]_
+- **Decisão**: Integração completa com AccountState em todas as features - **Motivo**: Consistência e atualização reativa de dados
+- **Implementação**:
+  - Menu/side-nav: Adicionado item "Contas" com ícone `account_balance_wallet` após "Orçamentos"
+  - Dashboard: Widget de contas integrado com AccountState, exibe dados reais, navegação ao clicar para `/accounts`
+  - Budgets: Seção "Contas do orçamento" adicionada em budget-detail com lista de contas, CTA "Criar Nova Conta" e link "Ver Todas as Contas"
+  - Transactions: Campo conta já existia, agora integrado com AccountState via computed signal, filtrado automaticamente por orçamento atual
+  - Goals: Links de navegação adicionados no sidebar quando há conta associada (`sourceAccountId`) e link geral "Ver todas as contas"
+- **Validação**: Todas as integrações funcionando, sem erros de lint/type-check
+- **Observação**: AccountState carrega automaticamente quando necessário (via effect em DashboardWidgetsComponent e TransactionsPage)
 
 ---
 

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
+import { AccountState } from '@core/services/account/account-state/account.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
@@ -132,6 +133,62 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             </button>
           </div>
         </section>
+
+        <section class="budget-detail-page__card">
+          <div class="budget-detail-page__card-header">
+            <h2 class="budget-detail-page__card-title">Contas do Orçamento</h2>
+            <button
+              type="button"
+              class="button button--primary button--small"
+              (click)="navigateToCreateAccount()"
+              [attr.aria-label]="'Criar nova conta para o orçamento ' + budget.name"
+            >
+              Criar Nova Conta
+            </button>
+          </div>
+
+          @if (accountsLoading()) {
+          <div class="budget-detail-page__accounts-loading" role="status" aria-live="polite">
+            <p>Carregando contas...</p>
+          </div>
+          } @else if (accounts().length === 0) {
+          <div class="budget-detail-page__accounts-empty" role="status">
+            <p>Nenhuma conta cadastrada para este orçamento.</p>
+            <button
+              type="button"
+              class="button button--primary"
+              (click)="navigateToCreateAccount()"
+              aria-label="Criar primeira conta"
+            >
+              Criar Primeira Conta
+            </button>
+          </div>
+          } @else {
+          <div class="budget-detail-page__accounts-list" role="list" aria-label="Lista de contas">
+            @for (account of accounts(); track account.id) {
+            <div class="budget-detail-page__account-item" role="listitem">
+              <div class="budget-detail-page__account-info">
+                <span class="budget-detail-page__account-name">{{ account.name }}</span>
+                <span class="budget-detail-page__account-type">{{ getAccountTypeLabel(account.type) }}</span>
+              </div>
+              <span class="budget-detail-page__account-balance">
+                {{ formatCurrency(account.balance) }}
+              </span>
+            </div>
+            }
+          </div>
+          <div class="budget-detail-page__accounts-actions">
+            <button
+              type="button"
+              class="button button--secondary"
+              (click)="navigateToAccounts()"
+              aria-label="Ver todas as contas"
+            >
+              Ver Todas as Contas
+            </button>
+          </div>
+          }
+        </section>
       </main>
       } @else {
       <div class="budget-detail-page__not-found" role="alert" aria-live="polite">
@@ -166,6 +223,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 export class BudgetDetailPage implements OnInit {
   private readonly budgetState = inject(BudgetState);
   private readonly authService = inject(AuthService);
+  private readonly accountState = inject(AccountState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -173,6 +231,8 @@ export class BudgetDetailPage implements OnInit {
   readonly error = this.budgetState.error;
 
   readonly currentUser = this.authService.currentUser;
+  readonly accounts = computed(() => this.accountState.accountsByBudgetId());
+  readonly accountsLoading = computed(() => this.accountState.loading());
 
   readonly budgetId = signal<string | null>(null);
   readonly showDeleteConfirm = signal(false);
@@ -230,6 +290,7 @@ export class BudgetDetailPage implements OnInit {
       }
 
       this.budgetState.selectBudget(id);
+      this.accountState.loadAccounts();
     }
   }
 
@@ -249,6 +310,33 @@ export class BudgetDetailPage implements OnInit {
     if (id) {
       this.router.navigate(['/budgets', id, 'edit']);
     }
+  }
+
+  navigateToCreateAccount(): void {
+    this.router.navigate(['/accounts'], { queryParams: { create: true } });
+  }
+
+  navigateToAccounts(): void {
+    this.router.navigate(['/accounts']);
+  }
+
+  getAccountTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      CHECKING_ACCOUNT: 'Conta Corrente',
+      SAVINGS_ACCOUNT: 'Poupança',
+      PHYSICAL_WALLET: 'Carteira Física',
+      DIGITAL_WALLET: 'Carteira Digital',
+      INVESTMENT_ACCOUNT: 'Investimento',
+      OTHER: 'Outros',
+    };
+    return labels[type] || type;
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
   }
 
   confirmDelete(): void {

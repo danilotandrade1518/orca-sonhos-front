@@ -26,7 +26,31 @@ import { GoalsState } from '../../state/goals-state/goals.state';
         <div slot="sidebar">
           <div class="os-goal-detail__sidebar">
             <p><strong>Orçamento:</strong> {{ goal()!.budgetId }}</p>
-            <p><strong>Conta:</strong> {{ goal()!.sourceAccountId || '—' }}</p>
+            <p>
+              <strong>Conta:</strong>
+              @if (goal()!.sourceAccountId) {
+              <a
+                href="/accounts"
+                (click)="navigateToAccounts($event)"
+                class="os-goal-detail__account-link"
+                [attr.aria-label]="'Ver conta ' + goal()!.sourceAccountId"
+              >
+                {{ goal()!.sourceAccountId }}
+              </a>
+              } @else {
+              <span>—</span>
+              }
+            </p>
+            <p>
+              <a
+                href="/accounts"
+                (click)="navigateToAccounts($event)"
+                class="os-goal-detail__accounts-link"
+                aria-label="Ver todas as contas"
+              >
+                Ver todas as contas
+              </a>
+            </p>
           </div>
         </div>
       </os-detail-template>
@@ -166,5 +190,10 @@ export class GoalDetailPage {
 
   closeRemoveModal(): void {
     this._showRemoveModal.set(false);
+  }
+
+  navigateToAccounts(event: Event): void {
+    event.preventDefault();
+    this.router.navigate(['/accounts']);
   }
 }
