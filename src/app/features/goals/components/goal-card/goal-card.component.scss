@@ -1,0 +1,123 @@
+.os-goal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--os-border-color, #e0e0e0);
+  background: var(--os-surface-color, #fff);
+}
+
+.os-goal-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.os-goal-card__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.os-goal-card__progress-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--os-color-gray-200, #eee);
+  overflow: hidden;
+}
+
+.os-goal-card__progress-bar-fill {
+  height: 100%;
+  transition: width 200ms ease, background-color 200ms ease;
+
+  &--success {
+    background-color: var(--os-color-success, #10b981);
+  }
+
+  &--warning {
+    background-color: var(--os-color-warning, #f59e0b);
+  }
+
+  &--danger {
+    background-color: var(--os-color-error, #ef4444);
+  }
+}
+
+.os-goal-card__progress-info {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  color: var(--os-text-secondary, #757575);
+}
+
+.os-goal-card__values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.os-goal-card__value {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.os-goal-card__value-label {
+  font-size: 12px;
+  color: var(--os-text-secondary, #757575);
+}
+
+.os-goal-card__value-text {
+  font-weight: 500;
+}
+
+.os-goal-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.os-goal-card__action {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--os-color-border, #e0e0e0);
+  background: var(--os-color-background, #fff);
+  cursor: pointer;
+  min-height: 44px;
+  transition: border-color 150ms ease, background-color 150ms ease;
+
+  &:focus {
+    outline: 2px solid var(--os-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:hover {
+    background-color: var(--os-color-background-hover, rgba(59, 130, 246, 0.1));
+    border-color: var(--os-color-border-hover, #cbd5e1);
+  }
+
+  &:active {
+    background-color: var(--os-color-background-hover, rgba(59, 130, 246, 0.15));
+  }
+}
+
+.os-goal-card__action--danger {
+  border-color: var(--os-color-error, #ef4444);
+  color: var(--os-color-error, #ef4444);
+
+  &:hover {
+    background-color: var(--os-color-error-50, #fef2f2);
+    border-color: var(--os-color-error-600, #dc2626);
+  }
+
+  &:focus {
+    outline-color: var(--os-color-error, #ef4444);
+  }
+}
+
+

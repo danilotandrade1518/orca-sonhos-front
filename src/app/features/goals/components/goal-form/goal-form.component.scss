@@ -1,0 +1,69 @@
+.os-goal-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 576px) {
+  .os-goal-form__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.os-goal-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.os-goal-form__field label {
+  font-weight: 500;
+  color: var(--os-color-text-primary, #1f2937);
+
+  span[aria-label="obrigatório"] {
+    color: var(--os-color-error, #ef4444);
+    margin-left: 4px;
+  }
+}
+
+.os-goal-form__field input {
+  padding: 8px 12px;
+  border: 1px solid var(--os-color-border, #e0e0e0);
+  border-radius: 6px;
+  font-size: 14px;
+  min-height: 44px;
+  transition: border-color 150ms ease, outline 150ms ease;
+
+  &:focus {
+    outline: 2px solid var(--os-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+    border-color: var(--os-color-border-focus, #3b82f6);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &[aria-invalid="true"] {
+    border-color: var(--os-color-error, #ef4444);
+  }
+
+  &[aria-invalid="true"]:focus {
+    outline-color: var(--os-color-error, #ef4444);
+  }
+}
+
+.os-goal-form__error {
+  font-size: 12px;
+  color: var(--os-color-error, #ef4444);
+  margin-top: 4px;
+}
+
+.os-goal-form__hint {
+  margin-top: 8px;
+  color: var(--os-color-text-secondary, #757575);
+  font-size: 14px;
+}
+
+

@@ -63,6 +63,7 @@ describe('DashboardWidgetsComponent', () => {
 
     const dashboardDataServiceSpy = {
       budgetOverview: signal(mockBudgetOverview),
+      goals: signal([]),
       isLoading: signal(false),
       error: signal(null),
     };
@@ -96,6 +97,7 @@ describe('DashboardWidgetsComponent', () => {
   it('should show loading state', () => {
     const loadingServiceSpy = {
       budgetOverview: signal(mockBudgetOverview),
+      goals: signal([]),
       isLoading: signal(true),
       error: signal(null),
     };
@@ -123,6 +125,7 @@ describe('DashboardWidgetsComponent', () => {
   it('should show error state', () => {
     const errorServiceSpy = {
       budgetOverview: signal(mockBudgetOverview),
+      goals: signal([]),
       isLoading: signal(false),
       error: signal('Erro ao carregar dados'),
     };
@@ -163,6 +166,7 @@ describe('DashboardWidgetsComponent', () => {
           provide: DashboardDataService,
           useValue: {
             budgetOverview: signal(mockBudgetOverview),
+            goals: signal([]),
             isLoading: signal(false),
             error: signal(null),
           },
@@ -193,6 +197,7 @@ describe('DashboardWidgetsComponent', () => {
   it('should apply loading class when loading', () => {
     const loadingServiceSpy = {
       budgetOverview: signal(mockBudgetOverview),
+      goals: signal([]),
       isLoading: signal(true),
       error: signal(null),
     };
@@ -226,6 +231,7 @@ describe('DashboardWidgetsComponent', () => {
   it('should apply error class when error', () => {
     const errorServiceSpy = {
       budgetOverview: signal(mockBudgetOverview),
+      goals: signal([]),
       isLoading: signal(false),
       error: signal('Error message'),
     };
@@ -271,6 +277,7 @@ describe('DashboardWidgetsComponent', () => {
           provide: DashboardDataService,
           useValue: {
             budgetOverview: signal(mockBudgetOverview),
+            goals: signal([]),
             isLoading: signal(false),
             error: signal(null),
           },

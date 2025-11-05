@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
+import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
 
 export interface GoalProgressData {
   id: string;
@@ -14,6 +15,7 @@ export interface GoalProgressData {
   deadline?: Date;
   priority: 'low' | 'medium' | 'high';
   category?: string;
+  suggestedAmount?: number | null;
 }
 
 export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
@@ -21,7 +23,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
 @Component({
   selector: 'os-goal-progress-card',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsProgressBarComponent],
+  imports: [CommonModule, OsIconComponent, OsProgressBarComponent, OsMoneyDisplayComponent],
   template: `
     <div
       class="os-goal-progress-card"
@@ -57,13 +59,6 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-icon name="check" size="sm" variant="success" [ariaLabel]="'Meta concluída'" />
           } @else if (isOverdue()) {
           <os-icon name="warning" size="sm" variant="error" [ariaLabel]="'Meta atrasada'" />
-          } @else {
-          <os-icon
-            [name]="getPriorityIcon()"
-            size="sm"
-            [variant]="getPriorityVariant()"
-            [ariaLabel]="getPriorityLabel()"
-          />
           }
         </div>
       </div>
@@ -84,26 +79,51 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
 
       <div class="os-goal-progress-card__values">
         <div class="os-goal-progress-card__current">
-          <span class="os-goal-progress-card__value-label">Atual</span>
-          <span class="os-goal-progress-card__value" [attr.aria-label]="getCurrentValueAriaLabel()">
-            {{ formatValue(goalData()?.currentValue || 0) }} {{ goalData()?.unit }}
-          </span>
+          <span class="os-goal-progress-card__value-label">Acumulado</span>
+          <os-money-display
+            [value]="goalData()?.currentValue || 0"
+            [currency]="getCurrencyFromUnit()"
+            [size]="'sm'"
+            [ariaLabel]="getCurrentValueAriaLabel()"
+            class="os-goal-progress-card__value"
+          />
         </div>
         <div class="os-goal-progress-card__target">
           <span class="os-goal-progress-card__value-label">Meta</span>
-          <span class="os-goal-progress-card__value" [attr.aria-label]="getTargetValueAriaLabel()">
-            {{ formatValue(goalData()?.targetValue || 0) }} {{ goalData()?.unit }}
-          </span>
+          <os-money-display
+            [value]="goalData()?.targetValue || 0"
+            [currency]="getCurrencyFromUnit()"
+            [size]="'sm'"
+            [ariaLabel]="getTargetValueAriaLabel()"
+            class="os-goal-progress-card__value"
+          />
         </div>
         <div class="os-goal-progress-card__remaining">
           <span class="os-goal-progress-card__value-label">Restante</span>
-          <span
+          <os-money-display
+            [value]="remainingValue()"
+            [currency]="getCurrencyFromUnit()"
+            [size]="'sm'"
+            [ariaLabel]="getRemainingValueAriaLabel()"
             class="os-goal-progress-card__value"
-            [attr.aria-label]="getRemainingValueAriaLabel()"
-          >
-            {{ formatValue(remainingValue()) }} {{ goalData()?.unit }}
-          </span>
+          />
         </div>
+        @if (showSuggestedAmount() && goalData()?.suggestedAmount !== undefined) {
+        <div class="os-goal-progress-card__suggested">
+          <span class="os-goal-progress-card__value-label">Aporte sugerido</span>
+          @if (goalData()?.suggestedAmount === null) {
+          <span class="os-goal-progress-card__value-text">—</span>
+          } @else {
+          <os-money-display
+            [value]="goalData()?.suggestedAmount!"
+            [currency]="getCurrencyFromUnit()"
+            [size]="'sm'"
+            [ariaLabel]="getSuggestedAmountAriaLabel()"
+            class="os-goal-progress-card__value"
+          />
+          }
+        </div>
+        }
       </div>
 
       @if (goalData()?.deadline) {
@@ -113,6 +133,33 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           Prazo: {{ formatDeadline(goalData()?.deadline) }}
         </span>
       </div>
+      } @if (showActions() && goalData()?.id) {
+      <footer class="os-goal-progress-card__actions">
+        <button
+          type="button"
+          class="os-goal-progress-card__action"
+          [attr.aria-label]="'Aportar na meta ' + goalData()?.title"
+          (click)="onAportar()"
+        >
+          Aportar
+        </button>
+        <button
+          type="button"
+          class="os-goal-progress-card__action"
+          [attr.aria-label]="'Editar meta ' + goalData()?.title"
+          (click)="onEditar()"
+        >
+          Editar
+        </button>
+        <button
+          type="button"
+          class="os-goal-progress-card__action os-goal-progress-card__action--danger"
+          [attr.aria-label]="'Excluir meta ' + goalData()?.title"
+          (click)="onExcluir()"
+        >
+          Excluir
+        </button>
+      </footer>
       } }
     </div>
   `,
@@ -120,16 +167,21 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsGoalProgressCardComponent {
-  
   readonly goalData = input<GoalProgressData | null>(null);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly state = input<GoalProgressState>('default');
   readonly ariaLabel = input<string>('Card de progresso da meta');
-  
+  readonly showActions = input<boolean>(false);
+  readonly showSuggestedAmount = input<boolean>(false);
+
   readonly cardClick = output<GoalProgressData>();
   readonly cardExpand = output<GoalProgressData>();
-  
+
+  readonly aportar = output<string>();
+  readonly editar = output<string>();
+  readonly excluir = output<string>();
+
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly isCompleted = computed(() => this.state() === 'completed');
   readonly isOverdue = computed(() => this.state() === 'overdue');
@@ -173,61 +225,16 @@ export class OsGoalProgressCardComponent {
   });
 
   readonly descriptionId = computed(() => `goal-description-${this.goalData()?.id || 'default'}`);
-  
-  getPriorityIcon(): string {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'flag';
-      case 'medium':
-        return 'star';
-      case 'low':
-        return 'bookmark';
-      default:
-        return 'flag';
-    }
-  }
-
-  getPriorityVariant():
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'info' {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      case 'low':
-        return 'info';
-      default:
-        return 'default';
-    }
-  }
-
-  getPriorityLabel(): string {
-    const priority = this.goalData()?.priority;
-    switch (priority) {
-      case 'high':
-        return 'Prioridade alta';
-      case 'medium':
-        return 'Prioridade média';
-      case 'low':
-        return 'Prioridade baixa';
-      default:
-        return 'Prioridade';
-    }
-  }
 
   getProgressVariant(): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
-    if (this.isCompleted()) return 'success';
+    const progress = this.progressPercentage();
+
+    if (progress >= 100) return 'success';
     if (this.isOverdue()) return 'danger';
-    if (this.progressPercentage() >= 90) return 'warning';
-    return 'primary';
+
+    if (progress < 33) return 'danger';
+    if (progress < 66) return 'warning';
+    return 'success';
   }
 
   getProgressAriaLabel(): string {
@@ -237,24 +244,56 @@ export class OsGoalProgressCardComponent {
 
   getCurrentValueAriaLabel(): string {
     const data = this.goalData();
-    return `Valor atual: ${this.formatValue(data?.currentValue || 0)} ${data?.unit || ''}`;
+    const value = data?.currentValue || 0;
+    const currency = this.getCurrencyFromUnit();
+    return `Valor atual: ${new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)}`;
   }
 
   getTargetValueAriaLabel(): string {
     const data = this.goalData();
-    return `Valor da meta: ${this.formatValue(data?.targetValue || 0)} ${data?.unit || ''}`;
+    const value = data?.targetValue || 0;
+    const currency = this.getCurrencyFromUnit();
+    return `Valor da meta: ${new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)}`;
   }
 
   getRemainingValueAriaLabel(): string {
-    const data = this.goalData();
-    return `Valor restante: ${this.formatValue(this.remainingValue())} ${data?.unit || ''}`;
+    const value = this.remainingValue();
+    const currency = this.getCurrencyFromUnit();
+    return `Valor restante: ${new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)}`;
   }
 
-  formatValue(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      minimumFractionDigits: 0,
+  getSuggestedAmountAriaLabel(): string {
+    const value = this.goalData()?.suggestedAmount || 0;
+    const currency = this.getCurrencyFromUnit();
+    return `Aporte sugerido: ${new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(value);
+    }).format(value)}`;
+  }
+
+  getCurrencyFromUnit(): string {
+    const unit = this.goalData()?.unit || 'BRL';
+    if (['BRL', 'USD', 'EUR', 'GBP'].includes(unit.toUpperCase())) {
+      return unit.toUpperCase();
+    }
+    return 'BRL';
   }
 
   formatDeadline(date: Date | undefined): string {
@@ -280,6 +319,27 @@ export class OsGoalProgressCardComponent {
       if (data && !this.isLoading()) {
         this.cardExpand.emit(data);
       }
+    }
+  }
+
+  onAportar(): void {
+    const data = this.goalData();
+    if (data?.id) {
+      this.aportar.emit(data.id);
+    }
+  }
+
+  onEditar(): void {
+    const data = this.goalData();
+    if (data?.id) {
+      this.editar.emit(data.id);
+    }
+  }
+
+  onExcluir(): void {
+    const data = this.goalData();
+    if (data?.id) {
+      this.excluir.emit(data.id);
     }
   }
 }

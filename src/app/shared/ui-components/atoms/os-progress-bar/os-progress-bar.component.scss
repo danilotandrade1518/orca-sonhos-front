@@ -1,4 +1,5 @@
 @use '../../theme/tokens';
+@use '@angular/material' as mat;
 
 .os-progress-bar {
   width: 100%;
@@ -105,6 +106,61 @@
     .os-progress-bar__hint {
       font-size: var(--os-font-size-base);
     }
+  }
+}
+
+.os-progress-bar[data-variant='primary'] {
+  mat-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--os-color-primary),
+        track-color: var(--os-color-primary-50),
+      )
+    );
+  }
+}
+
+.os-progress-bar[data-variant='secondary'] {
+  mat-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--os-color-secondary-500),
+        track-color: var(--os-color-secondary-50),
+      )
+    );
+  }
+}
+
+.os-progress-bar[data-variant='success'] {
+  mat-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--os-color-success),
+        track-color: var(--os-color-success-50),
+      )
+    );
+  }
+}
+
+.os-progress-bar[data-variant='warning'] {
+  mat-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--os-color-warning),
+        track-color: var(--os-color-warning-50),
+      )
+    );
+  }
+}
+
+.os-progress-bar[data-variant='danger'] {
+  mat-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--os-color-error),
+        track-color: var(--os-color-error-50),
+      )
+    );
   }
 }
 
