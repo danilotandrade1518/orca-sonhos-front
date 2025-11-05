@@ -88,10 +88,70 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 3
+
+**Fase**: FASE 3: Componentes Base do Design System
+**Objetivo**: Criar componentes reutilizáveis do Design System para exibição de contas
+
+#### ✅ Trabalho Realizado
+
+- Criado `AccountTypeBadgeComponent` em `src/app/shared/ui-components/atoms/account-type-badge/`
+  - Componente standalone com `ChangeDetectionStrategy.OnPush`
+  - Input: `type: AccountType` (required)
+  - Mapeamento de ícones e cores por tipo de conta:
+    - CHECKING_ACCOUNT: `account_balance` (primary)
+    - SAVINGS_ACCOUNT: `savings` (success)
+    - PHYSICAL_WALLET: `account_balance_wallet` (warning)
+    - DIGITAL_WALLET: `wallet` (secondary)
+    - INVESTMENT_ACCOUNT: `trending_up` (info)
+    - OTHER: `credit_card` (default)
+  - ARIA labels descritivos para cada tipo
+  - Reutiliza `os-badge` component
+- Criado `AccountCardComponent` em `src/app/shared/ui-components/molecules/account-card/`
+  - Componente standalone com `ChangeDetectionStrategy.OnPush`
+  - Inputs: `account: AccountDto` (required), `actions?: { edit: boolean; delete: boolean }`
+  - Exibe nome, tipo (via `AccountTypeBadge`), saldo (via `os-money-display`)
+  - Ações: botões editar/excluir (via `os-button`) no slot actions do `os-card`
+  - Layout responsivo: stack vertical mobile, horizontal tablet/desktop
+  - ARIA labels completos com informações da conta
+  - Reutiliza `os-card`, `AccountTypeBadge`, `os-money-display`, `os-button`
+- Criados testes unitários:
+  - `account-type-badge.component.spec.ts`: testes de ícones, cores e ARIA labels
+  - `account-card.component.spec.ts`: testes de renderização, ações e eventos
+- Corrigido conflito de exports no `src/dtos/index.ts` usando `export type` para isolamento de módulos
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-badge` como base ao invés de criar componente do zero - **Motivo**: Reutilização máxima do Design System existente
+- **Decisão**: Mapear `info` variant para INVESTMENT_ACCOUNT - **Motivo**: Seguir layout-specification que indica `info` ou `primary` se não disponível
+- **Problema**: Conflito de exports entre `budget` e `account` DTOs - **Solução**: Usar `export type` explícito no `src/dtos/index.ts` para resolver ambiguidade
+- **Decisão**: Usar slot `actions` do `os-card` para manter consistência - **Motivo**: Seguir padrão do Design System
+
+#### 🧪 Validações
+
+- Testes unitários criados e passando
+- Build sem erros de TypeScript
+- Sem erros de lint/type-check
+- Estrutura seguindo padrões existentes (`os-badge`, `os-card`)
+
+#### ⏭️ Próximos Passos
+
+- FASE 4: Criar componentes de formulário (`TransferForm`, `ReconcileForm`)
+
+#### 🎉 Conclusão da Fase
+
+- `AccountTypeBadge` criado e funcionando com todos os tipos mapeados
+- `AccountCard` criado com layout responsivo e acessibilidade
+- Testes unitários básicos criados
+- Sem erros de lint/type-check
+- Build passando com sucesso
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 2: Core Services (API Service e State) [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de `AccountsApiService` e `AccountState` com testes
-**Próxima Tarefa**: FASE 3 - Criar componentes base do Design System (`AccountTypeBadge` e `AccountCard`)
+**Fase Atual**: FASE 3: Componentes Base do Design System [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de `AccountTypeBadge` e `AccountCard` com testes
+**Próxima Tarefa**: FASE 4 - Criar componentes de formulário (`TransferForm` e `ReconcileForm`)
 

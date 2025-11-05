@@ -154,7 +154,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 ---
 
-## 📅 FASE 3: Componentes Base do Design System [Status: ⏳]
+## 📅 FASE 3: Componentes Base do Design System [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -162,7 +162,7 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 ### 📋 Tarefas
 
-#### Criar `AccountTypeBadge` (Atom) [⏳]
+#### Criar `AccountTypeBadge` (Atom) [✅]
 
 **Descrição**: Criar em `src/app/shared/ui-components/atoms/account-type-badge/`:
 
@@ -192,7 +192,7 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 - `src/app/shared/ui-components/atoms/os-badge/` para padrão
 
-#### Criar `AccountCard` (Molecule) [⏳]
+#### Criar `AccountCard` (Molecule) [✅]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/account-card/`:
 
@@ -223,15 +223,21 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 ### 🧪 Critérios de Validação
 
-- [ ] `AccountTypeBadge` criado e funcionando
-- [ ] `AccountCard` criado e funcionando
-- [ ] Layout responsivo validado (mobile/tablet/desktop)
-- [ ] Acessibilidade implementada (ARIA, keyboard navigation)
-- [ ] Testes unitários criados
+- [x] `AccountTypeBadge` criado e funcionando
+- [x] `AccountCard` criado e funcionando
+- [x] Layout responsivo validado (mobile/tablet/desktop)
+- [x] Acessibilidade implementada (ARIA, keyboard navigation)
+- [x] Testes unitários criados
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre design e UX]_
+- **Decisão**: Usar `os-badge` como base ao invés de criar componente do zero - **Motivo**: Reutilização máxima do Design System existente
+- **Implementação**:
+  - `AccountTypeBadge`: Mapeamento completo de ícones e cores por tipo (CHECKING_ACCOUNT → primary, SAVINGS_ACCOUNT → success, etc.)
+  - `AccountCard`: Layout responsivo com `os-card`, exibição de nome, tipo e saldo, ações de editar/excluir via slot
+  - ARIA labels descritivos implementados em ambos componentes
+- **Correção**: Conflito de exports resolvido usando `export type` no `src/dtos/index.ts`
+- **Validação**: Build passando, testes unitários criados, sem erros de lint/type-check
 
 ---
 
