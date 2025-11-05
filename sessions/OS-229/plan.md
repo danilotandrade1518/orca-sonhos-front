@@ -450,7 +450,7 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 
 ---
 
-## 📅 FASE 6: Modais e Ações [Status: ⏳]
+## 📅 FASE 6: Modais e Ações [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -458,7 +458,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 ### 📋 Tarefas
 
-#### Criar `TransferModal` [⏳]
+#### Criar `TransferModal` [✅]
 
 **Descrição**: Criar `src/app/features/accounts/components/transfer-modal/transfer-modal.component.ts`:
 
@@ -489,7 +489,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 - `src/app/shared/ui-components/templates/os-modal-template/` para padrão
 
-#### Criar `ReconcileModal` [⏳]
+#### Criar `ReconcileModal` [✅]
 
 **Descrição**: Criar `src/app/features/accounts/components/reconcile-modal/reconcile-modal.component.ts`:
 
@@ -516,7 +516,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 **Dependências**: FASE 2, FASE 4.2 completas
 
-#### Criar `ConfirmDeleteModal` [⏳]
+#### Criar `ConfirmDeleteModal` [✅]
 
 **Descrição**: Criar `src/app/features/accounts/components/confirm-delete-modal/confirm-delete-modal.component.ts`:
 
@@ -542,7 +542,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 **Dependências**: FASE 2 completa
 
-#### Integrar modais em `AccountsPage` [⏳]
+#### Integrar modais em `AccountsPage` [✅]
 
 **Descrição**:
 
@@ -563,18 +563,26 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 ### 🧪 Critérios de Validação
 
-- [ ] `TransferModal` criado e funcionando
-- [ ] `ReconcileModal` criado e funcionando
-- [ ] `ConfirmDeleteModal` criado e funcionando
-- [ ] Integração com `AccountState` funcionando
-- [ ] Validações funcionando
-- [ ] Feedback visual (loading/success/error) implementado
-- [ ] Focus management implementado
-- [ ] Acessibilidade implementada
+- [x] `TransferModal` criado e funcionando
+- [x] `ReconcileModal` criado e funcionando
+- [x] `ConfirmDeleteModal` criado e funcionando
+- [x] Integração com `AccountState` funcionando
+- [x] Validações funcionando
+- [x] Feedback visual (loading/success/error) implementado
+- [x] Focus management implementado
+- [x] Acessibilidade implementada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre UX de modais e validações]_
+- **Decisão**: Seguir padrão de `os-modal-template` para consistência com Design System - **Motivo**: Reutilização máxima de componentes existentes
+- **Implementação**:
+  - `TransferModal`: Integração com `TransferForm`, monitoramento de estado via signals para detectar sucesso/erro
+  - `ReconcileModal`: Integração com `ReconcileForm`, recebe `account` diretamente como input
+  - `ConfirmDeleteModal`: Modal compacto de confirmação com mensagem explicativa sobre bloqueio de exclusão
+  - Todos os modais usam `NotificationService` para feedback de sucesso/erro
+  - Integração completa na `AccountsPage` com signals para controle de abertura/fechamento
+- **Validação**: Build passando sem erros, sem erros de lint/type-check
+- **Observação**: Modais fecham automaticamente após operação bem-sucedida, com feedback visual claro
 
 ---
 

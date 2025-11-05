@@ -14,12 +14,22 @@ import { AccountState } from '@core/services/account/account-state/account.state
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
 import { AccountFormComponent } from '../../components/account-form/account-form.component';
+import { TransferModalComponent } from '../../components/transfer-modal/transfer-modal.component';
+import { ReconcileModalComponent } from '../../components/reconcile-modal/reconcile-modal.component';
+import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
 import type { AccountDto } from '../../../../../dtos/account/account-types';
 
 @Component({
   selector: 'os-accounts-page',
   standalone: true,
-  imports: [CommonModule, AccountCardComponent, AccountFormComponent],
+  imports: [
+    CommonModule,
+    AccountCardComponent,
+    AccountFormComponent,
+    TransferModalComponent,
+    ReconcileModalComponent,
+    ConfirmDeleteModalComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="os-accounts" role="main" aria-label="Página de contas">
@@ -147,6 +157,18 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
         (saved)="onFormSaved()"
         (cancelled)="onFormCancelled()"
       />
+      } @if (showTransferModal()) {
+      <os-transfer-modal (closed)="closeTransferModal()" />
+      } @if (showReconcileModal() && reconcilingAccount()) {
+      <os-reconcile-modal
+        [account]="reconcilingAccount()!"
+        (closed)="closeReconcileModal()"
+      />
+      } @if (showDeleteModal() && deletingAccount()) {
+      <os-confirm-delete-modal
+        [account]="deletingAccount()!"
+        (closed)="closeDeleteModal()"
+      />
       }
     </section>
   `,
@@ -165,6 +187,8 @@ export class AccountsPage implements OnInit {
   readonly hasAccounts = computed(() => this.accounts().length > 0);
 
   readonly editingAccount = signal<AccountDto | null>(null);
+  readonly deletingAccount = signal<AccountDto | null>(null);
+  readonly reconcilingAccount = signal<AccountDto | null>(null);
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
@@ -173,6 +197,10 @@ export class AccountsPage implements OnInit {
   readonly showEditModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'edit' && this.editingAccount() !== null;
   });
+
+  readonly showTransferModal = signal(false);
+  readonly showReconcileModal = signal(false);
+  readonly showDeleteModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -230,13 +258,21 @@ export class AccountsPage implements OnInit {
   }
 
   openTransferModal(): void {
-    // TODO: Implementar modal de transferência (FASE 6)
-    console.log('Abrir modal de transferência');
+    if (!this.selectedBudgetId() || !this.hasAccounts()) {
+      return;
+    }
+    this.showTransferModal.set(true);
   }
 
   openReconcileModal(): void {
-    // TODO: Implementar modal de reconciliação (FASE 6)
-    console.log('Abrir modal de reconciliação');
+    if (!this.selectedBudgetId() || !this.hasAccounts()) {
+      return;
+    }
+    const firstAccount = this.accounts()[0];
+    if (firstAccount) {
+      this.reconcilingAccount.set(firstAccount);
+      this.showReconcileModal.set(true);
+    }
   }
 
   onEditAccount(account: AccountDto): void {
@@ -245,8 +281,22 @@ export class AccountsPage implements OnInit {
   }
 
   onDeleteAccount(account: AccountDto): void {
-    // TODO: Implementar modal de confirmação de exclusão (FASE 6)
-    console.log('Excluir conta:', account);
+    this.deletingAccount.set(account);
+    this.showDeleteModal.set(true);
+  }
+
+  closeTransferModal(): void {
+    this.showTransferModal.set(false);
+  }
+
+  closeReconcileModal(): void {
+    this.showReconcileModal.set(false);
+    this.reconcilingAccount.set(null);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.deletingAccount.set(null);
   }
 
   onFormSaved(): void {
