@@ -27,6 +27,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 #### Criar estrutura de DTOs em `dtos/account/` [⏳]
 
 **Descrição**: Criar todos os DTOs necessários seguindo padrão de `budget`, `transaction` e `goal`:
+
 - `account-types.ts`: Enum `AccountType` e interface `AccountDto`
 - `list-accounts-response-dto.ts`: Response para listagem
 - `create-account-request-dto.ts` e `create-account-response-dto.ts`
@@ -36,7 +37,8 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 - `transfer-between-accounts-request-dto.ts` e `transfer-between-accounts-response-dto.ts`
 - `index.ts`: Exportar todos os tipos
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Todos os DTOs criados com tipos corretos
 - Tipos exportados em `index.ts`
 - Alinhados com contratos do backend (swagger/endpoints)
@@ -44,7 +46,8 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 
 **Dependências**: Nenhuma
 
-**Referências**: 
+**Referências**:
+
 - `src/dtos/budget/*` para padrão de estrutura
 - `src/app/core/mocks/handlers/accounts.handlers.ts` para contratos esperados
 
@@ -72,6 +75,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 #### Implementar `AccountsApiService` [⏳]
 
 **Descrição**: Criar serviço em `src/app/core/services/account/accounts-api/accounts-api.service.ts` com:
+
 - `listAccounts(budgetId: string): Observable<AccountDto[]>`
 - `createAccount(dto: CreateAccountRequestDto): Observable<string | null>`
 - `updateAccount(dto: UpdateAccountRequestDto): Observable<boolean>`
@@ -82,7 +86,8 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 - Integração com `ApiService` e `AuthService`
 - Tratamento de erros com `catchError` e `ApiError`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Todos os métodos implementados
 - Signals funcionando (loading/error)
 - Testes unitários básicos criados
@@ -90,12 +95,14 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 **Dependências**: FASE 1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/core/services/budget/budget.service.ts` para padrão
 
 #### Implementar `AccountState` [⏳]
 
 **Descrição**: Criar estado em `src/app/core/services/account/account-state/account.state.ts` com:
+
 - Signals privados: `_accounts`, `_loading`, `_error`
 - Readonly getters: `accounts()`, `loading()`, `error()`
 - Computed signals: `hasAccounts()`, `accountsCount()`, `accountsByBudgetId()`
@@ -109,7 +116,8 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 - Integração com `BudgetSelectionService` para filtro automático
 - Atualização reativa após mutations (via reload da lista)
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Signals e computed funcionando
 - Integração com `BudgetSelectionService`
 - Métodos de mutation implementados
@@ -117,7 +125,8 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 **Dependências**: FASE 2.1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/core/services/budget/budget.state.ts` para padrão
 - `src/app/features/goals/state/goals-state/goals.state.ts` para padrão de mutations
 
@@ -146,6 +155,7 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 #### Criar `AccountTypeBadge` (Atom) [⏳]
 
 **Descrição**: Criar em `src/app/shared/ui-components/atoms/account-type-badge/`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Input: `type: AccountType`
 - Exibe badge com ícone e cor específica por tipo
@@ -159,7 +169,8 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 - ARIA: `aria-label` com tipo de conta
 - Reutiliza `os-badge` e `os-icon`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Componente criado e exportado
 - Todos os tipos de conta mapeados com ícones/cores
 - Acessibilidade implementada
@@ -167,12 +178,14 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 **Dependências**: FASE 1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/shared/ui-components/atoms/os-badge/` para padrão
 
 #### Criar `AccountCard` (Molecule) [⏳]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/account-card/`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Inputs:
   - `account: AccountDto`
@@ -184,7 +197,8 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 - ARIA: `aria-label` completo com informações da conta
 - Reutiliza `os-card`, `AccountTypeBadge`, `os-money-display`, `os-button`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Componente criado e exportado
 - Layout responsivo funcionando
 - Estados visuais implementados
@@ -193,7 +207,8 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 **Dependências**: FASE 3.1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/shared/ui-components/molecules/os-card/` para padrão
 
 ### 🧪 Critérios de Validação
@@ -221,6 +236,7 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 #### Criar `TransferForm` (Molecule) [⏳]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/transfer-form/`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Formulário reativo (Reactive Forms)
 - Campos:
@@ -240,7 +256,8 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 - Feedback: Mensagens de erro claras e específicas
 - Reutiliza `os-form-field`, `os-form-group`, `os-select`, `os-money-input`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Componente criado e exportado
 - Validações funcionando
 - Mensagens de erro implementadas
@@ -249,12 +266,14 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 
 **Dependências**: FASE 1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/shared/ui-components/molecules/os-form-field/` para padrão
 
 #### Criar `ReconcileForm` (Molecule) [⏳]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/reconcile-form/`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Formulário reativo (Reactive Forms)
 - Campos:
@@ -268,7 +287,8 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
   - `cancel: EventEmitter<void>`
 - Reutiliza `os-form-field`, `os-form-group`, `os-select`, `os-money-input`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Componente criado e exportado
 - Helper text implementado
 - Validações funcionando
@@ -303,24 +323,28 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 #### Criar rotas da feature `accounts` [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/accounts.routes.ts`:
+
 - Rota `/accounts` (lista) - lazy load da `AccountsPage`
 - Rota `/accounts/new` (criação) - futuro, se necessário
 - Rota `/accounts/:id/edit` (edição) - futuro, se necessário
 - Integrar em `src/app/app.routes.ts` com lazy loading
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Rotas criadas e configuradas
 - Lazy loading funcionando
 - Navegação básica testada
 
 **Dependências**: Nenhuma
 
-**Referências**: 
+**Referências**:
+
 - `src/app/features/budget/budget.routes.ts` para padrão
 
 #### Criar `AccountsPage` (Lista Principal) [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/pages/accounts/accounts.page.ts`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Integra `AccountState` para obter lista de contas
 - Usa `os-list-template` com:
@@ -335,7 +359,8 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 - Estados: loading, empty, error, success
 - Integração com `BudgetSelectionService` para filtro automático
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Página criada e funcionando
 - Lista de contas exibida corretamente
 - Estados (loading/empty/error) implementados
@@ -344,13 +369,15 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 
 **Dependências**: FASE 2 e FASE 3 completas
 
-**Referências**: 
+**Referências**:
+
 - `src/app/features/budget/pages/budget-list/budget-list.page.ts` para padrão
 - `src/app/shared/ui-components/templates/os-list-template/` para uso do template
 
 #### Criar `AccountFormComponent` [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/components/account-form/account-form.component.ts`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Formulário reativo (Reactive Forms)
 - Campos:
@@ -367,7 +394,8 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 - Reutiliza `os-form-template` ou `os-modal-template` (se usado em modal)
 - Usa `os-form-field`, `os-form-group`, `os-input`, `os-select`, `os-money-input`
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Componente criado e funcionando
 - Formulário com validações
 - Suporte a criação e edição
@@ -402,6 +430,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 #### Criar `TransferModal` [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/components/transfer-modal/transfer-modal.component.ts`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Usa `os-modal-template` como base
 - Integra `TransferForm` (molecule)
@@ -415,7 +444,8 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 - Validações: Mesmo orçamento, saldo suficiente, origem != destino
 - Acessibilidade: Focus management, ARIA labels
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Modal criado e funcionando
 - Integração com `AccountState` funcionando
 - Validações funcionando
@@ -424,12 +454,14 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 **Dependências**: FASE 2, FASE 4.1 completas
 
-**Referências**: 
+**Referências**:
+
 - `src/app/shared/ui-components/templates/os-modal-template/` para padrão
 
 #### Criar `ReconcileModal` [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/components/reconcile-modal/reconcile-modal.component.ts`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Usa `os-modal-template` como base
 - Integra `ReconcileForm` (molecule)
@@ -444,7 +476,8 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 - Helper text explicativo sobre processo de ajuste
 - Acessibilidade: Focus management, ARIA labels
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Modal criado e funcionando
 - Integração com `AccountState` funcionando
 - Feedback visual (loading/success/error) implementado
@@ -455,6 +488,7 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 #### Criar `ConfirmDeleteModal` [⏳]
 
 **Descrição**: Criar `src/app/features/accounts/components/confirm-delete-modal/confirm-delete-modal.component.ts`:
+
 - Componente standalone com `ChangeDetectionStrategy.OnPush`
 - Usa `os-modal-template` como base (variant: compact)
 - Lógica:
@@ -467,7 +501,8 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
   - Fecha modal após sucesso
 - Acessibilidade: Focus management, ARIA labels
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Modal criado e funcionando
 - Integração com `AccountState` funcionando
 - Tratamento de erro de bloqueio implementado
@@ -478,14 +513,16 @@ Implementar modais para ações secundárias (transferência, reconciliação, c
 
 #### Integrar modais em `AccountsPage` [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar controles de abertura/fechamento de modais
 - Integrar `AccountFormModal` (criação/edição via modal)
 - Integrar `TransferModal`, `ReconcileModal`, `ConfirmDeleteModal`
 - Gerenciar estado de modais abertos (signals)
 - Focus management ao abrir/fechar modais
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Todos os modais integrados
 - Abertura/fechamento funcionando
 - Focus management implementado
@@ -520,25 +557,29 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 #### Integrar menu/side-nav [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar rota `/accounts` no menu/side-nav em `src/app/core/layout/app-layout.component.ts`
 - Ícone: `account_balance` ou similar
 - Label: "Contas"
 - Posição: Após "Orçamentos" ou "Transações"
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Rota adicionada no menu
 - Navegação funcionando
 - Ícone e label corretos
 
 **Dependências**: FASE 5.1 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/core/layout/app-layout.component.ts` para estrutura do menu
 
 #### Integrar Dashboard [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar card "Contas" em `src/app/features/dashboard/components/dashboard-widgets/dashboard-widgets.component.ts`
 - Exibe: Número de contas, saldo total (ou resumo)
 - Ações rápidas: "Nova Conta" (primary), "Transferir" (secondary)
@@ -546,7 +587,8 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 - Consome `AccountState` para dados
 - Loading/empty states
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Card "Contas" criado e funcionando
 - Ações rápidas funcionando
 - Navegação para `/accounts` funcionando
@@ -554,18 +596,21 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 **Dependências**: FASE 2, FASE 5 completas
 
-**Referências**: 
+**Referências**:
+
 - `src/app/features/dashboard/components/dashboard-widgets/dashboard-widgets.component.ts` para padrão
 
 #### Integrar Budgets [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar seção "Contas do orçamento" em `src/app/features/budget/pages/budget-detail/budget-detail.page.ts` (ou similar)
 - Exibe lista de contas do orçamento atual (via `AccountState`)
 - CTA: "Criar nova conta" (com `budgetId` pré-preenchido)
 - Links para `/accounts` quando relevante
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Seção "Contas" adicionada
 - Lista de contas exibida
 - CTA funcionando
@@ -573,19 +618,22 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 **Dependências**: FASE 2, FASE 5 completas
 
-**Referências**: 
+**Referências**:
+
 - `src/app/features/budget/pages/budget-list/budget-list.page.ts` para padrão
 
 #### Integrar Transactions [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar campo "Conta" obrigatório em formulários de criação/edição de transação
 - Usar `AccountState` para obter opções de conta
 - Filtrar contas do orçamento atual
 - Adicionar filtro por conta na lista de transações
 - Validação: `accountId` deve pertencer ao `budgetId` atual
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Campo "Conta" adicionado e obrigatório
 - Filtro por conta implementado
 - Validação de consistência implementada
@@ -593,16 +641,19 @@ Integrar contas com outras features (Dashboard, Budgets, Transactions, Goals) e 
 
 **Dependências**: FASE 2 completa
 
-**Referências**: 
+**Referências**:
+
 - `src/app/features/transactions/pages/transactions/transactions.page.ts` para estrutura
 
 #### Integrar Goals [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Adicionar links de navegação para `/accounts` quando relevante (ex: em detalhes de meta)
 - Consumir `AccountState` para opções de conta em formulários de meta (se houver campo de conta)
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Links de navegação adicionados
 - Integração com `AccountState` funcionando (se aplicável)
 
@@ -634,7 +685,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 #### Testes unitários de serviços [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Completar testes de `AccountsApiService`:
   - Cenários de sucesso (list, create, update, delete, transfer, reconcile)
   - Cenários de erro (401, 400, 500)
@@ -646,7 +698,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
   - Integração com `BudgetSelectionService`
   - Tratamento de erro de bloqueio de exclusão
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Cobertura ≥ 80% em serviços
 - Todos os cenários críticos cobertos
 - Testes passando
@@ -655,7 +708,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 #### Testes unitários de componentes [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Testes de `AccountTypeBadge`: Renderização por tipo, cores, ARIA
 - Testes de `AccountCard`: Renderização, ações, estados, ARIA
 - Testes de `TransferForm`: Validações, submissão, erros
@@ -664,7 +718,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 - Testes de `AccountsPage`: Lista, estados, ações, integração com state
 - Testes de modais: Abertura/fechamento, submissão, erros
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Cobertura ≥ 80% em componentes
 - Interações principais cobertas
 - Testes passando
@@ -673,13 +728,15 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 #### Testes de integração [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Testes de fluxo completo: Criar conta → Editar → Transferir → Reconciliar → Excluir
 - Testes de integração com Dashboard, Budgets, Transactions, Goals
 - Testes de navegação entre rotas
 - Testes de MSW handlers (validar contratos)
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Fluxos principais testados
 - Integrações testadas
 - Testes passando
@@ -688,7 +745,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 #### Acessibilidade (WCAG 2.1 AA) [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Validar keyboard navigation (Tab, Enter, Esc)
 - Validar ARIA attributes (labels, live regions, landmarks)
 - Validar contraste de cores (>= 4.5:1)
@@ -697,7 +755,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 - Validar skip links
 - Validar zoom até 200% sem quebra de layout
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Todas as validações de acessibilidade passando
 - Documentação de acessibilidade atualizada
 
@@ -705,7 +764,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 #### Validação final de funcionalidades [⏳]
 
-**Descrição**: 
+**Descrição**:
+
 - Validar todos os critérios de aceitação do `context.md`:
   - [ ] Lista contas do orçamento atual com id, nome, tipo e saldo
   - [ ] Cria/edita/exclui contas, com bloqueio de exclusão quando houver transações
@@ -715,7 +775,8 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
   - [ ] Integrações de navegação adicionadas (Dashboard, Budgets, Transactions, Goals, menu)
   - [ ] Cobertura de testes > 80% e mensagens de erro/empty states adequadas
 
-**Critério de Conclusão**: 
+**Critério de Conclusão**:
+
 - Todos os critérios de aceitação validados
 - Documentação atualizada
 
@@ -794,4 +855,3 @@ _[Observações sobre testes e validações]_
 
 **Última Atualização**: [Data da última atualização]
 **Status Geral**: ⏳ Não iniciado
-
