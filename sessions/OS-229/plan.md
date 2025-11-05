@@ -16,7 +16,7 @@ Implementar no frontend a gestão completa de contas financeiras (CRUD, transfer
 
 ---
 
-## 📅 FASE 1: DTOs e Tipos Base [Status: ⏳]
+## 📅 FASE 1: DTOs e Tipos Base [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -24,7 +24,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 
 ### 📋 Tarefas
 
-#### Criar estrutura de DTOs em `dtos/account/` [⏳]
+#### Criar estrutura de DTOs em `dtos/account/` [✅]
 
 **Descrição**: Criar todos os DTOs necessários seguindo padrão de `budget`, `transaction` e `goal`:
 
@@ -53,14 +53,17 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os DTOs criados e exportados
-- [ ] Tipos TypeScript corretos (sem `any`)
-- [ ] Alinhamento com handlers MSW existentes
-- [ ] Sem erros de lint/type-check
+- [x] Todos os DTOs criados e exportados
+- [x] Tipos TypeScript corretos (sem `any`)
+- [x] Alinhamento com handlers MSW existentes
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Criado `AccountType` com `'OTHER'` adicionado conforme especificado no plan.md
+- **Observação**: `AccountDto` e `AccountType` já existiam em `budget-types.ts`, mas foram criados em `dtos/account/` para seguir estrutura modular conforme arquitetura
+- **Validação**: Todos os DTOs alinhados com handlers MSW em `accounts.handlers.ts`
+- **Estrutura**: Seguindo padrão de `budget`, `transaction` e `goal` DTOs
 
 ---
 
