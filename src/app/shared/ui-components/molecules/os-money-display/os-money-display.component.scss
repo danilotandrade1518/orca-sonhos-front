@@ -96,6 +96,8 @@
     font-weight: var(--os-font-weight-bold);
     letter-spacing: 0.5px;
     transition: all 0.2s ease-in-out;
+    white-space: nowrap; // Garante que valores monetários não quebrem
+    overflow: visible; // Permite que valores longos sejam exibidos
   }
 
   // Responsive adjustments

@@ -10,7 +10,9 @@
   transition: all var(--os-transition-normal) ease-in-out;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; // Mantém as bordas arredondadas
+  box-sizing: border-box; // Garante que padding seja incluído no tamanho total
+  width: 100%; // Ocupa 100% do container do grid
 
   // Hover effects
   &:hover {
@@ -86,12 +88,19 @@
     grid-template-columns: repeat(3, 1fr);
     gap: var(--os-spacing-3);
     margin-bottom: var(--os-spacing-3);
+    width: 100%; // Garante que o grid ocupe 100% da largura disponível
+    box-sizing: border-box; // Inclui padding no cálculo de largura
 
     // Quando mostrar "Aporte sugerido", usar 4 colunas
     &:has(.os-goal-progress-card__suggested) {
-      grid-template-columns: repeat(4, 1fr);
+      // Reduz gap para dar mais espaço às colunas
+      gap: var(--os-spacing-2); // 8px em vez de 12px
+      // Largura mínima suficiente para valores como "R$10.000,00" (cerca de 90px)
+      // Mas aumenta para 120px para garantir espaço confortável
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
 
       @media (max-width: 768px) {
+        gap: var(--os-spacing-3); // Restaura gap original
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -106,6 +115,9 @@
   &__remaining,
   &__suggested {
     text-align: center;
+    min-width: 0; // Permite que o grid se ajuste
+    box-sizing: border-box;
+    // Remove overflow: hidden para permitir que valores sejam exibidos completamente
   }
 
   &__value-label {
@@ -114,6 +126,7 @@
     font-weight: var(--os-font-weight-medium);
     color: var(--os-color-text-secondary);
     margin-bottom: var(--os-spacing-1);
+    white-space: nowrap; // Mantém o label em uma linha
   }
 
   &__value {
@@ -121,11 +134,21 @@
     font-size: var(--os-font-size-sm);
     font-weight: var(--os-font-weight-semibold);
     color: var(--os-color-text-primary);
+    width: 100%;
+    box-sizing: border-box;
+    // Remove overflow: hidden para permitir que valores sejam exibidos completamente
+    white-space: nowrap; // Mantém valores em uma linha
 
     // Estilos para o componente os-money-display quando usado dentro deste container
     ::ng-deep .os-money-display {
-      display: block;
-      width: 100%;
+      display: inline-block; // Muda de block para inline-block para melhor ajuste
+      width: auto; // Permite que o componente se ajuste ao conteúdo
+      max-width: 100%; // Mas ainda respeita o limite do container
+      box-sizing: border-box;
+      
+      .os-money-display__value {
+        white-space: nowrap;
+      }
     }
   }
 

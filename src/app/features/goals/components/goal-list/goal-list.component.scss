@@ -2,19 +2,37 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
+  width: 100%;
 }
 
+// Grid responsivo que mantém o tamanho fixo dos cards
+// e permite que eles "caiam" para a linha de baixo quando não houver espaço
+// Largura aumentada para garantir que todos os valores sejam exibidos corretamente
+// especialmente quando há 4 colunas (incluindo "Aporte sugerido")
+// 600px garante espaço suficiente: 600px - 32px (padding) - 24px (3 gaps de 8px) = 544px
+// 544px / 4 colunas = 136px por coluna, suficiente para "R$10.000,00"
 @media (min-width: 576px) {
   .os-goal-list__grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, 600px);
+    gap: 16px;
+    justify-content: center;
   }
 }
 
 @media (min-width: 992px) {
   .os-goal-list__grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, 600px);
+    gap: 20px;
+    justify-content: start;
+  }
+}
+
+// Em telas muito grandes, manter o mesmo tamanho fixo
+// para garantir consistência visual
+@media (min-width: 1400px) {
+  .os-goal-list__grid {
+    grid-template-columns: repeat(auto-fill, 600px);
+    gap: 24px;
   }
 }
 
