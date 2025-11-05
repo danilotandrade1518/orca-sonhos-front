@@ -197,10 +197,62 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 5
+
+**Fase**: FASE 5: Feature Accounts - Rotas e Página Principal
+**Objetivo**: Criar estrutura de rotas e página principal de listagem de contas
+
+#### ✅ Trabalho Realizado
+
+- Criado `accounts.routes.ts` com lazy loading seguindo padrão de `goals.routes.ts`
+- Criado `AccountsPage` em `src/app/features/accounts/pages/accounts/accounts.page.ts`:
+  - Integração completa com `AccountState` para lista de contas
+  - Estados: loading, empty, error, success
+  - Layout responsivo com grid de cards (1 col mobile → 2 cols tablet → 3-4 cols desktop)
+  - Ações: Nova Conta, Transferir, Reconciliar (botões desabilitados quando não há orçamento/contas)
+  - Integração com `BudgetSelectionService` para filtro automático
+  - Efeito reativo para recarregar contas quando orçamento muda
+  - Skip link e live regions para acessibilidade
+- Criado `AccountFormComponent` em `src/app/features/accounts/components/account-form/account-form.component.ts`:
+  - Formulário reativo com campos: Nome (obrigatório), Tipo (obrigatório), Saldo Inicial (>= 0)
+  - Suporte a criação e edição via modal
+  - Validações implementadas com mensagens de erro claras
+  - Integração com `AccountState` para create/update
+  - Notificações de sucesso/erro via `NotificationService`
+- Integradas rotas em `app.routes.ts` com lazy loading
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Seguir padrão de `budget-list.page.ts` e `goals.page.ts` - **Motivo**: Consistência arquitetural
+- **Decisão**: Usar `os-select` e `os-money-input` com `formControlName` diretamente - **Motivo**: Compatibilidade com reactive forms
+- **Problema**: Erro ao usar `control` input em `os-select` e `os-money-input` - **Solução**: Usar `formControlName` diretamente conforme padrão do projeto
+- **Problema**: Métodos `error` e `success` não existem em `NotificationService` - **Solução**: Usar `showError` e `showSuccess` conforme API do serviço
+
+#### 🧪 Validações
+
+- Build passando sem erros
+- Sem erros de lint/type-check
+- Estrutura seguindo padrões existentes (`budget-list.page.ts`, `goals.page.ts`)
+- Rotas funcionando com lazy loading
+
+#### ⏭️ Próximos Passos
+
+- FASE 6: Criar modais de transferência, reconciliação e confirmação de exclusão
+
+#### 🎉 Conclusão da Fase
+
+- Rotas criadas e funcionando
+- `AccountsPage` exibindo lista de contas com estados implementados
+- `AccountFormComponent` funcionando para criação/edição
+- Integração com `AccountState` funcionando corretamente
+- Build passando com sucesso
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 4: Componentes de Formulário [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de `TransferForm` e `ReconcileForm` com validações customizadas
-**Próxima Tarefa**: FASE 5 - Criar estrutura de rotas e página principal (`AccountsPage`)
+**Fase Atual**: FASE 5: Feature Accounts - Rotas e Página Principal [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de rotas, `AccountsPage` e `AccountFormComponent`
+**Próxima Tarefa**: FASE 6 - Criar modais de ações secundárias (TransferModal, ReconcileModal, ConfirmDeleteModal)
 

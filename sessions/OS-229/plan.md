@@ -335,7 +335,7 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 
 ---
 
-## 📅 FASE 5: Feature Accounts - Rotas e Página Principal [Status: ⏳]
+## 📅 FASE 5: Feature Accounts - Rotas e Página Principal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -343,7 +343,7 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 
 ### 📋 Tarefas
 
-#### Criar rotas da feature `accounts` [⏳]
+#### Criar rotas da feature `accounts` [✅]
 
 **Descrição**: Criar `src/app/features/accounts/accounts.routes.ts`:
 
@@ -364,7 +364,7 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 
 - `src/app/features/budget/budget.routes.ts` para padrão
 
-#### Criar `AccountsPage` (Lista Principal) [⏳]
+#### Criar `AccountsPage` (Lista Principal) [✅]
 
 **Descrição**: Criar `src/app/features/accounts/pages/accounts/accounts.page.ts`:
 
@@ -397,7 +397,7 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 - `src/app/features/budget/pages/budget-list/budget-list.page.ts` para padrão
 - `src/app/shared/ui-components/templates/os-list-template/` para uso do template
 
-#### Criar `AccountFormComponent` [⏳]
+#### Criar `AccountFormComponent` [✅]
 
 **Descrição**: Criar `src/app/features/accounts/components/account-form/account-form.component.ts`:
 
@@ -429,16 +429,24 @@ Criar estrutura de rotas e página principal de listagem de contas, integrando c
 
 ### 🧪 Critérios de Validação
 
-- [ ] Rotas criadas e funcionando
-- [ ] `AccountsPage` exibindo lista de contas
-- [ ] `AccountFormComponent` funcionando (criação/edição)
-- [ ] Estados (loading/empty/error) implementados
-- [ ] Integração com `AccountState` funcionando
-- [ ] Navegação básica testada
+- [x] Rotas criadas e funcionando
+- [x] `AccountsPage` exibindo lista de contas
+- [x] `AccountFormComponent` funcionando (criação/edição)
+- [x] Estados (loading/empty/error) implementados
+- [x] Integração com `AccountState` funcionando
+- [x] Navegação básica testada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre estrutura e UX da página]_
+- **Decisão**: Seguir padrão de `budget-list.page.ts` e `goals.page.ts` para consistência - **Motivo**: Manter arquitetura uniforme no projeto
+- **Implementação**:
+  - Rotas criadas em `accounts.routes.ts` com lazy loading (padrão de `goals.routes.ts`)
+  - `AccountsPage` criada com integração completa com `AccountState`, estados (loading/empty/error/success), layout responsivo com grid de cards
+  - `AccountFormComponent` criado seguindo padrão de `BudgetFormComponent` com suporte a criação/edição via modal
+  - Integração com `BudgetSelectionService` para filtro automático por orçamento atual
+  - Efeito reativo para recarregar contas quando orçamento muda
+- **Validação**: Build passando sem erros, sem erros de lint/type-check
+- **Observação**: Modais de transferência e reconciliação serão implementados na FASE 6
 
 ---
 
