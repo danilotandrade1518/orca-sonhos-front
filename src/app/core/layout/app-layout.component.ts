@@ -82,6 +82,12 @@ export class AppLayoutComponent implements OnInit {
       route: '/goals',
     },
     {
+      id: 'accounts',
+      label: 'Contas',
+      icon: 'account_balance_wallet',
+      route: '/accounts',
+    },
+    {
       id: 'transactions',
       label: 'Transações',
       icon: 'receipt',

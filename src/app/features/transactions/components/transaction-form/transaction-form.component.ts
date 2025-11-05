@@ -303,12 +303,12 @@ export class TransactionFormComponent implements OnInit {
         Validators.min(0.01),
       ]),
       type: new FormControl<TransactionType>(
-        (initialTransaction?.type || initialTransaction?.direction || 'EXPENSE') as TransactionType,
-        [Validators.required]
-      ),
-      accountId: new FormControl<string>(initialTransaction?.accountId || '', [
-        Validators.required,
-      ]),
+	        (initialTransaction?.type || initialTransaction?.direction || 'EXPENSE') as TransactionType,
+	        [Validators.required]
+	      ),
+	      accountId: new FormControl(initialTransaction?.accountId || '', [
+	        Validators.required,
+	      ]),
       categoryId: new FormControl<string>(initialTransaction?.categoryId || '', [
         Validators.required,
       ]),

@@ -23,6 +23,7 @@ import {
 } from '../../../../shared/ui-components/organisms/os-transaction-list/os-transaction-list.component';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { TransactionsApiService } from '../../../transactions/services/transactions-api.service';
+import { AccountState } from '@core/services/account/account-state/account.state';
 import type { TransactionDto } from '../../../../../dtos/transaction/transaction-types';
 import { lastValueFrom } from 'rxjs';
 import {
@@ -134,6 +135,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly api = inject(TransactionsApiService);
+  private readonly accountState = inject(AccountState);
   private readonly notificationService = inject(NotificationService);
   private readonly authService = inject(AuthService);
   private readonly elementRef = inject(ElementRef);
@@ -149,7 +151,12 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly serverFilters = signal<Partial<TransactionsFilters>>({});
   private readonly clientFilters = signal<Partial<TransactionsFilters>>({});
 
-  readonly accountOptions = signal<{ value: string; label: string }[]>([]);
+  readonly accountOptions = computed(() =>
+    this.accountState.accountsSummary().map((account) => ({
+      value: account.id,
+      label: account.name,
+    }))
+  );
   readonly categoryOptions = signal<{ value: string; label: string }[]>([]);
 
   private readonly _showCreateModal = signal<boolean>(false);
@@ -292,6 +299,13 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   });
 
   constructor() {
+    // Efeito para carregar as contas
+    effect(() => {
+      // Força a carga das contas para que as opções estejam disponíveis
+      // O AccountState já carrega automaticamente ao mudar o budgetId
+      this.accountState.accounts();
+    });
+
     effect(() => {
       const budgetId = this.budgetSelection.selectedBudgetId();
       untracked(() => {

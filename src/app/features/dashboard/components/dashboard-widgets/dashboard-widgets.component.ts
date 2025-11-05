@@ -11,6 +11,7 @@ import {
   GoalProgressData,
 } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { GoalDto } from '@dtos/goal';
+import { AccountState } from '@core/services/account/account-state/account.state';
 
 @Component({
   selector: 'os-dashboard-widgets-container',
@@ -42,6 +43,7 @@ import { GoalDto } from '@dtos/goal';
 export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly accountState = inject(AccountState);
 
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
@@ -84,6 +86,11 @@ export class DashboardWidgetsComponent {
         if (firstGoal) {
           dashboardWidget.data = this.convertGoalToProgressData(firstGoal);
         }
+      } else if (widget.type === 'accounts-summary') {
+        dashboardWidget.data = {
+          accounts: this.accountState.accountsSummary(),
+          totalBalance: this.accountState.accounts().reduce((acc, a) => acc + a.currentBalance, 0),
+        };
       }
 
       return dashboardWidget;
