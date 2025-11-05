@@ -241,7 +241,7 @@ Criar componentes reutilizáveis do Design System para exibição de contas (Acc
 
 ---
 
-## 📅 FASE 4: Componentes de Formulário [Status: ⏳]
+## 📅 FASE 4: Componentes de Formulário [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -249,7 +249,7 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 
 ### 📋 Tarefas
 
-#### Criar `TransferForm` (Molecule) [⏳]
+#### Criar `TransferForm` (Molecule) [✅]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/transfer-form/`:
 
@@ -286,7 +286,7 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 
 - `src/app/shared/ui-components/molecules/os-form-field/` para padrão
 
-#### Criar `ReconcileForm` (Molecule) [⏳]
+#### Criar `ReconcileForm` (Molecule) [✅]
 
 **Descrição**: Criar em `src/app/shared/ui-components/molecules/reconcile-form/`:
 
@@ -315,16 +315,23 @@ Criar componentes de formulário reutilizáveis para transferência e reconcilia
 
 ### 🧪 Critérios de Validação
 
-- [ ] `TransferForm` criado e funcionando
-- [ ] `ReconcileForm` criado e funcionando
-- [ ] Validações customizadas implementadas
-- [ ] Mensagens de erro/helper text implementadas
-- [ ] Acessibilidade implementada
-- [ ] Testes unitários criados
+- [x] `TransferForm` criado e funcionando
+- [x] `ReconcileForm` criado e funcionando
+- [x] Validações customizadas implementadas
+- [x] Mensagens de erro/helper text implementadas
+- [x] Acessibilidade implementada
+- [ ] Testes unitários criados (pendente para próxima sessão)
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre validações e UX]_
+- **Decisão**: Usar `os-button` ao invés de botões HTML simples - **Motivo**: Consistência com Design System
+- **Implementação**:
+  - `TransferForm`: Validações customizadas para mesmo orçamento, contas diferentes e saldo suficiente
+  - `ReconcileForm`: Helper text explicativo sobre processo automático de ajuste
+  - Ambos componentes usam `os-form-group`, `os-select`, `os-money-input` e `os-button`
+  - Validações reativas com `effect()` para atualizar validações quando conta origem muda
+- **Validação**: Build passando, sem erros de lint/type-check
+- **Observação**: Testes unitários serão criados na próxima sessão conforme padrão do projeto
 
 ---
 

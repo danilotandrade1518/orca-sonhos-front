@@ -1,0 +1,19 @@
+.os-transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.os-transfer-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.os-transfer-form__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+

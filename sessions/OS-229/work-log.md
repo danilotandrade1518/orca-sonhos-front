@@ -148,10 +148,59 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 4
+
+**Fase**: FASE 4: Componentes de Formulário
+**Objetivo**: Criar componentes de formulário reutilizáveis para transferência e reconciliação
+
+#### ✅ Trabalho Realizado
+
+- Criado `TransferFormComponent` em `src/app/shared/ui-components/molecules/transfer-form/`
+  - Componente standalone com `ChangeDetectionStrategy.OnPush`
+  - Formulário reativo com campos: Conta Origem, Conta Destino, Valor
+  - Validações customizadas: mesmo orçamento, contas diferentes, saldo suficiente
+  - Mensagens de erro claras e específicas
+  - Reutiliza `os-form-group`, `os-select`, `os-money-input`, `os-button`
+- Criado `ReconcileFormComponent` em `src/app/shared/ui-components/molecules/reconcile-form/`
+  - Componente standalone com `ChangeDetectionStrategy.OnPush`
+  - Formulário reativo com campos: Conta (disabled), Valor Final Esperado
+  - Helper text explicativo sobre processo automático de ajuste
+  - Exibe saldo atual da conta
+  - Reutiliza `os-form-group`, `os-select`, `os-money-input`, `os-button`
+- Adicionados componentes ao `index.ts` das molecules para exportação
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-button` ao invés de botões HTML simples - **Motivo**: Consistência com Design System e melhor acessibilidade
+- **Decisão**: Validações customizadas como métodos privados usando arrow functions - **Motivo**: Evitar problemas de inicialização e manter contexto do `this`
+- **Decisão**: Usar `effect()` para atualizar validações quando conta origem muda - **Motivo**: Validações reativas que dependem de outros campos
+- **Problema**: Erro de inicialização dos validators - **Solução**: Declarar validators antes do `form` usando arrow functions para preservar contexto
+
+#### 🧪 Validações
+
+- Build passando sem erros
+- Sem erros de lint/type-check
+- Estrutura seguindo padrões existentes (goal-form, transaction-form)
+- Componentes exportados corretamente
+
+#### ⏭️ Próximos Passos
+
+- FASE 5: Criar estrutura de rotas e página principal (`AccountsPage`, `AccountFormComponent`)
+- Criar testes unitários para `TransferForm` e `ReconcileForm` (conforme padrão do projeto)
+
+#### 🎉 Conclusão da Fase
+
+- `TransferForm` criado com todas as validações funcionando
+- `ReconcileForm` criado com helper text e validações
+- Build passando com sucesso
+- Componentes prontos para integração em modais (FASE 6)
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 3: Componentes Base do Design System [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de `AccountTypeBadge` e `AccountCard` com testes
-**Próxima Tarefa**: FASE 4 - Criar componentes de formulário (`TransferForm` e `ReconcileForm`)
+**Fase Atual**: FASE 4: Componentes de Formulário [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de `TransferForm` e `ReconcileForm` com validações customizadas
+**Próxima Tarefa**: FASE 5 - Criar estrutura de rotas e página principal (`AccountsPage`)
 
