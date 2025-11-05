@@ -159,24 +159,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
         >
           <div class="os-dashboard-widgets__widget-header">
             <h4 class="os-dashboard-widgets__widget-title">{{ widget.title }}</h4>
-            @if (showWidgetActions()) {
-            <div class="os-dashboard-widgets__widget-actions">
-              <os-button
-                [variant]="'tertiary'"
-                [size]="'small'"
-                [icon]="'settings'"
-                [ariaLabel]="'Configurar widget'"
-                (buttonClick)="onWidgetConfigure(widget)"
-              />
-              <os-button
-                [variant]="'tertiary'"
-                [size]="'small'"
-                [icon]="'close'"
-                [ariaLabel]="'Fechar widget'"
-                (buttonClick)="onWidgetClose(widget)"
-              />
-            </div>
-            }
           </div>
 
           <div class="os-dashboard-widgets__widget-content">
@@ -198,7 +180,9 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                   [value]="getBudgetSummary()?.totalBalance || 0"
                   [currency]="'BRL'"
                   [size]="'md'"
-                  [ariaLabel]="'Saldo total: ' + formatCurrency(getBudgetSummary()?.totalBalance || 0)"
+                  [ariaLabel]="
+                    'Saldo total: ' + formatCurrency(getBudgetSummary()?.totalBalance || 0)
+                  "
                   class="os-dashboard-widgets__metric-value"
                 />
               </div>
@@ -209,7 +193,9 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                   [currency]="'BRL'"
                   [size]="'md'"
                   [variant]="'positive'"
-                  [ariaLabel]="'Receita mensal: ' + formatCurrency(getBudgetSummary()?.monthlyIncome || 0)"
+                  [ariaLabel]="
+                    'Receita mensal: ' + formatCurrency(getBudgetSummary()?.monthlyIncome || 0)
+                  "
                   class="os-dashboard-widgets__metric-value"
                 />
               </div>
@@ -220,7 +206,9 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                   [currency]="'BRL'"
                   [size]="'md'"
                   [variant]="'negative'"
-                  [ariaLabel]="'Despesa mensal: ' + formatCurrency(getBudgetSummary()?.monthlyExpense || 0)"
+                  [ariaLabel]="
+                    'Despesa mensal: ' + formatCurrency(getBudgetSummary()?.monthlyExpense || 0)
+                  "
                   class="os-dashboard-widgets__metric-value"
                 />
               </div>
@@ -330,19 +318,15 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsDashboardWidgetsComponent {
-  
   readonly widgets = input<DashboardWidget[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly state = input<DashboardState>('success');
-  readonly showWidgetActions = input<boolean>(true);
   readonly showCreateActions = input<boolean>(true);
   readonly errorMessage = input<string>('Erro ao carregar dados do dashboard');
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
-  
+
   readonly widgetClick = output<DashboardWidget>();
-  readonly widgetConfigure = output<DashboardWidget>();
-  readonly widgetClose = output<DashboardWidget>();
   readonly retryRequested = output<void>();
   readonly createBudgetRequested = output<void>();
   readonly createGoalRequested = output<void>();
@@ -350,7 +334,7 @@ export class OsDashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<GoalProgressData>();
   readonly goalCardExpand = output<GoalProgressData>();
-  
+
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error');
   readonly isEmpty = computed(() => this.state() === 'empty');
@@ -384,7 +368,7 @@ export class OsDashboardWidgetsComponent {
 
     return classes.join(' ');
   });
-  
+
   getWidgetClass(widget: DashboardWidget): string {
     const classes = ['os-dashboard-widgets__widget'];
 
@@ -411,16 +395,15 @@ export class OsDashboardWidgetsComponent {
   }
 
   getWidgetGridRow(widget: DashboardWidget): string {
-    
     switch (widget.type) {
       case 'budget-summary':
         return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
       case 'goal-progress':
         return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
       case 'transaction-list':
-        return 'span 3'; 
+        return 'span 3';
       case 'monthly-trends':
-        return 'span 2'; 
+        return 'span 2';
       case 'account-balance':
         return 'span 1';
       case 'quick-actions':
@@ -464,7 +447,6 @@ export class OsDashboardWidgetsComponent {
   }
 
   getBudgetSummary(): BudgetSummaryData | null {
-    
     return {
       totalBalance: 25000.5,
       monthlyIncome: 8000.0,
@@ -482,7 +464,6 @@ export class OsDashboardWidgetsComponent {
   }
 
   getRecentTransactions(): TransactionData[] {
-    
     return [
       {
         id: '1',
@@ -512,7 +493,6 @@ export class OsDashboardWidgetsComponent {
   }
 
   getAccountBalances(): AccountBalanceData[] {
-    
     return [
       {
         accountName: 'Conta Corrente',
@@ -554,7 +534,7 @@ export class OsDashboardWidgetsComponent {
       currency: 'BRL',
     }).format(value);
   }
-  
+
   onWidgetClick(widget: DashboardWidget): void {
     this.widgetClick.emit(widget);
   }
@@ -564,14 +544,6 @@ export class OsDashboardWidgetsComponent {
       event.preventDefault();
       this.onWidgetClick(widget);
     }
-  }
-
-  onWidgetConfigure(widget: DashboardWidget): void {
-    this.widgetConfigure.emit(widget);
-  }
-
-  onWidgetClose(widget: DashboardWidget): void {
-    this.widgetClose.emit(widget);
   }
 
   onRetry(): void {

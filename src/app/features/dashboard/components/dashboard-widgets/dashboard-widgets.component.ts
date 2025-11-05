@@ -22,13 +22,10 @@ import { GoalDto } from '@dtos/goal';
       [variant]="variant()"
       [size]="size()"
       [state]="dashboardState()"
-      [showWidgetActions]="showWidgetActions()"
       [showCreateActions]="showCreateActions()"
       [errorMessage]="errorMessage()"
       [emptyMessage]="emptyMessage()"
       (widgetClick)="onWidgetClick($event)"
-      (widgetConfigure)="onWidgetConfigure($event)"
-      (widgetClose)="onWidgetClose($event)"
       (retryRequested)="onRetryRequested()"
       (createBudgetRequested)="onCreateBudgetRequested()"
       (createGoalRequested)="onCreateGoalRequested()"
@@ -49,13 +46,10 @@ export class DashboardWidgetsComponent {
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
-  readonly showWidgetActions = input<boolean>(true);
   readonly showCreateActions = input<boolean>(true);
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
 
   readonly widgetClick = output<WidgetConfiguration>();
-  readonly widgetConfigure = output<WidgetConfiguration>();
-  readonly widgetClose = output<WidgetConfiguration>();
   readonly retryRequested = output<void>();
   readonly createBudgetRequested = output<void>();
   readonly createGoalRequested = output<void>();
@@ -240,13 +234,5 @@ export class DashboardWidgetsComponent {
 
   getDashboardWidgets() {
     return this.dashboardWidgets();
-  }
-
-  onWidgetConfigure(widget: WidgetConfiguration): void {
-    this.widgetConfigure.emit(widget);
-  }
-
-  onWidgetClose(widget: WidgetConfiguration): void {
-    this.widgetClose.emit(widget);
   }
 }
