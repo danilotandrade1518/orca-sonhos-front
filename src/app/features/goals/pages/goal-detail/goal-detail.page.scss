@@ -1,3 +1,13 @@
+.os-goal-detail__empty {
+  padding: 16px;
+}
+
+.os-goal-detail__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .os-goal-detail-page {
   padding: 1rem;
 }

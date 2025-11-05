@@ -121,7 +121,7 @@ Entregar a página de listagem `/goals` com estados de loading/empty/error e gri
 
 ---
 
-## 📅 FASE 4: Formulário de Criação/Edição [Status: ⏳]
+## 📅 FASE 4: Formulário de Criação/Edição [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -129,28 +129,31 @@ Construir `/goals/new` e fluxo de edição com `os-form-template` e validações
 
 ### 📋 Tarefas
 
-#### Criar `goal-form.component.ts` [⏳]
+#### Criar `goal-form.component.ts` [✅]
 
 **Descrição**: Campos: nome, valor alvo, data-alvo (opcional), orçamento, conta origem; dica de aporte sugerido (apenas exibição); validações.
 **Critério de Conclusão**: Form acessível (labels, aria), testes de validação.
 
-#### Página `/goals/new` [⏳]
+#### Página `/goals/new` [✅]
 
 **Descrição**: Usar `os-form-template` (Salvar/Cancelar), chamar `GoalsState.create` e navegar para lista/detalhe.
 **Critério de Conclusão**: Criação funcional com feedback visual.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Validações SMART básicas
-- [ ] Teclado completo e focus visível
+- [x] Validações SMART básicas
+- [x] Teclado completo e focus visível
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: `os-goal-form` criado com Reactive Forms + `os-form-template`
+- **Validações**: obrigatoriedade, mínimo > 0, `deadline` não passada
+- **UX/A11y**: dica de aporte sugerido, labels e foco visível; botões Salvar/Cancelar
+- **Fluxo**: `goals-new.page.ts` chama `GoalsState.create` e retorna à lista
 
 ---
 
-## 📅 FASE 5: Detalhe da Meta [Status: ⏳]
+## 📅 FASE 5: Detalhe da Meta [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -158,23 +161,26 @@ Entregar `/goals/:id` com `os-detail-template`, seções e sidebar opcional.
 
 ### 📋 Tarefas
 
-#### Página `goal-detail.page.ts` [⏳]
+#### Página `goal-detail.page.ts` [✅]
 
 **Descrição**: Seções Resumo (progresso e valores), Aportes (histórico), Informações (prazo, orçamento, conta). Ações editar/excluir.
 **Critério de Conclusão**: Navegação por abas/sections acessível, testes de renderização.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Leitura clara dos dados e progresso
-- [ ] Acessibilidade de regiões e headings
+- [x] Leitura clara dos dados e progresso
+- [x] Acessibilidade de regiões e headings
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: `goal-detail.page.ts` usa `os-detail-template` com seções Resumo e Informações
+- **Seções**: Resumo (progresso, acumulado, restante, aporte sugerido) e Informações (campos da meta)
+- **Sidebar**: exibe orçamento e conta origem
+- **Ações**: Editar navega para `../:id`; Excluir chama `GoalsState.delete` e retorna à lista
 
 ---
 
-## 📅 FASE 6: Aportes (Adicionar/Remover) [Status: ⏳]
+## 📅 FASE 6: Aportes (Adicionar/Remover) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -182,19 +188,23 @@ Implementar fluxos de aporte positivo e remoção com validações de não-negat
 
 ### 📋 Tarefas
 
-#### Ações de aporte nos componentes [⏳]
+#### Ações de aporte nos componentes [✅]
 
 **Descrição**: Em `GoalCard`/detalhe, abrir modal/inline para inserir valor; chamar `addAmount`/`removeAmount` do estado, atualizar UI e notificar.
 **Critério de Conclusão**: Regras evitam `currentAmount < 0`; testes cobrem erros.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Regras de negócio aplicadas
-- [ ] Mensagens de erro anunciadas (aria-live assertive)
+- [x] Regras de negócio aplicadas
+- [x] Mensagens de erro anunciadas (aria-live assertive)
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: Criado `goal-amount-modal` com modo add/remove e validações de não-negatividade
+- **Validações**: Impede saldo negativo ao remover; valida valor mínimo > 0; exibe valor após remoção em tempo real
+- **Integração**: Modal integrado em `goals.page.ts` e `goal-detail.page.ts`; ações adicionadas no template de detalhe
+- **A11y**: Mensagens de erro em aria-live assertive; feedback visual de validação
+- **Notificações**: Sucesso exibido após operações via `NotificationService.showSuccess`
 
 ---
 
