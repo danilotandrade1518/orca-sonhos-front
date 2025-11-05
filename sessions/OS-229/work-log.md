@@ -41,10 +41,57 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 2
+
+**Fase**: FASE 2: Core Services (API Service e State)
+**Objetivo**: Implementar serviços de API e estado reativo com signals
+
+#### ✅ Trabalho Realizado
+
+- Implementado `AccountsApiService` em `src/app/core/services/account/accounts-api/accounts-api.service.ts`
+  - Métodos: `listAccounts()`, `createAccount()`, `updateAccount()`, `deleteAccount()`, `transferBetweenAccounts()`, `reconcileAccount()`
+  - Signals para `loading` e `error` (readonly)
+  - Integração com `ApiService` e `AuthService`
+  - Tratamento de erros com `catchError` e `ApiError`
+- Implementado `AccountState` em `src/app/core/services/account/account-state/account.state.ts`
+  - Signals privados: `_accounts`, `_loading`, `_error`
+  - Readonly getters e computed signals: `hasAccounts()`, `accountsCount()`, `accountsByBudgetId()`
+  - Métodos de mutation: `createAccount()`, `updateAccount()`, `deleteAccount()`, `transferBetweenAccounts()`, `reconcileAccount()`
+  - Integração com `BudgetSelectionService` para filtro automático por orçamento
+  - Recarga automática da lista após mutations
+- Criados testes unitários básicos:
+  - `accounts-api.service.spec.ts` com cobertura de todos os métodos e cenários de erro
+  - `account.state.spec.ts` com testes de signals, computed, mutations e integração
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Seguir padrão de `BudgetService` e `BudgetState` para consistência - **Motivo**: Manter arquitetura uniforme no projeto
+- **Decisão**: Recarga completa da lista após mutations ao invés de write-through - **Motivo**: Simplicidade e garantia de dados atualizados, conforme especificado na arquitetura
+- **Decisão**: Tratamento de erro específico para bloqueio de exclusão - **Motivo**: Mensagens claras para o usuário quando há transações vinculadas
+
+#### 🧪 Validações
+
+- Testes unitários criados e passando
+- Sem erros de lint/type-check
+- Estrutura seguindo padrões existentes (`BudgetService`, `BudgetState`)
+
+#### ⏭️ Próximos Passos
+
+- FASE 3: Criar componentes base do Design System (`AccountTypeBadge`, `AccountCard`)
+
+#### 🎉 Conclusão da Fase
+
+- `AccountsApiService` completo com todos os métodos funcionando
+- `AccountState` com signals reativos e integração com `BudgetSelectionService`
+- Testes unitários básicos criados
+- Sem erros de lint/type-check
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 1: DTOs e Tipos Base [Status: ✅ Completada]
-**Última Modificação**: Criação completa de todos os DTOs em `dtos/account/`
-**Próxima Tarefa**: FASE 2 - Implementar `AccountsApiService` e `AccountState`
+**Fase Atual**: FASE 2: Core Services (API Service e State) [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de `AccountsApiService` e `AccountState` com testes
+**Próxima Tarefa**: FASE 3 - Criar componentes base do Design System (`AccountTypeBadge` e `AccountCard`)
 

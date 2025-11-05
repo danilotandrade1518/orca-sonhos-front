@@ -67,7 +67,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend e tipos/enums de cont
 
 ---
 
-## 📅 FASE 2: Core Services (API Service e State) [Status: ⏳]
+## 📅 FASE 2: Core Services (API Service e State) [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -75,7 +75,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 ### 📋 Tarefas
 
-#### Implementar `AccountsApiService` [⏳]
+#### Implementar `AccountsApiService` [✅]
 
 **Descrição**: Criar serviço em `src/app/core/services/account/accounts-api/accounts-api.service.ts` com:
 
@@ -102,7 +102,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 - `src/app/core/services/budget/budget.service.ts` para padrão
 
-#### Implementar `AccountState` [⏳]
+#### Implementar `AccountState` [✅]
 
 **Descrição**: Criar estado em `src/app/core/services/account/account-state/account.state.ts` com:
 
@@ -135,15 +135,22 @@ Implementar serviços de API e estado reativo com signals, seguindo padrões de 
 
 ### 🧪 Critérios de Validação
 
-- [ ] `AccountsApiService` com todos os métodos funcionando
-- [ ] `AccountState` com signals reativos
-- [ ] Integração com `BudgetSelectionService` funcionando
-- [ ] Testes unitários criados (estrutura básica)
-- [ ] Sem erros de lint/type-check
+- [x] `AccountsApiService` com todos os métodos funcionando
+- [x] `AccountState` com signals reativos
+- [x] Integração com `BudgetSelectionService` funcionando
+- [x] Testes unitários criados (estrutura básica)
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Decisão**: Seguindo padrão de `BudgetService` e `BudgetState` para consistência
+- **Implementação**:
+  - `AccountsApiService` com todos os métodos HTTP (list, create, update, delete, transfer, reconcile)
+  - `AccountState` com signals privados e readonly getters, computed signals para hasAccounts, accountsCount e accountsByBudgetId
+  - Integração com `BudgetSelectionService` para filtro automático por orçamento
+  - Tratamento de erros específico para bloqueio de exclusão quando há transações vinculadas
+- **Testes**: Cobertura básica criada seguindo padrão de `budget.service.spec.ts` e `budget.state.spec.ts`
+- **Validação**: Todos os métodos testados com cenários de sucesso e erro
 
 ---
 
