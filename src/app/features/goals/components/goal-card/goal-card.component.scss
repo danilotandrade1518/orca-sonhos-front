@@ -30,8 +30,19 @@
 
 .os-goal-card__progress-bar-fill {
   height: 100%;
-  background: var(--os-color-success, #388E3C);
-  transition: width 200ms ease;
+  transition: width 200ms ease, background-color 200ms ease;
+
+  &--success {
+    background-color: var(--os-color-success, #10b981);
+  }
+
+  &--warning {
+    background-color: var(--os-color-warning, #f59e0b);
+  }
+
+  &--danger {
+    background-color: var(--os-color-error, #ef4444);
+  }
 }
 
 .os-goal-card__progress-info {
@@ -70,14 +81,43 @@
 .os-goal-card__action {
   padding: 8px 12px;
   border-radius: 6px;
-  border: 1px solid var(--os-border-color, #e0e0e0);
-  background: var(--os-background-color, #fff);
+  border: 1px solid var(--os-color-border, #e0e0e0);
+  background: var(--os-color-background, #fff);
   cursor: pointer;
+  min-height: 44px;
+  transition: border-color 150ms ease, background-color 150ms ease;
+
+  &:focus {
+    outline: 2px solid var(--os-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:hover {
+    background-color: var(--os-color-background-hover, rgba(59, 130, 246, 0.1));
+    border-color: var(--os-color-border-hover, #cbd5e1);
+  }
+
+  &:active {
+    background-color: var(--os-color-background-hover, rgba(59, 130, 246, 0.15));
+  }
 }
 
 .os-goal-card__action--danger {
-  border-color: var(--os-color-error, #D32F2F);
-  color: var(--os-color-error, #D32F2F);
+  border-color: var(--os-color-error, #ef4444);
+  color: var(--os-color-error, #ef4444);
+
+  &:hover {
+    background-color: var(--os-color-error-50, #fef2f2);
+    border-color: var(--os-color-error-600, #dc2626);
+  }
+
+  &:focus {
+    outline-color: var(--os-color-error, #ef4444);
+  }
 }
 
 

@@ -10,4 +10,3 @@ export interface CreateGoalDto {
 export interface CreateGoalResponseDto {
   id: string;
 }
-

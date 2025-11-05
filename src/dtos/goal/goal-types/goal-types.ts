@@ -7,4 +7,3 @@ export interface GoalDto {
   budgetId: string;
   sourceAccountId?: string;
 }
-

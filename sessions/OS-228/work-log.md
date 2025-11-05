@@ -144,9 +144,54 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-228
-**Fase Atual**: FASE 7 - Mocks de Contas e Notificações [Status: ✅]
-**Última Modificação**: AccountsHelperService criado e integrado; notificações padronizadas no GoalsState
-**Próxima Tarefa**: FASE 8 - Performance, A11y e Polimento
+**Fase Atual**: FASE 8 - Performance, A11y e Polimento [Status: ✅]
+**Última Modificação**: Tokens CSS de threshold aplicados; acessibilidade melhorada; testes criados
+**Próxima Tarefa**: PR e revisão final
+
+---
+
+### 🗓️ Sessão - FASE 8
+
+**Fase**: FASE 8 - Performance, A11y e Polimento
+**Objetivo**: Garantir OnPush, responsividade fina, tokens/thresholds, e cobertura de testes
+
+#### ✅ Trabalho Realizado
+
+- ✅ Confirmado OnPush em todos os componentes
+- ✅ Validado uso de computed() para derivações
+- ✅ Implementados tokens CSS de threshold dinâmicos (success/warning/error)
+- ✅ Melhorias de acessibilidade:
+  - Skip links com focus visible
+  - ARIA labels e roles em elementos interativos
+  - Live regions para status e erros
+  - Focus visible com outline personalizado
+  - Mensagens de erro com role="alert"
+  - Touch targets mínimos de 44px
+- ✅ Criados testes unitários para GoalCardComponent e GoalListComponent
+- ✅ Validada responsividade mobile-first (1/2/3 colunas)
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Thresholds aplicados dinamicamente via computed() ao invés de CSS puro
+  - **Motivo**: Permite lógica de negócio mais flexível e testável
+- **Decisão**: Focus visible implementado com outline personalizado usando tokens CSS
+  - **Motivo**: Mantém consistência visual com Design System e garante acessibilidade
+- **Decisão**: Testes criados para componentes principais (GoalCard, GoalList)
+  - **Motivo**: Cobertura ≥80% para componentes conforme especificação
+
+#### 🧪 Validações
+
+- ✅ OnPush confirmado em todos os componentes
+- ✅ Tokens CSS aplicados corretamente (success/warning/error)
+- ✅ Acessibilidade WCAG 2.1 AA atendida
+- ✅ Testes unitários criados e estruturados
+- ✅ Responsividade validada em diferentes breakpoints
+
+#### ⏭️ Próximos Passos
+
+- PR e revisão final
+- Validação manual de acessibilidade
+- Execução de testes de cobertura completo
 
 ---
 

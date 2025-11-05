@@ -6,4 +6,3 @@ export interface ListGoalsResponseDto {
     count?: number;
   };
 }
-

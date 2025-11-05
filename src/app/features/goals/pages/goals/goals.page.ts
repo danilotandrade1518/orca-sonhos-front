@@ -22,7 +22,13 @@ import { GoalsState } from '../../state/goals-state/goals.state';
       <header class="os-goals__header">
         <h1>Metas</h1>
         <div class="os-goals__actions">
-          <button type="button" (click)="navigateToNew()">Nova Meta</button>
+          <button
+            type="button"
+            (click)="navigateToNew()"
+            aria-label="Criar nova meta"
+          >
+            Nova Meta
+          </button>
         </div>
       </header>
 

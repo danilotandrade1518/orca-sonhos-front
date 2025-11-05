@@ -550,4 +550,3 @@ describe('GoalsState', () => {
     });
   });
 });
-

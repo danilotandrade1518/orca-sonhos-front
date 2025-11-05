@@ -353,4 +353,3 @@ export class GoalsState {
     return Math.max(months, 0);
   }
 }
-

@@ -36,4 +36,3 @@ describe('GoalDto', () => {
     expect(goal.deadline).toBeNull();
   });
 });
-

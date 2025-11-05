@@ -17,4 +17,3 @@ export const GOALS_ROUTES: Routes = [
       import('./pages/goal-detail/goal-detail.page').then((m) => m.GoalDetailPage),
   },
 ];
-

@@ -40,12 +40,35 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
       <form [formGroup]="form" class="os-goal-form" aria-label="Formulário de meta">
         <div class="os-goal-form__grid">
           <div class="os-goal-form__field">
-            <label for="name">Nome</label>
-            <input id="name" type="text" formControlName="name" required />
+            <label for="name">
+              Nome
+              <span aria-label="obrigatório">*</span>
+            </label>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              required
+              [attr.aria-required]="true"
+              [attr.aria-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+              [attr.aria-describedby]="form.get('name')?.invalid && form.get('name')?.touched ? 'name-error' : null"
+            />
+            @if (form.get('name')?.invalid && form.get('name')?.touched) {
+              <span id="name-error" class="os-goal-form__error" role="alert">
+                @if (form.get('name')?.hasError('required')) {
+                  Nome é obrigatório
+                } @else if (form.get('name')?.hasError('maxlength')) {
+                  Nome deve ter no máximo 120 caracteres
+                }
+              </span>
+            }
           </div>
 
           <div class="os-goal-form__field">
-            <label for="totalAmount">Valor alvo</label>
+            <label for="totalAmount">
+              Valor alvo
+              <span aria-label="obrigatório">*</span>
+            </label>
             <input
               id="totalAmount"
               type="number"
@@ -53,12 +76,35 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
               min="0.01"
               formControlName="totalAmount"
               required
+              [attr.aria-required]="true"
+              [attr.aria-invalid]="form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched"
+              [attr.aria-describedby]="form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched ? 'totalAmount-error' : null"
             />
+            @if (form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched) {
+              <span id="totalAmount-error" class="os-goal-form__error" role="alert">
+                @if (form.get('totalAmount')?.hasError('required')) {
+                  Valor alvo é obrigatório
+                } @else if (form.get('totalAmount')?.hasError('min')) {
+                  Valor deve ser maior que zero
+                }
+              </span>
+            }
           </div>
 
           <div class="os-goal-form__field">
             <label for="deadline">Data-alvo (opcional)</label>
-            <input id="deadline" type="date" formControlName="deadline" />
+            <input
+              id="deadline"
+              type="date"
+              formControlName="deadline"
+              [attr.aria-invalid]="form.get('deadline')?.invalid && form.get('deadline')?.touched"
+              [attr.aria-describedby]="form.get('deadline')?.invalid && form.get('deadline')?.touched ? 'deadline-error' : null"
+            />
+            @if (form.get('deadline')?.invalid && form.get('deadline')?.touched) {
+              <span id="deadline-error" class="os-goal-form__error" role="alert">
+                Data não pode ser no passado
+              </span>
+            }
           </div>
 
           <div class="os-goal-form__field">
@@ -72,11 +118,12 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
                 accountsHelper.isLoading() ? 'Carregando contas...' : 'Selecione uma conta'
               "
               formControlName="sourceAccountId"
+              [attr.aria-required]="true"
             />
           </div>
         </div>
 
-        <p class="os-goal-form__hint" aria-live="polite">
+        <p class="os-goal-form__hint" aria-live="polite" role="note">
           Aporte mensal sugerido: {{ suggestedMonthlyHint() }}
         </p>
       </form>

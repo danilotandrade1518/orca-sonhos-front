@@ -18,8 +18,13 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
           [attr.aria-valuemin]="0"
           [attr.aria-valuemax]="100"
           [attr.aria-valuenow]="progress()"
+          [attr.aria-label]="'Progresso: ' + (progress() | number : '1.0-2') + '%'"
         >
-          <div class="os-goal-card__progress-bar-fill" [style.width.%]="progress()"></div>
+          <div
+            class="os-goal-card__progress-bar-fill"
+            [class]="'os-goal-card__progress-bar-fill--' + thresholdClass()"
+            [style.width.%]="progress()"
+          ></div>
         </div>
         <div class="os-goal-card__progress-info">
           <span class="os-goal-card__progress-value">{{ progress() | number : '1.0-2' }}%</span>
@@ -50,15 +55,26 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
       </section>
 
       <footer class="os-goal-card__actions">
-        <button type="button" class="os-goal-card__action" (click)="aportar.emit(goal().id!)">
+        <button
+          type="button"
+          class="os-goal-card__action"
+          [attr.aria-label]="'Aportar na meta ' + goal().name"
+          (click)="aportar.emit(goal().id!)"
+        >
           Aportar
         </button>
-        <button type="button" class="os-goal-card__action" (click)="editar.emit(goal().id!)">
+        <button
+          type="button"
+          class="os-goal-card__action"
+          [attr.aria-label]="'Editar meta ' + goal().name"
+          (click)="editar.emit(goal().id!)"
+        >
           Editar
         </button>
         <button
           type="button"
           class="os-goal-card__action os-goal-card__action--danger"
+          [attr.aria-label]="'Excluir meta ' + goal().name"
           (click)="excluir.emit(goal().id!)"
         >
           Excluir
