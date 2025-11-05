@@ -93,4 +93,48 @@ describe('AccountCardComponent', () => {
     expect(ariaLabel).toContain('CHECKING_ACCOUNT');
     expect(ariaLabel).toContain('R$');
   });
+
+  it('should generate correct balance aria-label', () => {
+    const balanceAriaLabel = component.getBalanceAriaLabel();
+    expect(balanceAriaLabel).toContain('Conta Corrente');
+    expect(balanceAriaLabel).toContain('R$');
+  });
+
+  it('should not emit edit when account is null', () => {
+    fixture.componentRef.setInput('account', null as any);
+    fixture.detectChanges();
+
+    spyOn(component.edit, 'emit');
+    component.onEdit();
+
+    expect(component.edit.emit).not.toHaveBeenCalled();
+  });
+
+  it('should not emit delete when account is null', () => {
+    fixture.componentRef.setInput('account', null as any);
+    fixture.detectChanges();
+
+    spyOn(component.delete, 'emit');
+    component.onDelete();
+
+    expect(component.delete.emit).not.toHaveBeenCalled();
+  });
+
+  it('should display account type badge', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const badgeElement = compiled.querySelector('os-account-type-badge');
+    expect(badgeElement).toBeTruthy();
+  });
+
+  it('should handle zero balance correctly', () => {
+    const accountWithZeroBalance: AccountDto = {
+      ...mockAccount,
+      balance: 0,
+    };
+    fixture.componentRef.setInput('account', accountWithZeroBalance);
+    fixture.detectChanges();
+
+    const balanceAriaLabel = component.getBalanceAriaLabel();
+    expect(balanceAriaLabel).toContain('R$ 0,00');
+  });
 });

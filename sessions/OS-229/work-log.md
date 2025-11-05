@@ -311,7 +311,7 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-229
-**Fase Atual**: FASE 7: Integrações [Status: ✅ Completada]
-**Última Modificação**: Integração completa de contas com Dashboard, Budgets, Transactions, Goals e menu/side-nav
-**Próxima Tarefa**: FASE 8 - Testes e Acessibilidade (cobertura ≥ 80%, validação WCAG 2.1 AA)
+**Fase Atual**: FASE 8: Testes e Acessibilidade [Status: ⏰ Em Progresso]
+**Última Modificação**: Testes unitários criados para serviços (AccountsApiService, AccountState) e componentes base (AccountTypeBadge, AccountCard, TransferForm)
+**Próxima Tarefa**: Completar testes de componentes (ReconcileForm, AccountFormComponent, AccountsPage, modais), testes de integração e validações de acessibilidade
 

@@ -3,21 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { delay, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type {
-  AccountDto,
-  CreateAccountRequestDto,
-  DeleteAccountRequestDto,
-  ReconcileAccountRequestDto,
-  TransferBetweenAccountsRequestDto,
-  UpdateAccountRequestDto,
-} from '../../../../../dtos/account';
+import { AccountDto, AccountType } from '../../../../../dtos/account';
 import { BudgetSelectionService } from '../../budget-selection/budget-selection.service';
 import { AccountsApiService } from '../accounts-api/accounts-api.service';
 import { AccountState } from './account.state';
 
 describe('AccountState', () => {
   let accountState: AccountState;
-  let accountsApi: {
+  let accountsApiService: {
     listAccounts: ReturnType<typeof vi.fn>;
     createAccount: ReturnType<typeof vi.fn>;
     updateAccount: ReturnType<typeof vi.fn>;
@@ -32,20 +25,22 @@ describe('AccountState', () => {
   const mockAccounts: AccountDto[] = [
     {
       id: 'account-1',
-      name: 'Conta Corrente Principal',
-      type: 'CHECKING_ACCOUNT',
-      balance: 3000.0,
+      name: 'Conta Corrente',
+      type: AccountType.CHECKING_ACCOUNT,
+      balance: 500000,
+      budgetId: 'budget-1',
     },
     {
       id: 'account-2',
-      name: 'Poupança',
-      type: 'SAVINGS_ACCOUNT',
-      balance: 2000.0,
+      name: 'Conta Poupança',
+      type: AccountType.SAVINGS_ACCOUNT,
+      balance: 1000000,
+      budgetId: 'budget-1',
     },
   ];
 
   beforeEach(() => {
-    accountsApi = {
+    accountsApiService = {
       listAccounts: vi.fn(),
       createAccount: vi.fn(),
       updateAccount: vi.fn(),
@@ -61,7 +56,7 @@ describe('AccountState', () => {
     TestBed.configureTestingModule({
       providers: [
         AccountState,
-        { provide: AccountsApiService, useValue: accountsApi },
+        { provide: AccountsApiService, useValue: accountsApiService },
         { provide: BudgetSelectionService, useValue: budgetSelectionService },
         provideZonelessChangeDetection(),
       ],
@@ -88,11 +83,16 @@ describe('AccountState', () => {
     it('should compute accountsCount as 0 initially', () => {
       expect(accountState.accountsCount()).toBe(0);
     });
+
+    it('should compute accountsByBudgetId as empty when no budget selected', () => {
+      budgetSelectionService.selectedBudgetId = vi.fn(() => null);
+      expect(accountState.accountsByBudgetId()).toEqual([]);
+    });
   });
 
   describe('loadAccounts', () => {
     it('should load accounts successfully', async () => {
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
       accountState.loadAccounts();
 
@@ -102,19 +102,38 @@ describe('AccountState', () => {
       expect(accountState.error()).toBeNull();
     });
 
+    it('should set loading to true during load', async () => {
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts).pipe(delay(100)));
+
+      accountState.loadAccounts();
+
+      expect(accountState.loading()).toBeTruthy();
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(accountState.loading()).toBeFalsy();
+    });
+
     it('should set error when no budget is selected', () => {
-      budgetSelectionService.selectedBudgetId.mockReturnValue(null);
+      budgetSelectionService.selectedBudgetId = vi.fn(() => null);
 
       accountState.loadAccounts();
 
       expect(accountState.error()).toBe('Nenhum orçamento selecionado');
-      expect(accountsApi.listAccounts).not.toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).not.toHaveBeenCalled();
     });
 
-    it('should handle API errors', async () => {
-      accountsApi.listAccounts.mockReturnValue(
-        throwError(() => ({ message: 'Failed to load accounts' }))
-      );
+    it('should not load if already loading', () => {
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts).pipe(delay(100)));
+
+      accountState.loadAccounts();
+      accountState.loadAccounts();
+
+      expect(accountsApiService.listAccounts).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle load errors', async () => {
+      const error = { message: 'Failed to load accounts' };
+      accountsApiService.listAccounts.mockReturnValue(throwError(() => error));
 
       accountState.loadAccounts();
 
@@ -123,162 +142,279 @@ describe('AccountState', () => {
       expect(accountState.loading()).toBeFalsy();
     });
 
-    it('should not load if already loading', () => {
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts).pipe(delay(100)));
+    it('should filter accounts by selected budget', async () => {
+      const accountsWithDifferentBudgets: AccountDto[] = [
+        ...mockAccounts,
+        {
+          id: 'account-3',
+          name: 'Outra Conta',
+          type: AccountType.CHECKING_ACCOUNT,
+          balance: 200000,
+          budgetId: 'budget-2',
+        },
+      ];
+
+      accountsApiService.listAccounts.mockReturnValue(of(accountsWithDifferentBudgets));
+      budgetSelectionService.selectedBudgetId = vi.fn(() => 'budget-1');
 
       accountState.loadAccounts();
-      accountState.loadAccounts();
 
-      expect(accountsApi.listAccounts).toHaveBeenCalledTimes(1);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.accountsByBudgetId().length).toBe(2);
+      expect(accountState.accountsByBudgetId()[0].budgetId).toBe('budget-1');
+      expect(accountState.accountsByBudgetId()[1].budgetId).toBe('budget-1');
     });
   });
 
   describe('createAccount', () => {
+    const createDto = {
+      name: 'Nova Conta',
+      type: AccountType.CHECKING_ACCOUNT,
+      initialBalance: 0,
+      budgetId: 'budget-1',
+    };
+
     it('should create account and reload list', async () => {
-      const dto: CreateAccountRequestDto = {
-        userId: 'user-123',
-        name: 'Nova Conta',
-        type: 'CHECKING_ACCOUNT',
-        budgetId: 'budget-1',
-      };
+      accountsApiService.createAccount.mockReturnValue(of('account-new'));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      accountsApi.createAccount.mockReturnValue(of('account-new'));
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
-
-      accountState.createAccount(dto);
+      accountState.createAccount(createDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.createAccount).toHaveBeenCalledWith(dto);
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.createAccount).toHaveBeenCalledWith(createDto);
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
     });
 
     it('should set error when creation fails', async () => {
-      const dto: CreateAccountRequestDto = {
-        userId: 'user-123',
-        name: 'Nova Conta',
-        type: 'CHECKING_ACCOUNT',
-        budgetId: 'budget-1',
-      };
+      accountsApiService.createAccount.mockReturnValue(of(null));
 
-      accountsApi.createAccount.mockReturnValue(of(null));
-
-      accountState.createAccount(dto);
+      accountState.createAccount(createDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
       expect(accountState.error()).toBe('Falha ao criar conta');
+      expect(accountState.loading()).toBeFalsy();
+    });
+
+    it('should handle creation errors', async () => {
+      const error = { message: 'Failed to create account' };
+      accountsApiService.createAccount.mockReturnValue(throwError(() => error));
+
+      accountState.createAccount(createDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Failed to create account');
+      expect(accountState.loading()).toBeFalsy();
     });
   });
 
   describe('updateAccount', () => {
+    const updateDto = {
+      id: 'account-1',
+      name: 'Conta Atualizada',
+      type: AccountType.SAVINGS_ACCOUNT,
+      budgetId: 'budget-1',
+    };
+
     it('should update account and reload list', async () => {
-      const dto: UpdateAccountRequestDto = {
-        id: 'account-1',
-        userId: 'user-123',
-        name: 'Conta Atualizada',
-      };
+      accountsApiService.updateAccount.mockReturnValue(of(true));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      accountsApi.updateAccount.mockReturnValue(of(true));
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
-
-      accountState.updateAccount(dto);
+      accountState.updateAccount(updateDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.updateAccount).toHaveBeenCalledWith(dto);
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.updateAccount).toHaveBeenCalledWith(updateDto);
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+    });
+
+    it('should set error when update fails', async () => {
+      accountsApiService.updateAccount.mockReturnValue(of(false));
+
+      accountState.updateAccount(updateDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Falha ao atualizar conta');
+      expect(accountState.loading()).toBeFalsy();
+    });
+
+    it('should handle update errors', async () => {
+      const error = { message: 'Failed to update account' };
+      accountsApiService.updateAccount.mockReturnValue(throwError(() => error));
+
+      accountState.updateAccount(updateDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Failed to update account');
+      expect(accountState.loading()).toBeFalsy();
     });
   });
 
   describe('deleteAccount', () => {
+    const deleteDto = {
+      id: 'account-1',
+      budgetId: 'budget-1',
+    };
+
     it('should delete account and reload list', async () => {
-      const dto: DeleteAccountRequestDto = {
-        userId: 'user-123',
-        accountId: 'account-1',
-      };
+      accountsApiService.deleteAccount.mockReturnValue(of(true));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      accountsApi.deleteAccount.mockReturnValue(of(true));
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
-
-      accountState.deleteAccount(dto);
+      accountState.deleteAccount(deleteDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.deleteAccount).toHaveBeenCalledWith(dto);
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.deleteAccount).toHaveBeenCalledWith(deleteDto);
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
     });
 
-    it('should set error message when deletion fails', async () => {
-      const dto: DeleteAccountRequestDto = {
-        userId: 'user-123',
-        accountId: 'account-1',
-      };
+    it('should set error when deletion fails', async () => {
+      accountsApiService.deleteAccount.mockReturnValue(of(false));
 
-      accountsApi.deleteAccount.mockReturnValue(of(false));
-
-      accountState.deleteAccount(dto);
+      accountState.deleteAccount(deleteDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
       expect(accountState.error()).toContain('Falha ao excluir conta');
+      expect(accountState.loading()).toBeFalsy();
+    });
+
+    it('should handle deletion errors with transaction block message', async () => {
+      const error = {
+        message: 'Account has transactions and cannot be deleted',
+      };
+      accountsApiService.deleteAccount.mockReturnValue(throwError(() => error));
+
+      accountState.deleteAccount(deleteDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toContain('transações vinculadas');
+      expect(accountState.loading()).toBeFalsy();
     });
   });
 
   describe('transferBetweenAccounts', () => {
+    const transferDto = {
+      fromAccountId: 'account-1',
+      toAccountId: 'account-2',
+      amountInCents: 100000,
+      budgetId: 'budget-1',
+    };
+
     it('should transfer and reload list', async () => {
-      const dto: TransferBetweenAccountsRequestDto = {
-        userId: 'user-123',
-        fromAccountId: 'account-1',
-        toAccountId: 'account-2',
-        amount: 500,
-      };
+      accountsApiService.transferBetweenAccounts.mockReturnValue(of(true));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      accountsApi.transferBetweenAccounts.mockReturnValue(of(true));
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
-
-      accountState.transferBetweenAccounts(dto);
+      accountState.transferBetweenAccounts(transferDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.transferBetweenAccounts).toHaveBeenCalledWith(dto);
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.transferBetweenAccounts).toHaveBeenCalledWith(transferDto);
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+    });
+
+    it('should set error when transfer fails', async () => {
+      accountsApiService.transferBetweenAccounts.mockReturnValue(of(false));
+
+      accountState.transferBetweenAccounts(transferDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Falha ao transferir entre contas');
+      expect(accountState.loading()).toBeFalsy();
+    });
+
+    it('should handle transfer errors', async () => {
+      const error = { message: 'Insufficient balance' };
+      accountsApiService.transferBetweenAccounts.mockReturnValue(throwError(() => error));
+
+      accountState.transferBetweenAccounts(transferDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Insufficient balance');
+      expect(accountState.loading()).toBeFalsy();
     });
   });
 
   describe('reconcileAccount', () => {
+    const reconcileDto = {
+      accountId: 'account-1',
+      finalBalanceInCents: 550000,
+      budgetId: 'budget-1',
+    };
+
     it('should reconcile and reload list', async () => {
-      const dto: ReconcileAccountRequestDto = {
-        userId: 'user-123',
-        budgetId: 'budget-1',
-        accountId: 'account-1',
-        realBalance: 3500,
-      };
+      accountsApiService.reconcileAccount.mockReturnValue(of(true));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      accountsApi.reconcileAccount.mockReturnValue(of(true));
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
-
-      accountState.reconcileAccount(dto);
+      accountState.reconcileAccount(reconcileDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.reconcileAccount).toHaveBeenCalledWith(dto);
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.reconcileAccount).toHaveBeenCalledWith(reconcileDto);
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+    });
+
+    it('should set error when reconciliation fails', async () => {
+      accountsApiService.reconcileAccount.mockReturnValue(of(false));
+
+      accountState.reconcileAccount(reconcileDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Falha ao reconciliar conta');
+      expect(accountState.loading()).toBeFalsy();
+    });
+
+    it('should handle reconciliation errors', async () => {
+      const error = { message: 'Failed to reconcile' };
+      accountsApiService.reconcileAccount.mockReturnValue(throwError(() => error));
+
+      accountState.reconcileAccount(reconcileDto);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBe('Failed to reconcile');
+      expect(accountState.loading()).toBeFalsy();
     });
   });
 
-  describe('accountsByBudgetId', () => {
-    it('should return accounts when budget is selected', () => {
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
+  describe('computed signals', () => {
+    it('should compute hasAccounts correctly', async () => {
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
+
       accountState.loadAccounts();
 
-      const accounts = accountState.accountsByBudgetId();
-      expect(accounts).toEqual(mockAccounts);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.hasAccounts()).toBeTruthy();
     });
 
-    it('should return empty array when no budget is selected', () => {
-      budgetSelectionService.selectedBudgetId.mockReturnValue(null);
+    it('should compute accountsCount correctly', async () => {
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
-      const accounts = accountState.accountsByBudgetId();
-      expect(accounts).toEqual([]);
+      accountState.loadAccounts();
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.accountsCount()).toBe(2);
+    });
+
+    it('should compute accountsByBudgetId correctly', async () => {
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
+      budgetSelectionService.selectedBudgetId = vi.fn(() => 'budget-1');
+
+      accountState.loadAccounts();
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.accountsByBudgetId().length).toBe(2);
+    });
+
+    it('should return empty array when no budget selected', () => {
+      budgetSelectionService.selectedBudgetId = vi.fn(() => null);
+      expect(accountState.accountsByBudgetId()).toEqual([]);
     });
   });
 
   describe('clearError', () => {
-    it('should clear error', () => {
+    it('should clear error', async () => {
+      const error = { message: 'Test error' };
+      accountsApiService.listAccounts.mockReturnValue(throwError(() => error));
+
+      accountState.loadAccounts();
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(accountState.error()).toBeTruthy();
+
       accountState.clearError();
       expect(accountState.error()).toBeNull();
     });
@@ -286,12 +422,14 @@ describe('AccountState', () => {
 
   describe('refreshAccounts', () => {
     it('should reload accounts', async () => {
-      accountsApi.listAccounts.mockReturnValue(of(mockAccounts));
+      accountsApiService.listAccounts.mockReturnValue(of(mockAccounts));
 
       accountState.refreshAccounts();
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountsApi.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountState.accounts()).toEqual(mockAccounts);
     });
   });
 });
+

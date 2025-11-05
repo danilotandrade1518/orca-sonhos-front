@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   AccountDto,
+  AccountType,
   CreateAccountRequestDto,
   CreateAccountResponseDto,
   DeleteAccountRequestDto,
@@ -26,6 +27,9 @@ describe('AccountsApiService', () => {
   let apiService: {
     getRaw: ReturnType<typeof vi.fn>;
     postRaw: ReturnType<typeof vi.fn>;
+    loading: ReturnType<typeof vi.fn>;
+    error: ReturnType<typeof vi.fn>;
+    clearError: ReturnType<typeof vi.fn>;
   };
   let authService: {
     user: ReturnType<typeof vi.fn>;
@@ -41,22 +45,31 @@ describe('AccountsApiService', () => {
   const mockAccounts: AccountDto[] = [
     {
       id: 'account-1',
-      name: 'Conta Corrente Principal',
-      type: 'CHECKING_ACCOUNT',
-      balance: 3000.0,
+      name: 'Conta Corrente',
+      type: AccountType.CHECKING_ACCOUNT,
+      balance: 500000,
+      budgetId: 'budget-1',
     },
     {
       id: 'account-2',
-      name: 'Poupança',
-      type: 'SAVINGS_ACCOUNT',
-      balance: 2000.0,
+      name: 'Conta Poupança',
+      type: AccountType.SAVINGS_ACCOUNT,
+      balance: 1000000,
+      budgetId: 'budget-1',
     },
   ];
+
+  const mockListResponse: ListAccountsResponseDto = {
+    data: mockAccounts,
+  };
 
   beforeEach(() => {
     apiService = {
       getRaw: vi.fn(),
       postRaw: vi.fn(),
+      loading: vi.fn(),
+      error: vi.fn(),
+      clearError: vi.fn(),
     };
 
     authService = {
@@ -79,172 +92,444 @@ describe('AccountsApiService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('Initial State', () => {
+    it('should initialize with loading false', () => {
+      expect(service.loading()).toBe(false);
+    });
+
+    it('should initialize with error null', () => {
+      expect(service.error()).toBeNull();
+    });
+  });
+
   describe('listAccounts', () => {
-    it('should list accounts successfully', () => {
-      const mockResponse: ListAccountsResponseDto = {
-        data: mockAccounts,
-        meta: { count: mockAccounts.length },
-      };
+    it('should load accounts successfully', (done) => {
+      apiService.getRaw.mockReturnValue(of(mockListResponse));
 
-      apiService.getRaw.mockReturnValue(of(mockResponse));
-
-      service.listAccounts('budget-1').subscribe((accounts) => {
-        expect(accounts).toEqual(mockAccounts);
-        expect(apiService.getRaw).toHaveBeenCalledWith('/accounts', { budgetId: 'budget-1' });
+      service.listAccounts('budget-1').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual(mockAccounts);
+          expect(apiService.getRaw).toHaveBeenCalledWith('/accounts', { budgetId: 'budget-1' });
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
       });
     });
 
-    it('should return empty array when user is not authenticated', () => {
-      authService.user.mockReturnValue(null);
+    it('should set loading to true during request', (done) => {
+      apiService.getRaw.mockReturnValue(of(mockListResponse));
 
-      service.listAccounts('budget-1').subscribe((accounts) => {
-        expect(accounts).toEqual([]);
-        expect(service.error()).toEqual({
-          message: 'User not authenticated',
-          status: 401,
-          code: 'UNAUTHORIZED',
-        });
+      service.listAccounts('budget-1').subscribe({
+        next: () => {
+          done();
+        },
+      });
+
+      expect(service.loading()).toBe(true);
+    });
+
+    it('should return empty array when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
+
+      service.listAccounts('budget-1').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual([]);
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
       });
     });
 
-    it('should return empty array when budgetId is missing', () => {
-      service.listAccounts('').subscribe((accounts) => {
-        expect(accounts).toEqual([]);
-        expect(service.error()?.code).toBe('BAD_REQUEST');
+    it('should return empty array when budgetId is not provided', (done) => {
+      service.listAccounts('').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual([]);
+          expect(service.error()?.code).toBe('BAD_REQUEST');
+          done();
+        },
       });
     });
 
-    it('should handle API errors', () => {
+    it('should handle API errors', (done) => {
       const apiError: ApiError = {
-        message: 'Failed to fetch accounts',
+        message: 'Failed to load accounts',
         status: 500,
         code: 'INTERNAL_ERROR',
       };
 
       apiService.getRaw.mockReturnValue(throwError(() => apiError));
 
-      service.listAccounts('budget-1').subscribe((accounts) => {
-        expect(accounts).toEqual([]);
-        expect(service.error()).toEqual(apiError);
+      service.listAccounts('budget-1').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual([]);
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
+      });
+    });
+
+    it('should handle 401 unauthorized error', (done) => {
+      const apiError: ApiError = {
+        message: 'Unauthorized',
+        status: 401,
+        code: 'UNAUTHORIZED',
+      };
+
+      apiService.getRaw.mockReturnValue(throwError(() => apiError));
+
+      service.listAccounts('budget-1').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual([]);
+          expect(service.error()?.status).toBe(401);
+          done();
+        },
+      });
+    });
+
+    it('should handle 400 bad request error', (done) => {
+      const apiError: ApiError = {
+        message: 'Bad request',
+        status: 400,
+        code: 'BAD_REQUEST',
+      };
+
+      apiService.getRaw.mockReturnValue(throwError(() => apiError));
+
+      service.listAccounts('budget-1').subscribe({
+        next: (accounts) => {
+          expect(accounts).toEqual([]);
+          expect(service.error()?.status).toBe(400);
+          done();
+        },
       });
     });
   });
 
   describe('createAccount', () => {
-    it('should create account successfully', () => {
-      const dto: CreateAccountRequestDto = {
-        userId: 'user-123',
-        name: 'Nova Conta',
-        type: 'CHECKING_ACCOUNT',
-        budgetId: 'budget-1',
-        initialBalance: 1000,
-      };
+    const createDto: CreateAccountRequestDto = {
+      name: 'Nova Conta',
+      type: AccountType.CHECKING_ACCOUNT,
+      initialBalance: 0,
+      budgetId: 'budget-1',
+    };
 
-      const mockResponse: CreateAccountResponseDto = {
-        id: 'account-new',
-      };
+    const createResponse: CreateAccountResponseDto = {
+      id: 'account-new',
+      success: true,
+    };
 
-      apiService.postRaw.mockReturnValue(of(mockResponse));
+    it('should create account successfully', (done) => {
+      apiService.postRaw.mockReturnValue(of(createResponse));
 
-      service.createAccount(dto).subscribe((accountId) => {
-        expect(accountId).toBe('account-new');
-        expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/create-account', dto);
+      service.createAccount(createDto).subscribe({
+        next: (accountId) => {
+          expect(accountId).toBe('account-new');
+          expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/create-account', createDto);
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
       });
     });
 
-    it('should return null when user is not authenticated', () => {
-      authService.user.mockReturnValue(null);
+    it('should return null when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
 
-      const dto: CreateAccountRequestDto = {
-        userId: 'user-123',
-        name: 'Nova Conta',
-        type: 'CHECKING_ACCOUNT',
-        budgetId: 'budget-1',
+      service.createAccount(createDto).subscribe({
+        next: (accountId) => {
+          expect(accountId).toBeNull();
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
+      });
+    });
+
+    it('should handle API errors', (done) => {
+      const apiError: ApiError = {
+        message: 'Failed to create account',
+        status: 500,
+        code: 'INTERNAL_ERROR',
       };
 
-      service.createAccount(dto).subscribe((accountId) => {
-        expect(accountId).toBeNull();
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
+
+      service.createAccount(createDto).subscribe({
+        next: (accountId) => {
+          expect(accountId).toBeNull();
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
       });
     });
   });
 
   describe('updateAccount', () => {
-    it('should update account successfully', () => {
-      const dto: UpdateAccountRequestDto = {
-        id: 'account-1',
-        userId: 'user-123',
-        name: 'Conta Atualizada',
+    const updateDto: UpdateAccountRequestDto = {
+      id: 'account-1',
+      name: 'Conta Atualizada',
+      type: AccountType.SAVINGS_ACCOUNT,
+      budgetId: 'budget-1',
+    };
+
+    const updateResponse: UpdateAccountResponseDto = {
+      success: true,
+    };
+
+    it('should update account successfully', (done) => {
+      apiService.postRaw.mockReturnValue(of(updateResponse));
+
+      service.updateAccount(updateDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(true);
+          expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/update-account', updateDto);
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
+      });
+    });
+
+    it('should return false when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
+
+      service.updateAccount(updateDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
+      });
+    });
+
+    it('should handle API errors', (done) => {
+      const apiError: ApiError = {
+        message: 'Failed to update account',
+        status: 500,
+        code: 'INTERNAL_ERROR',
       };
 
-      const mockResponse: UpdateAccountResponseDto = {
-        success: true,
-      };
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
 
-      apiService.postRaw.mockReturnValue(of(mockResponse));
-
-      service.updateAccount(dto).subscribe((success) => {
-        expect(success).toBe(true);
+      service.updateAccount(updateDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
       });
     });
   });
 
   describe('deleteAccount', () => {
-    it('should delete account successfully', () => {
-      const dto: DeleteAccountRequestDto = {
-        userId: 'user-123',
-        accountId: 'account-1',
+    const deleteDto: DeleteAccountRequestDto = {
+      id: 'account-1',
+      budgetId: 'budget-1',
+    };
+
+    const deleteResponse: DeleteAccountResponseDto = {
+      success: true,
+    };
+
+    it('should delete account successfully', (done) => {
+      apiService.postRaw.mockReturnValue(of(deleteResponse));
+
+      service.deleteAccount(deleteDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(true);
+          expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/delete-account', deleteDto);
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
+      });
+    });
+
+    it('should return false when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
+
+      service.deleteAccount(deleteDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
+      });
+    });
+
+    it('should handle API errors', (done) => {
+      const apiError: ApiError = {
+        message: 'Failed to delete account',
+        status: 500,
+        code: 'INTERNAL_ERROR',
       };
 
-      const mockResponse: DeleteAccountResponseDto = {
-        success: true,
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
+
+      service.deleteAccount(deleteDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
+      });
+    });
+
+    it('should handle 400 error when account has transactions', (done) => {
+      const apiError: ApiError = {
+        message: 'Account has transactions and cannot be deleted',
+        status: 400,
+        code: 'BAD_REQUEST',
       };
 
-      apiService.postRaw.mockReturnValue(of(mockResponse));
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
 
-      service.deleteAccount(dto).subscribe((success) => {
-        expect(success).toBe(true);
+      service.deleteAccount(deleteDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.status).toBe(400);
+          done();
+        },
       });
     });
   });
 
   describe('transferBetweenAccounts', () => {
-    it('should transfer between accounts successfully', () => {
-      const dto: TransferBetweenAccountsRequestDto = {
-        userId: 'user-123',
-        fromAccountId: 'account-1',
-        toAccountId: 'account-2',
-        amount: 500,
+    const transferDto: TransferBetweenAccountsRequestDto = {
+      fromAccountId: 'account-1',
+      toAccountId: 'account-2',
+      amountInCents: 100000,
+      budgetId: 'budget-1',
+    };
+
+    const transferResponse: TransferBetweenAccountsResponseDto = {
+      success: true,
+    };
+
+    it('should transfer between accounts successfully', (done) => {
+      apiService.postRaw.mockReturnValue(of(transferResponse));
+
+      service.transferBetweenAccounts(transferDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(true);
+          expect(apiService.postRaw).toHaveBeenCalledWith(
+            '/accounts/transfer-between-accounts',
+            transferDto
+          );
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
+      });
+    });
+
+    it('should return false when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
+
+      service.transferBetweenAccounts(transferDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
+      });
+    });
+
+    it('should handle API errors', (done) => {
+      const apiError: ApiError = {
+        message: 'Failed to transfer between accounts',
+        status: 500,
+        code: 'INTERNAL_ERROR',
       };
 
-      const mockResponse: TransferBetweenAccountsResponseDto = {
-        success: true,
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
+
+      service.transferBetweenAccounts(transferDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
+      });
+    });
+
+    it('should handle 400 error when insufficient balance', (done) => {
+      const apiError: ApiError = {
+        message: 'Insufficient balance',
+        status: 400,
+        code: 'BAD_REQUEST',
       };
 
-      apiService.postRaw.mockReturnValue(of(mockResponse));
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
 
-      service.transferBetweenAccounts(dto).subscribe((success) => {
-        expect(success).toBe(true);
+      service.transferBetweenAccounts(transferDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.status).toBe(400);
+          done();
+        },
       });
     });
   });
 
   describe('reconcileAccount', () => {
-    it('should reconcile account successfully', () => {
-      const dto: ReconcileAccountRequestDto = {
-        userId: 'user-123',
-        budgetId: 'budget-1',
-        accountId: 'account-1',
-        realBalance: 3500,
+    const reconcileDto: ReconcileAccountRequestDto = {
+      accountId: 'account-1',
+      finalBalanceInCents: 550000,
+      budgetId: 'budget-1',
+    };
+
+    const reconcileResponse: ReconcileAccountResponseDto = {
+      success: true,
+    };
+
+    it('should reconcile account successfully', (done) => {
+      apiService.postRaw.mockReturnValue(of(reconcileResponse));
+
+      service.reconcileAccount(reconcileDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(true);
+          expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/reconcile-account', reconcileDto);
+          expect(service.loading()).toBe(false);
+          expect(service.error()).toBeNull();
+          done();
+        },
+      });
+    });
+
+    it('should return false when user is not authenticated', (done) => {
+      authService.user = vi.fn(() => null);
+
+      service.reconcileAccount(reconcileDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()?.code).toBe('UNAUTHORIZED');
+          done();
+        },
+      });
+    });
+
+    it('should handle API errors', (done) => {
+      const apiError: ApiError = {
+        message: 'Failed to reconcile account',
+        status: 500,
+        code: 'INTERNAL_ERROR',
       };
 
-      const mockResponse: ReconcileAccountResponseDto = {
-        success: true,
-      };
+      apiService.postRaw.mockReturnValue(throwError(() => apiError));
 
-      apiService.postRaw.mockReturnValue(of(mockResponse));
-
-      service.reconcileAccount(dto).subscribe((success) => {
-        expect(success).toBe(true);
+      service.reconcileAccount(reconcileDto).subscribe({
+        next: (success) => {
+          expect(success).toBe(false);
+          expect(service.error()).toEqual(apiError);
+          expect(service.loading()).toBe(false);
+          done();
+        },
       });
     });
   });
@@ -256,3 +541,4 @@ describe('AccountsApiService', () => {
     });
   });
 });
+
