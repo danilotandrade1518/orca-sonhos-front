@@ -1,8 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePtBr from '@angular/common/locales/pt';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GoalCardComponent } from './goal-card.component';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
+
+registerLocaleData(localePtBr);
 
 describe('GoalCardComponent', () => {
   let component: GoalCardComponent;
@@ -21,7 +25,10 @@ describe('GoalCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GoalCardComponent],
-      providers: [provideZonelessChangeDetection()],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: LOCALE_ID, useValue: 'pt-BR' },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GoalCardComponent);

@@ -1,8 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePtBr from '@angular/common/locales/pt';
+import { By } from '@angular/platform-browser';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GoalListComponent } from './goal-list.component';
+import { GoalCardComponent } from '../goal-card/goal-card.component';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
+
+registerLocaleData(localePtBr);
 
 describe('GoalListComponent', () => {
   let component: GoalListComponent;
@@ -50,7 +56,10 @@ describe('GoalListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GoalListComponent],
-      providers: [provideZonelessChangeDetection()],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: LOCALE_ID, useValue: 'pt-BR' },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GoalListComponent);
@@ -103,6 +112,10 @@ describe('GoalListComponent', () => {
 
   describe('Outputs', () => {
     it('should emit create event', () => {
+      fixture.componentRef.setInput('goals', []);
+      fixture.componentRef.setInput('isLoading', false);
+      fixture.detectChanges();
+
       const spy = vi.fn();
       component.create.subscribe(spy);
 
@@ -118,9 +131,9 @@ describe('GoalListComponent', () => {
       const spy = vi.fn();
       component.aportar.subscribe(spy);
 
-      const cards = fixture.nativeElement.querySelectorAll('os-goal-card');
-      const firstCard = cards[0];
-      firstCard.dispatchEvent(new CustomEvent('aportar', { detail: 'goal-1' }));
+      const cardDebugElement = fixture.debugElement.query(By.directive(GoalCardComponent));
+      const cardComponent = cardDebugElement.componentInstance as GoalCardComponent;
+      cardComponent.aportar.emit('goal-1');
 
       expect(spy).toHaveBeenCalledWith('goal-1');
     });
@@ -129,9 +142,9 @@ describe('GoalListComponent', () => {
       const spy = vi.fn();
       component.editar.subscribe(spy);
 
-      const cards = fixture.nativeElement.querySelectorAll('os-goal-card');
-      const firstCard = cards[0];
-      firstCard.dispatchEvent(new CustomEvent('editar', { detail: 'goal-1' }));
+      const cardDebugElement = fixture.debugElement.query(By.directive(GoalCardComponent));
+      const cardComponent = cardDebugElement.componentInstance as GoalCardComponent;
+      cardComponent.editar.emit('goal-1');
 
       expect(spy).toHaveBeenCalledWith('goal-1');
     });
@@ -140,9 +153,9 @@ describe('GoalListComponent', () => {
       const spy = vi.fn();
       component.excluir.subscribe(spy);
 
-      const cards = fixture.nativeElement.querySelectorAll('os-goal-card');
-      const firstCard = cards[0];
-      firstCard.dispatchEvent(new CustomEvent('excluir', { detail: 'goal-1' }));
+      const cardDebugElement = fixture.debugElement.query(By.directive(GoalCardComponent));
+      const cardComponent = cardDebugElement.componentInstance as GoalCardComponent;
+      cardComponent.excluir.emit('goal-1');
 
       expect(spy).toHaveBeenCalledWith('goal-1');
     });
@@ -176,13 +189,13 @@ describe('GoalListComponent', () => {
 
   describe('Data passing', () => {
     it('should pass correct props to goal cards', () => {
-      const cards = fixture.nativeElement.querySelectorAll('os-goal-card');
-      expect(cards.length).toBe(2);
+      const cardDebugElements = fixture.debugElement.queryAll(By.directive(GoalCardComponent));
+      expect(cardDebugElements.length).toBe(2);
 
-      const firstCard = cards[0];
-      expect(firstCard.getAttribute('ng-reflect-goal')).toBeTruthy();
-      expect(firstCard.getAttribute('ng-reflect-progress')).toBe('50');
-      expect(firstCard.getAttribute('ng-reflect-remaining')).toBe('5000');
+      const firstCardComponent = cardDebugElements[0].componentInstance as GoalCardComponent;
+      expect(firstCardComponent.goal()).toEqual(mockGoals[0]);
+      expect(firstCardComponent.progress()).toBe(50);
+      expect(firstCardComponent.remaining()).toBe(5000);
     });
   });
 });

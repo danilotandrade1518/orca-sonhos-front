@@ -1,19 +1,55 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AccountsHelperService } from './accounts-helper.service';
-import { ApiService } from '../../../../core/services/api/api.service';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NotificationService } from '../../../../core/services/notification/notification.service';
 
 describe('AccountsHelperService', () => {
   let service: AccountsHelperService;
   let httpMock: HttpTestingController;
+  let configSpy: {
+    getApiUrl: ReturnType<typeof vi.fn>;
+    apiTimeout: ReturnType<typeof vi.fn>;
+    apiRetryAttempts: ReturnType<typeof vi.fn>;
+  };
+  let notificationSpy: {
+    setLoading: ReturnType<typeof vi.fn>;
+    showSuccess: ReturnType<typeof vi.fn>;
+    showError: ReturnType<typeof vi.fn>;
+  };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AccountsHelperService, ApiService, ConfigService, NotificationService],
-    });
+  beforeEach(async () => {
+    TestBed.resetTestingModule();
+
+    configSpy = {
+      getApiUrl: vi.fn().mockImplementation((endpoint: string) => {
+        const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+        return `http://localhost:3000/api/${cleanEndpoint}`;
+      }),
+      apiTimeout: vi.fn().mockReturnValue(30000),
+      apiRetryAttempts: vi.fn().mockReturnValue(3),
+    };
+
+    notificationSpy = {
+      setLoading: vi.fn(),
+      showSuccess: vi.fn(),
+      showError: vi.fn(),
+    };
+
+    await TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+        AccountsHelperService,
+        { provide: ConfigService, useValue: configSpy },
+        { provide: NotificationService, useValue: notificationSpy },
+      ],
+    }).compileComponents();
+
     service = TestBed.inject(AccountsHelperService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -49,6 +85,7 @@ describe('AccountsHelperService', () => {
 
     it('should handle error when loading accounts', () => {
       const budgetId = 'budget-1';
+      configSpy.apiRetryAttempts.mockReturnValue(0);
 
       service.loadAccounts(budgetId).subscribe((accounts) => {
         expect(accounts).toEqual([]);

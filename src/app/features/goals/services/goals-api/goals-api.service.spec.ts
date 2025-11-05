@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { GoalsApiService } from './goals-api.service';
@@ -24,6 +25,7 @@ describe('GoalsApiService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         GoalsApiService,
         { provide: ApiService, useValue: apiServiceMock },
       ],
@@ -57,7 +59,7 @@ describe('GoalsApiService', () => {
         budgetId: 'budget-1',
         sourceAccountId: 'account-1',
       };
-      const mockResponse = { id: 'goal-1' };
+      const mockResponse = { data: { id: 'goal-1' } };
 
       vi.mocked(apiService.post).mockReturnValue(of(mockResponse));
 
@@ -74,7 +76,7 @@ describe('GoalsApiService', () => {
         name: 'Viagem Atualizada',
         totalAmount: 18000,
       };
-      const mockResponse = { success: true };
+      const mockResponse = { data: { success: true } };
 
       vi.mocked(apiService.post).mockReturnValue(of(mockResponse));
 
@@ -87,7 +89,7 @@ describe('GoalsApiService', () => {
   describe('delete', () => {
     it('should call api.post with correct parameters', () => {
       const deleteDto: DeleteGoalDto = { id: 'goal-1' };
-      const mockResponse = { success: true };
+      const mockResponse = { data: { success: true } };
 
       vi.mocked(apiService.post).mockReturnValue(of(mockResponse));
 
@@ -103,7 +105,7 @@ describe('GoalsApiService', () => {
         id: 'goal-1',
         amount: 1000,
       };
-      const mockResponse = { success: true };
+      const mockResponse = { data: { success: true } };
 
       vi.mocked(apiService.post).mockReturnValue(of(mockResponse));
 
@@ -119,7 +121,7 @@ describe('GoalsApiService', () => {
         id: 'goal-1',
         amount: 500,
       };
-      const mockResponse = { success: true };
+      const mockResponse = { data: { success: true } };
 
       vi.mocked(apiService.post).mockReturnValue(of(mockResponse));
 
