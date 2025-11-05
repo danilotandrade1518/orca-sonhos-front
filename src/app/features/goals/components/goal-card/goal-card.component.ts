@@ -55,7 +55,7 @@ export class GoalCardComponent {
   readonly goalState = computed(() => {
     const p = this.progress();
     if (p >= 100) return 'completed' as const;
-    // Verificar se está atrasado baseado no deadline
+    
     const deadline = this.goal().deadline;
     if (deadline) {
       const dueDate = new Date(deadline);

@@ -226,8 +226,6 @@ export class OsGoalProgressCardComponent {
 
   readonly descriptionId = computed(() => `goal-description-${this.goalData()?.id || 'default'}`);
 
-  // Indicador de prioridade removido (não há funcionalidade de favoritar)
-
   getProgressVariant(): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
     const progress = this.progressPercentage();
 

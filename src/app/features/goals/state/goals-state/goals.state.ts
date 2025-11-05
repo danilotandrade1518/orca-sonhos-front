@@ -41,7 +41,7 @@ export class GoalsState {
     const progressMap = new Map<string, number>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; // Pula goals sem ID
+      if (!goal.id) return; 
       if (goal.totalAmount <= 0) {
         progressMap.set(goal.id, 0);
         return;
@@ -58,7 +58,7 @@ export class GoalsState {
     const remainingMap = new Map<string, number>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; // Pula goals sem ID
+      if (!goal.id) return; 
       const remaining = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
       remainingMap.set(goal.id, remaining);
     });
@@ -71,7 +71,7 @@ export class GoalsState {
     const suggestedMap = new Map<string, number | null>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; // Pula goals sem ID
+      if (!goal.id) return; 
       if (!goal.deadline) {
         suggestedMap.set(goal.id, null);
         return;
@@ -101,7 +101,7 @@ export class GoalsState {
   });
 
   load(budgetId?: string): void {
-    // Proteção contra múltiplas chamadas simultâneas
+    
     if (this._isLoading()) {
       return;
     }
@@ -124,7 +124,7 @@ export class GoalsState {
       )
       .subscribe({
         next: (goals) => {
-          // Valida e filtra goals sem ID
+          
           const validGoals = goals.filter((goal) => {
             if (!goal.id) {
               console.warn('Goal sem ID encontrado:', goal);
@@ -146,7 +146,6 @@ export class GoalsState {
   }
 
   create(dto: CreateGoalDto): void {
-    this._isLoading.set(true);
     this._error.set(null);
 
     this.goalsApi
@@ -159,27 +158,22 @@ export class GoalsState {
             const budgetId = dto.budgetId ?? this.budgetSelection.selectedBudgetId();
             if (budgetId) {
               this.load(budgetId);
-            } else {
-              this._isLoading.set(false);
             }
           } else {
             const errorMsg = 'Erro ao criar meta';
             this._error.set(errorMsg);
             this.notificationService.showError(errorMsg);
-            this._isLoading.set(false);
           }
         },
         error: (error) => {
           const errorMsg = error?.message || 'Erro ao criar meta';
           this._error.set(errorMsg);
           this.notificationService.showError(errorMsg);
-          this._isLoading.set(false);
         },
       });
   }
 
   update(dto: UpdateGoalDto): void {
-    this._isLoading.set(true);
     this._error.set(null);
 
     this.goalsApi
@@ -192,21 +186,17 @@ export class GoalsState {
             const budgetId = this.budgetSelection.selectedBudgetId();
             if (budgetId) {
               this.load(budgetId);
-            } else {
-              this._isLoading.set(false);
             }
           } else {
             const errorMsg = 'Erro ao atualizar meta';
             this._error.set(errorMsg);
             this.notificationService.showError(errorMsg);
-            this._isLoading.set(false);
           }
         },
         error: (error) => {
           const errorMsg = error?.message || 'Erro ao atualizar meta';
           this._error.set(errorMsg);
           this.notificationService.showError(errorMsg);
-          this._isLoading.set(false);
         },
       });
   }

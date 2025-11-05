@@ -122,7 +122,6 @@ export class GoalsPage implements OnInit {
     effect(() => {
       const budgetId = this.budgetSelection.selectedBudgetId();
       
-      // Evita recarregar se o budgetId não mudou ou se já está carregando
       if (budgetId === this._lastBudgetId || this.state.isLoading()) {
         return;
       }
