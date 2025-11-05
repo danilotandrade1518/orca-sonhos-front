@@ -208,7 +208,7 @@ Implementar fluxos de aporte positivo e remoção com validações de não-negat
 
 ---
 
-## 📅 FASE 7: Mocks de Contas e Notificações [Status: ⏳]
+## 📅 FASE 7: Mocks de Contas e Notificações [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -216,24 +216,28 @@ Viabilizar `sourceAccountId` com MSW/mocks e padronizar feedback ao usuário.
 
 ### 📋 Tarefas
 
-#### MSW para contas [⏳]
+#### MSW para contas [✅]
 
-**Descrição**: Criar `src/mocks/accounts/*` com shape mínimo; integrar no dev.
+**Descrição**: Criar `src/app/features/goals/services/accounts-helper/accounts-helper.service.ts` com shape mínimo; integrar no dev.
 **Critério de Conclusão**: Formulário lista contas; testes de fallback.
 
-#### NotificationService [⏳]
+#### NotificationService [✅]
 
 **Descrição**: Sucesso/erro em operações CRUD/aportes.
 **Critério de Conclusão**: Mensagens consistentes, testáveis.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Lista de contas aparece e seleciona
-- [ ] Notificações exibidas e acessíveis
+- [x] Lista de contas aparece e seleciona
+- [x] Notificações exibidas e acessíveis
 
 ### 📝 Comentários da Fase
 
-_Reservado para anotações._
+- **Implementação**: Criado `AccountsHelperService` para buscar contas via endpoint `/accounts` do MSW
+- **Integração**: Formulário de metas (`goal-form.component.ts`) atualizado para usar `os-select` ao invés de input texto
+- **Notificações**: Adicionadas notificações em todas as operações CRUD do `GoalsState` (create, update, delete, addAmount, removeAmount)
+- **Consistência**: Notificações centralizadas no `GoalsState`, removidas duplicações nas páginas
+- **Testes**: Criados testes básicos para `AccountsHelperService` cobrindo carregamento, erros e busca por ID
 
 ---
 

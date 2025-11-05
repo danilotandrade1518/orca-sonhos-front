@@ -11,6 +11,7 @@ import type {
   UpdateGoalDto,
 } from '../../../../../dtos/goal';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
 import { GoalsApiService } from '../../services/goals-api/goals-api.service';
 
 @Injectable({
@@ -19,6 +20,7 @@ import { GoalsApiService } from '../../services/goals-api/goals-api.service';
 export class GoalsState {
   private readonly goalsApi = inject(GoalsApiService);
   private readonly budgetSelection = inject(BudgetSelectionService);
+  private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _items = signal<GoalDto[]>([]);
@@ -135,6 +137,7 @@ export class GoalsState {
       .subscribe({
         next: (response) => {
           if (response.data?.id) {
+            this.notificationService.showSuccess('Meta criada com sucesso');
             const budgetId = dto.budgetId ?? this.budgetSelection.selectedBudgetId();
             if (budgetId) {
               this.load(budgetId);
@@ -142,12 +145,16 @@ export class GoalsState {
               this._isLoading.set(false);
             }
           } else {
-            this._error.set('Erro ao criar meta');
+            const errorMsg = 'Erro ao criar meta';
+            this._error.set(errorMsg);
+            this.notificationService.showError(errorMsg);
             this._isLoading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(error?.message || 'Erro ao criar meta');
+          const errorMsg = error?.message || 'Erro ao criar meta';
+          this._error.set(errorMsg);
+          this.notificationService.showError(errorMsg);
           this._isLoading.set(false);
         },
       });
@@ -163,6 +170,7 @@ export class GoalsState {
       .subscribe({
         next: (response) => {
           if (response.data?.success) {
+            this.notificationService.showSuccess('Meta atualizada com sucesso');
             const budgetId = this.budgetSelection.selectedBudgetId();
             if (budgetId) {
               this.load(budgetId);
@@ -170,12 +178,16 @@ export class GoalsState {
               this._isLoading.set(false);
             }
           } else {
-            this._error.set('Erro ao atualizar meta');
+            const errorMsg = 'Erro ao atualizar meta';
+            this._error.set(errorMsg);
+            this.notificationService.showError(errorMsg);
             this._isLoading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(error?.message || 'Erro ao atualizar meta');
+          const errorMsg = error?.message || 'Erro ao atualizar meta';
+          this._error.set(errorMsg);
+          this.notificationService.showError(errorMsg);
           this._isLoading.set(false);
         },
       });
@@ -191,16 +203,21 @@ export class GoalsState {
       .subscribe({
         next: (response) => {
           if (response.data?.success) {
+            this.notificationService.showSuccess('Meta excluída com sucesso');
             this._items.update((items) => items.filter((item) => item.id !== dto.id));
             this._lastUpdated.set(new Date());
             this._isLoading.set(false);
           } else {
-            this._error.set('Erro ao excluir meta');
+            const errorMsg = 'Erro ao excluir meta';
+            this._error.set(errorMsg);
+            this.notificationService.showError(errorMsg);
             this._isLoading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(error?.message || 'Erro ao excluir meta');
+          const errorMsg = error?.message || 'Erro ao excluir meta';
+          this._error.set(errorMsg);
+          this.notificationService.showError(errorMsg);
           this._isLoading.set(false);
         },
       });
@@ -208,7 +225,9 @@ export class GoalsState {
 
   addAmount(dto: AddAmountToGoalDto): void {
     if (dto.amount <= 0) {
-      this._error.set('O valor do aporte deve ser positivo');
+      const errorMsg = 'O valor do aporte deve ser positivo';
+      this._error.set(errorMsg);
+      this.notificationService.showError(errorMsg);
       return;
     }
 
@@ -221,6 +240,7 @@ export class GoalsState {
       .subscribe({
         next: (response) => {
           if (response.data?.success) {
+            this.notificationService.showSuccess('Aporte adicionado com sucesso');
             this._items.update((items) => {
               return items.map((item) => {
                 if (item.id === dto.id) {
@@ -233,12 +253,16 @@ export class GoalsState {
             this._lastUpdated.set(new Date());
             this._isLoading.set(false);
           } else {
-            this._error.set('Erro ao adicionar aporte');
+            const errorMsg = 'Erro ao adicionar aporte';
+            this._error.set(errorMsg);
+            this.notificationService.showError(errorMsg);
             this._isLoading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(error?.message || 'Erro ao adicionar aporte');
+          const errorMsg = error?.message || 'Erro ao adicionar aporte';
+          this._error.set(errorMsg);
+          this.notificationService.showError(errorMsg);
           this._isLoading.set(false);
         },
       });
@@ -246,19 +270,25 @@ export class GoalsState {
 
   removeAmount(dto: RemoveAmountFromGoalDto): void {
     if (dto.amount <= 0) {
-      this._error.set('O valor a remover deve ser positivo');
+      const errorMsg = 'O valor a remover deve ser positivo';
+      this._error.set(errorMsg);
+      this.notificationService.showError(errorMsg);
       return;
     }
 
     const goal = this._items().find((item) => item.id === dto.id);
     if (!goal) {
-      this._error.set('Meta não encontrada');
+      const errorMsg = 'Meta não encontrada';
+      this._error.set(errorMsg);
+      this.notificationService.showError(errorMsg);
       return;
     }
 
     const newAmount = goal.accumulatedAmount - dto.amount;
     if (newAmount < 0) {
-      this._error.set('Não é possível remover valor que resulte em saldo negativo');
+      const errorMsg = 'Não é possível remover valor que resulte em saldo negativo';
+      this._error.set(errorMsg);
+      this.notificationService.showError(errorMsg);
       return;
     }
 
@@ -271,6 +301,7 @@ export class GoalsState {
       .subscribe({
         next: (response) => {
           if (response.data?.success) {
+            this.notificationService.showSuccess('Aporte removido com sucesso');
             this._items.update((items) => {
               return items.map((item) => {
                 if (item.id === dto.id) {
@@ -282,12 +313,16 @@ export class GoalsState {
             this._lastUpdated.set(new Date());
             this._isLoading.set(false);
           } else {
-            this._error.set('Erro ao remover aporte');
+            const errorMsg = 'Erro ao remover aporte';
+            this._error.set(errorMsg);
+            this.notificationService.showError(errorMsg);
             this._isLoading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(error?.message || 'Erro ao remover aporte');
+          const errorMsg = error?.message || 'Erro ao remover aporte';
+          this._error.set(errorMsg);
+          this.notificationService.showError(errorMsg);
           this._isLoading.set(false);
         },
       });

@@ -144,6 +144,60 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-228
-**Fase Atual**: FASE 2 - Estado (signals) e Cálculos [Status: ✅]
-**Última Modificação**: GoalsState implementado com cálculos e validações
-**Próxima Tarefa**: FASE 3 - UI de Lista (GoalList + Page)
+**Fase Atual**: FASE 7 - Mocks de Contas e Notificações [Status: ✅]
+**Última Modificação**: AccountsHelperService criado e integrado; notificações padronizadas no GoalsState
+**Próxima Tarefa**: FASE 8 - Performance, A11y e Polimento
+
+---
+
+### 🗓️ Sessão - FASE 7
+
+**Fase**: FASE 7 - Mocks de Contas e Notificações
+**Objetivo**: Viabilizar sourceAccountId com MSW/mocks e padronizar feedback ao usuário
+
+#### ✅ Trabalho Realizado
+
+- ✅ Criado `AccountsHelperService`:
+  - Método `loadAccounts(budgetId)` para buscar contas via endpoint `/accounts`
+  - Signals: `accounts`, `isLoading`, `error`
+  - Método `getAccountById()` para buscar conta específica
+  - Integração com `ApiService` usando `ApiResponse<AccountDto[]>`
+- ✅ Atualizado `goal-form.component.ts`:
+  - Substituído input texto por `os-select` para seleção de contas
+  - Integração com `AccountsHelperService` usando `effect()` para carregar contas automaticamente
+  - Exibição de estado de loading e erros no select
+- ✅ Adicionadas notificações no `GoalsState`:
+  - `create()`: notificação de sucesso/erro
+  - `update()`: notificação de sucesso/erro
+  - `delete()`: notificação de sucesso/erro
+  - `addAmount()`: notificação de sucesso/erro (incluindo validações)
+  - `removeAmount()`: notificação de sucesso/erro (incluindo validações)
+- ✅ Removidas notificações duplicadas das páginas:
+  - `goals.page.ts`: removida importação e uso de `NotificationService`
+  - `goal-detail.page.ts`: removida importação e uso de `NotificationService`
+- ✅ Criados testes básicos para `AccountsHelperService`:
+  - Teste de criação do serviço
+  - Teste de carregamento de contas com sucesso
+  - Teste de tratamento de erros
+  - Teste de busca por ID
+  - Teste de método `clear()`
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Criar `AccountsHelperService` ao invés de usar serviço global de contas
+  - **Motivo**: Serviço específico para Goals, seguindo padrão de features isoladas; pode ser substituído facilmente quando serviço real existir
+- **Decisão**: Notificações centralizadas no `GoalsState`
+  - **Motivo**: Evitar duplicação de código e garantir consistência nas mensagens
+- **Decisão**: Usar `effect()` para carregar contas automaticamente quando budgetId mudar
+  - **Motivo**: Reatividade automática, sem necessidade de chamadas manuais
+
+#### 🧪 Validações
+
+- ✅ Formulário lista contas corretamente
+- ✅ Notificações exibidas em todas as operações CRUD/aportes
+- ✅ Testes básicos passando para `AccountsHelperService`
+- ✅ Nenhum erro de lint
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 8: Performance, A11y e Polimento (OnPush, responsividade fina, tokens/thresholds, cobertura de testes)

@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,10 +21,13 @@ import { OsFormTemplateComponent } from '../../../../shared/ui-components/templa
 import type { FormTemplateConfig } from '../../../../shared/ui-components/templates/os-form-template/os-form-template.component';
 import type { CreateGoalDto } from '../../../../../dtos/goal/create-goal-request-dto';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
+import { AccountsHelperService } from '../../services/accounts-helper/accounts-helper.service';
+import { OsSelectComponent } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
+import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
 
 @Component({
   selector: 'os-goal-form',
-  imports: [CommonModule, ReactiveFormsModule, OsFormTemplateComponent],
+  imports: [CommonModule, ReactiveFormsModule, OsFormTemplateComponent, OsSelectComponent],
   template: `
     <os-form-template
       [config]="formConfig()"
@@ -51,8 +62,17 @@ import { BudgetSelectionService } from '../../../../core/services/budget-selecti
           </div>
 
           <div class="os-goal-form__field">
-            <label for="sourceAccountId">Conta de origem</label>
-            <input id="sourceAccountId" type="text" formControlName="sourceAccountId" />
+            <os-select
+              label="Conta de origem"
+              [options]="accountOptions()"
+              [value]="form.get('sourceAccountId')?.value || ''"
+              [disabled]="loading() || accountsHelper.isLoading()"
+              [helperText]="accountsHelper.error() || ''"
+              [placeholder]="
+                accountsHelper.isLoading() ? 'Carregando contas...' : 'Selecione uma conta'
+              "
+              formControlName="sourceAccountId"
+            />
           </div>
         </div>
 
@@ -68,6 +88,7 @@ import { BudgetSelectionService } from '../../../../core/services/budget-selecti
 export class GoalFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly budgetSelection = inject(BudgetSelectionService);
+  readonly accountsHelper = inject(AccountsHelperService);
 
   readonly loading = input(false);
   readonly initialData = input<Partial<CreateGoalDto> | null>(null);
@@ -113,6 +134,23 @@ export class GoalFormComponent {
       Math.round(suggested * 100) / 100
     );
   });
+
+  readonly accountOptions = computed<OsSelectOption[]>(() => {
+    return this.accountsHelper.accounts().map((account) => ({
+      value: account.id,
+      label: account.name,
+      disabled: false,
+    }));
+  });
+
+  constructor() {
+    effect(() => {
+      const budgetId = this.budgetSelection.selectedBudgetId();
+      if (budgetId) {
+        this.accountsHelper.loadAccounts(budgetId).subscribe();
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) return;

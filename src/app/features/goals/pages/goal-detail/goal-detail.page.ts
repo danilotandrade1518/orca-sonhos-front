@@ -8,7 +8,6 @@ import {
 } from '../../../../shared/ui-components/templates/os-detail-template/os-detail-template.component';
 import { GoalAmountModalComponent } from '../../components/goal-amount-modal/goal-amount-modal.component';
 import { GoalsState } from '../../state/goals-state/goals.state';
-import { NotificationService } from '../../../../core/services/notification/notification.service';
 
 @Component({
   selector: 'os-goal-detail-page',
@@ -63,7 +62,6 @@ export class GoalDetailPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly state = inject(GoalsState);
-  private readonly notificationService = inject(NotificationService);
 
   private readonly _showAddModal = signal(false);
   private readonly _showRemoveModal = signal(false);
@@ -155,13 +153,11 @@ export class GoalDetailPage {
   onAddAmount(event: { goalId: string; amount: number }): void {
     this.state.addAmount({ id: event.goalId, amount: event.amount });
     this.closeAddModal();
-    this.notificationService.showSuccess('Aporte adicionado com sucesso');
   }
 
   onRemoveAmount(event: { goalId: string; amount: number }): void {
     this.state.removeAmount({ id: event.goalId, amount: event.amount });
     this.closeRemoveModal();
-    this.notificationService.showSuccess('Aporte removido com sucesso');
   }
 
   closeAddModal(): void {
