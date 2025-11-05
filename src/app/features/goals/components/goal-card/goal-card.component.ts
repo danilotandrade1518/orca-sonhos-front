@@ -1,86 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
+import {
+  OsGoalProgressCardComponent,
+  GoalProgressData,
+} from '../../../../shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
 
 @Component({
   selector: 'os-goal-card',
-  imports: [CommonModule],
+  imports: [CommonModule, OsGoalProgressCardComponent],
   template: `
-    <article class="os-goal-card" [attr.aria-label]="goal().name">
-      <header class="os-goal-card__header">
-        <h3 class="os-goal-card__title">{{ goal().name }}</h3>
-      </header>
-
-      <section class="os-goal-card__progress" aria-label="Progresso da meta">
-        <div
-          class="os-goal-card__progress-bar"
-          role="progressbar"
-          [attr.aria-valuemin]="0"
-          [attr.aria-valuemax]="100"
-          [attr.aria-valuenow]="progress()"
-          [attr.aria-label]="'Progresso: ' + (progress() | number : '1.0-2') + '%'"
-        >
-          <div
-            class="os-goal-card__progress-bar-fill"
-            [class]="'os-goal-card__progress-bar-fill--' + thresholdClass()"
-            [style.width.%]="progress()"
-          ></div>
-        </div>
-        <div class="os-goal-card__progress-info">
-          <span class="os-goal-card__progress-value">{{ progress() | number : '1.0-2' }}%</span>
-        </div>
-      </section>
-
-      <section class="os-goal-card__values" aria-label="Valores da meta">
-        <div class="os-goal-card__value">
-          <span class="os-goal-card__value-label">Acumulado</span>
-          <span class="os-goal-card__value-text">{{
-            goal().accumulatedAmount | currency : 'BRL' : 'symbol-narrow' : '1.2-2' : 'pt'
-          }}</span>
-        </div>
-        <div class="os-goal-card__value">
-          <span class="os-goal-card__value-label">Restante</span>
-          <span class="os-goal-card__value-text">{{
-            remaining() | currency : 'BRL' : 'symbol-narrow' : '1.2-2' : 'pt'
-          }}</span>
-        </div>
-        <div class="os-goal-card__value">
-          <span class="os-goal-card__value-label">Aporte sugerido</span>
-          <span class="os-goal-card__value-text">{{
-            suggested() === null
-              ? '—'
-              : (suggested() | currency : 'BRL' : 'symbol-narrow' : '1.2-2' : 'pt')
-          }}</span>
-        </div>
-      </section>
-
-      <footer class="os-goal-card__actions">
-        <button
-          type="button"
-          class="os-goal-card__action"
-          [attr.aria-label]="'Aportar na meta ' + goal().name"
-          (click)="aportar.emit(goal().id!)"
-        >
-          Aportar
-        </button>
-        <button
-          type="button"
-          class="os-goal-card__action"
-          [attr.aria-label]="'Editar meta ' + goal().name"
-          (click)="editar.emit(goal().id!)"
-        >
-          Editar
-        </button>
-        <button
-          type="button"
-          class="os-goal-card__action os-goal-card__action--danger"
-          [attr.aria-label]="'Excluir meta ' + goal().name"
-          (click)="excluir.emit(goal().id!)"
-        >
-          Excluir
-        </button>
-      </footer>
-    </article>
+    <os-goal-progress-card
+      [goalData]="goalProgressData()"
+      [variant]="'default'"
+      [size]="'medium'"
+      [state]="goalState()"
+      [showActions]="true"
+      [showSuggestedAmount]="true"
+      [ariaLabel]="'Meta: ' + goal().name"
+      (aportar)="aportar.emit($event)"
+      (editar)="editar.emit($event)"
+      (excluir)="excluir.emit($event)"
+    />
   `,
   styleUrl: './goal-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,10 +36,41 @@ export class GoalCardComponent {
   readonly editar = output<string>();
   readonly excluir = output<string>();
 
-  readonly thresholdClass = computed(() => {
-    const p = this.progress();
-    if (p < 33) return 'danger';
-    if (p < 66) return 'warning';
-    return 'success';
+  readonly goalProgressData = computed((): GoalProgressData => {
+    const g = this.goal();
+    const deadline = g.deadline ? new Date(g.deadline) : undefined;
+    
+    return {
+      id: g.id,
+      title: g.name,
+      currentValue: g.accumulatedAmount,
+      targetValue: g.totalAmount,
+      unit: 'BRL',
+      deadline: deadline,
+      priority: this.getPriorityFromProgress(),
+      suggestedAmount: this.suggested(),
+    };
   });
+
+  readonly goalState = computed(() => {
+    const p = this.progress();
+    if (p >= 100) return 'completed' as const;
+    // Verificar se está atrasado baseado no deadline
+    const deadline = this.goal().deadline;
+    if (deadline) {
+      const dueDate = new Date(deadline);
+      const now = new Date();
+      if (dueDate < now && p < 100) {
+        return 'overdue' as const;
+      }
+    }
+    return 'default' as const;
+  });
+
+  private getPriorityFromProgress(): 'low' | 'medium' | 'high' {
+    const p = this.progress();
+    if (p < 33) return 'high';
+    if (p < 66) return 'medium';
+    return 'low';
+  }
 }

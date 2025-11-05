@@ -86,11 +86,25 @@
     grid-template-columns: repeat(3, 1fr);
     gap: var(--os-spacing-3);
     margin-bottom: var(--os-spacing-3);
+
+    // Quando mostrar "Aporte sugerido", usar 4 colunas
+    &:has(.os-goal-progress-card__suggested) {
+      grid-template-columns: repeat(4, 1fr);
+
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 
   &__current,
   &__target,
-  &__remaining {
+  &__remaining,
+  &__suggested {
     text-align: center;
   }
 
@@ -107,6 +121,72 @@
     font-size: var(--os-font-size-sm);
     font-weight: var(--os-font-weight-semibold);
     color: var(--os-color-text-primary);
+
+    // Estilos para o componente os-money-display quando usado dentro deste container
+    ::ng-deep .os-money-display {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  &__value-text {
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-primary);
+  }
+
+  // Actions section
+  &__actions {
+    display: flex;
+    gap: var(--os-spacing-2);
+    margin-top: var(--os-spacing-3);
+    padding-top: var(--os-spacing-3);
+    border-top: 1px solid var(--os-color-border);
+  }
+
+  &__action {
+    flex: 1;
+    padding: var(--os-spacing-2) var(--os-spacing-3);
+    border-radius: var(--os-border-radius-md);
+    border: 1px solid var(--os-color-border);
+    background: var(--os-color-background-primary);
+    color: var(--os-color-text-primary);
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-medium);
+    cursor: pointer;
+    min-height: 44px;
+    transition: all var(--os-transition-normal) ease-in-out;
+
+    &:focus {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    &:hover {
+      background-color: var(--os-color-neutral-50);
+      border-color: var(--os-color-primary-300);
+    }
+
+    &:active {
+      background-color: var(--os-color-neutral-100);
+    }
+
+    &--danger {
+      border-color: var(--os-color-error);
+      color: var(--os-color-error);
+
+      &:hover {
+        background-color: var(--os-color-error-50);
+        border-color: var(--os-color-error-600);
+      }
+
+      &:focus {
+        outline-color: var(--os-color-error);
+      }
+    }
   }
 
   // Deadline
@@ -224,6 +304,10 @@
 
     .os-goal-progress-card__value {
       font-size: var(--os-font-size-xs);
+
+      ::ng-deep .os-money-display {
+        font-size: var(--os-font-size-xs);
+      }
     }
   }
 
@@ -234,6 +318,10 @@
 
     .os-goal-progress-card__value {
       font-size: var(--os-font-size-base);
+
+      ::ng-deep .os-money-display {
+        font-size: var(--os-font-size-base);
+      }
     }
   }
 
@@ -297,7 +385,8 @@
 
     &__current,
     &__target,
-    &__remaining {
+    &__remaining,
+    &__suggested {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -305,6 +394,10 @@
 
     &__value-label {
       margin-bottom: 0;
+    }
+
+    &__actions {
+      flex-direction: column;
     }
   }
 }

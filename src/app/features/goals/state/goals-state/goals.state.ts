@@ -41,6 +41,7 @@ export class GoalsState {
     const progressMap = new Map<string, number>();
 
     goals.forEach((goal) => {
+      if (!goal.id) return; // Pula goals sem ID
       if (goal.totalAmount <= 0) {
         progressMap.set(goal.id, 0);
         return;
@@ -57,6 +58,7 @@ export class GoalsState {
     const remainingMap = new Map<string, number>();
 
     goals.forEach((goal) => {
+      if (!goal.id) return; // Pula goals sem ID
       const remaining = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
       remainingMap.set(goal.id, remaining);
     });
@@ -69,6 +71,7 @@ export class GoalsState {
     const suggestedMap = new Map<string, number | null>();
 
     goals.forEach((goal) => {
+      if (!goal.id) return; // Pula goals sem ID
       if (!goal.deadline) {
         suggestedMap.set(goal.id, null);
         return;
@@ -98,6 +101,11 @@ export class GoalsState {
   });
 
   load(budgetId?: string): void {
+    // Proteção contra múltiplas chamadas simultâneas
+    if (this._isLoading()) {
+      return;
+    }
+
     const targetBudgetId = budgetId ?? this.budgetSelection.selectedBudgetId();
 
     if (!targetBudgetId) {
@@ -116,13 +124,23 @@ export class GoalsState {
       )
       .subscribe({
         next: (goals) => {
-          this._items.set(goals);
+          // Valida e filtra goals sem ID
+          const validGoals = goals.filter((goal) => {
+            if (!goal.id) {
+              console.warn('Goal sem ID encontrado:', goal);
+              return false;
+            }
+            return true;
+          });
+          
+          this._items.set(validGoals);
           this._lastUpdated.set(new Date());
           this._isLoading.set(false);
         },
         error: (error) => {
           this._error.set(error?.message || 'Erro ao carregar metas');
           this._isLoading.set(false);
+          console.error('Erro ao carregar metas:', error);
         },
       });
   }

@@ -10,6 +10,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     <div
       class="os-progress-bar"
       [class]="progressBarClasses()"
+      [attr.data-variant]="variant()"
       role="progressbar"
       [attr.aria-valuenow]="value()"
       [attr.aria-valuemin]="0"
@@ -25,13 +26,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
       </div>
       }
 
-      <div class="os-progress-bar__container">
+      <div class="os-progress-bar__container" [class]="'os-progress-bar__container--' + variant()">
         <mat-progress-bar
           [mode]="mode()"
           [value]="percentage()"
           [bufferValue]="bufferValue()"
           [color]="matColor()"
           [class]="progressBarClass()"
+          [attr.data-variant]="variant()"
         ></mat-progress-bar>
       </div>
 

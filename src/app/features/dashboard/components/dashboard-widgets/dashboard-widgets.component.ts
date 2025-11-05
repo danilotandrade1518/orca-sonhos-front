@@ -7,7 +7,10 @@ import { WidgetConfiguration } from '../../types/dashboard.types';
 import {
   OsDashboardWidgetsComponent,
   DashboardState,
+  DashboardWidget,
+  GoalProgressData,
 } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
+import { GoalDto } from '@dtos/goal';
 
 @Component({
   selector: 'os-dashboard-widgets-container',
@@ -42,14 +45,14 @@ import {
 export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
-  
+
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
   readonly showWidgetActions = input<boolean>(true);
   readonly showCreateActions = input<boolean>(true);
   readonly emptyMessage = input<string>('Nenhum dado disponível para exibir');
-  
+
   readonly widgetClick = output<WidgetConfiguration>();
   readonly widgetConfigure = output<WidgetConfiguration>();
   readonly widgetClose = output<WidgetConfiguration>();
@@ -60,10 +63,11 @@ export class DashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<unknown>();
   readonly goalCardExpand = output<unknown>();
-  
+
   readonly selectedBudget = computed(() => this.budgetSelectionService.selectedBudget());
   readonly hasSelectedBudget = computed(() => this.budgetSelectionService.hasSelectedBudget());
   readonly budgetOverview = computed(() => this.dashboardDataService.budgetOverview());
+  readonly goals = computed(() => this.dashboardDataService.goals());
   readonly isLoading = computed(() => this.dashboardDataService.isLoading());
   readonly hasError = computed(() => !!this.dashboardDataService.error());
   readonly errorMessage = computed(
@@ -71,15 +75,61 @@ export class DashboardWidgetsComponent {
   );
 
   readonly dashboardWidgets = computed(() => {
-    return this.widgets().map((widget) => ({
-      id: widget.id,
-      type: widget.type,
-      title: widget.title,
-      size: widget.size,
-      position: widget.position,
-      enabled: widget.enabled,
-    }));
+    return this.widgets().map((widget) => {
+      const dashboardWidget: DashboardWidget = {
+        id: widget.id,
+        type: widget.type,
+        title: widget.title,
+        size: widget.size,
+        position: widget.position,
+        enabled: widget.enabled,
+      };
+
+      if (widget.type === 'goal-progress') {
+        const firstGoal = this.getFirstGoal();
+        if (firstGoal) {
+          dashboardWidget.data = this.convertGoalToProgressData(firstGoal);
+        }
+      }
+
+      return dashboardWidget;
+    });
   });
+
+  private getFirstGoal(): GoalDto | null {
+    const goals = this.goals();
+    return goals.length > 0 ? goals[0] : null;
+  }
+
+  private convertGoalToProgressData(goal: GoalDto): GoalProgressData {
+    const deadline = goal.deadline ? new Date(goal.deadline) : undefined;
+    const progressPercentage =
+      goal.totalAmount > 0 ? Math.min((goal.accumulatedAmount / goal.totalAmount) * 100, 100) : 0;
+
+    let priority: 'low' | 'medium' | 'high' = 'medium';
+    if (deadline) {
+      const daysUntilDeadline = Math.ceil(
+        (deadline.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      );
+      if (daysUntilDeadline < 30 && progressPercentage < 50) {
+        priority = 'high';
+      } else if (daysUntilDeadline < 90 && progressPercentage < 75) {
+        priority = 'medium';
+      } else {
+        priority = 'low';
+      }
+    }
+
+    return {
+      id: goal.id,
+      title: goal.name,
+      currentValue: goal.accumulatedAmount,
+      targetValue: goal.totalAmount,
+      unit: 'BRL',
+      deadline,
+      priority,
+    };
+  }
 
   readonly dashboardState = computed((): DashboardState => {
     if (this.isLoading()) return 'loading';
@@ -146,10 +196,8 @@ export class DashboardWidgetsComponent {
         this.onWidgetClick(widget);
         break;
       case 'Tab':
-        
         break;
       default:
-        
         break;
     }
   }

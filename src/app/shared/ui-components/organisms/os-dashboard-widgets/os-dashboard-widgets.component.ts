@@ -10,6 +10,7 @@ export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
+import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
 
 export interface DashboardWidget {
   id: string;
@@ -62,6 +63,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
+    OsMoneyDisplayComponent,
   ],
   template: `
     <div
@@ -192,36 +194,35 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             <div class="os-dashboard-widgets__budget-summary">
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Saldo Total</span>
-                <span
+                <os-money-display
+                  [value]="getBudgetSummary()?.totalBalance || 0"
+                  [currency]="'BRL'"
+                  [size]="'md'"
+                  [ariaLabel]="'Saldo total: ' + formatCurrency(getBudgetSummary()?.totalBalance || 0)"
                   class="os-dashboard-widgets__metric-value"
-                  [attr.aria-label]="
-                    'Saldo total: ' + formatCurrency(getBudgetSummary()?.totalBalance || 0)
-                  "
-                >
-                  {{ formatCurrency(getBudgetSummary()?.totalBalance || 0) }}
-                </span>
+                />
               </div>
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Receita Mensal</span>
-                <span
+                <os-money-display
+                  [value]="getBudgetSummary()?.monthlyIncome || 0"
+                  [currency]="'BRL'"
+                  [size]="'md'"
+                  [variant]="'positive'"
+                  [ariaLabel]="'Receita mensal: ' + formatCurrency(getBudgetSummary()?.monthlyIncome || 0)"
                   class="os-dashboard-widgets__metric-value"
-                  [attr.aria-label]="
-                    'Receita mensal: ' + formatCurrency(getBudgetSummary()?.monthlyIncome || 0)
-                  "
-                >
-                  {{ formatCurrency(getBudgetSummary()?.monthlyIncome || 0) }}
-                </span>
+                />
               </div>
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Despesa Mensal</span>
-                <span
+                <os-money-display
+                  [value]="getBudgetSummary()?.monthlyExpense || 0"
+                  [currency]="'BRL'"
+                  [size]="'md'"
+                  [variant]="'negative'"
+                  [ariaLabel]="'Despesa mensal: ' + formatCurrency(getBudgetSummary()?.monthlyExpense || 0)"
                   class="os-dashboard-widgets__metric-value"
-                  [attr.aria-label]="
-                    'Despesa mensal: ' + formatCurrency(getBudgetSummary()?.monthlyExpense || 0)
-                  "
-                >
-                  {{ formatCurrency(getBudgetSummary()?.monthlyExpense || 0) }}
-                </span>
+                />
               </div>
               <div class="os-dashboard-widgets__progress">
                 <span class="os-dashboard-widgets__progress-label">Utilização do Orçamento</span>
@@ -246,12 +247,14 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                     transaction.category
                   }}</span>
                 </div>
-                <div
-                  class="os-dashboard-widgets__transaction-amount"
+                <os-money-display
+                  [value]="transaction.amount"
+                  [currency]="'BRL'"
+                  [size]="'sm'"
+                  [variant]="transaction.type === 'income' ? 'positive' : 'negative'"
                   [class]="getTransactionAmountClass(transaction)"
-                >
-                  {{ formatCurrency(transaction.amount) }}
-                </div>
+                  class="os-dashboard-widgets__transaction-amount"
+                />
               </div>
               }
             </div>
@@ -268,9 +271,12 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                   />
                   <span class="os-dashboard-widgets__account-name">{{ account.accountName }}</span>
                 </div>
-                <span class="os-dashboard-widgets__account-balance">
-                  {{ formatCurrency(account.balance) }}
-                </span>
+                <os-money-display
+                  [value]="account.balance"
+                  [currency]="'BRL'"
+                  [size]="'sm'"
+                  class="os-dashboard-widgets__account-balance"
+                />
               </div>
               }
             </div>

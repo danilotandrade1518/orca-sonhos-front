@@ -7,10 +7,13 @@ import {
   effect,
   inject,
   signal,
+  OnInit,
+  untracked,
 } from '@angular/core';
 import { GoalListComponent } from '../../components/goal-list/goal-list.component';
 import { GoalAmountModalComponent } from '../../components/goal-amount-modal/goal-amount-modal.component';
 import { GoalsState } from '../../state/goals-state/goals.state';
+import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 
 @Component({
   selector: 'os-goals-page',
@@ -41,14 +44,16 @@ import { GoalsState } from '../../state/goals-state/goals.state';
       >
         {{ state.isLoading() ? 'Carregando metas...' : '' }}
       </div>
+      @if (state.error()) {
       <div
         class="os-goals__live-region os-goals__live-region--error"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        {{ state.error() || '' }}
+        {{ state.error() }}
       </div>
+      }
 
       <div id="main-content" tabindex="-1">
         <os-goal-list
@@ -92,14 +97,16 @@ import { GoalsState } from '../../state/goals-state/goals.state';
   styleUrl: './goals.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsPage {
+export class GoalsPage implements OnInit {
   readonly state = inject(GoalsState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly budgetSelection = inject(BudgetSelectionService);
 
   private readonly _showAddModal = signal(false);
   private readonly _showRemoveModal = signal(false);
   private readonly _selectedGoalId = signal<string | null>(null);
+  private _lastBudgetId: string | null = null;
 
   readonly showAddModal = this._showAddModal.asReadonly();
   readonly showRemoveModal = this._showRemoveModal.asReadonly();
@@ -113,8 +120,29 @@ export class GoalsPage {
 
   constructor() {
     effect(() => {
-      this.state.load();
+      const budgetId = this.budgetSelection.selectedBudgetId();
+      
+      // Evita recarregar se o budgetId não mudou ou se já está carregando
+      if (budgetId === this._lastBudgetId || this.state.isLoading()) {
+        return;
+      }
+      
+      untracked(() => {
+        if (budgetId) {
+          this._lastBudgetId = budgetId;
+          this.state.load(budgetId);
+        } else {
+          this._lastBudgetId = null;
+        }
+      });
     });
+  }
+
+  ngOnInit(): void {
+    const budgetId = this.budgetSelection.selectedBudgetId();
+    if (budgetId) {
+      this.state.load(budgetId);
+    }
   }
 
   navigateToNew(): void {

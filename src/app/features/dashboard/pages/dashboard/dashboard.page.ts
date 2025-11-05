@@ -43,17 +43,17 @@ export class DashboardPage implements OnInit {
 
   readonly dashboardWidgets = computed((): WidgetConfiguration[] => [
     {
-      id: 'budget-summary',
-      type: 'budget-summary',
-      title: 'Resumo do Orçamento',
+      id: 'goal-progress',
+      type: 'goal-progress',
+      title: 'Progresso das Metas',
       size: 'large',
       position: { row: 1, column: 1 },
       enabled: true,
     },
     {
-      id: 'goal-progress',
-      type: 'goal-progress',
-      title: 'Progresso das Metas',
+      id: 'budget-summary',
+      type: 'budget-summary',
+      title: 'Resumo do Orçamento',
       size: 'large',
       position: { row: 2, column: 1 },
       enabled: true,
@@ -91,7 +91,11 @@ export class DashboardPage implements OnInit {
         this.budgetSelectionService.setAvailableBudgets(budgets);
         this.budgetSelectionService.setSelectedBudget(budgets[0]);
 
-        await firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgets[0].id));
+        const budgetId = budgets[0].id;
+        await Promise.all([
+          firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
+          firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
+        ]);
       }
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);
@@ -101,7 +105,9 @@ export class DashboardPage implements OnInit {
   }
 
   onWidgetClick(widget: WidgetConfiguration): void {
-    if (widget.type === 'budget-summary') {
+    if (widget.type === 'goal-progress') {
+      this.router.navigate(['/goals']);
+    } else if (widget.type === 'budget-summary') {
       const selectedBudgetId = this.budgetSelectionService.selectedBudgetId();
       if (selectedBudgetId) {
         this.router.navigate(['/budgets', selectedBudgetId]);

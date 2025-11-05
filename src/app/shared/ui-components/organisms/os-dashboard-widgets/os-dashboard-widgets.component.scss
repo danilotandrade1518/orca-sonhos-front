@@ -162,6 +162,13 @@
     font-size: var(--os-font-size-lg);
     font-weight: var(--os-font-weight-semibold);
     color: var(--os-color-text-primary);
+    display: block;
+
+    // Estilos para o componente os-money-display quando usado dentro deste container
+    ::ng-deep .os-money-display {
+      display: block;
+      width: 100%;
+    }
   }
 
   &__progress {
@@ -223,6 +230,7 @@
     font-size: var(--os-font-size-sm);
     font-weight: var(--os-font-weight-semibold);
     white-space: nowrap;
+    display: inline-block;
 
     &--income {
       color: var(--os-color-success);
@@ -230,6 +238,11 @@
 
     &--expense {
       color: var(--os-color-error);
+    }
+
+    // Estilos para o componente os-money-display quando usado dentro deste container
+    ::ng-deep .os-money-display {
+      display: inline-flex;
     }
   }
 
@@ -276,6 +289,12 @@
     font-weight: var(--os-font-weight-semibold);
     color: var(--os-color-text-primary);
     white-space: nowrap;
+    display: inline-block;
+
+    // Estilos para o componente os-money-display quando usado dentro deste container
+    ::ng-deep .os-money-display {
+      display: inline-flex;
+    }
   }
 
   // Quick actions specific

@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 import { GoalCardComponent } from '../goal-card/goal-card.component';
+import { OsButtonComponent } from '../../../../shared/ui-components/atoms/os-button/os-button.component';
 
 @Component({
   selector: 'os-goal-list',
-  imports: [CommonModule, GoalCardComponent],
+  imports: [CommonModule, GoalCardComponent, OsButtonComponent],
   template: `
     <section class="os-goal-list" role="region" aria-label="Lista de metas">
       <div class="os-goal-list__live" role="status" aria-live="polite" aria-atomic="true">
@@ -19,11 +20,20 @@ import { GoalCardComponent } from '../goal-card/goal-card.component';
       } @else if (goals().length === 0) {
       <div class="os-goal-list__empty">
         <p>Nenhuma meta encontrada</p>
-        <button type="button" (click)="create.emit()">Criar primeira meta</button>
+        <os-button
+          [variant]="'primary'"
+          [size]="'medium'"
+          [icon]="'flag'"
+          [ariaLabel]="'Criar primeira meta'"
+          (buttonClick)="create.emit()"
+        >
+          Criar primeira meta
+        </os-button>
       </div>
       } @else {
       <div class="os-goal-list__grid">
-        @for (g of goals(); track g.id) {
+        @for (g of goals(); track g.id || $index) {
+        @if (g.id) {
         <os-goal-card
           [goal]="g"
           [progress]="progressById()(g.id)"
@@ -33,6 +43,7 @@ import { GoalCardComponent } from '../goal-card/goal-card.component';
           (editar)="editar.emit($event)"
           (excluir)="excluir.emit($event)"
         />
+        }
         }
       </div>
       }
