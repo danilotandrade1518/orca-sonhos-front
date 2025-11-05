@@ -1,0 +1,25 @@
+.os-goal-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 576px) {
+  .os-goal-form__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.os-goal-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.os-goal-form__hint {
+  margin-top: 8px;
+  color: var(--os-text-secondary, #757575);
+}
+
+
