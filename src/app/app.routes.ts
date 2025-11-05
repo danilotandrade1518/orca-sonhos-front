@@ -28,6 +28,10 @@ export const routes: Routes = [
           import('./features/transactions/transactions.routes').then((m) => m.TRANSACTIONS_ROUTES),
       },
       {
+        path: 'accounts',
+        loadChildren: () => import('./features/accounts/accounts.routes').then((m) => m.ACCOUNTS_ROUTES),
+      },
+      {
         path: 'goals',
         loadChildren: () => import('./features/goals/goals.routes').then((m) => m.GOALS_ROUTES),
       },
