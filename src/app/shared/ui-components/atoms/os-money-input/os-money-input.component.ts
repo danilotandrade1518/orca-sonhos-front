@@ -6,6 +6,8 @@ import {
   model,
   ChangeDetectionStrategy,
   forwardRef,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -89,7 +91,16 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   };
   private _onTouched = () => {};
 
+  private readonly destroyRef = inject(DestroyRef);
+  private isDestroyed = false;
+
   inputId = `os-money-input-${Math.random().toString(36).substr(2, 9)}`;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.isDestroyed = true;
+    });
+  }
 
   containerClass = computed(() => {
     return [
@@ -243,7 +254,9 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
     this.valueChange.emit(numericValue);
 
     setTimeout(() => {
-      this.isFormatting.set(false);
+      if (!this.isDestroyed) {
+        this.isFormatting.set(false);
+      }
     }, 100);
   }
 

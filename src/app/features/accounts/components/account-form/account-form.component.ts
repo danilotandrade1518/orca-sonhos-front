@@ -19,7 +19,10 @@ import { NotificationService } from '@core/services/notification/notification.se
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
-import { OsSelectComponent, type OsSelectOption } from '@shared/ui-components/atoms/os-select/os-select.component';
+import {
+  OsSelectComponent,
+  type OsSelectOption,
+} from '@shared/ui-components/atoms/os-select/os-select.component';
 import { OsMoneyInputComponent } from '@shared/ui-components/atoms/os-money-input/os-money-input.component';
 import type { AccountDto, AccountType } from '../../../../../dtos/account/account-types';
 
@@ -100,15 +103,15 @@ export class AccountFormComponent implements OnInit {
   private readonly _validationTrigger = signal(0);
 
   readonly nameControl = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
   readonly typeControl = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     return this._form()?.get('type') as FormControl | null;
   });
   readonly initialBalanceControl = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     return this._form()?.get('initialBalance') as FormControl | null;
   });
 
@@ -142,7 +145,7 @@ export class AccountFormComponent implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da conta é obrigatório';
@@ -152,7 +155,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo de conta é obrigatório';
@@ -160,7 +163,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getInitialBalanceErrorMessage = computed(() => {
-    this._validationTrigger(); 
+    this._validationTrigger();
     const control = this.initialBalanceControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('min')) return 'Saldo inicial deve ser maior ou igual a zero';
@@ -177,8 +180,8 @@ export class AccountFormComponent implements OnInit {
           type: account.type,
           initialBalance: account.balance || 0,
         });
-        
-        this._validationTrigger.update(v => v + 1);
+
+        this._validationTrigger.update((v) => v + 1);
       }
     });
 

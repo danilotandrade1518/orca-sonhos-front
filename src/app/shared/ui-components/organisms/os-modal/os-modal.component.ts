@@ -152,6 +152,7 @@ export class OsModalComponent {
   private readonly isAnimating = signal(false);
   private readonly focusableElements: HTMLElement[] = [];
   private readonly previousActiveElement: HTMLElement | null = null;
+  private isDestroyed = false;
   
   readonly titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
   readonly descriptionId = computed(
@@ -254,6 +255,10 @@ export class OsModalComponent {
   });
 
   constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.isDestroyed = true;
+    });
+
     afterNextRender(() => {
       this.initializeModal();
     });
@@ -333,9 +338,11 @@ export class OsModalComponent {
     modalElement.classList.add('os-modal--entering');
 
     setTimeout(() => {
-      modalElement.classList.remove('os-modal--entering');
-      modalElement.classList.add('os-modal--entered');
-      this.isAnimating.set(false);
+      if (!this.isDestroyed) {
+        modalElement.classList.remove('os-modal--entering');
+        modalElement.classList.add('os-modal--entered');
+        this.isAnimating.set(false);
+      }
     }, 10);
   }
 
@@ -350,18 +357,24 @@ export class OsModalComponent {
     modalElement.classList.add('os-modal--leaving');
 
     setTimeout(() => {
-      this.closeModal();
+      if (!this.isDestroyed) {
+        this.closeModal();
+      }
     }, 300);
   }
 
   private closeModal(): void {
-    this.closed.emit();
-    if (this.dialogRef) {
-      this.dialogRef.close();
+    if (!this.isDestroyed) {
+      this.closed.emit();
+      if (this.dialogRef) {
+        this.dialogRef.close();
+      }
     }
   }
 
   private handleAnimationEnd(): void {
+    if (this.isDestroyed) return;
+
     const modalElement = this.elementRef.nativeElement;
     const isEntering = modalElement.classList.contains('os-modal--entering');
     const isLeaving = modalElement.classList.contains('os-modal--leaving');
