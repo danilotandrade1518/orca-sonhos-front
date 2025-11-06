@@ -7,6 +7,7 @@ import {
   inject,
   ElementRef,
   AfterViewInit,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -99,7 +100,6 @@ export interface CategoryFormData {
                 size="medium"
                 placeholder="Digite o nome da categoria"
                 [required]="true"
-                [disabled]="loading()"
               ></os-input>
               @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
               <div class="os-category-manager__error">
@@ -119,7 +119,6 @@ export interface CategoryFormData {
                 variant="default"
                 size="medium"
                 placeholder="Descrição opcional da categoria"
-                [disabled]="loading()"
               ></os-input>
             </os-form-field>
 
@@ -131,7 +130,6 @@ export interface CategoryFormData {
                 size="medium"
                 [options]="categoryTypeOptions"
                 [required]="true"
-                [disabled]="loading()"
               ></os-select>
             </os-form-field>
 
@@ -153,7 +151,6 @@ export interface CategoryFormData {
                   variant="default"
                   size="medium"
                   type="text"
-                  [disabled]="loading()"
                   placeholder="#3B82F6"
                 ></os-input>
                 <os-button
@@ -202,7 +199,6 @@ export interface CategoryFormData {
                   variant="default"
                   size="medium"
                   placeholder="Nome do ícone"
-                  [disabled]="loading()"
                 ></os-input>
                 <os-button
                   variant="tertiary"
@@ -499,6 +495,15 @@ export class OsCategoryManagerComponent implements AfterViewInit {
       icon: ['folder'],
       active: [true],
     });
+
+    effect(() => {
+      const isLoading = this.loading();
+      if (isLoading) {
+        this.categoryForm.disable();
+      } else {
+        this.categoryForm.enable();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -532,7 +537,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
   filteredCategories = computed(() => {
     let filtered = this.categories();
-    
+
     const searchTerm = this.searchTermSignal().toLowerCase();
     if (searchTerm) {
       filtered = filtered.filter(
@@ -541,12 +546,12 @@ export class OsCategoryManagerComponent implements AfterViewInit {
           (category.description && category.description.toLowerCase().includes(searchTerm))
       );
     }
-    
+
     const filterType = this.filterTypeSignal();
     if (filterType) {
       filtered = filtered.filter((category) => category.type === filterType);
     }
-    
+
     const filterStatus = this.filterStatusSignal();
     if (filterStatus) {
       const isActive = filterStatus === 'active';
@@ -555,7 +560,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
     return filtered;
   });
-  
+
   get searchTerm(): string {
     return this.searchTermSignal();
   }
@@ -579,7 +584,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
   set filterStatus(value: string) {
     this.filterStatusSignal.set(value);
   }
-  
+
   onAddCategory(): void {
     this.editingCategorySignal.set(null);
     this.categoryForm.reset({

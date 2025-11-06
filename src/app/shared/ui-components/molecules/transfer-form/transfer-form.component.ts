@@ -54,7 +54,6 @@ export interface TransferFormData {
           <os-select
             label="Conta Origem"
             [options]="fromAccountOptions()"
-            [disabled]="disabled()"
             formControlName="fromAccountId"
             [required]="true"
             [errorMessage]="getFromAccountErrorMessage()"
@@ -64,7 +63,6 @@ export interface TransferFormData {
           <os-select
             label="Conta Destino"
             [options]="toAccountOptions()"
-            [disabled]="disabled()"
             formControlName="toAccountId"
             [required]="true"
             [errorMessage]="getToAccountErrorMessage()"
@@ -72,7 +70,6 @@ export interface TransferFormData {
 
           <os-money-input
             label="Valor"
-            [disabled]="disabled()"
             formControlName="amount"
             [required]="true"
             [errorMessage]="getAmountErrorMessage()"
@@ -306,6 +303,15 @@ export class TransferFormComponent {
       if (fromAccountId) {
         this.form.get('toAccountId')?.updateValueAndValidity();
         this.form.get('amount')?.updateValueAndValidity();
+      }
+    });
+
+    effect(() => {
+      const isDisabled = this.disabled();
+      if (isDisabled) {
+        this.form.disable();
+      } else {
+        this.form.enable();
       }
     });
   }

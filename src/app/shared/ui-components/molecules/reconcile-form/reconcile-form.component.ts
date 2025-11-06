@@ -45,14 +45,12 @@ export interface ReconcileFormData {
           <os-select
             label="Conta"
             [options]="accountOptions()"
-            [disabled]="true"
             formControlName="accountId"
             [required]="true"
           />
 
           <os-money-input
             label="Valor Final Esperado"
-            [disabled]="disabled()"
             formControlName="realBalance"
             [required]="true"
             [errorMessage]="getRealBalanceErrorMessage()"
@@ -123,6 +121,18 @@ export class ReconcileFormComponent {
         this.form.patchValue({
           accountId: account.id,
         });
+      }
+    });
+
+    effect(() => {
+      const isDisabled = this.disabled();
+      const realBalanceControl = this.form.get('realBalance');
+      if (realBalanceControl) {
+        if (isDisabled) {
+          realBalanceControl.disable();
+        } else {
+          realBalanceControl.enable();
+        }
       }
     });
   }

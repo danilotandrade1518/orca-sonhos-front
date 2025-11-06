@@ -232,7 +232,6 @@ export class OsIconComponent {
     'check-circle',
     'lock',
     'custom-icon',
-    'unsupported-icon',
     'credit_card',
   ]);
 
@@ -339,7 +338,6 @@ export class OsIconComponent {
       dots: 'more_horiz',
       more: 'more_vert',
       'menu-dots': 'more_vert',
-
       category: 'category',
       check_circle: 'check_circle',
       trending_flat: 'trending_flat',
@@ -382,7 +380,6 @@ export class OsIconComponent {
       'check-circle': 'check_circle',
       lock: 'lock',
       'custom-icon': 'help',
-      'unsupported-icon': 'help',
       credit_card: 'credit_card',
     };
 

@@ -60,7 +60,6 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
           <os-select
             label="Tipo de Conta"
             [options]="typeOptions()"
-            [disabled]="loading()"
             formControlName="type"
             [required]="true"
             [errorMessage]="getTypeErrorMessage()"
@@ -68,7 +67,6 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
 
           <os-money-input
             label="Saldo Inicial"
-            [disabled]="loading()"
             formControlName="initialBalance"
             [errorMessage]="getInitialBalanceErrorMessage()"
             placeholder="0,00"
@@ -181,6 +179,18 @@ export class AccountFormComponent implements OnInit {
         });
         
         this._validationTrigger.update(v => v + 1);
+      }
+    });
+
+    effect(() => {
+      const form = this._form();
+      const isLoading = this.loading();
+      if (form) {
+        if (isLoading) {
+          form.disable();
+        } else {
+          form.enable();
+        }
       }
     });
   }

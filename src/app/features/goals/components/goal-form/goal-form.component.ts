@@ -112,7 +112,6 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
               label="Conta de origem"
               [options]="accountOptions()"
               [value]="form.get('sourceAccountId')?.value || ''"
-              [disabled]="loading() || accountsHelper.isLoading()"
               [helperText]="accountsHelper.error() || ''"
               [placeholder]="
                 accountsHelper.isLoading() ? 'Carregando contas...' : 'Selecione uma conta'
@@ -195,6 +194,18 @@ export class GoalFormComponent {
       const budgetId = this.budgetSelection.selectedBudgetId();
       if (budgetId) {
         this.accountsHelper.loadAccounts(budgetId).subscribe();
+      }
+    });
+
+    effect(() => {
+      const isLoading = this.loading() || this.accountsHelper.isLoading();
+      const sourceAccountControl = this.form.get('sourceAccountId');
+      if (sourceAccountControl) {
+        if (isLoading) {
+          sourceAccountControl.disable();
+        } else {
+          sourceAccountControl.enable();
+        }
       }
     });
   }
