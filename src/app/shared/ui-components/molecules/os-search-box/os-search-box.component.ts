@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
@@ -121,11 +122,16 @@ export class OsSearchBoxComponent {
   private searchHistory = signal<string[]>([]);
   private static nextId = 0;
   private readonly instanceId = OsSearchBoxComponent.nextId++;
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     
     this.searchSubject
-      .pipe(debounceTime(this.debounceTime()), distinctUntilChanged())
+      .pipe(
+        debounceTime(this.debounceTime()),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((value) => {
         this.debouncedSearch.emit(value);
       });

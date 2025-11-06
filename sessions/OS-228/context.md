@@ -123,3 +123,6 @@ Obs.: nomes e campos alinhados ao issue OS-228; mapear `totalAmount -> targetAmo
 - Meta Specs: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
 - Padrão de página: `src/app/features/transactions/pages/transactions/transactions.page.ts`
 - CLAUDE.md (convenções do projeto)
+
+
+

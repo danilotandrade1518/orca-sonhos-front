@@ -12,3 +12,5 @@ export * from './os-data-table/os-data-table.component';
 export * from './os-date-picker/os-date-picker.component';
 export * from './os-goal-progress-card/os-goal-progress-card.component';
 export * from './os-budget-selector/os-budget-selector.component';
+export * from './transfer-form/transfer-form.component';
+export * from './reconcile-form/reconcile-form.component';

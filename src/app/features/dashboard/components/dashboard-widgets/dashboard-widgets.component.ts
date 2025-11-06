@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
 
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { DashboardDataService } from '../../services/dashboard-data.service';
@@ -11,6 +11,9 @@ import {
   GoalProgressData,
 } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { GoalDto } from '@dtos/goal';
+import { AccountState } from '../../../../core/services/account/account-state/account.state';
+import { AccountDto } from '@dtos/account';
+import { AccountBalanceData } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 
 @Component({
   selector: 'os-dashboard-widgets-container',
@@ -42,6 +45,7 @@ import { GoalDto } from '@dtos/goal';
 export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly accountState = inject(AccountState);
 
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
@@ -67,6 +71,22 @@ export class DashboardWidgetsComponent {
   readonly errorMessage = computed(
     () => this.dashboardDataService.error() || 'Erro ao carregar dados do dashboard'
   );
+  readonly accounts = computed(() => this.accountState.accountsByBudgetId());
+  readonly accountsLoading = computed(() => this.accountState.loading());
+  readonly accountsError = computed(() => this.accountState.error());
+
+  constructor() {
+    effect(() => {
+      const budgetId = this.budgetSelectionService.selectedBudgetId();
+      if (budgetId && this.hasAccountBalanceWidget()) {
+        this.accountState.loadAccounts();
+      }
+    });
+  }
+
+  private hasAccountBalanceWidget(): boolean {
+    return this.widgets().some((widget) => widget.type === 'account-balance' && widget.enabled);
+  }
 
   readonly dashboardWidgets = computed(() => {
     return this.widgets().map((widget) => {
@@ -83,6 +103,13 @@ export class DashboardWidgetsComponent {
         const firstGoal = this.getFirstGoal();
         if (firstGoal) {
           dashboardWidget.data = this.convertGoalToProgressData(firstGoal);
+        }
+      }
+
+      if (widget.type === 'account-balance') {
+        const accounts = this.accounts();
+        if (accounts.length > 0) {
+          dashboardWidget.data = this.convertAccountsToBalanceData(accounts);
         }
       }
 
@@ -123,6 +150,24 @@ export class DashboardWidgetsComponent {
       deadline,
       priority,
     };
+  }
+
+  private convertAccountsToBalanceData(accounts: AccountDto[]): AccountBalanceData[] {
+    return accounts.map((account) => {
+      let type: 'checking' | 'savings' | 'investment' = 'checking';
+      if (account.type === 'SAVINGS_ACCOUNT') {
+        type = 'savings';
+      } else if (account.type === 'INVESTMENT_ACCOUNT') {
+        type = 'investment';
+      }
+
+      return {
+        accountName: account.name,
+        balance: account.balance,
+        type,
+        lastUpdated: new Date(),
+      };
+    });
   }
 
   readonly dashboardState = computed((): DashboardState => {

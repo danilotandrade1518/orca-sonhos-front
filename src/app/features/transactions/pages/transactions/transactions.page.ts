@@ -35,6 +35,7 @@ import { NotificationService } from '../../../../core/services/notification/noti
 import { OsModalTemplateComponent } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import type { ModalTemplateConfig } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import { AccountState } from '../../../../core/services/account/account-state/account.state';
 
 @Component({
   selector: 'os-transactions-page',
@@ -136,6 +137,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly api = inject(TransactionsApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly authService = inject(AuthService);
+  private readonly accountState = inject(AccountState);
   private readonly elementRef = inject(ElementRef);
   private readonly route = inject(ActivatedRoute);
 
@@ -149,7 +151,13 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly serverFilters = signal<Partial<TransactionsFilters>>({});
   private readonly clientFilters = signal<Partial<TransactionsFilters>>({});
 
-  readonly accountOptions = signal<{ value: string; label: string }[]>([]);
+  readonly accountOptions = computed<{ value: string; label: string }[]>(() => {
+    const accounts = this.accountState.accountsByBudgetId();
+    return accounts.map((account) => ({
+      value: account.id,
+      label: account.name,
+    }));
+  });
   readonly categoryOptions = signal<{ value: string; label: string }[]>([]);
 
   private readonly _showCreateModal = signal<boolean>(false);
@@ -297,6 +305,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
       untracked(() => {
         if (budgetId) {
           this.resetAndLoad(budgetId);
+          this.accountState.loadAccounts();
         } else {
           this.clearData();
         }

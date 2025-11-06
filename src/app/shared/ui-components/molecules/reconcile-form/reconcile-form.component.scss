@@ -1,0 +1,43 @@
+.os-reconcile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.os-reconcile-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.os-reconcile-form__helper {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--os-color-background-secondary);
+  border-radius: 8px;
+  border-left: 4px solid var(--os-color-info);
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--os-color-text-primary);
+    
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+    
+    strong {
+      font-weight: 600;
+      color: var(--os-color-text-primary);
+    }
+  }
+}
+
+.os-reconcile-form__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+

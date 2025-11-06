@@ -1,0 +1,118 @@
+@use '../../theme/variables' as *;
+
+.os-account-card {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-md);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--os-spacing-sm);
+  }
+
+  &__title-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-xs);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: var(--os-font-size-lg);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-primary);
+    margin: 0;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  &__balance {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-xs);
+  }
+
+  &__balance-label {
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-medium);
+    color: var(--os-color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--os-spacing-xs);
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: var(--os-spacing-sm);
+    border-top: var(--os-border-width-1) solid var(--os-color-border);
+    margin-top: var(--os-spacing-sm);
+  }
+}
+
+// ===== RESPONSIVE ADJUSTMENTS =====
+@media (max-width: 575px) {
+  .os-account-card {
+    &__content {
+      gap: var(--os-spacing-sm);
+    }
+
+    &__header {
+      flex-direction: column;
+      gap: var(--os-spacing-xs);
+    }
+
+    &__title-section {
+      width: 100%;
+    }
+
+    &__name {
+      font-size: var(--os-font-size-md);
+    }
+
+    &__actions {
+      flex-direction: row;
+      justify-content: flex-end;
+      padding-top: var(--os-spacing-xs);
+      margin-top: var(--os-spacing-xs);
+    }
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+  .os-account-card {
+    &__header {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__title-section {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--os-spacing-sm);
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .os-account-card {
+    &__header {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    &__title-section {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--os-spacing-sm);
+    }
+  }
+}
+

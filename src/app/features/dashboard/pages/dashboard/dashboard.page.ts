@@ -6,6 +6,7 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
+import { AccountState } from '@core/services/account/account-state/account.state';
 
 @Component({
   standalone: true,
@@ -37,6 +38,7 @@ import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly accountState = inject(AccountState);
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
@@ -96,6 +98,7 @@ export class DashboardPage implements OnInit {
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
         ]);
+        this.accountState.loadAccounts();
       }
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);
@@ -119,6 +122,8 @@ export class DashboardPage implements OnInit {
       } else {
         this.router.navigate(['/transactions']);
       }
+    } else if (widget.type === 'account-balance') {
+      this.router.navigate(['/accounts']);
     }
   }
 
