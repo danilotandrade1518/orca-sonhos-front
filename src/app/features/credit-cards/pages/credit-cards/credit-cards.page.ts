@@ -13,12 +13,26 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { CreditCardCardComponent } from '@shared/ui-components/molecules/credit-card-card';
+import { CreditCardFormComponent } from '../../components/credit-card-form';
+import { CreditCardBillFormComponent } from '../../components/credit-card-bill-form';
+import { PayBillModalComponent } from '../../components/pay-bill-modal';
+import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
+import { ConfirmDeleteCreditCardModalComponent } from '../../components/confirm-delete-modal';
 import type { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
+import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
 
 @Component({
   selector: 'os-credit-cards-page',
   standalone: true,
-  imports: [CommonModule, CreditCardCardComponent],
+  imports: [
+    CommonModule,
+    CreditCardCardComponent,
+    CreditCardFormComponent,
+    CreditCardBillFormComponent,
+    PayBillModalComponent,
+    ReopenBillModalComponent,
+    ConfirmDeleteCreditCardModalComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="os-credit-cards" role="main" aria-label="Página de cartões de crédito">
@@ -127,6 +141,28 @@ import type { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-
         </div>
         } }
       </div>
+
+      @if (showCreateModal()) {
+      <os-credit-card-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
+      } @if (showEditModal() && editingCreditCard()) {
+      <os-credit-card-form
+        [creditCard]="editingCreditCard()!"
+        [mode]="'edit'"
+        (saved)="onFormSaved()"
+        (cancelled)="onFormCancelled()"
+      />
+      } @if (showCreateBillModal()) {
+      <os-credit-card-bill-form [mode]="'create'" (saved)="onBillFormSaved()" (cancelled)="onBillFormCancelled()" />
+      } @if (showDeleteModal() && deletingCreditCard()) {
+      <os-confirm-delete-credit-card-modal
+        [creditCard]="deletingCreditCard()!"
+        (closed)="closeDeleteModal()"
+      />
+      } @if (showPayBillModal() && payingBill()) {
+      <os-pay-bill-modal [creditCardBill]="payingBill()!" (closed)="closePayBillModal()" />
+      } @if (showReopenBillModal() && reopeningBill()) {
+      <os-reopen-bill-modal [creditCardBill]="reopeningBill()!" (closed)="closeReopenBillModal()" />
+      }
     </section>
   `,
   styleUrl: './credit-cards.page.scss',
@@ -145,6 +181,8 @@ export class CreditCardsPage implements OnInit {
 
   readonly editingCreditCard = signal<CreditCardDto | null>(null);
   readonly deletingCreditCard = signal<CreditCardDto | null>(null);
+  readonly payingBill = signal<CreditCardBillDto | null>(null);
+  readonly reopeningBill = signal<CreditCardBillDto | null>(null);
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
@@ -156,6 +194,8 @@ export class CreditCardsPage implements OnInit {
 
   readonly showCreateBillModal = signal(false);
   readonly showDeleteModal = signal(false);
+  readonly showPayBillModal = signal(false);
+  readonly showReopenBillModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -240,6 +280,36 @@ export class CreditCardsPage implements OnInit {
   onFormCancelled(): void {
     this.editingCreditCard.set(null);
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
+  }
+
+  onBillFormSaved(): void {
+    this.showCreateBillModal.set(false);
+    this.router.navigate(['/credit-cards'], { replaceUrl: true });
+  }
+
+  onBillFormCancelled(): void {
+    this.showCreateBillModal.set(false);
+    this.router.navigate(['/credit-cards'], { replaceUrl: true });
+  }
+
+  openPayBillModal(bill: CreditCardBillDto): void {
+    this.payingBill.set(bill);
+    this.showPayBillModal.set(true);
+  }
+
+  closePayBillModal(): void {
+    this.showPayBillModal.set(false);
+    this.payingBill.set(null);
+  }
+
+  openReopenBillModal(bill: CreditCardBillDto): void {
+    this.reopeningBill.set(bill);
+    this.showReopenBillModal.set(true);
+  }
+
+  closeReopenBillModal(): void {
+    this.showReopenBillModal.set(false);
+    this.reopeningBill.set(null);
   }
 }
 
