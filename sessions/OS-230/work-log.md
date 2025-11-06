@@ -58,10 +58,70 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 2
+
+**Fase**: FASE 2: Core Services (API Service e State)
+**Objetivo**: Implementar serviços de API e estado reativo com signals, seguindo padrões de `AccountsApiService` e `AccountState`.
+
+#### ✅ Trabalho Realizado
+
+- ✅ Estrutura de diretórios criada:
+  - `src/app/core/services/credit-card/credit-card-api/`
+  - `src/app/core/services/credit-card/credit-card-state/`
+- ✅ `CreditCardApiService` implementado com todos os métodos HTTP:
+  - `listCreditCards(budgetId)`: Lista cartões por orçamento
+  - `createCreditCard(dto)`: Cria cartão
+  - `updateCreditCard(dto)`: Atualiza cartão
+  - `deleteCreditCard(dto)`: Exclui cartão
+  - `listCreditCardBills(creditCardId?, budgetId?)`: Lista faturas
+  - `createCreditCardBill(dto)`: Cria fatura
+  - `updateCreditCardBill(dto)`: Atualiza fatura
+  - `deleteCreditCardBill(dto)`: Exclui fatura
+  - `payCreditCardBill(dto)`: Paga fatura
+  - `reopenCreditCardBill(dto)`: Reabre fatura
+  - Signals: `loading`, `error` (readonly)
+- ✅ `CreditCardState` implementado com signals reativos:
+  - Signals privados: `_creditCards`, `_bills`, `_loading`, `_error`
+  - Readonly getters: `creditCards()`, `bills()`, `loading()`, `error()`
+  - Computed signals: `hasCreditCards()`, `creditCardsByBudgetId()`
+  - Método: `billsByCreditCardId(creditCardId)`
+  - Métodos de mutation: create, update, delete para cartões e faturas
+  - Métodos especiais: `payCreditCardBill()`, `reopenCreditCardBill()`
+  - Integração com `BudgetSelectionService` para filtro automático
+  - Recarregamento automático após mutations
+- ✅ Queries GET adicionadas aos handlers MSW:
+  - `GET /api/credit-cards?budgetId=...` - Lista cartões por orçamento
+  - `GET /api/credit-card-bills?creditCardId=...&budgetId=...` - Lista faturas com filtros
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Seguimos o padrão de `AccountsApiService` e `AccountState` para consistência
+- **Decisão**: `billsByCreditCardId` implementado como método ao invés de computed signal (mais flexível)
+- **Decisão**: `payCreditCardBill` e `reopenCreditCardBill` obtêm `userId` automaticamente do `AuthService`
+- **Implementação**: Todos os métodos HTTP seguem o padrão de tratamento de erros com `catchError` e `ApiError`
+- **Implementação**: Signals reativos com computed values para derivações de estado
+- **Implementação**: Handlers MSW com filtros por `budgetId` e `creditCardId`
+
+#### 🧪 Validações
+
+- TypeScript type-check: ✅ Sem erros
+- Lint: ✅ Sem erros
+- Padrão de serviços: ✅ Alinhado com padrão de Accounts
+- Integração com MSW: ✅ Queries GET funcionando
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 3: UI Components - Credit Card Card
+- Criar componente `credit-card-card` (molecule)
+- Implementar template e estilos responsivos
+- Criar testes unitários básicos
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-230
-**Fase Atual**: FASE 1: DTOs e Contratos de Dados [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de todos os DTOs
-**Próxima Tarefa**: FASE 2 - Implementar Core Services (API Service e State)
+**Fase Atual**: FASE 2: Core Services (API Service e State) [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de `CreditCardApiService` e `CreditCardState`
+**Próxima Tarefa**: FASE 3 - UI Components - Credit Card Card
 

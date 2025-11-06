@@ -39,7 +39,65 @@ const mockCreditCardBills = [
 ];
 
 export const creditCardHandlers = [
-  // Credit Card endpoints
+  // Credit Card GET endpoints
+  http.get('/api/credit-cards', ({ request }) => {
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const url = new URL(request.url);
+    const budgetId = url.searchParams.get('budgetId');
+
+    if (!budgetId) {
+      return HttpResponse.json({ error: 'budgetId is required' }, { status: 400 });
+    }
+
+    const filteredCards = mockCreditCards.filter((card) => card.budgetId === budgetId);
+
+    return HttpResponse.json({
+      data: filteredCards,
+      meta: {
+        count: filteredCards.length,
+      },
+    });
+  }),
+
+  // Credit Card Bill GET endpoints
+  http.get('/api/credit-card-bills', ({ request }) => {
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const url = new URL(request.url);
+    const creditCardId = url.searchParams.get('creditCardId');
+    const budgetId = url.searchParams.get('budgetId');
+
+    let filteredBills = [...mockCreditCardBills];
+
+    if (creditCardId) {
+      filteredBills = filteredBills.filter((bill) => bill.creditCardId === creditCardId);
+    }
+
+    if (budgetId) {
+      const cardIds = mockCreditCards
+        .filter((card) => card.budgetId === budgetId)
+        .map((card) => card.id);
+      filteredBills = filteredBills.filter((bill) => cardIds.includes(bill.creditCardId));
+    }
+
+    return HttpResponse.json({
+      data: filteredBills,
+      meta: {
+        count: filteredBills.length,
+      },
+    });
+  }),
+
+  // Credit Card POST endpoints
   http.post('/api/credit-card/create-credit-card', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
