@@ -5,4 +5,3 @@ export interface DeleteCreditCardBillRequestDto {
 export interface DeleteCreditCardBillResponseDto {
   success: boolean;
 }
-

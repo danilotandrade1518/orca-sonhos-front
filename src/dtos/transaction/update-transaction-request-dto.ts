@@ -10,6 +10,7 @@ export interface UpdateTransactionRequestDto {
   categoryId?: string;
   budgetId?: string;
   transactionDate?: string;
+  creditCardId?: string;
 }
 
 export interface UpdateTransactionResponseDto {

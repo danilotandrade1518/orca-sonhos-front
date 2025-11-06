@@ -6,4 +6,3 @@ export interface CreditCardDto {
   dueDay: number;
   budgetId: string;
 }
-

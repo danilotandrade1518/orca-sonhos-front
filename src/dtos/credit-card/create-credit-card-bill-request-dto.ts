@@ -8,4 +8,3 @@ export interface CreateCreditCardBillRequestDto {
 export interface CreateCreditCardBillResponseDto {
   id: string;
 }
-

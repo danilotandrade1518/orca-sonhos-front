@@ -10,4 +10,3 @@ export * from './delete-credit-card-bill-request-dto';
 export * from './pay-credit-card-bill-request-dto';
 export * from './reopen-credit-card-bill-request-dto';
 export * from './list-credit-card-bills-response-dto';
-

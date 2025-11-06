@@ -155,4 +155,3 @@ describe('CreditCardCardComponent', () => {
     expect(limitAriaLabel).toContain('R$');
   });
 });
-

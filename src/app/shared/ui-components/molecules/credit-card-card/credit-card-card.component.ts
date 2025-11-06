@@ -200,4 +200,3 @@ export class CreditCardCardComponent {
     }).format(limit / 100);
   }
 }
-

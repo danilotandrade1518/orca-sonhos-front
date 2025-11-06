@@ -6,4 +6,3 @@ export interface CreditCardBillDto {
   amount: number;
   paid: boolean;
 }
-

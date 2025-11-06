@@ -10,4 +10,3 @@ export interface PayCreditCardBillRequestDto {
 export interface PayCreditCardBillResponseDto {
   success: boolean;
 }
-

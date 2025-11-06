@@ -334,7 +334,7 @@ export class TransactionFormComponent implements OnInit {
           accountId: transaction.accountId || '',
           categoryId: transaction.categoryId || '',
           transactionDate: transactionDate ? new Date(transactionDate) : null,
-          creditCardId: (transaction as any).creditCardId || '',
+          creditCardId: transaction.creditCardId || '',
         });
       }
     });
@@ -363,7 +363,7 @@ export class TransactionFormComponent implements OnInit {
         Validators.required,
       ]),
       transactionDate: new FormControl<Date | null>(null),
-      creditCardId: new FormControl<string>((initialTransaction as any)?.creditCardId || ''),
+      creditCardId: new FormControl<string>(initialTransaction?.creditCardId || ''),
     });
 
     if (initialTransaction?.transactionDate || initialTransaction?.date) {
@@ -454,7 +454,7 @@ export class TransactionFormComponent implements OnInit {
             budgetId,
             transactionDate,
             creditCardId: formValue.creditCardId || undefined,
-          } as any)
+          })
         );
 
         if (result) {
@@ -478,7 +478,7 @@ export class TransactionFormComponent implements OnInit {
             budgetId,
             transactionDate,
             creditCardId: formValue.creditCardId || undefined,
-          } as any)
+          })
         );
 
         if (result?.data?.success) {

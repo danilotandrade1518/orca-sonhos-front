@@ -9,4 +9,3 @@ export interface UpdateCreditCardRequestDto {
 export interface UpdateCreditCardResponseDto {
   success: boolean;
 }
-
