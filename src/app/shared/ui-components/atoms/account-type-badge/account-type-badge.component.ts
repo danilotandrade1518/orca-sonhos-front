@@ -61,4 +61,3 @@ export class AccountTypeBadgeComponent {
     return `Tipo de conta: ${labelMap[type] || 'Desconhecido'}`;
   });
 }
-

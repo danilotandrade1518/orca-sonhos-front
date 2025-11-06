@@ -6,6 +6,7 @@ import {
   inject,
   ChangeDetectionStrategy,
   effect,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -100,6 +101,9 @@ export interface TransferFormData {
 })
 export class TransferFormComponent {
   private readonly fb = inject(FormBuilder);
+  
+  // Tracks current fromAccountId as a signal so computeds react to form changes
+  private readonly fromAccountIdSig = signal<string | null>(null);
 
   readonly accounts = input.required<AccountDto[]>();
   readonly selectedBudgetId = input<string | null>(null);
@@ -190,7 +194,7 @@ export class TransferFormComponent {
   });
 
   readonly toAccountOptions = computed<OsSelectOption[]>(() => {
-    const fromAccountId = this.form.get('fromAccountId')?.value;
+    const fromAccountId = this.fromAccountIdSig();
     return this.accounts()
       .filter((account) => account.id !== fromAccountId)
       .map((account) => ({
@@ -287,8 +291,19 @@ export class TransferFormComponent {
   }
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const fromAccountId = this.form.get('fromAccountId')?.value;
+      // Sync form control into signal for reactive computeds
+      this.fromAccountIdSig.set(fromAccountId ?? null);
+
+      const sub = this.form.get('fromAccountId')?.valueChanges.subscribe((value) => {
+        this.fromAccountIdSig.set(value ?? null);
+      });
+
+      if (sub) {
+        onCleanup(() => sub.unsubscribe());
+      }
+
       if (fromAccountId) {
         this.form.get('toAccountId')?.updateValueAndValidity();
         this.form.get('amount')?.updateValueAndValidity();

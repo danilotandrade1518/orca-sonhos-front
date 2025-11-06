@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TransferFormComponent, TransferFormData } from './transfer-form.component';
-import { AccountDto, AccountType } from '../../../../../dtos/account';
+import { AccountDto } from '../../../../../dtos/account';
 
 describe('TransferFormComponent', () => {
   let component: TransferFormComponent;
@@ -14,23 +14,20 @@ describe('TransferFormComponent', () => {
     {
       id: 'account-1',
       name: 'Conta Corrente',
-      type: AccountType.CHECKING_ACCOUNT,
-      balance: 500000,
-      budgetId: 'budget-1',
+      type: 'CHECKING_ACCOUNT',
+      balance: 5000.0,
     },
     {
       id: 'account-2',
       name: 'Conta Poupança',
-      type: AccountType.SAVINGS_ACCOUNT,
-      balance: 1000000,
-      budgetId: 'budget-1',
+      type: 'SAVINGS_ACCOUNT',
+      balance: 10000.0,
     },
     {
       id: 'account-3',
       name: 'Outra Conta',
-      type: AccountType.CHECKING_ACCOUNT,
+      type: 'CHECKING_ACCOUNT',
       balance: 0,
-      budgetId: 'budget-2',
     },
   ];
 
@@ -60,7 +57,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 100000,
+        amount: 1000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.valid).toBe(true);
@@ -70,7 +67,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: '',
         toAccountId: 'account-2',
-        amount: 100000,
+        amount: 1000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.get('fromAccountId')?.hasError('required')).toBe(true);
@@ -80,7 +77,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: '',
-        amount: 100000,
+        amount: 1000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.get('toAccountId')?.hasError('required')).toBe(true);
@@ -90,17 +87,19 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 0,
       });
+      const amountControl = component.form.get('amount');
+      amountControl?.setValue(undefined as unknown);
+      amountControl?.updateValueAndValidity();
       component.form.updateValueAndValidity();
-      expect(component.form.get('amount')?.hasError('required')).toBe(true);
+      expect(amountControl?.hasError('required')).toBe(true);
     });
 
     it('should validate minimum amount', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 0.001,
+        amount: 0.009,
       });
       component.form.updateValueAndValidity();
       expect(component.form.get('amount')?.hasError('min')).toBe(true);
@@ -110,7 +109,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-1',
-        amount: 100000,
+        amount: 1000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.hasError('sameAccount')).toBe(true);
@@ -120,7 +119,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 600000,
+        amount: 6000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.hasError('insufficientBalance')).toBe(true);
@@ -130,7 +129,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 400000,
+        amount: 4000.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.valid).toBe(true);
@@ -153,12 +152,26 @@ describe('TransferFormComponent', () => {
     });
 
     it('should filter out fromAccount from toAccountOptions', () => {
+      const initialOptions = component.toAccountOptions();
+      expect(initialOptions.find((opt) => opt.value === 'account-1')).toBeDefined();
+      expect(initialOptions.length).toBe(3);
+
+      // Quando definimos fromAccountId, o computed deve recalcular
       component.form.patchValue({ fromAccountId: 'account-1' });
       fixture.detectChanges();
 
+      // Forçar recálculo do computed ao acessá-lo novamente
       const options = component.toAccountOptions();
-      expect(options.find((opt) => opt.value === 'account-1')).toBeUndefined();
-      expect(options.find((opt) => opt.value === 'account-2')).toBeDefined();
+
+      // Verificar que account-1 não está mais na lista
+      const account1Option = options.find((opt) => opt.value === 'account-1');
+      expect(account1Option).toBeUndefined();
+
+      // Verificar que account-2 e account-3 ainda estão na lista
+      expect(options.length).toBe(2);
+      const account2Option = options.find((opt) => opt.value === 'account-2');
+      expect(account2Option).toBeDefined();
+      expect(account2Option?.value).toBe('account-2');
     });
   });
 
@@ -176,8 +189,15 @@ describe('TransferFormComponent', () => {
     });
 
     it('should return error message for required amount', () => {
+      component.form.patchValue({
+        fromAccountId: 'account-1',
+        toAccountId: 'account-2',
+      });
       const control = component.form.get('amount');
+      control?.setValue(undefined as unknown);
       control?.markAsTouched();
+      control?.updateValueAndValidity();
+      component.form.updateValueAndValidity();
       expect(component.getAmountErrorMessage()).toBe('Valor é obrigatório');
     });
 
@@ -185,7 +205,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 600000,
+        amount: 6000.0,
       });
       component.form.updateValueAndValidity();
       const control = component.form.get('amount');
@@ -217,7 +237,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 100000,
+        amount: 1000.0,
       });
       component.form.updateValueAndValidity();
 
@@ -226,7 +246,7 @@ describe('TransferFormComponent', () => {
       expect(emittedData).toBeDefined();
       expect(emittedData?.fromAccountId).toBe('account-1');
       expect(emittedData?.toAccountId).toBe('account-2');
-      expect(emittedData?.amount).toBe(100000);
+      expect(emittedData?.amount).toBe(1000.0);
     });
 
     it('should not emit when form is invalid', () => {
@@ -250,12 +270,18 @@ describe('TransferFormComponent', () => {
   });
 
   describe('Disabled State', () => {
-    it('should disable form when disabled input is true', () => {
+    it('should have disabled input signal when set to true', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
-      expect(component.form.disabled).toBe(false);
+      expect(component.disabled()).toBe(true);
+    });
+
+    it('should have disabled input signal when set to false', () => {
+      fixture.componentRef.setInput('disabled', false);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(false);
     });
   });
 });
-

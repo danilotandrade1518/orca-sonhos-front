@@ -117,13 +117,14 @@ export class OsFilterBarComponent {
   });
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       if (typeof window !== 'undefined') {
         const checkMobile = () => {
           this.isMobile.set(window.innerWidth < 768);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
+        onCleanup(() => window.removeEventListener('resize', checkMobile));
       }
     });
 
@@ -161,7 +162,9 @@ export class OsFilterBarComponent {
 
     try {
       const key = this.getStorageKey();
-      localStorage.setItem(key, JSON.stringify(filters));
+      const storage = this.getLocalStorage();
+      if (!storage) return;
+      storage.setItem(key, JSON.stringify(filters));
     } catch (error) {
       console.warn('Falha ao persistir filtros:', error);
     }
@@ -174,7 +177,9 @@ export class OsFilterBarComponent {
 
     try {
       const key = this.getStorageKey();
-      const stored = localStorage.getItem(key);
+      const storage = this.getLocalStorage();
+      if (!storage) return;
+      const stored = storage.getItem(key);
 
       if (stored) {
         const filters = JSON.parse(stored) as Record<string, unknown>;
@@ -192,7 +197,9 @@ export class OsFilterBarComponent {
 
     try {
       const key = this.getStorageKey();
-      localStorage.removeItem(key);
+      const storage = this.getLocalStorage();
+      if (!storage) return;
+      storage.removeItem(key);
     } catch (error) {
       console.warn('Falha ao limpar filtros persistidos:', error);
     }
@@ -200,5 +207,15 @@ export class OsFilterBarComponent {
 
   private getStorageKey(): string {
     return `os-filter-bar:${this.persistKey()}`;
+  }
+
+  private getLocalStorage(): Storage | null {
+    try {
+      if (typeof window === 'undefined') return null;
+      return window.localStorage ?? null;
+    } catch {
+      // Some environments can throw when accessing localStorage
+      return null;
+    }
   }
 }

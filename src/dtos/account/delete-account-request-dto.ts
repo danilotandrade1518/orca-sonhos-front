@@ -6,4 +6,3 @@ export interface DeleteAccountRequestDto {
 export interface DeleteAccountResponseDto {
   success: boolean;
 }
-

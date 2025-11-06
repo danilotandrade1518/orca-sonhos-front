@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
@@ -6,7 +6,9 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 @Injectable({
   providedIn: 'root',
 })
-export class ThemeService {
+export class ThemeService implements OnDestroy {
+  private mediaQueryRef: MediaQueryList | null = null;
+  private mediaQueryHandler: ((e: MediaQueryListEvent) => void) | null = null;
   private readonly platformId = inject(PLATFORM_ID);
   private readonly storageKey = 'orca-sonhos-theme';
   
@@ -46,6 +48,7 @@ export class ThemeService {
     }
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.mediaQueryRef = mediaQuery;
 
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
       if (this._themeMode() === 'system') {
@@ -53,6 +56,7 @@ export class ThemeService {
         this.updateDocumentTheme();
       }
     };
+    this.mediaQueryHandler = handleSystemThemeChange;
     
     mediaQuery.addEventListener('change', handleSystemThemeChange);
     
@@ -167,5 +171,17 @@ export class ThemeService {
       default:
         return 'system';
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.mediaQueryRef && this.mediaQueryHandler) {
+      try {
+        this.mediaQueryRef.removeEventListener('change', this.mediaQueryHandler);
+      } catch {
+        // ignore
+      }
+    }
+    this.mediaQueryRef = null;
+    this.mediaQueryHandler = null;
   }
 }

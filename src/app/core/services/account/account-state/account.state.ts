@@ -41,7 +41,7 @@ export class AccountState {
 
   readonly selectedBudgetId = this.budgetSelectionService.selectedBudgetId;
 
-  loadAccounts(): void {
+  loadAccounts(force = false): void {
     const budgetId = this.budgetSelectionService.selectedBudgetId();
 
     if (!budgetId) {
@@ -49,7 +49,7 @@ export class AccountState {
       return;
     }
 
-    if (this._loading()) {
+    if (!force && this._loading()) {
       return;
     }
 
@@ -81,7 +81,7 @@ export class AccountState {
       .subscribe({
         next: (accountId) => {
           if (accountId) {
-            this.loadAccounts();
+            this.loadAccounts(true);
           } else {
             this._error.set('Falha ao criar conta');
             this._loading.set(false);
@@ -104,7 +104,7 @@ export class AccountState {
       .subscribe({
         next: (success) => {
           if (success) {
-            this.loadAccounts();
+            this.loadAccounts(true);
           } else {
             this._error.set('Falha ao atualizar conta');
             this._loading.set(false);
@@ -127,17 +127,21 @@ export class AccountState {
       .subscribe({
         next: (success) => {
           if (success) {
-            this.loadAccounts();
+            this.loadAccounts(true);
           } else {
             this._error.set('Falha ao excluir conta. A conta pode ter transações vinculadas.');
             this._loading.set(false);
           }
         },
         error: (error) => {
-          this._error.set(
-            error?.message ||
-              'Erro ao excluir conta. A conta pode ter transações vinculadas e não pode ser excluída.'
-          );
+          const errorMessage = error?.message || '';
+          if (errorMessage.includes('transactions') || errorMessage.includes('transações')) {
+            this._error.set('A conta possui transações vinculadas e não pode ser excluída.');
+          } else {
+            this._error.set(
+              errorMessage || 'Erro ao excluir conta. A conta pode ter transações vinculadas e não pode ser excluída.'
+            );
+          }
           this._loading.set(false);
         },
       });
@@ -153,7 +157,7 @@ export class AccountState {
       .subscribe({
         next: (success) => {
           if (success) {
-            this.loadAccounts();
+            this.loadAccounts(true);
           } else {
             this._error.set('Falha ao transferir entre contas');
             this._loading.set(false);
@@ -176,7 +180,7 @@ export class AccountState {
       .subscribe({
         next: (success) => {
           if (success) {
-            this.loadAccounts();
+            this.loadAccounts(true);
           } else {
             this._error.set('Falha ao reconciliar conta');
             this._loading.set(false);

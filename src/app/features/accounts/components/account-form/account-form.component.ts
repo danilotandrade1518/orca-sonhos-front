@@ -238,4 +238,3 @@ export class AccountFormComponent implements OnInit {
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }
-

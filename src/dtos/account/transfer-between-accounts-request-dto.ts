@@ -8,4 +8,3 @@ export interface TransferBetweenAccountsRequestDto {
 export interface TransferBetweenAccountsResponseDto {
   success: boolean;
 }
-

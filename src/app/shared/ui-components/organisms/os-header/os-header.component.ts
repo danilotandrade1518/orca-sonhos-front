@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import type { Subscription } from 'rxjs';
 import { OsAvatarComponent } from '../../atoms/os-avatar/os-avatar.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
@@ -157,6 +158,7 @@ export interface BreadcrumbItem {
 })
 export class OsHeaderComponent implements OnDestroy {
   private readonly breakpointObserver = inject(BreakpointObserver);
+  private breakpointSubscription?: Subscription;
 
   readonly showUserMenu = input(false);
   readonly userName = input<string | null>(null);
@@ -431,9 +433,11 @@ export class OsHeaderComponent implements OnDestroy {
   };
 
   private setupBreakpointObserver(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(() => {
-      this.handleResize();
-    });
+    this.breakpointSubscription = this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .subscribe(() => {
+        this.handleResize();
+      });
   }
 
   private setupScrollListener(): void {
@@ -453,5 +457,9 @@ export class OsHeaderComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.removeScrollListener();
+    if (this.breakpointSubscription) {
+      this.breakpointSubscription.unsubscribe();
+      this.breakpointSubscription = undefined;
+    }
   }
 }

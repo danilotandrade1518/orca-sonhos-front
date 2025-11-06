@@ -22,4 +22,3 @@ export const ACCOUNTS_ROUTES: Routes = [
     data: { modalMode: 'edit' },
   },
 ];
-

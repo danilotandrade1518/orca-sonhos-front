@@ -236,8 +236,7 @@ export class AccountsPage implements OnInit {
     if (budgetId) {
       this.state.loadAccounts();
     }
-
-    // Carregar conta para edição se houver route param
+    
     const accountId = this.route.snapshot.paramMap.get('id');
     if (accountId && this.route.snapshot.data['modalMode'] === 'edit') {
       const accounts = this.state.accounts();
@@ -309,4 +308,3 @@ export class AccountsPage implements OnInit {
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }
-

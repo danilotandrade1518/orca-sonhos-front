@@ -1,4 +1,5 @@
 import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -8,10 +9,23 @@ import { BudgetSelectionService } from '../../../../core/services/budget-selecti
 import { DashboardDataService } from '../../services/dashboard-data.service';
 import { BudgetDto } from '../../../../../dtos/budget/budget-types';
 import { WidgetConfiguration } from '../../types/dashboard.types';
+import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '../../../../core/adapters/external-auth-service.adapter';
+import { AccountState } from '../../../../core/services/account/account-state/account.state';
 
 describe('DashboardWidgetsComponent', () => {
   let component: DashboardWidgetsComponent;
   let fixture: ComponentFixture<DashboardWidgetsComponent>;
+
+  const createMockAuthAdapter = () => ({
+    user: signal(null),
+    isAuthenticated: signal(false),
+    isLoading: signal(false),
+    error: signal(null),
+    login: () => Promise.resolve(),
+    logout: () => Promise.resolve(),
+    getAccessToken: () => Promise.resolve(null),
+    initializeAuthState: vi.fn(),
+  });
 
   const mockBudget: BudgetDto = {
     id: 'budget-1',
@@ -58,6 +72,7 @@ describe('DashboardWidgetsComponent', () => {
 
     const budgetSelectionServiceSpy = {
       selectedBudget: signal(mockBudget),
+      selectedBudgetId: signal('budget-1'),
       hasSelectedBudget: signal(true),
     };
 
@@ -68,12 +83,22 @@ describe('DashboardWidgetsComponent', () => {
       error: signal(null),
     };
 
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
+
     await TestBed.configureTestingModule({
       imports: [DashboardWidgetsComponent],
       providers: [
         { provide: BudgetSelectionService, useValue: budgetSelectionServiceSpy },
         { provide: DashboardDataService, useValue: dashboardDataServiceSpy },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     }).compileComponents();
 
@@ -102,16 +127,26 @@ describe('DashboardWidgetsComponent', () => {
       error: signal(null),
     };
 
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
+
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [DashboardWidgetsComponent],
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), hasSelectedBudget: signal(true) },
+          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
         },
         { provide: DashboardDataService, useValue: loadingServiceSpy },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 
@@ -130,16 +165,26 @@ describe('DashboardWidgetsComponent', () => {
       error: signal('Erro ao carregar dados'),
     };
 
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
+
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [DashboardWidgetsComponent],
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), hasSelectedBudget: signal(true) },
+          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
         },
         { provide: DashboardDataService, useValue: errorServiceSpy },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 
@@ -154,8 +199,16 @@ describe('DashboardWidgetsComponent', () => {
   it('should show empty state when no budget selected', () => {
     const emptyBudgetServiceSpy = {
       selectedBudget: signal(null),
+      selectedBudgetId: signal<string | null>(null),
       hasSelectedBudget: signal(false),
     };
+
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -171,7 +224,10 @@ describe('DashboardWidgetsComponent', () => {
             error: signal(null),
           },
         },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 
@@ -202,16 +258,26 @@ describe('DashboardWidgetsComponent', () => {
       error: signal(null),
     };
 
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
+
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [DashboardWidgetsComponent],
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), hasSelectedBudget: signal(true) },
+          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
         },
         { provide: DashboardDataService, useValue: loadingServiceSpy },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 
@@ -236,16 +302,26 @@ describe('DashboardWidgetsComponent', () => {
       error: signal('Error message'),
     };
 
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
+
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [DashboardWidgetsComponent],
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), hasSelectedBudget: signal(true) },
+          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
         },
         { provide: DashboardDataService, useValue: errorServiceSpy },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 
@@ -265,8 +341,16 @@ describe('DashboardWidgetsComponent', () => {
   it('should apply empty class when no budget selected', () => {
     const emptyBudgetServiceSpy = {
       selectedBudget: signal(null),
+      selectedBudgetId: signal<string | null>(null),
       hasSelectedBudget: signal(false),
     };
+
+    const accountStateSpy = {
+      accountsByBudgetId: signal([] as any[]),
+      loading: signal(false),
+      error: signal<string | null>(null),
+      loadAccounts: vi.fn(),
+    } as unknown as AccountState;
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -282,7 +366,10 @@ describe('DashboardWidgetsComponent', () => {
             error: signal(null),
           },
         },
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
+        { provide: AccountState, useValue: accountStateSpy },
         provideZonelessChangeDetection(),
+        provideHttpClient(),
       ],
     });
 

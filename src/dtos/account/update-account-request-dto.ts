@@ -11,4 +11,3 @@ export interface UpdateAccountRequestDto {
 export interface UpdateAccountResponseDto {
   success: boolean;
 }
-

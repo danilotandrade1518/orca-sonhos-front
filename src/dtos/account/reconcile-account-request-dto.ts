@@ -8,4 +8,3 @@ export interface ReconcileAccountRequestDto {
 export interface ReconcileAccountResponseDto {
   success: boolean;
 }
-

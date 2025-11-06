@@ -851,3 +851,5 @@ Formulário para reconciliação de saldo de conta.
 - **Jornada do Cliente**: `business/customer-profile/customer-journey.md` - Touchpoints e estágios de engajamento
 - **Conceitos Centrais**: `business/product-vision/core-concepts.md` - Sistema Dual: Orçamentos + Contas
 - **Funcionalidades Core**: `business/03_funcionalidades_core.md` - Sistema Dual como funcionalidade core
+
+

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { AccountTypeBadgeComponent } from './account-type-badge.component';
 import { AccountType } from '@dtos/account';
 
@@ -9,6 +10,7 @@ describe('AccountTypeBadgeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AccountTypeBadgeComponent],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountTypeBadgeComponent);

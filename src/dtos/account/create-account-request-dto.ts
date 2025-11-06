@@ -11,4 +11,3 @@ export interface CreateAccountRequestDto {
 export interface CreateAccountResponseDto {
   id: string;
 }
-

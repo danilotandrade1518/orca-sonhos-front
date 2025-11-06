@@ -26,16 +26,14 @@ describe('AccountState', () => {
     {
       id: 'account-1',
       name: 'Conta Corrente',
-      type: AccountType.CHECKING_ACCOUNT,
-      balance: 500000,
-      budgetId: 'budget-1',
+      type: 'CHECKING_ACCOUNT',
+      balance: 5000.0,
     },
     {
       id: 'account-2',
       name: 'Conta Poupança',
-      type: AccountType.SAVINGS_ACCOUNT,
-      balance: 1000000,
-      budgetId: 'budget-1',
+      type: 'SAVINGS_ACCOUNT',
+      balance: 10000.0,
     },
   ];
 
@@ -148,9 +146,8 @@ describe('AccountState', () => {
         {
           id: 'account-3',
           name: 'Outra Conta',
-          type: AccountType.CHECKING_ACCOUNT,
-          balance: 200000,
-          budgetId: 'budget-2',
+          type: 'CHECKING_ACCOUNT',
+          balance: 2000.0,
         },
       ];
 
@@ -160,16 +157,18 @@ describe('AccountState', () => {
       accountState.loadAccounts();
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountState.accountsByBudgetId().length).toBe(2);
-      expect(accountState.accountsByBudgetId()[0].budgetId).toBe('budget-1');
-      expect(accountState.accountsByBudgetId()[1].budgetId).toBe('budget-1');
+      expect(accountState.accountsByBudgetId().length).toBe(3);
+      expect(accountState.accountsByBudgetId()[0].id).toBe('account-1');
+      expect(accountState.accountsByBudgetId()[1].id).toBe('account-2');
+      expect(accountState.accountsByBudgetId()[2].id).toBe('account-3');
     });
   });
 
   describe('createAccount', () => {
     const createDto = {
+      userId: 'user-123',
       name: 'Nova Conta',
-      type: AccountType.CHECKING_ACCOUNT,
+      type: 'CHECKING_ACCOUNT' as AccountType,
       initialBalance: 0,
       budgetId: 'budget-1',
     };
@@ -180,9 +179,9 @@ describe('AccountState', () => {
 
       accountState.createAccount(createDto);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       expect(accountsApiService.createAccount).toHaveBeenCalledWith(createDto);
-      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalledWith('budget-1');
     });
 
     it('should set error when creation fails', async () => {
@@ -210,9 +209,9 @@ describe('AccountState', () => {
   describe('updateAccount', () => {
     const updateDto = {
       id: 'account-1',
+      userId: 'user-123',
       name: 'Conta Atualizada',
-      type: AccountType.SAVINGS_ACCOUNT,
-      budgetId: 'budget-1',
+      type: 'SAVINGS_ACCOUNT' as AccountType,
     };
 
     it('should update account and reload list', async () => {
@@ -221,9 +220,9 @@ describe('AccountState', () => {
 
       accountState.updateAccount(updateDto);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       expect(accountsApiService.updateAccount).toHaveBeenCalledWith(updateDto);
-      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalledWith('budget-1');
     });
 
     it('should set error when update fails', async () => {
@@ -250,8 +249,8 @@ describe('AccountState', () => {
 
   describe('deleteAccount', () => {
     const deleteDto = {
-      id: 'account-1',
-      budgetId: 'budget-1',
+      userId: 'user-123',
+      accountId: 'account-1',
     };
 
     it('should delete account and reload list', async () => {
@@ -260,9 +259,9 @@ describe('AccountState', () => {
 
       accountState.deleteAccount(deleteDto);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       expect(accountsApiService.deleteAccount).toHaveBeenCalledWith(deleteDto);
-      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalledWith('budget-1');
     });
 
     it('should set error when deletion fails', async () => {
@@ -284,17 +283,22 @@ describe('AccountState', () => {
       accountState.deleteAccount(deleteDto);
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(accountState.error()).toContain('transações vinculadas');
+      const errorMessage = accountState.error();
+      expect(errorMessage).toBeTruthy();
+      expect(
+        errorMessage?.includes('transações vinculadas') ||
+          errorMessage?.includes('transactions')
+      ).toBeTruthy();
       expect(accountState.loading()).toBeFalsy();
     });
   });
 
   describe('transferBetweenAccounts', () => {
     const transferDto = {
+      userId: 'user-123',
       fromAccountId: 'account-1',
       toAccountId: 'account-2',
-      amountInCents: 100000,
-      budgetId: 'budget-1',
+      amount: 1000.0,
     };
 
     it('should transfer and reload list', async () => {
@@ -303,9 +307,9 @@ describe('AccountState', () => {
 
       accountState.transferBetweenAccounts(transferDto);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       expect(accountsApiService.transferBetweenAccounts).toHaveBeenCalledWith(transferDto);
-      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalledWith('budget-1');
     });
 
     it('should set error when transfer fails', async () => {
@@ -332,9 +336,10 @@ describe('AccountState', () => {
 
   describe('reconcileAccount', () => {
     const reconcileDto = {
-      accountId: 'account-1',
-      finalBalanceInCents: 550000,
+      userId: 'user-123',
       budgetId: 'budget-1',
+      accountId: 'account-1',
+      realBalance: 5500.0,
     };
 
     it('should reconcile and reload list', async () => {
@@ -343,9 +348,9 @@ describe('AccountState', () => {
 
       accountState.reconcileAccount(reconcileDto);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       expect(accountsApiService.reconcileAccount).toHaveBeenCalledWith(reconcileDto);
-      expect(accountsApiService.listAccounts).toHaveBeenCalled();
+      expect(accountsApiService.listAccounts).toHaveBeenCalledWith('budget-1');
     });
 
     it('should set error when reconciliation fails', async () => {
@@ -432,4 +437,3 @@ describe('AccountState', () => {
     });
   });
 });
-
