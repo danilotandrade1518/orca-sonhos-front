@@ -22,7 +22,7 @@ Implementação completa da gestão de cartões de crédito e faturas no fronten
 
 ---
 
-## 📅 FASE 1: DTOs e Contratos de Dados [Status: ⏳]
+## 📅 FASE 1: DTOs e Contratos de Dados [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -30,7 +30,7 @@ Criar todos os DTOs (Data Transfer Objects) necessários para comunicação entr
 
 ### 📋 Tarefas
 
-#### Criar estrutura de diretórios para DTOs [⏳]
+#### Criar estrutura de diretórios para DTOs [✅]
 
 **Descrição**: Criar pasta `src/dtos/credit-card/` e arquivos base
 **Arquivos**: 
@@ -42,7 +42,7 @@ Criar todos os DTOs (Data Transfer Objects) necessários para comunicação entr
 
 **Dependências**: Nenhuma
 
-#### Implementar DTOs de Cartão de Crédito [⏳]
+#### Implementar DTOs de Cartão de Crédito [✅]
 
 **Descrição**: Criar tipos TypeScript em `credit-card-types.ts`:
 - `CreditCardDto`: id, name, limit (number em centavos), closingDay (1-31), dueDay (1-31), budgetId
@@ -62,7 +62,7 @@ Criar todos os DTOs (Data Transfer Objects) necessários para comunicação entr
 - `src/dtos/account/account-types.ts` para padrão
 - `src/app/core/mocks/handlers/credit-cards.handlers.ts` para contratos esperados
 
-#### Implementar DTOs de Fatura de Cartão [⏳]
+#### Implementar DTOs de Fatura de Cartão [✅]
 
 **Descrição**: Criar tipos TypeScript em `credit-card-bill-types.ts`:
 - `CreditCardBillDto`: id, creditCardId, closingDate (ISO string), dueDate (ISO string), amount (number em centavos), paid (boolean)
@@ -82,7 +82,7 @@ Criar todos os DTOs (Data Transfer Objects) necessários para comunicação entr
 - `src/dtos/account/account-types.ts` para padrão
 - `src/app/core/mocks/handlers/credit-cards.handlers.ts` para contratos esperados
 
-#### Configurar exports centralizados [⏳]
+#### Configurar exports centralizados [✅]
 
 **Descrição**: Criar `index.ts` exportando todos os tipos de forma organizada
 **Arquivos**: `src/dtos/credit-card/index.ts`
@@ -93,16 +93,24 @@ Criar todos os DTOs (Data Transfer Objects) necessários para comunicação entr
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os DTOs criados com tipos corretos
-- [ ] Tipos exportados em `index.ts`
-- [ ] Alinhados com contratos do backend (handlers MSW)
-- [ ] Valores monetários sempre em centavos (number)
-- [ ] Datas sempre em formato ISO string
-- [ ] Sem erros de lint/type-check
+- [x] Todos os DTOs criados com tipos corretos
+- [x] Tipos exportados em `index.ts`
+- [x] Alinhados com contratos do backend (handlers MSW)
+- [x] Valores monetários sempre em centavos (number)
+- [x] Datas sempre em formato ISO string
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Seguimos o padrão de DTOs de account, separando tipos principais de Request/Response DTOs em arquivos distintos
+- **Decisão**: Valores monetários sempre em centavos (number), não decimais, conforme especificação
+- **Decisão**: Datas sempre em formato ISO string (string) para comunicação com backend
+- **Implementação**: Todos os DTOs criados seguindo padrão estabelecido:
+  - `credit-card-types.ts`: CreditCardDto
+  - `credit-card-bill-types.ts`: CreditCardBillDto
+  - Request/Response DTOs separados por operação (create, update, delete, pay, reopen)
+  - Exports centralizados em `index.ts`
+- **Validação**: TypeScript e lint validados sem erros
 
 ---
 
