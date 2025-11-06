@@ -853,3 +853,4 @@ Formulário para reconciliação de saldo de conta.
 - **Funcionalidades Core**: `business/03_funcionalidades_core.md` - Sistema Dual como funcionalidade core
 
 
+

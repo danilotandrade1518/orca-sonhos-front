@@ -755,17 +755,20 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 **Status**: ✅ Testes criados e completos para `AccountsApiService` e `AccountState`
 
-#### Testes unitários de componentes [⏰ Em Progresso]
+#### Testes unitários de componentes [✅ Completada]
 
 **Descrição**:
 
 - Testes de `AccountTypeBadge`: Renderização por tipo, cores, ARIA ✅
 - Testes de `AccountCard`: Renderização, ações, estados, ARIA ✅
 - Testes de `TransferForm`: Validações, submissão, erros ✅
-- Testes de `ReconcileForm`: Validações, submissão, helper text ⏳
-- Testes de `AccountFormComponent`: Criação/edição, validações ⏳
-- Testes de `AccountsPage`: Lista, estados, ações, integração com state ⏳
-- Testes de modais: Abertura/fechamento, submissão, erros ⏳
+- Testes de `ReconcileForm`: Validações, submissão, helper text ✅
+- Testes de `AccountFormComponent`: Criação/edição, validações ✅
+- Testes de `AccountsPage`: Lista, estados, ações, integração com state ✅
+- Testes de modais: Abertura/fechamento, submissão, erros ✅
+  - `TransferModal`: Integração com AccountState, validações, efeitos de sucesso/erro ✅
+  - `ReconcileModal`: Integração com AccountState, validações, efeitos de sucesso/erro ✅
+  - `ConfirmDeleteModal`: Integração com AccountState, tratamento de erro de bloqueio ✅
 
 **Critério de Conclusão**:
 
@@ -775,7 +778,7 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 **Dependências**: FASE 3, FASE 4, FASE 5, FASE 6 completas
 
-**Status**: ⏰ Testes criados para `AccountTypeBadge`, `AccountCard` e `TransferForm`. Pendente: `ReconcileForm`, `AccountFormComponent`, `AccountsPage` e modais
+**Status**: ✅ Todos os testes de componentes criados e completos. Cobertura de testes unitários de componentes alcançada.
 
 #### Testes de integração [⏳]
 
@@ -846,8 +849,10 @@ Garantir cobertura de testes ≥ 80%, acessibilidade WCAG 2.1 AA e validação f
 
 - **Testes de Serviços**: ✅ Criados testes completos para `AccountsApiService` e `AccountState` com cobertura de todos os métodos, cenários de sucesso e erro, validações de contratos, signals e computed properties
 - **Testes de Componentes Design System**: ✅ Testes existentes para `AccountTypeBadge` e `AccountCard` foram melhorados com testes adicionais de acessibilidade e casos extremos
-- **Testes de Formulários**: ✅ Testes criados para `TransferForm` com validações completas (mesmo orçamento, contas diferentes, saldo suficiente). Pendente: `ReconcileForm` e `AccountFormComponent`
-- **Próximos Passos**: Criar testes para `ReconcileForm`, `AccountFormComponent`, `AccountsPage` e modais (`TransferModal`, `ReconcileModal`, `ConfirmDeleteModal`)
+- **Testes de Formulários**: ✅ Testes criados para `TransferForm` e `ReconcileForm` com validações completas (mesmo orçamento, contas diferentes, saldo suficiente, helper text)
+- **Testes de Feature Components**: ✅ Testes criados para `AccountFormComponent` (criação/edição, validações, integração com AccountState) e `AccountsPage` (lista, estados, ações, modais, integração com state)
+- **Testes de Modais**: ✅ Testes criados para `TransferModal`, `ReconcileModal` e `ConfirmDeleteModal` com cobertura de integração com AccountState, validações, efeitos de sucesso/erro e tratamento de bloqueio de exclusão
+- **Próximos Passos**: Criar testes de integração para fluxos completos e validações de acessibilidade WCAG 2.1 AA
 
 ---
 

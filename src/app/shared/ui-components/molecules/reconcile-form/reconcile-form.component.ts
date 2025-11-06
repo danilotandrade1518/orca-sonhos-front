@@ -105,6 +105,9 @@ export class ReconcileFormComponent {
 
   readonly accountOptions = computed(() => {
     const account = this.account();
+    if (!account) {
+      return [];
+    }
     return [
       {
         value: account.id,

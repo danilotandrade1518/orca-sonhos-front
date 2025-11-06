@@ -102,7 +102,6 @@ export interface TransferFormData {
 export class TransferFormComponent {
   private readonly fb = inject(FormBuilder);
   
-  // Tracks current fromAccountId as a signal so computeds react to form changes
   private readonly fromAccountIdSig = signal<string | null>(null);
 
   readonly accounts = input.required<AccountDto[]>();
@@ -293,7 +292,7 @@ export class TransferFormComponent {
   constructor() {
     effect((onCleanup) => {
       const fromAccountId = this.form.get('fromAccountId')?.value;
-      // Sync form control into signal for reactive computeds
+      
       this.fromAccountIdSig.set(fromAccountId ?? null);
 
       const sub = this.form.get('fromAccountId')?.valueChanges.subscribe((value) => {

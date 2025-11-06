@@ -84,7 +84,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -128,7 +128,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -140,7 +140,11 @@ describe('DashboardWidgetsComponent', () => {
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
+          useValue: {
+            selectedBudget: signal(mockBudget),
+            selectedBudgetId: signal('budget-1'),
+            hasSelectedBudget: signal(true),
+          },
         },
         { provide: DashboardDataService, useValue: loadingServiceSpy },
         { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
@@ -166,7 +170,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -178,7 +182,11 @@ describe('DashboardWidgetsComponent', () => {
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
+          useValue: {
+            selectedBudget: signal(mockBudget),
+            selectedBudgetId: signal('budget-1'),
+            hasSelectedBudget: signal(true),
+          },
         },
         { provide: DashboardDataService, useValue: errorServiceSpy },
         { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
@@ -204,7 +212,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -259,7 +267,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -271,7 +279,11 @@ describe('DashboardWidgetsComponent', () => {
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
+          useValue: {
+            selectedBudget: signal(mockBudget),
+            selectedBudgetId: signal('budget-1'),
+            hasSelectedBudget: signal(true),
+          },
         },
         { provide: DashboardDataService, useValue: loadingServiceSpy },
         { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
@@ -284,11 +296,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    
+
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-    
+
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--loading');
@@ -303,7 +315,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -315,7 +327,11 @@ describe('DashboardWidgetsComponent', () => {
       providers: [
         {
           provide: BudgetSelectionService,
-          useValue: { selectedBudget: signal(mockBudget), selectedBudgetId: signal('budget-1'), hasSelectedBudget: signal(true) },
+          useValue: {
+            selectedBudget: signal(mockBudget),
+            selectedBudgetId: signal('budget-1'),
+            hasSelectedBudget: signal(true),
+          },
         },
         { provide: DashboardDataService, useValue: errorServiceSpy },
         { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: createMockAuthAdapter() },
@@ -328,11 +344,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    
+
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-    
+
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--error');
@@ -346,7 +362,7 @@ describe('DashboardWidgetsComponent', () => {
     };
 
     const accountStateSpy = {
-      accountsByBudgetId: signal([] as any[]),
+      accountsByBudgetId: signal([] as unknown[]),
       loading: signal(false),
       error: signal<string | null>(null),
       loadAccounts: vi.fn(),
@@ -376,11 +392,11 @@ describe('DashboardWidgetsComponent', () => {
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    
+
     const osDashboardWidgetsElement =
       fixture.debugElement.nativeElement.querySelector('os-dashboard-widgets');
     expect(osDashboardWidgetsElement).toBeTruthy();
-    
+
     const internalWidgets = osDashboardWidgetsElement.querySelector('.os-dashboard-widgets');
     expect(internalWidgets).toBeTruthy();
     expect(internalWidgets.className).toContain('os-dashboard-widgets--empty');

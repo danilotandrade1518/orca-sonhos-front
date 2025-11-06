@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   AccountDto,
-  AccountType,
   CreateAccountRequestDto,
   CreateAccountResponseDto,
   DeleteAccountRequestDto,
@@ -124,7 +123,6 @@ describe('AccountsApiService', () => {
 
       const promise = firstValueFrom(service.listAccounts('budget-1'));
 
-      // Verificar loading imediatamente após chamar o método
       expect(service.loading()).toBe(true);
       expect(loadingCheck).toBe(true);
 

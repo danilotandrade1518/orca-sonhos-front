@@ -21,7 +21,7 @@ describe('DashboardPage', () => {
       login: () => Promise.resolve(),
       logout: () => Promise.resolve(),
       getAccessToken: () => Promise.resolve(null),
-      initializeAuthState: (callback: (user: any) => void) => {
+      initializeAuthState: (callback: (user: unknown) => void) => {
         callback(null);
       },
     };

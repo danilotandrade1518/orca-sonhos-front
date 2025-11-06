@@ -104,8 +104,7 @@ describe('AccountCardComponent', () => {
   });
 
   it('should not emit edit when account is null', () => {
-    // Não fazemos detectChanges porque o template falha com null
-    // Mas podemos testar o método diretamente
+    
     fixture.componentRef.setInput('account', null as unknown);
     
     const emitSpy = vi.spyOn(component.edit, 'emit');
@@ -115,8 +114,7 @@ describe('AccountCardComponent', () => {
   });
 
   it('should not emit delete when account is null', () => {
-    // Não fazemos detectChanges porque o template falha com null
-    // Mas podemos testar o método diretamente
+    
     fixture.componentRef.setInput('account', null as unknown);
     
     const emitSpy = vi.spyOn(component.delete, 'emit');

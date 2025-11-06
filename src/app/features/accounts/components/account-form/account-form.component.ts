@@ -48,30 +48,34 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
       (closed)="onCancel()"
     >
       <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
-        <os-form-field
-          label="Nome da Conta"
-          [required]="true"
-          [control]="nameControl()"
-          [errorMessage]="getNameErrorMessage()"
-        />
+        @if (form()) {
+        <div [formGroup]="form()!">
+          <os-form-field
+            label="Nome da Conta"
+            [required]="true"
+            [control]="nameControl()"
+            [errorMessage]="getNameErrorMessage()"
+          />
 
-        <os-select
-          label="Tipo de Conta"
-          [options]="typeOptions()"
-          [disabled]="loading()"
-          formControlName="type"
-          [required]="true"
-          [errorMessage]="getTypeErrorMessage()"
-        />
+          <os-select
+            label="Tipo de Conta"
+            [options]="typeOptions()"
+            [disabled]="loading()"
+            formControlName="type"
+            [required]="true"
+            [errorMessage]="getTypeErrorMessage()"
+          />
 
-        <os-money-input
-          label="Saldo Inicial"
-          [disabled]="loading()"
-          formControlName="initialBalance"
-          [errorMessage]="getInitialBalanceErrorMessage()"
-          placeholder="0,00"
-          [allowNegative]="false"
-        />
+          <os-money-input
+            label="Saldo Inicial"
+            [disabled]="loading()"
+            formControlName="initialBalance"
+            [errorMessage]="getInitialBalanceErrorMessage()"
+            placeholder="0,00"
+            [allowNegative]="false"
+          />
+        </div>
+        }
       </os-form-template>
     </os-modal-template>
   `,
@@ -95,11 +99,20 @@ export class AccountFormComponent implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  readonly nameControl = computed(() => this._form()?.get('name') as FormControl | null);
-  readonly typeControl = computed(() => this._form()?.get('type') as FormControl | null);
-  readonly initialBalanceControl = computed(
-    () => this._form()?.get('initialBalance') as FormControl | null
-  );
+  private readonly _validationTrigger = signal(0);
+
+  readonly nameControl = computed(() => {
+    this._validationTrigger(); 
+    return this._form()?.get('name') as FormControl | null;
+  });
+  readonly typeControl = computed(() => {
+    this._validationTrigger(); 
+    return this._form()?.get('type') as FormControl | null;
+  });
+  readonly initialBalanceControl = computed(() => {
+    this._validationTrigger(); 
+    return this._form()?.get('initialBalance') as FormControl | null;
+  });
 
   readonly typeOptions = computed<OsSelectOption[]>(() => [
     { value: 'CHECKING_ACCOUNT', label: 'Conta Corrente' },
@@ -131,6 +144,7 @@ export class AccountFormComponent implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._validationTrigger(); 
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da conta é obrigatório';
@@ -140,6 +154,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._validationTrigger(); 
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo de conta é obrigatório';
@@ -147,6 +162,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getInitialBalanceErrorMessage = computed(() => {
+    this._validationTrigger(); 
     const control = this.initialBalanceControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('min')) return 'Saldo inicial deve ser maior ou igual a zero';
@@ -163,6 +179,8 @@ export class AccountFormComponent implements OnInit {
           type: account.type,
           initialBalance: account.balance || 0,
         });
+        
+        this._validationTrigger.update(v => v + 1);
       }
     });
   }

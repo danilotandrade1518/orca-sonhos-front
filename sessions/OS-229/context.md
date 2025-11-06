@@ -108,3 +108,4 @@ Implementar no front web a gestão de contas financeiras (onde o dinheiro está)
 - Arquitetura/meta-specs: ver `meta_specs_path` configurado em `ai.properties.md`
 
 
+

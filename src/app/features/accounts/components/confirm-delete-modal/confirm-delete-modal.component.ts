@@ -36,11 +36,10 @@ import type { AccountDto } from '../../../../../dtos/account';
       (escapeKey)="onClose()"
     >
       <div class="os-confirm-delete-modal__content">
-        <p class="os-confirm-delete-modal__message">
-          Tem certeza que deseja excluir a conta <strong>{{ account().name }}</strong
-          >?
-        </p>
         @if (account()) {
+        <p class="os-confirm-delete-modal__message">
+          Tem certeza que deseja excluir a conta <strong>{{ account()!.name }}</strong>?
+        </p>
         <div class="os-confirm-delete-modal__warning" role="alert">
           <p>
             Esta ação não pode ser desfeita. Se a conta possuir transações vinculadas, a exclusão

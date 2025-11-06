@@ -155,19 +155,15 @@ describe('TransferFormComponent', () => {
       const initialOptions = component.toAccountOptions();
       expect(initialOptions.find((opt) => opt.value === 'account-1')).toBeDefined();
       expect(initialOptions.length).toBe(3);
-
-      // Quando definimos fromAccountId, o computed deve recalcular
+      
       component.form.patchValue({ fromAccountId: 'account-1' });
       fixture.detectChanges();
-
-      // Forçar recálculo do computed ao acessá-lo novamente
+      
       const options = component.toAccountOptions();
-
-      // Verificar que account-1 não está mais na lista
+      
       const account1Option = options.find((opt) => opt.value === 'account-1');
       expect(account1Option).toBeUndefined();
-
-      // Verificar que account-2 e account-3 ainda estão na lista
+      
       expect(options.length).toBe(2);
       const account2Option = options.find((opt) => opt.value === 'account-2');
       expect(account2Option).toBeDefined();

@@ -214,7 +214,7 @@ export class OsFilterBarComponent {
       if (typeof window === 'undefined') return null;
       return window.localStorage ?? null;
     } catch {
-      // Some environments can throw when accessing localStorage
+      
       return null;
     }
   }
