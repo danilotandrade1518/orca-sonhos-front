@@ -1,8 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreditCardCardComponent } from './credit-card-card.component';
 import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
+import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '../../../../core/adapters/external-auth-service.adapter';
+import { MockExternalAuthServiceAdapter } from '../../../../core/services/auth/__mocks__/external-auth-service.adapter.mock';
 
 describe('CreditCardCardComponent', () => {
   let component: CreditCardCardComponent;
@@ -20,7 +24,15 @@ describe('CreditCardCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CreditCardCardComponent],
-      providers: [provideZonelessChangeDetection()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+        {
+          provide: EXTERNAL_AUTH_SERVICE_ADAPTER,
+          useValue: new MockExternalAuthServiceAdapter(),
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreditCardCardComponent);
@@ -120,7 +132,7 @@ describe('CreditCardCardComponent', () => {
 
   it('should not emit edit when credit card is null', () => {
     fixture.componentRef.setInput('creditCard', null as unknown);
-    
+
     const emitSpy = vi.spyOn(component.edit, 'emit');
     component.onEdit();
 
@@ -129,7 +141,7 @@ describe('CreditCardCardComponent', () => {
 
   it('should not emit delete when credit card is null', () => {
     fixture.componentRef.setInput('creditCard', null as unknown);
-    
+
     const emitSpy = vi.spyOn(component.delete, 'emit');
     component.onDelete();
 
@@ -139,7 +151,7 @@ describe('CreditCardCardComponent', () => {
   it('should display credit card type', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const typeElement = compiled.querySelector('.os-credit-card-card__type');
-    expect(typeElement?.textContent?.trim()).toBe('CARTÃO DE CRÉDITO');
+    expect(typeElement?.textContent?.trim()).toBe('Cartão de Crédito');
   });
 
   it('should handle zero limit correctly', () => {

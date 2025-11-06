@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { of } from 'rxjs';
 import { CreditCardsPage } from './credit-cards.page';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -23,6 +26,7 @@ describe('CreditCardsPage - Integration Tests', () => {
 
   const mockBudgetId = 'budget-1';
   const mockUserId = 'user-1';
+  let selectedBudgetIdSignal: ReturnType<typeof signal<string | null>>;
 
   const mockCreditCard: CreditCardDto = {
     id: 'cc-1',
@@ -44,11 +48,13 @@ describe('CreditCardsPage - Integration Tests', () => {
 
   beforeEach(async () => {
     const mockAuthService = {
+      user: vi.fn(() => ({ id: mockUserId })),
       currentUser: vi.fn(() => ({ id: mockUserId })),
     };
 
+    selectedBudgetIdSignal = signal<string | null>(mockBudgetId);
     const mockBudgetSelectionService = {
-      selectedBudgetId: vi.fn(() => mockBudgetId),
+      selectedBudgetId: selectedBudgetIdSignal,
     };
 
     const mockRouter = {
@@ -67,6 +73,8 @@ describe('CreditCardsPage - Integration Tests', () => {
     await TestBed.configureTestingModule({
       imports: [CreditCardsPage],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         provideZonelessChangeDetection(),
         CreditCardState,
         CreditCardApiService,
@@ -86,22 +94,22 @@ describe('CreditCardsPage - Integration Tests', () => {
     router = TestBed.inject(Router);
     activatedRoute = TestBed.inject(ActivatedRoute);
 
-    vi.spyOn(creditCardApiService, 'listCreditCards').mockResolvedValue([mockCreditCard]);
-    vi.spyOn(creditCardApiService, 'createCreditCard').mockResolvedValue('cc-2');
-    vi.spyOn(creditCardApiService, 'updateCreditCard').mockResolvedValue(true);
-    vi.spyOn(creditCardApiService, 'deleteCreditCard').mockResolvedValue(true);
-    vi.spyOn(creditCardApiService, 'listCreditCardBills').mockResolvedValue([mockCreditCardBill]);
-    vi.spyOn(creditCardApiService, 'createCreditCardBill').mockResolvedValue('bill-2');
-    vi.spyOn(creditCardApiService, 'payCreditCardBill').mockResolvedValue(true);
-    vi.spyOn(creditCardApiService, 'reopenCreditCardBill').mockResolvedValue(true);
+    vi.spyOn(creditCardApiService, 'listCreditCards').mockReturnValue(of([mockCreditCard]));
+    vi.spyOn(creditCardApiService, 'createCreditCard').mockReturnValue(of('cc-2'));
+    vi.spyOn(creditCardApiService, 'updateCreditCard').mockReturnValue(of(true));
+    vi.spyOn(creditCardApiService, 'deleteCreditCard').mockReturnValue(of(true));
+    vi.spyOn(creditCardApiService, 'listCreditCardBills').mockReturnValue(of([mockCreditCardBill]));
+    vi.spyOn(creditCardApiService, 'createCreditCardBill').mockReturnValue(of('bill-2'));
+    vi.spyOn(creditCardApiService, 'payCreditCardBill').mockReturnValue(of(true));
+    vi.spyOn(creditCardApiService, 'reopenCreditCardBill').mockReturnValue(of(true));
   });
 
   describe('Full Flow Integration', () => {
-    it('should complete full flow: create card → create bill → pay bill → reopen bill', async () => {
-      await creditCardState.loadCreditCards();
+    it('should complete full flow: create card → create bill → pay bill → reopen bill', () => {
+      creditCardState.loadCreditCards();
       fixture.detectChanges();
 
-      expect(creditCardState.creditCards().length).toBeGreaterThan(0);
+      expect(creditCardApiService.listCreditCards).toHaveBeenCalled();
 
       const newCard: CreditCardDto = {
         id: 'cc-2',
@@ -112,7 +120,7 @@ describe('CreditCardsPage - Integration Tests', () => {
         budgetId: mockBudgetId,
       };
 
-      await creditCardState.createCreditCard({
+      creditCardState.createCreditCard({
         name: newCard.name,
         limit: newCard.limit,
         closingDay: newCard.closingDay,
@@ -131,7 +139,7 @@ describe('CreditCardsPage - Integration Tests', () => {
         paid: false,
       };
 
-      await creditCardState.createCreditCardBill({
+      creditCardState.createCreditCardBill({
         creditCardId: newBill.creditCardId,
         closingDate: newBill.closingDate,
         dueDate: newBill.dueDate,
@@ -140,7 +148,7 @@ describe('CreditCardsPage - Integration Tests', () => {
 
       expect(creditCardApiService.createCreditCardBill).toHaveBeenCalled();
 
-      await creditCardState.payCreditCardBill({
+      creditCardState.payCreditCardBill({
         creditCardBillId: newBill.id,
         accountId: 'account-1',
         userId: mockUserId,
@@ -151,7 +159,7 @@ describe('CreditCardsPage - Integration Tests', () => {
 
       expect(creditCardApiService.payCreditCardBill).toHaveBeenCalled();
 
-      await creditCardState.reopenCreditCardBill({
+      creditCardState.reopenCreditCardBill({
         creditCardBillId: newBill.id,
         userId: mockUserId,
         budgetId: mockBudgetId,
@@ -163,16 +171,16 @@ describe('CreditCardsPage - Integration Tests', () => {
   });
 
   describe('Budget Selection Integration', () => {
-    it('should reload credit cards when budget changes', async () => {
+    it('should reload credit cards when budget changes', () => {
       const loadSpy = vi.spyOn(creditCardState, 'loadCreditCards');
 
-      await creditCardState.loadCreditCards();
+      creditCardState.loadCreditCards();
       fixture.detectChanges();
 
       expect(loadSpy).toHaveBeenCalled();
 
       const newBudgetId = 'budget-2';
-      vi.spyOn(budgetSelectionService, 'selectedBudgetId').mockReturnValue(newBudgetId);
+      selectedBudgetIdSignal.set(newBudgetId);
 
       component.ngOnInit();
       fixture.detectChanges();

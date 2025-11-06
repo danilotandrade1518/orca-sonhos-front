@@ -742,3 +742,4 @@ Item de fatura dentro do card expandido, mostrando informações resumidas da fa
 - **Jornada do Cliente**: `customer-journey.md` - Touchpoints e estágios de engajamento (Estágio: Adoção)
 - **Conceitos Centrais**: `core-concepts.md` - Domínio financeiro e regras de negócio (Gestão de Cartões, Sistema Dual)
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Diferenciação e valor único (Gestão Integrada de Cartões #5, Sistema Dual #6)
+

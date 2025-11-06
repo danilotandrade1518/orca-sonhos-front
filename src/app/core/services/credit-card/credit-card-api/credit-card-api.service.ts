@@ -186,10 +186,10 @@ export class CreditCardApiService {
 
     const params: Record<string, string> = {};
     if (creditCardId) {
-      params.creditCardId = creditCardId;
+      params['creditCardId'] = creditCardId;
     }
     if (budgetId) {
-      params.budgetId = budgetId;
+      params['budgetId'] = budgetId;
     }
 
     return this.api.getRaw<ListCreditCardBillsResponseDto>('/credit-card-bills', params).pipe(

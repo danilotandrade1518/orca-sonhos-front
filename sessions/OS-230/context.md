@@ -179,3 +179,4 @@ A implementação seguirá o padrão Clean Architecture estabelecido no projeto:
 - **MSW Handlers**: `src/app/core/mocks/handlers/credit-cards.handlers.ts`
 - **Backlog**: `temp/backlog-features-incremental.md` - Card 12
 - **Meta Specs**: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
+

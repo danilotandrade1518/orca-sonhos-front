@@ -99,7 +99,7 @@ export class CreditCardState {
     this._error.set(null);
 
     this.creditCardApi
-      .listCreditCardBills(creditCardId, selectedBudgetId)
+      .listCreditCardBills(creditCardId, selectedBudgetId || undefined)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (bills) => {

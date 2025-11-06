@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -9,6 +11,8 @@ import { TransactionsApiService } from '../../services/transactions-api.service'
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '@core/adapters/external-auth-service.adapter';
+import { MockExternalAuthServiceAdapter } from '@core/services/auth/__mocks__/external-auth-service.adapter.mock';
 
 describe('TransactionFormComponent', () => {
   let component: TransactionFormComponent;
@@ -18,36 +22,50 @@ describe('TransactionFormComponent', () => {
     create: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
   };
-  let authService: { currentUser: ReturnType<typeof vi.fn> };
   let notificationService: {
     showSuccess: ReturnType<typeof vi.fn>;
     showError: ReturnType<typeof vi.fn>;
+    setLoading: ReturnType<typeof vi.fn>;
   };
-  let budgetSelection: { selectedBudgetId: ReturnType<typeof vi.fn> };
+  let budgetSelection: { selectedBudgetId: ReturnType<typeof signal<string | null>> };
+  let selectedBudgetIdSignal: ReturnType<typeof signal<string | null>>;
+  let mockAuthAdapter: MockExternalAuthServiceAdapter;
 
   beforeEach(async () => {
     transactionsApi = {
       create: vi.fn(),
       update: vi.fn(),
     };
-    authService = {
-      currentUser: vi.fn(() => ({ id: 'user-1' })),
-    };
     notificationService = {
       showSuccess: vi.fn(),
       showError: vi.fn(),
+      setLoading: vi.fn(),
     };
+    selectedBudgetIdSignal = signal<string | null>('budget-1');
     budgetSelection = {
-      selectedBudgetId: vi.fn(() => 'budget-1'),
+      selectedBudgetId: selectedBudgetIdSignal,
     };
+    mockAuthAdapter = new MockExternalAuthServiceAdapter();
+    mockAuthAdapter.setMockUser({
+      id: 'user-1',
+      email: 'test@example.com',
+      name: 'Test User',
+      avatar: null,
+      metadata: {},
+    });
 
     await TestBed.configureTestingModule({
       imports: [TransactionFormComponent, ReactiveFormsModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: TransactionsApiService, useValue: transactionsApi },
-        { provide: AuthService, useValue: authService },
         { provide: NotificationService, useValue: notificationService },
         { provide: BudgetSelectionService, useValue: budgetSelection },
+        {
+          provide: EXTERNAL_AUTH_SERVICE_ADAPTER,
+          useValue: mockAuthAdapter,
+        },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
@@ -129,7 +147,7 @@ describe('TransactionFormComponent', () => {
   });
 
   it('should show error when user not authenticated', async () => {
-    authService.currentUser = vi.fn(() => null);
+    mockAuthAdapter.setMockUser(null);
 
     component['descriptionControl']()?.setValue('D');
     component['descriptionControl']()?.setValue('Compra teste');
@@ -144,7 +162,7 @@ describe('TransactionFormComponent', () => {
   });
 
   it('should show error when no budget selected', async () => {
-    budgetSelection.selectedBudgetId = vi.fn(() => '');
+    selectedBudgetIdSignal.set(null);
 
     component['descriptionControl']()?.setValue('Compra');
     component['amountControl']()?.setValue(10);
