@@ -222,6 +222,18 @@ export class OsIconComponent {
     'light_mode',
     'dark_mode',
     'brightness_auto',
+    'list',
+    'pie_chart',
+    'target',
+    'alert-circle',
+    'expand_less',
+    'expand_more',
+    'visibility',
+    'check-circle',
+    'lock',
+    'custom-icon',
+    'unsupported-icon',
+    'credit_card',
   ]);
 
   iconContent = computed(() => {
@@ -360,6 +372,18 @@ export class OsIconComponent {
       light_mode: 'light_mode',
       dark_mode: 'dark_mode',
       brightness_auto: 'brightness_auto',
+      list: 'list',
+      pie_chart: 'pie_chart',
+      target: 'gps_fixed',
+      'alert-circle': 'error_outline',
+      expand_less: 'expand_less',
+      expand_more: 'expand_more',
+      visibility: 'visibility',
+      'check-circle': 'check_circle',
+      lock: 'lock',
+      'custom-icon': 'help',
+      'unsupported-icon': 'help',
+      credit_card: 'credit_card',
     };
 
     return iconMap[iconName] || this.fallbackIcon();
