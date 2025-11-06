@@ -20,6 +20,7 @@ import { TransactionsApiService } from '../../services/transactions-api.service'
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
@@ -146,6 +147,25 @@ import type { OsDropdownOption } from '@shared/ui-components/molecules/os-dropdo
             (valueChange)="onDateChange($event)"
           />
         </div>
+
+        <div class="transaction-form__payment-method-field">
+          <os-form-field
+            label="Forma de Pagamento"
+            [required]="false"
+            [control]="creditCardIdControl()"
+            [errorMessage]="getCreditCardIdErrorMessage()"
+          />
+        </div>
+        <os-dropdown
+          [options]="creditCardOptions()"
+          [selectedValue]="creditCardIdControl()?.value ?? ''"
+          [disabled]="loading() || creditCardOptions().length === 0"
+          (valueChange)="onCreditCardChange($event)"
+          size="medium"
+          variant="default"
+          placeholder="Selecione a forma de pagamento"
+          ariaLabel="Forma de pagamento"
+        />
       </os-form-template>
     </os-modal-template>
   `,
@@ -154,7 +174,8 @@ import type { OsDropdownOption } from '@shared/ui-components/molecules/os-dropdo
       .transaction-form__type-field,
       .transaction-form__account-field,
       .transaction-form__category-field,
-      .transaction-form__date-field {
+      .transaction-form__date-field,
+      .transaction-form__payment-method-field {
         margin-bottom: 16px;
       }
 
@@ -172,6 +193,7 @@ export class TransactionFormComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
   private readonly budgetSelection = inject(BudgetSelectionService);
+  private readonly creditCardState = inject(CreditCardState);
 
   readonly transaction = input<TransactionDto | null>(null);
   readonly accountOptions = input<{ value: string; label: string }[]>([]);
@@ -198,12 +220,26 @@ export class TransactionFormComponent implements OnInit {
   readonly transactionDateControl = computed(
     () => this._form()?.get('transactionDate') as FormControl | null
   );
+  readonly creditCardIdControl = computed(
+    () => this._form()?.get('creditCardId') as FormControl | null
+  );
 
   readonly transactionDateValue = computed(() => {
     const control = this.transactionDateControl();
     if (!control?.value) return null;
     const date = typeof control.value === 'string' ? new Date(control.value) : control.value;
     return date instanceof Date && !isNaN(date.getTime()) ? date : null;
+  });
+
+  readonly creditCardOptions = computed<OsDropdownOption[]>(() => {
+    const creditCards = this.creditCardState.creditCardsByBudgetId();
+    return [
+      { value: '', label: 'Nenhum (Dinheiro/Transferência)' },
+      ...creditCards.map((card) => ({
+        value: card.id,
+        label: card.name,
+      })),
+    ];
   });
 
   readonly typeOptions = computed<OsDropdownOption[]>(() => [
@@ -272,7 +308,20 @@ export class TransactionFormComponent implements OnInit {
     return '';
   });
 
+  readonly getCreditCardIdErrorMessage = computed(() => {
+    const control = this.creditCardIdControl();
+    if (!control || !control.touched) return '';
+    return '';
+  });
+
   constructor() {
+    effect(() => {
+      const budgetId = this.budgetSelection.selectedBudgetId();
+      if (budgetId) {
+        this.creditCardState.loadCreditCards();
+      }
+    });
+
     effect(() => {
       const transaction = this.transaction();
       const form = this._form();
@@ -285,6 +334,7 @@ export class TransactionFormComponent implements OnInit {
           accountId: transaction.accountId || '',
           categoryId: transaction.categoryId || '',
           transactionDate: transactionDate ? new Date(transactionDate) : null,
+          creditCardId: (transaction as any).creditCardId || '',
         });
       }
     });
@@ -313,6 +363,7 @@ export class TransactionFormComponent implements OnInit {
         Validators.required,
       ]),
       transactionDate: new FormControl<Date | null>(null),
+      creditCardId: new FormControl<string>((initialTransaction as any)?.creditCardId || ''),
     });
 
     if (initialTransaction?.transactionDate || initialTransaction?.date) {
@@ -357,6 +408,14 @@ export class TransactionFormComponent implements OnInit {
     }
   }
 
+  onCreditCardChange(value: string | number | boolean): void {
+    const control = this.creditCardIdControl();
+    if (control) {
+      control.setValue(String(value));
+      control.markAsTouched();
+    }
+  }
+
   async onSubmit(): Promise<void> {
     const form = this._form();
     if (!form || !form.valid) {
@@ -394,7 +453,8 @@ export class TransactionFormComponent implements OnInit {
             categoryId: formValue.categoryId,
             budgetId,
             transactionDate,
-          })
+            creditCardId: formValue.creditCardId || undefined,
+          } as any)
         );
 
         if (result) {
@@ -417,7 +477,8 @@ export class TransactionFormComponent implements OnInit {
             categoryId: formValue.categoryId,
             budgetId,
             transactionDate,
-          })
+            creditCardId: formValue.creditCardId || undefined,
+          } as any)
         );
 
         if (result?.data?.success) {

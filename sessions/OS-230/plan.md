@@ -629,7 +629,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 ---
 
-## 📅 FASE 6: Integrações e Finalização [Status: ⏳]
+## 📅 FASE 6: Integrações e Finalização [Status: ⏰ Em Progresso]
 
 ### 🎯 Objetivo
 
@@ -637,7 +637,7 @@ Finalizar integrações com outras features, melhorar UX, adicionar testes e val
 
 ### 📋 Tarefas
 
-#### Integrar com Transactions (campo "Forma de Pagamento") [⏳]
+#### Integrar com Transactions (campo "Forma de Pagamento") [✅]
 
 **Descrição**: Adicionar campo "Forma de Pagamento" em formulário de transações com opção de selecionar cartão de crédito
 **Arquivos**: `src/app/features/transactions/` (componente de formulário)
@@ -650,7 +650,7 @@ Finalizar integrações com outras features, melhorar UX, adicionar testes e val
 
 **Dependências**: FASE 2 completa
 
-#### Melhorar componente credit-card-card com faturas [⏳]
+#### Melhorar componente credit-card-card com faturas [✅]
 
 **Descrição**: Adicionar funcionalidade de expansão no card para mostrar faturas associadas:
 
@@ -667,7 +667,7 @@ Finalizar integrações com outras features, melhorar UX, adicionar testes e val
 
 **Dependências**: FASE 3 e FASE 5 completas
 
-#### Criar componente credit-card-bill-item [⏳]
+#### Criar componente credit-card-bill-item [✅]
 
 **Descrição**: Item de fatura dentro do card expandido:
 
@@ -732,19 +732,28 @@ Finalizar integrações com outras features, melhorar UX, adicionar testes e val
 
 ### 🧪 Critérios de Validação
 
-- [ ] Integração com Transactions funcionando
-- [ ] Card com expansão de faturas funcionando
-- [ ] Componente bill-item criado e integrado
+- [x] Integração com Transactions funcionando
+- [x] Card com expansão de faturas funcionando
+- [x] Componente bill-item criado e integrado
 - [ ] Testes de integração passando
 - [ ] Responsividade validada em todos os breakpoints
 - [ ] Acessibilidade WCAG 2.1 AA validada
 - [ ] Código revisado e otimizado
 - [ ] Cobertura de testes > 80%
-- [ ] Sem erros de lint/type-check
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre finalização]_
+- **Decisão**: Campo "Forma de Pagamento" adicionado como opcional no formulário de transações, integrado com `CreditCardState` para obter lista de cartões
+- **Implementação**:
+  - Campo "Forma de Pagamento" adicionado em `TransactionFormComponent` com dropdown de cartões
+  - Integração com `CreditCardState` para carregar cartões automaticamente quando orçamento muda
+  - Componente `credit-card-bill-item` criado para exibir faturas dentro do card expandido
+  - Componente `credit-card-card` melhorado com funcionalidade de expansão de faturas
+  - Botão de expansão com contador de faturas e lista de faturas quando expandido
+  - Integração com modais de pagamento e reabertura via outputs do card
+- **Validação**: TypeScript e lint validados sem erros
+- **Pendente**: Testes de integração, validação de responsividade e acessibilidade, revisão final
 
 ---
 

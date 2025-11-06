@@ -134,8 +134,11 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
           <os-credit-card-card
             [creditCard]="creditCard"
             [actions]="{ edit: true, delete: true }"
+            [showBills]="true"
             (edit)="onEditCreditCard($event)"
             (delete)="onDeleteCreditCard($event)"
+            (payBill)="onPayBill($event)"
+            (reopenBill)="onReopenBill($event)"
           />
           }
         </div>
@@ -310,5 +313,13 @@ export class CreditCardsPage implements OnInit {
   closeReopenBillModal(): void {
     this.showReopenBillModal.set(false);
     this.reopeningBill.set(null);
+  }
+
+  onPayBill(bill: CreditCardBillDto): void {
+    this.openPayBillModal(bill);
+  }
+
+  onReopenBill(bill: CreditCardBillDto): void {
+    this.openReopenBillModal(bill);
   }
 }

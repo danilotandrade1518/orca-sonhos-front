@@ -1,9 +1,13 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
+import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { CreditCardBillItemComponent } from '../credit-card-bill-item/credit-card-bill-item.component';
 import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
+import { CreditCardBillDto } from '../../../../../dtos/credit-card/credit-card-bill-types';
+import { CreditCardState } from '../../../../core/services/credit-card/credit-card-state/credit-card.state';
 
 @Component({
   selector: 'os-credit-card-card',
@@ -12,6 +16,8 @@ import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsButtonComponent,
+    OsIconComponent,
+    CreditCardBillItemComponent,
   ],
   template: `
     <os-card
@@ -32,7 +38,7 @@ import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types
         <div class="os-credit-card-card__limit">
           <span class="os-credit-card-card__limit-label">Limite</span>
           <os-money-display
-            [value]="creditCard().limit"
+            [value]="creditCard().limit / 100"
             [currency]="'BRL'"
             [size]="'lg'"
             [ariaLabel]="getLimitAriaLabel()"
@@ -49,6 +55,44 @@ import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types
             <span class="os-credit-card-card__info-value">Dia {{ creditCard().dueDay }}</span>
           </div>
         </div>
+
+        @if (showBills()) {
+        <div class="os-credit-card-card__bills-section">
+          <button
+            type="button"
+            class="os-credit-card-card__expand-button"
+            [attr.aria-expanded]="isExpanded()"
+            [attr.aria-label]="getExpandButtonAriaLabel()"
+            (click)="toggleExpanded()"
+          >
+            <span class="os-credit-card-card__expand-label">Faturas ({{ billsCount() }})</span>
+            <os-icon
+              [name]="isExpanded() ? 'expand_less' : 'expand_more'"
+              [size]="'sm'"
+              [attr.aria-hidden]="true"
+            />
+          </button>
+
+          @if (isExpanded()) {
+          <div class="os-credit-card-card__bills-list" role="list" [attr.aria-label]="'Lista de faturas'">
+            @if (bills().length === 0) {
+            <p class="os-credit-card-card__bills-empty">Nenhuma fatura encontrada</p>
+            } @else {
+            @for (bill of bills(); track bill.id) {
+            <div class="os-credit-card-card__bill-item" role="listitem">
+              <os-credit-card-bill-item
+                [bill]="bill"
+                [actions]="{ pay: true, reopen: true }"
+                (pay)="onPayBill($event)"
+                (reopen)="onReopenBill($event)"
+              />
+            </div>
+            }
+            }
+          </div>
+          }
+        </div>
+        }
       </div>
 
       @if (actions()?.edit || actions()?.delete) {
@@ -78,11 +122,26 @@ import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardCardComponent {
+  private readonly creditCardState = inject(CreditCardState);
+
   creditCard = input.required<CreditCardDto>();
   actions = input<{ edit: boolean; delete: boolean } | undefined>(undefined);
+  showBills = input<boolean>(true);
 
   edit = output<CreditCardDto>();
   delete = output<CreditCardDto>();
+  payBill = output<CreditCardBillDto>();
+  reopenBill = output<CreditCardBillDto>();
+
+  private readonly _isExpanded = signal<boolean>(false);
+  readonly isExpanded = this._isExpanded.asReadonly();
+
+  readonly bills = computed(() => {
+    if (!this.showBills()) return [];
+    return this.creditCardState.billsByCreditCardId(this.creditCard().id);
+  });
+
+  readonly billsCount = computed(() => this.bills().length);
 
   ariaLabelText = computed(() => {
     const card = this.creditCard();
@@ -110,11 +169,35 @@ export class CreditCardCardComponent {
     }
   }
 
+  toggleExpanded(): void {
+    const newExpanded = !this._isExpanded();
+    this._isExpanded.set(newExpanded);
+    if (newExpanded && this.showBills()) {
+      this.creditCardState.loadCreditCardBills(this.creditCard().id);
+    }
+  }
+
+  onPayBill(bill: CreditCardBillDto): void {
+    this.payBill.emit(bill);
+  }
+
+  onReopenBill(bill: CreditCardBillDto): void {
+    this.reopenBill.emit(bill);
+  }
+
+  getExpandButtonAriaLabel = computed(() => {
+    const count = this.billsCount();
+    const expanded = this.isExpanded();
+    return expanded
+      ? `Recolher lista de faturas (${count} faturas)`
+      : `Expandir lista de faturas (${count} faturas)`;
+  });
+
   private formatLimit(limit: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
-    }).format(limit);
+    }).format(limit / 100);
   }
 }
 
