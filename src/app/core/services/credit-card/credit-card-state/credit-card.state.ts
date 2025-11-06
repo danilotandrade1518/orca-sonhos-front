@@ -180,9 +180,7 @@ export class CreditCardState {
         error: (error) => {
           const errorMessage = error?.message || '';
           if (errorMessage.includes('bills') || errorMessage.includes('faturas')) {
-            this._error.set(
-              'O cartão possui faturas vinculadas e não pode ser excluído.'
-            );
+            this._error.set('O cartão possui faturas vinculadas e não pode ser excluído.');
           } else {
             this._error.set(
               errorMessage ||
@@ -369,4 +367,3 @@ export class CreditCardState {
     this.loadCreditCardBills(creditCardId);
   }
 }
-
