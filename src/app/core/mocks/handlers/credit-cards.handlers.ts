@@ -40,7 +40,7 @@ const mockCreditCardBills = [
 
 export const creditCardHandlers = [
   // Credit Card endpoints
-  http.post('/credit-card/create-credit-card', async ({ request }) => {
+  http.post('/api/credit-card/create-credit-card', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -77,7 +77,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ id: newCreditCard.id }, { status: 201 });
   }),
 
-  http.post('/credit-card/update-credit-card', async ({ request }) => {
+  http.post('/api/credit-card/update-credit-card', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -105,7 +105,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/credit-card/delete-credit-card', async ({ request }) => {
+  http.post('/api/credit-card/delete-credit-card', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -122,7 +122,7 @@ export const creditCardHandlers = [
   }),
 
   // Credit Card Bill endpoints
-  http.post('/credit-card-bill/create-credit-card-bill', async ({ request }) => {
+  http.post('/api/credit-card-bill/create-credit-card-bill', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -151,7 +151,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ id: newBill.id }, { status: 201 });
   }),
 
-  http.post('/credit-card-bill/update-credit-card-bill', async ({ request }) => {
+  http.post('/api/credit-card-bill/update-credit-card-bill', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -171,7 +171,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/credit-card-bill/delete-credit-card-bill', async ({ request }) => {
+  http.post('/api/credit-card-bill/delete-credit-card-bill', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -187,7 +187,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/credit-card-bill/pay-credit-card-bill', async ({ request }) => {
+  http.post('/api/credit-card-bill/pay-credit-card-bill', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -214,7 +214,7 @@ export const creditCardHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/credit-card-bill/reopen-credit-card-bill', async ({ request }) => {
+  http.post('/api/credit-card-bill/reopen-credit-card-bill', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
