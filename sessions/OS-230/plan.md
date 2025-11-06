@@ -366,7 +366,7 @@ Criar componente reutilizável `credit-card-card` (molecule) para exibir informa
 
 ---
 
-## 📅 FASE 4: Feature Credit Cards - Página e Rotas [Status: ⏳]
+## 📅 FASE 4: Feature Credit Cards - Página e Rotas [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -374,7 +374,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 ### 📋 Tarefas
 
-#### Criar estrutura da feature [⏳]
+#### Criar estrutura da feature [✅]
 
 **Descrição**: Criar estrutura de diretórios
 **Arquivos**:
@@ -388,7 +388,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 **Dependências**: FASE 2 e FASE 3 completas
 
-#### Implementar rotas lazy loading [⏳]
+#### Implementar rotas lazy loading [✅]
 
 **Descrição**: Criar `credit-cards.routes.ts` com:
 
@@ -404,7 +404,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 - `src/app/features/accounts/accounts.routes.ts` para padrão
 
-#### Implementar página principal [⏳]
+#### Implementar página principal [✅]
 
 **Descrição**: Criar `CreditCardsPage` com:
 
@@ -430,7 +430,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 - `src/app/features/accounts/pages/accounts/accounts.page.ts` para padrão
 
-#### Adicionar rota no app.routes.ts [⏳]
+#### Adicionar rota no app.routes.ts [✅]
 
 **Descrição**: Adicionar rota lazy para `/credit-cards` em `app.routes.ts`
 
@@ -442,7 +442,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 - `src/app/app.routes.ts` para padrão
 
-#### Adicionar item no menu/sidebar [⏳]
+#### Adicionar item no menu/sidebar [✅]
 
 **Descrição**: Adicionar item "Cartões de Crédito" no menu de navegação
 **Arquivos**: `src/app/core/layout/app-layout.component.ts` (ou componente de menu)
@@ -453,18 +453,30 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 ### 🧪 Critérios de Validação
 
-- [ ] Rotas lazy loading funcionando
-- [ ] Página renderiza corretamente
-- [ ] Estados (loading, error, empty, success) implementados
-- [ ] Grid responsivo funcionando
-- [ ] Integração com `CreditCardState` funcionando
-- [ ] Filtragem automática por orçamento funcionando
-- [ ] Item no menu adicionado
-- [ ] Sem erros de lint/type-check
+- [x] Rotas lazy loading funcionando
+- [x] Página renderiza corretamente
+- [x] Estados (loading, error, empty, success) implementados
+- [x] Grid responsivo funcionando
+- [x] Integração com `CreditCardState` funcionando
+- [x] Filtragem automática por orçamento funcionando
+- [x] Item no menu adicionado
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre implementação]_
+- **Decisão**: Seguimos o padrão de `AccountsPage` para consistência visual e arquitetural
+- **Implementação**: Página principal criada com:
+  - Header com título, subtítulo e ações (Novo Cartão, Nova Fatura)
+  - Grid responsivo de cards (1 col mobile, 2 tablet, 3-4 desktop)
+  - Estados completos: loading, error, empty, success
+  - Integração com `CreditCardState` e `BudgetSelectionService`
+  - Effect para recarregar quando orçamento muda (com `untracked()` para evitar loops)
+  - Modais condicionais baseados em route data (estrutura pronta para FASE 5)
+  - Acessibilidade completa: ARIA labels, live regions, keyboard navigation
+  - ChangeDetection OnPush para otimização de performance
+- **Rotas**: Lazy loading implementado seguindo padrão de Accounts
+- **Menu**: Item "Cartões de Crédito" adicionado no sidebar com ícone `credit_card`
+- **Validação**: TypeScript e lint validados sem erros
 
 ---
 
