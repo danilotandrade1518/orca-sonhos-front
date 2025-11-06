@@ -19,7 +19,6 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
-import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
 import {
   OsSelectComponent,
   type OsSelectOption,
@@ -35,7 +34,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     ReactiveFormsModule,
     OsModalTemplateComponent,
     OsFormTemplateComponent,
-    OsFormFieldComponent,
     OsSelectComponent,
     OsMoneyInputComponent,
   ],
