@@ -14,3 +14,5 @@ export * from './os-goal-progress-card/os-goal-progress-card.component';
 export * from './os-budget-selector/os-budget-selector.component';
 export * from './transfer-form/transfer-form.component';
 export * from './reconcile-form/reconcile-form.component';
+export * from './credit-card-card/credit-card-card.component';
+export * from './credit-card-bill-item/credit-card-bill-item.component';

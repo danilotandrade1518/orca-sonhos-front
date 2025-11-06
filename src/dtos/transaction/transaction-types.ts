@@ -4,11 +4,12 @@ export interface TransactionDto {
   id: string;
   description: string;
   amount: number;
-  type?: TransactionType; 
-  direction?: TransactionType; 
+  type?: TransactionType;
+  direction?: TransactionType;
   accountId?: string;
   categoryId?: string;
   budgetId?: string;
-  transactionDate?: string; 
-  date?: string; 
+  transactionDate?: string;
+  date?: string;
+  creditCardId?: string;
 }

@@ -9,6 +9,7 @@ export interface CreateTransactionRequestDto {
   categoryId: string;
   budgetId: string;
   transactionDate?: string;
+  creditCardId?: string;
 }
 
 export interface CreateTransactionResponseDto {
