@@ -8,7 +8,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TransactionFormComponent } from './transaction-form.component';
 import { TransactionsApiService } from '../../services/transactions-api.service';
-import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '@core/adapters/external-auth-service.adapter';

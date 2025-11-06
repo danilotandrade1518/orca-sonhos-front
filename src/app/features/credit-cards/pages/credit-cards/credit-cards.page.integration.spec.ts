@@ -20,7 +20,6 @@ describe('CreditCardsPage - Integration Tests', () => {
   let fixture: ComponentFixture<CreditCardsPage>;
   let creditCardState: CreditCardState;
   let creditCardApiService: CreditCardApiService;
-  let budgetSelectionService: BudgetSelectionService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
 
@@ -90,7 +89,6 @@ describe('CreditCardsPage - Integration Tests', () => {
     component = fixture.componentInstance;
     creditCardState = TestBed.inject(CreditCardState);
     creditCardApiService = TestBed.inject(CreditCardApiService);
-    budgetSelectionService = TestBed.inject(BudgetSelectionService);
     router = TestBed.inject(Router);
     activatedRoute = TestBed.inject(ActivatedRoute);
 
