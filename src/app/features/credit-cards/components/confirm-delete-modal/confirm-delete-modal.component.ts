@@ -128,4 +128,3 @@ export class ConfirmDeleteCreditCardModalComponent {
     this.closed.emit();
   }
 }
-

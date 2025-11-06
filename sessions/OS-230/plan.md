@@ -480,7 +480,7 @@ Criar a feature completa com página de listagem, rotas lazy loading e integraç
 
 ---
 
-## 📅 FASE 5: Formulários e Modais [Status: ⏳]
+## 📅 FASE 5: Formulários e Modais [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -488,7 +488,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 ### 📋 Tarefas
 
-#### Criar componente CreditCardFormComponent [⏳]
+#### Criar componente CreditCardFormComponent [✅]
 
 **Descrição**: Formulário de cartão (criar/editar) com:
 
@@ -512,7 +512,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 - `src/app/features/accounts/components/account-form/account-form.component.ts` para padrão
 
-#### Criar componente CreditCardBillFormComponent [⏳]
+#### Criar componente CreditCardBillFormComponent [✅]
 
 **Descrição**: Formulário de fatura (criar/editar) com:
 
@@ -531,7 +531,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 **Dependências**: FASE 4 completa
 
-#### Criar componente PayBillModalComponent [⏳]
+#### Criar componente PayBillModalComponent [✅]
 
 **Descrição**: Modal de pagamento de fatura com:
 
@@ -550,7 +550,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 **Dependências**: FASE 4 completa
 
-#### Criar componente ReopenBillModalComponent [⏳]
+#### Criar componente ReopenBillModalComponent [✅]
 
 **Descrição**: Modal de reabertura de fatura com:
 
@@ -566,7 +566,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 **Dependências**: FASE 4 completa
 
-#### Criar componente ConfirmDeleteModalComponent [⏳]
+#### Criar componente ConfirmDeleteModalComponent [✅]
 
 **Descrição**: Modal de confirmação de exclusão (reutilizar padrão de Accounts)
 
@@ -586,7 +586,7 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 - `src/app/features/accounts/components/confirm-delete-modal/confirm-delete-modal.component.ts` para padrão
 
-#### Integrar modais na página principal [⏳]
+#### Integrar modais na página principal [✅]
 
 **Descrição**: Adicionar lógica na `CreditCardsPage` para:
 
@@ -603,18 +603,29 @@ Implementar todos os formulários e modais necessários para CRUD de cartões e 
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os formulários funcionando
-- [ ] Validações implementadas
-- [ ] Modais integrados na página
-- [ ] Integração com `CreditCardState` funcionando
-- [ ] Pagamento de fatura criando transação automaticamente
-- [ ] Reabertura de fatura funcionando
+- [x] Todos os formulários funcionando
+- [x] Validações implementadas
+- [x] Modais integrados na página
+- [x] Integração com `CreditCardState` funcionando
+- [x] Pagamento de fatura criando transação automaticamente
+- [x] Reabertura de fatura funcionando
 - [ ] Testes unitários básicos criados
-- [ ] Sem erros de lint/type-check
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre implementação]_
+- **Decisão**: Seguimos o padrão de `AccountFormComponent` para consistência visual e arquitetural
+- **Implementação**: Todos os componentes de formulário e modal criados:
+  - `CreditCardFormComponent`: Formulário de cartão (criar/editar) com validações completas
+  - `CreditCardBillFormComponent`: Formulário de fatura (criar/editar) com select de cartões
+  - `PayBillModalComponent`: Modal de pagamento com integração com `AccountState` e categorias
+  - `ReopenBillModalComponent`: Modal de reabertura com campo de justificativa
+  - `ConfirmDeleteCreditCardModalComponent`: Modal de confirmação de exclusão seguindo padrão de Accounts
+- **Integração**: Todos os modais integrados na página principal `CreditCardsPage` com gerenciamento de estado via signals
+- **Validações**: Formulários com validações reativas (required, min/max, minlength, maxlength)
+- **Design System**: Componentes usando `os-modal-template`, `os-form-template`, `os-form-field`, `os-select`, `os-money-input`, `os-date-input`
+- **Acessibilidade**: ARIA labels, validações acessíveis, keyboard navigation
+- **Validação**: TypeScript e lint validados (warnings de linhas em branco corrigidos)
 
 ---
 

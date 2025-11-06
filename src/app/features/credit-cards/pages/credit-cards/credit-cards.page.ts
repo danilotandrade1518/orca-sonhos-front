@@ -312,4 +312,3 @@ export class CreditCardsPage implements OnInit {
     this.reopeningBill.set(null);
   }
 }
-

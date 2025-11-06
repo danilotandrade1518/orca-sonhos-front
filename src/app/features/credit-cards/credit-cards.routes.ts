@@ -22,4 +22,3 @@ export const CREDIT_CARDS_ROUTES: Routes = [
     data: { modalMode: 'edit' },
   },
 ];
-

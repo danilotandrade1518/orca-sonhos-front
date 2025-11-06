@@ -175,10 +175,85 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - FASE 5
+
+**Fase**: FASE 5: Formulários e Modais
+**Objetivo**: Implementar todos os formulários e modais necessários para CRUD de cartões e faturas, pagamento e reabertura.
+
+#### ✅ Trabalho Realizado
+
+- ✅ `CreditCardFormComponent` criado e implementado:
+  - Formulário de cartão (criar/editar) com campos: nome, limite, dia fechamento, dia vencimento
+  - Validações: required, min/max para dias (1-31), positivo para limite
+  - Usa `os-modal-template` e `os-form-template` como base
+  - Integração com `CreditCardState` para criar/atualizar cartões
+  - Modo: 'create' ou 'edit' com computed signals para configuração dinâmica
+  - ChangeDetection: OnPush
+- ✅ `CreditCardBillFormComponent` criado e implementado:
+  - Formulário de fatura (criar/editar) com campos: cartão (select), data fechamento, data vencimento, valor
+  - Validações: required, valor positivo
+  - Select de cartões integrado com `CreditCardState.creditCardsByBudgetId()`
+  - Usa `os-date-input` para datas e `os-money-input` para valores
+  - ChangeDetection: OnPush
+- ✅ `PayBillModalComponent` criado e implementado:
+  - Modal de pagamento de fatura com campos: conta (select), categoria de pagamento (select), valor (readonly)
+  - Integração com `AccountState` para lista de contas
+  - Categorias de pagamento hardcoded (futuro: integrar com `TransactionService`)
+  - Integração com `CreditCardState.payCreditCardBill()` para criar transação automaticamente
+  - ChangeDetection: OnPush
+- ✅ `ReopenBillModalComponent` criado e implementado:
+  - Modal de reabertura de fatura com campo: justificativa (textarea, required)
+  - Validações: required, minlength (10), maxlength (500)
+  - Integração com `CreditCardState.reopenCreditCardBill()`
+  - ChangeDetection: OnPush
+- ✅ `ConfirmDeleteCreditCardModalComponent` criado e implementado:
+  - Modal de confirmação de exclusão seguindo padrão de Accounts
+  - Usa `os-modal-template` com variant 'compact' e size 'small'
+  - Integração com `CreditCardState.deleteCreditCard()`
+  - Effect para detectar conclusão da exclusão e mostrar notificações
+  - ChangeDetection: OnPush
+- ✅ Integração dos modais na página principal:
+  - Todos os modais integrados na `CreditCardsPage`
+  - Gerenciamento de estado via signals (`showCreateModal`, `showEditModal`, `showDeleteModal`, etc.)
+  - Modais condicionais baseados em rotas e ações
+  - Atualização automática da lista após mutations
+- ✅ Correção de warnings de lint:
+  - Removidas linhas em branco no final dos arquivos dos componentes
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Seguimos o padrão de `AccountFormComponent` para consistência visual e arquitetural
+- **Decisão**: Formulários usando `os-modal-template` e `os-form-template` para consistência com Design System
+- **Decisão**: Validações reativas com computed signals para mensagens de erro dinâmicas
+- **Decisão**: Categorias de pagamento hardcoded no `PayBillModalComponent` (futuro: integrar com `TransactionService`)
+- **Implementação**: Todos os componentes seguem padrões Angular modernos (signals, inject, standalone, OnPush)
+- **Implementação**: Validações implementadas com `Validators` do Angular Reactive Forms
+- **Implementação**: Integração completa com `CreditCardState` para todas as operações CRUD
+
+#### 🧪 Validações
+
+- TypeScript type-check: ✅ Sem erros
+- Lint: ✅ Warnings de linhas em branco corrigidos
+- Padrão de componentes: ✅ Alinhado com padrão de Accounts
+- Integração com estado: ✅ Todos os componentes integrados com `CreditCardState`
+- Validações: ✅ Formulários com validações reativas funcionando
+- Design System: ✅ Componentes usando `os-*` conforme especificado
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 6: Integrações e Finalização
+- Integrar com Transactions (campo "Forma de Pagamento")
+- Melhorar componente credit-card-card com faturas
+- Criar componente credit-card-bill-item
+- Adicionar testes de integração
+- Validar responsividade e acessibilidade
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-230
-**Fase Atual**: FASE 4: Feature Credit Cards - Página e Rotas [Status: ✅ Completada]
-**Última Modificação**: Implementação completa da página principal e rotas lazy loading
-**Próxima Tarefa**: FASE 5 - Formulários e Modais
+**Fase Atual**: FASE 5: Formulários e Modais [Status: ✅ Completada]
+**Última Modificação**: Implementação completa de todos os formulários e modais, correção de warnings de lint
+**Próxima Tarefa**: FASE 6 - Integrações e Finalização
 

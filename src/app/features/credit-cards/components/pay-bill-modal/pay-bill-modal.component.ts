@@ -249,4 +249,3 @@ export class PayBillModalComponent implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 }
-

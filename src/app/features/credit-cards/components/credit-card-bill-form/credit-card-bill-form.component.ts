@@ -298,4 +298,3 @@ export class CreditCardBillFormComponent implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 }
-
