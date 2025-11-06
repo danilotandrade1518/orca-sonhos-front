@@ -278,20 +278,6 @@ describe('OsDatePickerComponent', () => {
       expect(component.endDate()).toBe(endDate);
     });
 
-    it('should validate range dates', () => {
-      vi.spyOn(console, 'warn');
-
-      const startDate = new Date('2024-12-31');
-      const endDate = new Date('2024-01-01');
-
-      fixture.componentRef.setInput('isRangePicker', true);
-      component.value.set(startDate);
-      component.endDate.set(endDate);
-      fixture.detectChanges();
-
-      expect(console.warn).toHaveBeenCalledWith('OsDatePicker: Start date is after end date');
-    });
-
     it('should apply range picker class', () => {
       fixture.componentRef.setInput('isRangePicker', true);
       fixture.detectChanges();

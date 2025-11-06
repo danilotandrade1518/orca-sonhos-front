@@ -205,16 +205,6 @@ export class OsDatePickerComponent implements ControlValueAccessor {
         this.quickDateOptions.set(this.getDefaultQuickDateOptions());
       }
     });
-
-    effect(() => {
-      if (this.isRangePicker() && this.value() && this.endDate()) {
-        const start = this.value();
-        const end = this.endDate();
-        if (start && end && start > end) {
-          console.warn('OsDatePicker: Start date is after end date');
-        }
-      }
-    });
   }
 
   selectQuickDate(option: QuickDateOption): void {
