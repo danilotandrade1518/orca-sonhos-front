@@ -180,3 +180,4 @@ A implementação seguirá o padrão Clean Architecture estabelecido no projeto:
 - **Backlog**: `temp/backlog-features-incremental.md` - Card 12
 - **Meta Specs**: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
 
+

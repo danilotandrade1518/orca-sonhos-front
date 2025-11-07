@@ -140,11 +140,11 @@ export const budgetHandlers = [
 
     const body = (await request.json()) as any;
 
-    if (!body.userId || !body.budgetId || !body.participantId) {
+    if (!body.budgetId || !body.participantId) {
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    return HttpResponse.json({ success: true }, { status: 200 });
+    return HttpResponse.json({ success: true, participantId: body.participantId }, { status: 200 });
   }),
 
   http.post('/api/budget/remove-participant', async ({ request }) => {
@@ -156,7 +156,7 @@ export const budgetHandlers = [
 
     const body = (await request.json()) as any;
 
-    if (!body.userId || !body.budgetId || !body.participantId) {
+    if (!body.budgetId || !body.participantId) {
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 

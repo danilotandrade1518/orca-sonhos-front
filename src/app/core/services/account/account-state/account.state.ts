@@ -46,6 +46,8 @@ export class AccountState {
 
     if (!budgetId) {
       this._error.set('Nenhum orçamento selecionado');
+      this._accounts.set([]);
+      this._loading.set(false);
       return;
     }
 
@@ -65,8 +67,11 @@ export class AccountState {
           this._loading.set(false);
         },
         error: (error) => {
+          
           this._error.set(error?.message || 'Erro ao carregar contas');
           this._loading.set(false);
+          
+          this._accounts.set([]);
         },
       });
   }

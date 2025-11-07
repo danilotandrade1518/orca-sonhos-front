@@ -3,21 +3,25 @@ import {
   computed,
   inject,
   OnInit,
+  OnDestroy,
   signal,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
+import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-detail-page',
   standalone: true,
-  imports: [CommonModule, OsModalTemplateComponent],
+  imports: [CommonModule, OsModalTemplateComponent, ShareBudgetComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-detail-page">
@@ -169,7 +173,9 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             <div class="budget-detail-page__account-item" role="listitem">
               <div class="budget-detail-page__account-info">
                 <span class="budget-detail-page__account-name">{{ account.name }}</span>
-                <span class="budget-detail-page__account-type">{{ getAccountTypeLabel(account.type) }}</span>
+                <span class="budget-detail-page__account-type">{{
+                  getAccountTypeLabel(account.type)
+                }}</span>
               </div>
               <span class="budget-detail-page__account-balance">
                 {{ formatCurrency(account.balance) }}
@@ -186,6 +192,45 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             >
               Ver Todas as Contas
             </button>
+          </div>
+          }
+        </section>
+
+        <section class="budget-detail-page__card">
+          <div class="budget-detail-page__card-header">
+            <h2 class="budget-detail-page__card-title">Colaboração</h2>
+            <button
+              type="button"
+              class="button button--primary button--small"
+              (click)="openShareModal()"
+              [attr.aria-label]="'Gerenciar participantes do orçamento ' + budget.name"
+            >
+              Gerenciar Participantes
+            </button>
+          </div>
+
+          @if (participantsLoading()) {
+          <div class="budget-detail-page__participants-loading" role="status" aria-live="polite">
+            <p>Carregando participantes...</p>
+          </div>
+          } @else if (participantsCount() === 0) {
+          <div class="budget-detail-page__participants-empty" role="status">
+            <p>Nenhum participante adicionado ainda.</p>
+            <button
+              type="button"
+              class="button button--primary"
+              (click)="openShareModal()"
+              aria-label="Adicionar primeiro participante"
+            >
+              Adicionar Participante
+            </button>
+          </div>
+          } @else {
+          <div class="budget-detail-page__participants-info">
+            <p>
+              <strong>{{ participantsCount() }}</strong>
+              {{ participantsCount() === 1 ? 'participante' : 'participantes' }}
+            </p>
           </div>
           }
         </section>
@@ -215,17 +260,30 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (cancelled)="onDeleteCancelled()"
         (closed)="onDeleteCancelled()"
       />
+      } @if (showShareModal()) {
+      <os-share-budget
+        [budgetId]="budgetId()!"
+        [budgetName]="budget()?.name || ''"
+        [creatorId]="currentUser()?.id || null"
+        [isOpen]="showShareModal()"
+        (opened)="onShareModalOpened()"
+        (closed)="onShareModalClosed()"
+        (participantAdded)="onParticipantAdded()"
+        (participantRemoved)="onParticipantRemoved()"
+      />
       }
     </div>
   `,
   styleUrl: './budget-detail.page.scss',
 })
-export class BudgetDetailPage implements OnInit {
+export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly budgetState = inject(BudgetState);
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
+  private readonly sharingState = inject(SharingState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -236,6 +294,11 @@ export class BudgetDetailPage implements OnInit {
 
   readonly budgetId = signal<string | null>(null);
   readonly showDeleteConfirm = signal(false);
+  readonly showShareModal = signal(false);
+
+  readonly participants = computed(() => this.sharingState.participants());
+  readonly participantsCount = computed(() => this.sharingState.participantsCount());
+  readonly participantsLoading = computed(() => this.sharingState.loading());
 
   readonly budget = computed(() => {
     const id = this.budgetId();
@@ -280,18 +343,52 @@ export class BudgetDetailPage implements OnInit {
     };
   });
 
+  private resourcesLoaded = signal(false);
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.budgetId.set(id);
-
-      if (this.budgetState.budgets().length === 0) {
-        this.budgetState.loadBudgets();
-      }
-
-      this.budgetState.selectBudget(id);
-      this.accountState.loadAccounts();
+    if (!id) {
+      return;
     }
+
+    this.budgetId.set(id);
+    
+    if (this.budgetState.budgets().length === 0) {
+      this.budgetState.loadBudgets();
+    } else {
+      
+      const budget = this.budgetState.budgets().find((b) => b.id === id);
+      if (budget) {
+        this.budgetState.selectBudget(id);
+        this.cdr.markForCheck();
+      }
+    }
+  }
+
+  private loadResources(id: string): void {
+    if (this.resourcesLoaded()) {
+      return;
+    }
+
+    try {
+      this.accountState.loadAccounts();
+      this.sharingState.loadParticipants(id);
+      this.sharingState.startPolling(id);
+      this.resourcesLoaded.set(true);
+      this.cdr.markForCheck();
+    } catch (error) {
+      console.error('Erro ao carregar recursos do orçamento:', error);
+      
+    }
+  }
+
+  ngOnDestroy(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.stopPolling();
+    }
+    
+    this.resourcesLoaded.set(false);
   }
 
   navigateToList(): void {
@@ -371,5 +468,41 @@ export class BudgetDetailPage implements OnInit {
 
   onDeleteCancelled(): void {
     this.showDeleteConfirm.set(false);
+  }
+
+  openShareModal(): void {
+    this.showShareModal.set(true);
+  }
+
+  onShareModalOpened(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+    }
+  }
+
+  onShareModalClosed(): void {
+    this.showShareModal.set(false);
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onParticipantAdded(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onParticipantRemoved(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
   }
 }
