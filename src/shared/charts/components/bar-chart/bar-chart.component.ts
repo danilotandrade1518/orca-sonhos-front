@@ -51,4 +51,3 @@ export class BarChartComponent {
   showDataTable = input(false);
   dataTableCaption = input<string>('Tabela de dados do gráfico de barras');
 }
-

@@ -8,9 +8,7 @@ import type { ChartData } from '../interfaces/chart-data.interface';
   providedIn: 'root',
 })
 export class ChartDataTransformer {
-  transformCategorySpendingToChartData(
-    categorySpending: CategorySpendingDto[]
-  ): ChartData {
+  transformCategorySpendingToChartData(categorySpending: CategorySpendingDto[]): ChartData {
     const labels = categorySpending.map((item) => item.categoryName);
     const data = categorySpending.map((item) => item.totalAmount);
 
@@ -30,9 +28,7 @@ export class ChartDataTransformer {
     };
   }
 
-  transformRevenueExpenseToChartData(
-    revenueExpense: RevenueExpenseDto
-  ): ChartData {
+  transformRevenueExpenseToChartData(revenueExpense: RevenueExpenseDto): ChartData {
     return {
       labels: ['Receitas', 'Despesas'],
       datasets: [
@@ -76,4 +72,3 @@ export class ChartDataTransformer {
     return { background, border };
   }
 }
-
