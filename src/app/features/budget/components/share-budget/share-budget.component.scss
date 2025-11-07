@@ -1,0 +1,30 @@
+.share-budget {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-lg, 24px);
+    padding: var(--os-spacing-md, 16px);
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  &__search-section {
+    flex-shrink: 0;
+  }
+
+  &__participants-section {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .share-budget {
+    &__content {
+      padding: var(--os-spacing-sm, 12px);
+      gap: var(--os-spacing-md, 16px);
+      max-height: 80vh;
+    }
+  }
+}
+
