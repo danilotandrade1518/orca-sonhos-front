@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
 
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { DashboardDataService } from '../../services/dashboard-data.service';
@@ -47,6 +47,8 @@ export class DashboardWidgetsComponent {
   private readonly dashboardDataService = inject(DashboardDataService);
   private readonly accountState = inject(AccountState);
 
+  private _lastBudgetId: string | null = null;
+
   readonly widgets = input<WidgetConfiguration[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -78,8 +80,21 @@ export class DashboardWidgetsComponent {
   constructor() {
     effect(() => {
       const budgetId = this.budgetSelectionService.selectedBudgetId();
-      if (budgetId && this.hasAccountBalanceWidget()) {
-        this.accountState.loadAccounts();
+      const hasWidget = untracked(() => this.hasAccountBalanceWidget());
+      const isLoading = untracked(() => this.accountState.loading());
+
+      // Evita chamadas repetidas quando o budgetId não mudou ou já está carregando
+      if (budgetId === this._lastBudgetId || isLoading) {
+        return;
+      }
+
+      if (budgetId && hasWidget) {
+        untracked(() => {
+          this._lastBudgetId = budgetId;
+          this.accountState.loadAccounts();
+        });
+      } else {
+        this._lastBudgetId = null;
       }
     });
   }

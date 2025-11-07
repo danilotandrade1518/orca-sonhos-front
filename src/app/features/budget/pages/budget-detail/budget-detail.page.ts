@@ -6,6 +6,7 @@ import {
   OnDestroy,
   signal,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -282,6 +283,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly sharingState = inject(SharingState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -341,19 +343,43 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     };
   });
 
+  private resourcesLoaded = signal(false);
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.budgetId.set(id);
+    if (!id) {
+      return;
+    }
 
-      if (this.budgetState.budgets().length === 0) {
-        this.budgetState.loadBudgets();
+    this.budgetId.set(id);
+
+    // Carrega budgets se necessário
+    if (this.budgetState.budgets().length === 0) {
+      this.budgetState.loadBudgets();
+    } else {
+      // Se já tem budgets, tenta selecionar imediatamente
+      const budget = this.budgetState.budgets().find((b) => b.id === id);
+      if (budget) {
+        this.budgetState.selectBudget(id);
+        this.cdr.markForCheck();
       }
+    }
+  }
 
-      this.budgetState.selectBudget(id);
+  private loadResources(id: string): void {
+    if (this.resourcesLoaded()) {
+      return;
+    }
+
+    try {
       this.accountState.loadAccounts();
       this.sharingState.loadParticipants(id);
       this.sharingState.startPolling(id);
+      this.resourcesLoaded.set(true);
+      this.cdr.markForCheck();
+    } catch (error) {
+      console.error('Erro ao carregar recursos do orçamento:', error);
+      // Não define erro aqui para não travar a aplicação
     }
   }
 
@@ -362,6 +388,8 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     if (id) {
       this.sharingState.stopPolling();
     }
+    // Reseta o flag para permitir recarregar recursos se o usuário voltar para esta página
+    this.resourcesLoaded.set(false);
   }
 
   navigateToList(): void {
