@@ -93,9 +93,9 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-232
-**Fase Atual**: FASE 3: Camada de Abstração de Gráficos [Status: ✅ Completada]
-**Última Modificação**: 2025-01-24 - Serviços e componentes da camada de abstração implementados e validados
-**Próxima Tarefa**: Iniciar FASE 4 - Serviços e Estado (API e Cálculos)
+**Fase Atual**: FASE 6: Componentes de Gráficos da Feature [Status: ✅ Completada]
+**Última Modificação**: 2025-01-24 - Componentes de gráficos da feature implementados usando camada de abstração
+**Próxima Tarefa**: Iniciar FASE 7 - Página de Relatórios e Roteamento
 
 **Progresso da FASE 3**:
 - ✅ 3.1. ChartAdapterService
@@ -199,4 +199,73 @@
 - **FASE 3 COMPLETA** - Implementação funcional concluída
 - Testes unitários serão implementados na FASE 8 (Testes, Validação e Polimento Final)
 - Iniciar FASE 4: Serviços e Estado (API e Cálculos)
+
+---
+
+### 🗓️ Sessão 2025-01-24 - FASE 6
+
+**Fase**: FASE 6: Componentes de Gráficos da Feature
+**Objetivo**: Implementar componentes específicos da feature para gráficos de pizza (gastos por categoria) e barras (receitas vs despesas) usando a camada de abstração de gráficos.
+
+#### ✅ Trabalho Realizado
+
+- **Componentes da Feature**:
+  - ✅ SpendingChartComponent criado (`src/app/features/reports/components/spending-chart/spending-chart.component.ts`)
+    - Usa PieChartComponent da camada de abstração (não ng2-charts diretamente)
+    - Integração com os-chart-container para estados (loading, error, empty)
+    - Conversão de CategorySpendingDto[] para ChartData genérico via ChartDataTransformer
+    - Configuração de ChartConfig com legendas, tooltips e animações
+    - Acessibilidade completa (ARIA labels, tabela de dados alternativa)
+    - CurrencyPipe injetado para formatação de valores em ARIA labels
+  - ✅ RevenueExpenseChartComponent criado (`src/app/features/reports/components/revenue-expense-chart/revenue-expense-chart.component.ts`)
+    - Usa BarChartComponent da camada de abstração (não ng2-charts diretamente)
+    - Integração com os-chart-container para estados
+    - Conversão de RevenueExpenseDto para ChartData genérico via ChartDataTransformer
+    - Configuração de ChartConfig com escalas Y começando em zero
+    - Acessibilidade completa
+  - ✅ ReportFiltersComponent criado (`src/app/features/reports/components/report-filters/report-filters.component.ts`)
+    - Filtro de período usando os-select com opções (Mês Atual, Mês Anterior, Últimos 3 Meses)
+    - Filtro de orçamento usando os-budget-selector (quando múltiplos orçamentos)
+    - Integração com os-filter-bar para layout responsivo
+    - Estado reativo usando signals e effects
+    - Emite eventos filtersChange para integração com ReportsState
+    - Responsividade mobile-first (stack vertical em mobile, horizontal em desktop)
+
+- **Conversão de Dados**:
+  - ✅ ChartDataTransformer existente usado para conversão de DTOs para formato genérico
+  - ✅ Componentes convertem dados usando computed properties reativas
+  - ✅ ChartConfig configurado com valores padrão otimizados para cada tipo de gráfico
+
+- **Configuração**:
+  - ✅ Path alias `@shared/*` atualizado no tsconfig.json para apontar tanto para `shared/*` quanto `app/shared/*`
+  - ✅ Imports usando path aliases (@shared, @dtos) para melhor organização
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão Técnica**: Usar ChartDataTransformer existente ao invés de criar novo arquivo de utils, seguindo princípio DRY
+- **Decisão de Acessibilidade**: CurrencyPipe injetado nos componentes para formatação de valores em ARIA labels, garantindo descrições textuais precisas
+- **Problema Técnico**: Path alias `@shared/*` não encontrava `src/shared/charts` (apontava apenas para `app/shared/*`)
+  - **Solução**: Atualizado tsconfig.json para incluir ambos os caminhos: `"@shared/*": ["shared/*", "app/shared/*"]`
+- **Problema Técnico**: Erro ao usar pipe `currency` dentro de template strings em computed properties
+  - **Solução**: CurrencyPipe injetado e usado diretamente no código TypeScript com `transform()`
+
+#### 🧪 Validações
+
+- ✅ Build compilado com sucesso (sem erros TypeScript ou de compilação)
+- ✅ Todos os componentes seguem padrões do projeto:
+  - `ChangeDetectionStrategy.OnPush` para performance
+  - Signals para estado reativo (`computed()` para derivações)
+  - `inject()` ao invés de constructor injection
+  - Standalone components
+  - Inputs/outputs usando functions (`input()`, `output()`)
+- ✅ Componentes não dependem diretamente do ng2-charts (usam apenas camada de abstração)
+- ✅ Integração com os-chart-container funcionando corretamente
+- ✅ Acessibilidade implementada (ARIA labels, tabelas alternativas)
+- ✅ Responsividade implementada (mobile-first)
+
+#### ⏭️ Próximos Passos
+
+- **FASE 6 COMPLETA** - Implementação funcional concluída
+- Testes unitários serão implementados na FASE 8 (Testes, Validação e Polimento Final)
+- Iniciar FASE 7: Página de Relatórios e Roteamento
 

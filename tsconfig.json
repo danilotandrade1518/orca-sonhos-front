@@ -18,7 +18,7 @@
     "paths": {
       "@app/*": ["app/*"],
       "@core/*": ["app/core/*"],
-      "@shared/*": ["app/shared/*"],
+      "@shared/*": ["shared/*", "app/shared/*"],
       "@features/*": ["app/features/*"],
       "@dtos/*": ["dtos/*"],
       "@either": ["shared/core"]
