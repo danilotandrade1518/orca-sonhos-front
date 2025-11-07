@@ -6,6 +6,11 @@
     padding: var(--os-spacing-md, 16px);
     max-height: 70vh;
     overflow-y: auto;
+    animation: fadeIn 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   &__search-section {
@@ -15,6 +20,15 @@
   &__participants-section {
     flex: 1;
     min-height: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

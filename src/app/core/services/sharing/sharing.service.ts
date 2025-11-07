@@ -25,6 +25,12 @@ export class SharingService {
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
 
+  /**
+   * Adds a participant to a budget.
+   * @param budgetId - The ID of the budget
+   * @param participantId - The ID of the user to add as participant
+   * @returns Observable that emits true if successful, false otherwise
+   */
   addParticipant(budgetId: string, participantId: string): Observable<boolean> {
     const user = this.auth.user();
 
@@ -58,6 +64,12 @@ export class SharingService {
     );
   }
 
+  /**
+   * Removes a participant from a budget.
+   * @param budgetId - The ID of the budget
+   * @param participantId - The ID of the participant to remove
+   * @returns Observable that emits true if successful, false otherwise
+   */
   removeParticipant(budgetId: string, participantId: string): Observable<boolean> {
     const user = this.auth.user();
 
@@ -91,6 +103,11 @@ export class SharingService {
     );
   }
 
+  /**
+   * Searches for users by email or phone number.
+   * @param query - Search query (email or phone)
+   * @returns Observable that emits an array of matching users
+   */
   searchUsers(query: string): Observable<SearchUserResponseDto[]> {
     const user = this.auth.user();
 
@@ -123,6 +140,9 @@ export class SharingService {
     );
   }
 
+  /**
+   * Clears the current error state.
+   */
   clearError(): void {
     this._error.set(null);
   }

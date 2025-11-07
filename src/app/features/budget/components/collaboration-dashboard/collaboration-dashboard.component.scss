@@ -28,6 +28,23 @@
     gap: var(--os-spacing-md, 16px);
   }
 
+  &__participant-card {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transform: none;
+      }
+    }
+  }
+
   &__participant-content {
     display: flex;
     align-items: center;

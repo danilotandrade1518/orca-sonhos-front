@@ -157,6 +157,9 @@ export class UserInviteComponent {
     }
   }
 
+  /**
+   * Clears the selected user and search results.
+   */
   clearSelection(): void {
     this._selectedUser.set(null);
     this._searchValue.set('');
@@ -165,6 +168,10 @@ export class UserInviteComponent {
     this._error.set(null);
   }
 
+  /**
+   * Gets the ID of the currently selected user.
+   * @returns The user ID or null if no user is selected
+   */
   getSelectedUserId(): string | null {
     return this._selectedUser()?.id || null;
   }

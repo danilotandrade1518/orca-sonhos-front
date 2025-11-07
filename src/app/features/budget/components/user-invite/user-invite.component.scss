@@ -11,6 +11,11 @@
     border: 1px solid var(--os-color-error, #c00);
     border-radius: var(--os-border-radius, 8px);
     color: var(--os-color-error, #c00);
+    animation: slideInDown 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   &__error-text {
@@ -27,6 +32,11 @@
     border: 1px solid var(--os-color-border, #ddd);
     border-radius: var(--os-border-radius, 8px);
     gap: var(--os-spacing-md, 16px);
+    animation: slideInUp 0.3s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   &__selected-content {
@@ -57,6 +67,11 @@
     padding: var(--os-spacing-sm, 12px);
     text-align: center;
     color: var(--os-color-text-secondary, #666);
+    animation: fadeIn 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   &__loading-text {
@@ -66,6 +81,11 @@
   &--loading {
     opacity: 0.7;
     pointer-events: none;
+    transition: opacity 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   &--error {
@@ -78,6 +98,37 @@
     .user-invite__selected {
       display: flex;
     }
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

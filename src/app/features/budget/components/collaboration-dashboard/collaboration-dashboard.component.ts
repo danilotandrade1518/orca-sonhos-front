@@ -58,6 +58,7 @@ import { OsBadgeComponent } from '@shared/ui-components/atoms/os-badge/os-badge.
       >
         @for (participant of participants(); track participant.id) {
         <os-card
+          class="collaboration-dashboard__participant-card"
           [variant]="'default'"
           [size]="'medium'"
           [clickable]="false"
@@ -147,6 +148,11 @@ export class CollaborationDashboardComponent {
       .join(' ');
   });
 
+  /**
+   * Checks if a participant is the creator of the budget.
+   * @param participantId - The ID of the participant to check
+   * @returns True if the participant is the creator, false otherwise
+   */
   isCreator(participantId: string): boolean {
     const creatorId = this.creatorId();
     if (creatorId) {
@@ -161,6 +167,11 @@ export class CollaborationDashboardComponent {
     return false;
   }
 
+  /**
+   * Gets the initial letters of a name for avatar display.
+   * @param name - The full name
+   * @returns One or two uppercase letters
+   */
   getInitial(name: string): string {
     if (!name || name.length === 0) return '?';
     const parts = name.trim().split(' ');
@@ -168,6 +179,11 @@ export class CollaborationDashboardComponent {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
+  /**
+   * Gets the ARIA label for a participant card.
+   * @param participant - The participant data
+   * @returns Formatted ARIA label string
+   */
   getParticipantAriaLabel(participant: BudgetParticipantDto): string {
     const creatorText = this.isCreator(participant.id) ? ' (Criador)' : '';
     return `${participant.name}${creatorText} - ${participant.email}`;
@@ -189,6 +205,11 @@ export class CollaborationDashboardComponent {
     );
   }
 
+  /**
+   * Handles the removal of a participant.
+   * Prevents removal of the budget creator.
+   * @param participantId - The ID of the participant to remove
+   */
   onRemoveParticipant(participantId: string): void {
     if (this.isCreator(participantId)) {
       return;

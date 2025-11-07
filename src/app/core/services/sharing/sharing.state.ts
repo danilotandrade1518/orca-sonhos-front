@@ -42,12 +42,21 @@ export class SharingState {
     });
   }
 
+  /**
+   * Checks if a user is the creator of the budget.
+   * @param userId - The ID of the user to check
+   * @returns True if the user is the creator, false otherwise
+   */
   isCreator(userId: string): boolean {
     const participants = this._participants();
     const creator = participants.find((p) => p.id === userId);
     return creator !== undefined;
   }
 
+  /**
+   * Loads participants for a budget.
+   * @param budgetId - The ID of the budget
+   */
   loadParticipants(budgetId: string): void {
     this._loading.set(true);
     this._error.set(null);
@@ -71,6 +80,12 @@ export class SharingState {
       });
   }
 
+  /**
+   * Adds a participant to a budget.
+   * Validates that the user is not already a participant.
+   * @param budgetId - The ID of the budget
+   * @param participantId - The ID of the user to add as participant
+   */
   addParticipant(budgetId: string, participantId: string): void {
     const currentParticipants = this._participants();
     const isAlreadyParticipant = currentParticipants.some((p) => p.id === participantId);
@@ -104,6 +119,13 @@ export class SharingState {
       });
   }
 
+  /**
+   * Removes a participant from a budget.
+   * Prevents removal of the budget creator.
+   * @param budgetId - The ID of the budget
+   * @param participantId - The ID of the participant to remove
+   * @param creatorId - Optional ID of the budget creator (prevents removal)
+   */
   removeParticipant(budgetId: string, participantId: string, creatorId?: string | null): void {
     if (creatorId && participantId === creatorId) {
       this._error.set('Não é possível remover o criador do orçamento');
@@ -134,14 +156,25 @@ export class SharingState {
       });
   }
 
+  /**
+   * Clears the participants list.
+   */
   clearParticipants(): void {
     this._participants.set([]);
   }
 
+  /**
+   * Clears the current error state.
+   */
   clearError(): void {
     this._error.set(null);
   }
 
+  /**
+   * Starts polling for participant changes.
+   * Polling is automatically disabled when the page is not visible.
+   * @param budgetId - The ID of the budget to poll
+   */
   startPolling(budgetId: string): void {
     if (this.pollingSubscription && this.currentBudgetId === budgetId) {
       return;
@@ -159,6 +192,9 @@ export class SharingState {
       });
   }
 
+  /**
+   * Stops polling for participant changes.
+   */
   stopPolling(): void {
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();

@@ -145,10 +145,18 @@ export class ShareBudgetComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles user selection from the search component.
+   * @param userId - The ID of the selected user, or null if cleared
+   */
   onSelectedUserChange(userId: string | null): void {
     this._selectedUserId.set(userId);
   }
 
+  /**
+   * Handles adding a participant to the budget.
+   * Validates that a user is selected and not already a participant.
+   */
   onAddParticipant(): void {
     const userId = this._selectedUserId();
     if (!userId) {
@@ -169,11 +177,18 @@ export class ShareBudgetComponent implements OnInit {
     this.sharingState.addParticipant(budgetId, userId);
   }
 
+  /**
+   * Handles participant removal event from the dashboard.
+   * @param participantId - The ID of the removed participant
+   */
   onParticipantRemoved(participantId: string): void {
     this.participantRemoved.emit(participantId);
     this.notificationService.showSuccess('Participante removido com sucesso!');
   }
 
+  /**
+   * Handles modal cancellation.
+   */
   onCancel(): void {
     this.closed.emit();
   }
