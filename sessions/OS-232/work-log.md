@@ -93,7 +93,55 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-232
-**Fase Atual**: FASE 2: Estrutura Base da Feature, Camada de Abstração e DTOs [Status: ✅ Completada]
-**Última Modificação**: FASE 2 concluída - estrutura criada, interfaces genéricas e DTOs implementados
-**Próxima Tarefa**: Iniciar FASE 3 - Camada de Abstração de Gráficos
+**Fase Atual**: FASE 3: Camada de Abstração de Gráficos [Status: ⏰ Em Progresso]
+**Última Modificação**: FASE 3 em andamento - serviços e componentes base implementados
+**Próxima Tarefa**: Criar testes unitários da camada de abstração
+
+---
+
+### 🗓️ Sessão 2025-01-24 - Continuação FASE 3
+
+**Fase**: FASE 3: Camada de Abstração de Gráficos
+**Objetivo**: Implementar a camada de abstração sobre ng2-charts, incluindo serviços de adaptação e componentes base que encapsulam a biblioteca.
+
+#### ✅ Trabalho Realizado
+
+- **Serviços da Camada de Abstração**:
+  - ✅ ChartAdapterService implementado - converte dados genéricos para formato ng2-charts
+  - ✅ ChartConfigMapper implementado - mapeia configurações genéricas para opções Chart.js
+  - ✅ ChartDataTransformer implementado - transforma DTOs em formato genérico (ChartData)
+  
+- **Componentes Base**:
+  - ✅ BaseChartComponent criado - componente base que encapsula ng2-charts com suporte a acessibilidade
+  - ✅ PieChartComponent implementado - wrapper para gráfico de pizza usando camada de abstração
+  - ✅ BarChartComponent implementado - wrapper para gráfico de barras usando camada de abstração
+  
+- **Infraestrutura**:
+  - ✅ chart-providers.ts criado - centraliza providers da camada de abstração
+  - ✅ Arquivos index.ts criados para facilitar importações
+  - ✅ Estilos SCSS para BaseChartComponent com tabela de dados acessível
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: BaseChartComponent criado como componente concreto (não abstrato) que pode ser usado diretamente ou através de wrappers específicos
+- **Decisão**: Implementação de tabela de dados acessível opcional para melhorar acessibilidade dos gráficos
+- **Problema**: Erros de compilação com index signatures e tipos do Chart.js
+- **Solução**: Uso de notação de colchetes para propriedades de index signature e cast explícito para tipos de easing
+- **Problema**: Caminhos de import incorretos para DTOs
+- **Solução**: Correção dos caminhos relativos (../../../dtos/report/)
+- **Problema**: Propriedades incorretas do RevenueExpenseDto
+- **Solução**: Uso de `revenue` e `expense` ao invés de `totalRevenue` e `totalExpenses`
+
+#### 🧪 Validações
+
+- Build compilado com sucesso (sem erros)
+- Todos os serviços implementados seguindo padrões do projeto (inject(), providedIn: 'root')
+- Componentes seguem padrões Angular modernos (OnPush, signals, standalone)
+- Acessibilidade implementada (ARIA labels, tabela de dados alternativa)
+
+#### ⏭️ Próximos Passos
+
+- Criar testes unitários da camada de abstração
+- Validar renderização dos gráficos em ambiente de desenvolvimento
+- Documentar uso da camada de abstração
 
