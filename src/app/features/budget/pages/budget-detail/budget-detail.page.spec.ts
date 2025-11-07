@@ -7,8 +7,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BudgetDetailPage } from './budget-detail.page';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
+import { AccountState } from '@core/services/account/account-state/account.state';
+import { SharingState } from '@core/services/sharing/sharing.state';
 import { signal } from '@angular/core';
 import { BudgetDto } from '../../../../../dtos/budget';
+import { AccountDto } from '../../../../../dtos/account';
+import { BudgetParticipantDto } from '../../../../../dtos/budget';
 
 describe('BudgetDetailPage', () => {
   let component: BudgetDetailPage;
@@ -23,6 +27,19 @@ describe('BudgetDetailPage', () => {
   };
   let authService: {
     currentUser: ReturnType<typeof signal<{ id: string; email: string; name: string } | null>>;
+  };
+  let accountState: {
+    accountsByBudgetId: ReturnType<typeof signal<AccountDto[]>>;
+    loading: ReturnType<typeof signal<boolean>>;
+    loadAccounts: ReturnType<typeof vi.fn>;
+  };
+  let sharingState: {
+    participants: ReturnType<typeof signal<BudgetParticipantDto[]>>;
+    participantsCount: ReturnType<typeof signal<number>>;
+    loading: ReturnType<typeof signal<boolean>>;
+    loadParticipants: ReturnType<typeof vi.fn>;
+    startPolling: ReturnType<typeof vi.fn>;
+    stopPolling: ReturnType<typeof vi.fn>;
   };
   let router: Router;
 
@@ -55,6 +72,21 @@ describe('BudgetDetailPage', () => {
       currentUser: signal(mockUser),
     };
 
+    accountState = {
+      accountsByBudgetId: signal([]),
+      loading: signal(false),
+      loadAccounts: vi.fn(),
+    };
+
+    sharingState = {
+      participants: signal([]),
+      participantsCount: signal(0),
+      loading: signal(false),
+      loadParticipants: vi.fn(),
+      startPolling: vi.fn(),
+      stopPolling: vi.fn(),
+    };
+
     router = {
       navigate: vi.fn(),
     } as unknown as Router;
@@ -72,6 +104,14 @@ describe('BudgetDetailPage', () => {
         {
           provide: AuthService,
           useValue: authService,
+        },
+        {
+          provide: AccountState,
+          useValue: accountState,
+        },
+        {
+          provide: SharingState,
+          useValue: sharingState,
         },
         {
           provide: Router,

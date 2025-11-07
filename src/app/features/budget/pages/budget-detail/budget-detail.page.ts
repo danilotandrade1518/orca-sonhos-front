@@ -172,7 +172,9 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             <div class="budget-detail-page__account-item" role="listitem">
               <div class="budget-detail-page__account-info">
                 <span class="budget-detail-page__account-name">{{ account.name }}</span>
-                <span class="budget-detail-page__account-type">{{ getAccountTypeLabel(account.type) }}</span>
+                <span class="budget-detail-page__account-type">{{
+                  getAccountTypeLabel(account.type)
+                }}</span>
               </div>
               <span class="budget-detail-page__account-balance">
                 {{ formatCurrency(account.balance) }}
@@ -265,8 +267,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         [isOpen]="showShareModal()"
         (opened)="onShareModalOpened()"
         (closed)="onShareModalClosed()"
-        (participantAdded)="onParticipantAdded($event)"
-        (participantRemoved)="onParticipantRemoved($event)"
+        (participantAdded)="onParticipantAdded()"
+        (participantRemoved)="onParticipantRemoved()"
       />
       }
     </div>
@@ -461,7 +463,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  onParticipantAdded(participantId: string): void {
+  onParticipantAdded(): void {
     const id = this.budgetId();
     if (id) {
       this.sharingState.loadParticipants(id);
@@ -469,7 +471,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  onParticipantRemoved(participantId: string): void {
+  onParticipantRemoved(): void {
     const id = this.budgetId();
     if (id) {
       this.sharingState.loadParticipants(id);

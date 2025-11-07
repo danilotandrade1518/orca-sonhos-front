@@ -147,12 +147,7 @@ export class CollaborationDashboardComponent {
       .filter(Boolean)
       .join(' ');
   });
-
-  /**
-   * Checks if a participant is the creator of the budget.
-   * @param participantId - The ID of the participant to check
-   * @returns True if the participant is the creator, false otherwise
-   */
+  
   isCreator(participantId: string): boolean {
     const creatorId = this.creatorId();
     if (creatorId) {
@@ -166,24 +161,15 @@ export class CollaborationDashboardComponent {
 
     return false;
   }
-
-  /**
-   * Gets the initial letters of a name for avatar display.
-   * @param name - The full name
-   * @returns One or two uppercase letters
-   */
+  
   getInitial(name: string): string {
-    if (!name || name.length === 0) return '?';
-    const parts = name.trim().split(' ');
+    if (!name || name.trim().length === 0) return '?';
+    const parts = name.trim().split(' ').filter((part) => part.length > 0);
+    if (parts.length === 0) return '?';
     if (parts.length === 1) return parts[0][0].toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
-
-  /**
-   * Gets the ARIA label for a participant card.
-   * @param participant - The participant data
-   * @returns Formatted ARIA label string
-   */
+  
   getParticipantAriaLabel(participant: BudgetParticipantDto): string {
     const creatorText = this.isCreator(participant.id) ? ' (Criador)' : '';
     return `${participant.name}${creatorText} - ${participant.email}`;
@@ -204,12 +190,7 @@ export class CollaborationDashboardComponent {
       { allowSignalWrites: true }
     );
   }
-
-  /**
-   * Handles the removal of a participant.
-   * Prevents removal of the budget creator.
-   * @param participantId - The ID of the participant to remove
-   */
+  
   onRemoveParticipant(participantId: string): void {
     if (this.isCreator(participantId)) {
       return;

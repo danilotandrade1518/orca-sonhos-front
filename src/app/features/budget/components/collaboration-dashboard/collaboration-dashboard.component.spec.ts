@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 
@@ -231,7 +230,7 @@ describe('CollaborationDashboardComponent', () => {
       fixture.detectChanges();
       component.onRemoveParticipant('user-2');
 
-      expect(sharingState.removeParticipant).toHaveBeenCalledWith('budget-1', 'user-2');
+      expect(sharingState.removeParticipant).toHaveBeenCalledWith('budget-1', 'user-2', 'user-1');
     });
 
     it('should set removingParticipantId when removing', () => {
@@ -353,4 +352,3 @@ describe('CollaborationDashboardComponent', () => {
     });
   });
 });
-

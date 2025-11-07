@@ -7,6 +7,7 @@ import { ShareBudgetComponent } from './share-budget.component';
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
+import { SharingService } from '@core/services/sharing/sharing.service';
 import { BudgetParticipantDto } from '../../../../../dtos/budget';
 
 describe('ShareBudgetComponent', () => {
@@ -27,6 +28,11 @@ describe('ShareBudgetComponent', () => {
     showSuccess: ReturnType<typeof vi.fn>;
     showError: ReturnType<typeof vi.fn>;
   };
+  let sharingService: {
+    searchUsers: ReturnType<typeof vi.fn>;
+    loading: ReturnType<typeof signal<boolean>>;
+    error: ReturnType<typeof signal<unknown>>;
+  };
 
   const mockParticipants: BudgetParticipantDto[] = [
     {
@@ -46,6 +52,8 @@ describe('ShareBudgetComponent', () => {
     const loadingSignal = signal<boolean>(false);
     const errorSignal = signal<string | null>(null);
     const currentUserSignal = signal<{ id: string; name: string; email: string } | null>(null);
+    const sharingServiceLoadingSignal = signal<boolean>(false);
+    const sharingServiceErrorSignal = signal<unknown>(null);
 
     sharingState = {
       participants: participantsSignal,
@@ -54,6 +62,12 @@ describe('ShareBudgetComponent', () => {
       loadParticipants: vi.fn(),
       addParticipant: vi.fn(),
       clearError: vi.fn(),
+    };
+
+    sharingService = {
+      searchUsers: vi.fn(),
+      loading: sharingServiceLoadingSignal,
+      error: sharingServiceErrorSignal,
     };
 
     authService = {
@@ -69,6 +83,7 @@ describe('ShareBudgetComponent', () => {
       imports: [ShareBudgetComponent],
       providers: [
         { provide: SharingState, useValue: sharingState },
+        { provide: SharingService, useValue: sharingService },
         { provide: AuthService, useValue: authService },
         { provide: NotificationService, useValue: notificationService },
         provideZonelessChangeDetection(),
@@ -163,6 +178,8 @@ describe('ShareBudgetComponent', () => {
 
     it('should clear selected user when modal closes', () => {
       component['_selectedUserId'].set('user-1');
+      fixture.componentRef.setInput('isOpen', true);
+      fixture.detectChanges();
       fixture.componentRef.setInput('isOpen', false);
       fixture.detectChanges();
       expect(component.selectedUserId()).toBeNull();
@@ -369,4 +386,3 @@ describe('ShareBudgetComponent', () => {
     });
   });
 });
-

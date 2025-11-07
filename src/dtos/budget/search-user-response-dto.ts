@@ -4,4 +4,3 @@ export interface SearchUserResponseDto {
   email: string;
   phone?: string;
 }
-

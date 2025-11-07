@@ -165,7 +165,7 @@ describe('SharingState', () => {
       sharingState.addParticipant('budget-1', 'user-3');
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(sharingState.error()).toBe('Failed to add participant');
+      expect(sharingState.error()).toBe('Falha ao adicionar participante. Tente novamente.');
       expect(sharingState.loading()).toBeFalsy();
     });
 
@@ -206,7 +206,7 @@ describe('SharingState', () => {
       sharingState.removeParticipant('budget-1', 'user-2');
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(sharingState.error()).toBe('Failed to remove participant');
+      expect(sharingState.error()).toBe('Falha ao remover participante. Tente novamente.');
       expect(sharingState.loading()).toBeFalsy();
     });
 
@@ -291,4 +291,3 @@ describe('SharingState', () => {
     });
   });
 });
-

@@ -7,6 +7,7 @@ import { UserInviteComponent } from './user-invite.component';
 import { SharingService } from '@core/services/sharing/sharing.service';
 import { SearchUserResponseDto } from '../../../../../dtos/budget';
 import { signal } from '@angular/core';
+import { OsSearchSuggestion } from '@app/shared/ui-components/molecules';
 
 describe('UserInviteComponent', () => {
   let component: UserInviteComponent;
@@ -155,6 +156,7 @@ describe('UserInviteComponent', () => {
 
       const suggestion = component.suggestions()[0];
       component.onSuggestionSelect(suggestion);
+      fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith('user-1');
     });
@@ -175,11 +177,13 @@ describe('UserInviteComponent', () => {
     it('should emit null when selection is cleared', () => {
       const suggestion = component.suggestions()[0];
       component.onSuggestionSelect(suggestion);
+      fixture.detectChanges();
 
       const spy = vi.fn();
       component.userSelected.subscribe(spy);
 
       component.clearSelection();
+      fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith(null);
     });
@@ -204,12 +208,12 @@ describe('UserInviteComponent', () => {
 
   describe('Loading State', () => {
     it('should reflect loading state from service', () => {
-      const loadingSignal = signal<boolean>(true);
-      sharingService.loading = loadingSignal;
-
+      sharingService.loading.set(true);
+      fixture.detectChanges();
       expect(component.loading()).toBeTruthy();
 
-      loadingSignal.set(false);
+      sharingService.loading.set(false);
+      fixture.detectChanges();
       expect(component.loading()).toBeFalsy();
     });
   });
@@ -222,26 +226,28 @@ describe('UserInviteComponent', () => {
     });
 
     it('should disable search when loading', () => {
-      const loadingSignal = signal<boolean>(true);
-      sharingService.loading = loadingSignal;
+      sharingService.loading.set(true);
+      fixture.detectChanges();
       expect(component.loading()).toBeTruthy();
     });
   });
 
   describe('Container Classes', () => {
     it('should add loading class when loading', () => {
-      const loadingSignal = signal<boolean>(true);
-      sharingService.loading = loadingSignal;
+      sharingService.loading.set(true);
+      fixture.detectChanges();
       expect(component.containerClass()).toContain('user-invite--loading');
     });
 
     it('should add error class when error exists', () => {
       component['_error'].set('Test error');
+      fixture.detectChanges();
       expect(component.containerClass()).toContain('user-invite--error');
     });
 
     it('should add selected class when user is selected', () => {
       component['_selectedUser'].set(mockUsers[0]);
+      fixture.detectChanges();
       expect(component.containerClass()).toContain('user-invite--selected');
     });
   });
@@ -249,16 +255,18 @@ describe('UserInviteComponent', () => {
   describe('ARIA Attributes', () => {
     it('should set aria-describedby when error exists', () => {
       component['_error'].set('Test error');
+      fixture.detectChanges();
       expect(component.ariaDescribedBy()).toBe('user-invite-error');
     });
 
     it('should set aria-describedby when loading', () => {
-      const loadingSignal = signal<boolean>(true);
-      sharingService.loading = loadingSignal;
+      sharingService.loading.set(true);
+      fixture.detectChanges();
       expect(component.ariaDescribedBy()).toBe('user-invite-loading');
     });
 
     it('should return null when no error or loading', () => {
+      fixture.detectChanges();
       expect(component.ariaDescribedBy()).toBeNull();
     });
   });
@@ -300,10 +308,9 @@ describe('UserInviteComponent', () => {
       component['_foundUsers'].set(mockUsers);
       const fakeSuggestion = { id: 'fake-id', text: 'Fake User' };
 
-      component.onSuggestionSelect(fakeSuggestion as any);
+      component.onSuggestionSelect(fakeSuggestion as unknown as OsSearchSuggestion);
 
       expect(component.selectedUser()).toBeNull();
     });
   });
 });
-

@@ -2,6 +2,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { signal } from '@angular/core';
 
 import {
   AddParticipantResponseDto,
@@ -19,7 +20,7 @@ describe('SharingService', () => {
     postRaw: ReturnType<typeof vi.fn>;
   };
   let authService: {
-    user: ReturnType<typeof vi.fn>;
+    user: ReturnType<typeof signal<{ id: string; email: string; name: string; avatar: null } | null>>;
   };
 
   const mockUser = {
@@ -51,7 +52,7 @@ describe('SharingService', () => {
     };
 
     authService = {
-      user: vi.fn(() => mockUser),
+      user: signal(mockUser),
     };
 
     TestBed.configureTestingModule({
@@ -89,7 +90,7 @@ describe('SharingService', () => {
     });
 
     it('should return false and set error when user is not authenticated', () => {
-      authService.user = vi.fn(() => null);
+      authService.user.set(null);
 
       service.addParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
@@ -135,7 +136,7 @@ describe('SharingService', () => {
     });
 
     it('should return false and set error when user is not authenticated', () => {
-      authService.user = vi.fn(() => null);
+      authService.user.set(null);
 
       service.removeParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
@@ -190,7 +191,7 @@ describe('SharingService', () => {
     });
 
     it('should return empty array and set error when user is not authenticated', () => {
-      authService.user = vi.fn(() => null);
+      authService.user.set(null);
 
       service.searchUsers('ana').subscribe((users) => {
         expect(users).toEqual([]);
@@ -256,4 +257,3 @@ describe('SharingService', () => {
     });
   });
 });
-
