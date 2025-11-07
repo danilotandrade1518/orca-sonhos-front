@@ -356,3 +356,4 @@ Se ng2-charts não atender completamente às necessidades:
 - [ngx-charts GitHub](https://github.com/swimlane/ngx-charts)
 - [ng-apexcharts GitHub](https://github.com/apexcharts/ng-apexcharts)
 - [ag-charts Documentation](https://www.ag-grid.com/charts/)
+

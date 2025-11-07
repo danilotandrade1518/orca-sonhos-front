@@ -751,3 +751,4 @@ Nenhuma nova dependência externa. Todas as dependências já existem:
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Compartilhamento Familiar Simplificado (#3)
 
 
+

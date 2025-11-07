@@ -152,3 +152,4 @@ Implementar uma feature de relatórios financeiros simples que permita aos usuá
 - Fase: Fase 3 - Features de Suporte
 - Card Original: Card 13 do backlog-features-incremental.md
 - Alinhamento: Segue escopo MVP conforme definido em mvp-scope.md
+

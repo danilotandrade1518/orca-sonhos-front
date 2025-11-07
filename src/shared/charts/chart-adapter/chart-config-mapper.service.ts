@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ChartOptions as ChartJsOptions } from 'chart.js';
 
 import type { ChartConfig } from '../interfaces/chart-config.interface';
