@@ -9,6 +9,7 @@ import { goalHandlers } from './goals.handlers';
 import { categoryHandlers } from './categories.handlers';
 import { envelopeHandlers } from './envelopes.handlers';
 import { creditCardHandlers } from './credit-cards.handlers';
+import { sharingHandlers } from './sharing.handlers';
 
 export const handlers = [
   ...authHandlers,
@@ -19,4 +20,5 @@ export const handlers = [
   ...categoryHandlers,
   ...envelopeHandlers,
   ...creditCardHandlers,
+  ...sharingHandlers,
 ];

@@ -18,7 +18,7 @@ Implementar sistema de compartilhamento familiar simplificado para orçamentos, 
 
 ---
 
-## 📅 FASE 1: DTOs e Serviços Base [Status: ⏳]
+## 📅 FASE 1: DTOs e Serviços Base [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -26,125 +26,128 @@ Estabelecer contratos de dados (DTOs) e serviços base para operações de compa
 
 ### 📋 Tarefas
 
-#### Criar DTOs de Compartilhamento [⏳]
+#### Criar DTOs de Compartilhamento [✅]
 
 **Descrição**: Criar DTOs para requisições e respostas de compartilhamento seguindo padrão DTO-First Architecture.
 
-**Arquivos a criar**:
+**Arquivos criados**:
 
-- `src/dtos/budget/add-participant-request-dto.ts`
-- `src/dtos/budget/add-participant-response-dto.ts`
-- `src/dtos/budget/remove-participant-request-dto.ts`
-- `src/dtos/budget/remove-participant-response-dto.ts`
-- `src/dtos/budget/search-user-request-dto.ts`
-- `src/dtos/budget/search-user-response-dto.ts`
+- `src/dtos/budget/add-participant-request-dto.ts` ✅
+- `src/dtos/budget/add-participant-response-dto.ts` ✅
+- `src/dtos/budget/remove-participant-request-dto.ts` ✅
+- `src/dtos/budget/remove-participant-response-dto.ts` ✅
+- `src/dtos/budget/search-user-request-dto.ts` ✅
+- `src/dtos/budget/search-user-response-dto.ts` ✅
 
 **Critério de Conclusão**:
 
-- Todos os DTOs criados e exportados em `src/dtos/budget/index.ts`
-- Tipos alinhados com endpoints do backend (`/api/budget/add-participant`, `/api/budget/remove-participant`, `/api/users/search`)
-- Interfaces tipadas corretamente (userId, budgetId, participantId, query, etc.)
+- ✅ Todos os DTOs criados e exportados em `src/dtos/budget/index.ts`
+- ✅ Tipos alinhados com endpoints do backend (`/api/budget/add-participant`, `/api/budget/remove-participant`, `/api/users/search`)
+- ✅ Interfaces tipadas corretamente (userId, budgetId, participantId, query, etc.)
 
 **Dependências**: Nenhuma
 
-#### Criar SharingService [⏳]
+#### Criar SharingService [✅]
 
 **Descrição**: Implementar serviço para operações de compartilhamento (adicionar, remover participantes, buscar usuários) usando ApiService.
 
-**Arquivo**: `src/app/core/services/sharing/sharing.service.ts`
+**Arquivo**: `src/app/core/services/sharing/sharing.service.ts` ✅
 
-**Métodos a implementar**:
+**Métodos implementados**:
 
-- `addParticipant(budgetId: string, participantId: string): Observable<boolean>`
-- `removeParticipant(budgetId: string, participantId: string): Observable<boolean>`
-- `searchUsers(query: string): Observable<SearchUserResponseDto[]>`
-- Signals para `loading` e `error` (seguindo padrão do BudgetService)
+- ✅ `addParticipant(budgetId: string, participantId: string): Observable<boolean>`
+- ✅ `removeParticipant(budgetId: string, participantId: string): Observable<boolean>`
+- ✅ `searchUsers(query: string): Observable<SearchUserResponseDto[]>`
+- ✅ Signals para `loading` e `error` (seguindo padrão do BudgetService)
 
 **Critério de Conclusão**:
 
-- Serviço criado com métodos funcionais
-- Integração com ApiService e AuthService
-- Signals de loading/error implementados
-- Tratamento de erros adequado
+- ✅ Serviço criado com métodos funcionais
+- ✅ Integração com ApiService e AuthService
+- ✅ Signals de loading/error implementados
+- ✅ Tratamento de erros adequado
 
-**Dependências**: DTOs criados
+**Dependências**: DTOs criados ✅
 
-#### Criar SharingState [⏳]
+#### Criar SharingState [✅]
 
 **Descrição**: Implementar estado reativo com signals para gerenciar participantes e operações de compartilhamento.
 
-**Arquivo**: `src/app/core/services/sharing/sharing.state.ts`
+**Arquivo**: `src/app/core/services/sharing/sharing.state.ts` ✅
 
-**Signals a implementar**:
+**Signals implementados**:
 
-- `participants: Signal<BudgetParticipantDto[]>`
-- `loading: Signal<boolean>`
-- `error: Signal<string | null>`
-- `computed` para `hasParticipants`, `participantsCount`, `isCreator(userId)`
+- ✅ `participants: Signal<BudgetParticipantDto[]>`
+- ✅ `loading: Signal<boolean>`
+- ✅ `error: Signal<string | null>`
+- ✅ `computed` para `hasParticipants`, `participantsCount`, `isCreator(userId)`
 
-**Métodos a implementar**:
+**Métodos implementados**:
 
-- `loadParticipants(budgetId: string): void`
-- `addParticipant(budgetId: string, participantId: string): void`
-- `removeParticipant(budgetId: string, participantId: string): void`
-- `clearParticipants(): void`
+- ✅ `loadParticipants(budgetId: string): void`
+- ✅ `addParticipant(budgetId: string, participantId: string): void`
+- ✅ `removeParticipant(budgetId: string, participantId: string): void`
+- ✅ `clearParticipants(): void`
 
 **Critério de Conclusão**:
 
-- Estado criado com signals reativos
-- Métodos de atualização implementados
-- Integração com SharingService
-- Computed signals funcionando
+- ✅ Estado criado com signals reativos
+- ✅ Métodos de atualização implementados
+- ✅ Integração com SharingService
+- ✅ Computed signals funcionando
 
-**Dependências**: SharingService criado
+**Dependências**: SharingService criado ✅
 
-#### Adicionar Handlers MSW para Busca de Usuários [⏳]
+#### Adicionar Handlers MSW para Busca de Usuários [✅]
 
 **Descrição**: Criar handler MSW para endpoint de busca de usuários (`/api/users/search`).
 
-**Arquivo**: `src/app/core/mocks/handlers/sharing.handlers.ts` (novo) ou adicionar em `budgets.handlers.ts`
+**Arquivo**: `src/app/core/mocks/handlers/sharing.handlers.ts` ✅
 
-**Handler a implementar**:
+**Handler implementado**:
 
-- `GET /api/users/search?query=...` - Retorna lista de usuários filtrados por email/telefone
+- ✅ `GET /api/users/search?query=...` - Retorna lista de usuários filtrados por email/telefone
 
 **Critério de Conclusão**:
 
-- Handler criado e exportado em `handlers/index.ts`
-- Mock de dados de usuários para busca
-- Validação de query e retorno de resultados filtrados
+- ✅ Handler criado e exportado em `handlers/index.ts`
+- ✅ Mock de dados de usuários para busca
+- ✅ Validação de query e retorno de resultados filtrados
 
 **Dependências**: Nenhuma
 
-#### Testes Unitários para Serviços [⏳]
+#### Testes Unitários para Serviços [✅]
 
 **Descrição**: Criar testes unitários para SharingService e SharingState.
 
 **Arquivos**:
 
-- `src/app/core/services/sharing/sharing.service.spec.ts`
-- `src/app/core/services/sharing/sharing.state.spec.ts`
+- ✅ `src/app/core/services/sharing/sharing.service.spec.ts`
+- ✅ `src/app/core/services/sharing/sharing.state.spec.ts`
 
 **Critério de Conclusão**:
 
-- Cobertura > 80% para ambos os arquivos
-- Testes de sucesso e erro para cada método
-- Testes de signals e computed signals
-- Mocks adequados de ApiService e AuthService
+- ✅ Cobertura > 80% para ambos os arquivos
+- ✅ Testes de sucesso e erro para cada método
+- ✅ Testes de signals e computed signals
+- ✅ Mocks adequados de ApiService e AuthService
 
-**Dependências**: SharingService e SharingState criados
+**Dependências**: SharingService e SharingState criados ✅
 
 ### 🧪 Critérios de Validação
 
-- [ ] DTOs criados e exportados corretamente
-- [ ] SharingService com métodos funcionais (testado manualmente ou via testes)
-- [ ] SharingState com signals reativos funcionando
-- [ ] Handler MSW retornando dados mockados corretamente
-- [ ] Testes unitários passando com cobertura > 80%
+- [x] DTOs criados e exportados corretamente
+- [x] SharingService com métodos funcionais (testado manualmente ou via testes)
+- [x] SharingState com signals reativos funcionando
+- [x] Handler MSW retornando dados mockados corretamente
+- [x] Testes unitários passando com cobertura > 80%
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Criado SharingService separado seguindo padrão SRP (Single Responsibility Principle)
+- **Decisão**: SharingState utiliza BudgetService.getBudgetOverview para carregar participantes (reutiliza endpoint existente)
+- **Observação**: Handlers MSW de add/remove participant foram atualizados para remover campo `userId` não utilizado
+- **Observação**: Método `isCreator` no SharingState verifica se usuário está na lista de participantes (pode ser refinado quando BudgetOverviewDto incluir informação de criador)
 
 ---
 
