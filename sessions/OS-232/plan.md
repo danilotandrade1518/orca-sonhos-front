@@ -24,7 +24,7 @@ Implementação da feature de Relatórios Financeiros Simples (MVP) que permite 
 
 ---
 
-## 📅 FASE 1: Setup e Instalação da Biblioteca ng2-charts [Status: ⏳]
+## 📅 FASE 1: Setup e Instalação da Biblioteca ng2-charts [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -32,7 +32,7 @@ Instalar e configurar ng2-charts e chart.js no projeto, garantindo que a bibliot
 
 ### 📋 Tarefas
 
-#### 1.1. Instalar dependências [⏳]
+#### 1.1. Instalar dependências [✅]
 
 **Descrição**: Instalar ng2-charts e chart.js via npm
 **Comando**:
@@ -42,13 +42,15 @@ npm install ng2-charts chart.js --save
 ```
 
 **Critério de Conclusão**: Dependências aparecem no `package.json` e `package-lock.json`
+**Status**: ✅ Instalado - ng2-charts ^8.0.0, chart.js ^4.5.1
 
-#### 1.2. Verificar compatibilidade de versões [⏳]
+#### 1.2. Verificar compatibilidade de versões [✅]
 
 **Descrição**: Verificar versões compatíveis de ng2-charts e chart.js com Angular 20+
 **Critério de Conclusão**: Versões instaladas são compatíveis (ng2-charts ^5.0.0, chart.js ^4.4.0)
+**Status**: ✅ Versões instaladas são compatíveis com Angular 20+ (ng2-charts ^8.0.0, chart.js ^4.5.1)
 
-#### 1.3. Configurar providers no app.config.ts [⏳]
+#### 1.3. Configurar providers no app.config.ts [✅]
 
 **Descrição**: Adicionar `provideCharts(withDefaultRegisterables())` no `app.config.ts` para configuração global
 **Arquivo**: `src/app/app.config.ts`
@@ -66,24 +68,33 @@ export const appConfig: ApplicationConfig = {
 ```
 
 **Critério de Conclusão**: Providers configurados corretamente, sem erros de compilação
+**Status**: ✅ Providers configurados em `app.config.ts`, sem erros de compilação
 
-#### 1.4. Criar componente de teste simples [⏳]
+#### 1.4. Criar componente de teste simples [✅]
 
 **Descrição**: Criar componente de teste para validar instalação e configuração
 **Arquivo**: `src/app/features/reports/components/chart-test/chart-test.component.ts`
 **Critério de Conclusão**: Componente renderiza gráfico simples sem erros
+**Status**: ✅ Componente criado com gráfico de pizza básico, seguindo padrões do projeto (OnPush, signals)
 
 ### 🧪 Critérios de Validação
 
-- [ ] Dependências instaladas corretamente
-- [ ] `app.config.ts` atualizado com providers
-- [ ] Componente de teste renderiza gráfico básico
-- [ ] Sem erros de compilação ou runtime
-- [ ] Bundle size verificado (deve adicionar ~150KB)
+- [x] Dependências instaladas corretamente
+- [x] `app.config.ts` atualizado com providers
+- [x] Componente de teste renderiza gráfico básico
+- [x] Sem erros de compilação ou runtime
+- [x] Bundle size verificado (chart.js adiciona ~150KB conforme esperado)
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Versões instaladas (ng2-charts ^8.0.0, chart.js ^4.5.1) são superiores às mínimas especificadas e totalmente compatíveis com Angular 20+
+- **Implementação**: Componente de teste criado seguindo padrões do projeto:
+  - `ChangeDetectionStrategy.OnPush`
+  - Signals para dados reativos
+  - Standalone component
+  - Template inline
+- **Validação**: Build compilado com sucesso, sem erros de compilação ou runtime
+- **Bundle Size**: Chart.js adiciona aproximadamente 150KB ao bundle conforme esperado
 
 ---
 
