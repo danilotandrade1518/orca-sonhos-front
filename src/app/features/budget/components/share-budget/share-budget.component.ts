@@ -156,6 +156,14 @@ export class ShareBudgetComponent implements OnInit {
       return;
     }
 
+    const participants = this.sharingState.participants();
+    const isAlreadyParticipant = participants.some((p) => p.id === userId);
+
+    if (isAlreadyParticipant) {
+      this.notificationService.showError('Este usuário já é participante do orçamento');
+      return;
+    }
+
     this._addingParticipantId.set(userId);
     const budgetId = this.budgetId();
     this.sharingState.addParticipant(budgetId, userId);

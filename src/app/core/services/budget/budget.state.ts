@@ -150,4 +150,20 @@ export class BudgetState {
   refreshBudgets(): void {
     this.loadBudgets();
   }
+
+  updateBudgetParticipantsCount(budgetId: string, participantsCount: number): void {
+    this._budgets.update((budgets) =>
+      budgets.map((budget) =>
+        budget.id === budgetId ? { ...budget, participantsCount } : budget
+      )
+    );
+
+    const selectedBudget = this.selectedBudget();
+    if (selectedBudget && selectedBudget.id === budgetId) {
+      const updatedBudget = this._budgets().find((b) => b.id === budgetId);
+      if (updatedBudget) {
+        this.budgetSelectionService.setSelectedBudget(updatedBudget);
+      }
+    }
+  }
 }

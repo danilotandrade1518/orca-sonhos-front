@@ -3,6 +3,7 @@ import {
   computed,
   inject,
   OnInit,
+  OnDestroy,
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -11,13 +12,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
+import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-detail-page',
   standalone: true,
-  imports: [CommonModule, OsModalTemplateComponent],
+  imports: [CommonModule, OsModalTemplateComponent, ShareBudgetComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-detail-page">
@@ -189,6 +192,45 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           </div>
           }
         </section>
+
+        <section class="budget-detail-page__card">
+          <div class="budget-detail-page__card-header">
+            <h2 class="budget-detail-page__card-title">Colaboração</h2>
+            <button
+              type="button"
+              class="button button--primary button--small"
+              (click)="openShareModal()"
+              [attr.aria-label]="'Gerenciar participantes do orçamento ' + budget.name"
+            >
+              Gerenciar Participantes
+            </button>
+          </div>
+
+          @if (participantsLoading()) {
+          <div class="budget-detail-page__participants-loading" role="status" aria-live="polite">
+            <p>Carregando participantes...</p>
+          </div>
+          } @else if (participantsCount() === 0) {
+          <div class="budget-detail-page__participants-empty" role="status">
+            <p>Nenhum participante adicionado ainda.</p>
+            <button
+              type="button"
+              class="button button--primary"
+              (click)="openShareModal()"
+              aria-label="Adicionar primeiro participante"
+            >
+              Adicionar Participante
+            </button>
+          </div>
+          } @else {
+          <div class="budget-detail-page__participants-info">
+            <p>
+              <strong>{{ participantsCount() }}</strong>
+              {{ participantsCount() === 1 ? 'participante' : 'participantes' }}
+            </p>
+          </div>
+          }
+        </section>
       </main>
       } @else {
       <div class="budget-detail-page__not-found" role="alert" aria-live="polite">
@@ -215,15 +257,27 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (cancelled)="onDeleteCancelled()"
         (closed)="onDeleteCancelled()"
       />
+      } @if (showShareModal()) {
+      <os-share-budget
+        [budgetId]="budgetId()!"
+        [budgetName]="budget()?.name || ''"
+        [creatorId]="currentUser()?.id || null"
+        [isOpen]="showShareModal()"
+        (opened)="onShareModalOpened()"
+        (closed)="onShareModalClosed()"
+        (participantAdded)="onParticipantAdded($event)"
+        (participantRemoved)="onParticipantRemoved($event)"
+      />
       }
     </div>
   `,
   styleUrl: './budget-detail.page.scss',
 })
-export class BudgetDetailPage implements OnInit {
+export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly budgetState = inject(BudgetState);
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
+  private readonly sharingState = inject(SharingState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -236,6 +290,11 @@ export class BudgetDetailPage implements OnInit {
 
   readonly budgetId = signal<string | null>(null);
   readonly showDeleteConfirm = signal(false);
+  readonly showShareModal = signal(false);
+
+  readonly participants = computed(() => this.sharingState.participants());
+  readonly participantsCount = computed(() => this.sharingState.participantsCount());
+  readonly participantsLoading = computed(() => this.sharingState.loading());
 
   readonly budget = computed(() => {
     const id = this.budgetId();
@@ -291,6 +350,15 @@ export class BudgetDetailPage implements OnInit {
 
       this.budgetState.selectBudget(id);
       this.accountState.loadAccounts();
+      this.sharingState.loadParticipants(id);
+      this.sharingState.startPolling(id);
+    }
+  }
+
+  ngOnDestroy(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.stopPolling();
     }
   }
 
@@ -371,5 +439,41 @@ export class BudgetDetailPage implements OnInit {
 
   onDeleteCancelled(): void {
     this.showDeleteConfirm.set(false);
+  }
+
+  openShareModal(): void {
+    this.showShareModal.set(true);
+  }
+
+  onShareModalOpened(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+    }
+  }
+
+  onShareModalClosed(): void {
+    this.showShareModal.set(false);
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onParticipantAdded(participantId: string): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onParticipantRemoved(participantId: string): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
   }
 }

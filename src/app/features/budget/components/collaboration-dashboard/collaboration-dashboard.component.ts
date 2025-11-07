@@ -194,8 +194,9 @@ export class CollaborationDashboardComponent {
       return;
     }
 
+    const creatorId = this.creatorId();
     this._removingParticipantId.set(participantId);
     const budgetId = this.budgetId();
-    this.sharingState.removeParticipant(budgetId, participantId);
+    this.sharingState.removeParticipant(budgetId, participantId, creatorId);
   }
 }
