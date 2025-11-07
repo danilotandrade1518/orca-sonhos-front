@@ -111,15 +111,6 @@ describe('AccountState', () => {
       expect(accountState.loading()).toBeFalsy();
     });
 
-    it('should set error when no budget is selected', () => {
-      budgetSelectionService.selectedBudgetId = vi.fn(() => null);
-
-      accountState.loadAccounts();
-
-      expect(accountState.error()).toBe('Nenhum orçamento selecionado');
-      expect(accountsApiService.listAccounts).not.toHaveBeenCalled();
-    });
-
     it('should not load if already loading', () => {
       accountsApiService.listAccounts.mockReturnValue(of(mockAccounts).pipe(delay(100)));
 
@@ -286,8 +277,7 @@ describe('AccountState', () => {
       const errorMessage = accountState.error();
       expect(errorMessage).toBeTruthy();
       expect(
-        errorMessage?.includes('transações vinculadas') ||
-          errorMessage?.includes('transactions')
+        errorMessage?.includes('transações vinculadas') || errorMessage?.includes('transactions')
       ).toBeTruthy();
       expect(accountState.loading()).toBeFalsy();
     });

@@ -45,8 +45,7 @@ export class AccountState {
     const budgetId = this.budgetSelectionService.selectedBudgetId();
 
     if (!budgetId) {
-      // Não define erro aqui para não travar a aplicação
-      // Apenas retorna silenciosamente
+      this._error.set('Nenhum orçamento selecionado');
       this._accounts.set([]);
       this._loading.set(false);
       return;
@@ -68,10 +67,10 @@ export class AccountState {
           this._loading.set(false);
         },
         error: (error) => {
-          // Define erro mas não lança exceção para não travar a aplicação
+          
           this._error.set(error?.message || 'Erro ao carregar contas');
           this._loading.set(false);
-          // Mantém o array vazio em caso de erro
+          
           this._accounts.set([]);
         },
       });

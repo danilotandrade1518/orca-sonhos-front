@@ -65,10 +65,10 @@ export class SharingState {
           this._loading.set(false);
         },
         error: (error) => {
-          // Define erro mas não lança exceção para não travar a aplicação
+          
           this._error.set(error?.message || 'Failed to load participants');
           this._loading.set(false);
-          // Mantém o array vazio em caso de erro
+          
           this._participants.set([]);
         },
       });

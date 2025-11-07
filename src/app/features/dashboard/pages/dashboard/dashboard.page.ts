@@ -96,8 +96,7 @@ export class DashboardPage implements OnInit {
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
         ]);
-        // O carregamento de contas é gerenciado automaticamente pelo componente filho
-        // através do effect quando o budgetId é definido acima
+        
       }
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);

@@ -82,8 +82,7 @@ export class DashboardWidgetsComponent {
       const budgetId = this.budgetSelectionService.selectedBudgetId();
       const hasWidget = untracked(() => this.hasAccountBalanceWidget());
       const isLoading = untracked(() => this.accountState.loading());
-
-      // Evita chamadas repetidas quando o budgetId não mudou ou já está carregando
+      
       if (budgetId === this._lastBudgetId || isLoading) {
         return;
       }

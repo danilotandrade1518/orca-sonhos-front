@@ -352,12 +352,11 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     }
 
     this.budgetId.set(id);
-
-    // Carrega budgets se necessário
+    
     if (this.budgetState.budgets().length === 0) {
       this.budgetState.loadBudgets();
     } else {
-      // Se já tem budgets, tenta selecionar imediatamente
+      
       const budget = this.budgetState.budgets().find((b) => b.id === id);
       if (budget) {
         this.budgetState.selectBudget(id);
@@ -379,7 +378,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Erro ao carregar recursos do orçamento:', error);
-      // Não define erro aqui para não travar a aplicação
+      
     }
   }
 
@@ -388,7 +387,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     if (id) {
       this.sharingState.stopPolling();
     }
-    // Reseta o flag para permitir recarregar recursos se o usuário voltar para esta página
+    
     this.resourcesLoaded.set(false);
   }
 
