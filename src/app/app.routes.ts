@@ -40,6 +40,10 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/credit-cards/credit-cards.routes').then((m) => m.CREDIT_CARDS_ROUTES),
       },
+      {
+        path: 'reports',
+        loadChildren: () => import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
+      },
     ],
   },
 ];

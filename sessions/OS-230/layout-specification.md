@@ -744,3 +744,4 @@ Item de fatura dentro do card expandido, mostrando informações resumidas da fa
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Diferenciação e valor único (Gestão Integrada de Cartões #5, Sistema Dual #6)
 
 
+

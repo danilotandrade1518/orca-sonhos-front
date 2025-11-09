@@ -1,0 +1,47 @@
+.os-base-chart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__data-table {
+    margin-top: var(--os-spacing-md);
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--os-font-size-sm);
+
+      caption {
+        font-weight: var(--os-font-weight-semibold);
+        margin-bottom: var(--os-spacing-xs);
+        text-align: left;
+      }
+
+      thead {
+        background-color: var(--os-color-surface-variant);
+      }
+
+      th,
+      td {
+        padding: var(--os-spacing-xs) var(--os-spacing-sm);
+        text-align: left;
+        border-bottom: 1px solid var(--os-color-outline-variant);
+      }
+
+      th {
+        font-weight: var(--os-font-weight-semibold);
+      }
+
+      tbody tr:hover {
+        background-color: var(--os-color-surface-variant);
+      }
+    }
+  }
+}
+

@@ -131,3 +131,4 @@ Implementar o sistema de compartilhamento familiar simplificado, permitindo que 
 - **Prioridade**: Média - Feature importante para o MVP, mas não bloqueante para funcionalidades core individuais
 - **Estimativa**: 4-5 story points - Feature completa com múltiplos componentes e integrações
 
+

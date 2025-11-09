@@ -1,0 +1,217 @@
+@use '../../theme/variables' as *;
+
+.os-chart-container {
+  display: flex;
+  flex-direction: column;
+  background: var(--os-color-background-primary);
+  border: 1px solid var(--os-color-border);
+  border-radius: var(--os-border-radius-md);
+  overflow: hidden;
+  transition: var(--os-transition-all);
+  position: relative;
+
+  // ===== VARIANTS =====
+  &--default {
+    padding: 24px;
+  }
+
+  &--compact {
+    padding: 16px;
+  }
+
+  // ===== HEADER =====
+  &__header {
+    margin-bottom: var(--os-spacing-md);
+    padding-bottom: var(--os-spacing-md);
+    border-bottom: 1px solid var(--os-color-border);
+  }
+
+  &__title {
+    font-size: var(--os-font-size-lg);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-primary);
+    margin: 0 0 var(--os-spacing-xs) 0;
+    line-height: 1.4;
+  }
+
+  &__subtitle {
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-normal);
+    color: var(--os-color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  // ===== CONTENT =====
+  &__content {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+  }
+
+  &__chart {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // ===== LOADING STATE =====
+  &--loading {
+    .os-chart-container__content {
+      min-height: 250px;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--os-spacing-md);
+    min-height: 250px;
+    padding: var(--os-spacing-xl);
+  }
+
+  &__loading-text {
+    font-size: var(--os-font-size-sm);
+    color: var(--os-color-text-secondary);
+    margin: 0;
+    text-align: center;
+  }
+
+  // ===== ERROR STATE =====
+  &--error {
+    .os-chart-container__content {
+      min-height: 250px;
+    }
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--os-spacing-md);
+    min-height: 250px;
+    padding: var(--os-spacing-xl);
+    text-align: center;
+  }
+
+  &__error-message {
+    font-size: var(--os-font-size-base);
+    color: var(--os-color-text-primary);
+    margin: 0;
+    max-width: 400px;
+  }
+
+  // ===== EMPTY STATE =====
+  &--empty {
+    .os-chart-container__content {
+      min-height: 250px;
+    }
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--os-spacing-md);
+    min-height: 250px;
+    padding: var(--os-spacing-xl);
+    text-align: center;
+  }
+
+  &__empty-message {
+    font-size: var(--os-font-size-base);
+    color: var(--os-color-text-secondary);
+    margin: 0;
+    max-width: 400px;
+  }
+
+  // ===== RESPONSIVE ADJUSTMENTS =====
+  @media (max-width: 575px) {
+    &--default {
+      padding: 16px;
+    }
+
+    &--compact {
+      padding: 12px;
+    }
+
+    &__header {
+      margin-bottom: var(--os-spacing-sm);
+      padding-bottom: var(--os-spacing-sm);
+    }
+
+    &__title {
+      font-size: var(--os-font-size-base);
+    }
+
+    &__subtitle {
+      font-size: var(--os-font-size-xs);
+    }
+
+    &__chart {
+      min-height: 250px;
+    }
+
+    &__loading,
+    &__error,
+    &__empty {
+      min-height: 250px;
+      padding: var(--os-spacing-lg);
+    }
+  }
+
+  @media (min-width: 576px) and (max-width: 991px) {
+    &--default {
+      padding: 20px;
+    }
+
+    &__chart {
+      min-height: 300px;
+    }
+
+    &__loading,
+    &__error,
+    &__empty {
+      min-height: 300px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    &__chart {
+      min-height: 400px;
+    }
+
+    &__loading,
+    &__error,
+    &__empty {
+      min-height: 400px;
+    }
+  }
+
+  // ===== ACCESSIBILITY IMPROVEMENTS =====
+  &[role='region'] {
+    &:focus-visible {
+      outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+      outline-offset: var(--os-focus-ring-offset);
+    }
+  }
+}
+
+.os-chart-container-host {
+  display: block;
+  width: 100%;
+}
+
+// ===== REDUCED MOTION SUPPORT =====
+@media (prefers-reduced-motion: reduce) {
+  .os-chart-container {
+    transition: none;
+  }
+}
+
