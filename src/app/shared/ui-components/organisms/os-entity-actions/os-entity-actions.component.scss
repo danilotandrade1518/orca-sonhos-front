@@ -1,0 +1,78 @@
+@use '../../../theme/variables' as *;
+
+.os-entity-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &__button {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--os-border-radius-full);
+    transition: var(--os-transition-all);
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-surface-hover);
+    }
+
+    &:focus-visible {
+      outline: var(--os-focus-ring-width) solid var(--os-focus-ring-color);
+      outline-offset: var(--os-focus-ring-offset);
+    }
+
+    &--small {
+      min-width: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &--large {
+      min-width: 40px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__menu {
+    min-width: 180px;
+    padding: var(--os-padding-xs) 0;
+  }
+
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--os-gap-sm);
+    padding: var(--os-padding-sm) var(--os-padding-md);
+    width: 100%;
+    text-align: left;
+    font-size: var(--os-font-size-sm);
+    color: var(--os-color-text-primary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-surface-hover);
+    }
+
+    &--danger {
+      color: var(--os-color-danger);
+
+      &:hover:not(:disabled) {
+        background-color: var(--os-color-danger-light);
+        color: var(--os-color-danger-dark);
+      }
+    }
+
+    os-icon {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.os-entity-actions-host {
+  display: inline-flex;
+}
+

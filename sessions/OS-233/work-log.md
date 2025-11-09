@@ -109,10 +109,48 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 4
+
+**Fase**: FASE 4 - Unificação de Cards/Listas (Entidades)
+**Objetivo**: Aplicar `os-entity-card`/`os-entity-actions` e `os-entity-list` quando aplicável.
+
+#### ✅ Trabalho Realizado
+
+- Criado componente `os-entity-card` com slots (title, meta, metrics, actions)
+- Criado componente `os-entity-actions` para menu de ações contextuais ("more")
+- Criado componente `os-entity-list` para listas padronizadas com estados (loading, empty)
+- Migrada lista de Metas para usar `os-entity-list` (mantendo `goal-card` específico)
+- Migrado `budget-card` para usar `os-entity-card` ao invés de `os-card`
+- Migrada lista de Orçamentos para usar `os-entity-list` ao invés de grid customizado
+- Exportados novos componentes no `index.ts` de organisms
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Criar componentes genéricos `os-entity-card`, `os-entity-actions` e `os-entity-list` - **Motivo**: Padronizar estrutura visual e comportamental entre diferentes entidades
+- **Decisão**: Manter `goal-card` específico usando `os-goal-progress-card` - **Motivo**: Componente específico para metas com progresso visual, mas dentro de `os-entity-list` para padronização
+- **Decisão**: `os-entity-card` suporta tanto input `title` quanto slot `title` - **Motivo**: Flexibilidade para usar texto simples ou conteúdo customizado
+- **Decisão**: `os-entity-actions` usa Material Menu temporariamente - **Motivo**: MVP rápido, pode migrar para componente próprio no futuro
+
+#### 🧪 Validações
+
+- ✅ Componentes criados sem erros de lint
+- ✅ Exportações adicionadas ao index.ts
+- ✅ Lista de Metas migrada para `os-entity-list`
+- ✅ Lista de Orçamentos migrada para `os-entity-list`
+- ✅ `budget-card` migrado para `os-entity-card`
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes breakpoints
+- Testar funcionalidade de ações em cards
+- Atualizar plan.md marcando FASE 4 como concluída
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 3 - Filtros Padronizados (Orçamentos, Metas) [Concluída ✅]
-**Última Modificação**: Implementação de filtros padronizados em Orçamentos e Metas
-**Próxima Tarefa**: FASE 4 - Unificação de Cards/Listas (Entidades)
+**Fase Atual**: FASE 4 - Unificação de Cards/Listas (Entidades) [Concluída ✅]
+**Última Modificação**: Criação de componentes `os-entity-card`, `os-entity-actions`, `os-entity-list` e migração de listas de Metas e Orçamentos
+**Próxima Tarefa**: FASE 5 - Locale pt-BR Centralizado
 

@@ -116,7 +116,7 @@ Padronizar filtros com `os-filter-bar` e campos DS.
 
 ---
 
-## 📅 FASE 4: Unificação de Cards/Listas (Entidades) [Status: ⏳]
+## 📅 FASE 4: Unificação de Cards/Listas (Entidades) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -124,25 +124,28 @@ Aplicar `os-entity-card`/`os-entity-actions` e `os-entity-list` quando aplicáve
 
 ### 📋 Tarefas
 
-#### Padronizar lista de Metas [⏳]
+#### Padronizar lista de Metas [✅]
 
 **Descrição**: Renderizar metas em `os-entity-card` com slots (title/meta/metrics/actions).  
 **Critério de Conclusão**: Ações acessíveis; hierarquia clara; spacing por tokens.
 
-#### Padronizar lista/grade de Orçamentos [⏳]
+#### Padronizar lista/grade de Orçamentos [✅]
 
 **Descrição**: Aplicar mesma estrutura e ações contextuais com `os-entity-actions`.  
 **Critério de Conclusão**: UX consistente com Metas; responsivo.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Mesma estrutura visual entre entidades
-- [ ] Ações acessíveis via teclado
-- [ ] Responsividade preservada
+- [x] Mesma estrutura visual entre entidades
+- [x] Ações acessíveis via teclado
+- [x] Responsividade preservada
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Componentes criados**: `os-entity-card`, `os-entity-actions` e `os-entity-list` implementados conforme especificação
+- **Lista de Metas**: Migrada para usar `os-entity-list`, mantendo `goal-card` específico com `os-goal-progress-card` dentro da lista padronizada
+- **Lista de Orçamentos**: Migrada para usar `os-entity-list` e `budget-card` agora usa `os-entity-card` ao invés de `os-card` diretamente
+- **Padrão aplicado**: Ambos os casos seguem o mesmo padrão visual e comportamental, garantindo consistência entre páginas
 
 ---
 

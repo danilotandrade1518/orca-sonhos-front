@@ -1,16 +1,18 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BudgetDto } from '../../../../../dtos/budget';
-import { OsCardComponent } from '@shared/ui-components/molecules/os-card/os-card.component';
-import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import {
+  OsEntityCardComponent,
+  type OsEntityCardAction,
+} from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
 
 @Component({
   selector: 'os-budget-card',
   standalone: true,
-  imports: [CommonModule, OsCardComponent, OsButtonComponent],
+  imports: [CommonModule, OsEntityCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <os-card
+    <os-entity-card
       [clickable]="true"
       [selected]="selected()"
       [disabled]="disabled()"
@@ -18,48 +20,22 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
       [ariaLabel]="ariaLabel()"
       [variant]="variant()"
       [size]="size()"
-      [actions]="showActions()"
+      [title]="titleText()"
+      [meta]="metaText()"
+      [actions]="cardActions()"
+      [showActionsMenu]="false"
       (cardClick)="onCardClick()"
+      (actionClick)="onActionClick($event)"
     >
-      <div class="budget-card__header">
-        <h3 class="budget-card__name">{{ budget().name }}</h3>
-        <span
-          class="budget-card__type"
-          [class.budget-card__type--personal]="budget().type === 'PERSONAL'"
-          [class.budget-card__type--shared]="budget().type === 'SHARED'"
-        >
-          {{ budget().type === 'PERSONAL' ? 'Pessoal' : 'Compartilhado' }}
-        </span>
-      </div>
-
-      <div class="budget-card__info">
-        <p class="budget-card__participants">
-          {{ budget().participantsCount }}
-          {{ budget().participantsCount === 1 ? 'participante' : 'participantes' }}
-        </p>
-      </div>
-
-      @if (showActions()) {
-      <div slot="actions" class="budget-card__actions">
-        <os-button
-          variant="secondary"
-          size="small"
-          [ariaLabel]="'Editar orçamento ' + budget().name"
-          (clicked)="onEditClick()"
-        >
-          Editar
-        </os-button>
-        <os-button
-          variant="danger"
-          size="small"
-          [ariaLabel]="'Excluir orçamento ' + budget().name"
-          (clicked)="onDeleteClick()"
-        >
-          Excluir
-        </os-button>
-      </div>
-      }
-    </os-card>
+      <span
+        slot="title"
+        class="budget-card__type"
+        [class.budget-card__type--personal]="budget().type === 'PERSONAL'"
+        [class.budget-card__type--shared]="budget().type === 'SHARED'"
+      >
+        {{ budget().type === 'PERSONAL' ? 'Pessoal' : 'Compartilhado' }}
+      </span>
+    </os-entity-card>
   `,
   styleUrl: './budget-card.component.scss',
   host: {
@@ -81,17 +57,46 @@ export class BudgetCardComponent {
 
   readonly ariaLabel = computed(() => `Orçamento ${this.budget().name}`);
 
+  readonly titleText = computed(() => {
+    return this.budget().name;
+  });
+
+  readonly metaText = computed(() => {
+    const count = this.budget().participantsCount;
+    return `${count} ${count === 1 ? 'participante' : 'participantes'}`;
+  });
+
+  readonly cardActions = computed<OsEntityCardAction[]>(() => {
+    if (!this.showActions()) {
+      return [];
+    }
+    return [
+      {
+        id: 'edit',
+        label: 'Editar',
+        icon: 'edit',
+        variant: 'primary',
+      },
+      {
+        id: 'delete',
+        label: 'Excluir',
+        icon: 'trash',
+        variant: 'danger',
+      },
+    ];
+  });
+
   onCardClick(): void {
     if (!this.disabled() && !this.loading()) {
       this.cardClick.emit();
     }
   }
 
-  onEditClick(): void {
-    this.editClick.emit(this.budget().id);
-  }
-
-  onDeleteClick(): void {
-    this.deleteClick.emit(this.budget().id);
+  onActionClick(action: OsEntityCardAction): void {
+    if (action.id === 'edit') {
+      this.editClick.emit(this.budget().id);
+    } else if (action.id === 'delete') {
+      this.deleteClick.emit(this.budget().id);
+    }
   }
 }

@@ -17,6 +17,7 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
 import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
 import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
 import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
+import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -31,6 +32,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsFilterBarComponent,
     OsInputComponent,
     OsSelectComponent,
+    OsEntityListComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -83,17 +85,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
       </section>
 
       <main class="budget-list-page__content">
-        @switch (currentState()) { @case ('loading') {
-        <div
-          class="budget-list-page__loading"
-          role="status"
-          aria-live="polite"
-          aria-label="Carregando orçamentos"
-        >
-          <div class="spinner" aria-hidden="true"></div>
-          <p>Carregando orçamentos...</p>
-        </div>
-        } @case ('error') {
+        @if (currentState() === 'error') {
         <div class="budget-list-page__error" role="alert" aria-live="assertive">
           <p class="error-message">{{ errorMessage() }}</p>
           <os-button
@@ -105,22 +97,22 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             Tentar Novamente
           </os-button>
         </div>
-        } @case ('empty') {
-        <div class="budget-list-page__empty" role="status" aria-live="polite">
-          <p>Nenhum orçamento encontrado</p>
-          <p class="empty-subtitle">Crie seu primeiro orçamento para começar</p>
-          <os-button
-            variant="primary"
-            size="medium"
-            icon="plus"
-            (buttonClick)="navigateToCreate()"
-            [attr.aria-label]="'Criar primeiro orçamento'"
-          >
-            Criar Orçamento
-          </os-button>
-        </div>
-        } @default {
-        <div class="budget-list-page__grid">
+        } @else {
+        <os-entity-list
+          [layout]="'grid'"
+          [size]="'medium'"
+          [isLoading]="currentState() === 'loading'"
+          [isEmpty]="currentState() === 'empty'"
+          [loadingText]="'Carregando orçamentos...'"
+          [emptyTitle]="'Nenhum orçamento encontrado'"
+          [emptyText]="'Crie seu primeiro orçamento para começar'"
+          [emptyIcon]="'wallet'"
+          [emptyAction]="true"
+          [emptyActionLabel]="'Criar Orçamento'"
+          [emptyActionIcon]="'plus'"
+          [ariaLabel]="'Lista de orçamentos'"
+          (emptyActionClick)="navigateToCreate()"
+        >
           @for (budget of filteredBudgets(); track budget.id) {
           <os-budget-card
             [budget]="budget"
@@ -130,8 +122,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             (deleteClick)="confirmDelete($event)"
           />
           }
-        </div>
-        } }
+        </os-entity-list>
+        }
       </main>
 
       @if (showCreateModal()) {
