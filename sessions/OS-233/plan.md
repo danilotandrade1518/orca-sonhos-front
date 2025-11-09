@@ -84,7 +84,7 @@ Eliminar uso de `mat-button` nas páginas/containers; padronizar variantes/taman
 
 ---
 
-## 📅 FASE 3: Filtros Padronizados (Orçamentos, Metas) [Status: ⏳]
+## 📅 FASE 3: Filtros Padronizados (Orçamentos, Metas) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -92,25 +92,27 @@ Padronizar filtros com `os-filter-bar` e campos DS.
 
 ### 📋 Tarefas
 
-#### Implementar os-filter-bar em Orçamentos [⏳]
+#### Implementar os-filter-bar em Orçamentos [✅]
 
 **Descrição**: Adicionar barra de filtros com controles (`os-input`, `os-select`, date range), limpar/aplicar.  
 **Critério de Conclusão**: Filtros funcionais com aria-labels; layout responsivo.
 
-#### Implementar os-filter-bar em Metas [⏳]
+#### Implementar os-filter-bar em Metas [✅]
 
 **Descrição**: Repetir padrão de Orçamentos, ajustando campos específicos.  
 **Critério de Conclusão**: Padrão replicado; sem divergência visual.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Barra com limpar/aplicar
-- [ ] Controles com labels e validações claras
-- [ ] Responsivo (mobile→desktop)
+- [x] Barra com limpar/aplicar
+- [x] Controles com labels e validações claras
+- [x] Responsivo (mobile→desktop)
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Orçamentos**: Substituídos filtros HTML nativos (`input` e `select`) por `os-filter-bar` com `os-input` e `os-select`. Implementados filtros de busca por nome e tipo (Pessoal/Compartilhado). Ações de limpar/aplicar funcionais.
+- **Metas**: Adicionados filtros padronizados com `os-filter-bar`. Implementados filtros de busca por nome e filtro por prazo (Com prazo/Sem prazo/Todas). Layout responsivo aplicado.
+- **Padrão aplicado**: Ambos os casos seguem o mesmo padrão visual e comportamental, garantindo consistência entre páginas.
 
 ---
 

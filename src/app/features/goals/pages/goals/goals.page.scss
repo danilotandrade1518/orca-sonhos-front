@@ -21,7 +21,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: var(--os-spacing-md, 16px);
+}
+
+.os-goals__filters-content {
+  display: flex;
+  gap: var(--os-spacing-md, 16px);
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  @media (max-width: 575px) {
+    flex-direction: column;
+    gap: var(--os-spacing-sm, 12px);
+  }
+
+  @media (min-width: 576px) and (max-width: 991px) {
+    gap: var(--os-spacing-sm, 12px);
+  }
 }
 
 .os-goals__header h1 {

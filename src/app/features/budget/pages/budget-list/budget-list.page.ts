@@ -14,12 +14,24 @@ import { BudgetCardComponent } from '../../components/budget-card/budget-card.co
 import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
+import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
+import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-list-page',
   standalone: true,
-  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent, OsModalTemplateComponent, OsButtonComponent],
+  imports: [
+    CommonModule,
+    BudgetCardComponent,
+    BudgetFormComponent,
+    OsModalTemplateComponent,
+    OsButtonComponent,
+    OsFilterBarComponent,
+    OsInputComponent,
+    OsSelectComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-list-page">
@@ -39,29 +51,35 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
       </header>
 
       <section class="budget-list-page__toolbar">
-        <div class="budget-list-page__filters">
-          <input
-            type="text"
-            class="budget-list-page__search"
-            placeholder="Buscar orçamentos..."
-            [value]="searchTerm()"
-            (input)="updateSearchTerm($event)"
-            aria-label="Buscar orçamentos por nome"
-            id="budget-search-input"
-          />
+        <os-filter-bar
+          variant="default"
+          size="medium"
+          [hasActiveFilters]="hasActiveFilters()"
+          [ariaLabel]="'Filtros de orçamentos'"
+          (clear)="onClearFilters()"
+          (apply)="onApplyFilters()"
+        >
+          <div class="budget-list-page__filters-content">
+            <os-input
+              type="text"
+              label="Buscar"
+              placeholder="Buscar orçamentos..."
+              [value]="searchTerm()"
+              size="medium"
+              [ariaLabel]="'Buscar orçamentos por nome'"
+              (valueChange)="onSearchChange($event)"
+            />
 
-          <select
-            class="budget-list-page__type-filter"
-            [value]="selectedType()"
-            (change)="updateTypeFilter($event)"
-            aria-label="Filtrar orçamentos por tipo"
-            id="budget-type-filter"
-          >
-            <option value="all">Todos os tipos</option>
-            <option value="PERSONAL">Pessoal</option>
-            <option value="SHARED">Compartilhado</option>
-          </select>
-        </div>
+            <os-select
+              label="Tipo"
+              [options]="typeOptions()"
+              [value]="selectedType()"
+              size="medium"
+              [ariaLabel]="'Filtrar orçamentos por tipo'"
+              (valueChange)="onTypeChange($event)"
+            />
+          </div>
+        </os-filter-bar>
       </section>
 
       <main class="budget-list-page__content">
@@ -207,18 +225,36 @@ export class BudgetListPage implements OnInit {
 
   readonly errorMessage = computed(() => this.error() || 'Erro ao carregar orçamentos');
 
+  readonly hasActiveFilters = computed(() => {
+    return this.searchTerm().length > 0 || this.selectedType() !== 'all';
+  });
+
+  readonly typeOptions = computed(() => [
+    { value: 'all', label: 'Todos os tipos' },
+    { value: 'PERSONAL', label: 'Pessoal' },
+    { value: 'SHARED', label: 'Compartilhado' },
+  ]);
+
   ngOnInit(): void {
     this.budgetState.loadBudgets();
   }
 
-  updateSearchTerm(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
+  onSearchChange(value: string): void {
+    this.searchTerm.set(value);
   }
 
-  updateTypeFilter(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.selectedType.set(select.value as 'all' | 'PERSONAL' | 'SHARED');
+  onTypeChange(value: string | number): void {
+    this.selectedType.set(value as 'all' | 'PERSONAL' | 'SHARED');
+  }
+
+  onClearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedType.set('all');
+  }
+
+  onApplyFilters(): void {
+    // Filtros são aplicados automaticamente via computed filteredBudgets
+    // Este método pode ser usado para ações adicionais se necessário
   }
 
   isSelected(budgetId: string): boolean {

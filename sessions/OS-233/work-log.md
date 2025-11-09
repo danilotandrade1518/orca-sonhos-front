@@ -71,10 +71,48 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 3
+
+**Fase**: FASE 3 - Filtros Padronizados (Orçamentos, Metas)
+**Objetivo**: Padronizar filtros com `os-filter-bar` e campos DS.
+
+#### ✅ Trabalho Realizado
+
+- Migrados filtros HTML nativos em `budget-list.page.ts` para `os-filter-bar` com `os-input` e `os-select`
+- Implementados filtros padronizados em `goals.page.ts` com busca por nome e filtro por prazo
+- Adicionadas ações de limpar/aplicar em ambos os casos
+- Atualizados estilos SCSS para layout responsivo dos filtros
+- Implementado computed `hasActiveFilters` para controlar estado dos botões de ação
+- Implementado computed `filteredBudgets` e `filteredGoals` para aplicar filtros automaticamente
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-input` e `os-select` ao invés de campos HTML nativos - **Motivo**: Seguir padrões do Design System e garantir consistência visual
+- **Decisão**: Filtros aplicados automaticamente via computed - **Motivo**: Melhor UX, sem necessidade de clicar em "Aplicar" para ver resultados
+- **Decisão**: Manter botão "Aplicar" mesmo com filtros automáticos - **Motivo**: Padrão do `os-filter-bar` e pode ser útil para ações futuras (ex: salvar filtros)
+- **Decisão**: Filtros em Metas incluem busca por nome e filtro por prazo - **Motivo**: Campos mais relevantes baseados na estrutura de `GoalDto`
+
+#### 🧪 Validações
+
+- ✅ Filtros funcionais em Orçamentos (busca por nome e tipo)
+- ✅ Filtros funcionais em Metas (busca por nome e prazo)
+- ✅ Ações de limpar/aplicar funcionais
+- ✅ Layout responsivo (mobile/tablet/desktop)
+- ✅ Acessibilidade: aria-labels em todos os controles
+- ✅ Sem erros de lint
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes breakpoints
+- Testar funcionalidade de filtros em ambiente de desenvolvimento
+- Atualizar plan.md marcando FASE 3 como concluída
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 2 - Migração de Botões para os-button [Concluída ✅]
-**Última Modificação**: Migração completa de botões em budget-list e budget-detail
-**Próxima Tarefa**: FASE 3 - Filtros Padronizados (Orçamentos, Metas)
+**Fase Atual**: FASE 3 - Filtros Padronizados (Orçamentos, Metas) [Concluída ✅]
+**Última Modificação**: Implementação de filtros padronizados em Orçamentos e Metas
+**Próxima Tarefa**: FASE 4 - Unificação de Cards/Listas (Entidades)
 

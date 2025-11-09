@@ -48,42 +48,21 @@
 
   &__toolbar {
     margin-bottom: var(--os-spacing-lg, 24px);
-    padding: var(--os-spacing-md, 16px);
-    background-color: var(--os-surface-color, #f5f5f5);
-    border-radius: var(--os-border-radius-md, 8px);
   }
 
-  &__filters {
+  &__filters-content {
     display: flex;
     gap: var(--os-spacing-md, 16px);
     flex-wrap: wrap;
-  }
+    align-items: flex-start;
 
-  &__search {
-    flex: 1;
-    min-width: 200px;
-    padding: var(--os-spacing-sm, 8px) var(--os-spacing-md, 16px);
-    border: 1px solid var(--os-border-color, #e0e0e0);
-    border-radius: var(--os-border-radius-sm, 4px);
-    font-size: var(--os-font-size-md, 16px);
-
-    &:focus {
-      outline: none;
-      border-color: var(--os-primary-color, #1976d2);
+    @media (max-width: 575px) {
+      flex-direction: column;
+      gap: var(--os-spacing-sm, 12px);
     }
-  }
 
-  &__type-filter {
-    padding: var(--os-spacing-sm, 8px) var(--os-spacing-md, 16px);
-    border: 1px solid var(--os-border-color, #e0e0e0);
-    border-radius: var(--os-border-radius-sm, 4px);
-    font-size: var(--os-font-size-md, 16px);
-    background-color: white;
-    cursor: pointer;
-
-    &:focus {
-      outline: none;
-      border-color: var(--os-primary-color, #1976d2);
+    @media (min-width: 576px) and (max-width: 991px) {
+      gap: var(--os-spacing-sm, 12px);
     }
   }
 
@@ -293,14 +272,6 @@
       grid-template-columns: 1fr;
     }
 
-    &__filters {
-      flex-direction: column;
-    }
-
-    &__search,
-    &__type-filter {
-      width: 100%;
-    }
   }
 
   .budget-card {
