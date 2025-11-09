@@ -36,7 +36,7 @@ describe('BaseChartComponent', () => {
 
     fixture = TestBed.createComponent(BaseChartComponent);
     component = fixture.componentInstance;
-    // Set required inputs before first detectChanges
+    
     fixture.componentRef.setInput('data', mockChartData);
     fixture.componentRef.setInput('type', ChartType.PIE);
   });
@@ -62,7 +62,6 @@ describe('BaseChartComponent', () => {
 
     it('should return null when data is not provided', () => {
       
-      // Reset component with only type
       fixture = TestBed.createComponent(BaseChartComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('data', null);
@@ -76,7 +75,6 @@ describe('BaseChartComponent', () => {
 
     it('should return null when type is not provided', () => {
       
-      // Reset component with only data
       fixture = TestBed.createComponent(BaseChartComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('data', mockChartData);
@@ -92,7 +90,6 @@ describe('BaseChartComponent', () => {
       
       fixture.componentRef.setInput('data', mockChartData);
       fixture.componentRef.setInput('type', ChartType.PIE);
-      // Don't call detectChanges to avoid Chart.js DOM access
 
       const initialConfig = component.chartConfiguration();
       
@@ -108,7 +105,6 @@ describe('BaseChartComponent', () => {
         ],
       };
       fixture.componentRef.setInput('data', newData);
-      // Don't call detectChanges to avoid Chart.js DOM access
       
       const newConfig = component.chartConfiguration();
       expect(newConfig).not.toEqual(initialConfig);
@@ -154,12 +150,10 @@ describe('BaseChartComponent', () => {
 
     it('should return empty array when data is not provided', () => {
       
-      // Reset component with empty data structure
       fixture = TestBed.createComponent(BaseChartComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('data', { labels: [], datasets: [] });
       fixture.componentRef.setInput('type', ChartType.PIE);
-      // Don't call detectChanges to avoid Chart.js DOM access
       
       expect(component.dataTableRows()).toEqual([]);
     });

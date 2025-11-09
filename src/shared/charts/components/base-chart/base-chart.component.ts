@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
 
 import { ChartAdapterService } from '../../chart-adapter/chart-adapter.service';
 import type { ChartConfig } from '../../interfaces/chart-config.interface';
@@ -25,11 +24,14 @@ import type { ChartType } from '../../interfaces/chart-type.enum';
         [type]="type()!"
         [attr.aria-label]="ariaLabel()"
       ></canvas>
-      }
-      @if (showDataTable()) {
+      } @if (showDataTable()) {
       <div class="os-base-chart__data-table" role="table" [attr.aria-label]="dataTableAriaLabel()">
         <table>
-          <caption>{{ dataTableCaption() }}</caption>
+          <caption>
+            {{
+              dataTableCaption()
+            }}
+          </caption>
           <thead>
             <tr>
               <th scope="col">Categoria</th>
@@ -40,7 +42,7 @@ import type { ChartType } from '../../interfaces/chart-type.enum';
             @for (item of dataTableRows(); track item.label) {
             <tr>
               <td>{{ item.label }}</td>
-              <td>{{ item.value | currency: 'BRL' }}</td>
+              <td>{{ item.value | currency : 'BRL' }}</td>
             </tr>
             }
           </tbody>
@@ -73,16 +75,14 @@ export class BaseChartComponent<T extends ChartType = ChartType> {
       return null;
     }
 
-    return this.chartAdapter.convertToChartJsConfiguration(
-      currentData,
-      currentConfig,
-      currentType
-    );
+    return this.chartAdapter.convertToChartJsConfiguration(currentData, currentConfig, currentType);
   });
 
   readonly containerClass = computed(() => {
     const chartType = this.type();
-    return ['os-base-chart', chartType ? `os-base-chart--${chartType}` : null].filter(Boolean).join(' ');
+    return ['os-base-chart', chartType ? `os-base-chart--${chartType}` : null]
+      .filter(Boolean)
+      .join(' ');
   });
 
   readonly dataTableRows = computed(() => {
