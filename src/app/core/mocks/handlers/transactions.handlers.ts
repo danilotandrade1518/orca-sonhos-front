@@ -1,50 +1,132 @@
 import { http, HttpResponse } from 'msw';
 
+// Função auxiliar para gerar data no mês atual
+const getCurrentMonthDate = (day: number, hour: number = 12): string => {
+  const now = new Date();
+  const date = new Date(now.getFullYear(), now.getMonth(), day, hour, 0, 0);
+  return date.toISOString();
+};
+
 const mockTransactions = [
   {
     id: 'transaction-1',
-    date: '2025-01-10T10:30:00Z',
+    date: getCurrentMonthDate(5),
+    transactionDate: getCurrentMonthDate(5),
     description: 'Salário',
-    amount: 3000.0,
+    amount: 5000.0,
+    type: 'INCOME',
     direction: 'INCOME',
     accountId: 'account-1',
     categoryId: 'category-salary',
+    budgetId: 'budget-1',
   },
   {
     id: 'transaction-2',
-    date: '2025-01-09T14:20:00Z',
+    date: getCurrentMonthDate(8),
+    transactionDate: getCurrentMonthDate(8),
     description: 'Supermercado',
-    amount: 150.0,
+    amount: 450.0,
+    type: 'EXPENSE',
     direction: 'EXPENSE',
     accountId: 'account-1',
     categoryId: 'category-groceries',
+    budgetId: 'budget-1',
   },
   {
     id: 'transaction-3',
-    date: '2025-01-08T09:15:00Z',
-    description: 'Transferência para poupança',
-    amount: 500.0,
-    direction: 'TRANSFER',
-    accountId: 'account-1',
-    categoryId: 'category-transfer',
-  },
-  {
-    id: 'transaction-4',
-    date: '2025-01-07T16:45:00Z',
+    date: getCurrentMonthDate(10),
+    transactionDate: getCurrentMonthDate(10),
     description: 'Conta de luz',
-    amount: 80.0,
+    amount: 120.0,
+    type: 'EXPENSE',
     direction: 'EXPENSE',
     accountId: 'account-1',
     categoryId: 'category-utilities',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-4',
+    date: getCurrentMonthDate(12),
+    transactionDate: getCurrentMonthDate(12),
+    description: 'Freelance',
+    amount: 1500.0,
+    type: 'INCOME',
+    direction: 'INCOME',
+    accountId: 'account-1',
+    categoryId: 'category-freelance',
+    budgetId: 'budget-1',
   },
   {
     id: 'transaction-5',
-    date: '2025-01-06T11:30:00Z',
-    description: 'Freelance',
+    date: getCurrentMonthDate(15),
+    transactionDate: getCurrentMonthDate(15),
+    description: 'Restaurante',
+    amount: 85.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-food',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-6',
+    date: getCurrentMonthDate(18),
+    transactionDate: getCurrentMonthDate(18),
+    description: 'Transporte',
+    amount: 200.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-transport',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-7',
+    date: getCurrentMonthDate(20),
+    transactionDate: getCurrentMonthDate(20),
+    description: 'Lazer',
+    amount: 300.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-entertainment',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-8',
+    date: getCurrentMonthDate(22),
+    transactionDate: getCurrentMonthDate(22),
+    description: 'Conta de água',
+    amount: 65.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-utilities',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-9',
+    date: getCurrentMonthDate(25),
+    transactionDate: getCurrentMonthDate(25),
+    description: 'Venda de produto',
     amount: 800.0,
+    type: 'INCOME',
     direction: 'INCOME',
-    accountId: 'account-4',
-    categoryId: 'category-freelance',
+    accountId: 'account-1',
+    categoryId: 'category-sales',
+    budgetId: 'budget-1',
+  },
+  {
+    id: 'transaction-10',
+    date: getCurrentMonthDate(28),
+    transactionDate: getCurrentMonthDate(28),
+    description: 'Farmácia',
+    amount: 150.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-health',
+    budgetId: 'budget-1',
   },
 ];
 
@@ -71,6 +153,11 @@ export const transactionHandlers = [
 
     let filteredTransactions = [...mockTransactions];
 
+    // Filtrar por budgetId se fornecido
+    if (budgetId) {
+      filteredTransactions = filteredTransactions.filter((t) => t.budgetId === budgetId);
+    }
+
     if (accountId) {
       filteredTransactions = filteredTransactions.filter((t) => t.accountId === accountId);
     }
@@ -81,12 +168,26 @@ export const transactionHandlers = [
 
     if (dateFrom) {
       const fromDate = new Date(dateFrom);
-      filteredTransactions = filteredTransactions.filter((t) => new Date(t.date) >= fromDate);
+      fromDate.setHours(0, 0, 0, 0);
+      filteredTransactions = filteredTransactions.filter((t) => {
+        const transactionDate = t.transactionDate || t.date;
+        if (!transactionDate) return false;
+        const txDate = new Date(transactionDate);
+        txDate.setHours(0, 0, 0, 0);
+        return txDate >= fromDate;
+      });
     }
 
     if (dateTo) {
       const toDate = new Date(dateTo);
-      filteredTransactions = filteredTransactions.filter((t) => new Date(t.date) <= toDate);
+      toDate.setHours(23, 59, 59, 999);
+      filteredTransactions = filteredTransactions.filter((t) => {
+        const transactionDate = t.transactionDate || t.date;
+        if (!transactionDate) return false;
+        const txDate = new Date(transactionDate);
+        txDate.setHours(0, 0, 0, 0);
+        return txDate <= toDate;
+      });
     }
 
     const startIndex = (page - 1) * pageSize;

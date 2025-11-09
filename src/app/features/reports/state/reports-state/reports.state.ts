@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import type { CategorySpendingDto } from '../../../../../dtos/report/category-spending.dto';
 import type { RevenueExpenseDto } from '../../../../../dtos/report/revenue-expense.dto';
@@ -19,7 +19,6 @@ export class ReportsState {
   private readonly reportsApi: ReportsApiService = inject(ReportsApiService);
   private readonly calculator: ReportsCalculatorService = inject(ReportsCalculatorService);
   private readonly budgetSelectionService: BudgetSelectionService = inject(BudgetSelectionService);
-  private readonly destroyRef = inject(DestroyRef);
 
   private readonly _transactions = signal<TransactionDto[]>([]);
   private readonly _categorySpending = signal<CategorySpendingDto[]>([]);

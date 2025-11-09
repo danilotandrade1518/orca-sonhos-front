@@ -183,7 +183,6 @@ export class ReportsPage implements OnInit {
   readonly currentState = computed(() => {
     if (this.loading()) return 'loading';
     if (this.error()) return 'error';
-    if (!this.hasData()) return 'empty';
     return 'success';
   });
 

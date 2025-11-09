@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 import { TransactionsApiService } from '../../../transactions/services/transactions-api.service';
 import type { TransactionDto } from '../../../../../dtos/transaction';
@@ -24,15 +25,15 @@ export class ReportsApiService {
     let hasNext = true;
 
     while (hasNext) {
-      const response = await this.transactionsApi
-        .list({
+      const response = await firstValueFrom(
+        this.transactionsApi.list({
           budgetId,
           page,
           pageSize,
           dateFrom: startDate,
           dateTo: endDate,
         })
-        .toPromise();
+      );
 
       if (!response?.data?.data) {
         break;
