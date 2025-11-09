@@ -125,4 +125,3 @@ export class SpendingChartComponent {
     this.retry()();
   }
 }
-

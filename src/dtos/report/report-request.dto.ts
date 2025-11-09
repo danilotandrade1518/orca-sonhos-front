@@ -6,4 +6,3 @@ export interface ReportRequestDto {
   startDate?: string;
   endDate?: string;
 }
-

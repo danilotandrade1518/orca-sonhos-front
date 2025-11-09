@@ -10,4 +10,3 @@ export interface ChartData {
   labels: string[];
   datasets: ChartDataset[];
 }
-

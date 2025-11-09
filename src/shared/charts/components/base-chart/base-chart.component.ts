@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
@@ -17,13 +17,15 @@ import type { ChartType } from '../../interfaces/chart-type.enum';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="ariaDescribedBy()"
     >
+      @if (type() && chartConfiguration()) {
       <canvas
         baseChart
-        [data]="chartConfiguration()?.data"
-        [options]="chartConfiguration()?.options"
-        [type]="type()"
+        [data]="chartConfiguration()!.data"
+        [options]="chartConfiguration()!.options"
+        [type]="type()!"
         [attr.aria-label]="ariaLabel()"
       ></canvas>
+      }
       @if (showDataTable()) {
       <div class="os-base-chart__data-table" role="table" [attr.aria-label]="dataTableAriaLabel()">
         <table>
@@ -54,15 +56,13 @@ import type { ChartType } from '../../interfaces/chart-type.enum';
 export class BaseChartComponent<T extends ChartType = ChartType> {
   protected readonly chartAdapter = inject(ChartAdapterService);
 
-  data = input.required<ChartData>();
+  data = input<ChartData | null>(null);
   config = input<ChartConfig>({});
-  type = input.required<T>();
+  type = input<T | null>(null);
   ariaLabel = input<string>();
   ariaDescribedBy = input<string>();
   showDataTable = input(false);
   dataTableCaption = input<string>('Tabela de dados do gráfico');
-
-  private readonly _chartConfiguration = signal<ChartConfiguration<T> | null>(null);
 
   readonly chartConfiguration = computed(() => {
     const currentData = this.data();
@@ -73,18 +73,16 @@ export class BaseChartComponent<T extends ChartType = ChartType> {
       return null;
     }
 
-    const config = this.chartAdapter.convertToChartJsConfiguration(
+    return this.chartAdapter.convertToChartJsConfiguration(
       currentData,
       currentConfig,
       currentType
     );
-
-    this._chartConfiguration.set(config);
-    return config;
   });
 
   readonly containerClass = computed(() => {
-    return ['os-base-chart', `os-base-chart--${this.type()}`].filter(Boolean).join(' ');
+    const chartType = this.type();
+    return ['os-base-chart', chartType ? `os-base-chart--${chartType}` : null].filter(Boolean).join(' ');
   });
 
   readonly dataTableRows = computed(() => {
@@ -103,4 +101,3 @@ export class BaseChartComponent<T extends ChartType = ChartType> {
     return this.dataTableCaption() || 'Tabela de dados do gráfico';
   });
 }
-

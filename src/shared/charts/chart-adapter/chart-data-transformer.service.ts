@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import type { CategorySpendingDto } from '../../../dtos/report/category-spending.dto';
 import type { RevenueExpenseDto } from '../../../dtos/report/revenue-expense.dto';

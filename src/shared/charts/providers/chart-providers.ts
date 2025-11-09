@@ -7,4 +7,3 @@ export const CHART_PROVIDERS = [
   ChartConfigMapper,
   ChartDataTransformer,
 ];
-

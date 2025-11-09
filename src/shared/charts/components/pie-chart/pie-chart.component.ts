@@ -42,4 +42,3 @@ export class PieChartComponent {
   showDataTable = input(false);
   dataTableCaption = input<string>('Tabela de dados do gráfico de pizza');
 }
-

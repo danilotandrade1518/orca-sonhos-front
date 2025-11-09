@@ -4,4 +4,3 @@ export enum ChartType {
   LINE = 'line',
   DOUGHNUT = 'doughnut',
 }
-

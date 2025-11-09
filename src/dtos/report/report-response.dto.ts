@@ -9,4 +9,3 @@ export interface ReportResponseDto {
   revenueExpense: RevenueExpenseDto;
   totalTransactions: number;
 }
-

@@ -4,4 +4,3 @@ export interface RevenueExpenseDto {
   difference: number;
   period: string;
 }
-

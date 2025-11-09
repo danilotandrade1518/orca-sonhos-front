@@ -134,4 +134,3 @@ export class ChartContainerComponent {
     this.emptyAction.emit();
   }
 }
-

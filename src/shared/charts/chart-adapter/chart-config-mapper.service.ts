@@ -22,25 +22,23 @@ export class ChartConfigMapper {
         options.plugins.legend = {
           display: config.plugins.legend.display ?? true,
           position: config.plugins.legend.position ?? 'top',
-          labels: config.plugins.legend.labels
-            ? {
-                usePointStyle: config.plugins.legend.labels.usePointStyle ?? false,
-                padding: config.plugins.legend.labels.padding ?? 10,
-                font: config.plugins.legend.labels.font
-                  ? {
-                      size: config.plugins.legend.labels.font.size,
-                      family: config.plugins.legend.labels.font.family,
-                      weight: config.plugins.legend.labels.font.weight as
-                        | 'normal'
-                        | 'bold'
-                        | 'lighter'
-                        | 'bolder'
-                        | number
-                        | undefined,
-                    }
-                  : undefined,
-              }
-            : undefined,
+          labels: {
+            usePointStyle: config.plugins.legend.labels?.usePointStyle ?? false,
+            padding: config.plugins.legend.labels?.padding ?? 10,
+            font: config.plugins.legend.labels?.font
+              ? {
+                  size: config.plugins.legend.labels.font.size,
+                  family: config.plugins.legend.labels.font.family,
+                  weight: config.plugins.legend.labels.font.weight as
+                    | 'normal'
+                    | 'bold'
+                    | 'lighter'
+                    | 'bolder'
+                    | number
+                    | undefined,
+                }
+              : undefined,
+          },
         };
       }
 
@@ -151,4 +149,3 @@ export class ChartConfigMapper {
     return options;
   }
 }
-

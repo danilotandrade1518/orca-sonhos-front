@@ -7,4 +7,3 @@ export const REPORTS_ROUTES: Routes = [
       import('./pages/reports/reports.page').then((m) => m.ReportsPage),
   },
 ];
-

@@ -5,4 +5,3 @@ export interface CategorySpendingDto {
   percentage: number;
   transactionCount: number;
 }
-

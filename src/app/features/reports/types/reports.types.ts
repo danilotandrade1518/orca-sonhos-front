@@ -8,4 +8,3 @@ export interface ReportFilters {
   period: ReportPeriod;
   budgetId?: string;
 }
-

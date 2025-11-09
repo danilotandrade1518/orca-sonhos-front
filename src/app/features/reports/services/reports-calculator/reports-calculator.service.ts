@@ -18,7 +18,7 @@ export class ReportsCalculatorService {
     categoryMap?: CategoryMap
   ): CategorySpendingDto[] {
     const expenseTransactions = transactions.filter(
-      (t) => t.type === 'EXPENSE' && t.categoryId && t.amount > 0
+      (t) => t.type === 'EXPENSE' && t.categoryId && Math.abs(t.amount) > 0
     );
 
     if (expenseTransactions.length === 0) {
