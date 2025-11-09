@@ -10,6 +10,8 @@ export {
   type PageHeaderAction,
 } from './os-page-header/os-page-header.component';
 
+export { OsPageComponent } from './os-page/os-page.component';
+
 export {
   OsFormSectionComponent,
   type OsFormSectionVariant,

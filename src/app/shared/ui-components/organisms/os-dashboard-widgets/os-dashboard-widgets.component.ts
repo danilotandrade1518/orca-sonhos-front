@@ -81,8 +81,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           <div
             class="os-dashboard-widgets__skeleton-widget"
             [class]="getWidgetClass(widget)"
-            [style.grid-column]="getWidgetGridColumn(widget)"
-            [style.grid-row]="getWidgetGridRow(widget)"
             aria-hidden="true"
           >
             <div class="os-dashboard-widgets__skeleton-header">
@@ -148,8 +146,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
         <div
           class="os-dashboard-widgets__widget"
           [class]="getWidgetClass(widget)"
-          [style.grid-column]="getWidgetGridColumn(widget)"
-          [style.grid-row]="getWidgetGridRow(widget)"
           [attr.aria-label]="getWidgetAriaLabel(widget)"
           [attr.aria-describedby]="getWidgetDescriptionId(widget)"
           role="region"
@@ -381,37 +377,6 @@ export class OsDashboardWidgetsComponent {
     return classes.join(' ');
   }
 
-  getWidgetGridColumn(widget: DashboardWidget): string {
-    switch (widget.size) {
-      case 'small':
-        return 'span 1';
-      case 'large':
-        return 'span 2';
-      case 'full-width':
-        return 'span 3';
-      default:
-        return 'span 1';
-    }
-  }
-
-  getWidgetGridRow(widget: DashboardWidget): string {
-    switch (widget.type) {
-      case 'budget-summary':
-        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
-      case 'goal-progress':
-        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
-      case 'transaction-list':
-        return 'span 3';
-      case 'monthly-trends':
-        return 'span 2';
-      case 'account-balance':
-        return 'span 1';
-      case 'quick-actions':
-        return 'span 1';
-      default:
-        return 'span 1';
-    }
-  }
 
   getWidgetAriaLabel(widget: DashboardWidget): string {
     return `Widget: ${widget.title}`;

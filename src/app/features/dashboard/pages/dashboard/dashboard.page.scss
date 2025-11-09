@@ -1,55 +1,14 @@
 @use '../../../../shared/ui-components/theme/tokens.scss' as *;
 
-.dashboard-page {
-  min-height: 100vh;
-  background-color: var(--os-color-background-secondary);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.dashboard-page__header {
-  padding: var(--os-spacing-6) 0 var(--os-spacing-4);
-  text-align: center;
-  background-color: var(--os-color-background-primary);
-  border-bottom: var(--os-border-width-1) solid var(--os-color-border);
-}
-
-.dashboard-page__title {
-  margin: 0 0 var(--os-spacing-2) 0;
-  font-size: var(--os-font-size-3xl);
-  font-weight: var(--os-font-weight-bold);
-  color: var(--os-color-text-primary);
-}
-
-.dashboard-page__subtitle {
-  margin: 0;
-  font-size: var(--os-font-size-lg);
-  color: var(--os-color-text-secondary);
-  font-weight: var(--os-font-weight-normal);
-}
-
 .dashboard-page__main {
   flex: 1;
-  padding: var(--os-spacing-8) 0;
-  min-height: calc(100vh - 200px);
+  width: 100%;
 }
 
 .dashboard-page__container {
   max-width: var(--os-container-xl);
   margin: 0 auto;
-  padding: 0 var(--os-spacing-4);
-}
-
-// Contextual Actions Slot Styles
-.dashboard-contextual-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--os-spacing-2) 0;
-  background-color: var(--os-color-background-primary);
-  border-bottom: var(--os-border-width-1) solid var(--os-color-border);
+  width: 100%;
 }
 
 // Mobile-first responsive design
@@ -58,36 +17,11 @@
   .dashboard-page__container {
     padding: 0 var(--os-spacing-3);
   }
-
-  .dashboard-page__main {
-    padding: var(--os-spacing-6) 0;
-  }
 }
 
 // Mobile: 0-575px
 @media (max-width: 575px) {
-  .dashboard-page__header {
-    padding: var(--os-spacing-4) 0 var(--os-spacing-3);
-  }
-
-  .dashboard-page__title {
-    font-size: var(--os-font-size-2xl);
-    margin-bottom: var(--os-spacing-1);
-  }
-
-  .dashboard-page__subtitle {
-    font-size: var(--os-font-size-base);
-  }
-
-  .dashboard-page__main {
-    padding: var(--os-spacing-4) 0;
-  }
-
   .dashboard-page__container {
     padding: 0 var(--os-spacing-2);
-  }
-
-  .dashboard-contextual-actions {
-    padding: var(--os-spacing-1) 0;
   }
 }

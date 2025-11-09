@@ -15,7 +15,7 @@ Executar a padronização visual e de interação em todo o app aplicando o Desi
 
 ---
 
-## 📅 FASE 1: Fundações de Layout (os-page, os-page-header, os-grid) [Status: ⏳]
+## 📅 FASE 1: Fundações de Layout (os-page, os-page-header, os-grid) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -23,26 +23,29 @@ Introduzir containers base e padronizar espaçamentos, removendo estilos inline 
 
 ### 📋 Tarefas
 
-#### Adotar os-page e os-page-header no Dashboard [⏳]
+#### Adotar os-page e os-page-header no Dashboard [✅]
 
 **Descrição**: Encapsular a página com `os-page` e usar `os-page-header` (título/descrição/ações).  
 **Critério de Conclusão**: Header visível; H1 único; ações primária/secundária padronizadas.
 
-#### Substituir estilos inline de grid por tokens/os-grid [⏳]
+#### Substituir estilos inline de grid por tokens/os-grid [✅]
 
 **Descrição**: Remover `grid-area`/inline styles em widgets; usar `os-grid/os-widget-grid` e tokens de espaçamento.  
 **Critério de Conclusão**: Sem estilos inline de layout; gaps/paddings via tokens; sem regressão visual relevante.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `os-page-header` aplicado
-- [ ] Inline styles de layout removidos
-- [ ] Spacing consistente por tokens
-- [ ] Sem warnings SSR/hidratação
+- [x] `os-page-header` aplicado
+- [x] Inline styles de layout removidos
+- [x] Spacing consistente por tokens
+- [x] Sem warnings SSR/hidratação
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Componente `os-page` criado**: Wrapper de página padronizado com espaçamentos verticais responsivos por breakpoint
+- **Dashboard migrado**: Agora usa `os-page` e `os-page-header` ao invés de classes customizadas
+- **Estilos inline removidos**: Substituídos `[style.grid-column]` e `[style.grid-row]` por classes CSS no SCSS do componente `os-dashboard-widgets`
+- **Grid system**: Grid já estava usando tokens de espaçamento, apenas removemos estilos inline
 
 ---
 
