@@ -15,13 +15,14 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-detail-page',
   standalone: true,
-  imports: [CommonModule, OsModalTemplateComponent, ShareBudgetComponent],
+  imports: [CommonModule, OsModalTemplateComponent, OsButtonComponent, ShareBudgetComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-detail-page">
@@ -38,26 +39,27 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
       } @case ('error') {
       <div class="budget-detail-page__error" role="alert" aria-live="assertive">
         <p class="error-message">{{ errorMessage() }}</p>
-        <button
-          type="button"
-          class="button button--secondary"
-          (click)="navigateToList()"
-          aria-label="Voltar para lista de orçamentos"
+        <os-button
+          variant="secondary"
+          size="medium"
+          (buttonClick)="navigateToList()"
+          [attr.aria-label]="'Voltar para lista de orçamentos'"
         >
           Voltar para Lista
-        </button>
+        </os-button>
       </div>
       } @default { @if (budget(); as budget) {
       <header class="budget-detail-page__header">
         <div class="budget-detail-page__header-content">
-          <button
-            type="button"
-            class="budget-detail-page__back-button"
-            (click)="navigateToList()"
-            aria-label="Voltar para lista de orçamentos"
+          <os-button
+            variant="tertiary"
+            size="medium"
+            icon="arrow-left"
+            (buttonClick)="navigateToList()"
+            [attr.aria-label]="'Voltar para lista de orçamentos'"
           >
-            ← Voltar
-          </button>
+            Voltar
+          </os-button>
 
           <div class="budget-detail-page__title-section">
             <h1 class="budget-detail-page__title">{{ budget.name }}</h1>
@@ -72,22 +74,24 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         </div>
 
         <div class="budget-detail-page__actions">
-          <button
-            type="button"
-            class="button button--secondary"
-            (click)="navigateToEdit()"
+          <os-button
+            variant="secondary"
+            size="medium"
+            icon="edit"
+            (buttonClick)="navigateToEdit()"
             [attr.aria-label]="'Editar orçamento ' + budget.name"
           >
             Editar
-          </button>
-          <button
-            type="button"
-            class="button button--danger"
-            (click)="confirmDelete()"
+          </os-button>
+          <os-button
+            variant="danger"
+            size="medium"
+            icon="trash"
+            (buttonClick)="confirmDelete()"
             [attr.aria-label]="'Excluir orçamento ' + budget.name"
           >
             Excluir
-          </button>
+          </os-button>
         </div>
       </header>
 
@@ -127,28 +131,30 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             Aguarde a implementação dos componentes de overview e participants.
           </p>
           <div class="budget-detail-page__actions-section">
-            <button
-              type="button"
-              class="button button--primary"
-              (click)="navigateToTransactions()"
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="receipt"
+              (buttonClick)="navigateToTransactions()"
               [attr.aria-label]="'Ver transações do orçamento ' + budget.name"
             >
               Ver Transações
-            </button>
+            </os-button>
           </div>
         </section>
 
         <section class="budget-detail-page__card">
           <div class="budget-detail-page__card-header">
             <h2 class="budget-detail-page__card-title">Contas do Orçamento</h2>
-            <button
-              type="button"
-              class="button button--primary button--small"
-              (click)="navigateToCreateAccount()"
+            <os-button
+              variant="primary"
+              size="small"
+              icon="plus"
+              (buttonClick)="navigateToCreateAccount()"
               [attr.aria-label]="'Criar nova conta para o orçamento ' + budget.name"
             >
               Criar Nova Conta
-            </button>
+            </os-button>
           </div>
 
           @if (accountsLoading()) {
@@ -158,14 +164,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           } @else if (accounts().length === 0) {
           <div class="budget-detail-page__accounts-empty" role="status">
             <p>Nenhuma conta cadastrada para este orçamento.</p>
-            <button
-              type="button"
-              class="button button--primary"
-              (click)="navigateToCreateAccount()"
-              aria-label="Criar primeira conta"
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="plus"
+              (buttonClick)="navigateToCreateAccount()"
+              [attr.aria-label]="'Criar primeira conta'"
             >
               Criar Primeira Conta
-            </button>
+            </os-button>
           </div>
           } @else {
           <div class="budget-detail-page__accounts-list" role="list" aria-label="Lista de contas">
@@ -184,14 +191,14 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             }
           </div>
           <div class="budget-detail-page__accounts-actions">
-            <button
-              type="button"
-              class="button button--secondary"
-              (click)="navigateToAccounts()"
-              aria-label="Ver todas as contas"
+            <os-button
+              variant="secondary"
+              size="medium"
+              (buttonClick)="navigateToAccounts()"
+              [attr.aria-label]="'Ver todas as contas'"
             >
               Ver Todas as Contas
-            </button>
+            </os-button>
           </div>
           }
         </section>
@@ -199,14 +206,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         <section class="budget-detail-page__card">
           <div class="budget-detail-page__card-header">
             <h2 class="budget-detail-page__card-title">Colaboração</h2>
-            <button
-              type="button"
-              class="button button--primary button--small"
-              (click)="openShareModal()"
+            <os-button
+              variant="primary"
+              size="small"
+              icon="users"
+              (buttonClick)="openShareModal()"
               [attr.aria-label]="'Gerenciar participantes do orçamento ' + budget.name"
             >
               Gerenciar Participantes
-            </button>
+            </os-button>
           </div>
 
           @if (participantsLoading()) {
@@ -216,14 +224,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           } @else if (participantsCount() === 0) {
           <div class="budget-detail-page__participants-empty" role="status">
             <p>Nenhum participante adicionado ainda.</p>
-            <button
-              type="button"
-              class="button button--primary"
-              (click)="openShareModal()"
-              aria-label="Adicionar primeiro participante"
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="user-plus"
+              (buttonClick)="openShareModal()"
+              [attr.aria-label]="'Adicionar primeiro participante'"
             >
               Adicionar Participante
-            </button>
+            </os-button>
           </div>
           } @else {
           <div class="budget-detail-page__participants-info">
@@ -239,14 +248,14 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
       <div class="budget-detail-page__not-found" role="alert" aria-live="polite">
         <h2>Orçamento não encontrado</h2>
         <p>O orçamento que você está procurando não existe ou foi removido.</p>
-        <button
-          type="button"
-          class="button button--primary"
-          (click)="navigateToList()"
-          aria-label="Voltar para lista de orçamentos"
+        <os-button
+          variant="primary"
+          size="medium"
+          (buttonClick)="navigateToList()"
+          [attr.aria-label]="'Voltar para lista de orçamentos'"
         >
           Voltar para Lista
-        </button>
+        </os-button>
       </div>
       } } } @if (showDeleteConfirmModal()) {
       <os-modal-template

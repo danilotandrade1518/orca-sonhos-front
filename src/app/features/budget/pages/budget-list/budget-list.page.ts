@@ -13,12 +13,13 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { BudgetCardComponent } from '../../components/budget-card/budget-card.component';
 import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-list-page',
   standalone: true,
-  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent, OsModalTemplateComponent],
+  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent, OsModalTemplateComponent, OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="budget-list-page">
@@ -26,14 +27,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         <h1 class="budget-list-page__title">Orçamentos</h1>
         <p class="budget-list-page__subtitle">Gerencie seus orçamentos pessoais e compartilhados</p>
 
-        <button
-          class="budget-list-page__create-button"
-          (click)="navigateToCreate()"
-          type="button"
-          aria-label="Criar novo orçamento"
+        <os-button
+          variant="primary"
+          size="medium"
+          icon="plus"
+          (buttonClick)="navigateToCreate()"
+          [attr.aria-label]="'Criar novo orçamento'"
         >
-          <span>+ Novo Orçamento</span>
-        </button>
+          Novo Orçamento
+        </os-button>
       </header>
 
       <section class="budget-list-page__toolbar">
@@ -76,27 +78,28 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         } @case ('error') {
         <div class="budget-list-page__error" role="alert" aria-live="assertive">
           <p class="error-message">{{ errorMessage() }}</p>
-          <button
-            type="button"
-            class="retry-button"
-            (click)="retry()"
-            aria-label="Tentar carregar orçamentos novamente"
+          <os-button
+            variant="secondary"
+            size="medium"
+            (buttonClick)="retry()"
+            [attr.aria-label]="'Tentar carregar orçamentos novamente'"
           >
             Tentar Novamente
-          </button>
+          </os-button>
         </div>
         } @case ('empty') {
         <div class="budget-list-page__empty" role="status" aria-live="polite">
           <p>Nenhum orçamento encontrado</p>
           <p class="empty-subtitle">Crie seu primeiro orçamento para começar</p>
-          <button
-            type="button"
-            class="create-button"
-            (click)="navigateToCreate()"
-            aria-label="Criar primeiro orçamento"
+          <os-button
+            variant="primary"
+            size="medium"
+            icon="plus"
+            (buttonClick)="navigateToCreate()"
+            [attr.aria-label]="'Criar primeiro orçamento'"
           >
             Criar Orçamento
-          </button>
+          </os-button>
         </div>
         } @default {
         <div class="budget-list-page__grid">

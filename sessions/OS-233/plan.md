@@ -49,7 +49,7 @@ Introduzir containers base e padronizar espaçamentos, removendo estilos inline 
 
 ---
 
-## 📅 FASE 2: Migração de Botões para os-button [Status: ⏳]
+## 📅 FASE 2: Migração de Botões para os-button [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -57,25 +57,30 @@ Eliminar uso de `mat-button` nas páginas/containers; padronizar variantes/taman
 
 ### 📋 Tarefas
 
-#### Auditoria e refactor de botões em Dashboard e Orçamentos [⏳]
+#### Auditoria e refactor de botões em Dashboard e Orçamentos [✅]
 
 **Descrição**: Mapear `mat-` em botões e substituir por `os-button`; ajustar variantes/sizes; `aria-label` em ícone-only.  
 **Critério de Conclusão**: Não há `mat-*` nos botões renderizados; variantes e tamanhos consistentes.
 
-#### Atualizar ações em headers/toolbars [⏳]
+#### Atualizar ações em headers/toolbars [✅]
 
 **Descrição**: Garantir `os-button` em `os-page-header` e toolbars relacionados.  
 **Critério de Conclusão**: Ações padronizadas; foco visível; ripple/feedback ok.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Ausência de `mat-mdc-button` no DOM das páginas migradas
-- [ ] `aria-label` em botões ícone-only
-- [ ] Estados hover/focus/active consistentes
+- [x] Ausência de `mat-mdc-button` no DOM das páginas migradas
+- [x] `aria-label` em botões ícone-only
+- [x] Estados hover/focus/active consistentes
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Migração concluída**: Todos os botões HTML nativos em `budget-list.page.ts` e `budget-detail.page.ts` foram migrados para `os-button`
+- **Padrões aplicados**: Variantes (`primary`, `secondary`, `tertiary`, `danger`) e tamanhos (`small`, `medium`) conforme especificação
+- **Ícones adicionados**: Botões agora incluem ícones apropriados (`plus`, `edit`, `trash`, `arrow-left`, `receipt`, `users`, `user-plus`)
+- **Acessibilidade**: Todos os botões mantêm `aria-label` para screen readers
+- **Headers verificados**: `os-page-header` e `os-header` já utilizam `os-button` corretamente
+- **Dashboard**: Não havia botões HTML nativos para migrar, já utiliza `os-page-header` com `os-button`
 
 ---
 
