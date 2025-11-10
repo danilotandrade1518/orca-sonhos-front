@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
@@ -12,7 +19,7 @@ import { SpendingChartComponent } from '../../components/spending-chart/spending
 import { RevenueExpenseChartComponent } from '../../components/revenue-expense-chart/revenue-expense-chart.component';
 import { ReportsState } from '../../state/reports-state/reports.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
-import { CurrencyPipe } from '@shared/formatting';
+import { LocaleService } from '@shared/formatting';
 import type { ReportFilters } from '../../types/reports.types';
 import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-selector/os-budget-selector.component';
 
@@ -42,7 +49,12 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
 
       <!-- Main Content -->
       @if (currentState() === 'loading') {
-      <div class="reports-page__loading" role="status" aria-live="polite" aria-label="Carregando relatórios">
+      <div
+        class="reports-page__loading"
+        role="status"
+        aria-live="polite"
+        aria-label="Carregando relatórios"
+      >
         <os-skeleton variant="card" size="lg" [width]="'100%'" [height]="'400px'" />
       </div>
       } @else if (currentState() === 'error') {
@@ -68,72 +80,72 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
         </div>
       </os-alert>
       } @else {
-        <!-- Summary Cards -->
-        <section
-          class="reports-page__summary-section"
-          role="region"
-          aria-label="Resumo financeiro do período selecionado"
-        >
-          <div class="reports-page__summary-grid">
-            <os-report-summary-card
-              [label]="'Total de Gastos'"
-              [value]="totalExpenses()"
-              [variant]="'negative'"
-              [icon]="'money'"
-              [ariaLabel]="'Total de gastos: ' + totalExpenses()"
-            />
-            <os-report-summary-card
-              [label]="'Total de Receitas'"
-              [value]="totalRevenue()"
-              [variant]="'positive'"
-              [icon]="'trending-up'"
-              [ariaLabel]="'Total de receitas: ' + totalRevenue()"
-            />
-            <os-report-summary-card
-              [label]="'Diferença'"
-              [value]="difference()"
-              [variant]="differenceVariant()"
-              [change]="differenceChange()"
-              [icon]="differenceIcon()"
-              [ariaLabel]="'Diferença entre receitas e gastos: ' + difference()"
-            />
-          </div>
-        </section>
+      <!-- Summary Cards -->
+      <section
+        class="reports-page__summary-section"
+        role="region"
+        aria-label="Resumo financeiro do período selecionado"
+      >
+        <div class="reports-page__summary-grid">
+          <os-report-summary-card
+            [label]="'Total de Gastos'"
+            [value]="totalExpenses()"
+            [variant]="'negative'"
+            [icon]="'money'"
+            [ariaLabel]="'Total de gastos: ' + totalExpenses()"
+          />
+          <os-report-summary-card
+            [label]="'Total de Receitas'"
+            [value]="totalRevenue()"
+            [variant]="'positive'"
+            [icon]="'trending-up'"
+            [ariaLabel]="'Total de receitas: ' + totalRevenue()"
+          />
+          <os-report-summary-card
+            [label]="'Diferença'"
+            [value]="difference()"
+            [variant]="differenceVariant()"
+            [change]="differenceChange()"
+            [icon]="differenceIcon()"
+            [ariaLabel]="'Diferença entre receitas e gastos: ' + difference()"
+          />
+        </div>
+      </section>
 
-        <!-- Charts Section -->
-        <section
-          class="reports-page__charts-section"
-          role="region"
-          aria-label="Gráficos de análise financeira"
-        >
-          <!-- Spending Chart -->
-          <div class="reports-page__chart-item">
-            <os-spending-chart
-              [categorySpending]="categorySpending()"
-              [title]="'Gastos por Categoria'"
-              [subtitle]="'Distribuição dos gastos por categoria no período selecionado'"
-              [loading]="loading()"
-              [error]="error()"
-              [retryable]="!!error()"
-              [ariaLabel]="'Gráfico de pizza mostrando distribuição de gastos por categoria'"
-              [retry]="onRetry"
-            />
-          </div>
+      <!-- Charts Section -->
+      <section
+        class="reports-page__charts-section"
+        role="region"
+        aria-label="Gráficos de análise financeira"
+      >
+        <!-- Spending Chart -->
+        <div class="reports-page__chart-item">
+          <os-spending-chart
+            [categorySpending]="categorySpending()"
+            [title]="'Gastos por Categoria'"
+            [subtitle]="'Distribuição dos gastos por categoria no período selecionado'"
+            [loading]="loading()"
+            [error]="error()"
+            [retryable]="!!error()"
+            [ariaLabel]="'Gráfico de pizza mostrando distribuição de gastos por categoria'"
+            [retry]="onRetry"
+          />
+        </div>
 
-          <!-- Revenue vs Expense Chart -->
-          <div class="reports-page__chart-item">
-            <os-revenue-expense-chart
-              [revenueExpense]="revenueExpense()"
-              [title]="'Receitas vs Despesas'"
-              [subtitle]="'Comparação entre receitas e despesas no período selecionado'"
-              [loading]="loading()"
-              [error]="error()"
-              [retryable]="!!error()"
-              [ariaLabel]="'Gráfico de barras comparando receitas e despesas'"
-              [retry]="onRetry"
-            />
-          </div>
-        </section>
+        <!-- Revenue vs Expense Chart -->
+        <div class="reports-page__chart-item">
+          <os-revenue-expense-chart
+            [revenueExpense]="revenueExpense()"
+            [title]="'Receitas vs Despesas'"
+            [subtitle]="'Comparação entre receitas e despesas no período selecionado'"
+            [loading]="loading()"
+            [error]="error()"
+            [retryable]="!!error()"
+            [ariaLabel]="'Gráfico de barras comparando receitas e despesas'"
+            [retry]="onRetry"
+          />
+        </div>
+      </section>
       }
     </os-page>
   `,
@@ -155,7 +167,7 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
 export class ReportsPage implements OnInit {
   private readonly reportsState = inject(ReportsState);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
-  private readonly currencyPipe = inject(CurrencyPipe);
+  private readonly localeService = inject(LocaleService);
 
   readonly loading = this.reportsState.loading;
   readonly error = this.reportsState.error;
@@ -203,17 +215,17 @@ export class ReportsPage implements OnInit {
 
   readonly totalExpenses = computed(() => {
     const total = this.totals().totalExpense;
-    return this.currencyPipe.transform(total, 'BRL') || 'R$ 0,00';
+    return this.localeService.formatCurrency(total, 'BRL');
   });
 
   readonly totalRevenue = computed(() => {
     const total = this.totals().totalRevenue;
-    return this.currencyPipe.transform(total, 'BRL') || 'R$ 0,00';
+    return this.localeService.formatCurrency(total, 'BRL');
   });
 
   readonly difference = computed(() => {
     const diff = this.totals().totalDifference;
-    return this.currencyPipe.transform(diff, 'BRL') || 'R$ 0,00';
+    return this.localeService.formatCurrency(diff, 'BRL');
   });
 
   readonly differenceVariant = computed(() => {
@@ -226,9 +238,7 @@ export class ReportsPage implements OnInit {
   readonly differenceChange = computed(() => {
     const diff = this.totals().totalDifference;
     const totalExpense = this.totals().totalExpense;
-    const percentage = totalExpense > 0
-      ? ((diff / totalExpense) * 100).toFixed(1)
-      : '0.0';
+    const percentage = totalExpense > 0 ? ((diff / totalExpense) * 100).toFixed(1) : '0.0';
     return diff !== 0 ? `${diff > 0 ? '+' : ''}${percentage}%` : '';
   });
 
