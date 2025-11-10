@@ -7,7 +7,10 @@ import { DashboardWidgetsComponent } from '@features/dashboard/components/dashbo
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
-import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 
 @Component({
   standalone: true,
@@ -101,10 +104,9 @@ export class DashboardPage implements OnInit {
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
         ]);
-        
       }
     } catch (error) {
-      // Error handling is done by the dashboard widgets component
+      console.error('Error loading dashboard data', error);
     } finally {
       this.isLoading.set(false);
     }

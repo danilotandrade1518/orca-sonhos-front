@@ -262,8 +262,7 @@ export class BudgetListPage implements OnInit {
   }
 
   onApplyFilters(): void {
-    // Filtros são aplicados automaticamente via computed filteredBudgets
-    // Este método pode ser usado para ações adicionais se necessário
+    
   }
 
   isSelected(budgetId: string): boolean {

@@ -19,4 +19,3 @@ export class DatePipe implements PipeTransform {
     return this.localeService.formatDate(value, options);
   }
 }
-

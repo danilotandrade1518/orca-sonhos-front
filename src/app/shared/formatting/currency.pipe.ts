@@ -20,4 +20,3 @@ export class CurrencyPipe implements PipeTransform {
     return this.localeService.formatCurrency(value, currency, options);
   }
 }
-

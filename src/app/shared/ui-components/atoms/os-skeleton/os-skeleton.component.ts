@@ -43,4 +43,3 @@ export class OsSkeletonComponent {
     return classes.join(' ');
   });
 }
-

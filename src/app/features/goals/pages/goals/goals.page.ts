@@ -271,7 +271,6 @@ export class GoalsPage implements OnInit {
   }
 
   onApplyFilters(): void {
-    // Filtros são aplicados automaticamente via computed filteredGoals
-    // Este método pode ser usado para ações adicionais se necessário
+    
   }
 }

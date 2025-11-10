@@ -94,4 +94,3 @@ export class OsEmptyStateComponent {
     this.actionClick.emit();
   }
 }
-

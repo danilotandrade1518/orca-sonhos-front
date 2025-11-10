@@ -17,7 +17,11 @@ import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
-import { OsPageHeaderComponent, PageHeaderAction, BreadcrumbItem } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+  BreadcrumbItem,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { LocaleService } from '@shared/formatting';
@@ -41,20 +45,19 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   template: `
     <os-page variant="default" size="medium" ariaLabel="Detalhes do orçamento">
       @switch (currentState()) { @case ('loading') {
-      <os-page-header
-        title="Carregando..."
-        [breadcrumbs]="breadcrumbs()"
-      />
-      <div class="budget-detail-page__loading" role="status" aria-live="polite" aria-label="Carregando detalhes do orçamento">
+      <os-page-header title="Carregando..." [breadcrumbs]="breadcrumbs()" />
+      <div
+        class="budget-detail-page__loading"
+        role="status"
+        aria-live="polite"
+        aria-label="Carregando detalhes do orçamento"
+      >
         <os-skeleton variant="card" size="lg" />
         <os-skeleton variant="card" size="lg" />
         <os-skeleton variant="card" size="lg" />
       </div>
       } @case ('error') {
-      <os-page-header
-        title="Erro"
-        [breadcrumbs]="breadcrumbs()"
-      />
+      <os-page-header title="Erro" [breadcrumbs]="breadcrumbs()" />
       <os-alert
         type="error"
         [title]="'Erro ao carregar orçamento'"
@@ -236,10 +239,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         </section>
       </main>
       } @else {
-      <os-page-header
-        title="Orçamento não encontrado"
-        [breadcrumbs]="breadcrumbs()"
-      />
+      <os-page-header title="Orçamento não encontrado" [breadcrumbs]="breadcrumbs()" />
       <os-alert
         type="warning"
         title="Orçamento não encontrado"
@@ -359,7 +359,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
 
   readonly breadcrumbs = computed((): BreadcrumbItem[] => [
     { label: 'Orçamentos', route: '/budgets' },
-    { label: this.budget()?.name || 'Detalhes', route: null },
+    { label: this.budget()?.name || 'Detalhes', route: undefined },
   ]);
 
   readonly pageHeaderActions = computed((): PageHeaderAction[] => {
@@ -391,11 +391,10 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     }
 
     this.budgetId.set(id);
-    
+
     if (this.budgetState.budgets().length === 0) {
       this.budgetState.loadBudgets();
     } else {
-      
       const budget = this.budgetState.budgets().find((b) => b.id === id);
       if (budget) {
         this.budgetState.selectBudget(id);
@@ -416,7 +415,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
       this.resourcesLoaded.set(true);
       this.cdr.markForCheck();
     } catch (error) {
-      // Error handling is done by the component state
+      console.error('Error loading resources', error);
     }
   }
 
@@ -425,7 +424,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     if (id) {
       this.sharingState.stopPolling();
     }
-    
+
     this.resourcesLoaded.set(false);
   }
 

@@ -380,7 +380,6 @@ export class OsDashboardWidgetsComponent {
     return classes.join(' ');
   }
 
-
   getWidgetAriaLabel(widget: DashboardWidget): string {
     return `Widget: ${widget.title}`;
   }
