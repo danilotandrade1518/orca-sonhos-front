@@ -16,6 +16,10 @@ import { AccountState } from '@core/services/account/account-state/account.state
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent, PageHeaderAction, BreadcrumbItem } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { LocaleService } from '@shared/formatting';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
@@ -23,78 +27,64 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 @Component({
   selector: 'os-budget-detail-page',
   standalone: true,
-  imports: [CommonModule, OsModalTemplateComponent, OsButtonComponent, ShareBudgetComponent],
+  imports: [
+    CommonModule,
+    OsModalTemplateComponent,
+    OsButtonComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsSkeletonComponent,
+    OsAlertComponent,
+    ShareBudgetComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="budget-detail-page">
+    <os-page variant="default" size="medium" ariaLabel="Detalhes do orçamento">
       @switch (currentState()) { @case ('loading') {
-      <div
-        class="budget-detail-page__loading"
-        role="status"
-        aria-live="polite"
-        aria-label="Carregando detalhes do orçamento"
-      >
-        <div class="spinner" aria-hidden="true"></div>
-        <p>Carregando detalhes do orçamento...</p>
+      <os-page-header
+        title="Carregando..."
+        [breadcrumbs]="breadcrumbs()"
+      />
+      <div class="budget-detail-page__loading" role="status" aria-live="polite" aria-label="Carregando detalhes do orçamento">
+        <os-skeleton variant="card" size="lg" />
+        <os-skeleton variant="card" size="lg" />
+        <os-skeleton variant="card" size="lg" />
       </div>
       } @case ('error') {
-      <div class="budget-detail-page__error" role="alert" aria-live="assertive">
-        <p class="error-message">{{ errorMessage() }}</p>
-        <os-button
-          variant="secondary"
-          size="medium"
-          (buttonClick)="navigateToList()"
-          [attr.aria-label]="'Voltar para lista de orçamentos'"
-        >
-          Voltar para Lista
-        </os-button>
-      </div>
-      } @default { @if (budget(); as budget) {
-      <header class="budget-detail-page__header">
-        <div class="budget-detail-page__header-content">
+      <os-page-header
+        title="Erro"
+        [breadcrumbs]="breadcrumbs()"
+      />
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar orçamento'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
+      >
+        {{ errorMessage() }}
+        <div class="budget-detail-page__error-action">
           <os-button
-            variant="tertiary"
+            variant="primary"
             size="medium"
             icon="arrow-left"
             (buttonClick)="navigateToList()"
             [attr.aria-label]="'Voltar para lista de orçamentos'"
           >
-            Voltar
-          </os-button>
-
-          <div class="budget-detail-page__title-section">
-            <h1 class="budget-detail-page__title">{{ budget.name }}</h1>
-            <span
-              class="budget-detail-page__type-badge"
-              [class.budget-detail-page__type-badge--personal]="budget.type === 'PERSONAL'"
-              [class.budget-detail-page__type-badge--shared]="budget.type === 'SHARED'"
-            >
-              {{ budget.type === 'PERSONAL' ? 'Pessoal' : 'Compartilhado' }}
-            </span>
-          </div>
-        </div>
-
-        <div class="budget-detail-page__actions">
-          <os-button
-            variant="secondary"
-            size="medium"
-            icon="edit"
-            (buttonClick)="navigateToEdit()"
-            [attr.aria-label]="'Editar orçamento ' + budget.name"
-          >
-            Editar
-          </os-button>
-          <os-button
-            variant="danger"
-            size="medium"
-            icon="trash"
-            (buttonClick)="confirmDelete()"
-            [attr.aria-label]="'Excluir orçamento ' + budget.name"
-          >
-            Excluir
+            Voltar para Lista
           </os-button>
         </div>
-      </header>
+      </os-alert>
+      } @default { @if (budget(); as budget) {
+      <os-page-header
+        [title]="budget.name"
+        [subtitle]="budget.type === 'PERSONAL' ? 'Orçamento Pessoal' : 'Orçamento Compartilhado'"
+        [breadcrumbs]="breadcrumbs()"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+        (breadcrumbClick)="onBreadcrumbClick($event)"
+      />
 
       <main class="budget-detail-page__content">
         <section class="budget-detail-page__card">
@@ -246,18 +236,31 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         </section>
       </main>
       } @else {
-      <div class="budget-detail-page__not-found" role="alert" aria-live="polite">
-        <h2>Orçamento não encontrado</h2>
-        <p>O orçamento que você está procurando não existe ou foi removido.</p>
-        <os-button
-          variant="primary"
-          size="medium"
-          (buttonClick)="navigateToList()"
-          [attr.aria-label]="'Voltar para lista de orçamentos'"
-        >
-          Voltar para Lista
-        </os-button>
-      </div>
+      <os-page-header
+        title="Orçamento não encontrado"
+        [breadcrumbs]="breadcrumbs()"
+      />
+      <os-alert
+        type="warning"
+        title="Orçamento não encontrado"
+        [role]="'alert'"
+        [ariaLive]="'polite'"
+        [showIcon]="true"
+        [dismissible]="false"
+      >
+        O orçamento que você está procurando não existe ou foi removido.
+        <div class="budget-detail-page__error-action">
+          <os-button
+            variant="primary"
+            size="medium"
+            icon="arrow-left"
+            (buttonClick)="navigateToList()"
+            [attr.aria-label]="'Voltar para lista de orçamentos'"
+          >
+            Voltar para Lista
+          </os-button>
+        </div>
+      </os-alert>
       } } } @if (showDeleteConfirmModal()) {
       <os-modal-template
         [config]="deleteModalConfig()"
@@ -282,7 +285,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (participantRemoved)="onParticipantRemoved()"
       />
       }
-    </div>
+    </os-page>
   `,
   styleUrl: './budget-detail.page.scss',
 })
@@ -354,6 +357,31 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     };
   });
 
+  readonly breadcrumbs = computed((): BreadcrumbItem[] => [
+    { label: 'Orçamentos', route: '/budgets' },
+    { label: this.budget()?.name || 'Detalhes', route: null },
+  ]);
+
+  readonly pageHeaderActions = computed((): PageHeaderAction[] => {
+    const budget = this.budget();
+    if (!budget) return [];
+
+    return [
+      {
+        label: 'Editar',
+        variant: 'secondary',
+        size: 'medium',
+        icon: 'edit',
+      },
+      {
+        label: 'Excluir',
+        variant: 'danger',
+        size: 'medium',
+        icon: 'trash',
+      },
+    ];
+  });
+
   private resourcesLoaded = signal(false);
 
   ngOnInit(): void {
@@ -388,8 +416,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
       this.resourcesLoaded.set(true);
       this.cdr.markForCheck();
     } catch (error) {
-      console.error('Erro ao carregar recursos do orçamento:', error);
-      
+      // Error handling is done by the component state
     }
   }
 
@@ -511,6 +538,20 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     if (id) {
       this.sharingState.loadParticipants(id);
       this.budgetState.loadBudgets();
+    }
+  }
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Editar') {
+      this.navigateToEdit();
+    } else if (action.label === 'Excluir') {
+      this.confirmDelete();
+    }
+  }
+
+  onBreadcrumbClick(breadcrumb: BreadcrumbItem): void {
+    if (breadcrumb.route) {
+      this.router.navigate([breadcrumb.route]);
     }
   }
 }

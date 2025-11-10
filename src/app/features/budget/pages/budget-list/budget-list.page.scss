@@ -1,51 +1,4 @@
 .budget-list-page {
-  padding: var(--os-spacing-lg, 24px);
-  max-width: 1200px;
-  margin: 0 auto;
-
-  &__header {
-    margin-bottom: var(--os-spacing-lg, 24px);
-    display: flex;
-    flex-direction: column;
-    gap: var(--os-spacing-sm, 8px);
-  }
-
-  &__title {
-    font-size: var(--os-font-size-2xl, 32px);
-    font-weight: 700;
-    color: var(--os-text-primary, #212121);
-    margin: 0;
-  }
-
-  &__subtitle {
-    font-size: var(--os-font-size-md, 16px);
-    color: var(--os-text-secondary, #757575);
-    margin: 0;
-  }
-
-  &__create-button {
-    margin-top: var(--os-spacing-md, 16px);
-    padding: var(--os-spacing-sm, 8px) var(--os-spacing-md, 16px);
-    background-color: var(--os-primary-color, #1976d2);
-    color: white;
-    border: none;
-    border-radius: var(--os-border-radius-md, 8px);
-    font-size: var(--os-font-size-md, 16px);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    align-self: flex-start;
-
-    &:hover {
-      background-color: var(--os-primary-color-dark, #1565c0);
-    }
-
-    &:focus {
-      outline: 2px solid var(--os-primary-color, #1976d2);
-      outline-offset: 2px;
-    }
-  }
-
   &__toolbar {
     margin-bottom: var(--os-spacing-lg, 24px);
   }
@@ -266,16 +219,9 @@
 
 @media (max-width: 575px) {
   .budget-list-page {
-    padding: var(--os-spacing-md, 16px);
-
-    &__header {
-      margin-bottom: var(--os-spacing-md, 16px);
-    }
-
     &__grid {
       grid-template-columns: 1fr;
     }
-
   }
 
   .budget-card {

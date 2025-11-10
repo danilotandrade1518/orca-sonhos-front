@@ -227,7 +227,7 @@ Implementar `os-empty-state`, `os-skeleton` e consolidar `os-alert`/toasts.
 
 ---
 
-## 📅 FASE 7: Passes por Página I (Dashboard, Orçamentos) [Status: ⏳]
+## 📅 FASE 7: Passes por Página I (Dashboard, Orçamentos) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -235,24 +235,27 @@ Aplicar padrão completo nas primeiras páginas alvo.
 
 ### 📋 Tarefas
 
-#### Dashboard padronizado [⏳]
+#### Dashboard padronizado [✅]
 
 **Descrição**: Revisão final: containers, botões, grids, estados.  
 **Critério de Conclusão**: Sem inline layout; validação visual responsiva.
 
-#### Orçamentos padronizado [⏳]
+#### Orçamentos padronizado [✅]
 
 **Descrição**: Reforçar padrões; filtros e entidades ajustados.  
 **Critério de Conclusão**: Aderência integral ao DS.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Checklista de layout-spec satisfeita
-- [ ] A11y básica (tab order, foco visível)
+- [x] Checklista de layout-spec satisfeita
+- [x] A11y básica (tab order, foco visível)
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Dashboard**: Já estava padronizado com `os-page` e `os-page-header`. Removido `console.error` conforme padrões do projeto.
+- **budget-list**: Migrado para usar `os-page` e `os-page-header` ao invés de header customizado. Botão "Novo Orçamento" movido para ações do header. SCSS simplificado removendo estilos não utilizados.
+- **budget-detail**: Migrado para usar `os-page` e `os-page-header` com breadcrumbs. Estados de loading agora usam `os-skeleton`. Estados de erro/empty usam `os-alert`. Ações (Editar/Excluir) movidas para header. SCSS simplificado removendo estilos do header customizado. Removido `console.error` conforme padrões do projeto.
+- **Padrões aplicados**: Todas as páginas agora seguem o padrão completo do Design System com containers padronizados, headers consistentes e estados de UI padronizados.
 
 ---
 

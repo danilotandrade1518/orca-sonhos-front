@@ -104,7 +104,7 @@ export class DashboardPage implements OnInit {
         
       }
     } catch (error) {
-      console.error('Erro ao carregar dados do dashboard:', error);
+      // Error handling is done by the dashboard widgets component
     } finally {
       this.isLoading.set(false);
     }

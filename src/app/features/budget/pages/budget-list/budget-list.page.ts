@@ -19,6 +19,8 @@ import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.
 import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
 import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -35,24 +37,18 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsSelectComponent,
     OsEntityListComponent,
     OsAlertComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="budget-list-page">
-      <header class="budget-list-page__header">
-        <h1 class="budget-list-page__title">Orçamentos</h1>
-        <p class="budget-list-page__subtitle">Gerencie seus orçamentos pessoais e compartilhados</p>
-
-        <os-button
-          variant="primary"
-          size="medium"
-          icon="plus"
-          (buttonClick)="navigateToCreate()"
-          [attr.aria-label]="'Criar novo orçamento'"
-        >
-          Novo Orçamento
-        </os-button>
-      </header>
+    <os-page variant="default" size="medium" ariaLabel="Página de orçamentos">
+      <os-page-header
+        title="Orçamentos"
+        subtitle="Gerencie seus orçamentos pessoais e compartilhados"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+      />
 
       <section class="budget-list-page__toolbar">
         <os-filter-bar
@@ -153,7 +149,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (closed)="onDeleteCancelled()"
       />
       }
-    </div>
+    </os-page>
   `,
   styleUrl: './budget-list.page.scss',
 })
@@ -237,6 +233,15 @@ export class BudgetListPage implements OnInit {
     { value: 'all', label: 'Todos os tipos' },
     { value: 'PERSONAL', label: 'Pessoal' },
     { value: 'SHARED', label: 'Compartilhado' },
+  ]);
+
+  readonly pageHeaderActions = computed((): PageHeaderAction[] => [
+    {
+      label: 'Novo Orçamento',
+      variant: 'primary',
+      size: 'medium',
+      icon: 'plus',
+    },
   ]);
 
   ngOnInit(): void {
@@ -326,5 +331,11 @@ export class BudgetListPage implements OnInit {
 
   onFormCancelled(): void {
     this.router.navigate(['/budgets'], { replaceUrl: true });
+  }
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Novo Orçamento') {
+      this.navigateToCreate();
+    }
   }
 }
