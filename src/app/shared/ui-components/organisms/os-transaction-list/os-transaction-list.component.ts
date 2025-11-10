@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
+import { LocaleService } from '@shared/formatting';
 import {
   OsDataTableComponent,
   OsDataTableColumn,
@@ -376,6 +377,7 @@ export interface TransactionCardAction {
 export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
   private elementRef = inject(ElementRef);
+  private readonly localeService = inject(LocaleService);
 
   @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
 
@@ -895,18 +897,11 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   }
 
   formatTransactionAmount(amount: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(amount);
+    return this.localeService.formatCurrency(amount, 'BRL');
   }
 
   formatTransactionDate(date: Date): string {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
+    return this.localeService.formatDateShort(date);
   }
 
   getTransactionStatusText(status: string): string {

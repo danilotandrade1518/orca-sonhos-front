@@ -22,6 +22,7 @@ import { OsFormGroupComponent } from '../os-form-group/os-form-group.component';
 import { OsSelectComponent, type OsSelectOption } from '../../atoms/os-select/os-select.component';
 import { OsMoneyInputComponent } from '../../atoms/os-money-input/os-money-input.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { LocaleService } from '@shared/formatting';
 import type { AccountDto } from '../../../../../dtos/account';
 
 export interface TransferFormData {
@@ -98,6 +99,7 @@ export interface TransferFormData {
 })
 export class TransferFormComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly localeService = inject(LocaleService);
   
   private readonly fromAccountIdSig = signal<string | null>(null);
 
@@ -317,9 +319,6 @@ export class TransferFormComponent {
   }
 
   private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 }

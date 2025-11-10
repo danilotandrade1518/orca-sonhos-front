@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { ReportFiltersComponent } from '../../components/report-filters/report-filters.component';
@@ -8,6 +8,7 @@ import { SpendingChartComponent } from '../../components/spending-chart/spending
 import { RevenueExpenseChartComponent } from '../../components/revenue-expense-chart/revenue-expense-chart.component';
 import { ReportsState } from '../../state/reports-state/reports.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { CurrencyPipe } from '@shared/formatting';
 import type { ReportFilters } from '../../types/reports.types';
 import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-selector/os-budget-selector.component';
 
@@ -138,8 +139,8 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
     ReportSummaryCardComponent,
     SpendingChartComponent,
     RevenueExpenseChartComponent,
+    CurrencyPipe,
   ],
-  providers: [CurrencyPipe],
 })
 export class ReportsPage implements OnInit {
   private readonly reportsState = inject(ReportsState);
@@ -192,17 +193,17 @@ export class ReportsPage implements OnInit {
 
   readonly totalExpenses = computed(() => {
     const total = this.totals().totalExpense;
-    return this.currencyPipe.transform(total, 'BRL', 'symbol', '1.2-2') || 'R$ 0,00';
+    return this.currencyPipe.transform(total, 'BRL') || 'R$ 0,00';
   });
 
   readonly totalRevenue = computed(() => {
     const total = this.totals().totalRevenue;
-    return this.currencyPipe.transform(total, 'BRL', 'symbol', '1.2-2') || 'R$ 0,00';
+    return this.currencyPipe.transform(total, 'BRL') || 'R$ 0,00';
   });
 
   readonly difference = computed(() => {
     const diff = this.totals().totalDifference;
-    return this.currencyPipe.transform(diff, 'BRL', 'symbol', '1.2-2') || 'R$ 0,00';
+    return this.currencyPipe.transform(diff, 'BRL') || 'R$ 0,00';
   });
 
   readonly differenceVariant = computed(() => {

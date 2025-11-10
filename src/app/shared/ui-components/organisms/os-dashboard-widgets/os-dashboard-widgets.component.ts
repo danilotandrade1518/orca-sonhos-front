@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import {
   OsGoalProgressCardComponent,
@@ -11,6 +11,7 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
+import { LocaleService } from '@shared/formatting';
 
 export interface DashboardWidget {
   id: string;
@@ -314,6 +315,8 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsDashboardWidgetsComponent {
+  private readonly localeService = inject(LocaleService);
+
   readonly widgets = input<DashboardWidget[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -497,10 +500,7 @@ export class OsDashboardWidgetsComponent {
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   onWidgetClick(widget: DashboardWidget): void {

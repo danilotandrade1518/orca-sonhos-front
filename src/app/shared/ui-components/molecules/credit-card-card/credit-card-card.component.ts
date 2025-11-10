@@ -5,6 +5,7 @@ import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.co
 import { OsButtonComponent } from '../../atoms/os-button';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { CreditCardBillItemComponent } from '../credit-card-bill-item/credit-card-bill-item.component';
+import { LocaleService } from '@shared/formatting';
 import { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
 import { CreditCardBillDto } from '../../../../../dtos/credit-card/credit-card-bill-types';
 import { CreditCardState } from '../../../../core/services/credit-card/credit-card-state/credit-card.state';
@@ -123,6 +124,7 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
 })
 export class CreditCardCardComponent {
   private readonly creditCardState = inject(CreditCardState);
+  private readonly localeService = inject(LocaleService);
 
   creditCard = input.required<CreditCardDto>();
   actions = input<{ edit: boolean; delete: boolean } | undefined>(undefined);
@@ -194,9 +196,6 @@ export class CreditCardCardComponent {
   });
 
   private formatLimit(limit: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(limit / 100);
+    return this.localeService.formatCurrency(limit / 100, 'BRL');
   }
 }

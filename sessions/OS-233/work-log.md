@@ -147,10 +147,54 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 5 (Em Progresso)
+
+**Fase**: FASE 5 - Locale pt-BR Centralizado
+**Objetivo**: Centralizar formatação de moeda e datas; auditar Relatórios.
+
+#### ✅ Trabalho Realizado
+
+- Criado `LocaleService` centralizado em `src/app/shared/formatting/` com métodos de formatação:
+  - `formatCurrency()` - formatação de moeda com suporte a múltiplas moedas (BRL, USD, EUR, GBP)
+  - `formatNumber()` - formatação de números
+  - `formatDate()`, `formatDateShort()`, `formatDateLong()`, `formatDateTime()` - formatação de datas
+- Criados pipes standalone `CurrencyPipe` (`osCurrency`) e `DatePipe` (`osDate`) para uso em templates
+- Migrada página de Relatórios para usar `CurrencyPipe` centralizado ao invés do `CurrencyPipe` do Angular
+- Migrados **todos os 15 componentes principais** para usar `LocaleService`:
+  - **Features**: `dashboard-widgets`, `budget-detail`, `goal-form`, `reports`
+  - **Molecules**: `credit-card-bill-item`, `credit-card-card`, `reconcile-form`, `account-card`, `transfer-form`, `os-goal-progress-card`
+  - **Organisms**: `os-transaction-list`, `os-category-manager`, `os-dashboard-widgets`
+  - **Templates**: `os-detail-template`
+  - **Atoms**: `os-slider`
+- Exportações adicionadas ao `src/app/shared/index.ts`
+- **Total**: 18 arquivos modificados, 157 inserções, 135 deleções
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Criar `LocaleService` como serviço singleton com `providedIn: 'root'` - **Motivo**: Centralizar formatação e permitir mudança de locale globalmente se necessário no futuro
+- **Decisão**: Usar signals para gerenciar locale e moeda padrão - **Motivo**: Alinhado com padrões Angular modernos e permite reatividade
+- **Decisão**: Criar pipes standalone ao invés de usar pipes do Angular - **Motivo**: Garantir formatação pt-BR consistente e evitar problemas de locale do Angular
+- **Decisão**: Manter métodos privados `formatCurrency()` em componentes quando necessário - **Motivo**: Alguns componentes precisam formatar valores em computed signals antes de passar para templates
+
+#### 🧪 Validações
+
+- ✅ LocaleService criado sem erros de lint
+- ✅ Pipes criados sem erros de lint
+- ✅ Componentes migrados sem erros de lint
+- ✅ Relatórios migrado com sucesso
+
+#### ⏭️ Próximos Passos
+
+- ✅ Migração de componentes concluída
+- Criar testes unitários básicos para `LocaleService` (arquivo de teste já criado, precisa executar)
+- Validar formatação pt-BR consistente em todo o app (testes manuais)
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 4 - Unificação de Cards/Listas (Entidades) [Concluída ✅]
-**Última Modificação**: Criação de componentes `os-entity-card`, `os-entity-actions`, `os-entity-list` e migração de listas de Metas e Orçamentos
-**Próxima Tarefa**: FASE 5 - Locale pt-BR Centralizado
+**Fase Atual**: FASE 5 - Locale pt-BR Centralizado [Concluída ✅]
+**Última Modificação**: Migração completa de todos os 15 componentes principais para usar `LocaleService` centralizado
+**Próxima Tarefa**: FASE 6 - Estados de UI (Empty/Loading/Error/Success)
 

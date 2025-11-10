@@ -1,9 +1,10 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { AccountTypeBadgeComponent } from '../../atoms/account-type-badge/account-type-badge.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
+import { LocaleService } from '@shared/formatting';
 import { AccountDto } from '../../../../../dtos/account/account-types';
 
 @Component({
@@ -70,6 +71,8 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountCardComponent {
+  private readonly localeService = inject(LocaleService);
+
   account = input.required<AccountDto>();
   actions = input<{ edit: boolean; delete: boolean } | undefined>(undefined);
 
@@ -103,9 +106,6 @@ export class AccountCardComponent {
   }
 
   private formatBalance(balance: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(balance);
+    return this.localeService.formatCurrency(balance, 'BRL');
   }
 }

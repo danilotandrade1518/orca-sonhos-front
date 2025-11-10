@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
+import { LocaleService } from '@shared/formatting';
 
 export interface GoalProgressData {
   id: string;
@@ -167,6 +168,8 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsGoalProgressCardComponent {
+  private readonly localeService = inject(LocaleService);
+
   readonly goalData = input<GoalProgressData | null>(null);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -245,47 +248,27 @@ export class OsGoalProgressCardComponent {
   getCurrentValueAriaLabel(): string {
     const data = this.goalData();
     const value = data?.currentValue || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Valor atual: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor atual: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getTargetValueAriaLabel(): string {
     const data = this.goalData();
     const value = data?.targetValue || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Valor da meta: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor da meta: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getRemainingValueAriaLabel(): string {
     const value = this.remainingValue();
-    const currency = this.getCurrencyFromUnit();
-    return `Valor restante: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor restante: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getSuggestedAmountAriaLabel(): string {
     const value = this.goalData()?.suggestedAmount || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Aporte sugerido: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Aporte sugerido: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getCurrencyFromUnit(): string {
@@ -298,11 +281,7 @@ export class OsGoalProgressCardComponent {
 
   formatDeadline(date: Date | undefined): string {
     if (!date) return '';
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
+    return this.localeService.formatDateShort(date);
   }
 
   onCardClick(): void {

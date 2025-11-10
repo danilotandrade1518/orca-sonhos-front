@@ -23,6 +23,7 @@ import type { CreateGoalDto } from '../../../../../dtos/goal/create-goal-request
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { AccountsHelperService } from '../../services/accounts-helper/accounts-helper.service';
 import { OsSelectComponent } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
+import { LocaleService } from '@shared/formatting';
 import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
 
 @Component({
@@ -135,6 +136,7 @@ export class GoalFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly budgetSelection = inject(BudgetSelectionService);
   readonly accountsHelper = inject(AccountsHelperService);
+  private readonly localeService = inject(LocaleService);
 
   readonly loading = input(false);
   readonly initialData = input<Partial<CreateGoalDto> | null>(null);
@@ -176,9 +178,7 @@ export class GoalFormComponent {
     const current = 0;
     const remaining = Math.max(total - current, 0);
     const suggested = remaining / months;
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-      Math.round(suggested * 100) / 100
-    );
+    return this.localeService.formatCurrency(Math.round(suggested * 100) / 100, 'BRL');
   });
 
   readonly accountOptions = computed<OsSelectOption[]>(() => {

@@ -149,7 +149,7 @@ Aplicar `os-entity-card`/`os-entity-actions` e `os-entity-list` quando aplicáve
 
 ---
 
-## 📅 FASE 5: Locale pt-BR Centralizado [Status: ⏳]
+## 📅 FASE 5: Locale pt-BR Centralizado [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -157,25 +157,39 @@ Centralizar formatação de moeda e datas; auditar Relatórios.
 
 ### 📋 Tarefas
 
-#### Criar LocaleService/Pipes e aplicar no app [⏳]
+#### Criar LocaleService/Pipes e aplicar no app [✅]
 
 **Descrição**: Serviço/pipes para `pt-BR` (currency, date); providers globais conforme necessário.  
 **Critério de Conclusão**: Formatação unificada; remoção de ad-hoc.
 
-#### Auditar Relatórios e páginas críticas [⏳]
+#### Auditar Relatórios e páginas críticas [✅]
 
 **Descrição**: Ajustar formatação onde divergente; garantir notações consistentes.  
 **Critério de Conclusão**: Relatórios com `pt-BR` consistente.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Currency/date uniformes
-- [ ] Sem “R$1,370.00” (erro de locale)
+- [x] LocaleService criado com métodos de formatação centralizados
+- [x] Pipes standalone criados (CurrencyPipe, DatePipe)
+- [x] Relatórios migrados para usar pipes centralizados
+- [x] Todos os componentes principais migrados (15 arquivos)
+- [x] Currency/date uniformes em todos os componentes
+- [x] Sem "R$1,370.00" (erro de locale) - formatação pt-BR garantida
 - [ ] Testes unitários básicos de formatação
 
 ### 📝 Comentários da Fase
 
-_–_
+- **LocaleService criado**: Serviço centralizado em `src/app/shared/formatting/` com métodos `formatCurrency()`, `formatNumber()`, `formatDate()`, `formatDateShort()`, `formatDateLong()`, `formatDateTime()`. Suporte a múltiplas moedas (BRL, USD, EUR, GBP) e gerenciamento de locale via signals.
+- **Pipes standalone**: Criados `CurrencyPipe` (`osCurrency`) e `DatePipe` (`osDate`) para uso em templates.
+- **Relatórios migrados**: Página de relatórios agora usa `CurrencyPipe` centralizado ao invés do `CurrencyPipe` do Angular, garantindo formatação pt-BR consistente.
+- **Componentes migrados**: Todos os 15 componentes principais migrados para usar `LocaleService`:
+  - Features: `dashboard-widgets`, `budget-detail`, `goal-form`, `reports`
+  - Molecules: `credit-card-bill-item`, `credit-card-card`, `reconcile-form`, `account-card`, `transfer-form`, `os-goal-progress-card`
+  - Organisms: `os-transaction-list`, `os-category-manager`, `os-dashboard-widgets`
+  - Templates: `os-detail-template`
+  - Atoms: `os-slider`
+- **Formatação unificada**: Todas as formatações de moeda e data agora passam pelo `LocaleService`, garantindo consistência pt-BR em todo o app.
+- **Nota**: `os-money-input` e `os-money-display` já usam pt-BR corretamente internamente e podem ser migrados para usar `LocaleService` em uma refatoração futura se necessário.
 
 ---
 

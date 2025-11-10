@@ -16,6 +16,7 @@ import { AccountState } from '@core/services/account/account-state/account.state
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { LocaleService } from '@shared/formatting';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
@@ -293,6 +294,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly localeService = inject(LocaleService);
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -439,10 +441,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   confirmDelete(): void {

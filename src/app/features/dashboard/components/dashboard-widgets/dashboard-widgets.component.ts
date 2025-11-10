@@ -14,6 +14,7 @@ import { GoalDto } from '@dtos/goal';
 import { AccountState } from '../../../../core/services/account/account-state/account.state';
 import { AccountDto } from '@dtos/account';
 import { AccountBalanceData } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
+import { LocaleService } from '@shared/formatting';
 
 @Component({
   selector: 'os-dashboard-widgets-container',
@@ -46,6 +47,7 @@ export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
   private readonly accountState = inject(AccountState);
+  private readonly localeService = inject(LocaleService);
 
   private _lastBudgetId: string | null = null;
 
@@ -227,10 +229,7 @@ export class DashboardWidgetsComponent {
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   onRetry(): void {
