@@ -259,7 +259,7 @@ Aplicar padrão completo nas primeiras páginas alvo.
 
 ---
 
-## 📅 FASE 8: Passes por Página II (Contas, Cartões) [Status: ⏳]
+## 📅 FASE 8: Passes por Página II (Contas, Cartões) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -267,24 +267,26 @@ Aplicar padrão nas páginas de Contas e Cartões.
 
 ### 📋 Tarefas
 
-#### Contas [⏳]
+#### Contas [✅]
 
 **Descrição**: Containers, botões, listas/cards, estados.  
 **Critério de Conclusão**: Consistência com fases anteriores.
 
-#### Cartões de Crédito [⏳]
+#### Cartões de Crédito [✅]
 
 **Descrição**: Mesmo padrão; atenção a listas/faturas.  
 **Critério de Conclusão**: Aderência e responsividade.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Botões 100% `os-button`
-- [ ] Spacing e grids padronizados
+- [x] Botões 100% `os-button`
+- [x] Spacing e grids padronizados
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Página de Contas migrada**: Substituído header customizado por `os-page-header` com ações (Nova Conta, Transferir, Reconciliar). Estados customizados substituídos por `os-entity-list` com `os-skeleton` para loading e `os-empty-state` para empty. Erros agora usam `os-alert` com `role="alert"` e `aria-live="assertive"`. Botões HTML nativos substituídos por `os-button` no header. SCSS simplificado removendo estilos não utilizados.
+- **Página de Cartões migrada**: Mesma migração aplicada. `os-page-header` com ações (Novo Cartão, Nova Fatura). `os-entity-list` para listas padronizadas. Estados de loading/empty/error padronizados. SCSS simplificado.
+- **Padrão aplicado**: Ambas as páginas agora seguem o mesmo padrão visual e comportamental das fases anteriores, garantindo consistência entre todas as páginas do app.
 
 ---
 

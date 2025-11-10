@@ -18,6 +18,13 @@ import { CreditCardBillFormComponent } from '../../components/credit-card-bill-f
 import { PayBillModalComponent } from '../../components/pay-bill-modal';
 import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
 import { ConfirmDeleteCreditCardModalComponent } from '../../components/confirm-delete-modal';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
+import { OsEmptyStateComponent } from '@shared/ui-components/molecules/os-empty-state/os-empty-state.component';
+import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
 import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
 
@@ -32,118 +39,75 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     PayBillModalComponent,
     ReopenBillModalComponent,
     ConfirmDeleteCreditCardModalComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsButtonComponent,
+    OsEntityListComponent,
+    OsEmptyStateComponent,
+    OsSkeletonComponent,
+    OsAlertComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="os-credit-cards" role="main" aria-label="Página de cartões de crédito">
-      <a href="#main-content" class="os-credit-cards__skip-link">Pular para conteúdo principal</a>
+    <os-page variant="default" size="medium" ariaLabel="Página de cartões de crédito">
+      <os-page-header
+        title="Cartões de Crédito"
+        subtitle="Gerencie seus cartões e faturas"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+      />
 
-      <header class="os-credit-cards__header">
-        <div class="os-credit-cards__header-content">
-          <div>
-            <h1 class="os-credit-cards__title">Cartões de Crédito</h1>
-            <p class="os-credit-cards__subtitle">Gerencie seus cartões e faturas</p>
-          </div>
-          <div class="os-credit-cards__actions">
-            <button
-              type="button"
-              class="os-credit-cards__action-button os-credit-cards__action-button--primary"
-              (click)="openCreateModal()"
-              [disabled]="!selectedBudgetId()"
-              aria-label="Criar novo cartão de crédito"
-            >
-              Novo Cartão
-            </button>
-            <button
-              type="button"
-              class="os-credit-cards__action-button os-credit-cards__action-button--secondary"
-              (click)="openCreateBillModal()"
-              [disabled]="!selectedBudgetId() || !hasCreditCards()"
-              aria-label="Criar nova fatura"
-            >
-              Nova Fatura
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div
-        class="os-credit-cards__live-region"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        [attr.aria-label]="state.loading() ? 'Carregando cartões de crédito' : ''"
+      @if (currentState() === 'error') {
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar cartões de crédito'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
       >
-        {{ state.loading() ? 'Carregando cartões de crédito...' : '' }}
-      </div>
-
-      @if (state.error()) {
-      <div
-        class="os-credit-cards__live-region os-credit-cards__live-region--error"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        {{ state.error() }}
-      </div>
-      }
-
-      <div id="main-content" tabindex="-1" class="os-credit-cards__content">
-        @switch (currentState()) { @case ('loading') {
-        <div
-          class="os-credit-cards__loading"
-          role="status"
-          aria-live="polite"
-          aria-label="Carregando cartões de crédito"
-        >
-          <div class="os-credit-cards__spinner" aria-hidden="true"></div>
-          <p>Carregando cartões de crédito...</p>
-        </div>
-        } @case ('error') {
-        <div class="os-credit-cards__error" role="alert" aria-live="assertive">
-          <p class="os-credit-cards__error-message">{{ errorMessage() }}</p>
-          <button
-            type="button"
-            class="os-credit-cards__retry-button"
-            (click)="retry()"
-            aria-label="Tentar carregar cartões de crédito novamente"
+        {{ errorMessage() }}
+        <div class="credit-cards-page__error-action">
+          <os-button
+            variant="primary"
+            size="medium"
+            icon="refresh"
+            (buttonClick)="retry()"
+            [attr.aria-label]="'Tentar carregar cartões de crédito novamente'"
           >
             Tentar Novamente
-          </button>
+          </os-button>
         </div>
-        } @case ('empty') {
-        <div class="os-credit-cards__empty" role="status" aria-live="polite">
-          <div class="os-credit-cards__empty-icon" aria-hidden="true">💳</div>
-          <h2 class="os-credit-cards__empty-title">Nenhum cartão cadastrado</h2>
-          <p class="os-credit-cards__empty-description">
-            Crie seu primeiro cartão para começar a gerenciar suas faturas
-          </p>
-          <button
-            type="button"
-            class="os-credit-cards__create-button"
-            (click)="openCreateModal()"
-            [disabled]="!selectedBudgetId()"
-            aria-label="Criar primeiro cartão de crédito"
-          >
-            Criar primeiro cartão
-          </button>
-        </div>
-        } @default {
-        <div class="os-credit-cards__grid">
-          @for (creditCard of creditCards(); track creditCard.id) {
-          <os-credit-card-card
-            [creditCard]="creditCard"
-            [actions]="{ edit: true, delete: true }"
-            [showBills]="true"
-            (edit)="onEditCreditCard($event)"
-            (delete)="onDeleteCreditCard($event)"
-            (payBill)="onPayBill($event)"
-            (reopenBill)="onReopenBill($event)"
-          />
-          }
-        </div>
-        } }
-      </div>
+      </os-alert>
+      }
+
+      <os-entity-list
+        layout="grid"
+        size="medium"
+        [isLoading]="currentState() === 'loading'"
+        [isEmpty]="currentState() === 'empty'"
+        loadingText="Carregando cartões de crédito..."
+        emptyTitle="Nenhum cartão cadastrado"
+        emptyText="Crie seu primeiro cartão para começar a gerenciar suas faturas"
+        emptyIcon="credit_card"
+        [emptyAction]="!!selectedBudgetId()"
+        emptyActionLabel="Criar primeiro cartão"
+        emptyActionIcon="plus"
+        ariaLabel="Lista de cartões de crédito"
+        (emptyActionClick)="openCreateModal()"
+      >
+        @for (creditCard of creditCards(); track creditCard.id) {
+        <os-credit-card-card
+          [creditCard]="creditCard"
+          [actions]="{ edit: true, delete: true }"
+          [showBills]="true"
+          (edit)="onEditCreditCard($event)"
+          (delete)="onDeleteCreditCard($event)"
+          (payBill)="onPayBill($event)"
+          (reopenBill)="onReopenBill($event)"
+        />
+        }
+      </os-entity-list>
 
       @if (showCreateModal()) {
       <os-credit-card-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
@@ -166,7 +130,7 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
       } @if (showReopenBillModal() && reopeningBill()) {
       <os-reopen-bill-modal [creditCardBill]="reopeningBill()!" (closed)="closeReopenBillModal()" />
       }
-    </section>
+    </os-page>
   `,
   styleUrl: './credit-cards.page.scss',
 })
@@ -209,6 +173,33 @@ export class CreditCardsPage implements OnInit {
   });
 
   readonly errorMessage = computed(() => this.state.error() || 'Erro ao carregar cartões de crédito');
+
+  readonly pageHeaderActions = computed<PageHeaderAction[]>(() => {
+    return [
+      {
+        label: 'Novo Cartão',
+        icon: 'credit_card',
+        variant: 'primary',
+        size: 'medium',
+        disabled: !this.selectedBudgetId(),
+      },
+      {
+        label: 'Nova Fatura',
+        icon: 'receipt',
+        variant: 'secondary',
+        size: 'medium',
+        disabled: !this.selectedBudgetId() || !this.hasCreditCards(),
+      },
+    ];
+  });
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Novo Cartão') {
+      this.openCreateModal();
+    } else if (action.label === 'Nova Fatura') {
+      this.openCreateBillModal();
+    }
+  }
 
   constructor() {
     effect(() => {

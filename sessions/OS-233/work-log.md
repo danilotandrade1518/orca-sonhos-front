@@ -227,10 +227,51 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 8
+
+**Fase**: FASE 8 - Passes por Página II (Contas, Cartões)
+**Objetivo**: Aplicar padrão completo nas páginas de Contas e Cartões de Crédito.
+
+#### ✅ Trabalho Realizado
+
+- Migrada página de Contas (`accounts.page.ts`) para usar componentes padronizados:
+  - Substituído header customizado por `os-page-header` com ações (Nova Conta, Transferir, Reconciliar)
+  - Substituídos estados customizados por `os-entity-list` com `os-skeleton` para loading e `os-empty-state` para empty
+  - Erros agora usam `os-alert` com `role="alert"` e `aria-live="assertive"`
+  - Botões HTML nativos substituídos por `os-button` no header
+  - SCSS simplificado removendo estilos não utilizados
+- Migrada página de Cartões (`credit-cards.page.ts`) para usar componentes padronizados:
+  - `os-page-header` com ações (Novo Cartão, Nova Fatura)
+  - `os-entity-list` para listas padronizadas
+  - Estados de loading/empty/error padronizados
+  - SCSS simplificado
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-entity-list` ao invés de grid customizado - **Motivo**: Padronização e reutilização de estados (loading/empty) já implementados
+- **Decisão**: Manter `account-card` e `credit-card-card` como estão - **Motivo**: Componentes específicos funcionam bem dentro de `os-entity-list`, não há necessidade de migrar para `os-entity-card` neste momento
+- **Decisão**: Simplificar SCSS drasticamente - **Motivo**: Componentes padronizados já incluem estilos necessários, mantendo apenas estilos específicos da página (ex: error-action)
+
+#### 🧪 Validações
+
+- ✅ Páginas migradas sem erros de lint
+- ✅ Componentes padronizados importados corretamente
+- ✅ Ações do header funcionais
+- ✅ Estados de loading/empty/error padronizados
+- ✅ SCSS simplificado
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes breakpoints
+- Testar funcionalidade completa em ambiente de desenvolvimento
+- Atualizar plan.md marcando FASE 8 como concluída ✅
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 6 - Estados de UI (Empty/Loading/Error/Success) [Concluída ✅]
-**Última Modificação**: Criados componentes `os-skeleton` e `os-empty-state`, integrados em `os-entity-list` e `budget-list`
-**Próxima Tarefa**: FASE 7 - Passes por Página I (Dashboard, Orçamentos)
+**Fase Atual**: FASE 8 - Passes por Página II (Contas, Cartões) [Concluída ✅]
+**Última Modificação**: Migradas páginas de Contas e Cartões para usar componentes padronizados do Design System
+**Próxima Tarefa**: FASE 9 - Passes por Página III (Metas, Transações, Relatórios, Configurações)
 
