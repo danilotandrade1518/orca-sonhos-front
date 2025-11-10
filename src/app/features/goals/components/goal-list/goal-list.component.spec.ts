@@ -81,7 +81,7 @@ describe('GoalListComponent', () => {
       fixture.componentRef.setInput('isLoading', true);
       fixture.detectChanges();
 
-      const skeleton = fixture.nativeElement.querySelector('.os-goal-list__skeleton');
+      const skeleton = fixture.nativeElement.querySelector('os-skeleton');
       expect(skeleton).toBeTruthy();
     });
 
@@ -90,7 +90,7 @@ describe('GoalListComponent', () => {
       fixture.componentRef.setInput('isLoading', false);
       fixture.detectChanges();
 
-      const empty = fixture.nativeElement.querySelector('.os-goal-list__empty');
+      const empty = fixture.nativeElement.querySelector('os-empty-state');
       expect(empty).toBeTruthy();
       expect(empty.textContent).toContain('Nenhuma meta encontrada');
     });
@@ -119,10 +119,11 @@ describe('GoalListComponent', () => {
       const spy = vi.fn();
       component.create.subscribe(spy);
 
-      const button = fixture.nativeElement.querySelector(
-        '.os-goal-list__empty button'
-      ) as HTMLButtonElement;
-      button.click();
+      const entityList = fixture.debugElement.query(By.css('os-entity-list'));
+      expect(entityList).toBeTruthy();
+      
+      const entityListComponent = entityList.componentInstance;
+      entityListComponent.emptyActionClick.emit();
 
       expect(spy).toHaveBeenCalled();
     });

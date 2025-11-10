@@ -150,7 +150,6 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
     ReportSummaryCardComponent,
     SpendingChartComponent,
     RevenueExpenseChartComponent,
-    CurrencyPipe,
   ],
 })
 export class ReportsPage implements OnInit {

@@ -18,11 +18,12 @@ import { TransferModalComponent } from '../../components/transfer-modal/transfer
 import { ReconcileModalComponent } from '../../components/reconcile-modal/reconcile-modal.component';
 import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
-import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
-import { OsEmptyStateComponent } from '@shared/ui-components/molecules/os-empty-state/os-empty-state.component';
-import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { AccountDto } from '../../../../../dtos/account/account-types';
 
@@ -40,8 +41,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsEmptyStateComponent,
-    OsSkeletonComponent,
     OsAlertComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,15 +114,9 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
       } @if (showTransferModal()) {
       <os-transfer-modal (closed)="closeTransferModal()" />
       } @if (showReconcileModal() && reconcilingAccount()) {
-      <os-reconcile-modal
-        [account]="reconcilingAccount()!"
-        (closed)="closeReconcileModal()"
-      />
+      <os-reconcile-modal [account]="reconcilingAccount()!" (closed)="closeReconcileModal()" />
       } @if (showDeleteModal() && deletingAccount()) {
-      <os-confirm-delete-modal
-        [account]="deletingAccount()!"
-        (closed)="closeDeleteModal()"
-      />
+      <os-confirm-delete-modal [account]="deletingAccount()!" (closed)="closeDeleteModal()" />
       }
     </os-page>
   `,
@@ -227,7 +220,7 @@ export class AccountsPage implements OnInit {
     if (budgetId) {
       this.state.loadAccounts();
     }
-    
+
     const accountId = this.route.snapshot.paramMap.get('id');
     if (accountId && this.route.snapshot.data['modalMode'] === 'edit') {
       const accounts = this.state.accounts();

@@ -87,10 +87,6 @@ describe('BudgetDetailPage', () => {
       stopPolling: vi.fn(),
     };
 
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
-
     TestBed.configureTestingModule({
       imports: [BudgetDetailPage],
       providers: [
@@ -114,10 +110,6 @@ describe('BudgetDetailPage', () => {
           useValue: sharingState,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
@@ -132,6 +124,8 @@ describe('BudgetDetailPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BudgetDetailPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 

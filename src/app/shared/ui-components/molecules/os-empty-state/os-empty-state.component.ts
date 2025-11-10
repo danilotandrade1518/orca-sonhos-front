@@ -1,6 +1,6 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { OsIconComponent, type OsIconVariant } from '../../atoms/os-icon/os-icon.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export type OsEmptyStateSize = 'small' | 'medium' | 'large';
@@ -19,19 +19,13 @@ export type OsEmptyStateSize = 'small' | 'medium' | 'large';
     >
       @if (icon()) {
       <div class="os-empty-state__icon" [attr.aria-hidden]="'true'">
-        <os-icon [name]="icon()" [size]="iconSize()" [variant]="iconVariant()" />
+        <os-icon [name]="icon()!" [size]="iconSize()" [variant]="iconVariant()" />
       </div>
-      }
-
-      @if (title()) {
+      } @if (title()) {
       <h3 class="os-empty-state__title">{{ title() }}</h3>
-      }
-
-      @if (message()) {
+      } @if (message()) {
       <p class="os-empty-state__message">{{ message() }}</p>
-      }
-
-      @if (showAction()) {
+      } @if (showAction()) {
       <div class="os-empty-state__action">
         <os-button
           [variant]="actionVariant()"
@@ -86,7 +80,7 @@ export class OsEmptyStateComponent {
     return sizeMap[this.size()];
   });
 
-  iconVariant = computed(() => {
+  iconVariant = computed<OsIconVariant>(() => {
     return 'default';
   });
 

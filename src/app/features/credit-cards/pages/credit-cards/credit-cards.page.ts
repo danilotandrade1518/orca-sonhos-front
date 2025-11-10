@@ -19,11 +19,12 @@ import { PayBillModalComponent } from '../../components/pay-bill-modal';
 import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
 import { ConfirmDeleteCreditCardModalComponent } from '../../components/confirm-delete-modal';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
-import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
-import { OsEmptyStateComponent } from '@shared/ui-components/molecules/os-empty-state/os-empty-state.component';
-import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
 import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
@@ -43,8 +44,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsEmptyStateComponent,
-    OsSkeletonComponent,
     OsAlertComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -110,7 +109,11 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
       </os-entity-list>
 
       @if (showCreateModal()) {
-      <os-credit-card-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
+      <os-credit-card-form
+        [mode]="'create'"
+        (saved)="onFormSaved()"
+        (cancelled)="onFormCancelled()"
+      />
       } @if (showEditModal() && editingCreditCard()) {
       <os-credit-card-form
         [creditCard]="editingCreditCard()!"
@@ -119,7 +122,11 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         (cancelled)="onFormCancelled()"
       />
       } @if (showCreateBillModal()) {
-      <os-credit-card-bill-form [mode]="'create'" (saved)="onBillFormSaved()" (cancelled)="onBillFormCancelled()" />
+      <os-credit-card-bill-form
+        [mode]="'create'"
+        (saved)="onBillFormSaved()"
+        (cancelled)="onBillFormCancelled()"
+      />
       } @if (showDeleteModal() && deletingCreditCard()) {
       <os-confirm-delete-credit-card-modal
         [creditCard]="deletingCreditCard()!"
@@ -172,7 +179,9 @@ export class CreditCardsPage implements OnInit {
     return 'success';
   });
 
-  readonly errorMessage = computed(() => this.state.error() || 'Erro ao carregar cartões de crédito');
+  readonly errorMessage = computed(
+    () => this.state.error() || 'Erro ao carregar cartões de crédito'
+  );
 
   readonly pageHeaderActions = computed<PageHeaderAction[]>(() => {
     return [
