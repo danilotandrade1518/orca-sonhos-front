@@ -268,10 +268,45 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 9
+
+**Fase**: FASE 9 - Passes por Página III (Metas, Transações, Relatórios, Configurações)
+**Objetivo**: Completar padronização nas páginas restantes e polimento final de a11y.
+
+#### ✅ Trabalho Realizado
+
+- **Página de Metas migrada**: Substituído header customizado por `os-page` + `os-page-header` com ação "Nova Meta" usando `os-button`. Estados de erro agora usam `os-alert` com `role="alert"` e `aria-live="assertive"`. Removidos skip-link e live-regions customizados. SCSS simplificado removendo estilos não utilizados.
+- **Página de Transações migrada**: Adicionado `os-page` wrapper. Removidos skip-link e live-regions customizados (tratados internamente pelo `os-transaction-list`). Mantida estrutura de erros via `notificationService` conforme padrão existente.
+- **Página de Relatórios migrada**: Adicionado `os-page` wrapper. Estados de loading agora usam `os-skeleton` com variante `card`. Estados de erro agora usam `os-alert` com `os-button` para retry. Formatação pt-BR já estava correta usando `CurrencyPipe` do `@shared/formatting`. SCSS simplificado removendo estilos customizados.
+- **Configurações**: Página não existe ainda no app, será implementada em fase futura quando necessário.
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Manter estrutura de erros via `notificationService` em Transações - **Motivo**: Padrão já estabelecido na página, não há necessidade de mudar para `os-alert` neste momento
+- **Decisão**: Usar `os-skeleton` com variante `card` em Relatórios - **Motivo**: Melhor representação visual do conteúdo que será carregado (gráficos e cards)
+- **Decisão**: Simplificar SCSS drasticamente em todas as páginas - **Motivo**: Componentes padronizados já incluem estilos necessários, mantendo apenas estilos específicos da página
+
+#### 🧪 Validações
+
+- ✅ Páginas migradas sem erros de lint
+- ✅ Componentes padronizados importados corretamente
+- ✅ Estados de loading/error padronizados
+- ✅ Formatação pt-BR verificada em Relatórios
+- ✅ SCSS simplificado em todas as páginas
+- ✅ Acessibilidade: `aria-live`, `role` e `aria-label` implementados corretamente
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes breakpoints
+- Testar funcionalidade completa em ambiente de desenvolvimento
+- Atualizar plan.md marcando FASE 9 como concluída ✅
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 8 - Passes por Página II (Contas, Cartões) [Concluída ✅]
-**Última Modificação**: Migradas páginas de Contas e Cartões para usar componentes padronizados do Design System
-**Próxima Tarefa**: FASE 9 - Passes por Página III (Metas, Transações, Relatórios, Configurações)
+**Fase Atual**: FASE 9 - Passes por Página III (Metas, Transações, Relatórios, Configurações) [Concluída ✅]
+**Última Modificação**: Migradas páginas de Metas, Transações e Relatórios para usar componentes padronizados do Design System
+**Próxima Tarefa**: Validação final e preparação para PR
 

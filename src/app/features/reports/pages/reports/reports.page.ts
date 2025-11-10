@@ -2,6 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } 
 import { CommonModule } from '@angular/common';
 
 import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
+import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { ReportFiltersComponent } from '../../components/report-filters/report-filters.component';
 import { ReportSummaryCardComponent } from '@shared/ui-components/molecules/report-summary-card/report-summary-card.component';
 import { SpendingChartComponent } from '../../components/spending-chart/spending-chart.component';
@@ -15,8 +19,7 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
 @Component({
   selector: 'os-reports-page',
   template: `
-    <div class="reports-page" role="main" aria-label="Página de relatórios financeiros">
-      <!-- Header -->
+    <os-page variant="default" size="medium" ariaLabel="Página de relatórios financeiros">
       <os-page-header
         [title]="'Relatórios Financeiros'"
         [subtitle]="'Análise visual dos seus gastos e receitas'"
@@ -26,8 +29,8 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
         [ariaLabel]="'Cabeçalho da página de relatórios'"
       />
 
-      <!-- Filters Bar (Sticky) -->
-      <div class="reports-page__filters-bar" [class.reports-page__filters-bar--sticky]="true">
+      <!-- Filters Bar -->
+      <div class="reports-page__filters-bar">
         <os-report-filters
           [initialFilters]="initialFilters()"
           [budgets]="budgets()"
@@ -38,28 +41,33 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
       </div>
 
       <!-- Main Content -->
-      <div class="reports-page__content">
-        @if (currentState() === 'loading') {
-        <div class="reports-page__loading" role="status" aria-live="polite" aria-label="Carregando relatórios">
-          <div class="reports-page__loading-content">
-            <p class="reports-page__loading-text">Carregando dados dos relatórios...</p>
-          </div>
+      @if (currentState() === 'loading') {
+      <div class="reports-page__loading" role="status" aria-live="polite" aria-label="Carregando relatórios">
+        <os-skeleton variant="card" size="lg" [width]="'100%'" [height]="'400px'" />
+      </div>
+      } @else if (currentState() === 'error') {
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar relatórios'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
+      >
+        {{ errorMessage() }}
+        <div class="reports-page__error-action">
+          <os-button
+            variant="primary"
+            size="medium"
+            icon="refresh"
+            (buttonClick)="onRetry()"
+            [attr.aria-label]="'Tentar carregar relatórios novamente'"
+          >
+            Tentar Novamente
+          </os-button>
         </div>
-        } @else if (currentState() === 'error') {
-        <div class="reports-page__error" role="alert" aria-live="assertive">
-          <div class="reports-page__error-content">
-            <p class="reports-page__error-message">{{ errorMessage() }}</p>
-            <button
-              type="button"
-              class="reports-page__retry-button"
-              (click)="onRetry()"
-              [attr.aria-label]="'Tentar carregar relatórios novamente'"
-            >
-              Tentar Novamente
-            </button>
-          </div>
-        </div>
-        } @else {
+      </os-alert>
+      } @else {
         <!-- Summary Cards -->
         <section
           class="reports-page__summary-section"
@@ -126,15 +134,18 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
             />
           </div>
         </section>
-        }
-      </div>
-    </div>
+      }
+    </os-page>
   `,
   styleUrl: './reports.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    OsPageComponent,
     OsPageHeaderComponent,
+    OsAlertComponent,
+    OsSkeletonComponent,
+    OsButtonComponent,
     ReportFiltersComponent,
     ReportSummaryCardComponent,
     SpendingChartComponent,

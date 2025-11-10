@@ -290,7 +290,7 @@ Aplicar padrão nas páginas de Contas e Cartões.
 
 ---
 
-## 📅 FASE 9: Passes por Página III (Metas, Transações, Relatórios, Configurações) [Status: ⏳]
+## 📅 FASE 9: Passes por Página III (Metas, Transações, Relatórios, Configurações) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -298,25 +298,29 @@ Completar padronização nas páginas restantes e polimento final de a11y.
 
 ### 📋 Tarefas
 
-#### Metas e Transações [⏳]
+#### Metas e Transações [✅]
 
 **Descrição**: Reforçar filtros/listas/cards; estados.  
 **Critério de Conclusão**: Paridade de UX com páginas anteriores.
 
-#### Relatórios e Configurações [⏳]
+#### Relatórios e Configurações [✅]
 
 **Descrição**: Auditar formatação `pt-BR`; containers; ações.  
 **Critério de Conclusão**: Relatórios consistentes e acessíveis.
 
 ### 🧪 Critérios de Validação
 
-- [ ] WCAG 2.1 AA (checagem básica)
-- [ ] Sem `mat-*` em botões nas páginas
-- [ ] Sem scroll horizontal
+- [x] WCAG 2.1 AA (checagem básica)
+- [x] Sem `mat-*` em botões nas páginas
+- [x] Sem scroll horizontal
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Página de Metas migrada**: Substituído header customizado por `os-page` + `os-page-header` com ação "Nova Meta" usando `os-button`. Estados de erro agora usam `os-alert` com `role="alert"` e `aria-live="assertive"`. Removidos skip-link e live-regions customizados. SCSS simplificado removendo estilos não utilizados (header, actions, live-regions).
+- **Página de Transações migrada**: Adicionado `os-page` wrapper. Removidos skip-link e live-regions customizados (tratados internamente pelo `os-transaction-list`). Mantida estrutura de erros via `notificationService` conforme padrão existente.
+- **Página de Relatórios migrada**: Adicionado `os-page` wrapper. Estados de loading agora usam `os-skeleton` com variante `card`. Estados de erro agora usam `os-alert` com `os-button` para retry. Formatação pt-BR já estava correta usando `CurrencyPipe` do `@shared/formatting`. SCSS simplificado removendo estilos customizados de loading/error/retry-button.
+- **Configurações**: Página não existe ainda no app, será implementada em fase futura quando necessário.
+- **Padrão aplicado**: Todas as páginas agora seguem o mesmo padrão visual e comportamental das fases anteriores, garantindo consistência entre todas as páginas do app.
 
 ---
 

@@ -17,6 +17,9 @@ import { BudgetSelectionService } from '../../../../core/services/budget-selecti
 import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
 import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
 import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent, type PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 
 @Component({
@@ -28,42 +31,30 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
     OsFilterBarComponent,
     OsInputComponent,
     OsSelectComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsAlertComponent,
   ],
   template: `
-    <section class="os-goals" role="main" aria-label="Página de metas">
-      <a href="#main-content" class="os-goals__skip-link">Pular para conteúdo principal</a>
+    <os-page variant="default" size="medium" ariaLabel="Página de metas">
+      <os-page-header
+        title="Metas"
+        subtitle="Gerencie suas metas financeiras"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+      />
 
-      <header class="os-goals__header">
-        <h1>Metas</h1>
-        <div class="os-goals__actions">
-          <button
-            type="button"
-            (click)="navigateToNew()"
-            aria-label="Criar nova meta"
-          >
-            Nova Meta
-          </button>
-        </div>
-      </header>
-
-      <div
-        class="os-goals__live-region"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        [attr.aria-label]="state.isLoading() ? 'Carregando metas' : ''"
-      >
-        {{ state.isLoading() ? 'Carregando metas...' : '' }}
-      </div>
       @if (state.error()) {
-      <div
-        class="os-goals__live-region os-goals__live-region--error"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar metas'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
       >
         {{ state.error() }}
-      </div>
+      </os-alert>
       }
 
       <os-filter-bar
@@ -96,21 +87,19 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
         </div>
       </os-filter-bar>
 
-      <div id="main-content" tabindex="-1">
-        <os-goal-list
-          [goals]="filteredGoals()"
-          [isLoading]="state.isLoading()"
-          [lastUpdated]="state.lastUpdated()"
-          [error]="state.error()"
-          [progressById]="state.progressById()"
-          [remainingById]="state.remainingById()"
-          [suggestedById]="state.suggestedMonthlyById()"
-          (create)="navigateToNew()"
-          (aportar)="onAportar($event)"
-          (editar)="onEditar($event)"
-          (excluir)="onExcluir($event)"
-        />
-      </div>
+      <os-goal-list
+        [goals]="filteredGoals()"
+        [isLoading]="state.isLoading()"
+        [lastUpdated]="state.lastUpdated()"
+        [error]="state.error()"
+        [progressById]="state.progressById()"
+        [remainingById]="state.remainingById()"
+        [suggestedById]="state.suggestedMonthlyById()"
+        (create)="navigateToNew()"
+        (aportar)="onAportar($event)"
+        (editar)="onEditar($event)"
+        (excluir)="onExcluir($event)"
+      />
 
       @if (showAddModal()) {
       <os-goal-amount-modal
@@ -133,7 +122,7 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
         (cancelled)="closeRemoveModal()"
       />
       }
-    </section>
+    </os-page>
   `,
   styleUrl: './goals.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -187,6 +176,23 @@ export class GoalsPage implements OnInit {
       return matchesSearch && matchesDeadline;
     });
   });
+
+  readonly pageHeaderActions = computed<PageHeaderAction[]>(() => {
+    return [
+      {
+        label: 'Nova Meta',
+        icon: 'plus',
+        variant: 'primary',
+        size: 'medium',
+      },
+    ];
+  });
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Nova Meta') {
+      this.navigateToNew();
+    }
+  }
 
   constructor() {
     effect(() => {
