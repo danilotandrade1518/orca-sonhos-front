@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output, inject } f
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { LocaleService } from '@shared/formatting';
 
 export interface GoalProgressData {
@@ -24,7 +25,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
 @Component({
   selector: 'os-goal-progress-card',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsProgressBarComponent, OsMoneyDisplayComponent],
+  imports: [CommonModule, OsIconComponent, OsProgressBarComponent, OsMoneyDisplayComponent, OsButtonComponent],
   template: `
     <div
       class="os-goal-progress-card"
@@ -136,30 +137,33 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       </div>
       } @if (showActions() && goalData()?.id) {
       <footer class="os-goal-progress-card__actions">
-        <button
-          type="button"
-          class="os-goal-progress-card__action"
+        <os-button
+          variant="primary"
+          size="small"
+          icon="add"
+          (buttonClick)="onAportar()"
           [attr.aria-label]="'Aportar na meta ' + goalData()?.title"
-          (click)="onAportar()"
         >
           Aportar
-        </button>
-        <button
-          type="button"
-          class="os-goal-progress-card__action"
+        </os-button>
+        <os-button
+          variant="secondary"
+          size="small"
+          icon="edit"
+          (buttonClick)="onEditar()"
           [attr.aria-label]="'Editar meta ' + goalData()?.title"
-          (click)="onEditar()"
         >
           Editar
-        </button>
-        <button
-          type="button"
-          class="os-goal-progress-card__action os-goal-progress-card__action--danger"
+        </os-button>
+        <os-button
+          variant="danger"
+          size="small"
+          icon="trash"
+          (buttonClick)="onExcluir()"
           [attr.aria-label]="'Excluir meta ' + goalData()?.title"
-          (click)="onExcluir()"
         >
           Excluir
-        </button>
+        </os-button>
       </footer>
       } }
     </div>

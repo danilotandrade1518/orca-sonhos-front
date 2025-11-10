@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { OsIconMenuButtonComponent } from '../../atoms/os-icon-menu-button/os-icon-menu-button.component';
 import type { OsEntityCardAction } from '../os-entity-card/os-entity-card.component';
 
 export type OsEntityActionsSize = 'small' | 'medium' | 'large';
@@ -11,22 +12,18 @@ export type OsEntityActionsSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-entity-actions',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatMenuModule, MatIconModule, OsIconComponent],
+  imports: [CommonModule, MatButtonModule, MatMenuModule, MatIconModule, OsIconComponent, OsIconMenuButtonComponent],
   template: `
     <div class="os-entity-actions">
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="actionsMenu"
+      <os-icon-menu-button
+        [menu]="actionsMenu"
         [disabled]="disabled()"
         [class]="buttonClasses()"
-        [attr.aria-label]="ariaLabel()"
-        [attr.aria-haspopup]="'true'"
-        [attr.aria-expanded]="menuOpen()"
-        type="button"
+        [ariaLabel]="ariaLabel()"
+        [size]="menuButtonSize()"
+        [icon]="'more_vert'"
         (click)="$event.stopPropagation()"
-      >
-        <os-icon name="more-vert" [size]="getIconSize()" [ariaHidden]="true" />
-      </button>
+      />
 
       <mat-menu #actionsMenu="matMenu" class="os-entity-actions__menu">
         @for (action of actions(); track action.id) {
@@ -73,6 +70,15 @@ export class OsEntityActionsComponent {
       small: 'sm',
       medium: 'md',
       large: 'md',
+    };
+    return sizeMap[this.size()];
+  });
+
+  menuButtonSize = computed(() => {
+    const sizeMap: Record<OsEntityActionsSize, 'small' | 'medium'> = {
+      small: 'small',
+      medium: 'medium',
+      large: 'medium',
     };
     return sizeMap[this.size()];
   });

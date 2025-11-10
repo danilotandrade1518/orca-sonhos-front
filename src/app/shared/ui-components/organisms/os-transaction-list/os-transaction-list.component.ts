@@ -260,16 +260,14 @@ export interface TransactionCardAction {
                   <os-icon [name]="getTransactionPriorityIcon(transaction)" [size]="'sm'" />
                 </div>
                 } @if (cardActions().length > 0) {
-                <button
-                  mat-icon-button
-                  [matMenuTriggerFor]="cardMenu"
+                <os-icon-menu-button
+                  [menu]="cardMenu"
                   class="os-transaction-list__card-menu-button"
                   (click)="$event.stopPropagation()"
-                  [attr.aria-label]="'Ações para transação ' + transaction.description"
-                  type="button"
-                >
-                  <mat-icon>more_vert</mat-icon>
-                </button>
+                  [ariaLabel]="'Ações para transação ' + transaction.description"
+                  [size]="'small'"
+                  [icon]="'more_vert'"
+                />
                 <mat-menu #cardMenu="matMenu" class="os-transaction-list__card-menu">
                   @for (action of cardActions(); track action.id) {
                   <button

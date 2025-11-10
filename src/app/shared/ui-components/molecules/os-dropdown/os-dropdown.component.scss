@@ -390,6 +390,11 @@
     }
 
     &__trigger {
+      &--small,
+      &--medium {
+        padding: var(--os-spacing-2) var(--os-spacing-3);
+        min-height: 44px;
+      }
       &--large {
         padding: var(--os-spacing-2) var(--os-spacing-3);
         font-size: var(--os-font-size-base);

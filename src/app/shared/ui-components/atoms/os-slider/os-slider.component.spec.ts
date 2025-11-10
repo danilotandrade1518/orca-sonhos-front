@@ -387,7 +387,7 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
-      // Component divides by 100: 75 / 100 = 0.75, formatted with 0 decimals = 1%
+      
       expect(valueDisplay.nativeElement.textContent.trim()).toBe('1%');
     });
 

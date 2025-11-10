@@ -24,6 +24,7 @@ import {
 } from '@shared/ui-components/organisms/os-sidebar/os-sidebar.component';
 import { ThemeService } from '@core/services/theme/theme.service';
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
+import { OsIconButtonComponent } from '@shared/ui-components/atoms/os-icon-button/os-icon-button.component';
 
 export interface AppShellLayout {
   variant: 'default' | 'compact';
@@ -72,22 +73,12 @@ export interface AppShellLayout {
             (backdropClick)="onSidebarBackdropClick()"
           >
             <div slot="footer" class="os-app-shell-template__sidebar-theme-toggle">
-              <button
-                type="button"
-                class="os-app-shell-template__theme-button"
-                [attr.aria-label]="'Alternar tema'"
-                [attr.title]="
-                  themeService.isDark() ? 'Alternar para modo claro' : 'Alternar para modo escuro'
-                "
-                (click)="onThemeToggle()"
-              >
-                <os-icon
-                  [name]="themeService.isDark() ? 'dark_mode' : 'light_mode'"
-                  [size]="'lg'"
-                  [variant]="'default'"
-                  [role]="'decorative'"
-                />
-              </button>
+              <os-icon-button
+                [icon]="themeService.isDark() ? 'dark_mode' : 'light_mode'"
+                [ariaLabel]="themeService.isDark() ? 'Alternar para modo claro' : 'Alternar para modo escuro'"
+                [size]="'medium'"
+                (clicked)="onThemeToggle()"
+              />
             </div>
           </os-sidebar>
         </nav>
@@ -198,6 +189,7 @@ export interface AppShellLayout {
     OsHeaderComponent,
     OsSidebarComponent,
     OsIconComponent,
+    OsIconButtonComponent,
   ],
 })
 export class OsAppShellTemplateComponent {
