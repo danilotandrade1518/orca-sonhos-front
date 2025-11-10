@@ -1,8 +1,7 @@
 import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
-import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
-import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
+import { OsEmptyStateComponent } from '../../molecules/os-empty-state/os-empty-state.component';
+import { OsSkeletonComponent } from '../../atoms/os-skeleton/os-skeleton.component';
 
 export type OsEntityListLayout = 'grid' | 'list';
 export type OsEntityListSize = 'small' | 'medium' | 'large';
@@ -11,7 +10,7 @@ export type OsEntityListVariant = 'default' | 'compact';
 @Component({
   selector: 'os-entity-list',
   standalone: true,
-  imports: [CommonModule, OsButtonComponent, OsSpinnerComponent, OsIconComponent],
+  imports: [CommonModule, OsEmptyStateComponent, OsSkeletonComponent],
   template: `
     <div
       class="os-entity-list"
@@ -20,30 +19,29 @@ export type OsEntityListVariant = 'default' | 'compact';
       [attr.aria-label]="ariaLabel()"
     >
       @if (isLoading()) {
-      <div class="os-entity-list__loading" role="status" aria-live="polite">
-        <os-spinner [variant]="'default'" [size]="getSpinnerSize()" />
-        <p class="os-entity-list__loading-text">{{ loadingText() }}</p>
+      <div class="os-entity-list__loading" role="status" aria-live="polite" [attr.aria-busy]="'true'">
+        <div class="os-entity-list__skeleton-container" [class]="containerClasses()">
+          @for (item of skeletonItems(); track $index) {
+          <os-skeleton [variant]="'card'" [size]="getSkeletonSize()" />
+          }
+        </div>
+        <p class="os-entity-list__loading-text" aria-hidden="true">{{ loadingText() }}</p>
       </div>
       } @else if (isEmpty()) {
-      <div class="os-entity-list__empty" role="status" aria-live="polite">
-        @if (emptyIcon()) {
-        <os-icon [name]="emptyIcon()" [size]="'lg'" />
-        } @if (emptyTitle()) {
-        <h3 class="os-entity-list__empty-title">{{ emptyTitle() }}</h3>
-        } @if (emptyText()) {
-        <p class="os-entity-list__empty-text">{{ emptyText() }}</p>
-        } @if (emptyAction()) {
-        <os-button
-          [variant]="'primary'"
-          [size]="getButtonSize()"
-          [icon]="emptyActionIcon()"
-          (buttonClick)="onEmptyAction()"
-          [attr.aria-label]="emptyActionLabel()"
-        >
-          {{ emptyActionLabel() }}
-        </os-button>
-        }
-      </div>
+      <os-empty-state
+        [size]="getEmptyStateSize()"
+        [icon]="emptyIcon()"
+        [title]="emptyTitle()"
+        [message]="emptyText()"
+        [showAction]="emptyAction()"
+        [actionLabel]="emptyActionLabel()"
+        [actionIcon]="emptyActionIcon()"
+        [actionVariant]="'primary'"
+        [actionSize]="getButtonSize()"
+        [ariaLabel]="ariaLabel() + ' - Estado vazio'"
+        [ariaLive]="'polite'"
+        (actionClick)="onEmptyAction()"
+      />
       } @else {
       <div class="os-entity-list__container" [class]="containerClasses()">
         <ng-content></ng-content>
@@ -97,11 +95,29 @@ export class OsEntityListComponent {
     return classes.join(' ');
   });
 
-  getSpinnerSize = computed(() => {
+  skeletonItems = computed(() => {
+    const countMap: Record<OsEntityListSize, number> = {
+      small: 4,
+      medium: 6,
+      large: 8,
+    };
+    return Array(countMap[this.size()]).fill(0);
+  });
+
+  getSkeletonSize = computed(() => {
     const sizeMap: Record<OsEntityListSize, 'sm' | 'md' | 'lg'> = {
       small: 'sm',
       medium: 'md',
       large: 'lg',
+    };
+    return sizeMap[this.size()];
+  });
+
+  getEmptyStateSize = computed(() => {
+    const sizeMap: Record<OsEntityListSize, 'small' | 'medium' | 'large'> = {
+      small: 'small',
+      medium: 'medium',
+      large: 'large',
     };
     return sizeMap[this.size()];
   });

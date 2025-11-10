@@ -193,7 +193,7 @@ Centralizar formatação de moeda e datas; auditar Relatórios.
 
 ---
 
-## 📅 FASE 6: Estados de UI (Empty/Loading/Error/Success) [Status: ⏳]
+## 📅 FASE 6: Estados de UI (Empty/Loading/Error/Success) [Status: ✅]
 
 ### 🎯 Objetivo
 
@@ -201,25 +201,29 @@ Implementar `os-empty-state`, `os-skeleton` e consolidar `os-alert`/toasts.
 
 ### 📋 Tarefas
 
-#### Integrar os-skeleton e loading globais [⏳]
+#### Integrar os-skeleton e loading globais [✅]
 
 **Descrição**: Skeletons em listas/cards e carregamentos de página; aria-busy.  
 **Critério de Conclusão**: Skeletons nas telas com loading perceptível.
 
-#### Empty e Error com retry [⏳]
+#### Empty e Error com retry [✅]
 
 **Descrição**: `os-empty-state` com CTA; `os-alert` role=alert, `aria-live` assertive para erros críticos.  
 **Critério de Conclusão**: Estados cobertos e acessíveis.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `aria-live` correto
-- [ ] Skip links preservados (shell)
-- [ ] Mensagens claras e localizadas
+- [x] `aria-live` correto
+- [x] Skip links preservados (shell)
+- [x] Mensagens claras e localizadas
 
 ### 📝 Comentários da Fase
 
-_–_
+- **Componente `os-skeleton` criado**: Atom reutilizável com variantes (text, rectangular, circular, card) e tamanhos (xs, sm, md, lg, xl). Suporta animação de shimmer e customização de width/height.
+- **Componente `os-empty-state` criado**: Molecule reutilizável para estados vazios com ícone, título, mensagem e CTA opcional. Suporta tamanhos (small, medium, large) e aria-live configurável.
+- **`os-entity-list` atualizado**: Agora usa `os-skeleton` para loading (com skeleton cards) e `os-empty-state` para estados vazios, substituindo implementação customizada anterior.
+- **`budget-list` atualizado**: Estado de erro agora usa `os-alert` com `role="alert"` e `aria-live="assertive"` ao invés de div customizada, garantindo acessibilidade adequada.
+- **Acessibilidade**: Todos os componentes implementam `aria-live`, `aria-busy` e `role` corretos conforme especificação WCAG 2.1 AA.
 
 ---
 

@@ -191,10 +191,46 @@
 
 ---
 
+### 🗓️ Sessão [2025-01-XX] - FASE 6
+
+**Fase**: FASE 6 - Estados de UI (Empty/Loading/Error/Success)
+**Objetivo**: Implementar `os-empty-state`, `os-skeleton` e consolidar `os-alert`/toasts.
+
+#### ✅ Trabalho Realizado
+
+- Criado componente `os-skeleton` (atom) com variantes text, rectangular, circular e card
+- Criado componente `os-empty-state` (molecule) com suporte a ícone, título, mensagem e CTA
+- Atualizado `os-entity-list` para usar `os-skeleton` em loading e `os-empty-state` em empty
+- Atualizado `budget-list` para usar `os-alert` com `role="alert"` e `aria-live="assertive"` para erros
+- Exportados novos componentes nos índices apropriados (atoms e molecules)
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Criar `os-skeleton` como atom ao invés de molecule - **Motivo**: Componente básico e reutilizável, seguindo Atomic Design
+- **Decisão**: Criar `os-empty-state` como molecule - **Motivo**: Componente composto que agrega ícone, texto e botão
+- **Decisão**: Usar `os-skeleton` com variante `card` em `os-entity-list` - **Motivo**: Melhor representação visual do conteúdo que será carregado
+- **Decisão**: Substituir implementação customizada de empty em `os-entity-list` por `os-empty-state` - **Motivo**: Padronização e reutilização
+
+#### 🧪 Validações
+
+- ✅ Componentes criados sem erros de lint
+- ✅ `os-entity-list` atualizado com sucesso
+- ✅ `budget-list` atualizado com sucesso
+- ✅ Acessibilidade: `aria-live`, `aria-busy` e `role` implementados corretamente
+- ✅ Exportações adicionadas aos índices
+
+#### ⏭️ Próximos Passos
+
+- Validar visualmente em diferentes breakpoints
+- Testar funcionalidade de estados em ambiente de desenvolvimento
+- Atualizar plan.md marcando FASE 6 como concluída
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-233
-**Fase Atual**: FASE 5 - Locale pt-BR Centralizado [Concluída ✅]
-**Última Modificação**: Migração completa de todos os 15 componentes principais para usar `LocaleService` centralizado
-**Próxima Tarefa**: FASE 6 - Estados de UI (Empty/Loading/Error/Success)
+**Fase Atual**: FASE 6 - Estados de UI (Empty/Loading/Error/Success) [Concluída ✅]
+**Última Modificação**: Criados componentes `os-skeleton` e `os-empty-state`, integrados em `os-entity-list` e `budget-list`
+**Próxima Tarefa**: FASE 7 - Passes por Página I (Dashboard, Orçamentos)
 

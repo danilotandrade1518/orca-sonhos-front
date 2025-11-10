@@ -4,6 +4,7 @@ export * from './os-icon';
 export * from './os-badge';
 export * from './os-avatar';
 export * from './os-spinner';
+export * from './os-skeleton';
 export * from './os-label';
 export * from './os-checkbox';
 export * from './os-radio';

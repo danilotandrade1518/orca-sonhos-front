@@ -18,6 +18,7 @@ import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-
 import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
 import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
 import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -33,6 +34,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsInputComponent,
     OsSelectComponent,
     OsEntityListComponent,
+    OsAlertComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -86,17 +88,27 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 
       <main class="budget-list-page__content">
         @if (currentState() === 'error') {
-        <div class="budget-list-page__error" role="alert" aria-live="assertive">
-          <p class="error-message">{{ errorMessage() }}</p>
-          <os-button
-            variant="secondary"
-            size="medium"
-            (buttonClick)="retry()"
-            [attr.aria-label]="'Tentar carregar orçamentos novamente'"
-          >
-            Tentar Novamente
-          </os-button>
-        </div>
+        <os-alert
+          type="error"
+          [title]="'Erro ao carregar orçamentos'"
+          [role]="'alert'"
+          [ariaLive]="'assertive'"
+          [showIcon]="true"
+          [dismissible]="false"
+        >
+          {{ errorMessage() }}
+          <div class="budget-list-page__error-action">
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="refresh"
+              (buttonClick)="retry()"
+              [attr.aria-label]="'Tentar carregar orçamentos novamente'"
+            >
+              Tentar Novamente
+            </os-button>
+          </div>
+        </os-alert>
         } @else {
         <os-entity-list
           [layout]="'grid'"

@@ -70,6 +70,10 @@
     min-height: 400px;
   }
 
+  &__error-action {
+    margin-top: var(--os-spacing-md, 16px);
+  }
+
   &__loading,
   &__error,
   &__empty {
