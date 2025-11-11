@@ -41,9 +41,6 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="descriptionId()"
       role="region"
-      tabindex="0"
-      (click)="onCardClick()"
-      (keydown)="onKeyDown($event)"
     >
       @if (isLoading()) {
       <div class="os-goal-progress-card__skeleton" aria-hidden="true">
@@ -93,7 +90,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.currentValue || 0"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getCurrentValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -103,7 +100,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.targetValue || 0"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getTargetValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -113,7 +110,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="remainingValue()"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getRemainingValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -127,7 +124,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.suggestedAmount!"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getSuggestedAmountAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -184,9 +181,6 @@ export class OsGoalProgressCardComponent {
   readonly ariaLabel = input<string>('Card de progresso da meta');
   readonly showActions = input<boolean>(false);
   readonly showSuggestedAmount = input<boolean>(false);
-
-  readonly cardClick = output<GoalProgressData>();
-  readonly cardExpand = output<GoalProgressData>();
 
   readonly aportar = output<string>();
   readonly editar = output<string>();
@@ -289,23 +283,6 @@ export class OsGoalProgressCardComponent {
   formatDeadline(date: Date | undefined): string {
     if (!date) return '';
     return this.localeService.formatDateShort(date);
-  }
-
-  onCardClick(): void {
-    const data = this.goalData();
-    if (data && !this.isLoading()) {
-      this.cardClick.emit(data);
-    }
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      const data = this.goalData();
-      if (data && !this.isLoading()) {
-        this.cardExpand.emit(data);
-      }
-    }
   }
 
   onAportar(): void {
