@@ -34,6 +34,7 @@ import {
   OsFilterOption,
   OsFilterBarVariant,
 } from '../../molecules/os-filter-bar/os-filter-bar.component';
+import { OsIconMenuButtonComponent } from '../../atoms/os-icon-menu-button/os-icon-menu-button.component';
 
 export interface Transaction {
   id: string;
@@ -89,6 +90,7 @@ export interface TransactionCardAction {
     CommonModule,
     OsButtonComponent,
     OsIconComponent,
+    OsIconMenuButtonComponent,
     OsSpinnerComponent,
     OsDataTableComponent,
     OsFilterBarComponent,

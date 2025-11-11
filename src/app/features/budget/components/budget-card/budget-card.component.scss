@@ -18,3 +18,12 @@
     color: var(--os-success-color, #388e3c);
   }
 }
+
+/* Ações do footer do card – alinhadas ao padrão de contas */
+.budget-card__actions {
+  display: flex;
+  gap: var(--os-spacing-xs, 4px);
+  justify-content: flex-end;
+  align-items: center;
+}
+

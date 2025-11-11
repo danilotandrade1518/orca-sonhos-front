@@ -5,11 +5,12 @@ import {
   OsEntityCardComponent,
   type OsEntityCardAction,
 } from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 
 @Component({
   selector: 'os-budget-card',
   standalone: true,
-  imports: [CommonModule, OsEntityCardComponent],
+  imports: [CommonModule, OsEntityCardComponent, OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-entity-card
@@ -22,10 +23,9 @@ import {
       [size]="size()"
       [title]="titleText()"
       [meta]="metaText()"
-      [actions]="cardActions()"
+      [customActions]="showActions()"
       [showActionsMenu]="false"
       (cardClick)="onCardClick()"
-      (actionClick)="onActionClick($event)"
     >
       <span
         slot="title"
@@ -35,6 +35,25 @@ import {
       >
         {{ budget().type === 'PERSONAL' ? 'Pessoal' : 'Compartilhado' }}
       </span>
+
+      @if (showActions()) {
+      <div slot="actions" class="budget-card__actions">
+        <os-button
+          variant="tertiary"
+          size="small"
+          [icon]="'edit'"
+          [ariaLabel]="'Editar orçamento ' + budget().name"
+          (buttonClick)="onEdit()"
+        />
+        <os-button
+          variant="danger"
+          size="small"
+          [icon]="'delete'"
+          [ariaLabel]="'Excluir orçamento ' + budget().name"
+          (buttonClick)="onDelete()"
+        />
+      </div>
+      }
     </os-entity-card>
   `,
   styleUrl: './budget-card.component.scss',
@@ -92,11 +111,11 @@ export class BudgetCardComponent {
     }
   }
 
-  onActionClick(action: OsEntityCardAction): void {
-    if (action.id === 'edit') {
-      this.editClick.emit(this.budget().id);
-    } else if (action.id === 'delete') {
-      this.deleteClick.emit(this.budget().id);
-    }
+  onEdit(): void {
+    this.editClick.emit(this.budget().id);
+  }
+
+  onDelete(): void {
+    this.deleteClick.emit(this.budget().id);
   }
 }

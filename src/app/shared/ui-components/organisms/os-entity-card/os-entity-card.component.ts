@@ -30,7 +30,7 @@ export interface OsEntityCardAction {
       [ariaLabel]="ariaLabel()"
       [ariaDescribedBy]="ariaDescribedBy()"
       [header]="hasHeader()"
-      [actions]="hasActions()"
+      [actions]="hasActions() || customActions()"
       (cardClick)="onCardClick()"
     >
       @if (hasHeader()) {
@@ -66,20 +66,22 @@ export interface OsEntityCardAction {
         <ng-content></ng-content>
       </div>
 
-      @if (hasActions() && !showActionsMenu()) {
+      @if ((customActions() || hasActions()) && !showActionsMenu()) {
       <div slot="actions" class="os-entity-card__actions">
         <ng-content select="[slot=actions]"></ng-content>
-        @for (action of actions(); track action.id) {
-        <os-button
-          [variant]="action.variant || 'primary'"
-          [size]="getActionSize()"
-          [icon]="action.icon || 'plus'"
-          [disabled]="action.disabled || disabled()"
-          [ariaLabel]="action.label"
-          (buttonClick)="onActionClick(action)"
-        >
-          {{ action.label }}
-        </os-button>
+        @if (hasActions()) {
+          @for (action of actions(); track action.id) {
+          <os-button
+            [variant]="action.variant || 'primary'"
+            [size]="getActionSize()"
+            [icon]="action.icon || 'plus'"
+            [disabled]="action.disabled || disabled()"
+            [ariaLabel]="action.label"
+            (buttonClick)="onActionClick(action)"
+          >
+            @if (!actionsIconOnly()) { {{ action.label }} }
+          </os-button>
+          }
         }
       </div>
       }
@@ -102,6 +104,8 @@ export class OsEntityCardComponent {
   selected = input<boolean>(false);
   actions = input<OsEntityCardAction[]>([]);
   showActionsMenu = input<boolean>(false);
+  customActions = input<boolean>(false);
+  actionsIconOnly = input<boolean>(true);
   ariaLabel = input<string | null>(null);
   ariaDescribedBy = input<string | null>(null);
 

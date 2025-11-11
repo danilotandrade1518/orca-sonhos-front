@@ -20,7 +20,10 @@ import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-sele
 import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
-import { OsPageHeaderComponent, PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -261,9 +264,7 @@ export class BudgetListPage implements OnInit {
     this.selectedType.set('all');
   }
 
-  onApplyFilters(): void {
-    
-  }
+  onApplyFilters(): void {}
 
   isSelected(budgetId: string): boolean {
     return this.selectedBudgetId() === budgetId;

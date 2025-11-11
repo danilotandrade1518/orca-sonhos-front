@@ -7,6 +7,7 @@
     align-items: flex-start;
     gap: var(--os-gap-md);
     width: 100%;
+    padding-bottom: var(--os-gap-xs);
   }
 
   &__title-section {
@@ -51,12 +52,23 @@
 
   &__actions {
     display: flex;
-    gap: var(--os-gap-sm);
+    gap: var(--os-spacing-xs, var(--os-gap-xs));
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
+    padding-top: var(--os-spacing-sm);
+    margin-top: var(--os-spacing-sm);
   }
 }
 
+@media (max-width: 575px) {
+  .os-entity-card {
+    &__actions {
+      padding-top: var(--os-spacing-xs);
+      margin-top: var(--os-spacing-xs);
+    }
+  }
+}
 @media (max-width: 575px) {
   .os-entity-card {
     &__header {
