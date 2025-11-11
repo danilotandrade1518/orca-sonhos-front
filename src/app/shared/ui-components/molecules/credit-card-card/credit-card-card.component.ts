@@ -1,8 +1,17 @@
-import { Component, input, output, computed, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  computed,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
+import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { CreditCardBillItemComponent } from '../credit-card-bill-item/credit-card-bill-item.component';
 import { LocaleService } from '@shared/formatting';
@@ -17,6 +26,7 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsButtonComponent,
+    OsDeleteButtonComponent,
     OsIconComponent,
     CreditCardBillItemComponent,
   ],
@@ -75,11 +85,14 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
           </button>
 
           @if (isExpanded()) {
-          <div class="os-credit-card-card__bills-list" role="list" [attr.aria-label]="'Lista de faturas'">
+          <div
+            class="os-credit-card-card__bills-list"
+            role="list"
+            [attr.aria-label]="'Lista de faturas'"
+          >
             @if (bills().length === 0) {
             <p class="os-credit-card-card__bills-empty">Nenhuma fatura encontrada</p>
-            } @else {
-            @for (bill of bills(); track bill.id) {
+            } @else { @for (bill of bills(); track bill.id) {
             <div class="os-credit-card-card__bill-item" role="listitem">
               <os-credit-card-bill-item
                 [bill]="bill"
@@ -88,8 +101,7 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
                 (reopen)="onReopenBill($event)"
               />
             </div>
-            }
-            }
+            } }
           </div>
           }
         </div>
@@ -107,12 +119,9 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
           (buttonClick)="onEdit()"
         />
         } @if (actions()?.delete) {
-        <os-button
-          variant="danger"
-          size="small"
-          [icon]="'delete'"
+        <os-delete-button
           [ariaLabel]="'Excluir cartão ' + creditCard().name"
-          (buttonClick)="onDelete()"
+          (deleteClick)="onDelete()"
         />
         }
       </div>
@@ -148,7 +157,9 @@ export class CreditCardCardComponent {
   ariaLabelText = computed(() => {
     const card = this.creditCard();
     if (!card) return 'Card de cartão de crédito';
-    return `Cartão de crédito ${card.name}, limite ${this.formatLimit(card.limit)}, fechamento dia ${card.closingDay}, vencimento dia ${card.dueDay}`;
+    return `Cartão de crédito ${card.name}, limite ${this.formatLimit(
+      card.limit
+    )}, fechamento dia ${card.closingDay}, vencimento dia ${card.dueDay}`;
   });
 
   getLimitAriaLabel = computed(() => {

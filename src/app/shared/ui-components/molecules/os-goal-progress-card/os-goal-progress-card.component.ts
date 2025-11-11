@@ -5,6 +5,7 @@ import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.com
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
 import { LocaleService } from '@shared/formatting';
 
 export interface GoalProgressData {
@@ -25,7 +26,14 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
 @Component({
   selector: 'os-goal-progress-card',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsProgressBarComponent, OsMoneyDisplayComponent, OsButtonComponent],
+  imports: [
+    CommonModule,
+    OsIconComponent,
+    OsProgressBarComponent,
+    OsMoneyDisplayComponent,
+    OsButtonComponent,
+    OsDeleteButtonComponent,
+  ],
   template: `
     <div
       class="os-goal-progress-card"
@@ -155,15 +163,10 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         >
           Editar
         </os-button>
-        <os-button
-          variant="danger"
-          size="small"
-          icon="trash"
-          (buttonClick)="onExcluir()"
-          [attr.aria-label]="'Excluir meta ' + goalData()?.title"
-        >
-          Excluir
-        </os-button>
+        <os-delete-button
+          [ariaLabel]="'Excluir meta ' + goalData()?.title"
+          (deleteClick)="onExcluir()"
+        />
       </footer>
       } }
     </div>

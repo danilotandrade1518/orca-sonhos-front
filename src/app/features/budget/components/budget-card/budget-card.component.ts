@@ -6,11 +6,12 @@ import {
   type OsEntityCardAction,
 } from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsDeleteButtonComponent } from '@shared/ui-components/atoms/os-delete-button';
 
 @Component({
   selector: 'os-budget-card',
   standalone: true,
-  imports: [CommonModule, OsEntityCardComponent, OsButtonComponent],
+  imports: [CommonModule, OsEntityCardComponent, OsButtonComponent, OsDeleteButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-entity-card
@@ -45,12 +46,9 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
           [ariaLabel]="'Editar orçamento ' + budget().name"
           (buttonClick)="onEdit()"
         />
-        <os-button
-          variant="danger"
-          size="small"
-          [icon]="'delete'"
+        <os-delete-button
           [ariaLabel]="'Excluir orçamento ' + budget().name"
-          (buttonClick)="onDelete()"
+          (deleteClick)="onDelete()"
         />
       </div>
       }

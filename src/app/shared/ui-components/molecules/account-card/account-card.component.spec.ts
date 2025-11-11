@@ -86,7 +86,7 @@ describe('AccountCardComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const deleteButton = compiled.querySelector('os-button[variant="danger"]');
+    const deleteButton = compiled.querySelector('os-delete-button');
     expect(deleteButton).toBeTruthy();
   });
 

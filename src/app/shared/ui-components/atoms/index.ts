@@ -1,4 +1,5 @@
 export * from './os-button';
+export * from './os-delete-button';
 export * from './os-input';
 export * from './os-icon';
 export * from './os-badge';

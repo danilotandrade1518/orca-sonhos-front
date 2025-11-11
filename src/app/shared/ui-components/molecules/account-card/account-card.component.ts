@@ -4,6 +4,7 @@ import { OsCardComponent } from '../os-card/os-card.component';
 import { AccountTypeBadgeComponent } from '../../atoms/account-type-badge/account-type-badge.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
+import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
 import { LocaleService } from '@shared/formatting';
 import { AccountDto } from '../../../../../dtos/account/account-types';
 
@@ -16,6 +17,7 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
     AccountTypeBadgeComponent,
     OsMoneyDisplayComponent,
     OsButtonComponent,
+    OsDeleteButtonComponent,
   ],
   template: `
     <os-card
@@ -55,12 +57,9 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
           (click)="onEdit()"
         />
         } @if (actions()?.delete) {
-        <os-button
-          variant="danger"
-          size="small"
-          [icon]="'delete'"
+        <os-delete-button
           [ariaLabel]="'Excluir conta ' + account().name"
-          (click)="onDelete()"
+          (deleteClick)="onDelete()"
         />
         }
       </div>
