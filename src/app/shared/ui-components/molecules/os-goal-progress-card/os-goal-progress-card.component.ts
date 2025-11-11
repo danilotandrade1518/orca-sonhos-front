@@ -6,6 +6,7 @@ import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
+import { OsEditButtonComponent } from '../../atoms/os-edit-button';
 import { LocaleService } from '@shared/formatting';
 
 export interface GoalProgressData {
@@ -33,6 +34,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
     OsMoneyDisplayComponent,
     OsButtonComponent,
     OsDeleteButtonComponent,
+    OsEditButtonComponent,
   ],
   template: `
     <div
@@ -151,15 +153,10 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         >
           Aportar
         </os-button>
-        <os-button
-          variant="secondary"
-          size="small"
-          icon="edit"
-          (buttonClick)="onEditar()"
-          [attr.aria-label]="'Editar meta ' + goalData()?.title"
-        >
-          Editar
-        </os-button>
+        <os-edit-button
+          [ariaLabel]="'Editar meta ' + goalData()?.title"
+          (editClick)="onEditar($event)"
+        />
         <os-delete-button
           [ariaLabel]="'Excluir meta ' + goalData()?.title"
           (deleteClick)="onExcluir()"
@@ -292,7 +289,8 @@ export class OsGoalProgressCardComponent {
     }
   }
 
-  onEditar(): void {
+  onEditar(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.editar.emit(data.id);

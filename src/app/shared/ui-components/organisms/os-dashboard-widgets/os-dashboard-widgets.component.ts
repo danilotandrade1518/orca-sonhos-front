@@ -166,8 +166,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               [size]="getWidgetSize(widget)"
               [state]="getGoalState(widget)"
               [ariaLabel]="'Progresso da meta'"
-              (cardClick)="onGoalCardClick($event)"
-              (cardExpand)="onGoalCardExpand($event)"
             />
             } @case ('budget-summary') {
             <div class="os-dashboard-widgets__budget-summary">

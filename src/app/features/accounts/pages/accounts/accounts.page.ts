@@ -15,7 +15,6 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
 import { AccountFormComponent } from '../../components/account-form/account-form.component';
 import { TransferModalComponent } from '../../components/transfer-modal/transfer-modal.component';
-import { ReconcileModalComponent } from '../../components/reconcile-modal/reconcile-modal.component';
 import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -35,7 +34,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
     AccountCardComponent,
     AccountFormComponent,
     TransferModalComponent,
-    ReconcileModalComponent,
     ConfirmDeleteModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
@@ -104,17 +102,8 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
 
       @if (showCreateModal()) {
       <os-account-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showEditModal() && editingAccount()) {
-      <os-account-form
-        [account]="editingAccount()!"
-        [mode]="'edit'"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
       } @if (showTransferModal()) {
       <os-transfer-modal (closed)="closeTransferModal()" />
-      } @if (showReconcileModal() && reconcilingAccount()) {
-      <os-reconcile-modal [account]="reconcilingAccount()!" (closed)="closeReconcileModal()" />
       } @if (showDeleteModal() && deletingAccount()) {
       <os-confirm-delete-modal [account]="deletingAccount()!" (closed)="closeDeleteModal()" />
       }
@@ -134,20 +123,13 @@ export class AccountsPage implements OnInit {
   readonly accounts = computed(() => this.state.accountsByBudgetId());
   readonly hasAccounts = computed(() => this.accounts().length > 0);
 
-  readonly editingAccount = signal<AccountDto | null>(null);
   readonly deletingAccount = signal<AccountDto | null>(null);
-  readonly reconcilingAccount = signal<AccountDto | null>(null);
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
   });
 
-  readonly showEditModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'edit' && this.editingAccount() !== null;
-  });
-
   readonly showTransferModal = signal(false);
-  readonly showReconcileModal = signal(false);
   readonly showDeleteModal = signal(false);
 
   readonly currentState = computed(() => {
@@ -176,13 +158,6 @@ export class AccountsPage implements OnInit {
         size: 'medium',
         disabled: !this.selectedBudgetId() || !this.hasAccounts(),
       },
-      {
-        label: 'Reconciliar',
-        icon: 'check_circle',
-        variant: 'secondary',
-        size: 'medium',
-        disabled: !this.selectedBudgetId() || !this.hasAccounts(),
-      },
     ];
   });
 
@@ -191,8 +166,6 @@ export class AccountsPage implements OnInit {
       this.openCreateModal();
     } else if (action.label === 'Transferir') {
       this.openTransferModal();
-    } else if (action.label === 'Reconciliar') {
-      this.openReconcileModal();
     }
   }
 
@@ -220,15 +193,6 @@ export class AccountsPage implements OnInit {
     if (budgetId) {
       this.state.loadAccounts();
     }
-
-    const accountId = this.route.snapshot.paramMap.get('id');
-    if (accountId && this.route.snapshot.data['modalMode'] === 'edit') {
-      const accounts = this.state.accounts();
-      const account = accounts.find((a) => a.id === accountId);
-      if (account) {
-        this.editingAccount.set(account);
-      }
-    }
   }
 
   retry(): void {
@@ -247,20 +211,8 @@ export class AccountsPage implements OnInit {
     this.showTransferModal.set(true);
   }
 
-  openReconcileModal(): void {
-    if (!this.selectedBudgetId() || !this.hasAccounts()) {
-      return;
-    }
-    const firstAccount = this.accounts()[0];
-    if (firstAccount) {
-      this.reconcilingAccount.set(firstAccount);
-      this.showReconcileModal.set(true);
-    }
-  }
-
   onEditAccount(account: AccountDto): void {
-    this.editingAccount.set(account);
-    this.router.navigate([account.id, 'edit'], { relativeTo: this.route });
+    this.router.navigate([account.id], { relativeTo: this.route });
   }
 
   onDeleteAccount(account: AccountDto): void {
@@ -272,23 +224,16 @@ export class AccountsPage implements OnInit {
     this.showTransferModal.set(false);
   }
 
-  closeReconcileModal(): void {
-    this.showReconcileModal.set(false);
-    this.reconcilingAccount.set(null);
-  }
-
   closeDeleteModal(): void {
     this.showDeleteModal.set(false);
     this.deletingAccount.set(null);
   }
 
   onFormSaved(): void {
-    this.editingAccount.set(null);
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 
   onFormCancelled(): void {
-    this.editingAccount.set(null);
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }

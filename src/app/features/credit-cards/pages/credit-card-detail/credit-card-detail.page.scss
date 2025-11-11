@@ -1,0 +1,153 @@
+.credit-card-detail-page {
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-lg, 24px);
+    padding: var(--os-spacing-xl, 32px) 0;
+  }
+
+  &__error-action {
+    margin-top: var(--os-spacing-md, 16px);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-lg, 24px);
+  }
+
+  &__card {
+    padding: var(--os-spacing-lg, 24px);
+    background-color: white;
+    border: 1px solid var(--os-border-color, #e0e0e0);
+    border-radius: var(--os-border-radius-lg, 12px);
+  }
+
+  &__card-title {
+    font-size: var(--os-font-size-lg, 18px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+    margin: 0 0 var(--os-spacing-md, 16px) 0;
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--os-spacing-md, 16px);
+  }
+
+  &__actions-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--os-spacing-md, 16px);
+    margin-top: var(--os-spacing-md, 16px);
+  }
+
+  &__empty-bills {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--os-spacing-md, 16px);
+    padding: var(--os-spacing-xl, 32px) 0;
+    text-align: center;
+    color: var(--os-text-secondary, #757575);
+  }
+
+  &__bills-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-sm, 8px);
+  }
+
+  &__bill-item {
+    padding: var(--os-spacing-md, 16px);
+    background-color: var(--os-color-neutral-50, #fafafa);
+    border: 1px solid var(--os-border-color, #e0e0e0);
+    border-radius: var(--os-border-radius-md, 8px);
+  }
+
+  &__bill-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-xs, 4px);
+  }
+
+  &__bill-date {
+    font-size: var(--os-font-size-sm, 14px);
+    color: var(--os-text-secondary, #757575);
+  }
+
+  &__bill-amount {
+    font-size: var(--os-font-size-lg, 18px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+  }
+
+  &__bill-status {
+    font-size: var(--os-font-size-sm, 14px);
+    font-weight: 600;
+    padding: var(--os-spacing-xs, 4px) var(--os-spacing-sm, 8px);
+    border-radius: var(--os-border-radius-sm, 4px);
+    display: inline-block;
+    width: fit-content;
+    margin-top: var(--os-spacing-xs, 4px);
+
+    &--paid {
+      background-color: var(--os-color-success-50, #e8f5e9);
+      color: var(--os-color-success-700, #2e7d32);
+    }
+
+    &--unpaid {
+      background-color: var(--os-color-warning-50, #fff3e0);
+      color: var(--os-color-warning-700, #e65100);
+    }
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--os-spacing-xs, 4px);
+
+  &__label {
+    font-size: var(--os-font-size-sm, 14px);
+    font-weight: 600;
+    color: var(--os-text-secondary, #757575);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__value {
+    font-size: var(--os-font-size-md, 16px);
+    color: var(--os-text-primary, #212121);
+  }
+}
+
+@media (max-width: 575px) {
+  .credit-card-detail-page {
+    &__card {
+      padding: var(--os-spacing-md, 16px);
+    }
+
+    &__info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__actions-section {
+      flex-direction: column;
+    }
+
+    &__bill-info {
+      gap: var(--os-spacing-xs, 4px);
+    }
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+  .credit-card-detail-page {
+    &__info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+

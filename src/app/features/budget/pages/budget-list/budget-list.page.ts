@@ -128,7 +128,6 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           <os-budget-card
             [budget]="budget"
             [selected]="isSelected(budget.id)"
-            (cardClick)="navigateToDetail(budget.id)"
             (editClick)="navigateToEdit($event)"
             (deleteClick)="confirmDelete($event)"
           />

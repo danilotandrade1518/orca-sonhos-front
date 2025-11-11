@@ -1,21 +1,18 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BudgetDto } from '../../../../../dtos/budget';
-import {
-  OsEntityCardComponent,
-  type OsEntityCardAction,
-} from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
-import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsEntityCardComponent } from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
 import { OsDeleteButtonComponent } from '@shared/ui-components/atoms/os-delete-button';
+import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-button';
 
 @Component({
   selector: 'os-budget-card',
   standalone: true,
-  imports: [CommonModule, OsEntityCardComponent, OsButtonComponent, OsDeleteButtonComponent],
+  imports: [CommonModule, OsEntityCardComponent, OsDeleteButtonComponent, OsEditButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-entity-card
-      [clickable]="true"
+      [clickable]="false"
       [selected]="selected()"
       [disabled]="disabled()"
       [loading]="loading()"
@@ -26,7 +23,6 @@ import { OsDeleteButtonComponent } from '@shared/ui-components/atoms/os-delete-b
       [meta]="metaText()"
       [customActions]="showActions()"
       [showActionsMenu]="false"
-      (cardClick)="onCardClick()"
     >
       <span
         slot="title"
@@ -39,12 +35,9 @@ import { OsDeleteButtonComponent } from '@shared/ui-components/atoms/os-delete-b
 
       @if (showActions()) {
       <div slot="actions" class="budget-card__actions">
-        <os-button
-          variant="tertiary"
-          size="small"
-          [icon]="'edit'"
+        <os-edit-button
           [ariaLabel]="'Editar orçamento ' + budget().name"
-          (buttonClick)="onEdit()"
+          (editClick)="onEdit($event)"
         />
         <os-delete-button
           [ariaLabel]="'Excluir orçamento ' + budget().name"
@@ -68,7 +61,6 @@ export class BudgetCardComponent {
   readonly variant = input<'default' | 'outlined' | 'elevated' | 'flat'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
 
-  readonly cardClick = output<void>();
   readonly editClick = output<string>();
   readonly deleteClick = output<string>();
 
@@ -83,33 +75,8 @@ export class BudgetCardComponent {
     return `${count} ${count === 1 ? 'participante' : 'participantes'}`;
   });
 
-  readonly cardActions = computed<OsEntityCardAction[]>(() => {
-    if (!this.showActions()) {
-      return [];
-    }
-    return [
-      {
-        id: 'edit',
-        label: 'Editar',
-        icon: 'edit',
-        variant: 'primary',
-      },
-      {
-        id: 'delete',
-        label: 'Excluir',
-        icon: 'trash',
-        variant: 'danger',
-      },
-    ];
-  });
-
-  onCardClick(): void {
-    if (!this.disabled() && !this.loading()) {
-      this.cardClick.emit();
-    }
-  }
-
-  onEdit(): void {
+  onEdit(event?: MouseEvent): void {
+    event?.stopPropagation();
     this.editClick.emit(this.budget().id);
   }
 

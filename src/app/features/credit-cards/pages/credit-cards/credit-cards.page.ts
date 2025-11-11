@@ -114,13 +114,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         (saved)="onFormSaved()"
         (cancelled)="onFormCancelled()"
       />
-      } @if (showEditModal() && editingCreditCard()) {
-      <os-credit-card-form
-        [creditCard]="editingCreditCard()!"
-        [mode]="'edit'"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
       } @if (showCreateBillModal()) {
       <os-credit-card-bill-form
         [mode]="'create'"
@@ -153,17 +146,12 @@ export class CreditCardsPage implements OnInit {
   readonly creditCards = computed(() => this.state.creditCardsByBudgetId());
   readonly hasCreditCards = computed(() => this.creditCards().length > 0);
 
-  readonly editingCreditCard = signal<CreditCardDto | null>(null);
   readonly deletingCreditCard = signal<CreditCardDto | null>(null);
   readonly payingBill = signal<CreditCardBillDto | null>(null);
   readonly reopeningBill = signal<CreditCardBillDto | null>(null);
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
-  });
-
-  readonly showEditModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'edit' && this.editingCreditCard() !== null;
   });
 
   readonly showCreateBillModal = signal(false);
@@ -234,15 +222,6 @@ export class CreditCardsPage implements OnInit {
     if (budgetId) {
       this.state.loadCreditCards();
     }
-
-    const creditCardId = this.route.snapshot.paramMap.get('id');
-    if (creditCardId && this.route.snapshot.data['modalMode'] === 'edit') {
-      const creditCards = this.state.creditCards();
-      const creditCard = creditCards.find((cc) => cc.id === creditCardId);
-      if (creditCard) {
-        this.editingCreditCard.set(creditCard);
-      }
-    }
   }
 
   retry(): void {
@@ -261,8 +240,7 @@ export class CreditCardsPage implements OnInit {
   }
 
   onEditCreditCard(creditCard: CreditCardDto): void {
-    this.editingCreditCard.set(creditCard);
-    this.router.navigate([creditCard.id, 'edit'], { relativeTo: this.route });
+    this.router.navigate([creditCard.id], { relativeTo: this.route });
   }
 
   onDeleteCreditCard(creditCard: CreditCardDto): void {
@@ -276,12 +254,10 @@ export class CreditCardsPage implements OnInit {
   }
 
   onFormSaved(): void {
-    this.editingCreditCard.set(null);
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 
   onFormCancelled(): void {
-    this.editingCreditCard.set(null);
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 

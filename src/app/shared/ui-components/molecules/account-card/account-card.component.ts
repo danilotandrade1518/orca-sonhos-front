@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { AccountTypeBadgeComponent } from '../../atoms/account-type-badge/account-type-badge.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
-import { OsButtonComponent } from '../../atoms/os-button';
 import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
+import { OsEditButtonComponent } from '../../atoms/os-edit-button';
 import { LocaleService } from '@shared/formatting';
 import { AccountDto } from '../../../../../dtos/account/account-types';
 
@@ -16,8 +16,8 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
     OsCardComponent,
     AccountTypeBadgeComponent,
     OsMoneyDisplayComponent,
-    OsButtonComponent,
     OsDeleteButtonComponent,
+    OsEditButtonComponent,
   ],
   template: `
     <os-card
@@ -49,12 +49,9 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
       @if (actions()?.edit || actions()?.delete) {
       <div class="os-account-card__actions" slot="actions">
         @if (actions()?.edit) {
-        <os-button
-          variant="tertiary"
-          size="small"
-          [icon]="'edit'"
+        <os-edit-button
           [ariaLabel]="'Editar conta ' + account().name"
-          (click)="onEdit()"
+          (editClick)="onEdit($event)"
         />
         } @if (actions()?.delete) {
         <os-delete-button
@@ -90,7 +87,8 @@ export class AccountCardComponent {
     return `Saldo da conta ${acc.name}: ${this.formatBalance(acc.balance)}`;
   });
 
-  onEdit(): void {
+  onEdit(event?: MouseEvent): void {
+    event?.stopPropagation();
     const acc = this.account();
     if (acc) {
       this.edit.emit(acc);

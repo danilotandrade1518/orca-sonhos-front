@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 import { OsButtonComponent } from '../os-button/os-button.component';
 
 @Component({
-  selector: 'os-delete-button',
+  selector: 'os-edit-button',
   standalone: true,
   imports: [CommonModule, OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./os-delete-button.component.scss'],
+  styleUrls: ['./os-edit-button.component.scss'],
   template: `
     <os-button
-      variant="danger"
+      variant="secondary"
       size="small"
-      icon="delete"
+      icon="edit"
       [disabled]="disabled()"
       [loading]="loading()"
       [ariaLabel]="ariaLabel()"
@@ -20,16 +20,16 @@ import { OsButtonComponent } from '../os-button/os-button.component';
     />
   `,
 })
-export class OsDeleteButtonComponent {
+export class OsEditButtonComponent {
   readonly ariaLabel = input.required<string>();
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
 
-  readonly deleteClick = output<MouseEvent>();
+  readonly editClick = output<MouseEvent>();
 
   onClick(event: MouseEvent): void {
     if (!this.disabled() && !this.loading()) {
-      this.deleteClick.emit(event);
+      this.editClick.emit(event);
     }
   }
 }

@@ -134,57 +134,13 @@ describe('BudgetCardComponent', () => {
   });
 
   describe('Outputs', () => {
-    it('should emit cardClick when card is clicked', () => {
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(true);
-    });
-
-    it('should not emit cardClick when disabled', () => {
-      fixture.componentRef.setInput('disabled', true);
-      fixture.detectChanges();
-
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(false);
-    });
-
-    it('should not emit cardClick when loading', () => {
-      fixture.componentRef.setInput('loading', true);
-      fixture.detectChanges();
-
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(false);
-    });
-
     it('should emit editClick with budget id when edit button is clicked', () => {
       let emittedValue = '';
       component.editClick.subscribe((value) => {
         emittedValue = value;
       });
 
-      component.onActionClick({
-        id: 'edit',
-        label: 'Editar',
-        icon: 'edit',
-        variant: 'primary',
-      });
+      component.onEdit();
 
       expect(emittedValue).toBe(mockBudget.id);
     });
@@ -195,12 +151,7 @@ describe('BudgetCardComponent', () => {
         emittedValue = value;
       });
 
-      component.onActionClick({
-        id: 'delete',
-        label: 'Excluir',
-        icon: 'trash',
-        variant: 'danger',
-      });
+      component.onDelete();
 
       expect(emittedValue).toBe(mockBudget.id);
     });

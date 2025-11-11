@@ -10,8 +10,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
-import { OsButtonComponent } from '../../atoms/os-button';
 import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
+import { OsEditButtonComponent } from '../../atoms/os-edit-button';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { CreditCardBillItemComponent } from '../credit-card-bill-item/credit-card-bill-item.component';
 import { LocaleService } from '@shared/formatting';
@@ -25,8 +25,8 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
     CommonModule,
     OsCardComponent,
     OsMoneyDisplayComponent,
-    OsButtonComponent,
     OsDeleteButtonComponent,
+    OsEditButtonComponent,
     OsIconComponent,
     CreditCardBillItemComponent,
   ],
@@ -111,12 +111,9 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
       @if (actions()?.edit || actions()?.delete) {
       <div class="os-credit-card-card__actions" slot="actions">
         @if (actions()?.edit) {
-        <os-button
-          variant="tertiary"
-          size="small"
-          [icon]="'edit'"
+        <os-edit-button
           [ariaLabel]="'Editar cartão ' + creditCard().name"
-          (buttonClick)="onEdit()"
+          (editClick)="onEdit($event)"
         />
         } @if (actions()?.delete) {
         <os-delete-button
@@ -168,7 +165,8 @@ export class CreditCardCardComponent {
     return `Limite do cartão ${card.name}: ${this.formatLimit(card.limit)}`;
   });
 
-  onEdit(): void {
+  onEdit(event?: MouseEvent): void {
+    event?.stopPropagation();
     const card = this.creditCard();
     if (card) {
       this.edit.emit(card);
