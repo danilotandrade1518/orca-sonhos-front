@@ -7,9 +7,10 @@ import { OsButtonComponent } from '../os-button/os-button.component';
   standalone: true,
   imports: [CommonModule, OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./os-delete-button.component.scss'],
   template: `
     <os-button
-      variant="danger"
+      variant="secondary"
       size="small"
       icon="delete"
       [disabled]="disabled()"

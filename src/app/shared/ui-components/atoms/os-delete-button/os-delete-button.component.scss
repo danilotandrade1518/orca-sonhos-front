@@ -1,0 +1,88 @@
+@use '../../theme/tokens' as tokens;
+
+:host {
+  display: inline-block;
+}
+
+::ng-deep os-button {
+  .os-button--secondary {
+    background-color: transparent !important;
+    color: var(--os-color-error-700, var(--os-color-error)) !important;
+    border-color: var(--os-color-error-700, var(--os-color-error)) !important;
+
+    // Garantir que o ícone fique vermelho (ação crítica) no estado normal
+    .os-button__icon,
+    os-icon,
+    os-icon .os-icon,
+    mat-icon {
+      color: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    // Garantir que SVGs dentro do ícone também fiquem vermelhos no estado normal
+    os-icon svg,
+    os-icon svg path {
+      fill: var(--os-color-error-700, var(--os-color-error)) !important;
+      stroke: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--os-color-error-100) !important;
+      border-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      color: var(--os-color-text-primary) !important;
+      transform: scale(1.02);
+
+      // No hover, o ícone volta para a cor normal (preta)
+      .os-button__icon,
+      os-icon,
+      os-icon .os-icon,
+      mat-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+
+      os-icon svg,
+      os-icon svg path {
+        fill: var(--os-color-text-primary) !important;
+        stroke: var(--os-color-text-primary) !important;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--os-color-error-100) !important;
+      border-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      color: var(--os-color-text-primary) !important;
+      transform: scale(0.98);
+
+      // No active, o ícone também fica na cor normal (preta)
+      .os-button__icon,
+      os-icon,
+      os-icon .os-icon,
+      mat-icon {
+        color: var(--os-color-text-primary) !important;
+      }
+
+      os-icon svg,
+      os-icon svg path {
+        fill: var(--os-color-text-primary) !important;
+        stroke: var(--os-color-text-primary) !important;
+      }
+    }
+
+    // Override Material outlined button theme colors
+    &.mat-mdc-outlined-button {
+      --mdc-outlined-button-outline-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      --mdc-outlined-button-label-text-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      border-color: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    // Ripple em tom de vermelho
+    ::ng-deep .mat-ripple-element {
+      background-color: rgba(239, 68, 68, 0.3) !important;
+    }
+  }
+
+  // Garantir que o touch target não apareça
+  ::ng-deep .mat-mdc-button-touch-target {
+    display: none;
+  }
+}
+
