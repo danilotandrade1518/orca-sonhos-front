@@ -1,14 +1,131 @@
-.os-goal-detail__empty {
-  padding: 16px;
+.goal-detail-page {
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-lg, 24px);
+    padding: var(--os-spacing-xl, 32px) 0;
+  }
+
+  &__error-action {
+    margin-top: var(--os-spacing-md, 16px);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-lg, 24px);
+  }
+
+  &__card {
+    padding: var(--os-spacing-lg, 24px);
+    background-color: white;
+    border: 1px solid var(--os-border-color, #e0e0e0);
+    border-radius: var(--os-border-radius-lg, 12px);
+  }
+
+  &__card-title {
+    font-size: var(--os-font-size-lg, 18px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+    margin: 0 0 var(--os-spacing-md, 16px) 0;
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--os-spacing-md, 16px);
+  }
+
+  &__progress-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--os-spacing-md, 16px);
+  }
+
+  &__progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__progress-label {
+    font-size: var(--os-font-size-md, 16px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+  }
+
+  &__progress-value {
+    font-size: var(--os-font-size-lg, 18px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+  }
+
+  &__suggested {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--os-spacing-sm, 8px) var(--os-spacing-md, 16px);
+    background-color: var(--os-color-neutral-50, #fafafa);
+    border-radius: var(--os-border-radius-md, 8px);
+  }
+
+  &__suggested-label {
+    font-size: var(--os-font-size-sm, 14px);
+    color: var(--os-text-secondary, #757575);
+  }
+
+  &__suggested-value {
+    font-size: var(--os-font-size-md, 16px);
+    font-weight: 600;
+    color: var(--os-text-primary, #212121);
+  }
+
+  &__actions-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--os-spacing-md, 16px);
+  }
 }
 
-.os-goal-detail__sidebar {
+.info-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--os-spacing-xs, 4px);
+
+  &__label {
+    font-size: var(--os-font-size-sm, 14px);
+    font-weight: 600;
+    color: var(--os-text-secondary, #757575);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__value {
+    font-size: var(--os-font-size-md, 16px);
+    color: var(--os-text-primary, #212121);
+  }
 }
 
-.os-goal-detail-page {
-  padding: 1rem;
+@media (max-width: 575px) {
+  .goal-detail-page {
+    &__card {
+      padding: var(--os-spacing-md, 16px);
+    }
+
+    &__info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__actions-section {
+      flex-direction: column;
+    }
+  }
 }
 
+@media (min-width: 576px) and (max-width: 991px) {
+  .goal-detail-page {
+    &__info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
