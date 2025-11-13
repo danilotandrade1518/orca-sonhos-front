@@ -77,7 +77,7 @@ describe('AccountCardComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const editButton = compiled.querySelector('os-button[variant="tertiary"]');
+    const editButton = compiled.querySelector('os-edit-button');
     expect(editButton).toBeTruthy();
   });
 
