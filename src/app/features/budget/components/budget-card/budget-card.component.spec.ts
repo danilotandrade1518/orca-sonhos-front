@@ -3,8 +3,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { BudgetCardComponent } from './budget-card.component';
 import { BudgetDto } from '../../../../../dtos/budget';
-import { OsCardComponent } from '@shared/ui-components/molecules/os-card/os-card.component';
-import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsEntityCardComponent } from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
 
 describe('BudgetCardComponent', () => {
   let component: BudgetCardComponent;
@@ -26,7 +25,7 @@ describe('BudgetCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BudgetCardComponent, OsCardComponent, OsButtonComponent],
+      imports: [BudgetCardComponent, OsEntityCardComponent],
       providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
@@ -74,7 +73,7 @@ describe('BudgetCardComponent', () => {
 
   describe('Rendering', () => {
     it('should render budget name', () => {
-      const nameElement = fixture.nativeElement.querySelector('.budget-card__name');
+      const nameElement = fixture.nativeElement.querySelector('.os-entity-card__title');
       expect(nameElement).toBeTruthy();
       expect(nameElement.textContent.trim()).toBe(mockBudget.name);
     });
@@ -97,7 +96,7 @@ describe('BudgetCardComponent', () => {
     });
 
     it('should render participants count', () => {
-      const participantsElement = fixture.nativeElement.querySelector('.budget-card__participants');
+      const participantsElement = fixture.nativeElement.querySelector('.os-entity-card__meta-text');
       expect(participantsElement).toBeTruthy();
       expect(participantsElement.textContent.trim()).toBe('1 participante');
     });
@@ -106,7 +105,8 @@ describe('BudgetCardComponent', () => {
       fixture.componentRef.setInput('budget', mockSharedBudget);
       fixture.detectChanges();
 
-      const participantsElement = fixture.nativeElement.querySelector('.budget-card__participants');
+      const participantsElement = fixture.nativeElement.querySelector('.os-entity-card__meta-text');
+      expect(participantsElement).toBeTruthy();
       expect(participantsElement.textContent.trim()).toBe('3 participantes');
     });
 
@@ -114,7 +114,7 @@ describe('BudgetCardComponent', () => {
       fixture.componentRef.setInput('showActions', true);
       fixture.detectChanges();
 
-      const actionsContainer = fixture.nativeElement.querySelector('.budget-card__actions');
+      const actionsContainer = fixture.nativeElement.querySelector('.os-entity-card__actions');
       expect(actionsContainer).toBeTruthy();
     });
 
@@ -122,7 +122,7 @@ describe('BudgetCardComponent', () => {
       fixture.componentRef.setInput('showActions', false);
       fixture.detectChanges();
 
-      const actionsContainer = fixture.nativeElement.querySelector('.budget-card__actions');
+      const actionsContainer = fixture.nativeElement.querySelector('.os-entity-card__actions');
       expect(actionsContainer).toBeFalsy();
     });
   });
@@ -134,52 +134,13 @@ describe('BudgetCardComponent', () => {
   });
 
   describe('Outputs', () => {
-    it('should emit cardClick when card is clicked', () => {
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(true);
-    });
-
-    it('should not emit cardClick when disabled', () => {
-      fixture.componentRef.setInput('disabled', true);
-      fixture.detectChanges();
-
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(false);
-    });
-
-    it('should not emit cardClick when loading', () => {
-      fixture.componentRef.setInput('loading', true);
-      fixture.detectChanges();
-
-      let emitted = false;
-      component.cardClick.subscribe(() => {
-        emitted = true;
-      });
-
-      component.onCardClick();
-
-      expect(emitted).toBe(false);
-    });
-
     it('should emit editClick with budget id when edit button is clicked', () => {
       let emittedValue = '';
       component.editClick.subscribe((value) => {
         emittedValue = value;
       });
 
-      component.onEditClick();
+      component.onEdit();
 
       expect(emittedValue).toBe(mockBudget.id);
     });
@@ -190,7 +151,7 @@ describe('BudgetCardComponent', () => {
         emittedValue = value;
       });
 
-      component.onDeleteClick();
+      component.onDelete();
 
       expect(emittedValue).toBe(mockBudget.id);
     });

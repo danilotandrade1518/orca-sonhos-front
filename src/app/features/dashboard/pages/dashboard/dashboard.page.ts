@@ -6,20 +6,24 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, DashboardWidgetsComponent],
+  imports: [CommonModule, DashboardWidgetsComponent, OsPageComponent, OsPageHeaderComponent],
   template: `
-    <div class="dashboard-page">
-      <!-- Page Header -->
-      <div class="dashboard-page__header">
-        <h1 class="dashboard-page__title">Dashboard</h1>
-        <p class="dashboard-page__subtitle">Visão geral do seu orçamento e metas</p>
-      </div>
+    <os-page variant="default" size="medium" ariaLabel="Dashboard principal">
+      <os-page-header
+        title="Dashboard"
+        subtitle="Visão geral do seu orçamento e metas"
+        [actions]="pageHeaderActions()"
+      />
 
-      <!-- Main Content -->
-      <main class="dashboard-page__main" role="main" aria-label="Dashboard principal">
+      <main class="dashboard-page__main" role="main" aria-label="Conteúdo do dashboard">
         <div class="dashboard-page__container">
           <os-dashboard-widgets-container
             [widgets]="dashboardWidgets()"
@@ -30,7 +34,7 @@ import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
           />
         </div>
       </main>
-    </div>
+    </os-page>
   `,
   styleUrl: './dashboard.page.scss',
 })
@@ -40,6 +44,10 @@ export class DashboardPage implements OnInit {
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
+
+  readonly pageHeaderActions = computed((): PageHeaderAction[] => {
+    return [];
+  });
 
   readonly dashboardWidgets = computed((): WidgetConfiguration[] => [
     {
@@ -96,10 +104,9 @@ export class DashboardPage implements OnInit {
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
         ]);
-        
       }
     } catch (error) {
-      console.error('Erro ao carregar dados do dashboard:', error);
+      console.error('Error loading dashboard data', error);
     } finally {
       this.isLoading.set(false);
     }

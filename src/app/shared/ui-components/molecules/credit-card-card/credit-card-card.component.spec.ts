@@ -103,7 +103,7 @@ describe('CreditCardCardComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const editButton = compiled.querySelector('os-button[variant="tertiary"]');
+    const editButton = compiled.querySelector('os-edit-button');
     expect(editButton).toBeTruthy();
   });
 
@@ -112,7 +112,7 @@ describe('CreditCardCardComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const deleteButton = compiled.querySelector('os-button[variant="danger"]');
+    const deleteButton = compiled.querySelector('os-delete-button');
     expect(deleteButton).toBeTruthy();
   });
 

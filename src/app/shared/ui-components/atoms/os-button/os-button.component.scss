@@ -78,14 +78,92 @@
     color: var(--os-color-primary-500);
     border: 1px solid var(--os-color-primary-500);
 
+    // Garantir que o ícone fique primary no estado normal
+    ::ng-deep os-icon,
+    ::ng-deep os-icon .os-icon,
+    ::ng-deep os-icon .os-icon--default,
+    ::ng-deep os-icon .os-icon--primary,
+    ::ng-deep os-icon mat-icon,
+    ::ng-deep mat-icon,
+    ::ng-deep .mat-icon {
+      color: var(--os-color-primary-500) !important;
+    }
+
+    // Override Material icon color attribute
+    ::ng-deep mat-icon[color] {
+      color: var(--os-color-primary-500) !important;
+    }
+
+    // Garantir que SVGs dentro do ícone também fiquem primary no estado normal
+    ::ng-deep os-icon svg,
+    ::ng-deep os-icon svg path,
+    ::ng-deep os-icon .os-icon svg,
+    ::ng-deep os-icon .os-icon svg path {
+      fill: var(--os-color-primary-500) !important;
+      stroke: var(--os-color-primary-500) !important;
+    }
+
     &:hover:not(:disabled) {
       background-color: var(--os-color-primary-50);
       transform: scale(1.02);
+
+      // No hover, o ícone permanece primary
+      ::ng-deep os-icon,
+      ::ng-deep os-icon .os-icon,
+      ::ng-deep os-icon .os-icon--default,
+      ::ng-deep os-icon .os-icon--primary,
+      ::ng-deep os-icon mat-icon,
+      ::ng-deep mat-icon,
+      ::ng-deep .mat-icon {
+        color: var(--os-color-primary-500) !important;
+      }
+
+      ::ng-deep mat-icon[color] {
+        color: var(--os-color-primary-500) !important;
+      }
+
+      ::ng-deep os-icon svg,
+      ::ng-deep os-icon svg path,
+      ::ng-deep os-icon .os-icon svg,
+      ::ng-deep os-icon .os-icon svg path {
+        fill: var(--os-color-primary-500) !important;
+        stroke: var(--os-color-primary-500) !important;
+      }
     }
 
     &:active:not(:disabled) {
       background-color: var(--os-color-primary-100);
       transform: scale(0.98);
+
+      // No active, o ícone permanece primary
+      ::ng-deep os-icon,
+      ::ng-deep os-icon .os-icon,
+      ::ng-deep os-icon .os-icon--default,
+      ::ng-deep os-icon .os-icon--primary,
+      ::ng-deep os-icon mat-icon,
+      ::ng-deep mat-icon,
+      ::ng-deep .mat-icon {
+        color: var(--os-color-primary-500) !important;
+      }
+
+      ::ng-deep mat-icon[color] {
+        color: var(--os-color-primary-500) !important;
+      }
+
+      ::ng-deep os-icon svg,
+      ::ng-deep os-icon svg path,
+      ::ng-deep os-icon .os-icon svg,
+      ::ng-deep os-icon .os-icon svg path {
+        fill: var(--os-color-primary-500) !important;
+        stroke: var(--os-color-primary-500) !important;
+      }
+    }
+
+    // Override Material outlined button theme colors
+    ::ng-deep &.mat-mdc-outlined-button {
+      --mdc-outlined-button-outline-color: var(--os-color-primary-500) !important;
+      --mdc-outlined-button-label-text-color: var(--os-color-primary-500) !important;
+      border-color: var(--os-color-primary-500) !important;
     }
   }
 
@@ -105,23 +183,105 @@
   }
 
   &--danger {
-    background-color: var(--os-color-error) !important;
-    color: var(--os-color-surface) !important;
+    background-color: transparent;
+    color: var(--os-color-error-700, var(--os-color-error));
+    border: 1px solid var(--os-color-error-700, var(--os-color-error));
+
+    // Garantir que o ícone fique vermelho (ação crítica) no estado normal
+    ::ng-deep os-icon,
+    ::ng-deep os-icon .os-icon,
+    ::ng-deep os-icon .os-icon--default,
+    ::ng-deep os-icon .os-icon--error,
+    ::ng-deep os-icon mat-icon,
+    ::ng-deep mat-icon,
+    ::ng-deep .mat-icon {
+      color: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    // Override Material icon color attribute
+    ::ng-deep mat-icon[color] {
+      color: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    // Garantir que SVGs dentro do ícone também fiquem vermelhos no estado normal
+    ::ng-deep os-icon svg,
+    ::ng-deep os-icon svg path,
+    ::ng-deep os-icon .os-icon svg,
+    ::ng-deep os-icon .os-icon svg path {
+      fill: var(--os-color-error-700, var(--os-color-error)) !important;
+      stroke: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
 
     &:hover:not(:disabled) {
-      background-color: var(--os-color-error-600) !important;
+      background-color: var(--os-color-error-100);
+      border-color: var(--os-color-error-700, var(--os-color-error));
+      color: var(--os-color-error-700, var(--os-color-error));
       transform: scale(1.02);
+
+      // No hover, o ícone permanece vermelho
+      ::ng-deep os-icon,
+      ::ng-deep os-icon .os-icon,
+      ::ng-deep os-icon .os-icon--default,
+      ::ng-deep os-icon .os-icon--error,
+      ::ng-deep os-icon mat-icon,
+      ::ng-deep mat-icon,
+      ::ng-deep .mat-icon {
+        color: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
+
+      ::ng-deep mat-icon[color] {
+        color: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
+
+      ::ng-deep os-icon svg,
+      ::ng-deep os-icon svg path,
+      ::ng-deep os-icon .os-icon svg,
+      ::ng-deep os-icon .os-icon svg path {
+        fill: var(--os-color-error-700, var(--os-color-error)) !important;
+        stroke: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
     }
 
     &:active:not(:disabled) {
-      background-color: var(--os-color-error-700) !important;
+      background-color: var(--os-color-error-100);
+      border-color: var(--os-color-error-700, var(--os-color-error));
+      color: var(--os-color-error-700, var(--os-color-error));
       transform: scale(0.98);
+
+      // No active, o ícone permanece vermelho
+      ::ng-deep os-icon,
+      ::ng-deep os-icon .os-icon,
+      ::ng-deep os-icon .os-icon--default,
+      ::ng-deep os-icon .os-icon--error,
+      ::ng-deep os-icon mat-icon,
+      ::ng-deep mat-icon,
+      ::ng-deep .mat-icon {
+        color: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
+
+      ::ng-deep mat-icon[color] {
+        color: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
+
+      ::ng-deep os-icon svg,
+      ::ng-deep os-icon svg path,
+      ::ng-deep os-icon .os-icon svg,
+      ::ng-deep os-icon .os-icon svg path {
+        fill: var(--os-color-error-700, var(--os-color-error)) !important;
+        stroke: var(--os-color-error-700, var(--os-color-error)) !important;
+      }
     }
 
-    // Override Material theme colors
-    ::ng-deep &.mat-mdc-unelevated-button {
-      --mdc-filled-button-container-color: var(--os-color-error) !important;
-      --mdc-filled-button-label-text-color: var(--os-color-surface) !important;
+    // Override Material outlined button theme colors
+    ::ng-deep &.mat-mdc-outlined-button {
+      --mdc-outlined-button-outline-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      --mdc-outlined-button-label-text-color: var(--os-color-error-700, var(--os-color-error)) !important;
+      border-color: var(--os-color-error-700, var(--os-color-error)) !important;
+    }
+
+    // Ripple em tom de vermelho
+    ::ng-deep .mat-ripple-element {
+      background-color: rgba(239, 68, 68, 0.3) !important;
     }
   }
 

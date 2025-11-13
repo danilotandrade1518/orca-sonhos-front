@@ -14,6 +14,7 @@ import { OsFormGroupComponent } from '../os-form-group/os-form-group.component';
 import { OsSelectComponent } from '../../atoms/os-select/os-select.component';
 import { OsMoneyInputComponent } from '../../atoms/os-money-input/os-money-input.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { LocaleService } from '@shared/formatting';
 import type { AccountDto } from '../../../../../dtos/account';
 
 export interface ReconcileFormData {
@@ -89,6 +90,7 @@ export interface ReconcileFormData {
 })
 export class ReconcileFormComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly localeService = inject(LocaleService);
 
   readonly account = input.required<AccountDto>();
   readonly disabled = input<boolean>(false);
@@ -176,16 +178,10 @@ export class ReconcileFormComponent {
   getFormattedBalance(): string {
     const account = this.account();
     if (!account) return '';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(account.balance);
+    return this.localeService.formatCurrency(account.balance, 'BRL');
   }
 
   private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 }

@@ -2,6 +2,7 @@ export * from './os-form-field/os-form-field.component';
 export * from './os-card/os-card.component';
 export * from './os-money-display/os-money-display.component';
 export * from './os-alert/os-alert.component';
+export * from './os-empty-state/os-empty-state.component';
 export * from './os-navigation-item/os-navigation-item.component';
 export * from './os-dropdown/os-dropdown.component';
 export * from './os-tooltip/os-tooltip.component';

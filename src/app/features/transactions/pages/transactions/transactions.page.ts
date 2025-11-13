@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsPageComponent } from '../../../../shared/ui-components/organisms/os-page/os-page.component';
 import {
   OsTransactionListComponent,
   type Transaction as UiTransaction,
@@ -41,6 +42,7 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
   selector: 'os-transactions-page',
   imports: [
     CommonModule,
+    OsPageComponent,
     OsPageHeaderComponent,
     OsTransactionListComponent,
     TransactionsFiltersComponent,
@@ -48,25 +50,10 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
     OsModalTemplateComponent,
   ],
   template: `
-    <section class="os-transactions" role="main" aria-label="Página de transações">
-      <a href="#main-content" class="os-transactions__skip-link">Pular para conteúdo principal</a>
-      <div
-        class="os-transactions__live-region"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        [attr.aria-label]="isLoading() ? 'Carregando transações' : ''"
-      >
-        {{ isLoading() ? 'Carregando transações...' : '' }}
-      </div>
-      <div
-        class="os-transactions__live-region os-transactions__live-region--error"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      ></div>
+    <os-page variant="default" size="medium" ariaLabel="Página de transações">
       <os-page-header
         title="Transações"
+        subtitle="Gerencie suas transações financeiras"
         [actions]="headerActions()"
         [breadcrumbs]="[]"
         (actionClick)="onHeaderActionClick($event)"
@@ -79,25 +66,23 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
         [attr.aria-label]="'Filtros de transações'"
       />
 
-      <div id="main-content" tabindex="-1">
-        <os-transaction-list
-          [title]="'Lista'"
-          [transactions]="filteredTransactions()"
-          [isLoading]="isLoading()"
-          [lastUpdated]="lastUpdated()"
-          [layout]="'card'"
-          [variant]="'default'"
-          [size]="'medium'"
-          [enableInfiniteScroll]="true"
-          [hasMoreData]="hasMore()"
-          [showFilters]="false"
-          [cardActions]="cardActions()"
-          (refresh)="onRefresh()"
-          (pageChange)="onPageChange($event)"
-          (cardActionClick)="onCardActionClick($event)"
-          [attr.aria-label]="'Lista de transações'"
-        />
-      </div>
+      <os-transaction-list
+        [title]="'Lista'"
+        [transactions]="filteredTransactions()"
+        [isLoading]="isLoading()"
+        [lastUpdated]="lastUpdated()"
+        [layout]="'card'"
+        [variant]="'default'"
+        [size]="'medium'"
+        [enableInfiniteScroll]="true"
+        [hasMoreData]="hasMore()"
+        [showFilters]="false"
+        [cardActions]="cardActions()"
+        (refresh)="onRefresh()"
+        (pageChange)="onPageChange($event)"
+        (cardActionClick)="onCardActionClick($event)"
+        [attr.aria-label]="'Lista de transações'"
+      />
 
       @if (showCreateModal()) {
       <os-transaction-form
@@ -127,7 +112,7 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
         (closed)="onConfirmCancelled()"
       />
       }
-    </section>
+    </os-page>
   `,
   styleUrl: './transactions.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

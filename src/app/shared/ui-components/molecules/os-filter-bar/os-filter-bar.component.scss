@@ -144,4 +144,20 @@
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+
+  // Tablet density adjustments (576px–991px)
+  @media (min-width: 576px) and (max-width: 991px) {
+    padding: var(--os-spacing-xs);
+    gap: var(--os-spacing-sm);
+
+    .os-filter-bar__content {
+      gap: var(--os-spacing-xs);
+      min-height: 40px;
+    }
+
+    .os-filter-bar__actions {
+      gap: var(--os-spacing-xs);
+      min-height: 40px;
+    }
+  }
 }

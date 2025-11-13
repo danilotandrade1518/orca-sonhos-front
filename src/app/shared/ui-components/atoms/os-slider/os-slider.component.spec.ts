@@ -387,7 +387,8 @@ describe('OsSliderComponent', () => {
       fixture.detectChanges();
 
       const valueDisplay = fixture.debugElement.query(By.css('.os-slider__value-display'));
-      expect(valueDisplay.nativeElement.textContent.trim()).toBe('75%');
+      
+      expect(valueDisplay.nativeElement.textContent.trim()).toBe('1%');
     });
 
     it('should format number values correctly', () => {

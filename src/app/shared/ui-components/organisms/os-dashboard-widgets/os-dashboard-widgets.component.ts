@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import {
   OsGoalProgressCardComponent,
@@ -11,6 +11,7 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
+import { LocaleService } from '@shared/formatting';
 
 export interface DashboardWidget {
   id: string;
@@ -81,8 +82,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           <div
             class="os-dashboard-widgets__skeleton-widget"
             [class]="getWidgetClass(widget)"
-            [style.grid-column]="getWidgetGridColumn(widget)"
-            [style.grid-row]="getWidgetGridRow(widget)"
             aria-hidden="true"
           >
             <div class="os-dashboard-widgets__skeleton-header">
@@ -148,8 +147,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
         <div
           class="os-dashboard-widgets__widget"
           [class]="getWidgetClass(widget)"
-          [style.grid-column]="getWidgetGridColumn(widget)"
-          [style.grid-row]="getWidgetGridRow(widget)"
           [attr.aria-label]="getWidgetAriaLabel(widget)"
           [attr.aria-describedby]="getWidgetDescriptionId(widget)"
           role="region"
@@ -169,8 +166,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               [size]="getWidgetSize(widget)"
               [state]="getGoalState(widget)"
               [ariaLabel]="'Progresso da meta'"
-              (cardClick)="onGoalCardClick($event)"
-              (cardExpand)="onGoalCardExpand($event)"
             />
             } @case ('budget-summary') {
             <div class="os-dashboard-widgets__budget-summary">
@@ -318,6 +313,8 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsDashboardWidgetsComponent {
+  private readonly localeService = inject(LocaleService);
+
   readonly widgets = input<DashboardWidget[]>([]);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -379,38 +376,6 @@ export class OsDashboardWidgetsComponent {
     classes.push(`os-dashboard-widgets__widget--${widget.type}`);
 
     return classes.join(' ');
-  }
-
-  getWidgetGridColumn(widget: DashboardWidget): string {
-    switch (widget.size) {
-      case 'small':
-        return 'span 1';
-      case 'large':
-        return 'span 2';
-      case 'full-width':
-        return 'span 3';
-      default:
-        return 'span 1';
-    }
-  }
-
-  getWidgetGridRow(widget: DashboardWidget): string {
-    switch (widget.type) {
-      case 'budget-summary':
-        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
-      case 'goal-progress':
-        return widget.size === 'large' || widget.size === 'full-width' ? 'span 2' : 'span 1';
-      case 'transaction-list':
-        return 'span 3';
-      case 'monthly-trends':
-        return 'span 2';
-      case 'account-balance':
-        return 'span 1';
-      case 'quick-actions':
-        return 'span 1';
-      default:
-        return 'span 1';
-    }
   }
 
   getWidgetAriaLabel(widget: DashboardWidget): string {
@@ -532,10 +497,7 @@ export class OsDashboardWidgetsComponent {
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   onWidgetClick(widget: DashboardWidget): void {

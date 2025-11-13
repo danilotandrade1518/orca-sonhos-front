@@ -1,27 +1,12 @@
 @use '../../../../shared/ui-components/theme/variables' as *;
 
-.budget-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--os-spacing-sm, 8px);
-  margin-bottom: var(--os-spacing-md, 16px);
-}
-
-.budget-card__name {
-  font-size: var(--os-font-size-lg, 18px);
-  font-weight: 600;
-  color: var(--os-text-primary, #212121);
-  margin: 0;
-  flex: 1;
-}
-
 .budget-card__type {
   padding: var(--os-spacing-xs, 4px) var(--os-spacing-sm, 8px);
   font-size: var(--os-font-size-sm, 14px);
   font-weight: 500;
   border-radius: var(--os-border-radius-sm, 4px);
   white-space: nowrap;
+  margin-left: var(--os-spacing-sm, 8px);
 
   &--personal {
     background-color: var(--os-info-color-light, #e3f2fd);
@@ -34,23 +19,11 @@
   }
 }
 
-.budget-card__info {
-  margin-bottom: var(--os-spacing-md, 16px);
-}
-
-.budget-card__participants {
-  font-size: var(--os-font-size-sm, 14px);
-  color: var(--os-text-secondary, #757575);
-  margin: 0;
-}
-
+/* Ações do footer do card – alinhadas ao padrão de contas */
 .budget-card__actions {
   display: flex;
-  gap: var(--os-spacing-sm, 8px);
+  gap: var(--os-spacing-xs, 4px);
+  justify-content: flex-end;
+  align-items: center;
 }
 
-@media (max-width: 575px) {
-  .budget-card__actions {
-    flex-direction: column;
-  }
-}

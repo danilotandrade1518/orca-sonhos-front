@@ -196,11 +196,10 @@ describe('CreditCardsPage - Integration Tests', () => {
       });
     });
 
-    it('should navigate to edit route when editing credit card', () => {
+    it('should navigate to credit card detail route when editing credit card', () => {
       component.onEditCreditCard(mockCreditCard);
 
-      expect(component.editingCreditCard()).toEqual(mockCreditCard);
-      expect(router.navigate).toHaveBeenCalledWith([mockCreditCard.id, 'edit'], {
+      expect(router.navigate).toHaveBeenCalledWith([mockCreditCard.id], {
         relativeTo: activatedRoute,
       });
     });
@@ -208,7 +207,6 @@ describe('CreditCardsPage - Integration Tests', () => {
     it('should navigate back to list after form save', () => {
       component.onFormSaved();
 
-      expect(component.editingCreditCard()).toBeNull();
       expect(router.navigate).toHaveBeenCalledWith(['/credit-cards'], {
         replaceUrl: true,
       });

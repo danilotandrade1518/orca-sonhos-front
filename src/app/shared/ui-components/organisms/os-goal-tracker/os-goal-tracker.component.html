@@ -252,34 +252,50 @@
 
         <!-- Actions -->
         <div class="os-goal-tracker__actions">
-            <button type="button" class="os-goal-tracker__action" (click)="onRefreshClick()"
-                [attr.aria-label]="'Atualizar meta ' + goalData()!.title">
-                <os-icon name="refresh" [size]="iconSize()" />
+            <os-button
+                variant="tertiary"
+                [size]="isMobile() ? 'small' : 'medium'"
+                icon="refresh"
+                [ariaLabel]="'Atualizar meta ' + goalData()!.title"
+                (buttonClick)="onRefreshClick()"
+            >
                 Atualizar
-            </button>
+            </os-button>
 
             @if (goalData()!.status === 'active') {
-            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('pause')"
-                [attr.aria-label]="'Pausar meta ' + goalData()!.title">
-                <os-icon name="pause" [size]="iconSize()" />
+            <os-button
+                variant="tertiary"
+                [size]="isMobile() ? 'small' : 'medium'"
+                icon="pause"
+                [ariaLabel]="'Pausar meta ' + goalData()!.title"
+                (buttonClick)="onActionClick('pause')"
+            >
                 Pausar
-            </button>
+            </os-button>
             }
 
             @if (goalData()!.status === 'paused') {
-            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('resume')"
-                [attr.aria-label]="'Retomar meta ' + goalData()!.title">
-                <os-icon name="play_arrow" [size]="iconSize()" />
+            <os-button
+                variant="tertiary"
+                [size]="isMobile() ? 'small' : 'medium'"
+                icon="play_arrow"
+                [ariaLabel]="'Retomar meta ' + goalData()!.title"
+                (buttonClick)="onActionClick('resume')"
+            >
                 Retomar
-            </button>
+            </os-button>
             }
 
             @if (!isCompleted()) {
-            <button type="button" class="os-goal-tracker__action" (click)="onActionClick('cancel')"
-                [attr.aria-label]="'Cancelar meta ' + goalData()!.title">
-                <os-icon name="cancel" [size]="iconSize()" />
+            <os-button
+                variant="danger"
+                [size]="isMobile() ? 'small' : 'medium'"
+                icon="cancel"
+                [ariaLabel]="'Cancelar meta ' + goalData()!.title"
+                (buttonClick)="onActionClick('cancel')"
+            >
                 Cancelar
-            </button>
+            </os-button>
             }
         </div>
     </os-card>

@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
+import { LocaleService } from '@shared/formatting';
 import {
   OsDataTableComponent,
   OsDataTableColumn,
@@ -33,6 +34,7 @@ import {
   OsFilterOption,
   OsFilterBarVariant,
 } from '../../molecules/os-filter-bar/os-filter-bar.component';
+import { OsIconMenuButtonComponent } from '../../atoms/os-icon-menu-button/os-icon-menu-button.component';
 
 export interface Transaction {
   id: string;
@@ -88,6 +90,7 @@ export interface TransactionCardAction {
     CommonModule,
     OsButtonComponent,
     OsIconComponent,
+    OsIconMenuButtonComponent,
     OsSpinnerComponent,
     OsDataTableComponent,
     OsFilterBarComponent,
@@ -259,16 +262,14 @@ export interface TransactionCardAction {
                   <os-icon [name]="getTransactionPriorityIcon(transaction)" [size]="'sm'" />
                 </div>
                 } @if (cardActions().length > 0) {
-                <button
-                  mat-icon-button
-                  [matMenuTriggerFor]="cardMenu"
+                <os-icon-menu-button
+                  [menu]="cardMenu"
                   class="os-transaction-list__card-menu-button"
                   (click)="$event.stopPropagation()"
-                  [attr.aria-label]="'Ações para transação ' + transaction.description"
-                  type="button"
-                >
-                  <mat-icon>more_vert</mat-icon>
-                </button>
+                  [ariaLabel]="'Ações para transação ' + transaction.description"
+                  [size]="'small'"
+                  [icon]="'more_vert'"
+                />
                 <mat-menu #cardMenu="matMenu" class="os-transaction-list__card-menu">
                   @for (action of cardActions(); track action.id) {
                   <button
@@ -376,6 +377,7 @@ export interface TransactionCardAction {
 export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
   private elementRef = inject(ElementRef);
+  private readonly localeService = inject(LocaleService);
 
   @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
 
@@ -895,18 +897,11 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   }
 
   formatTransactionAmount(amount: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(amount);
+    return this.localeService.formatCurrency(amount, 'BRL');
   }
 
   formatTransactionDate(date: Date): string {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
+    return this.localeService.formatDateShort(date);
   }
 
   getTransactionStatusText(status: string): string {

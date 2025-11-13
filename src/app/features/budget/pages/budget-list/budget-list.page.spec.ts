@@ -112,9 +112,7 @@ describe('BudgetListPage', () => {
 
   describe('filtering', () => {
     it('should filter budgets by search term', () => {
-      component.updateSearchTerm({
-        target: { value: 'Personal' },
-      } as unknown as Event);
+      component.onSearchChange('Personal');
 
       fixture.detectChanges();
       const filtered = component.filteredBudgets();
@@ -123,9 +121,7 @@ describe('BudgetListPage', () => {
     });
 
     it('should filter budgets by type', () => {
-      component.updateTypeFilter({
-        target: { value: 'SHARED' },
-      } as unknown as Event);
+      component.onTypeChange('SHARED');
 
       fixture.detectChanges();
       const filtered = component.filteredBudgets();
@@ -134,9 +130,7 @@ describe('BudgetListPage', () => {
     });
 
     it('should show all budgets when type is "all"', () => {
-      component.updateTypeFilter({
-        target: { value: 'all' },
-      } as unknown as Event);
+      component.onTypeChange('all');
 
       fixture.detectChanges();
       const filtered = component.filteredBudgets();

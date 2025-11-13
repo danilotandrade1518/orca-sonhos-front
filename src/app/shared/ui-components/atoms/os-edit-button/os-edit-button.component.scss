@@ -1,0 +1,13 @@
+@use '../../theme/tokens' as tokens;
+
+:host {
+  display: inline-block;
+}
+
+::ng-deep os-button {
+  // Garantir que o touch target não apareça
+  ::ng-deep .mat-mdc-button-touch-target {
+    display: none;
+  }
+}
+

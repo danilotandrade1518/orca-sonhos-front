@@ -232,36 +232,6 @@ describe('AccountsPage', () => {
       });
     });
 
-    describe('openReconcileModal', () => {
-      it('should open reconcile modal with first account when budget and accounts exist', () => {
-        accountState.accountsByBudgetId.set(mockAccounts);
-        fixture.detectChanges();
-
-        component.openReconcileModal();
-
-        expect(component.showReconcileModal()).toBe(true);
-        expect(component.reconcilingAccount()).toEqual(mockAccounts[0]);
-      });
-
-      it('should not open reconcile modal when no budget selected', () => {
-        budgetSelection.selectedBudgetId.set(null);
-        fixture.detectChanges();
-
-        component.openReconcileModal();
-
-        expect(component.showReconcileModal()).toBe(false);
-      });
-
-      it('should not open reconcile modal when no accounts', () => {
-        accountState.accountsByBudgetId.set([]);
-        fixture.detectChanges();
-
-        component.openReconcileModal();
-
-        expect(component.showReconcileModal()).toBe(false);
-      });
-    });
-
     describe('closeTransferModal', () => {
       it('should close transfer modal', () => {
         component.showTransferModal.set(true);
@@ -270,19 +240,6 @@ describe('AccountsPage', () => {
         component.closeTransferModal();
 
         expect(component.showTransferModal()).toBe(false);
-      });
-    });
-
-    describe('closeReconcileModal', () => {
-      it('should close reconcile modal and clear reconciling account', () => {
-        component.showReconcileModal.set(true);
-        component.reconcilingAccount.set(mockAccounts[0]);
-        fixture.detectChanges();
-
-        component.closeReconcileModal();
-
-        expect(component.showReconcileModal()).toBe(false);
-        expect(component.reconcilingAccount()).toBe(null);
       });
     });
 
@@ -302,13 +259,12 @@ describe('AccountsPage', () => {
 
   describe('Account Actions', () => {
     describe('onEditAccount', () => {
-      it('should set editing account and navigate to edit route', () => {
+      it('should navigate to account detail route', () => {
         const account = mockAccounts[0];
 
         component.onEditAccount(account);
 
-        expect(component.editingAccount()).toEqual(account);
-        expect(router.navigate).toHaveBeenCalledWith([account.id, 'edit'], {
+        expect(router.navigate).toHaveBeenCalledWith([account.id], {
           relativeTo: TestBed.inject(ActivatedRoute),
         });
       });
@@ -328,40 +284,34 @@ describe('AccountsPage', () => {
 
   describe('Form Handlers', () => {
     describe('onFormSaved', () => {
-      it('should clear editing account and navigate to accounts list', () => {
-        component.editingAccount.set(mockAccounts[0]);
-        fixture.detectChanges();
-
+      it('should navigate to accounts list', () => {
         component.onFormSaved();
 
-        expect(component.editingAccount()).toBe(null);
         expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
       });
     });
 
     describe('onFormCancelled', () => {
-      it('should clear editing account and navigate to accounts list', () => {
-        component.editingAccount.set(mockAccounts[0]);
-        fixture.detectChanges();
-
+      it('should navigate to accounts list', () => {
         component.onFormCancelled();
 
-        expect(component.editingAccount()).toBe(null);
         expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
       });
     });
   });
 
   describe('Budget Effect', () => {
-    it('should reload accounts when budget changes', () => {
+    it('should reload accounts when budget changes', async () => {
       accountState.loadAccounts.mockClear();
 
       budgetSelection.selectedBudgetId.set('budget-2');
       fixture.detectChanges();
 
-      setTimeout(() => {
-        expect(accountState.loadAccounts).toHaveBeenCalled();
-      }, 100);
+      // Aguarda o effect ser executado
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      fixture.detectChanges();
+
+      expect(accountState.loadAccounts).toHaveBeenCalled();
     });
 
     it('should not reload accounts when budget is the same', () => {
@@ -384,37 +334,4 @@ describe('AccountsPage', () => {
     });
   });
 
-  describe('ngOnInit - Edit Mode', () => {
-    it('should set editing account when route has account id and edit mode', () => {
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot = {
-        data: { modalMode: 'edit' },
-        paramMap: new Map([['id', 'account-1']]),
-      } as unknown as ActivatedRouteSnapshot;
-
-      fixture = TestBed.createComponent(AccountsPage);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-
-      component.ngOnInit();
-
-      expect(component.editingAccount()).toEqual(mockAccounts[0]);
-    });
-
-    it('should not set editing account when account not found', () => {
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot = {
-        data: { modalMode: 'edit' },
-        paramMap: new Map([['id', 'non-existent']]),
-      } as unknown as ActivatedRouteSnapshot;
-
-      fixture = TestBed.createComponent(AccountsPage);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-
-      component.ngOnInit();
-
-      expect(component.editingAccount()).toBe(null);
-    });
-  });
 });

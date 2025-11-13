@@ -22,6 +22,7 @@ import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsLabelComponent } from '../../atoms/os-label/os-label.component';
 import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-group.component';
 import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
+import { LocaleService } from '@shared/formatting';
 import { FormsModule } from '@angular/forms';
 
 export interface Category {
@@ -398,6 +399,8 @@ export interface CategoryFormData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsCategoryManagerComponent implements AfterViewInit {
+  private readonly localeService = inject(LocaleService);
+
   title = input<string>('Gerenciador de Categorias');
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -685,11 +688,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
   }
 
   formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(new Date(date));
+    return this.localeService.formatDateShort(date);
   }
 
   onDragDrop(event: CdkDragDrop<Category[]>): void {

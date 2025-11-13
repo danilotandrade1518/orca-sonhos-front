@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
+import { LocaleService } from '@shared/formatting';
 import {
   OsNavigationComponent,
   NavigationItem,
@@ -197,6 +198,7 @@ export class OsDetailTemplateComponent implements OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
   private isMobileSignal = signal(false);
   private breakpointSubscription?: Subscription;
+  private readonly localeService = inject(LocaleService);
 
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
@@ -361,27 +363,22 @@ export class OsDetailTemplateComponent implements OnDestroy {
 
   public formatCurrency(value: string | number | Date): string {
     const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
-    return new Intl.NumberFormat('pt-BR', {
+    return this.localeService.formatNumber(numValue, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(numValue);
+    });
   }
 
   public formatPercentage(value: string | number | Date): string {
     const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
-    return new Intl.NumberFormat('pt-BR', {
+    return this.localeService.formatNumber(numValue, {
       minimumFractionDigits: 1,
       maximumFractionDigits: 2,
-    }).format(numValue);
+    });
   }
 
   public formatDate(value: string | number | Date): string {
-    const dateValue = value instanceof Date ? value : new Date(value);
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(dateValue);
+    return this.localeService.formatDateShort(value);
   }
 
   public toggleSection(section: DetailTemplateSection): void {

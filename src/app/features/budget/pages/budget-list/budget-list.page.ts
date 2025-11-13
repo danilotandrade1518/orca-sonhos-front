@@ -13,104 +13,127 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { BudgetCardComponent } from '../../components/budget-card/budget-card.component';
 import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
+import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
+import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
+import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
   selector: 'os-budget-list-page',
   standalone: true,
-  imports: [CommonModule, BudgetCardComponent, BudgetFormComponent, OsModalTemplateComponent],
+  imports: [
+    CommonModule,
+    BudgetCardComponent,
+    BudgetFormComponent,
+    OsModalTemplateComponent,
+    OsButtonComponent,
+    OsFilterBarComponent,
+    OsInputComponent,
+    OsSelectComponent,
+    OsEntityListComponent,
+    OsAlertComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="budget-list-page">
-      <header class="budget-list-page__header">
-        <h1 class="budget-list-page__title">Orçamentos</h1>
-        <p class="budget-list-page__subtitle">Gerencie seus orçamentos pessoais e compartilhados</p>
-
-        <button
-          class="budget-list-page__create-button"
-          (click)="navigateToCreate()"
-          type="button"
-          aria-label="Criar novo orçamento"
-        >
-          <span>+ Novo Orçamento</span>
-        </button>
-      </header>
+    <os-page variant="default" size="medium" ariaLabel="Página de orçamentos">
+      <os-page-header
+        title="Orçamentos"
+        subtitle="Gerencie seus orçamentos pessoais e compartilhados"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+      />
 
       <section class="budget-list-page__toolbar">
-        <div class="budget-list-page__filters">
-          <input
-            type="text"
-            class="budget-list-page__search"
-            placeholder="Buscar orçamentos..."
-            [value]="searchTerm()"
-            (input)="updateSearchTerm($event)"
-            aria-label="Buscar orçamentos por nome"
-            id="budget-search-input"
-          />
+        <os-filter-bar
+          variant="default"
+          size="medium"
+          [hasActiveFilters]="hasActiveFilters()"
+          [ariaLabel]="'Filtros de orçamentos'"
+          (clear)="onClearFilters()"
+          (apply)="onApplyFilters()"
+        >
+          <div class="budget-list-page__filters-content">
+            <os-input
+              type="text"
+              label="Buscar"
+              placeholder="Buscar orçamentos..."
+              [value]="searchTerm()"
+              size="medium"
+              [ariaLabel]="'Buscar orçamentos por nome'"
+              (valueChange)="onSearchChange($event)"
+            />
 
-          <select
-            class="budget-list-page__type-filter"
-            [value]="selectedType()"
-            (change)="updateTypeFilter($event)"
-            aria-label="Filtrar orçamentos por tipo"
-            id="budget-type-filter"
-          >
-            <option value="all">Todos os tipos</option>
-            <option value="PERSONAL">Pessoal</option>
-            <option value="SHARED">Compartilhado</option>
-          </select>
-        </div>
+            <os-select
+              label="Tipo"
+              [options]="typeOptions()"
+              [value]="selectedType()"
+              size="medium"
+              [ariaLabel]="'Filtrar orçamentos por tipo'"
+              (valueChange)="onTypeChange($event)"
+            />
+          </div>
+        </os-filter-bar>
       </section>
 
       <main class="budget-list-page__content">
-        @switch (currentState()) { @case ('loading') {
-        <div
-          class="budget-list-page__loading"
-          role="status"
-          aria-live="polite"
-          aria-label="Carregando orçamentos"
+        @if (currentState() === 'error') {
+        <os-alert
+          type="error"
+          [title]="'Erro ao carregar orçamentos'"
+          [role]="'alert'"
+          [ariaLive]="'assertive'"
+          [showIcon]="true"
+          [dismissible]="false"
         >
-          <div class="spinner" aria-hidden="true"></div>
-          <p>Carregando orçamentos...</p>
-        </div>
-        } @case ('error') {
-        <div class="budget-list-page__error" role="alert" aria-live="assertive">
-          <p class="error-message">{{ errorMessage() }}</p>
-          <button
-            type="button"
-            class="retry-button"
-            (click)="retry()"
-            aria-label="Tentar carregar orçamentos novamente"
-          >
-            Tentar Novamente
-          </button>
-        </div>
-        } @case ('empty') {
-        <div class="budget-list-page__empty" role="status" aria-live="polite">
-          <p>Nenhum orçamento encontrado</p>
-          <p class="empty-subtitle">Crie seu primeiro orçamento para começar</p>
-          <button
-            type="button"
-            class="create-button"
-            (click)="navigateToCreate()"
-            aria-label="Criar primeiro orçamento"
-          >
-            Criar Orçamento
-          </button>
-        </div>
-        } @default {
-        <div class="budget-list-page__grid">
+          {{ errorMessage() }}
+          <div class="budget-list-page__error-action">
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="refresh"
+              (buttonClick)="retry()"
+              [attr.aria-label]="'Tentar carregar orçamentos novamente'"
+            >
+              Tentar Novamente
+            </os-button>
+          </div>
+        </os-alert>
+        } @else {
+        <os-entity-list
+          [layout]="'grid'"
+          [size]="'medium'"
+          [isLoading]="currentState() === 'loading'"
+          [isEmpty]="currentState() === 'empty'"
+          [loadingText]="'Carregando orçamentos...'"
+          [emptyTitle]="'Nenhum orçamento encontrado'"
+          [emptyText]="'Crie seu primeiro orçamento para começar'"
+          [emptyIcon]="'wallet'"
+          [emptyAction]="true"
+          [emptyActionLabel]="'Criar Orçamento'"
+          [emptyActionIcon]="'plus'"
+          [ariaLabel]="'Lista de orçamentos'"
+          (emptyActionClick)="navigateToCreate()"
+        >
           @for (budget of filteredBudgets(); track budget.id) {
           <os-budget-card
             [budget]="budget"
             [selected]="isSelected(budget.id)"
-            (cardClick)="navigateToDetail(budget.id)"
             (editClick)="navigateToEdit($event)"
             (deleteClick)="confirmDelete($event)"
           />
           }
-        </div>
-        } }
+        </os-entity-list>
+        }
       </main>
 
       @if (showCreateModal()) {
@@ -128,7 +151,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (closed)="onDeleteCancelled()"
       />
       }
-    </div>
+    </os-page>
   `,
   styleUrl: './budget-list.page.scss',
 })
@@ -204,19 +227,43 @@ export class BudgetListPage implements OnInit {
 
   readonly errorMessage = computed(() => this.error() || 'Erro ao carregar orçamentos');
 
+  readonly hasActiveFilters = computed(() => {
+    return this.searchTerm().length > 0 || this.selectedType() !== 'all';
+  });
+
+  readonly typeOptions = computed(() => [
+    { value: 'all', label: 'Todos os tipos' },
+    { value: 'PERSONAL', label: 'Pessoal' },
+    { value: 'SHARED', label: 'Compartilhado' },
+  ]);
+
+  readonly pageHeaderActions = computed((): PageHeaderAction[] => [
+    {
+      label: 'Novo Orçamento',
+      variant: 'primary',
+      size: 'medium',
+      icon: 'plus',
+    },
+  ]);
+
   ngOnInit(): void {
     this.budgetState.loadBudgets();
   }
 
-  updateSearchTerm(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
+  onSearchChange(value: string): void {
+    this.searchTerm.set(value);
   }
 
-  updateTypeFilter(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.selectedType.set(select.value as 'all' | 'PERSONAL' | 'SHARED');
+  onTypeChange(value: string | number): void {
+    this.selectedType.set(value as 'all' | 'PERSONAL' | 'SHARED');
   }
+
+  onClearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedType.set('all');
+  }
+
+  onApplyFilters(): void {}
 
   isSelected(budgetId: string): boolean {
     return this.selectedBudgetId() === budgetId;
@@ -283,5 +330,11 @@ export class BudgetListPage implements OnInit {
 
   onFormCancelled(): void {
     this.router.navigate(['/budgets'], { replaceUrl: true });
+  }
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Novo Orçamento') {
+      this.navigateToCreate();
+    }
   }
 }

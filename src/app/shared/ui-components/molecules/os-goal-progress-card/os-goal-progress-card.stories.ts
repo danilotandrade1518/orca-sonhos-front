@@ -36,14 +36,6 @@ const meta: Meta<OsGoalProgressCardComponent> = {
       control: { type: 'text' },
       description: 'Label de acessibilidade',
     },
-    cardClick: {
-      action: 'cardClick',
-      description: 'Evento de clique no card',
-    },
-    cardExpand: {
-      action: 'cardExpand',
-      description: 'Evento de expansão do card',
-    },
   },
   tags: ['autodocs'],
 };

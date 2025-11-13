@@ -1,9 +1,11 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsCardComponent } from '../os-card/os-card.component';
 import { AccountTypeBadgeComponent } from '../../atoms/account-type-badge/account-type-badge.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
-import { OsButtonComponent } from '../../atoms/os-button';
+import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
+import { OsEditButtonComponent } from '../../atoms/os-edit-button';
+import { LocaleService } from '@shared/formatting';
 import { AccountDto } from '../../../../../dtos/account/account-types';
 
 @Component({
@@ -14,7 +16,8 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
     OsCardComponent,
     AccountTypeBadgeComponent,
     OsMoneyDisplayComponent,
-    OsButtonComponent,
+    OsDeleteButtonComponent,
+    OsEditButtonComponent,
   ],
   template: `
     <os-card
@@ -46,20 +49,14 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
       @if (actions()?.edit || actions()?.delete) {
       <div class="os-account-card__actions" slot="actions">
         @if (actions()?.edit) {
-        <os-button
-          variant="tertiary"
-          size="small"
-          [icon]="'edit'"
+        <os-edit-button
           [ariaLabel]="'Editar conta ' + account().name"
-          (click)="onEdit()"
+          (editClick)="onEdit($event)"
         />
         } @if (actions()?.delete) {
-        <os-button
-          variant="danger"
-          size="small"
-          [icon]="'delete'"
+        <os-delete-button
           [ariaLabel]="'Excluir conta ' + account().name"
-          (click)="onDelete()"
+          (deleteClick)="onDelete()"
         />
         }
       </div>
@@ -70,6 +67,8 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountCardComponent {
+  private readonly localeService = inject(LocaleService);
+
   account = input.required<AccountDto>();
   actions = input<{ edit: boolean; delete: boolean } | undefined>(undefined);
 
@@ -88,7 +87,8 @@ export class AccountCardComponent {
     return `Saldo da conta ${acc.name}: ${this.formatBalance(acc.balance)}`;
   });
 
-  onEdit(): void {
+  onEdit(event?: MouseEvent): void {
+    event?.stopPropagation();
     const acc = this.account();
     if (acc) {
       this.edit.emit(acc);
@@ -103,9 +103,6 @@ export class AccountCardComponent {
   }
 
   private formatBalance(balance: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(balance);
+    return this.localeService.formatCurrency(balance, 'BRL');
   }
 }

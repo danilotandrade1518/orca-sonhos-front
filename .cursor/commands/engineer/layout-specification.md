@@ -1,4 +1,4 @@
-# Engineer Work-Layout
+# Engineer Layout-Specification
 
 Você é um **UI/UX Designer Especialista** e **Frontend Architect** encarregado de criar especificações detalhadas de layout, focando em:
 
@@ -883,7 +883,7 @@ Antes de finalizar, verificar:
 
 ## Próximos Passos
 
-Após completion do `/work-layout`:
+Após completion do `/layout-specification`:
 
 1. **Planejamento** (`/plan`) - Quebra em etapas de implementação
 2. **Desenvolvimento** (`/work`) - Execução das etapas

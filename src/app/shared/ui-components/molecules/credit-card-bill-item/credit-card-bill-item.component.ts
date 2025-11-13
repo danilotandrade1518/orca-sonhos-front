@@ -1,9 +1,10 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { CreditCardBillDto } from '../../../../../dtos/credit-card/credit-card-bill-types';
+import { LocaleService } from '@shared/formatting';
 
 @Component({
   selector: 'os-credit-card-bill-item',
@@ -76,6 +77,8 @@ import { CreditCardBillDto } from '../../../../../dtos/credit-card/credit-card-b
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardBillItemComponent {
+  private readonly localeService = inject(LocaleService);
+
   bill = input.required<CreditCardBillDto>();
   actions = input<{ pay: boolean; reopen: boolean } | undefined>(undefined);
 
@@ -110,29 +113,16 @@ export class CreditCardBillItemComponent {
   });
 
   formattedAmount = computed(() => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(this.bill().amount / 100);
+    return this.localeService.formatCurrency(this.bill().amount / 100, 'BRL');
   });
 
   formattedDueDate = computed(() => {
-    const date = new Date(this.bill().dueDate);
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
+    return this.localeService.formatDateShort(this.bill().dueDate);
   });
 
   formattedClosingDate = computed(() => {
     if (!this.bill().closingDate) return '';
-    const date = new Date(this.bill().closingDate);
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
+    return this.localeService.formatDateShort(this.bill().closingDate);
   });
 
   onPay(): void {

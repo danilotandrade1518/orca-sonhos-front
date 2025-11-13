@@ -10,6 +10,14 @@ const mockGoals = [
     budgetId: 'budget-1',
   },
   {
+    id: 'goal-large',
+    name: 'Meta com valor grande',
+    totalAmount: 1500000.0,
+    accumulatedAmount: 999999.99,
+    deadline: '2026-12-31T23:59:59Z',
+    budgetId: 'budget-1',
+  },
+  {
     id: 'goal-2',
     name: 'Reserva de emergência',
     totalAmount: 10000.0,

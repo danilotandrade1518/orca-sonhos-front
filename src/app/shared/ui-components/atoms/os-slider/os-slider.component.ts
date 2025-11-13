@@ -8,10 +8,12 @@ import {
   forwardRef,
   signal,
   effect,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
+import { LocaleService } from '@shared/formatting';
 
 export type OsSliderSize = 'small' | 'medium' | 'large';
 export type OsSliderFormat = 'number' | 'currency' | 'percentage';
@@ -119,6 +121,8 @@ export type OsSliderRole = 'slider' | 'progressbar';
   ],
 })
 export class OsSliderComponent implements ControlValueAccessor {
+  private readonly localeService = inject(LocaleService);
+
   size = input<OsSliderSize>('medium');
   label = input<string>('');
   helperText = input<string>('');
@@ -277,23 +281,20 @@ export class OsSliderComponent implements ControlValueAccessor {
 
     switch (format) {
       case 'currency':
-        return new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: currency,
+        return this.localeService.formatCurrency(value, currency as 'BRL' | 'USD' | 'EUR' | 'GBP', {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
-        }).format(value);
+        });
       case 'percentage':
-        return new Intl.NumberFormat('pt-BR', {
-          style: 'percent',
+        return this.localeService.formatNumber(value / 100, {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
-        }).format(value / 100);
+        }) + '%';
       default:
-        return new Intl.NumberFormat('pt-BR', {
+        return this.localeService.formatNumber(value, {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
-        }).format(value);
+        });
     }
   }
 

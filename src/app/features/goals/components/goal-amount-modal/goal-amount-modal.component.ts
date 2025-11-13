@@ -13,10 +13,11 @@ import {
   OsModalTemplateComponent,
   type ModalTemplateConfig,
 } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { CurrencyPipe as OsCurrencyPipe } from '@shared/formatting';
 
 @Component({
   selector: 'os-goal-amount-modal',
-  imports: [CommonModule, ReactiveFormsModule, OsModalTemplateComponent],
+  imports: [CommonModule, ReactiveFormsModule, OsModalTemplateComponent, OsCurrencyPipe],
   template: `
     <os-modal-template
       [config]="modalConfig()"
@@ -64,11 +65,11 @@ import {
         <div class="os-goal-amount-modal__info">
           <p>
             <strong>Valor atual acumulado:</strong>
-            {{ currentAmount() | currency : 'BRL' : 'symbol-narrow' : '1.2-2' : 'pt' }}
+            {{ currentAmount() | osCurrency : 'BRL' }}
           </p>
           <p>
             <strong>Valor após remoção:</strong>
-            {{ remainingAfter() | currency : 'BRL' : 'symbol-narrow' : '1.2-2' : 'pt' }}
+            {{ remainingAfter() | osCurrency : 'BRL' }}
           </p>
         </div>
         }

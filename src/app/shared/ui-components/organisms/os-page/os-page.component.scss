@@ -1,0 +1,80 @@
+@use '../../theme/variables' as *;
+
+.os-page {
+  --os-page-bg: var(--os-color-background-secondary);
+  --os-page-padding-vertical-desktop: var(--os-spacing-8);
+  --os-page-padding-vertical-tablet: var(--os-spacing-6);
+  --os-page-padding-vertical-mobile: var(--os-spacing-4);
+  --os-page-padding-horizontal-desktop: var(--os-spacing-4);
+  --os-page-padding-horizontal-tablet: var(--os-spacing-3);
+  --os-page-padding-horizontal-mobile: var(--os-spacing-3);
+  --os-page-max-width: 1200px;
+
+  min-height: 100vh;
+  background-color: var(--os-page-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+
+  // Base padding - mobile first
+  padding: var(--os-page-padding-vertical-mobile) var(--os-page-padding-horizontal-mobile);
+
+  // Tablet: 576-991px
+  @media (min-width: 576px) {
+    padding: var(--os-page-padding-vertical-tablet) var(--os-page-padding-horizontal-tablet);
+  }
+
+  // Desktop: ≥ 992px
+  @media (min-width: 992px) {
+    padding: var(--os-page-padding-vertical-desktop) var(--os-page-padding-horizontal-desktop);
+  }
+
+  // Variants
+  &--compact {
+    --os-page-padding-vertical-desktop: var(--os-spacing-4);
+    --os-page-padding-vertical-tablet: var(--os-spacing-3);
+    --os-page-padding-vertical-mobile: var(--os-spacing-2);
+  }
+
+  &--extended {
+    --os-page-padding-vertical-desktop: var(--os-spacing-12);
+    --os-page-padding-vertical-tablet: var(--os-spacing-8);
+    --os-page-padding-vertical-mobile: var(--os-spacing-6);
+  }
+
+  // Sizes
+  &--small {
+    --os-page-max-width: 800px;
+  }
+
+  &--medium {
+    --os-page-max-width: 1200px;
+  }
+
+  &--large {
+    --os-page-max-width: 1600px;
+  }
+
+  // Dark theme
+  &--dark {
+    --os-page-bg: var(--os-color-background-secondary-dark);
+  }
+
+  // Mobile optimizations
+  &--mobile {
+    padding: var(--os-page-padding-vertical-mobile) var(--os-page-padding-horizontal-mobile);
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    border: 1px solid var(--os-color-border);
+  }
+
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+

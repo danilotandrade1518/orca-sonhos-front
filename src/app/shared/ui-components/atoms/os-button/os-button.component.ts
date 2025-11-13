@@ -78,6 +78,7 @@ export class OsButtonComponent {
       case 'tertiary':
         return 'rgba(59, 130, 246, 0.3)';
       case 'danger':
+        return 'rgba(239, 68, 68, 0.3)';
       case 'warning':
         return 'rgba(255, 255, 255, 0.3)';
       default:
@@ -88,12 +89,12 @@ export class OsButtonComponent {
   get buttonVariant() {
     switch (this.variant()) {
       case 'primary':
-      case 'danger':
       case 'success':
       case 'warning':
         return 'filled';
 
       case 'secondary':
+      case 'danger':
         return 'outlined';
 
       case 'tertiary':

@@ -317,4 +317,21 @@
       }
     }
   }
+
+  // Tablet density adjustments (576px–991px)
+  @media (min-width: 576px) and (max-width: 991px) {
+    padding: var(--os-spacing-sm) var(--os-spacing-lg);
+
+    .os-page-header__main {
+      gap: var(--os-spacing-md);
+    }
+
+    .os-page-header__actions {
+      gap: var(--os-spacing-xs);
+
+      os-button {
+        min-height: 40px;
+      }
+    }
+  }
 }

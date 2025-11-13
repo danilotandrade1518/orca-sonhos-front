@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '@shared/ui-components/molecules/os-money-display/os-money-display.component';
+import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
+import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
+import { OsEditButtonComponent } from '../../atoms/os-edit-button';
+import { LocaleService } from '@shared/formatting';
 
 export interface GoalProgressData {
   id: string;
@@ -23,7 +27,15 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
 @Component({
   selector: 'os-goal-progress-card',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsProgressBarComponent, OsMoneyDisplayComponent],
+  imports: [
+    CommonModule,
+    OsIconComponent,
+    OsProgressBarComponent,
+    OsMoneyDisplayComponent,
+    OsButtonComponent,
+    OsDeleteButtonComponent,
+    OsEditButtonComponent,
+  ],
   template: `
     <div
       class="os-goal-progress-card"
@@ -31,9 +43,6 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="descriptionId()"
       role="region"
-      tabindex="0"
-      (click)="onCardClick()"
-      (keydown)="onKeyDown($event)"
     >
       @if (isLoading()) {
       <div class="os-goal-progress-card__skeleton" aria-hidden="true">
@@ -83,7 +92,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.currentValue || 0"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getCurrentValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -93,7 +102,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.targetValue || 0"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getTargetValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -103,7 +112,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="remainingValue()"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getRemainingValueAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -117,7 +126,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           <os-money-display
             [value]="goalData()?.suggestedAmount!"
             [currency]="getCurrencyFromUnit()"
-            [size]="'sm'"
+            [size]="'xs'"
             [ariaLabel]="getSuggestedAmountAriaLabel()"
             class="os-goal-progress-card__value"
           />
@@ -135,30 +144,23 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       </div>
       } @if (showActions() && goalData()?.id) {
       <footer class="os-goal-progress-card__actions">
-        <button
-          type="button"
-          class="os-goal-progress-card__action"
+        <os-button
+          variant="primary"
+          size="small"
+          icon="add"
+          (buttonClick)="onAportar()"
           [attr.aria-label]="'Aportar na meta ' + goalData()?.title"
-          (click)="onAportar()"
         >
           Aportar
-        </button>
-        <button
-          type="button"
-          class="os-goal-progress-card__action"
-          [attr.aria-label]="'Editar meta ' + goalData()?.title"
-          (click)="onEditar()"
-        >
-          Editar
-        </button>
-        <button
-          type="button"
-          class="os-goal-progress-card__action os-goal-progress-card__action--danger"
-          [attr.aria-label]="'Excluir meta ' + goalData()?.title"
-          (click)="onExcluir()"
-        >
-          Excluir
-        </button>
+        </os-button>
+        <os-edit-button
+          [ariaLabel]="'Editar meta ' + goalData()?.title"
+          (editClick)="onEditar($event)"
+        />
+        <os-delete-button
+          [ariaLabel]="'Excluir meta ' + goalData()?.title"
+          (deleteClick)="onExcluir()"
+        />
       </footer>
       } }
     </div>
@@ -167,6 +169,8 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsGoalProgressCardComponent {
+  private readonly localeService = inject(LocaleService);
+
   readonly goalData = input<GoalProgressData | null>(null);
   readonly variant = input<'default' | 'compact' | 'extended'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
@@ -174,9 +178,6 @@ export class OsGoalProgressCardComponent {
   readonly ariaLabel = input<string>('Card de progresso da meta');
   readonly showActions = input<boolean>(false);
   readonly showSuggestedAmount = input<boolean>(false);
-
-  readonly cardClick = output<GoalProgressData>();
-  readonly cardExpand = output<GoalProgressData>();
 
   readonly aportar = output<string>();
   readonly editar = output<string>();
@@ -245,47 +246,27 @@ export class OsGoalProgressCardComponent {
   getCurrentValueAriaLabel(): string {
     const data = this.goalData();
     const value = data?.currentValue || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Valor atual: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor atual: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getTargetValueAriaLabel(): string {
     const data = this.goalData();
     const value = data?.targetValue || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Valor da meta: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor da meta: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getRemainingValueAriaLabel(): string {
     const value = this.remainingValue();
-    const currency = this.getCurrencyFromUnit();
-    return `Valor restante: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Valor restante: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getSuggestedAmountAriaLabel(): string {
     const value = this.goalData()?.suggestedAmount || 0;
-    const currency = this.getCurrencyFromUnit();
-    return `Aporte sugerido: ${new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)}`;
+    const currency = this.getCurrencyFromUnit() as 'BRL' | 'USD' | 'EUR' | 'GBP';
+    return `Aporte sugerido: ${this.localeService.formatCurrency(value, currency)}`;
   }
 
   getCurrencyFromUnit(): string {
@@ -298,28 +279,7 @@ export class OsGoalProgressCardComponent {
 
   formatDeadline(date: Date | undefined): string {
     if (!date) return '';
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
-  }
-
-  onCardClick(): void {
-    const data = this.goalData();
-    if (data && !this.isLoading()) {
-      this.cardClick.emit(data);
-    }
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      const data = this.goalData();
-      if (data && !this.isLoading()) {
-        this.cardExpand.emit(data);
-      }
-    }
+    return this.localeService.formatDateShort(date);
   }
 
   onAportar(): void {
@@ -329,7 +289,8 @@ export class OsGoalProgressCardComponent {
     }
   }
 
-  onEditar(): void {
+  onEditar(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.editar.emit(data.id);

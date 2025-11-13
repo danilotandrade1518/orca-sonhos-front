@@ -15,8 +15,15 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
 import { AccountFormComponent } from '../../components/account-form/account-form.component';
 import { TransferModalComponent } from '../../components/transfer-modal/transfer-modal.component';
-import { ReconcileModalComponent } from '../../components/reconcile-modal/reconcile-modal.component';
 import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import {
+  OsPageHeaderComponent,
+  PageHeaderAction,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
+import { OsEntityListComponent } from '@shared/ui-components/organisms/os-entity-list/os-entity-list.component';
+import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import type { AccountDto } from '../../../../../dtos/account/account-types';
 
 @Component({
@@ -27,150 +34,80 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
     AccountCardComponent,
     AccountFormComponent,
     TransferModalComponent,
-    ReconcileModalComponent,
     ConfirmDeleteModalComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsButtonComponent,
+    OsEntityListComponent,
+    OsAlertComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="os-accounts" role="main" aria-label="Página de contas">
-      <a href="#main-content" class="os-accounts__skip-link">Pular para conteúdo principal</a>
+    <os-page variant="default" size="medium" ariaLabel="Página de contas">
+      <os-page-header
+        title="Contas"
+        subtitle="Gerencie suas contas financeiras"
+        [actions]="pageHeaderActions()"
+        (actionClick)="onPageHeaderActionClick($event)"
+      />
 
-      <header class="os-accounts__header">
-        <div class="os-accounts__header-content">
-          <div>
-            <h1 class="os-accounts__title">Contas</h1>
-            <p class="os-accounts__subtitle">Gerencie suas contas financeiras</p>
-          </div>
-          <div class="os-accounts__actions">
-            <button
-              type="button"
-              class="os-accounts__action-button os-accounts__action-button--primary"
-              (click)="openCreateModal()"
-              [disabled]="!selectedBudgetId()"
-              aria-label="Criar nova conta"
-            >
-              Nova Conta
-            </button>
-            <button
-              type="button"
-              class="os-accounts__action-button os-accounts__action-button--secondary"
-              (click)="openTransferModal()"
-              [disabled]="!selectedBudgetId() || !hasAccounts()"
-              aria-label="Transferir entre contas"
-            >
-              Transferir
-            </button>
-            <button
-              type="button"
-              class="os-accounts__action-button os-accounts__action-button--secondary"
-              (click)="openReconcileModal()"
-              [disabled]="!selectedBudgetId() || !hasAccounts()"
-              aria-label="Reconciliar conta"
-            >
-              Reconciliar
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div
-        class="os-accounts__live-region"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        [attr.aria-label]="state.loading() ? 'Carregando contas' : ''"
+      @if (currentState() === 'error') {
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar contas'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
       >
-        {{ state.loading() ? 'Carregando contas...' : '' }}
-      </div>
-
-      @if (state.error()) {
-      <div
-        class="os-accounts__live-region os-accounts__live-region--error"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        {{ state.error() }}
-      </div>
-      }
-
-      <div id="main-content" tabindex="-1" class="os-accounts__content">
-        @switch (currentState()) { @case ('loading') {
-        <div
-          class="os-accounts__loading"
-          role="status"
-          aria-live="polite"
-          aria-label="Carregando contas"
-        >
-          <div class="os-accounts__spinner" aria-hidden="true"></div>
-          <p>Carregando contas...</p>
-        </div>
-        } @case ('error') {
-        <div class="os-accounts__error" role="alert" aria-live="assertive">
-          <p class="os-accounts__error-message">{{ errorMessage() }}</p>
-          <button
-            type="button"
-            class="os-accounts__retry-button"
-            (click)="retry()"
-            aria-label="Tentar carregar contas novamente"
+        {{ errorMessage() }}
+        <div class="accounts-page__error-action">
+          <os-button
+            variant="primary"
+            size="medium"
+            icon="refresh"
+            (buttonClick)="retry()"
+            [attr.aria-label]="'Tentar carregar contas novamente'"
           >
             Tentar Novamente
-          </button>
+          </os-button>
         </div>
-        } @case ('empty') {
-        <div class="os-accounts__empty" role="status" aria-live="polite">
-          <div class="os-accounts__empty-icon" aria-hidden="true">💰</div>
-          <h2 class="os-accounts__empty-title">Nenhuma conta cadastrada</h2>
-          <p class="os-accounts__empty-description">
-            Crie sua primeira conta para começar a gerenciar suas finanças
-          </p>
-          <button
-            type="button"
-            class="os-accounts__create-button"
-            (click)="openCreateModal()"
-            [disabled]="!selectedBudgetId()"
-            aria-label="Criar primeira conta"
-          >
-            Criar primeira conta
-          </button>
-        </div>
-        } @default {
-        <div class="os-accounts__grid">
-          @for (account of accounts(); track account.id) {
-          <os-account-card
-            [account]="account"
-            [actions]="{ edit: true, delete: true }"
-            (edit)="onEditAccount($event)"
-            (delete)="onDeleteAccount($event)"
-          />
-          }
-        </div>
-        } }
-      </div>
+      </os-alert>
+      }
+
+      <os-entity-list
+        layout="grid"
+        size="medium"
+        [isLoading]="currentState() === 'loading'"
+        [isEmpty]="currentState() === 'empty'"
+        loadingText="Carregando contas..."
+        emptyTitle="Nenhuma conta cadastrada"
+        emptyText="Crie sua primeira conta para começar a gerenciar suas finanças"
+        emptyIcon="account_balance"
+        [emptyAction]="!!selectedBudgetId()"
+        emptyActionLabel="Criar primeira conta"
+        emptyActionIcon="plus"
+        ariaLabel="Lista de contas"
+        (emptyActionClick)="openCreateModal()"
+      >
+        @for (account of accounts(); track account.id) {
+        <os-account-card
+          [account]="account"
+          [actions]="{ edit: true, delete: true }"
+          (edit)="onEditAccount($event)"
+          (delete)="onDeleteAccount($event)"
+        />
+        }
+      </os-entity-list>
 
       @if (showCreateModal()) {
       <os-account-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showEditModal() && editingAccount()) {
-      <os-account-form
-        [account]="editingAccount()!"
-        [mode]="'edit'"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
       } @if (showTransferModal()) {
       <os-transfer-modal (closed)="closeTransferModal()" />
-      } @if (showReconcileModal() && reconcilingAccount()) {
-      <os-reconcile-modal
-        [account]="reconcilingAccount()!"
-        (closed)="closeReconcileModal()"
-      />
       } @if (showDeleteModal() && deletingAccount()) {
-      <os-confirm-delete-modal
-        [account]="deletingAccount()!"
-        (closed)="closeDeleteModal()"
-      />
+      <os-confirm-delete-modal [account]="deletingAccount()!" (closed)="closeDeleteModal()" />
       }
-    </section>
+    </os-page>
   `,
   styleUrl: './accounts.page.scss',
 })
@@ -186,20 +123,13 @@ export class AccountsPage implements OnInit {
   readonly accounts = computed(() => this.state.accountsByBudgetId());
   readonly hasAccounts = computed(() => this.accounts().length > 0);
 
-  readonly editingAccount = signal<AccountDto | null>(null);
   readonly deletingAccount = signal<AccountDto | null>(null);
-  readonly reconcilingAccount = signal<AccountDto | null>(null);
 
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
   });
 
-  readonly showEditModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'edit' && this.editingAccount() !== null;
-  });
-
   readonly showTransferModal = signal(false);
-  readonly showReconcileModal = signal(false);
   readonly showDeleteModal = signal(false);
 
   readonly currentState = computed(() => {
@@ -211,6 +141,33 @@ export class AccountsPage implements OnInit {
   });
 
   readonly errorMessage = computed(() => this.state.error() || 'Erro ao carregar contas');
+
+  readonly pageHeaderActions = computed<PageHeaderAction[]>(() => {
+    return [
+      {
+        label: 'Nova Conta',
+        icon: 'plus',
+        variant: 'primary',
+        size: 'medium',
+        disabled: !this.selectedBudgetId(),
+      },
+      {
+        label: 'Transferir',
+        icon: 'swap_horiz',
+        variant: 'secondary',
+        size: 'medium',
+        disabled: !this.selectedBudgetId() || !this.hasAccounts(),
+      },
+    ];
+  });
+
+  onPageHeaderActionClick(action: PageHeaderAction): void {
+    if (action.label === 'Nova Conta') {
+      this.openCreateModal();
+    } else if (action.label === 'Transferir') {
+      this.openTransferModal();
+    }
+  }
 
   constructor() {
     effect(() => {
@@ -236,15 +193,6 @@ export class AccountsPage implements OnInit {
     if (budgetId) {
       this.state.loadAccounts();
     }
-    
-    const accountId = this.route.snapshot.paramMap.get('id');
-    if (accountId && this.route.snapshot.data['modalMode'] === 'edit') {
-      const accounts = this.state.accounts();
-      const account = accounts.find((a) => a.id === accountId);
-      if (account) {
-        this.editingAccount.set(account);
-      }
-    }
   }
 
   retry(): void {
@@ -263,20 +211,8 @@ export class AccountsPage implements OnInit {
     this.showTransferModal.set(true);
   }
 
-  openReconcileModal(): void {
-    if (!this.selectedBudgetId() || !this.hasAccounts()) {
-      return;
-    }
-    const firstAccount = this.accounts()[0];
-    if (firstAccount) {
-      this.reconcilingAccount.set(firstAccount);
-      this.showReconcileModal.set(true);
-    }
-  }
-
   onEditAccount(account: AccountDto): void {
-    this.editingAccount.set(account);
-    this.router.navigate([account.id, 'edit'], { relativeTo: this.route });
+    this.router.navigate([account.id], { relativeTo: this.route });
   }
 
   onDeleteAccount(account: AccountDto): void {
@@ -288,23 +224,16 @@ export class AccountsPage implements OnInit {
     this.showTransferModal.set(false);
   }
 
-  closeReconcileModal(): void {
-    this.showReconcileModal.set(false);
-    this.reconcilingAccount.set(null);
-  }
-
   closeDeleteModal(): void {
     this.showDeleteModal.set(false);
     this.deletingAccount.set(null);
   }
 
   onFormSaved(): void {
-    this.editingAccount.set(null);
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 
   onFormCancelled(): void {
-    this.editingAccount.set(null);
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }

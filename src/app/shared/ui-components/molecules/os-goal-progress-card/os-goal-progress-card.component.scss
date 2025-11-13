@@ -8,30 +8,10 @@
   border-radius: var(--os-border-radius-lg);
   padding: var(--os-spacing-3) var(--os-spacing-4);
   transition: all var(--os-transition-normal) ease-in-out;
-  cursor: pointer;
   position: relative;
   overflow: hidden; // Mantém as bordas arredondadas
   box-sizing: border-box; // Garante que padding seja incluído no tamanho total
   width: 100%; // Ocupa 100% do container do grid
-
-  // Hover effects
-  &:hover {
-    border-color: var(--os-color-primary-300);
-    box-shadow: var(--os-shadow-md);
-    transform: translateY(-2px);
-  }
-
-  // Focus styles
-  &:focus-visible {
-    outline: 2px solid var(--os-color-primary-500);
-    outline-offset: 2px;
-  }
-
-  // Active state
-  &:active {
-    transform: translateY(0);
-    box-shadow: var(--os-shadow-sm);
-  }
 
   // Header section
   &__header {
@@ -85,24 +65,16 @@
   // Values section
   &__values {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--os-spacing-3);
     margin-bottom: var(--os-spacing-3);
     width: 100%; // Garante que o grid ocupe 100% da largura disponível
     box-sizing: border-box; // Inclui padding no cálculo de largura
 
-    // Quando mostrar "Aporte sugerido", usar 4 colunas
+    // Quando mostrar "Aporte sugerido", usar 2 colunas também (2 linhas de 2 colunas)
     &:has(.os-goal-progress-card__suggested) {
-      // Reduz gap para dar mais espaço às colunas
-      gap: var(--os-spacing-2); // 8px em vez de 12px
-      // Largura mínima suficiente para valores como "R$10.000,00" (cerca de 90px)
-      // Mas aumenta para 120px para garantir espaço confortável
-      grid-template-columns: repeat(4, minmax(120px, 1fr));
-
-      @media (max-width: 768px) {
-        gap: var(--os-spacing-3); // Restaura gap original
-        grid-template-columns: repeat(2, 1fr);
-      }
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--os-spacing-3);
 
       @media (max-width: 480px) {
         grid-template-columns: 1fr;
@@ -114,10 +86,15 @@
   &__target,
   &__remaining,
   &__suggested {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     text-align: center;
     min-width: 0; // Permite que o grid se ajuste
     box-sizing: border-box;
-    // Remove overflow: hidden para permitir que valores sejam exibidos completamente
+    overflow: hidden; // Previne overflow
+    max-width: 100%;
   }
 
   &__value-label {
@@ -127,28 +104,62 @@
     color: var(--os-color-text-secondary);
     margin-bottom: var(--os-spacing-1);
     white-space: nowrap; // Mantém o label em uma linha
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__value {
-    display: block;
-    font-size: var(--os-font-size-sm);
-    font-weight: var(--os-font-weight-semibold);
-    color: var(--os-color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
-    // Remove overflow: hidden para permitir que valores sejam exibidos completamente
-    white-space: nowrap; // Mantém valores em uma linha
+    overflow: hidden; // Permite ellipsis quando necessário
+    min-width: 0; // Permite que o container encolha se necessário
 
-    // Estilos para o componente os-money-display quando usado dentro deste container
+    // Garante que o os-money-display seja renderizado corretamente
+    // Tamanho xs garante que valores até 999.999,99 caibam
+    ::ng-deep os-money-display,
+    ::ng-deep .os-money-display-host {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
+
     ::ng-deep .os-money-display {
-      display: inline-block; // Muda de block para inline-block para melhor ajuste
-      width: auto; // Permite que o componente se ajuste ao conteúdo
-      max-width: 100%; // Mas ainda respeita o limite do container
-      box-sizing: border-box;
-      
-      .os-money-display__value {
-        white-space: nowrap;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+      flex-shrink: 1 !important;
+
+      .os-money-display__currency {
+        overflow: visible !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
+
+      .os-money-display__value {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+      }
+    }
+  }
+
+  // Media query específica para telas entre 856px e 1070px
+  @media (min-width: 856px) and (max-width: 1070px) {
+    &__values {
+      gap: var(--os-spacing-2);
     }
   }
 
@@ -160,9 +171,11 @@
   // Actions section
   &__actions {
     display: flex;
-    gap: var(--os-spacing-2);
-    margin-top: var(--os-spacing-3);
-    padding-top: var(--os-spacing-3);
+    gap: var(--os-spacing-xs);
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: var(--os-spacing-sm);
+    padding-top: var(--os-spacing-sm);
     border-top: 1px solid var(--os-color-border);
   }
 
@@ -356,11 +369,6 @@
     .os-goal-progress-card__title {
       color: var(--os-color-success-700);
     }
-
-    &:hover {
-      border-color: var(--os-color-success-600);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-    }
   }
 
   &--overdue {
@@ -370,21 +378,10 @@
     .os-goal-progress-card__title {
       color: var(--os-color-error-700);
     }
-
-    &:hover {
-      border-color: var(--os-color-error-600);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
-    }
   }
 
   &--loading {
-    cursor: default;
     pointer-events: none;
-
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
   }
 }
 
@@ -402,25 +399,14 @@
 @media (max-width: 768px) {
   .os-goal-progress-card {
     &__values {
-      grid-template-columns: 1fr;
       gap: var(--os-spacing-2);
     }
 
-    &__current,
-    &__target,
-    &__remaining,
-    &__suggested {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    &__value-label {
-      margin-bottom: 0;
-    }
-
     &__actions {
-      flex-direction: column;
+      flex-direction: row;
+      justify-content: flex-end;
+      padding-top: var(--os-spacing-xs);
+      margin-top: var(--os-spacing-xs);
     }
   }
 }
@@ -437,6 +423,21 @@
     &__status {
       margin-left: 0;
       align-self: flex-start;
+    }
+
+    &__values {
+      grid-template-columns: 1fr;
+      gap: var(--os-spacing-2);
+    }
+
+    &__current,
+    &__target,
+    &__remaining,
+    &__suggested {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
   }
 }
@@ -456,10 +457,6 @@
 @media (prefers-reduced-motion: reduce) {
   .os-goal-progress-card {
     transition: none;
-
-    &:hover {
-      transform: none;
-    }
 
     &__skeleton {
       animation: none;
