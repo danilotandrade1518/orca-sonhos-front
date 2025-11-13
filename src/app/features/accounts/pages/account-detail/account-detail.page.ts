@@ -357,4 +357,3 @@ export class AccountDetailPage implements OnInit {
     }
   }
 }
-
