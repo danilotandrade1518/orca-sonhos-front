@@ -10,6 +10,8 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
   private _isAuthenticated = false;
   private _token: string | null = null;
   private _onAuthStateChanged: ((user: AuthUser | null) => void) | null = null;
+  private _redirectResult: AuthResult | null = null;
+  private _simulateFirstAccess = false;
 
   initializeAuthState(onAuthStateChanged: (user: AuthUser | null) => void): void {
     this._onAuthStateChanged = onAuthStateChanged;
@@ -89,6 +91,67 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
     this._isAuthenticated = user !== null;
     if (this._onAuthStateChanged) {
       this._onAuthStateChanged(user);
+    }
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    this._simulateFirstAccess = Math.random() > 0.5;
+
+    const mockUser: AuthUser = this._simulateFirstAccess
+      ? {
+          id: 'mock-user-first-access-id',
+          email: 'newuser@orca-sonhos.com',
+          name: null,
+          avatar: null,
+          metadata: { provider: 'google', isFirstAccess: true },
+        }
+      : {
+          id: 'mock-user-id',
+          email: 'user@orca-sonhos.com',
+          name: 'Mock User',
+          avatar: null,
+          metadata: { provider: 'google' },
+        };
+
+    this._redirectResult = {
+      user: mockUser,
+      token: 'mock-google-token',
+    };
+  }
+
+  async getRedirectResult(): Promise<AuthResult | null> {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    const result = this._redirectResult;
+    this._redirectResult = null;
+
+    if (result) {
+      this._currentUser = result.user;
+      this._isAuthenticated = true;
+      this._token = result.token || null;
+
+      if (this._onAuthStateChanged) {
+        this._onAuthStateChanged(result.user);
+      }
+    }
+
+    return result;
+  }
+
+  async updateUserProfile(name: string): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    if (this._currentUser) {
+      this._currentUser = {
+        ...this._currentUser,
+        name,
+      };
+
+      if (this._onAuthStateChanged) {
+        this._onAuthStateChanged(this._currentUser);
+      }
     }
   }
 }

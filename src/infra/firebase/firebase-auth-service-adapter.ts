@@ -5,6 +5,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  updateProfile,
+  UserCredential,
 } from '@angular/fire/auth';
 import {
   ExternalAuthServiceAdapter,
@@ -117,5 +122,50 @@ export class FirebaseAuthServiceAdapter implements ExternalAuthServiceAdapter {
 
   isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    const provider = new GoogleAuthProvider();
+    await signInWithRedirect(this.auth, provider);
+  }
+
+  async getRedirectResult(): Promise<AuthResult | null> {
+    try {
+      const result: UserCredential | null = await getRedirectResult(this.auth);
+      if (!result) {
+        return null;
+      }
+
+      const user = result.user;
+      const token = await user.getIdToken();
+
+      const authUser: AuthUser = {
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+        avatar: user.photoURL,
+        metadata: {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+      };
+
+      return {
+        user: authUser,
+        token,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUserProfile(name: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      throw new Error('Nenhum usuário autenticado');
+    }
+
+    await updateProfile(user, { displayName: name });
   }
 }

@@ -17,7 +17,7 @@ Implementar funcionalidade completa de registro de novos usuários utilizando Fi
 
 ---
 
-## 📅 FASE 1: Infraestrutura Base - Adapters e Serviços [Status: ⏳]
+## 📅 FASE 1: Infraestrutura Base - Adapters e Serviços [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -25,7 +25,7 @@ Estender a infraestrutura de autenticação para suportar Google OAuth, incluind
 
 ### 📋 Tarefas
 
-#### 1.1 Estender Interface ExternalAuthServiceAdapter [⏳]
+#### 1.1 Estender Interface ExternalAuthServiceAdapter [✅]
 
 **Descrição**: Adicionar métodos necessários para Google OAuth na interface `ExternalAuthServiceAdapter`
 
@@ -42,7 +42,7 @@ Estender a infraestrutura de autenticação para suportar Google OAuth, incluind
 
 ---
 
-#### 1.2 Implementar Métodos no FirebaseAuthServiceAdapter [⏳]
+#### 1.2 Implementar Métodos no FirebaseAuthServiceAdapter [✅]
 
 **Descrição**: Implementar métodos de Google OAuth no adapter Firebase
 
@@ -60,7 +60,7 @@ Estender a infraestrutura de autenticação para suportar Google OAuth, incluind
 
 ---
 
-#### 1.3 Implementar Métodos no AuthService [⏳]
+#### 1.3 Implementar Métodos no AuthService [✅]
 
 **Descrição**: Expor métodos públicos no AuthService para Google OAuth
 
@@ -78,7 +78,7 @@ Estender a infraestrutura de autenticação para suportar Google OAuth, incluind
 
 ---
 
-#### 1.4 Implementar Métodos no MockAuthServiceAdapter [⏳]
+#### 1.4 Implementar Métodos no MockAuthServiceAdapter [✅]
 
 **Descrição**: Simular fluxo Google OAuth no adapter mock para desenvolvimento
 
@@ -97,17 +97,20 @@ Estender a infraestrutura de autenticação para suportar Google OAuth, incluind
 
 ### 🧪 Critérios de Validação
 
-- [ ] Interface `ExternalAuthServiceAdapter` estendida com novos métodos
-- [ ] `FirebaseAuthServiceAdapter` implementa todos os métodos corretamente
-- [ ] `AuthService` expõe métodos públicos e gerencia estados adequadamente
-- [ ] `MockAuthServiceAdapter` simula fluxo Google OAuth
-- [ ] Detecção de primeiro acesso funciona (verifica `displayName` vazio)
-- [ ] Tratamento de erros implementado em todos os métodos
+- [x] Interface `ExternalAuthServiceAdapter` estendida com novos métodos
+- [x] `FirebaseAuthServiceAdapter` implementa todos os métodos corretamente
+- [x] `AuthService` expõe métodos públicos e gerencia estados adequadamente
+- [x] `MockAuthServiceAdapter` simula fluxo Google OAuth
+- [x] Detecção de primeiro acesso funciona (verifica `displayName` vazio)
+- [x] Tratamento de erros implementado em todos os métodos
 - [ ] Testes unitários básicos passando para adapters e serviço
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Implementação concluída**: Todos os métodos Google OAuth implementados nos adapters e serviços
+- **Decisão técnica**: `handleRedirectResult()` retorna objeto com `isFirstAccess` para facilitar lógica de redirecionamento
+- **Mock adapters**: Ambos `MockAuthServiceAdapter` e `MockExternalAuthServiceAdapter` atualizados para suportar Google OAuth
+- **Detecção de primeiro acesso**: Verifica se `name` está vazio ou null após autenticação Google
 
 ---
 

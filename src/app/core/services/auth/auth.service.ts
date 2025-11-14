@@ -98,4 +98,68 @@ export class AuthService {
   signOutObservable(): Observable<void> {
     return from(this.signOut());
   }
+
+  async signInWithGoogle(): Promise<void> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      await this.externalAuthService.signInWithGoogle();
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao autenticar com Google';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
+
+  async handleRedirectResult(): Promise<{ isFirstAccess: boolean; user: AuthUser } | null> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      const result = await this.externalAuthService.getRedirectResult();
+      if (!result) {
+        return null;
+      }
+
+      this._user.set(result.user);
+      const isFirstAccess = !result.user.name || result.user.name.trim() === '';
+
+      return {
+        isFirstAccess,
+        user: result.user,
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar autenticação';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
+
+  async completeProfile(name: string): Promise<void> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      await this.externalAuthService.updateUserProfile(name);
+
+      const currentUser = this._user();
+      if (currentUser) {
+        this._user.set({
+          ...currentUser,
+          name,
+        });
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao atualizar perfil';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
 }

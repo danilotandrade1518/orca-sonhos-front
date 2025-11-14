@@ -27,6 +27,9 @@ export interface ExternalAuthServiceAdapter {
   refreshToken(): Promise<string | null>;
   getCurrentUser(): AuthUser | null;
   isAuthenticated(): boolean;
+  signInWithGoogle(): Promise<void>;
+  getRedirectResult(): Promise<AuthResult | null>;
+  updateUserProfile(name: string): Promise<void>;
 }
 
 export const EXTERNAL_AUTH_SERVICE_ADAPTER = new InjectionToken<ExternalAuthServiceAdapter>(
