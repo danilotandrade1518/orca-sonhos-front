@@ -78,9 +78,9 @@ describe('AuthGuard', () => {
       expect(result).toBe(false);
     });
 
-    it('should call router navigate to login', () => {
+    it('should call router navigate to register', () => {
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: mockState.url },
       });
     });
@@ -100,7 +100,7 @@ describe('AuthGuard', () => {
       mockState.url = '/budget/123/overview';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/123/overview' },
       });
     });
@@ -109,7 +109,7 @@ describe('AuthGuard', () => {
       mockState.url = '/';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/' },
       });
     });
@@ -118,7 +118,7 @@ describe('AuthGuard', () => {
       mockState.url = '/budget?page=2&filter=active';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget?page=2&filter=active' },
       });
     });
@@ -127,7 +127,7 @@ describe('AuthGuard', () => {
       mockState.url = '/budget#section1';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget#section1' },
       });
     });
@@ -136,7 +136,7 @@ describe('AuthGuard', () => {
       mockState.url = '';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '' },
       });
     });
@@ -145,7 +145,7 @@ describe('AuthGuard', () => {
       mockState.url = '/budget/123/transactions?page=1&size=10&sort=date#top';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/123/transactions?page=1&size=10&sort=date#top' },
       });
     });
@@ -154,7 +154,7 @@ describe('AuthGuard', () => {
       mockState.url = '/budget/search?q=test%20query&category=expense';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/search?q=test%20query&category=expense' },
       });
     });
@@ -163,7 +163,7 @@ describe('AuthGuard', () => {
       mockState.url = '/reports/monthly?year=2024&month=1&format=pdf&download=true';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/reports/monthly?year=2024&month=1&format=pdf&download=true' },
       });
     });
@@ -172,7 +172,7 @@ describe('AuthGuard', () => {
       mockState.url = '/admin/users/123/edit?tab=permissions';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/admin/users/123/edit?tab=permissions' },
       });
     });
@@ -184,7 +184,7 @@ describe('AuthGuard', () => {
       mockState.url = null as unknown as string;
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: null },
       });
     });
@@ -194,7 +194,7 @@ describe('AuthGuard', () => {
       mockState.url = undefined as unknown as string;
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: undefined },
       });
     });
@@ -206,7 +206,7 @@ describe('AuthGuard', () => {
       mockState.url = longUrl;
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: longUrl },
       });
     });
@@ -216,7 +216,7 @@ describe('AuthGuard', () => {
       mockState.url = '/search?q=hello%20world&category=test%20category';
       TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/search?q=hello%20world&category=test%20category' },
       });
     });

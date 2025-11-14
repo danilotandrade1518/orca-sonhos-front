@@ -219,7 +219,7 @@ Criar página de registro (`/register`) com botão "Entrar com Google", seguindo
 
 ---
 
-## 📅 FASE 3: Página de Completar Perfil [Status: ⏳]
+## 📅 FASE 3: Página de Completar Perfil [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -227,7 +227,7 @@ Criar página de completar perfil (`/register/complete-profile`) com formulário
 
 ### 📋 Tarefas
 
-#### 3.1 Criar Estrutura do Componente CompleteProfilePage [⏳]
+#### 3.1 Criar Estrutura do Componente CompleteProfilePage [✅]
 
 **Descrição**: Criar estrutura básica do componente de completar perfil
 
@@ -246,7 +246,7 @@ Criar página de completar perfil (`/register/complete-profile`) com formulário
 
 ---
 
-#### 3.2 Implementar Formulário Reativo com Validação [⏳]
+#### 3.2 Implementar Formulário Reativo com Validação [✅]
 
 **Descrição**: Criar formulário reativo para campo de nome
 
@@ -266,7 +266,7 @@ Criar página de completar perfil (`/register/complete-profile`) com formulário
 
 ---
 
-#### 3.3 Implementar UI da Página de Completar Perfil [⏳]
+#### 3.3 Implementar UI da Página de Completar Perfil [✅]
 
 **Descrição**: Implementar interface seguindo `layout-specification.md`
 
@@ -287,7 +287,7 @@ Criar página de completar perfil (`/register/complete-profile`) com formulário
 
 ---
 
-#### 3.4 Implementar Lógica de Atualização de Perfil [⏳]
+#### 3.4 Implementar Lógica de Atualização de Perfil [✅]
 
 **Descrição**: Implementar lógica para atualizar perfil e redirecionar
 
@@ -308,25 +308,31 @@ Criar página de completar perfil (`/register/complete-profile`) com formulário
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página de completar perfil renderiza corretamente seguindo design system
-- [ ] Formulário reativo criado com validações corretas (2-100 caracteres)
-- [ ] Campo de nome pré-preenchido com nome do Google
-- [ ] Validação em tempo real funciona corretamente
-- [ ] Botão "Continuar" habilitado apenas quando nome válido
-- [ ] Atualização de perfil funciona corretamente
-- [ ] Mensagem de sucesso exibida após atualização
-- [ ] Redirecionamento para `/dashboard` funciona após sucesso
-- [ ] Estados de loading e erro funcionando adequadamente
-- [ ] Responsividade mobile-first implementada corretamente
-- [ ] Acessibilidade WCAG 2.1 AA (keyboard navigation, ARIA, contraste)
+- [x] Página de completar perfil renderiza corretamente seguindo design system
+- [x] Formulário reativo criado com validações corretas (2-100 caracteres)
+- [x] Campo de nome pré-preenchido com nome do Google
+- [x] Validação em tempo real funciona corretamente
+- [x] Botão "Continuar" habilitado apenas quando nome válido
+- [x] Atualização de perfil funciona corretamente
+- [x] Mensagem de sucesso exibida após atualização
+- [x] Redirecionamento para `/dashboard` funciona após sucesso
+- [x] Estados de loading e erro funcionando adequadamente
+- [x] Responsividade mobile-first implementada corretamente
+- [x] Acessibilidade WCAG 2.1 AA (keyboard navigation, ARIA, contraste)
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Implementação concluída**: Todos os componentes da página de completar perfil implementados
+- **Decisão técnica**: Usado `os-form-field` com `formControlName` para integração com reactive forms
+- **Validação**: Implementada validação em tempo real com `Validators.minLength(2)` e `Validators.maxLength(100)`
+- **Pré-preenchimento**: Campo pré-preenchido com nome do Google via `AuthService.user()` no `ngOnInit`
+- **Rotas**: Adicionada rota `/register/complete-profile` no `auth.routes.ts` com lazy loading
+- **Acessibilidade**: Implementados ARIA attributes, keyboard navigation e estados visuais adequados
+- **Estados**: Implementados estados de loading, erro e sucesso com mensagens apropriadas
 
 ---
 
-## 📅 FASE 4: Rotas e Integração [Status: ⏳]
+## 📅 FASE 4: Rotas e Integração [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -334,7 +340,7 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 
 ### 📋 Tarefas
 
-#### 4.1 Adicionar Rotas de Registro [⏳]
+#### 4.1 Adicionar Rotas de Registro [✅]
 
 **Descrição**: Adicionar rotas públicas de registro no `app.routes.ts`
 
@@ -343,7 +349,7 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 - Configurar rotas como públicas (sem guard de autenticação)
 - Garantir lazy loading para otimização de bundle
 
-**Arquivo**: `src/app/app.routes.ts`
+**Arquivo**: `src/app/features/auth/auth.routes.ts`
 
 **Critério de Conclusão**: Rotas adicionadas, lazy loading funcionando, rotas acessíveis publicamente
 
@@ -351,7 +357,7 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 
 ---
 
-#### 4.2 Configurar Guards e Proteção de Rotas [⏳]
+#### 4.2 Configurar Guards e Proteção de Rotas [✅]
 
 **Descrição**: Configurar guards para proteger rotas adequadamente
 
@@ -368,7 +374,7 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 
 ---
 
-#### 4.3 Validar Fluxo Completo de Integração [⏳]
+#### 4.3 Validar Fluxo Completo de Integração [✅]
 
 **Descrição**: Validar fluxo completo de autenticação end-to-end
 
@@ -388,18 +394,24 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 
 ### 🧪 Critérios de Validação
 
-- [ ] Rotas `/register` e `/register/complete-profile` adicionadas e funcionando
-- [ ] Lazy loading implementado corretamente
-- [ ] Guards configurados adequadamente (rotas públicas acessíveis)
-- [ ] Fluxo completo de primeiro acesso funciona end-to-end
-- [ ] Fluxo de usuário existente funciona end-to-end
-- [ ] Redirecionamentos funcionam corretamente em todos os cenários
-- [ ] Estado do `AuthService` atualizado corretamente
-- [ ] Tratamento de erros funciona em todas as etapas
+- [x] Rotas `/register` e `/register/complete-profile` adicionadas e funcionando
+- [x] Lazy loading implementado corretamente
+- [x] Guards configurados adequadamente (rotas públicas acessíveis)
+- [x] Fluxo completo de primeiro acesso funciona end-to-end
+- [x] Fluxo de usuário existente funciona end-to-end
+- [x] Redirecionamentos funcionam corretamente em todos os cenários
+- [x] Estado do `AuthService` atualizado corretamente
+- [x] Tratamento de erros funciona em todas as etapas
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Implementação concluída**: Todos os guards e rotas configurados corretamente
+- **Decisão técnica**: Criado `guestGuard` para impedir usuários autenticados de acessar rotas de registro
+- **Decisão técnica**: Criado `completeProfileGuard` para proteger rota de completar perfil (só permite usuários autenticados)
+- **Decisão técnica**: Aplicado `authGuard` no nível do `app-layout` para proteger todas as rotas filhas (dashboard, budgets, etc.)
+- **Decisão técnica**: Ajustado `authGuard` para redirecionar para `/register` ao invés de `/login` (não existe página de login ainda)
+- **Rotas protegidas**: Todas as rotas dentro do `app-layout` agora são protegidas pelo `authGuard`
+- **Rotas públicas**: Rotas de registro protegidas com `guestGuard` e `completeProfileGuard` conforme necessário
 
 ---
 
