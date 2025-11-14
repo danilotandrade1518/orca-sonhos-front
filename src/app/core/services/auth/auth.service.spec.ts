@@ -1,5 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   AuthUser,
@@ -253,6 +254,265 @@ describe('AuthService', () => {
     it('should return observable for sign out', async () => {
       await service.signOutObservable().toPromise();
       expect(service.user()).toBeNull();
+    });
+  });
+
+  describe('Google OAuth', () => {
+    describe('signInWithGoogle', () => {
+      it('should call adapter signInWithGoogle', async () => {
+        const signInWithGoogleSpy = vi.spyOn(mockAdapter, 'signInWithGoogle');
+        
+        await service.signInWithGoogle();
+
+        expect(signInWithGoogleSpy).toHaveBeenCalled();
+      });
+
+      it('should set loading state during sign in', async () => {
+        expect(service.isLoading()).toBeFalsy();
+        
+        const signInPromise = service.signInWithGoogle();
+        
+        expect(service.isLoading()).toBeTruthy();
+
+        await signInPromise;
+        expect(service.isLoading()).toBeFalsy();
+      });
+
+      it('should handle errors when signInWithGoogle fails', async () => {
+        mockAdapter.signInWithGoogle = () => Promise.reject(new Error('Google auth failed'));
+
+        try {
+          await service.signInWithGoogle();
+          fail('Should have thrown an error');
+        } catch (error) {
+          expect((error as Error).message).toBe('Google auth failed');
+          expect(service.error()).toBe('Google auth failed');
+        }
+      });
+
+      it('should clear error before attempting sign in', async () => {
+        mockAdapter.signInWithGoogle = () => Promise.reject(new Error('Test error'));
+        
+        try {
+          await service.signInWithGoogle();
+        } catch {
+          expect(service.error()).toBe('Test error');
+        }
+
+        mockAdapter.signInWithGoogle = () => Promise.resolve();
+        await service.signInWithGoogle();
+
+        expect(service.error()).toBeNull();
+      });
+    });
+
+    describe('handleRedirectResult', () => {
+      it('should return null when no redirect result', async () => {
+        mockAdapter.getRedirectResult = () => Promise.resolve(null);
+
+        const result = await service.handleRedirectResult();
+
+        expect(result).toBeNull();
+        expect(service.isLoading()).toBeFalsy();
+      });
+
+      it('should detect first access when displayName is null', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: null,
+        };
+
+        mockAdapter.getRedirectResult = () => Promise.resolve({
+          user: mockUser,
+          token: 'mock-token',
+        });
+
+        const result = await service.handleRedirectResult();
+
+        expect(result).not.toBeNull();
+        expect(result?.isFirstAccess).toBe(true);
+        expect(result?.user).toEqual(mockUser);
+        expect(service.user()).toEqual(mockUser);
+      });
+
+      it('should detect first access when displayName is empty string', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: '',
+          avatar: null,
+        };
+
+        mockAdapter.getRedirectResult = () => Promise.resolve({
+          user: mockUser,
+          token: 'mock-token',
+        });
+
+        const result = await service.handleRedirectResult();
+
+        expect(result).not.toBeNull();
+        expect(result?.isFirstAccess).toBe(true);
+      });
+
+      it('should detect existing user when displayName is filled', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: 'Existing User',
+          avatar: null,
+        };
+
+        mockAdapter.getRedirectResult = () => Promise.resolve({
+          user: mockUser,
+          token: 'mock-token',
+        });
+
+        const result = await service.handleRedirectResult();
+
+        expect(result).not.toBeNull();
+        expect(result?.isFirstAccess).toBe(false);
+        expect(result?.user).toEqual(mockUser);
+        expect(service.user()).toEqual(mockUser);
+      });
+
+      it('should set loading state during redirect handling', async () => {
+        mockAdapter.getRedirectResult = () => Promise.resolve(null);
+
+        expect(service.isLoading()).toBeFalsy();
+        
+        const handlePromise = service.handleRedirectResult();
+        
+        expect(service.isLoading()).toBeTruthy();
+
+        await handlePromise;
+        expect(service.isLoading()).toBeFalsy();
+      });
+
+      it('should handle errors when getRedirectResult fails', async () => {
+        mockAdapter.getRedirectResult = () => Promise.reject(new Error('Redirect failed'));
+
+        try {
+          await service.handleRedirectResult();
+          fail('Should have thrown an error');
+        } catch (error) {
+          expect((error as Error).message).toBe('Redirect failed');
+          expect(service.error()).toBe('Redirect failed');
+        }
+      });
+
+      it('should update user state after successful redirect', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: 'Test User',
+          avatar: null,
+        };
+
+        mockAdapter.getRedirectResult = () => Promise.resolve({
+          user: mockUser,
+          token: 'mock-token',
+        });
+
+        await service.handleRedirectResult();
+
+        expect(service.user()).toEqual(mockUser);
+        expect(service.isAuthenticated()).toBeTruthy();
+      });
+    });
+
+    describe('completeProfile', () => {
+      it('should call adapter updateUserProfile', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: null,
+        };
+
+        mockAdapter.setMockUser(mockUser);
+        const updateProfileSpy = vi.spyOn(mockAdapter, 'updateUserProfile');
+
+        await service.completeProfile('New Name');
+
+        expect(updateProfileSpy).toHaveBeenCalledWith('New Name');
+      });
+
+      it('should update user state after profile completion', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: null,
+        };
+
+        mockAdapter.setMockUser(mockUser);
+
+        await service.completeProfile('Complete Name');
+
+        expect(service.user()?.name).toBe('Complete Name');
+      });
+
+      it('should set loading state during profile update', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: null,
+        };
+
+        mockAdapter.setMockUser(mockUser);
+
+        expect(service.isLoading()).toBeFalsy();
+        
+        const completePromise = service.completeProfile('New Name');
+        
+        expect(service.isLoading()).toBeTruthy();
+
+        await completePromise;
+        expect(service.isLoading()).toBeFalsy();
+      });
+
+      it('should handle errors when updateUserProfile fails', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: null,
+        };
+
+        mockAdapter.setMockUser(mockUser);
+        mockAdapter.updateUserProfile = () => Promise.reject(new Error('Update failed'));
+
+        try {
+          await service.completeProfile('New Name');
+          fail('Should have thrown an error');
+        } catch (error) {
+          expect((error as Error).message).toBe('Update failed');
+          expect(service.error()).toBe('Update failed');
+        }
+      });
+
+      it('should preserve other user properties when updating name', async () => {
+        const mockUser: AuthUser = {
+          id: 'user-123',
+          email: 'user@example.com',
+          name: null,
+          avatar: 'https://example.com/avatar.jpg',
+          metadata: { provider: 'google' },
+        };
+
+        mockAdapter.setMockUser(mockUser);
+
+        await service.completeProfile('New Name');
+
+        const updatedUser = service.user();
+        expect(updatedUser?.name).toBe('New Name');
+        expect(updatedUser?.id).toBe('user-123');
+        expect(updatedUser?.email).toBe('user@example.com');
+        expect(updatedUser?.avatar).toBe('https://example.com/avatar.jpg');
+      });
     });
   });
 });
