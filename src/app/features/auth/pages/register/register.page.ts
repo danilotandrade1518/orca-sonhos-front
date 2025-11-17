@@ -115,8 +115,12 @@ export class RegisterPage {
       this.errorMessage.set(null);
       await this.authService.signInWithGoogle();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Erro ao autenticar com Google. Tente novamente.';
-      this.errorMessage.set(message);
+      const message = error instanceof Error && error.message ? error.message : 'Erro ao autenticar com Google. Tente novamente.';
+      if (message.includes('Erro ao autenticar')) {
+        this.errorMessage.set(message);
+      } else {
+        this.errorMessage.set(`Erro ao autenticar: ${message}`);
+      }
     } finally {
       this.isLoading.set(false);
     }
@@ -137,9 +141,14 @@ export class RegisterPage {
       } else {
         await this.router.navigate(['/dashboard']);
       }
+      this.isProcessingRedirect.set(false);
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Erro ao processar autenticação. Tente novamente.';
-      this.errorMessage.set(message);
+      const message = error instanceof Error && error.message ? error.message : 'Erro ao processar autenticação. Tente novamente.';
+      if (message.includes('Erro ao processar autenticação')) {
+        this.errorMessage.set(message);
+      } else {
+        this.errorMessage.set(`Erro ao processar autenticação: ${message}`);
+      }
       this.isProcessingRedirect.set(false);
     }
   }
@@ -148,4 +157,3 @@ export class RegisterPage {
     this.errorMessage.set(null);
   }
 }
-

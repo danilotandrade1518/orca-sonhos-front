@@ -2,12 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 
-/**
- * Guard que protege a rota de completar perfil.
- * Permite acesso apenas se o usuário estiver autenticado (mesmo que seja primeiro acesso).
- * Redireciona usuários não autenticados para a página de registro.
- */
-export const completeProfileGuard: CanActivateFn = (route, state) => {
+export const completeProfileGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -18,4 +13,3 @@ export const completeProfileGuard: CanActivateFn = (route, state) => {
 
   return true;
 };
-

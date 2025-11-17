@@ -50,8 +50,6 @@ describe('CompleteProfilePage', () => {
 
     fixture = TestBed.createComponent(CompleteProfilePage);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService) as typeof authService;
-    router = TestBed.inject(Router) as typeof router;
   });
 
   it('should create', () => {

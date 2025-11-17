@@ -130,34 +130,30 @@ export class FirebaseAuthServiceAdapter implements ExternalAuthServiceAdapter {
   }
 
   async getRedirectResult(): Promise<AuthResult | null> {
-    try {
-      const result: UserCredential | null = await getRedirectResult(this.auth);
-      if (!result) {
-        return null;
-      }
-
-      const user = result.user;
-      const token = await user.getIdToken();
-
-      const authUser: AuthUser = {
-        id: user.uid,
-        email: user.email,
-        name: user.displayName,
-        avatar: user.photoURL,
-        metadata: {
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        },
-      };
-
-      return {
-        user: authUser,
-        token,
-      };
-    } catch (error) {
-      throw error;
+    const result: UserCredential | null = await getRedirectResult(this.auth);
+    if (!result) {
+      return null;
     }
+
+    const user = result.user;
+    const token = await user.getIdToken();
+
+    const authUser: AuthUser = {
+      id: user.uid,
+      email: user.email,
+      name: user.displayName,
+      avatar: user.photoURL,
+      metadata: {
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      },
+    };
+
+    return {
+      user: authUser,
+      token,
+    };
   }
 
   async updateUserProfile(name: string): Promise<void> {

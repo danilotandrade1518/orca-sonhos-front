@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Event as RouterEvent } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { signal } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RegisterPage } from './register.page';
@@ -18,9 +19,7 @@ describe('RegisterPage', () => {
     error: ReturnType<typeof signal<string | null>>;
     user: ReturnType<typeof signal<AuthUser | null>>;
   };
-  let router: {
-    navigate: ReturnType<typeof vi.fn>;
-  };
+  let router: Partial<Router>;
 
   beforeEach(async () => {
     authService = {
@@ -33,21 +32,23 @@ describe('RegisterPage', () => {
 
     router = {
       navigate: vi.fn().mockResolvedValue(true),
-    };
+      createUrlTree: vi.fn().mockReturnValue({}),
+      serializeUrl: vi.fn().mockReturnValue('/test'),
+      events: of({}) as Observable<RouterEvent>,
+    } as Partial<Router>;
 
     await TestBed.configureTestingModule({
       imports: [RegisterPage],
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
+        { provide: ActivatedRoute, useValue: {} },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterPage);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService) as typeof authService;
-    router = TestBed.inject(Router) as typeof router;
   });
 
   it('should create', () => {
@@ -198,7 +199,10 @@ describe('RegisterPage', () => {
 
   describe('component initialization', () => {
     it('should call handleRedirectResult after render', async () => {
-      const handleRedirectSpy = vi.spyOn(component as any, 'handleRedirectResult');
+      const handleRedirectSpy = vi.spyOn(
+        component as unknown as { handleRedirectResult: () => Promise<void> },
+        'handleRedirectResult'
+      );
       authService.handleRedirectResult.mockResolvedValue(null);
 
       fixture.detectChanges();

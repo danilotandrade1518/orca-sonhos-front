@@ -136,14 +136,18 @@ export class CompleteProfilePage implements OnInit {
       const name = this.form.get('name')?.value?.trim() || '';
       await this.authService.completeProfile(name);
 
-      this.successMessage.set('Redirecionando para o dashboard...');
+      this.successMessage.set('Perfil atualizado com sucesso!');
 
       setTimeout(async () => {
         await this.router.navigate(['/dashboard']);
       }, 1500);
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Erro ao atualizar perfil. Tente novamente.';
-      this.errorMessage.set(message);
+      const message = error instanceof Error && error.message ? error.message : 'Erro ao atualizar perfil. Tente novamente.';
+      if (message.includes('Erro ao atualizar perfil')) {
+        this.errorMessage.set(message);
+      } else {
+        this.errorMessage.set(`Erro ao atualizar perfil: ${message}`);
+      }
     } finally {
       this.isLoading.set(false);
     }
@@ -153,4 +157,3 @@ export class CompleteProfilePage implements OnInit {
     this.errorMessage.set(null);
   }
 }
-

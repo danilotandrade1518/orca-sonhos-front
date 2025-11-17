@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { signal } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RegisterPage } from './register.page';
@@ -16,36 +15,54 @@ describe('Register Flow Integration', () => {
   let completeProfileFixture: ComponentFixture<CompleteProfilePage>;
   let authService: AuthService;
   let mockAdapter: MockExternalAuthServiceAdapter;
-  let router: {
-    navigate: ReturnType<typeof vi.fn>;
-  };
+  let router: Router;
 
   beforeEach(async () => {
     mockAdapter = new MockExternalAuthServiceAdapter();
-
-    router = {
-      navigate: vi.fn().mockResolvedValue(true),
-    };
 
     await TestBed.configureTestingModule({
       imports: [RegisterPage, CompleteProfilePage],
       providers: [
         AuthService,
-        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: mockAdapter },
-        { provide: Router, useValue: router },
         provideZonelessChangeDetection(),
+        provideRouter([]),
+        { provide: EXTERNAL_AUTH_SERVICE_ADAPTER, useValue: mockAdapter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              data: {},
+              paramMap: new Map(),
+            },
+          },
+        },
       ],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true as never);
 
     registerFixture = TestBed.createComponent(RegisterPage);
     completeProfileFixture = TestBed.createComponent(CompleteProfilePage);
     authService = TestBed.inject(AuthService);
-    router = TestBed.inject(Router) as typeof router;
   });
 
   describe('First Access Flow', () => {
     it('should complete full flow: register → Google → redirect → complete profile → dashboard', async () => {
       const registerComponent = registerFixture.componentInstance;
+      const completeProfileComponent = completeProfileFixture.componentInstance;
+
+      const mockUser: AuthUser = {
+        id: 'user-123',
+        email: 'user@example.com',
+        name: null,
+        avatar: null,
+      };
+
+      mockAdapter.getRedirectResult = async () => ({
+        user: mockUser,
+        token: 'mock-token',
+      });
 
       await mockAdapter.signInWithGoogle();
 
@@ -54,9 +71,9 @@ describe('Register Flow Integration', () => {
       expect(redirectResult?.isFirstAccess).toBe(true);
 
       if (redirectResult?.isFirstAccess) {
+        await registerComponent['handleRedirectResult']();
         expect(router.navigate).toHaveBeenCalledWith(['/register/complete-profile']);
 
-        const completeProfileComponent = completeProfileFixture.componentInstance;
         completeProfileComponent.form.patchValue({ name: 'Complete Name' });
 
         await completeProfileComponent.onSubmit();
@@ -260,4 +277,3 @@ describe('Register Flow Integration', () => {
     });
   });
 });
-

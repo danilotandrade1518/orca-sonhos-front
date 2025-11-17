@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { MockAuthServiceAdapter } from './mock-auth-service-adapter';
-import { AuthResult, AuthUser } from '../../app/core/adapters/external-auth-service.adapter';
 
 describe('MockAuthServiceAdapter', () => {
   let adapter: MockAuthServiceAdapter;
@@ -47,8 +46,8 @@ describe('MockAuthServiceAdapter', () => {
       const result = await adapter.getRedirectResult();
 
       if (result?.user.name !== null) {
-        expect(result.user.name).toBe('Developer User');
-        expect(result.user.email).toBe('dev@orca-sonhos.com');
+        expect(result?.user.name).toBe('Developer User');
+        expect(result?.user.email).toBe('dev@orca-sonhos.com');
       }
     });
   });
@@ -148,4 +147,3 @@ describe('MockAuthServiceAdapter', () => {
     });
   });
 });
-
