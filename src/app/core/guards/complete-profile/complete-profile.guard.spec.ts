@@ -8,10 +8,12 @@ import { AuthService } from '../../services/auth/auth.service';
 
 interface MockAuthService {
   isAuthenticated: ReturnType<typeof vi.fn>;
+  waitForAuthStateReady: ReturnType<typeof vi.fn>;
 }
 
 interface MockRouter {
   navigate: ReturnType<typeof vi.fn>;
+  createUrlTree: ReturnType<typeof vi.fn>;
 }
 
 describe('CompleteProfileGuard', () => {
@@ -23,9 +25,11 @@ describe('CompleteProfileGuard', () => {
   beforeEach(() => {
     mockAuthService = {
       isAuthenticated: vi.fn().mockReturnValue(false),
+      waitForAuthStateReady: vi.fn().mockResolvedValue(undefined),
     };
     mockRouter = {
       navigate: vi.fn(),
+      createUrlTree: vi.fn(),
     };
 
     mockRoute = {} as ActivatedRouteSnapshot;
@@ -52,18 +56,20 @@ describe('CompleteProfileGuard', () => {
       mockAuthService.isAuthenticated.mockReturnValue(true);
     });
 
-    it('should return true and allow access', () => {
-      const result = TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
+    it('should return true and allow access', async () => {
+      const result = await TestBed.runInInjectionContext(() =>
+        completeProfileGuard(mockRoute, mockState)
+      );
       expect(result).toBe(true);
     });
 
-    it('should not call router navigate', () => {
-      TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
+    it('should not call router navigate', async () => {
+      await TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
       expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
+    it('should call isAuthenticated method', async () => {
+      await TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
       expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
     });
   });
@@ -73,18 +79,24 @@ describe('CompleteProfileGuard', () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
     });
 
-    it('should return false and deny access', () => {
-      const result = TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
-      expect(result).toBe(false);
+    it('should return url tree and deny access', async () => {
+      const urlTree = {} as unknown as any;
+      mockRouter.createUrlTree.mockReturnValue(urlTree);
+
+      const result = await TestBed.runInInjectionContext(() =>
+        completeProfileGuard(mockRoute, mockState)
+      );
+
+      expect(result).toBe(urlTree);
     });
 
-    it('should call router navigate to register', () => {
-      TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register']);
+    it('should call router createUrlTree to register', async () => {
+      await TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/register']);
     });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
+    it('should call isAuthenticated method', async () => {
+      await TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
       expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
     });
   });
