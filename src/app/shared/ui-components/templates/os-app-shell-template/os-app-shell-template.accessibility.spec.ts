@@ -194,8 +194,7 @@ describe('OsAppShellTemplateComponent - Accessibility Tests', () => {
       const themeToggle = fixture.nativeElement.querySelector(
         '.os-app-shell-template__sidebar-theme-toggle'
       );
-      // O theme toggle pode não estar visível se o sidebar não renderizar o slot corretamente
-      // Verificamos apenas que o sidebar está presente e tem a estrutura correta
+      
       if (themeToggle) {
         const themeButton = themeToggle.querySelector('os-icon-button');
         expect(themeButton).toBeTruthy();

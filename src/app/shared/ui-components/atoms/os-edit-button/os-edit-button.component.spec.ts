@@ -38,7 +38,7 @@ describe('OsEditButtonComponent', () => {
 
       const osButton = fixture.nativeElement.querySelector('os-button');
       expect(osButton).toBeTruthy();
-      // Verifica se o componente está renderizado com o ariaLabel
+      
       expect(component.ariaLabel()).toBe(ariaLabel);
     });
   });
@@ -132,7 +132,7 @@ describe('OsEditButtonComponent', () => {
 
       const osButton = fixture.nativeElement.querySelector('os-button');
       expect(osButton).toBeTruthy();
-      // O componente usa variant="secondary" no template
+      
     });
 
     it('should use small size', () => {
@@ -142,7 +142,7 @@ describe('OsEditButtonComponent', () => {
 
       const osButton = fixture.nativeElement.querySelector('os-button');
       expect(osButton).toBeTruthy();
-      // O componente usa size="small" no template
+      
     });
 
     it('should use edit icon', () => {
@@ -152,7 +152,7 @@ describe('OsEditButtonComponent', () => {
 
       const osButton = fixture.nativeElement.querySelector('os-button');
       expect(osButton).toBeTruthy();
-      // O componente usa icon="edit" no template
+      
     });
   });
 });

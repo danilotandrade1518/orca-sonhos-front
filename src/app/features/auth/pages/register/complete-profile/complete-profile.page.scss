@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--os-spacing-4);
+  background: var(--os-color-background-secondary);
+}
+
+.complete-profile-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--os-spacing-6);
+  width: 100%;
+}
+
+.complete-profile-page__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--os-spacing-4);
+  width: 100%;
+  margin-top: var(--os-spacing-6);
+}
+
+@media (min-width: 576px) {
+  .complete-profile-page__form {
+    max-width: 400px;
+  }
+
+  .complete-profile-page__actions {
+    max-width: 400px;
+  }
+}
+
+@media (min-width: 992px) {
+  .complete-profile-page__form {
+    max-width: 350px;
+  }
+
+  .complete-profile-page__actions {
+    max-width: 350px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none;
+  }
+}
+

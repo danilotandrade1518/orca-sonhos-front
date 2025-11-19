@@ -23,7 +23,6 @@ import {
   SidebarVariant,
 } from '@shared/ui-components/organisms/os-sidebar/os-sidebar.component';
 import { ThemeService } from '@core/services/theme/theme.service';
-import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
 import { OsIconButtonComponent } from '@shared/ui-components/atoms/os-icon-button/os-icon-button.component';
 
 export interface AppShellLayout {
@@ -188,7 +187,6 @@ export interface AppShellLayout {
     RouterOutlet,
     OsHeaderComponent,
     OsSidebarComponent,
-    OsIconComponent,
     OsIconButtonComponent,
   ],
 })

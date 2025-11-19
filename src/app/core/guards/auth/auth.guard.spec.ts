@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth/auth.service';
 
 interface MockAuthService {
   isAuthenticated: ReturnType<typeof vi.fn>;
+  waitForAuthStateReady: ReturnType<typeof vi.fn>;
 }
 
 interface MockRouter {
@@ -23,6 +24,7 @@ describe('AuthGuard', () => {
   beforeEach(() => {
     mockAuthService = {
       isAuthenticated: vi.fn().mockReturnValue(false),
+      waitForAuthStateReady: vi.fn().mockResolvedValue(undefined),
     };
     mockRouter = {
       navigate: vi.fn(),
@@ -52,18 +54,18 @@ describe('AuthGuard', () => {
       mockAuthService.isAuthenticated.mockReturnValue(true);
     });
 
-    it('should return true and allow access', () => {
-      const result = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+    it('should return true and allow access', async () => {
+      const result = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result).toBe(true);
     });
 
-    it('should not call router navigate', () => {
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+    it('should not call router navigate', async () => {
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+    it('should call isAuthenticated method', async () => {
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
     });
   });
@@ -73,20 +75,20 @@ describe('AuthGuard', () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
     });
 
-    it('should return false and deny access', () => {
-      const result = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+    it('should return false and deny access', async () => {
+      const result = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result).toBe(false);
     });
 
-    it('should call router navigate to login', () => {
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+    it('should call router navigate to register', async () => {
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: mockState.url },
       });
     });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+    it('should call isAuthenticated method', async () => {
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
     });
   });
@@ -96,165 +98,165 @@ describe('AuthGuard', () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
     });
 
-    it('should redirect to login with correct return URL for simple path', () => {
+    it('should redirect to login with correct return URL for simple path', async () => {
       mockState.url = '/budget/123/overview';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/123/overview' },
       });
     });
 
-    it('should redirect to login with root URL when no specific URL', () => {
+    it('should redirect to login with root URL when no specific URL', async () => {
       mockState.url = '/';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/' },
       });
     });
 
-    it('should redirect to login with query parameters preserved', () => {
+    it('should redirect to login with query parameters preserved', async () => {
       mockState.url = '/budget?page=2&filter=active';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget?page=2&filter=active' },
       });
     });
 
-    it('should redirect to login with fragment preserved', () => {
+    it('should redirect to login with fragment preserved', async () => {
       mockState.url = '/budget#section1';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget#section1' },
       });
     });
 
-    it('should handle empty URL', () => {
+    it('should handle empty URL', async () => {
       mockState.url = '';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '' },
       });
     });
 
-    it('should handle complex URLs with multiple segments', () => {
+    it('should handle complex URLs with multiple segments', async () => {
       mockState.url = '/budget/123/transactions?page=1&size=10&sort=date#top';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/123/transactions?page=1&size=10&sort=date#top' },
       });
     });
 
-    it('should handle URLs with special characters', () => {
+    it('should handle URLs with special characters', async () => {
       mockState.url = '/budget/search?q=test%20query&category=expense';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/budget/search?q=test%20query&category=expense' },
       });
     });
 
-    it('should handle URLs with multiple query parameters', () => {
+    it('should handle URLs with multiple query parameters', async () => {
       mockState.url = '/reports/monthly?year=2024&month=1&format=pdf&download=true';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/reports/monthly?year=2024&month=1&format=pdf&download=true' },
       });
     });
 
-    it('should handle URLs with nested paths', () => {
+    it('should handle URLs with nested paths', async () => {
       mockState.url = '/admin/users/123/edit?tab=permissions';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/admin/users/123/edit?tab=permissions' },
       });
     });
   });
 
   describe('edge cases', () => {
-    it('should handle null state URL', () => {
+    it('should handle null state URL', async () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
       mockState.url = null as unknown as string;
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: null },
       });
     });
 
-    it('should handle undefined state URL', () => {
+    it('should handle undefined state URL', async () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
       mockState.url = undefined as unknown as string;
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: undefined },
       });
     });
 
-    it('should handle very long URLs', () => {
+    it('should handle very long URLs', async () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
       const longUrl =
         '/very/long/path/with/many/segments/and/parameters?param1=value1&param2=value2&param3=value3&param4=value4&param5=value5';
       mockState.url = longUrl;
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: longUrl },
       });
     });
 
-    it('should handle URLs with encoded characters', () => {
+    it('should handle URLs with encoded characters', async () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
       mockState.url = '/search?q=hello%20world&category=test%20category';
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/register'], {
         queryParams: { returnUrl: '/search?q=hello%20world&category=test%20category' },
       });
     });
   });
 
   describe('service integration', () => {
-    it('should call isAuthenticated exactly once per guard execution', () => {
+    it('should call isAuthenticated exactly once per guard execution', async () => {
       mockAuthService.isAuthenticated.mockReturnValue(true);
-      TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
 
       expect(mockAuthService.isAuthenticated).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle isAuthenticated throwing an error', () => {
+    it('should handle isAuthenticated throwing an error', async () => {
       mockAuthService.isAuthenticated.mockImplementation(() => {
         throw new Error('Auth service error');
       });
 
-      expect(() => TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState))).toThrow(
-        'Auth service error'
-      );
+      await expect(
+        TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState))
+      ).rejects.toThrow('Auth service error');
     });
 
-    it('should handle isAuthenticated returning different types', () => {
+    it('should handle isAuthenticated returning different types', async () => {
       mockAuthService.isAuthenticated.mockReturnValue('truthy string');
-      const result = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      const result = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result).toBe(true);
 
       mockAuthService.isAuthenticated.mockReturnValue(0);
-      const result2 = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      const result2 = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result2).toBe(false);
 
       mockAuthService.isAuthenticated.mockReturnValue(null);
-      const result3 = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      const result3 = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result3).toBe(false);
 
       mockAuthService.isAuthenticated.mockReturnValue(undefined);
-      const result4 = TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
+      const result4 = await TestBed.runInInjectionContext(() => authGuard(mockRoute, mockState));
       expect(result4).toBe(false);
     });
   });

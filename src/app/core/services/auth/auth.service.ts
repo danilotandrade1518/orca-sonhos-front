@@ -15,6 +15,9 @@ export class AuthService {
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _authStateReady = signal<boolean>(false);
+  private authStateReadyResolver: (() => void) | null = null;
+  private readonly authStateReadyPromise: Promise<void>;
 
   readonly user = this._user.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
@@ -23,14 +26,35 @@ export class AuthService {
   readonly currentUser = computed(() => this.user());
 
   constructor() {
-    this.initializeAuthState();
+    this.authStateReadyPromise = new Promise((resolve) => {
+      this.authStateReadyResolver = resolve;
+    });
+    this.initializeAuthState().catch(() => {
+      this.markAuthStateReady();
+    });
   }
 
-  private initializeAuthState(): void {
+  private async initializeAuthState(): Promise<void> {
     this.externalAuthService.initializeAuthState((user: AuthUser | null) => {
       this._isLoading.set(false);
       this._user.set(user);
+      this.markAuthStateReady();
     });
+  }
+
+  private markAuthStateReady(): void {
+    if (!this._authStateReady()) {
+      this._authStateReady.set(true);
+      this.authStateReadyResolver?.();
+      this.authStateReadyResolver = null;
+    }
+  }
+
+  async waitForAuthStateReady(): Promise<void> {
+    if (this._authStateReady()) {
+      return;
+    }
+    return this.authStateReadyPromise;
   }
 
   async signInWithEmail(email: string, password: string): Promise<AuthUser> {
@@ -97,5 +121,75 @@ export class AuthService {
 
   signOutObservable(): Observable<void> {
     return from(this.signOut());
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      await this.externalAuthService.signInWithGoogle();
+
+      const user = this.externalAuthService.getCurrentUser();
+      if (user) {
+        this._user.set(user);
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao autenticar com Google';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
+
+  async handleRedirectResult(): Promise<{ isFirstAccess: boolean; user: AuthUser } | null> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      const result = await this.externalAuthService.getRedirectResult();
+      if (!result) {
+        return null;
+      }
+
+      this._user.set(result.user);
+      const isFirstAccess = !result.user.name || result.user.name.trim() === '';
+
+      return {
+        isFirstAccess,
+        user: result.user,
+      };
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro ao processar autenticação';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
+
+  async completeProfile(name: string): Promise<void> {
+    try {
+      this._isLoading.set(true);
+      this._error.set(null);
+
+      await this.externalAuthService.updateUserProfile(name);
+
+      const currentUser = this._user();
+      if (currentUser) {
+        this._user.set({
+          ...currentUser,
+          name,
+        });
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao atualizar perfil';
+      this._error.set(errorMessage);
+      throw error;
+    } finally {
+      this._isLoading.set(false);
+    }
   }
 }

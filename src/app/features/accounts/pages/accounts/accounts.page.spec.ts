@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { ActivatedRouteSnapshot, provideRouter } from '@angular/router';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { AccountsPage } from './accounts.page';
@@ -307,7 +306,6 @@ describe('AccountsPage', () => {
       budgetSelection.selectedBudgetId.set('budget-2');
       fixture.detectChanges();
 
-      // Aguarda o effect ser executado
       await new Promise((resolve) => setTimeout(resolve, 100));
       fixture.detectChanges();
 
@@ -333,5 +331,4 @@ describe('AccountsPage', () => {
       expect(accountState.loadAccounts).not.toHaveBeenCalled();
     });
   });
-
 });

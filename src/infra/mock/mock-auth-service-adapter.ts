@@ -20,8 +20,22 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
     },
   };
 
+  private readonly mockUserFirstAccess: AuthUser = {
+    id: 'mock-user-first-access-id',
+    email: 'newuser@orca-sonhos.com',
+    name: null,
+    avatar: null,
+    metadata: {
+      bypass: true,
+      environment: 'development',
+      isFirstAccess: true,
+    },
+  };
+
   private readonly mockToken = 'mock-bearer-token';
   private currentUser: AuthUser | null = null;
+  private redirectResult: AuthResult | null = null;
+  private simulateFirstAccess = false;
 
   initializeAuthState(callback: (user: AuthUser | null) => void): void {
     setTimeout(() => {
@@ -66,5 +80,49 @@ export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
 
   isAuthenticated(): boolean {
     return this.currentUser !== null;
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    this.simulateFirstAccess = Math.random() > 0.5;
+
+    if (this.simulateFirstAccess) {
+      this.redirectResult = {
+        user: this.mockUserFirstAccess,
+        token: this.mockToken,
+        refreshToken: this.mockToken,
+      };
+    } else {
+      this.redirectResult = {
+        user: this.mockUser,
+        token: this.mockToken,
+        refreshToken: this.mockToken,
+      };
+    }
+  }
+
+  async getRedirectResult(): Promise<AuthResult | null> {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const result = this.redirectResult;
+    this.redirectResult = null;
+
+    if (result) {
+      this.currentUser = result.user;
+    }
+
+    return result;
+  }
+
+  async updateUserProfile(name: string): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    if (this.currentUser) {
+      this.currentUser = {
+        ...this.currentUser,
+        name,
+      };
+    }
   }
 }

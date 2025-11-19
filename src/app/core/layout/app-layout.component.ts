@@ -12,6 +12,7 @@ import { OsAppShellTemplateComponent } from '@shared/ui-components/templates/os-
 import { SidebarItem } from '@shared/ui-components/organisms/os-sidebar/os-sidebar.component';
 import { HeaderUserMenu } from '@shared/ui-components/organisms/os-header/os-header.component';
 import { BudgetSelectorComponent } from '@features/dashboard/components/budget-selector/budget-selector.component';
+import { AuthService } from '@core/services/auth/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -25,6 +26,7 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
       (sidebarItemClick)="onSidebarItemClick($event)"
       (sidebarCollapseChange)="onSidebarCollapseChange($event)"
       (headerLogoClick)="onHeaderLogoClick()"
+      (headerUserMenuClick)="onHeaderUserMenuAction($event)"
     >
       <!-- Header Content Slot (Budget Selector) -->
       <div slot="header-content">
@@ -49,6 +51,7 @@ import { BudgetSelectorComponent } from '@features/dashboard/components/budget-s
 })
 export class AppLayoutComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   private readonly sidebarCollapsed = signal(false);
   private readonly currentRoute = signal<string>('/');
@@ -131,6 +134,7 @@ export class AppLayoutComponent implements OnInit {
     {
       label: 'Sair',
       icon: 'logout',
+      action: 'logout',
     },
   ]);
 
@@ -144,6 +148,13 @@ export class AppLayoutComponent implements OnInit {
 
   onHeaderLogoClick(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  async onHeaderUserMenuAction(event: { action: string }): Promise<void> {
+    if (event.action === 'logout') {
+      await this.authService.signOut();
+      await this.router.navigate(['/register']);
+    }
   }
 
   ngOnInit(): void {
