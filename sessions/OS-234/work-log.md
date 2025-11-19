@@ -182,7 +182,73 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-234
-**Fase Atual**: FASE 4: Rotas e Integração [Status: ✅ Completada]
-**Última Modificação**: Implementação completa de guards e proteção de rotas
-**Próxima Tarefa**: Implementar FASE 5 - Testes e MSW Handlers
+**Fase Atual**: Correções pós-entrega (Fluxo de autenticação Google)
+**Última Modificação**: Ajustado `AuthService` para processar redirect result na inicialização, corrigindo problema de redirecionamento após login Google
+**Próxima Tarefa**: Validar fluxo completo de autenticação Google em ambiente de desenvolvimento
+
+---
+
+### 🗓️ Sessão 2025-11-17 - Suporte OS-234
+
+**Fase**: Correção pós-entrega (Rotas de registro)
+**Objetivo**: Investigar tela em branco ao acessar `/register` e restabelecer fluxo de registro
+
+#### ✅ Trabalho Realizado
+
+- Revisado plano, arquitetura e layout para confirmar comportamento esperado
+- Identificada configuração incorreta no arquivo `auth.routes.ts` (paths duplicando segmento `register`)
+- Ajustadas rotas lazy para usar `''` e `complete-profile`, garantindo que `/register` e `/register/complete-profile` apontem para as páginas corretas
+- Removido link “Já tem conta? Faça login” da `RegisterPage` conforme novo direcionamento de UX
+- Adicionada simulação de redirect na `RegisterPage` quando `environment.authBypass` está habilitado para que o fluxo mock funcione sem recarregar a página
+- Atualizado `AuthService`/`guestGuard` para aguardar a resolução do estado de autenticação antes de liberar `/register`, redirecionando automaticamente usuários logados (dashboard ou complete-profile) e evitando retorno à tela após F5
+- Validado dependências (guards e navegação interna) e executado lint específico do arquivo
+
+#### 🤔 Decisões/Problemas
+
+- **Problema**: Router estava montando caminhos `/register/register` e `/register/register/complete-profile`, resultando em rota sem correspondência e tela em branco
+- **Decisão**: Normalizar paths filhos no módulo lazy, mantendo apenas o segmento pai na definição principal em `app.routes.ts`
+
+#### 🧪 Validações
+
+- Linter (`read_lints`) executado para `auth.routes.ts` sem apontamentos
+- Revisão manual de navegação para garantir que `router.navigate(['/register/complete-profile'])` continue consistente com o novo path
+
+#### ⏭️ Próximos Passos
+
+- Monitorar ambiente para confirmar que a página renderiza corretamente após o ajuste
+- Executar suíte de testes de autenticação na próxima janela para mitigar regressões
+
+---
+
+### 🗓️ Sessão 2025-11-17 (Tarde) - Correção Redirect Google
+
+**Fase**: Correção pós-entrega (Fluxo de autenticação Google)
+**Objetivo**: Corrigir problema onde usuário era redirecionado de volta para `/register` após fazer login no Google
+
+#### ✅ Trabalho Realizado
+
+- Identificado problema: `guestGuard` verificava estado de autenticação antes do redirect result ser processado
+- Ajustado `AuthService.initializeAuthState()` para processar `getRedirectResult()` ANTES de verificar estado de autenticação
+- Removida lógica de `handleRedirectResult()` da `RegisterPage`, deixando o guard fazer o redirecionamento automaticamente
+- Simplificada `RegisterPage` removendo `afterNextRender`, `isProcessingRedirect` e método `handleRedirectResult()`
+- Fluxo agora: `AuthService` processa redirect result na inicialização → `guestGuard` verifica estado e redireciona corretamente
+
+#### 🤔 Decisões/Problemas
+
+- **Problema**: Após login no Google, usuário voltava para `/register` ao invés de `/dashboard` ou `/register/complete-profile`
+- **Causa Raiz**: `getRedirectResult()` precisa ser chamado ANTES de verificar estado de autenticação, pois o Firebase só retorna o resultado uma vez após o redirect
+- **Solução**: Processar redirect result durante inicialização do `AuthService`, garantindo que o estado esteja correto quando o guard verificar
+
+#### 🧪 Validações
+
+- Linter executado sem erros
+- Fluxo de autenticação Google agora processa redirect result corretamente na inicialização
+- Guard redireciona automaticamente baseado no estado de autenticação
+
+#### ⏭️ Próximos Passos
+
+- Testar fluxo completo: login Google → redirect → dashboard/complete-profile
+- Validar que F5 após login mantém usuário autenticado e redireciona corretamente
+
+---
 

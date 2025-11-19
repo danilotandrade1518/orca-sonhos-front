@@ -1,11 +1,22 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy, afterNextRender } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+  afterNextRender,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { OsFormTemplateComponent, FormTemplateConfig } from '../../../../shared/ui-components/templates/os-form-template/os-form-template.component';
+import {
+  OsFormTemplateComponent,
+  FormTemplateConfig,
+} from '../../../../shared/ui-components/templates/os-form-template/os-form-template.component';
 import { OsButtonComponent } from '../../../../shared/ui-components/atoms/os-button/os-button.component';
 import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-alert/os-alert.component';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'os-register-page',
@@ -25,7 +36,6 @@ import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-
       [showHeader]="true"
       [showActions]="false"
       [disabled]="isLoading()"
-      [loading]="isProcessingRedirect()"
     >
       @if (errorMessage()) {
       <os-alert
@@ -46,7 +56,7 @@ import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-
           variant="primary"
           size="large"
           [loading]="isLoading()"
-          [disabled]="isLoading() || isProcessingRedirect()"
+          [disabled]="isLoading()"
           (buttonClick)="onSignInWithGoogle()"
           [attr.aria-label]="'Entrar com Google'"
           [attr.aria-busy]="isLoading()"
@@ -74,12 +84,6 @@ import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-
           </span>
           <span class="register-page__button-text">Entrar com Google</span>
         </os-button>
-
-        <div class="register-page__login-link">
-          <a routerLink="/login" [attr.aria-label]="'Já tem conta? Faça login'">
-            Já tem conta? Faça login
-          </a>
-        </div>
       </div>
     </os-form-template>
   `,
@@ -88,9 +92,9 @@ import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-
 export class RegisterPage {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly shouldSimulateRedirect = environment.authBypass;
 
   readonly isLoading = signal(false);
-  readonly isProcessingRedirect = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
   readonly formConfig = computed<FormTemplateConfig>(() => ({
@@ -105,7 +109,7 @@ export class RegisterPage {
 
   constructor() {
     afterNextRender(() => {
-      this.handleRedirectResult();
+      void this.handlePostAuthNavigation();
     });
   }
 
@@ -114,8 +118,12 @@ export class RegisterPage {
       this.isLoading.set(true);
       this.errorMessage.set(null);
       await this.authService.signInWithGoogle();
+      await this.handlePostAuthNavigation();
     } catch (error: unknown) {
-      const message = error instanceof Error && error.message ? error.message : 'Erro ao autenticar com Google. Tente novamente.';
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : 'Erro ao autenticar com Google. Tente novamente.';
       if (message.includes('Erro ao autenticar')) {
         this.errorMessage.set(message);
       } else {
@@ -126,34 +134,23 @@ export class RegisterPage {
     }
   }
 
-  private async handleRedirectResult(): Promise<void> {
-    try {
-      this.isProcessingRedirect.set(true);
-      const result = await this.authService.handleRedirectResult();
-
-      if (!result) {
-        this.isProcessingRedirect.set(false);
-        return;
-      }
-
-      if (result.isFirstAccess) {
-        await this.router.navigate(['/register/complete-profile']);
-      } else {
-        await this.router.navigate(['/dashboard']);
-      }
-      this.isProcessingRedirect.set(false);
-    } catch (error: unknown) {
-      const message = error instanceof Error && error.message ? error.message : 'Erro ao processar autenticação. Tente novamente.';
-      if (message.includes('Erro ao processar autenticação')) {
-        this.errorMessage.set(message);
-      } else {
-        this.errorMessage.set(`Erro ao processar autenticação: ${message}`);
-      }
-      this.isProcessingRedirect.set(false);
-    }
-  }
-
   clearError(): void {
     this.errorMessage.set(null);
+  }
+
+  private async handlePostAuthNavigation(): Promise<void> {
+    await this.authService.waitForAuthStateReady();
+
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return;
+    }
+
+    if (!user.name || !user.name.trim()) {
+      await this.router.navigate(['/register/complete-profile']);
+      return;
+    }
+
+    await this.router.navigate(['/dashboard']);
   }
 }

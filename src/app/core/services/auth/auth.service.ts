@@ -15,6 +15,9 @@ export class AuthService {
   private readonly _user = signal<AuthUser | null>(null);
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _authStateReady = signal<boolean>(false);
+  private authStateReadyResolver: (() => void) | null = null;
+  private readonly authStateReadyPromise: Promise<void>;
 
   readonly user = this._user.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
@@ -23,14 +26,35 @@ export class AuthService {
   readonly currentUser = computed(() => this.user());
 
   constructor() {
-    this.initializeAuthState();
+    this.authStateReadyPromise = new Promise((resolve) => {
+      this.authStateReadyResolver = resolve;
+    });
+    this.initializeAuthState().catch(() => {
+      this.markAuthStateReady();
+    });
   }
 
-  private initializeAuthState(): void {
+  private async initializeAuthState(): Promise<void> {
     this.externalAuthService.initializeAuthState((user: AuthUser | null) => {
       this._isLoading.set(false);
       this._user.set(user);
+      this.markAuthStateReady();
     });
+  }
+
+  private markAuthStateReady(): void {
+    if (!this._authStateReady()) {
+      this._authStateReady.set(true);
+      this.authStateReadyResolver?.();
+      this.authStateReadyResolver = null;
+    }
+  }
+
+  async waitForAuthStateReady(): Promise<void> {
+    if (this._authStateReady()) {
+      return;
+    }
+    return this.authStateReadyPromise;
   }
 
   async signInWithEmail(email: string, password: string): Promise<AuthUser> {
@@ -105,6 +129,11 @@ export class AuthService {
       this._error.set(null);
 
       await this.externalAuthService.signInWithGoogle();
+
+      const user = this.externalAuthService.getCurrentUser();
+      if (user) {
+        this._user.set(user);
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao autenticar com Google';
       this._error.set(errorMessage);
@@ -132,7 +161,8 @@ export class AuthService {
         user: result.user,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar autenticação';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro ao processar autenticação';
       this._error.set(errorMessage);
       throw error;
     } finally {

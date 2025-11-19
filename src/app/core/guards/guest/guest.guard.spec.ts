@@ -1,31 +1,29 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { guestGuard } from './guest.guard';
 import { AuthService } from '../../services/auth/auth.service';
 
-interface MockAuthService {
-  isAuthenticated: ReturnType<typeof vi.fn>;
-}
-
-interface MockRouter {
-  navigate: ReturnType<typeof vi.fn>;
-}
-
 describe('GuestGuard', () => {
-  let mockAuthService: MockAuthService;
-  let mockRouter: MockRouter;
+  let mockAuthService: {
+    waitForAuthStateReady: ReturnType<typeof vi.fn>;
+    getCurrentUser: ReturnType<typeof vi.fn>;
+  };
+  let mockRouter: {
+    createUrlTree: ReturnType<typeof vi.fn>;
+  };
   let mockRoute: ActivatedRouteSnapshot;
   let mockState: RouterStateSnapshot;
 
   beforeEach(() => {
     mockAuthService = {
-      isAuthenticated: vi.fn().mockReturnValue(false),
+      waitForAuthStateReady: vi.fn().mockResolvedValue(undefined),
+      getCurrentUser: vi.fn().mockReturnValue(null),
     };
     mockRouter = {
-      navigate: vi.fn(),
+      createUrlTree: vi.fn().mockReturnValue({} as UrlTree),
     };
 
     mockRoute = {} as ActivatedRouteSnapshot;
@@ -49,43 +47,59 @@ describe('GuestGuard', () => {
 
   describe('when user is not authenticated', () => {
     beforeEach(() => {
-      mockAuthService.isAuthenticated.mockReturnValue(false);
+      mockAuthService.getCurrentUser.mockReturnValue(null);
     });
 
-    it('should return true and allow access', () => {
-      const result = TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
+    it('should return true and allow access', async () => {
+      const result = await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
       expect(result).toBe(true);
     });
 
-    it('should not call router navigate', () => {
-      TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
+    it('should not create url tree', async () => {
+      await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
+      expect(mockRouter.createUrlTree).not.toHaveBeenCalled();
     });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
-      expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
+    it('should await auth state readiness', async () => {
+      await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
+      expect(mockAuthService.waitForAuthStateReady).toHaveBeenCalled();
     });
   });
 
   describe('when user is authenticated', () => {
     beforeEach(() => {
-      mockAuthService.isAuthenticated.mockReturnValue(true);
+      mockAuthService.getCurrentUser.mockReturnValue({
+        id: 'user-1',
+        email: 'dev@orca.com',
+        name: 'Dev User',
+        avatar: null,
+      });
     });
 
-    it('should return false and deny access', () => {
-      const result = TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
-      expect(result).toBe(false);
+    it('should redirect to dashboard when user has display name', async () => {
+      const tree = {} as UrlTree;
+      mockRouter.createUrlTree.mockReturnValue(tree);
+
+      const result = await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
+
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
+      expect(result).toBe(tree);
     });
 
-    it('should call router navigate to dashboard', () => {
-      TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
-    });
+    it('should redirect to complete profile when user has no name', async () => {
+      const tree = {} as UrlTree;
+      mockRouter.createUrlTree.mockReturnValue(tree);
+      mockAuthService.getCurrentUser.mockReturnValue({
+        id: 'user-2',
+        email: 'first@orca.com',
+        name: '',
+        avatar: null,
+      });
 
-    it('should call isAuthenticated method', () => {
-      TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
-      expect(mockAuthService.isAuthenticated).toHaveBeenCalled();
+      const result = await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
+
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/register/complete-profile']);
+      expect(result).toBe(tree);
     });
   });
 });

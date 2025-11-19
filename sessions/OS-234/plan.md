@@ -216,6 +216,7 @@ Criar página de registro (`/register`) com botão "Entrar com Google", seguindo
 - **Decisão técnica**: Usado `afterNextRender` para garantir que componente está renderizado antes de verificar redirect
 - **Rotas**: Criado arquivo `auth.routes.ts` e adicionadas rotas públicas no `app.routes.ts`
 - **Acessibilidade**: Implementados ARIA attributes, keyboard navigation e estados visuais adequados
+- **Atualização 17/11**: Link “Já tem conta? Faça login” removido a pedido do time, mantendo fluxo único via Google OAuth
 
 ---
 
@@ -410,6 +411,7 @@ Adicionar rotas de registro no sistema de rotas, configurar guards se necessári
 - **Decisão técnica**: Criado `completeProfileGuard` para proteger rota de completar perfil (só permite usuários autenticados)
 - **Decisão técnica**: Aplicado `authGuard` no nível do `app-layout` para proteger todas as rotas filhas (dashboard, budgets, etc.)
 - **Decisão técnica**: Ajustado `authGuard` para redirecionar para `/register` ao invés de `/login` (não existe página de login ainda)
+- **Atualização 17/11**: `guestGuard` passou a aguardar a inicialização do estado de autenticação e direcionar automaticamente usuários logados para `/dashboard` ou `/register/complete-profile`, evitando que a tela `/register` reapareça após um F5
 - **Rotas protegidas**: Todas as rotas dentro do `app-layout` agora são protegidas pelo `authGuard`
 - **Rotas públicas**: Rotas de registro protegidas com `guestGuard` e `completeProfileGuard` conforme necessário
 

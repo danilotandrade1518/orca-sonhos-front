@@ -5,11 +5,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  signInWithRedirect,
   getRedirectResult,
   GoogleAuthProvider,
   updateProfile,
   UserCredential,
+  signInWithPopup,
 } from '@angular/fire/auth';
 import {
   ExternalAuthServiceAdapter,
@@ -126,7 +126,7 @@ export class FirebaseAuthServiceAdapter implements ExternalAuthServiceAdapter {
 
   async signInWithGoogle(): Promise<void> {
     const provider = new GoogleAuthProvider();
-    await signInWithRedirect(this.auth, provider);
+    await signInWithPopup(this.auth, provider);
   }
 
   async getRedirectResult(): Promise<AuthResult | null> {

@@ -44,29 +44,6 @@
   text-align: center;
 }
 
-.register-page__login-link {
-  margin-top: var(--os-spacing-2);
-
-  a {
-    color: var(--os-color-primary-600);
-    text-decoration: none;
-    font-size: var(--os-font-size-md);
-    font-weight: var(--os-font-weight-medium);
-    transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
-
-    &:hover {
-      color: var(--os-color-primary-700);
-      text-decoration: underline;
-    }
-
-    &:focus {
-      outline: 2px solid var(--os-color-primary-300);
-      outline-offset: 2px;
-      border-radius: var(--os-border-radius-sm);
-    }
-  }
-}
-
 @media (min-width: 576px) {
   .register-page__content {
     max-width: 400px;
@@ -78,10 +55,3 @@
     max-width: 350px;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .register-page__login-link a {
-    transition: none;
-  }
-}
-

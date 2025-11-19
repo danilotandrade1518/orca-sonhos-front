@@ -848,3 +848,4 @@ Pode ser criado como componente específico ou usar `os-button` com customizaç�
 - [Firebase Auth - Google Sign-In](https://firebase.google.com/docs/auth/web/google-signin)
 - [AngularFire Auth](https://github.com/angular/angularfire)
 - [Firebase Auth - Redirect-based OAuth](https://firebase.google.com/docs/auth/web/redirect-best-practices)
+

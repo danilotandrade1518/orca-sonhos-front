@@ -1,15 +1,21 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 
-export const guestGuard: CanActivateFn = () => {
+export const guestGuard: CanActivateFn = async (): Promise<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isAuthenticated()) {
-    router.navigate(['/dashboard']);
-    return false;
+  await authService.waitForAuthStateReady();
+  const user = authService.getCurrentUser();
+
+  if (!user) {
+    return true;
   }
 
-  return true;
+  if (!user.name || !user.name.trim()) {
+    return router.createUrlTree(['/register/complete-profile']);
+  }
+
+  return router.createUrlTree(['/dashboard']);
 };

@@ -1,5 +1,9 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -12,6 +16,17 @@ import { AuthService } from './auth.service';
 describe('AuthService', () => {
   let service: AuthService;
   let mockAdapter: MockExternalAuthServiceAdapter;
+
+  beforeAll(() => {
+    try {
+      TestBed.initTestEnvironment(
+        BrowserDynamicTestingModule,
+        platformBrowserDynamicTesting()
+      );
+    } catch {
+      // Ambiente de testes já inicializado.
+    }
+  });
 
   beforeEach(async () => {
     mockAdapter = new MockExternalAuthServiceAdapter();

@@ -5,13 +5,13 @@ import { completeProfileGuard } from '@core/guards/complete-profile/complete-pro
 
 export const AUTH_ROUTES: Routes = [
   {
-    path: 'register',
+    path: '',
     loadComponent: () =>
       import('./pages/register/register.page').then((m) => m.RegisterPage),
     canActivate: [guestGuard],
   },
   {
-    path: 'register/complete-profile',
+    path: 'complete-profile',
     loadComponent: () =>
       import('./pages/register/complete-profile/complete-profile.page').then((m) => m.CompleteProfilePage),
     canActivate: [completeProfileGuard],
