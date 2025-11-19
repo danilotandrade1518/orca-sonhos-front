@@ -4,17 +4,8 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 
-/**
- * Configuração global do ambiente de testes Angular para Vitest.
- * É executado uma única vez antes de qualquer spec.
- */
 try {
-  TestBed.initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting(),
-  );
+  TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 } catch {
-  // Ambiente já foi inicializado (evita erro em execuções múltiplas).
+  console.log('Ambiente de testes já inicializado');
 }
-
-

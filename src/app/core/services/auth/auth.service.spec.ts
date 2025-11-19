@@ -1,9 +1,5 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -16,17 +12,6 @@ import { AuthService } from './auth.service';
 describe('AuthService', () => {
   let service: AuthService;
   let mockAdapter: MockExternalAuthServiceAdapter;
-
-  beforeAll(() => {
-    try {
-      TestBed.initTestEnvironment(
-        BrowserDynamicTestingModule,
-        platformBrowserDynamicTesting()
-      );
-    } catch {
-      // Ambiente de testes já inicializado.
-    }
-  });
 
   beforeEach(async () => {
     mockAdapter = new MockExternalAuthServiceAdapter();
@@ -124,9 +109,9 @@ describe('AuthService', () => {
       const password = 'password123';
 
       expect(service.isLoading()).toBeFalsy();
-      
+
       const signInPromise = service.signInWithEmail(email, password);
-      
+
       expect(service.isLoading()).toBeTruthy();
 
       await signInPromise;
@@ -166,9 +151,9 @@ describe('AuthService', () => {
 
     it('should set loading state during sign out', async () => {
       expect(service.isLoading()).toBeFalsy();
-      
+
       const signOutPromise = service.signOut();
-      
+
       expect(service.isLoading()).toBeTruthy();
 
       await signOutPromise;
@@ -276,7 +261,7 @@ describe('AuthService', () => {
     describe('signInWithGoogle', () => {
       it('should call adapter signInWithGoogle', async () => {
         const signInWithGoogleSpy = vi.spyOn(mockAdapter, 'signInWithGoogle');
-        
+
         await service.signInWithGoogle();
 
         expect(signInWithGoogleSpy).toHaveBeenCalled();
@@ -284,9 +269,9 @@ describe('AuthService', () => {
 
       it('should set loading state during sign in', async () => {
         expect(service.isLoading()).toBeFalsy();
-        
+
         const signInPromise = service.signInWithGoogle();
-        
+
         expect(service.isLoading()).toBeTruthy();
 
         await signInPromise;
@@ -307,7 +292,7 @@ describe('AuthService', () => {
 
       it('should clear error before attempting sign in', async () => {
         mockAdapter.signInWithGoogle = () => Promise.reject(new Error('Test error'));
-        
+
         try {
           await service.signInWithGoogle();
         } catch {
@@ -339,10 +324,11 @@ describe('AuthService', () => {
           avatar: null,
         };
 
-        mockAdapter.getRedirectResult = () => Promise.resolve({
-          user: mockUser,
-          token: 'mock-token',
-        });
+        mockAdapter.getRedirectResult = () =>
+          Promise.resolve({
+            user: mockUser,
+            token: 'mock-token',
+          });
 
         const result = await service.handleRedirectResult();
 
@@ -360,10 +346,11 @@ describe('AuthService', () => {
           avatar: null,
         };
 
-        mockAdapter.getRedirectResult = () => Promise.resolve({
-          user: mockUser,
-          token: 'mock-token',
-        });
+        mockAdapter.getRedirectResult = () =>
+          Promise.resolve({
+            user: mockUser,
+            token: 'mock-token',
+          });
 
         const result = await service.handleRedirectResult();
 
@@ -379,10 +366,11 @@ describe('AuthService', () => {
           avatar: null,
         };
 
-        mockAdapter.getRedirectResult = () => Promise.resolve({
-          user: mockUser,
-          token: 'mock-token',
-        });
+        mockAdapter.getRedirectResult = () =>
+          Promise.resolve({
+            user: mockUser,
+            token: 'mock-token',
+          });
 
         const result = await service.handleRedirectResult();
 
@@ -396,9 +384,9 @@ describe('AuthService', () => {
         mockAdapter.getRedirectResult = () => Promise.resolve(null);
 
         expect(service.isLoading()).toBeFalsy();
-        
+
         const handlePromise = service.handleRedirectResult();
-        
+
         expect(service.isLoading()).toBeTruthy();
 
         await handlePromise;
@@ -425,10 +413,11 @@ describe('AuthService', () => {
           avatar: null,
         };
 
-        mockAdapter.getRedirectResult = () => Promise.resolve({
-          user: mockUser,
-          token: 'mock-token',
-        });
+        mockAdapter.getRedirectResult = () =>
+          Promise.resolve({
+            user: mockUser,
+            token: 'mock-token',
+          });
 
         await service.handleRedirectResult();
 
@@ -480,9 +469,9 @@ describe('AuthService', () => {
         mockAdapter.setMockUser(mockUser);
 
         expect(service.isLoading()).toBeFalsy();
-        
+
         const completePromise = service.completeProfile('New Name');
-        
+
         expect(service.isLoading()).toBeTruthy();
 
         await completePromise;

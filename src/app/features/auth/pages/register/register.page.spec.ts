@@ -1,13 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute, Event as RouterEvent } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 
 import { RegisterPage } from './register.page';
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -23,17 +18,6 @@ describe.skip('RegisterPage', () => {
     getCurrentUser: ReturnType<typeof vi.fn>;
   };
   let router: Partial<Router>;
-
-  beforeAll(() => {
-    try {
-      TestBed.initTestEnvironment(
-        BrowserDynamicTestingModule,
-        platformBrowserDynamicTesting()
-      );
-    } catch {
-      // Ambiente de testes já inicializado.
-    }
-  });
 
   beforeEach(async () => {
     environment.authBypass = false;
@@ -139,15 +123,15 @@ describe.skip('RegisterPage', () => {
 
       expect(component.errorMessage()).toBe('Erro ao autenticar com Google. Tente novamente.');
     });
-
   });
 
   describe('handlePostAuthNavigation', () => {
     it('should not navigate when there is no user', async () => {
       authService.getCurrentUser.mockReturnValue(null);
 
-      await (component as unknown as { handlePostAuthNavigation: () => Promise<void> })
-        .handlePostAuthNavigation();
+      await (
+        component as unknown as { handlePostAuthNavigation: () => Promise<void> }
+      ).handlePostAuthNavigation();
 
       expect(router.navigate).not.toHaveBeenCalled();
     });
@@ -162,8 +146,9 @@ describe.skip('RegisterPage', () => {
 
       authService.getCurrentUser.mockReturnValue(mockUser);
 
-      await (component as unknown as { handlePostAuthNavigation: () => Promise<void> })
-        .handlePostAuthNavigation();
+      await (
+        component as unknown as { handlePostAuthNavigation: () => Promise<void> }
+      ).handlePostAuthNavigation();
 
       expect(router.navigate).toHaveBeenCalledWith(['/register/complete-profile']);
     });
@@ -178,8 +163,9 @@ describe.skip('RegisterPage', () => {
 
       authService.getCurrentUser.mockReturnValue(mockUser);
 
-      await (component as unknown as { handlePostAuthNavigation: () => Promise<void> })
-        .handlePostAuthNavigation();
+      await (
+        component as unknown as { handlePostAuthNavigation: () => Promise<void> }
+      ).handlePostAuthNavigation();
 
       expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
     });

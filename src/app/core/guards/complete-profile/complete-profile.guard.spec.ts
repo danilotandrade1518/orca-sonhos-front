@@ -80,7 +80,7 @@ describe('CompleteProfileGuard', () => {
     });
 
     it('should return url tree and deny access', async () => {
-      const urlTree = {} as unknown as any;
+      const urlTree = {} as unknown;
       mockRouter.createUrlTree.mockReturnValue(urlTree);
 
       const result = await TestBed.runInInjectionContext(() =>
