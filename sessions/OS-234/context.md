@@ -144,3 +144,6 @@ Implementar funcionalidade completa de registro de novos usuários no OrçaSonho
 - Arquitetura: Clean Architecture e padrões do projeto (CLAUDE.md)
 - Meta Specs: `/home/danilo/workspace/projeto-orca-sonhos/orca-sonhos-meta-specs`
 
+
+
+

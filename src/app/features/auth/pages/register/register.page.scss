@@ -17,12 +17,33 @@
   max-width: 100%;
 }
 
+.register-page__description {
+  text-align: center;
+  color: var(--os-color-text-secondary);
+  font-size: var(--os-font-size-sm);
+  line-height: 1.5;
+  margin: 0;
+  padding: 0 var(--os-spacing-2);
+}
+
+.register-page__time-info {
+  text-align: center;
+  color: var(--os-color-text-tertiary);
+  font-size: var(--os-font-size-xs);
+  margin: calc(var(--os-spacing-2) * -1) 0 0 0;
+  padding: 0;
+}
+
 .register-page__google-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--os-spacing-3);
   width: 100%;
+
+  ::ng-deep .os-button__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--os-spacing-3);
+    width: 100%;
+  }
 }
 
 .register-page__google-icon {

@@ -14,7 +14,7 @@ export const guestGuard: CanActivateFn = async (): Promise<boolean | UrlTree> =>
   }
 
   if (!user.name || !user.name.trim()) {
-    return router.createUrlTree(['/register/complete-profile']);
+    return router.createUrlTree(['/auth/complete-profile']);
   }
 
   return router.createUrlTree(['/dashboard']);

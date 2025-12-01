@@ -9,7 +9,7 @@ export const completeProfileGuard: CanActivateFn = async (): Promise<boolean | U
   await authService.waitForAuthStateReady();
 
   if (!authService.isAuthenticated()) {
-    return router.createUrlTree(['/register']);
+    return router.createUrlTree(['/auth']);
   }
 
   return true;

@@ -35,7 +35,9 @@ import { environment } from '../../../../../environments/environment';
       [variant]="'compact'"
       [showHeader]="true"
       [showActions]="false"
+      [showProgress]="false"
       [disabled]="isLoading()"
+      [ariaLabel]="'Tela de entrada com Google para acessar o OrçaSonhos'"
     >
       @if (errorMessage()) {
       <os-alert
@@ -52,13 +54,18 @@ import { environment } from '../../../../../environments/environment';
       }
 
       <div class="register-page__content">
+        <p class="register-page__description">
+          Usamos sua conta Google apenas para identificar você. Se você já usa o OrçaSonhos, vamos te levar direto para o seu orçamento. Se for seu primeiro acesso, vamos criar sua conta em poucos passos.
+        </p>
+        <p class="register-page__time-info">Leva menos de 2 minutos.</p>
+
         <os-button
           variant="primary"
           size="large"
           [loading]="isLoading()"
           [disabled]="isLoading()"
           (buttonClick)="onSignInWithGoogle()"
-          [attr.aria-label]="'Entrar com Google'"
+          [attr.aria-label]="'Continuar com Google'"
           [attr.aria-busy]="isLoading()"
           [class]="'register-page__google-button'"
         >
@@ -82,7 +89,7 @@ import { environment } from '../../../../../environments/environment';
               />
             </svg>
           </span>
-          <span class="register-page__button-text">Entrar com Google</span>
+          <span class="register-page__button-text">Continuar com Google</span>
         </os-button>
       </div>
     </os-form-template>
@@ -98,8 +105,8 @@ export class RegisterPage {
   readonly errorMessage = signal<string | null>(null);
 
   readonly formConfig = computed<FormTemplateConfig>(() => ({
-    title: 'Bem-vindo ao OrçaSonhos',
-    subtitle: 'Transforme seus sonhos em metas alcançáveis',
+    title: 'Continuar com Google',
+    subtitle: 'Entre com sua conta Google para acessar o OrçaSonhos',
     showBackButton: false,
     showSaveButton: false,
     showCancelButton: false,
@@ -147,7 +154,7 @@ export class RegisterPage {
     }
 
     if (!user.name || !user.name.trim()) {
-      await this.router.navigate(['/register/complete-profile']);
+      await this.router.navigate(['/auth/complete-profile']);
       return;
     }
 

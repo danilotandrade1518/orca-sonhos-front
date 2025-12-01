@@ -9,8 +9,13 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'register',
+    path: 'auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+  },
+  {
+    path: 'register',
+    redirectTo: '/auth',
+    pathMatch: 'full',
   },
   {
     path: '',

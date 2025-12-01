@@ -153,7 +153,7 @@ export class AppLayoutComponent implements OnInit {
   async onHeaderUserMenuAction(event: { action: string }): Promise<void> {
     if (event.action === 'logout') {
       await this.authService.signOut();
-      await this.router.navigate(['/register']);
+      await this.router.navigate(['/auth']);
     }
   }
 
