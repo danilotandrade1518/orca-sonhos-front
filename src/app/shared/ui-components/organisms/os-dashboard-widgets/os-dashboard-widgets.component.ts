@@ -167,11 +167,12 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           [attr.aria-label]="getWidgetAriaLabel(widget)"
           [attr.aria-describedby]="getWidgetDescriptionId(widget)"
           role="region"
-          tabindex="0"
-          (click)="onWidgetClick(widget)"
-          (keydown)="onWidgetKeyDown($event, widget)"
+          [attr.tabindex]="isWidgetClickable(widget) ? 0 : null"
+          [attr.aria-disabled]="!isWidgetClickable(widget) ? 'true' : null"
+          (click)="onWidgetClickIfClickable(widget)"
+          (keydown)="onWidgetKeyDownIfClickable($event, widget)"
         >
-          @if (widget.type !== 'goal-progress' || !hasGoalsListData(widget)) {
+          @if (!hasWidgetOwnTitle(widget)) {
           <div class="os-dashboard-widgets__widget-header">
             <h4 class="os-dashboard-widgets__widget-title">{{ widget.title }}</h4>
           </div>
@@ -443,8 +444,43 @@ export class OsDashboardWidgetsComponent {
     }
 
     classes.push(`os-dashboard-widgets__widget--${widget.type}`);
+    
+    if (!this.isWidgetClickable(widget)) {
+      classes.push('os-dashboard-widgets__widget--non-clickable');
+    }
+    
+    if (this.hasWidgetOwnTitle(widget)) {
+      classes.push('os-dashboard-widgets__widget--has-internal-style');
+    }
 
     return classes.join(' ');
+  }
+
+  isWidgetClickable(widget: DashboardWidget): boolean {
+    
+    const clickableTypes: DashboardWidget['type'][] = [
+      'goal-progress',
+      'budget-summary',
+      'transaction-list',
+      'account-balance',
+    ];
+    return clickableTypes.includes(widget.type);
+  }
+
+  hasWidgetOwnTitle(widget: DashboardWidget): boolean {
+    
+    const widgetsWithOwnTitle: DashboardWidget['type'][] = [
+      'financial-health',
+      'suggested-actions',
+      'category-spending',
+      'recent-achievements',
+    ];
+    
+    if (widget.type === 'goal-progress' && this.hasGoalsListData(widget)) {
+      return true;
+    }
+    
+    return widgetsWithOwnTitle.includes(widget.type);
   }
 
   getWidgetAriaLabel(widget: DashboardWidget): string {
@@ -630,10 +666,22 @@ export class OsDashboardWidgetsComponent {
     this.widgetClick.emit(widget);
   }
 
+  onWidgetClickIfClickable(widget: DashboardWidget): void {
+    if (this.isWidgetClickable(widget)) {
+      this.onWidgetClick(widget);
+    }
+  }
+
   onWidgetKeyDown(event: KeyboardEvent, widget: DashboardWidget): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this.onWidgetClick(widget);
+    }
+  }
+
+  onWidgetKeyDownIfClickable(event: KeyboardEvent, widget: DashboardWidget): void {
+    if (this.isWidgetClickable(widget)) {
+      this.onWidgetKeyDown(event, widget);
     }
   }
 

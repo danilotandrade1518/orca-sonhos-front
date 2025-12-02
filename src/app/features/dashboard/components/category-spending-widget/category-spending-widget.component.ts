@@ -122,15 +122,14 @@ export class CategorySpendingWidgetComponent {
     return `${value.toFixed(1)}%`;
   }
 
-  getProgressVariant(percentage: number): 'default' | 'success' | 'warning' | 'error' {
+  getProgressVariant(percentage: number): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
     if (percentage >= 30) {
-      return 'error';
+      return 'danger';
     } else if (percentage >= 20) {
       return 'warning';
     } else if (percentage >= 10) {
-      return 'default';
+      return 'primary';
     }
     return 'success';
   }
 }
-

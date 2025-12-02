@@ -303,4 +303,3 @@ export class GoalsProgressWidgetComponent {
     this.router.navigate(['/goals/new']);
   }
 }
-

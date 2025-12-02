@@ -873,7 +873,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
       case 'expense':
         return 'trending_down';
       case 'transfer':
-        return 'swap_horiz';
+        return 'exchange-alt';
       default:
         return 'receipt';
     }

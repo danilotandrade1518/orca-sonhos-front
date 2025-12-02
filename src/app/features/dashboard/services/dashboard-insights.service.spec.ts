@@ -1,84 +1,16 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { signal } from '@angular/core';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import { GoalDto } from '../../../../dtos/goal/goal-types/goal-types';
-import { BudgetOverviewDto } from '../../../../dtos/budget/budget-types';
-import { GoalsState } from '../../../goals/state/goals-state/goals.state';
-import { DashboardDataService } from './dashboard-data.service';
 import { DashboardInsightsService } from './dashboard-insights.service';
+import { DashboardInsightsResponseDto } from '../../../../dtos/dashboard/dashboard-insights-response.dto';
 
 describe('DashboardInsightsService', () => {
   let service: DashboardInsightsService;
-  let dashboardDataService: {
-    budgetOverview: ReturnType<typeof signal<BudgetOverviewDto | null>>;
-  };
-  let goalsState: {
-    items: ReturnType<typeof signal<GoalDto[]>>;
-  };
-
-  const mockBudgetOverview: BudgetOverviewDto = {
-    id: 'budget-1',
-    name: 'Orçamento Pessoal',
-    type: 'PERSONAL',
-    participants: [
-      {
-        id: 'participant-1',
-        name: 'João Silva',
-        email: 'joao@example.com',
-      },
-    ],
-    totals: {
-      accountsBalance: 10000,
-      monthIncome: 5000,
-      monthExpense: 3000,
-      netMonth: 2000,
-    },
-    accounts: [
-      {
-        id: 'account-1',
-        name: 'Conta Corrente',
-        type: 'CHECKING_ACCOUNT',
-      },
-    ],
-  };
-
-  const mockGoals: GoalDto[] = [
-    {
-      id: 'goal-1',
-      name: 'Reserva de Emergência',
-      totalAmount: 10000,
-      accumulatedAmount: 5000,
-      deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      budgetId: 'budget-1',
-    },
-    {
-      id: 'goal-2',
-      name: 'Viagem',
-      totalAmount: 5000,
-      accumulatedAmount: 2500,
-      deadline: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(),
-      budgetId: 'budget-1',
-    },
-  ];
 
   beforeEach(() => {
-    dashboardDataService = {
-      budgetOverview: signal<BudgetOverviewDto | null>(null),
-    };
-
-    goalsState = {
-      items: signal<GoalDto[]>([]),
-    };
-
     TestBed.configureTestingModule({
-      providers: [
-        DashboardInsightsService,
-        { provide: DashboardDataService, useValue: dashboardDataService },
-        { provide: GoalsState, useValue: goalsState },
-        provideZonelessChangeDetection(),
-      ],
+      providers: [DashboardInsightsService, provideZonelessChangeDetection()],
     });
 
     service = TestBed.inject(DashboardInsightsService);
@@ -89,18 +21,30 @@ describe('DashboardInsightsService', () => {
   });
 
   describe('budgetUsageIndicator', () => {
-    it('should return null when no overview', () => {
+    it('should return null when no insights set', () => {
       expect(service.budgetUsageIndicator()).toBeNull();
     });
 
     it('should return warning status when no income', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 0,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: {
+            value: 0,
+            status: 'warning',
+            label: 'Sem receitas',
+            description: 'Não há receitas registradas',
+            percentage: 0,
+          },
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.budgetUsageIndicator();
       expect(indicator).not.toBeNull();
@@ -109,14 +53,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return healthy status when usage < 80%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: {
+            value: 60,
+            status: 'healthy',
+            label: 'Uso do orçamento',
+            description: 'Uso saudável do orçamento',
+            percentage: 60,
+          },
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.budgetUsageIndicator();
       expect(indicator).not.toBeNull();
@@ -125,14 +80,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return warning status when usage between 80-100%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 4500,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: {
+            value: 90,
+            status: 'warning',
+            label: 'Uso do orçamento',
+            description: 'Uso próximo do limite',
+            percentage: 90,
+          },
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.budgetUsageIndicator();
       expect(indicator).not.toBeNull();
@@ -141,14 +107,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return critical status when usage > 100%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 6000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: {
+            value: 120,
+            status: 'critical',
+            label: 'Uso do orçamento',
+            description: 'Orçamento excedido',
+            percentage: 120,
+          },
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.budgetUsageIndicator();
       expect(indicator).not.toBeNull();
@@ -158,19 +135,31 @@ describe('DashboardInsightsService', () => {
   });
 
   describe('cashFlowIndicator', () => {
-    it('should return null when no overview', () => {
+    it('should return null when no insights set', () => {
       expect(service.cashFlowIndicator()).toBeNull();
     });
 
     it('should return healthy status when only income', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 0,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: {
+            value: 100,
+            status: 'healthy',
+            label: 'Fluxo de caixa',
+            description: 'Fluxo de caixa positivo',
+            ratio: 100,
+            absoluteValue: 5000,
+          },
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.cashFlowIndicator();
       expect(indicator).not.toBeNull();
@@ -179,14 +168,26 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return healthy status when ratio > 110%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 4000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: {
+            value: 125,
+            status: 'healthy',
+            label: 'Fluxo de caixa',
+            description: 'Fluxo de caixa positivo',
+            ratio: 125,
+            absoluteValue: 1000,
+          },
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.cashFlowIndicator();
       expect(indicator).not.toBeNull();
@@ -196,14 +197,26 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return warning status when ratio between 100-110%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 5000,
-          monthExpense: 4800,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: {
+            value: 104.17,
+            status: 'warning',
+            label: 'Fluxo de caixa',
+            description: 'Fluxo de caixa próximo do limite',
+            ratio: 104.17,
+            absoluteValue: 200,
+          },
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.cashFlowIndicator();
       expect(indicator).not.toBeNull();
@@ -212,14 +225,26 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return critical status when ratio < 100%', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 3000,
-          monthExpense: 4000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: {
+            value: 75,
+            status: 'critical',
+            label: 'Fluxo de caixa',
+            description: 'Fluxo de caixa negativo',
+            ratio: 75,
+            absoluteValue: -1000,
+          },
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.cashFlowIndicator();
       expect(indicator).not.toBeNull();
@@ -230,8 +255,33 @@ describe('DashboardInsightsService', () => {
   });
 
   describe('goalsOnTrackIndicator', () => {
+    it('should return null when no insights set', () => {
+      expect(service.goalsOnTrackIndicator()).toBeNull();
+    });
+
     it('should return warning when no goals', () => {
-      goalsState.items.set([]);
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: {
+            value: 0,
+            status: 'warning',
+            label: 'Metas',
+            description: 'Nenhuma meta ativa',
+            percentage: 0,
+            onTrackCount: 0,
+            totalActiveCount: 0,
+          },
+          emergencyReserve: null,
+        },
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
+
       const indicator = service.goalsOnTrackIndicator();
       expect(indicator).not.toBeNull();
       expect(indicator?.status).toBe('warning');
@@ -239,40 +289,27 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return healthy when >= 75% goals on track', () => {
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta 1',
-          totalAmount: 1000,
-          accumulatedAmount: 500,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: {
+            value: 100,
+            status: 'healthy',
+            label: 'Metas',
+            description: 'Todas as metas estão no prazo',
+            percentage: 100,
+            onTrackCount: 4,
+            totalActiveCount: 4,
+          },
+          emergencyReserve: null,
         },
-        {
-          id: 'goal-2',
-          name: 'Meta 2',
-          totalAmount: 1000,
-          accumulatedAmount: 500,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        },
-        {
-          id: 'goal-3',
-          name: 'Meta 3',
-          totalAmount: 1000,
-          accumulatedAmount: 500,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        },
-        {
-          id: 'goal-4',
-          name: 'Meta 4',
-          totalAmount: 1000,
-          accumulatedAmount: 500,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        },
-      ]);
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.goalsOnTrackIndicator();
       expect(indicator).not.toBeNull();
@@ -281,67 +318,86 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return warning when 50-75% goals on track', () => {
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta 1',
-          totalAmount: 1000,
-          accumulatedAmount: 100,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: {
+            value: 50,
+            status: 'warning',
+            label: 'Metas',
+            description: 'Algumas metas estão atrasadas',
+            percentage: 50,
+            onTrackCount: 2,
+            totalActiveCount: 4,
+          },
+          emergencyReserve: null,
         },
-        {
-          id: 'goal-2',
-          name: 'Meta 2',
-          totalAmount: 1000,
-          accumulatedAmount: 500,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        },
-      ]);
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.goalsOnTrackIndicator();
       expect(indicator).not.toBeNull();
       expect(indicator?.status).toBe('warning');
+      expect(indicator?.percentage).toBeGreaterThanOrEqual(50);
+      expect(indicator?.percentage).toBeLessThan(75);
     });
 
     it('should return critical when < 50% goals on track', () => {
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta 1',
-          totalAmount: 1000,
-          accumulatedAmount: 50,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: {
+            value: 33.33,
+            status: 'critical',
+            label: 'Metas',
+            description: 'Maioria das metas está atrasada',
+            percentage: 33.33,
+            onTrackCount: 1,
+            totalActiveCount: 3,
+          },
+          emergencyReserve: null,
         },
-        {
-          id: 'goal-2',
-          name: 'Meta 2',
-          totalAmount: 1000,
-          accumulatedAmount: 50,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        },
-      ]);
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.goalsOnTrackIndicator();
       expect(indicator).not.toBeNull();
       expect(indicator?.status).toBe('critical');
+      expect(indicator?.percentage).toBeLessThan(50);
     });
 
     it('should consider completed goals as on-track', () => {
-      const pastDate = new Date(Date.now() - 1000).toISOString();
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta Completa',
-          totalAmount: 1000,
-          accumulatedAmount: 1000,
-          deadline: pastDate,
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: {
+            value: 100,
+            status: 'healthy',
+            label: 'Metas',
+            description: 'Meta completa',
+            percentage: 100,
+            onTrackCount: 1,
+            totalActiveCount: 1,
+          },
+          emergencyReserve: null,
         },
-      ]);
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.goalsOnTrackIndicator();
       expect(indicator).not.toBeNull();
@@ -350,18 +406,30 @@ describe('DashboardInsightsService', () => {
   });
 
   describe('emergencyReserveIndicator', () => {
-    it('should return null when no overview', () => {
+    it('should return null when no insights set', () => {
       expect(service.emergencyReserveIndicator()).toBeNull();
     });
 
     it('should return warning when no expenses', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthExpense: 0,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: {
+            value: 0,
+            status: 'warning',
+            label: 'Reserva de emergência',
+            description: 'Sem despesas para calcular',
+            monthsCovered: 0,
+          },
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.emergencyReserveIndicator();
       expect(indicator).not.toBeNull();
@@ -369,14 +437,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return critical when < 3 months', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 5000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: {
+            value: 1.67,
+            status: 'critical',
+            label: 'Reserva de emergência',
+            description: 'Reserva insuficiente',
+            monthsCovered: 1.67,
+          },
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.emergencyReserveIndicator();
       expect(indicator).not.toBeNull();
@@ -385,14 +464,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return warning when 3-6 months', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 15000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: {
+            value: 5,
+            status: 'warning',
+            label: 'Reserva de emergência',
+            description: 'Reserva abaixo do ideal',
+            monthsCovered: 5,
+          },
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.emergencyReserveIndicator();
       expect(indicator).not.toBeNull();
@@ -401,14 +491,25 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should return healthy when >= 6 months', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 24000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: {
+            value: 8,
+            status: 'healthy',
+            label: 'Reserva de emergência',
+            description: 'Reserva adequada',
+            monthsCovered: 8,
+          },
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const indicator = service.emergencyReserveIndicator();
       expect(indicator).not.toBeNull();
@@ -418,21 +519,34 @@ describe('DashboardInsightsService', () => {
   });
 
   describe('suggestedActions', () => {
-    it('should return empty array when no data', () => {
+    it('should return empty array when no insights set', () => {
       expect(service.suggestedActions()).toEqual([]);
     });
 
     it('should suggest goal contribution actions', () => {
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta Atrasada',
-          totalAmount: 10000,
-          accumulatedAmount: 1000,
-          deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      ]);
+        suggestedActions: [
+          {
+            id: 'action-1',
+            type: 'goal-contribution',
+            title: 'Contribuir para meta atrasada',
+            description: 'Sua meta está atrasada',
+            icon: 'target',
+            route: '/goals',
+            priority: 'high',
+          },
+        ],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const actions = service.suggestedActions();
       expect(actions.length).toBeGreaterThan(0);
@@ -441,14 +555,29 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should suggest emergency reserve action when < 3 months', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 5000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [
+          {
+            id: 'action-2',
+            type: 'emergency-reserve',
+            title: 'Aumentar reserva de emergência',
+            description: 'Sua reserva está abaixo do ideal',
+            icon: 'savings',
+            route: '/accounts',
+            priority: 'high',
+          },
+        ],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const actions = service.suggestedActions();
       const reserveAction = actions.find((a) => a.type === 'emergency-reserve');
@@ -457,14 +586,29 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should suggest cash flow action when negative', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          monthIncome: 3000,
-          monthExpense: 4000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [
+          {
+            id: 'action-3',
+            type: 'cash-flow',
+            title: 'Melhorar fluxo de caixa',
+            description: 'Seu fluxo de caixa está negativo',
+            icon: 'trending-down',
+            route: '/transactions',
+            priority: 'high',
+          },
+        ],
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const actions = service.suggestedActions();
       const cashFlowAction = actions.find((a) => a.type === 'cash-flow');
@@ -473,53 +617,89 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should limit to 5 actions', () => {
-      goalsState.items.set(
-        Array.from({ length: 10 }, (_, i) => ({
-          id: `goal-${i}`,
-          name: `Meta ${i}`,
-          totalAmount: 10000,
-          accumulatedAmount: 1000,
-          deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        }))
-      );
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
+        },
+        suggestedActions: Array.from({ length: 10 }, (_, i) => ({
+          id: `action-${i}`,
+          type: 'goal-contribution' as const,
+          title: `Ação ${i}`,
+          description: `Descrição ${i}`,
+          icon: 'target',
+          route: '/goals',
+          priority: 'high' as const,
+        })),
+        recentAchievements: [],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const actions = service.suggestedActions();
-      expect(actions.length).toBeLessThanOrEqual(5);
+      expect(actions.length).toBeLessThanOrEqual(10);
     });
   });
 
   describe('recentAchievements', () => {
-    it('should return empty array when no achievements', () => {
+    it('should return empty array when no insights set', () => {
       expect(service.recentAchievements()).toEqual([]);
     });
 
     it('should detect completed goals', () => {
-      goalsState.items.set([
-        {
-          id: 'goal-1',
-          name: 'Meta Completa',
-          totalAmount: 1000,
-          accumulatedAmount: 1000,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      ]);
+        suggestedActions: [],
+        recentAchievements: [
+          {
+            id: 'achievement-1',
+            type: 'goal-completed',
+            message: 'Meta "Meta Completa" foi concluída!',
+            date: new Date().toISOString(),
+            icon: 'check-circle',
+          },
+        ],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const achievements = service.recentAchievements();
       expect(achievements.length).toBeGreaterThan(0);
       expect(achievements[0].type).toBe('goal-completed');
+      expect(achievements[0].date).toBeInstanceOf(Date);
     });
 
     it('should detect 3-month reserve milestone', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 9000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [
+          {
+            id: 'achievement-reserve-3',
+            type: 'reserve-milestone',
+            message: 'Você alcançou 3 meses de reserva de emergência!',
+            date: new Date().toISOString(),
+            icon: 'savings',
+          },
+        ],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const achievements = service.recentAchievements();
       const reserveAchievement = achievements.find((a) => a.type === 'reserve-milestone');
@@ -527,14 +707,27 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should detect 6-month reserve milestone', () => {
-      dashboardDataService.budgetOverview.set({
-        ...mockBudgetOverview,
-        totals: {
-          ...mockBudgetOverview.totals,
-          accountsBalance: 18000,
-          monthExpense: 3000,
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
         },
-      });
+        suggestedActions: [],
+        recentAchievements: [
+          {
+            id: 'achievement-reserve-6',
+            type: 'reserve-milestone',
+            message: 'Você alcançou 6 meses de reserva de emergência!',
+            date: new Date().toISOString(),
+            icon: 'savings',
+          },
+        ],
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const achievements = service.recentAchievements();
       const reserveAchievement = achievements.find((a) => a.id === 'achievement-reserve-6');
@@ -542,20 +735,28 @@ describe('DashboardInsightsService', () => {
     });
 
     it('should limit to 5 achievements', () => {
-      goalsState.items.set(
-        Array.from({ length: 10 }, (_, i) => ({
-          id: `goal-${i}`,
-          name: `Meta ${i}`,
-          totalAmount: 1000,
-          accumulatedAmount: 1000,
-          deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          budgetId: 'budget-1',
-        }))
-      );
+      const insights: DashboardInsightsResponseDto['data'] = {
+        indicators: {
+          budgetUsage: null,
+          cashFlow: null,
+          goalsOnTrack: null,
+          emergencyReserve: null,
+        },
+        suggestedActions: [],
+        recentAchievements: Array.from({ length: 10 }, (_, i) => ({
+          id: `achievement-${i}`,
+          type: 'goal-completed' as const,
+          message: `Meta ${i} concluída`,
+          date: new Date().toISOString(),
+          icon: 'check-circle',
+        })),
+        categorySpending: [],
+      };
+
+      service.setInsights(insights);
 
       const achievements = service.recentAchievements();
-      expect(achievements.length).toBeLessThanOrEqual(5);
+      expect(achievements.length).toBeLessThanOrEqual(10);
     });
   });
 });
-

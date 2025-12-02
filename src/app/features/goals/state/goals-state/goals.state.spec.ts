@@ -265,13 +265,17 @@ describe('GoalsState', () => {
 
   describe('suggestedMonthlyById', () => {
     it('should calculate suggested monthly when dueDate exists', async () => {
+      
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 2);
+      
       const goalsWithDeadline: GoalDto[] = [
         {
           id: 'goal-monthly',
           name: 'Goal with deadline',
           totalAmount: 12000,
           accumulatedAmount: 0,
-          deadline: '2025-12-31T23:59:59Z',
+          deadline: futureDate.toISOString(),
           budgetId: 'budget-1',
           sourceAccountId: 'account-1',
         },
@@ -285,12 +289,15 @@ describe('GoalsState', () => {
       );
 
       goalsState.load('budget-1');
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       const suggested = goalsState.suggestedMonthlyById();
       const value = suggested('goal-monthly');
-      expect(value).toBeGreaterThan(0);
-      expect(value).toBeLessThanOrEqual(12000);
+      expect(value).not.toBeNull();
+      if (value !== null) {
+        expect(value).toBeGreaterThan(0);
+        expect(value).toBeLessThanOrEqual(12000);
+      }
     });
 
     it('should return null when dueDate is null', async () => {

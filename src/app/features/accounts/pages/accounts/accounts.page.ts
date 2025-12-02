@@ -153,7 +153,7 @@ export class AccountsPage implements OnInit {
       },
       {
         label: 'Transferir',
-        icon: 'swap_horiz',
+        icon: 'exchange-alt',
         variant: 'secondary',
         size: 'medium',
         disabled: !this.selectedBudgetId() || !this.hasAccounts(),

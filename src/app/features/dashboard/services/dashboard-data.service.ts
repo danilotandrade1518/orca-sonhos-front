@@ -6,6 +6,7 @@ import { GetBudgetsResponseDto } from '../../../../dtos/budget/get-budgets-respo
 import { GetBudgetOverviewResponseDto } from '../../../../dtos/budget/get-budget-overview-response-dto';
 import { GoalDto } from '../../../../dtos/goal/goal-types/goal-types';
 import { DashboardData, DashboardMetrics } from '../types/dashboard.types';
+import { DashboardInsightsResponseDto } from '../../../../dtos/dashboard/dashboard-insights-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -90,6 +91,28 @@ export class DashboardDataService {
         return of([]);
       })
     );
+  }
+
+  loadDashboardInsights(budgetId: string): Observable<DashboardInsightsResponseDto['data']> {
+    return this.apiService
+      .get<DashboardInsightsResponseDto['data']>(`budget/${budgetId}/dashboard/insights`)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => {
+          this._error.set(error.message || 'Erro ao carregar insights do dashboard');
+          return of({
+            indicators: {
+              budgetUsage: null,
+              cashFlow: null,
+              goalsOnTrack: null,
+              emergencyReserve: null,
+            },
+            suggestedActions: [],
+            recentAchievements: [],
+            categorySpending: [],
+          });
+        })
+      );
   }
 
   clearOverview(): void {

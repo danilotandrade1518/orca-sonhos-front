@@ -215,20 +215,25 @@
 
   &__item-values {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--os-spacing-3);
+    grid-template-columns: 1fr;
+    gap: var(--os-spacing-2);
   }
 
   &__item-value {
     display: flex;
     flex-direction: column;
     gap: var(--os-spacing-1);
+    min-width: 0;
+    overflow: hidden;
   }
 
   &__item-value-label {
     font-size: var(--os-font-size-xs);
     color: var(--os-color-text-secondary);
     font-weight: var(--os-font-weight-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__footer {
@@ -247,10 +252,73 @@
   }
 }
 
-@media (min-width: 768px) {
+// Responsive adjustments
+@media (min-width: 576px) {
+  .goals-progress-widget {
+    &__item-values {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--os-spacing-3);
+    }
+  }
+}
+
+@media (min-width: 873px) {
   .goals-progress-widget {
     &__item-values {
       grid-template-columns: repeat(4, 1fr);
+    }
+
+    &__summary {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .goals-progress-widget {
+    padding: var(--os-spacing-3);
+
+    &__item {
+      padding: var(--os-spacing-3);
+    }
+
+    &__item-value {
+      min-width: 0;
+      width: 100%;
+
+      ::ng-deep os-money-display {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    &__item-value-label {
+      font-size: var(--os-font-size-xs);
+      white-space: nowrap;
+    }
+
+    &__summary {
+      flex-direction: column;
+      gap: var(--os-spacing-2);
+    }
+
+    &__summary-item {
+      align-items: center;
+      text-align: center;
+    }
+
+    &__item-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--os-spacing-2);
+    }
+
+    &__item-title {
+      width: 100%;
     }
   }
 }

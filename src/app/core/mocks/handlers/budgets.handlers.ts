@@ -162,4 +162,110 @@ export const budgetHandlers = [
 
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
+
+  http.get('/api/budget/:budgetId/dashboard/insights', ({ request, params }) => {
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { budgetId } = params;
+
+    if (budgetId === 'budget-1') {
+      const now = new Date();
+      const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+      const fiveDaysAgo = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
+
+      return HttpResponse.json({
+        data: {
+          indicators: {
+            budgetUsage: {
+              value: 83.33,
+              percentage: 83.33,
+              status: 'warning',
+              label: 'Uso de Orçamento',
+              description: '83.3% das receitas foram utilizadas',
+            },
+            cashFlow: {
+              value: 120,
+              ratio: 120,
+              absoluteValue: 500,
+              status: 'healthy',
+              label: 'Fluxo de Caixa',
+              description: 'Superávit de R$ 500,00',
+            },
+            goalsOnTrack: {
+              value: 75,
+              percentage: 75,
+              status: 'warning',
+              label: 'Metas On-Track',
+              description: '3 de 4 metas no prazo',
+              onTrackCount: 3,
+              totalActiveCount: 4,
+            },
+            emergencyReserve: {
+              value: 2,
+              monthsCovered: 2,
+              status: 'critical',
+              label: 'Reserva de Emergência',
+              description: '2.0 meses de despesas cobertos',
+            },
+          },
+          suggestedActions: [
+            {
+              id: 'emergency-reserve',
+              type: 'emergency-reserve',
+              title: 'Aumentar reserva de emergência',
+              description: 'Sua reserva cobre apenas 2.0 meses. Recomenda-se pelo menos 3 meses',
+              icon: 'shield',
+              route: '/goals',
+              priority: 'high',
+            },
+          ],
+          recentAchievements: [
+            {
+              id: 'achievement-goal-1',
+              type: 'goal-completed',
+              message: 'Meta "Reserva de emergência" alcançada!',
+              date: twoDaysAgo.toISOString(),
+              icon: 'trophy',
+            },
+            {
+              id: 'achievement-reserve-3',
+              type: 'reserve-milestone',
+              message: 'Reserva de emergência atingiu 3 meses!',
+              date: fiveDaysAgo.toISOString(),
+              icon: 'shield',
+            },
+          ],
+          categorySpending: [
+            {
+              categoryId: 'category-1',
+              categoryName: 'Alimentação',
+              totalAmount: 800,
+              percentage: 32,
+              transactionCount: 15,
+            },
+            {
+              categoryId: 'category-2',
+              categoryName: 'Transporte',
+              totalAmount: 500,
+              percentage: 20,
+              transactionCount: 8,
+            },
+            {
+              categoryId: 'category-3',
+              categoryName: 'Moradia',
+              totalAmount: 1200,
+              percentage: 48,
+              transactionCount: 3,
+            },
+          ],
+        },
+      });
+    }
+
+    return HttpResponse.json({ error: 'Budget not found' }, { status: 404 });
+  }),
 ];

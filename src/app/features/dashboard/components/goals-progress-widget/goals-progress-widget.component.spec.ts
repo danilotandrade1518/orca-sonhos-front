@@ -90,8 +90,10 @@ describe('GoalsProgressWidgetComponent', () => {
       fixture.componentRef.setInput('goals', []);
       fixture.detectChanges();
 
-      const createButton = fixture.nativeElement.querySelector('os-button');
-      createButton?.click();
+      const createButton = fixture.nativeElement.querySelector('.goals-progress-widget__empty os-button button');
+      if (createButton) {
+        createButton.click();
+      }
 
       expect(router.navigate).toHaveBeenCalledWith(['/goals/new']);
     });
@@ -169,8 +171,11 @@ describe('GoalsProgressWidgetComponent', () => {
       fixture.componentRef.setInput('maxDisplayed', 5);
       fixture.detectChanges();
 
-      const button = fixture.nativeElement.querySelector('os-button');
-      button?.click();
+      const footer = fixture.nativeElement.querySelector('.goals-progress-widget__footer');
+      const button = footer?.querySelector('os-button button');
+      if (button) {
+        button.click();
+      }
 
       expect(router.navigate).toHaveBeenCalledWith(['/goals']);
     });
@@ -247,7 +252,7 @@ describe('GoalsProgressWidgetComponent', () => {
 
       const suggestedValue = Array.from(
         fixture.nativeElement.querySelectorAll('.goals-progress-widget__item-value-label')
-      ).find((el) => el.textContent?.includes('Aporte sugerido'));
+      ).find((el) => (el as Element).textContent?.includes('Aporte sugerido')) as Element | undefined;
 
       expect(suggestedValue).toBeTruthy();
     });
@@ -290,4 +295,3 @@ describe('GoalsProgressWidgetComponent', () => {
     });
   });
 });
-

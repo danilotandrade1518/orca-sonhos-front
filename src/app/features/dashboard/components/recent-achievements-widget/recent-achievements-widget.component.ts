@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { RecentAchievement } from '../../types/dashboard.types';
 import { OsCardComponent } from '@shared/ui-components/molecules/os-card/os-card.component';
@@ -83,7 +83,6 @@ export class RecentAchievementsWidgetComponent {
   });
 
   formatDate(date: Date): string {
-    return this.localeService.formatDate(date, 'short');
+    return this.localeService.formatDateShort(date);
   }
 }
-
