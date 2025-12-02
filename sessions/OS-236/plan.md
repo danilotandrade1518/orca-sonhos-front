@@ -222,7 +222,7 @@ Integrar:
 
 ---
 
-## 📅 FASE 4: Integração com Transações, Presets, MSW CRUD e Polimento [Status: ⏰ Em Progresso]
+## 📅 FASE 4: Integração com Transações, Presets, MSW CRUD e Polimento [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -266,12 +266,14 @@ Criar `PresetCategoriesService` e integrar com fluxo de criação de orçamento:
 **Descrição**:  
 Atualizar `categories.handlers.ts` para:
 
-- Suportar `POST /categories`, `PUT /categories/:id`, `DELETE /categories/:id`.
-- Persistir dados em memória (array mock) respeitando `active`, `type`, `kind`, `budgetId`.
+- Suportar `POST /category/create-category`, `POST /category/update-category`, `POST /category/delete-category` (padrão command-style do backend).
+- Persistir dados em memória (Map) respeitando `active`, `type`, `kind`, `budgetId`.
+- Alinhar formatos de request/response com contratos reais do backend.
 
 **Critério de Conclusão**:
 
-- Fluxos de criar/editar/desativar categoria funcionam em ambiente com MSW.
+- Fluxos de criar/editar/excluir categoria funcionam em ambiente com MSW.
+- Handlers refletem exatamente os contratos do backend (rotas, métodos HTTP, formatos de body/response).
 
 #### 4. Validações de Formulário e Regras de Negócio [✅]
 
@@ -292,7 +294,7 @@ Implementar:
 - Formulário de categorias impede duplicidades conforme regra.
 - Estado de categoria inativa reflete corretamente na UI.
 
-#### 5. Acessibilidade, Responsividade e Testes Finais [⏳]
+#### 5. Acessibilidade, Responsividade e Testes Finais [✅]
 
 **Descrição**:  
 Revisar:
@@ -319,8 +321,27 @@ Revisar:
 
 - **Integração com transações**: `TransactionFormComponent` e `TransactionsFiltersComponent` agora usam `CategoryState` diretamente, removendo dependência de inputs mockados. Categorias são filtradas por tipo de transação e apenas ativas são exibidas.
 - **PresetCategoriesService**: Criado serviço com catálogo de 14 categorias preset (4 INCOME, 8 EXPENSE, 2 TRANSFER). Seed automático integrado ao `BudgetState.createBudget()` usando `firstValueFrom` para aguardar criação assíncrona.
-- **MSW CRUD completo**: Implementados handlers POST, PUT e DELETE com persistência em memória usando `Map`. Validação de unicidade de nome implementada no handler POST/PUT. Soft delete implementado via flag `active: false`.
-- **Validações**: Adicionado validador customizado `uniqueNameValidator` no `os-category-manager` que verifica unicidade case-insensitive contra categorias existentes. Validação também implementada no MSW para garantir integridade no backend.
+- **MSW CRUD completo**: Implementados handlers seguindo padrão command-style do backend:
+  - `POST /category/create-category` com body `{ name, type, budgetId }`
+  - `POST /category/update-category` com body `{ id, name, type }`
+  - `POST /category/delete-category` com body `{ id }`
+  - Persistência em memória usando `Map`. Respostas incluem `{ id, traceId }` (sucesso) ou `{ errors: string[], traceId: string }` (erro).
+  - Validação de unicidade de nome implementada nos handlers. Delete remove categoria do store (hard delete no mock, mas backend pode implementar soft delete).
+- **Validações**: Adicionado validador customizado `uniqueNameValidator` no `os-category-manager` que verifica unicidade case-insensitive contra categorias existentes. Validação também implementada no MSW para garantir integridade.
+- **Alinhamento com backend**: Handlers MSW e `CategoriesApiService` validados e corrigidos para refletir exatamente os contratos reais do backend:
+  - Validação realizada comparando handlers com controllers reais do backend (`CreateCategoryController`, `UpdateCategoryController`, `DeleteCategoryController`).
+  - Rotas corrigidas para seguir padrão command-style: `POST /category/create-category`, `POST /category/update-category`, `POST /category/delete-category`.
+  - Formatos de request/response alinhados: bodies simplificados (apenas campos obrigatórios), respostas com `{ id, traceId }` ou `{ errors: string[], traceId: string }`.
+  - Removidos métodos desnecessários do `ApiService` (`patchRaw`, `deleteRaw`) já que todas mutations são POST.
+- **Testes e Acessibilidade**:
+  - Criado arquivo de testes completo para `CategoriesPage` (`categories-page.component.spec.ts`) com cobertura de estados, mapeamento de categorias, eventos e efeitos.
+  - Melhorias de acessibilidade implementadas em `os-category-manager`:
+    - Adicionados `aria-label` descritivos em botões de ação ("Editar categoria X", "Excluir categoria X").
+    - Ícones decorativos marcados com `aria-hidden="true"`.
+    - Seção de filtros com `role="search"` e `aria-label="Filtros de categorias"`.
+    - Botão de toggle de filtros com `aria-expanded` dinâmico.
+    - Lista de categorias já tinha `role="list"` e itens com `role="listitem"`.
+  - Responsividade já implementada via `BreakpointObserver` no componente, com estilos responsivos em SCSS.
 
 ---
 
