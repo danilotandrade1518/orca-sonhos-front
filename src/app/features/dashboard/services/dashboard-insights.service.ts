@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { GoalDto } from '../../../../dtos/goal/goal-types/goal-types';
 import { GoalsState } from '../../../goals/state/goals-state/goals.state';
@@ -12,6 +12,9 @@ import {
   RecentAchievement,
   SuggestedAction,
 } from '../types/dashboard.types';
+import { CategorySpendingDto } from '../../../../dtos/report/category-spending.dto';
+import { TransactionDto } from '../../../../dtos/transaction';
+import { ReportsCalculatorService } from '../../../reports/services/reports-calculator/reports-calculator.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +22,14 @@ import {
 export class DashboardInsightsService {
   private readonly dashboardDataService = inject(DashboardDataService);
   private readonly goalsState = inject(GoalsState);
+  private readonly reportsCalculator = inject(ReportsCalculatorService);
+
+  private readonly _transactions = signal<TransactionDto[]>([]);
+  readonly transactions = this._transactions.asReadonly();
+
+  setTransactions(transactions: TransactionDto[]): void {
+    this._transactions.set(transactions);
+  }
 
   readonly budgetUsageIndicator = computed<BudgetUsageIndicator | null>(() => {
     const overview = this.dashboardDataService.budgetOverview();
@@ -305,6 +316,15 @@ export class DashboardInsightsService {
     }
 
     return achievements.slice(0, 5);
+  });
+
+  readonly categorySpending = computed<CategorySpendingDto[]>(() => {
+    const transactions = this._transactions();
+    if (transactions.length === 0) {
+      return [];
+    }
+
+    return this.reportsCalculator.calculateCategorySpending(transactions);
   });
 
   private calculateMonthsRemaining(start: Date, end: Date): number {

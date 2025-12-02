@@ -149,7 +149,7 @@ export class DashboardWidgetsComponent {
       }
 
       if (widget.type === 'category-spending') {
-        dashboardWidget.data = null;
+        dashboardWidget.data = this.dashboardInsightsService.categorySpending();
       }
 
       if (widget.type === 'recent-achievements') {

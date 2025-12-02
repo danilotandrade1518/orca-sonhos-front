@@ -326,7 +326,7 @@ Definir lógica simplificada para:
 
 ---
 
-## 📅 FASE 5: Gastos por Categoria (Parcial) e Polimento de Layout/Acessibilidade [Status: ⏳]
+## 📅 FASE 5: Gastos por Categoria (Parcial) e Polimento de Layout/Acessibilidade [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -334,7 +334,7 @@ Entregar a visão parcial de **gastos por categoria**, preparar o widget para in
 
 ### 📋 Tarefas
 
-#### 5.1 Implementar `CategorySpendingWidgetComponent` (versão parcial) [⏳]
+#### 5.1 Implementar `CategorySpendingWidgetComponent` (versão parcial) [✅]
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/category-spending-widget` que:
@@ -351,7 +351,7 @@ Componente standalone em `features/dashboard/components/category-spending-widget
 - Widget funcional com dados parciais.
 - Preparado para, futuramente, receber também `% do planejado` sem refactor pesado.
 
-#### 5.2 Refinar layout responsivo e hierarquia visual do dashboard [⏳]
+#### 5.2 Refinar layout responsivo e hierarquia visual do dashboard [✅]
 
 **Descrição**:  
 Aplicar ajustes finos em:
@@ -365,7 +365,7 @@ Aplicar ajustes finos em:
 - Em mobile, os widgets seguem a ordem e empilhamento especificados.
 - Em desktop, hero + grid se comportam conforme wireframes textuais do `layout-specification.md`.
 
-#### 5.3 Acessibilidade e estados globais [⏳]
+#### 5.3 Acessibilidade e estados globais [✅]
 
 **Descrição**:  
 Garantir que todos os widgets e o dashboard como um todo:
@@ -381,14 +381,51 @@ Garantir que todos os widgets e o dashboard como um todo:
 
 ### 🧪 Critérios de Validação
 
-- [ ] Layout sem scroll horizontal em todas as resoluções suportadas.
-- [ ] Progresso de metas sempre visível na primeira dobra em mobile/desktop.
-- [ ] Navegação por teclado completa sobre todos os elementos interativos.
-- [ ] Indicadores e estados (sucesso/erro/atenção) compreensíveis por leitores de tela.
+- [x] Layout sem scroll horizontal em todas as resoluções suportadas.
+- [x] Progresso de metas sempre visível na primeira dobra em mobile/desktop.
+- [x] Navegação por teclado completa sobre todos os elementos interativos.
+- [x] Indicadores e estados (sucesso/erro/atenção) compreensíveis por leitores de tela.
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_
+- **Implementação**: CategorySpendingWidgetComponent criado como componente standalone seguindo padrões Angular modernos (OnPush, signals, input/output functions)
+- **Layout**: Componente implementa layout de barras horizontais conforme layout-specification.md:
+  - Lista de categorias com barras de progresso horizontais
+  - Exibe nome da categoria, percentual do total e valor gasto
+  - Contador de transações por categoria
+  - Mensagem informativa sobre visão completa com envelopes (futuro)
+  - Estados de loading (skeleton) e empty implementados
+- **Funcionalidades**:
+  - Exibe até 5 categorias principais (configurável via maxDisplayed)
+  - Barras de progresso com variantes semânticas baseadas no percentual (success/default/warning/error)
+  - Formatação de valores monetários e percentuais
+  - Footer com nota quando há mais categorias que maxDisplayed
+- **Integração**:
+  - DashboardInsightsService atualizado com método categorySpending() usando ReportsCalculatorService
+  - Método setTransactions() adicionado para atualizar transações do período atual
+  - OsDashboardWidgetsComponent atualizado para renderizar CategorySpendingWidgetComponent quando widget.type === 'category-spending'
+  - Método helper getCategorySpending criado para extrair dados do widget
+  - DashboardWidgetsComponent atualizado para fornecer dados de category-spending
+  - DashboardPage atualizado para buscar transações do mês atual e atualizar DashboardInsightsService
+  - Widget adicionado ao DashboardPage na linha 3, coluna 2 conforme layout-specification.md
+- **Responsividade**: Layout mobile-first implementado com media queries:
+  - Grid adaptativo para diferentes breakpoints
+  - Cards com padding e espaçamento ajustados por breakpoint
+  - Valores numéricos com tamanhos de fonte responsivos
+- **Acessibilidade**: ARIA labels, roles e navegação por teclado implementados:
+  - role="region" com aria-labelledby apontando para título
+  - ARIA labels em progress bars e money displays
+  - Estrutura semântica com headings e landmarks adequados
+  - Estados de loading/empty com aria-live e role="status"
+- **Testes**: Testes unitários criados cobrindo:
+  - Renderização de categorias
+  - Estados de loading/empty
+  - Limitação de categorias exibidas (maxDisplayed)
+  - Formatação de valores e percentuais
+  - Variantes de progress bar baseadas em percentual
+  - Mensagem informativa sobre envelopes
+  - Acessibilidade (ARIA, roles, estrutura semântica)
+  - Footer com nota quando há mais categorias
 
 ---
 

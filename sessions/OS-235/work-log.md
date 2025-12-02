@@ -159,7 +159,59 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-235
-**Fase Atual**: FASE 4 - Próximas Ações e Conquistas Recentes [Status: ✅ Completada]
-**Última Modificação**: SuggestedActionsWidgetComponent e RecentAchievementsWidgetComponent criados e integrados ao dashboard
-**Próxima Tarefa**: Criar testes unitários para os novos componentes
+**Fase Atual**: FASE 5 - Gastos por Categoria (Parcial) e Polimento de Layout/Acessibilidade [Status: ✅ Completada]
+**Última Modificação**: CategorySpendingWidgetComponent criado, integrado ao dashboard e testes unitários implementados
+**Próxima Tarefa**: Validação final e preparação para entrega
+
+---
+
+### 🗓️ Sessão 2025-01-27 - Continuação
+
+**Fase**: FASE 5 - Gastos por Categoria (Parcial) e Polimento de Layout/Acessibilidade
+**Objetivo**: Implementar CategorySpendingWidgetComponent e garantir layout responsivo e acessibilidade
+
+#### ✅ Trabalho Realizado
+
+- **Criação do CategorySpendingWidgetComponent**:
+  - Componente standalone com ChangeDetectionStrategy.OnPush
+  - Layout de barras horizontais conforme layout-specification.md
+  - Implementados estados de loading (skeleton) e empty
+  - Lista de categorias com barras de progresso, percentuais e valores
+  - Contador de transações por categoria
+  - Mensagem informativa sobre visão completa com envelopes (futuro)
+  - Footer com nota quando há mais categorias que maxDisplayed
+  - Responsividade mobile-first implementada
+  - Acessibilidade: ARIA labels, roles e navegação por teclado
+- **Atualização do DashboardInsightsService**:
+  - Método categorySpending() adicionado usando ReportsCalculatorService
+  - Método setTransactions() adicionado para atualizar transações do período atual
+  - Signal de transações criado para reatividade
+- **Integração ao OsDashboardWidgetsComponent**:
+  - Import do CategorySpendingWidgetComponent adicionado
+  - Caso 'category-spending' adicionado ao switch de tipos de widget
+  - Método helper getCategorySpending criado para extrair dados do widget
+- **Atualização do DashboardWidgetsComponent**:
+  - Dados de category-spending mapeados para widget.data
+- **Atualização do DashboardPage**:
+  - Método loadCurrentMonthTransactions criado para buscar transações do mês atual
+  - Integração com TransactionsApiService para buscar todas as transações do período
+  - Atualização do DashboardInsightsService com transações carregadas
+  - Widget category-spending adicionado na linha 3, coluna 2 conforme layout-specification.md
+- **Testes unitários criados**:
+  - Cobertura completa de cenários principais
+  - Testes de renderização, estados, formatação e acessibilidade
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar ReportsCalculatorService existente para calcular gastos por categoria ✅
+- **Decisão**: Buscar transações do mês atual no DashboardPage e atualizar DashboardInsightsService ✅
+- **Decisão**: Implementar versão parcial sem % do planejado (aguardando envelopes) conforme especificado ✅
+- **Implementação**: Barras de progresso com variantes semânticas baseadas em percentual (success/default/warning/error)
+- **Implementação**: Mensagem informativa sobre visão completa com envelopes para orientar usuários
+
+#### ⏭️ Próximos Passos
+
+- Validação final do dashboard completo
+- Verificação de layout responsivo em diferentes resoluções
+- Preparação para entrega final
 

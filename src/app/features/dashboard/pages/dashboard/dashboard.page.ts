@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
+import { DashboardInsightsService } from '@features/dashboard/services/dashboard-insights.service';
+import { TransactionsApiService } from '@features/transactions/services/transactions-api.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -41,6 +43,8 @@ import {
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly dashboardInsightsService = inject(DashboardInsightsService);
+  private readonly transactionsApi = inject(TransactionsApiService);
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
@@ -80,6 +84,14 @@ export class DashboardPage implements OnInit {
       title: 'Conquistas Recentes',
       size: 'medium',
       position: { row: 3, column: 1 },
+      enabled: true,
+    },
+    {
+      id: 'category-spending',
+      type: 'category-spending',
+      title: 'Gastos por Categoria',
+      size: 'medium',
+      position: { row: 3, column: 2 },
       enabled: true,
     },
     {
@@ -127,6 +139,7 @@ export class DashboardPage implements OnInit {
         await Promise.all([
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
+          this.loadCurrentMonthTransactions(budgetId),
         ]);
       }
     } catch (error) {
@@ -158,5 +171,43 @@ export class DashboardPage implements OnInit {
 
   onRetryRequested(): void {
     this.loadDashboardData();
+  }
+
+  private async loadCurrentMonthTransactions(budgetId: string): Promise<void> {
+    try {
+      const now = new Date();
+      const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
+      const allTransactions = [];
+      let page = 1;
+      const pageSize = 100;
+      let hasNext = true;
+
+      while (hasNext) {
+        const response = await firstValueFrom(
+          this.transactionsApi.list({
+            budgetId,
+            page,
+            pageSize,
+            dateFrom: startDate.toISOString().split('T')[0],
+            dateTo: endDate.toISOString().split('T')[0],
+          })
+        );
+
+        if (response?.data?.data) {
+          allTransactions.push(...response.data.data);
+          hasNext = response.data.meta?.hasNext ?? false;
+          page++;
+        } else {
+          hasNext = false;
+        }
+      }
+
+      this.dashboardInsightsService.setTransactions(allTransactions);
+    } catch (error) {
+      console.error('Error loading transactions for category spending', error);
+      this.dashboardInsightsService.setTransactions([]);
+    }
   }
 }

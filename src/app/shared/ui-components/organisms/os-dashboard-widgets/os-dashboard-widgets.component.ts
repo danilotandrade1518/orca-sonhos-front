@@ -9,8 +9,10 @@ import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goa
 import { FinancialHealthIndicatorComponent, FinancialHealthIndicators } from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
 import { SuggestedActionsWidgetComponent } from '@features/dashboard/components/suggested-actions-widget/suggested-actions-widget.component';
 import { RecentAchievementsWidgetComponent } from '@features/dashboard/components/recent-achievements-widget/recent-achievements-widget.component';
+import { CategorySpendingWidgetComponent } from '@features/dashboard/components/category-spending-widget/category-spending-widget.component';
 import { GoalDto } from '@dtos/goal';
 import { SuggestedAction, RecentAchievement } from '@features/dashboard/types/dashboard.types';
+import { CategorySpendingDto } from '@dtos/report/category-spending.dto';
 
 export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
@@ -75,6 +77,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
     FinancialHealthIndicatorComponent,
     SuggestedActionsWidgetComponent,
     RecentAchievementsWidgetComponent,
+    CategorySpendingWidgetComponent,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
@@ -351,6 +354,17 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               <p>Não há conquistas recentes disponíveis</p>
             </div>
             }
+            } @case ('category-spending') {
+            @if (getCategorySpending(widget)) {
+            <os-category-spending-widget
+              [categories]="getCategorySpending(widget)!"
+              [isLoading]="false"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há dados de gastos por categoria disponíveis</p>
+            </div>
+            }
             } @default {
             <div class="os-dashboard-widgets__placeholder">
               <p>Widget não implementado: {{ widget.type }}</p>
@@ -597,6 +611,13 @@ export class OsDashboardWidgetsComponent {
   getRecentAchievements(widget: DashboardWidget): RecentAchievement[] | null {
     if (widget.data && Array.isArray(widget.data)) {
       return widget.data as RecentAchievement[];
+    }
+    return null;
+  }
+
+  getCategorySpending(widget: DashboardWidget): CategorySpendingDto[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as CategorySpendingDto[];
     }
     return null;
   }
