@@ -5,6 +5,14 @@ import {
   OsGoalProgressCardComponent,
   GoalProgressData,
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
+import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goals-progress-widget/goals-progress-widget.component';
+import { FinancialHealthIndicatorComponent, FinancialHealthIndicators } from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
+import { SuggestedActionsWidgetComponent } from '@features/dashboard/components/suggested-actions-widget/suggested-actions-widget.component';
+import { RecentAchievementsWidgetComponent } from '@features/dashboard/components/recent-achievements-widget/recent-achievements-widget.component';
+import { CategorySpendingWidgetComponent } from '@features/dashboard/components/category-spending-widget/category-spending-widget.component';
+import { GoalDto } from '@dtos/goal';
+import { SuggestedAction, RecentAchievement } from '@features/dashboard/types/dashboard.types';
+import { CategorySpendingDto } from '@dtos/report/category-spending.dto';
 
 export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
@@ -21,7 +29,11 @@ export interface DashboardWidget {
     | 'transaction-list'
     | 'account-balance'
     | 'monthly-trends'
-    | 'quick-actions';
+    | 'quick-actions'
+    | 'financial-health'
+    | 'suggested-actions'
+    | 'category-spending'
+    | 'recent-achievements';
   title: string;
   size: 'small' | 'medium' | 'large' | 'full-width';
   position: { row: number; column: number };
@@ -61,6 +73,11 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   imports: [
     CommonModule,
     OsGoalProgressCardComponent,
+    GoalsProgressWidgetComponent,
+    FinancialHealthIndicatorComponent,
+    SuggestedActionsWidgetComponent,
+    RecentAchievementsWidgetComponent,
+    CategorySpendingWidgetComponent,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
@@ -150,16 +167,25 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           [attr.aria-label]="getWidgetAriaLabel(widget)"
           [attr.aria-describedby]="getWidgetDescriptionId(widget)"
           role="region"
-          tabindex="0"
-          (click)="onWidgetClick(widget)"
-          (keydown)="onWidgetKeyDown($event, widget)"
+          [attr.tabindex]="isWidgetClickable(widget) ? 0 : null"
+          [attr.aria-disabled]="!isWidgetClickable(widget) ? 'true' : null"
+          (click)="onWidgetClickIfClickable(widget)"
+          (keydown)="onWidgetKeyDownIfClickable($event, widget)"
         >
+          @if (!hasWidgetOwnTitle(widget)) {
           <div class="os-dashboard-widgets__widget-header">
             <h4 class="os-dashboard-widgets__widget-title">{{ widget.title }}</h4>
           </div>
+          }
 
           <div class="os-dashboard-widgets__widget-content">
             @switch (widget.type) { @case ('goal-progress') {
+            @if (hasGoalsListData(widget)) {
+            <os-goals-progress-widget
+              [goals]="getGoalsList(widget)"
+              [isLoading]="getGoalsLoading(widget)"
+            />
+            } @else {
             <os-goal-progress-card
               [goalData]="getGoalData(widget)"
               [variant]="'default'"
@@ -167,6 +193,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               [state]="getGoalState(widget)"
               [ariaLabel]="'Progresso da meta'"
             />
+            }
             } @case ('budget-summary') {
             <div class="os-dashboard-widgets__budget-summary">
               <div class="os-dashboard-widgets__metric">
@@ -297,6 +324,48 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                 Relatórios
               </os-button>
             </div>
+            } @case ('financial-health') {
+            @if (getFinancialHealthIndicators(widget)) {
+            <os-financial-health-indicator [indicators]="getFinancialHealthIndicators(widget)!" />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há dados de saúde financeira disponíveis</p>
+            </div>
+            }
+            } @case ('suggested-actions') {
+            @if (getSuggestedActions(widget)) {
+            <os-suggested-actions-widget
+              [actions]="getSuggestedActions(widget)!"
+              [isLoading]="false"
+              (actionClick)="onSuggestedActionClick($event)"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há ações sugeridas disponíveis</p>
+            </div>
+            }
+            } @case ('recent-achievements') {
+            @if (getRecentAchievements(widget)) {
+            <os-recent-achievements-widget
+              [achievements]="getRecentAchievements(widget)!"
+              [isLoading]="false"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há conquistas recentes disponíveis</p>
+            </div>
+            }
+            } @case ('category-spending') {
+            @if (getCategorySpending(widget)) {
+            <os-category-spending-widget
+              [categories]="getCategorySpending(widget)!"
+              [isLoading]="false"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há dados de gastos por categoria disponíveis</p>
+            </div>
+            }
             } @default {
             <div class="os-dashboard-widgets__placeholder">
               <p>Widget não implementado: {{ widget.type }}</p>
@@ -331,6 +400,7 @@ export class OsDashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<GoalProgressData>();
   readonly goalCardExpand = output<GoalProgressData>();
+  readonly suggestedActionClick = output<SuggestedAction>();
 
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error');
@@ -374,8 +444,43 @@ export class OsDashboardWidgetsComponent {
     }
 
     classes.push(`os-dashboard-widgets__widget--${widget.type}`);
+    
+    if (!this.isWidgetClickable(widget)) {
+      classes.push('os-dashboard-widgets__widget--non-clickable');
+    }
+    
+    if (this.hasWidgetOwnTitle(widget)) {
+      classes.push('os-dashboard-widgets__widget--has-internal-style');
+    }
 
     return classes.join(' ');
+  }
+
+  isWidgetClickable(widget: DashboardWidget): boolean {
+    
+    const clickableTypes: DashboardWidget['type'][] = [
+      'goal-progress',
+      'budget-summary',
+      'transaction-list',
+      'account-balance',
+    ];
+    return clickableTypes.includes(widget.type);
+  }
+
+  hasWidgetOwnTitle(widget: DashboardWidget): boolean {
+    
+    const widgetsWithOwnTitle: DashboardWidget['type'][] = [
+      'financial-health',
+      'suggested-actions',
+      'category-spending',
+      'recent-achievements',
+    ];
+    
+    if (widget.type === 'goal-progress' && this.hasGoalsListData(widget)) {
+      return true;
+    }
+    
+    return widgetsWithOwnTitle.includes(widget.type);
   }
 
   getWidgetAriaLabel(widget: DashboardWidget): string {
@@ -396,6 +501,21 @@ export class OsDashboardWidgetsComponent {
       default:
         return 'medium';
     }
+  }
+
+  hasGoalsListData(widget: DashboardWidget): boolean {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data !== null && Array.isArray(data?.goals);
+  }
+
+  getGoalsList(widget: DashboardWidget): GoalDto[] {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data?.goals || [];
+  }
+
+  getGoalsLoading(widget: DashboardWidget): boolean {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data?.isLoading || false;
   }
 
   getGoalData(widget: DashboardWidget): GoalProgressData | null {
@@ -496,6 +616,48 @@ export class OsDashboardWidgetsComponent {
     }
   }
 
+  getFinancialHealthIndicators(widget: DashboardWidget): FinancialHealthIndicators | null {
+    if (widget.data && typeof widget.data === 'object') {
+      const data = widget.data as {
+        budgetUsage?: unknown;
+        cashFlow?: unknown;
+        goalsOnTrack?: unknown;
+        emergencyReserve?: unknown;
+      };
+      
+      if (data.budgetUsage || data.cashFlow || data.goalsOnTrack || data.emergencyReserve) {
+        return {
+          budgetUsage: data.budgetUsage as FinancialHealthIndicators['budgetUsage'],
+          cashFlow: data.cashFlow as FinancialHealthIndicators['cashFlow'],
+          goalsOnTrack: data.goalsOnTrack as FinancialHealthIndicators['goalsOnTrack'],
+          emergencyReserve: data.emergencyReserve as FinancialHealthIndicators['emergencyReserve'],
+        };
+      }
+    }
+    return null;
+  }
+
+  getSuggestedActions(widget: DashboardWidget): SuggestedAction[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as SuggestedAction[];
+    }
+    return null;
+  }
+
+  getRecentAchievements(widget: DashboardWidget): RecentAchievement[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as RecentAchievement[];
+    }
+    return null;
+  }
+
+  getCategorySpending(widget: DashboardWidget): CategorySpendingDto[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as CategorySpendingDto[];
+    }
+    return null;
+  }
+
   formatCurrency(value: number): string {
     return this.localeService.formatCurrency(value, 'BRL');
   }
@@ -504,10 +666,22 @@ export class OsDashboardWidgetsComponent {
     this.widgetClick.emit(widget);
   }
 
+  onWidgetClickIfClickable(widget: DashboardWidget): void {
+    if (this.isWidgetClickable(widget)) {
+      this.onWidgetClick(widget);
+    }
+  }
+
   onWidgetKeyDown(event: KeyboardEvent, widget: DashboardWidget): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this.onWidgetClick(widget);
+    }
+  }
+
+  onWidgetKeyDownIfClickable(event: KeyboardEvent, widget: DashboardWidget): void {
+    if (this.isWidgetClickable(widget)) {
+      this.onWidgetKeyDown(event, widget);
     }
   }
 
@@ -537,5 +711,9 @@ export class OsDashboardWidgetsComponent {
 
   onGoalCardExpand(goalData: GoalProgressData): void {
     this.goalCardExpand.emit(goalData);
+  }
+
+  onSuggestedActionClick(action: SuggestedAction): void {
+    this.suggestedActionClick.emit(action);
   }
 }

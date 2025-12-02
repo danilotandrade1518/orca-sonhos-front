@@ -92,9 +92,14 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: 1fr;
     gap: var(--os-dashboard-widgets-gap-desktop);
     width: 100%;
+
+    // 2 colunas em telas maiores
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
     &--compact {
       gap: var(--os-spacing-3);
@@ -194,20 +199,14 @@
     padding: var(--os-dashboard-widgets-padding-mobile);
 
     &__grid {
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: 1fr;
       gap: var(--os-dashboard-widgets-gap-tablet);
     }
 
     &__widget {
-      &--small {
-        grid-column: span 4;
-      }
-      &--medium {
-        grid-column: span 6;
-      }
-      &--large {
-        grid-column: span 8;
-      }
+      &--small,
+      &--medium,
+      &--large,
       &--full {
         grid-column: 1 / -1;
       }

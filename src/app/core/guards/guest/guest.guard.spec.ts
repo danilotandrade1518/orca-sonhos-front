@@ -98,7 +98,7 @@ describe('GuestGuard', () => {
 
       const result = await TestBed.runInInjectionContext(() => guestGuard(mockRoute, mockState));
 
-      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/register/complete-profile']);
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/auth/complete-profile']);
       expect(result).toBe(tree);
     });
   });

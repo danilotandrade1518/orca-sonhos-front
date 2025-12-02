@@ -92,7 +92,7 @@ describe('CompleteProfileGuard', () => {
 
     it('should call router createUrlTree to register', async () => {
       await TestBed.runInInjectionContext(() => completeProfileGuard(mockRoute, mockState));
-      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/register']);
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/auth']);
     });
 
     it('should call isAuthenticated method', async () => {

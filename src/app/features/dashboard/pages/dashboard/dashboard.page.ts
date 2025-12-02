@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
+import { DashboardInsightsService } from '@features/dashboard/services/dashboard-insights.service';
 import { WidgetConfiguration } from '@features/dashboard/types/dashboard.types';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -41,6 +42,7 @@ import {
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly dashboardInsightsService = inject(DashboardInsightsService);
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
@@ -59,11 +61,43 @@ export class DashboardPage implements OnInit {
       enabled: true,
     },
     {
+      id: 'financial-health',
+      type: 'financial-health',
+      title: 'Saúde Financeira',
+      size: 'medium',
+      position: { row: 2, column: 1 },
+      enabled: true,
+    },
+    {
+      id: 'category-spending',
+      type: 'category-spending',
+      title: 'Gastos por Categoria',
+      size: 'medium',
+      position: { row: 2, column: 2 },
+      enabled: true,
+    },
+    {
+      id: 'suggested-actions',
+      type: 'suggested-actions',
+      title: 'Próximas Ações',
+      size: 'medium',
+      position: { row: 3, column: 1 },
+      enabled: true,
+    },
+    {
+      id: 'recent-achievements',
+      type: 'recent-achievements',
+      title: 'Conquistas Recentes',
+      size: 'medium',
+      position: { row: 3, column: 2 },
+      enabled: true,
+    },
+    {
       id: 'budget-summary',
       type: 'budget-summary',
       title: 'Resumo do Orçamento',
       size: 'large',
-      position: { row: 2, column: 1 },
+      position: { row: 4, column: 1 },
       enabled: true,
     },
     {
@@ -71,7 +105,7 @@ export class DashboardPage implements OnInit {
       type: 'transaction-list',
       title: 'Transações Recentes',
       size: 'large',
-      position: { row: 3, column: 1 },
+      position: { row: 5, column: 1 },
       enabled: true,
     },
     {
@@ -79,7 +113,7 @@ export class DashboardPage implements OnInit {
       type: 'account-balance',
       title: 'Saldo das Contas',
       size: 'large',
-      position: { row: 4, column: 1 },
+      position: { row: 6, column: 1 },
       enabled: true,
     },
   ]);
@@ -100,10 +134,15 @@ export class DashboardPage implements OnInit {
         this.budgetSelectionService.setSelectedBudget(budgets[0]);
 
         const budgetId = budgets[0].id;
-        await Promise.all([
+        const [, , insights] = await Promise.all([
           firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
           firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
+          firstValueFrom(this.dashboardDataService.loadDashboardInsights(budgetId)),
         ]);
+
+        if (insights) {
+          this.dashboardInsightsService.setInsights(insights);
+        }
       }
     } catch (error) {
       console.error('Error loading dashboard data', error);
