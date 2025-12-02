@@ -152,7 +152,7 @@ Escrever testes unitários para:
 
 ---
 
-## 📅 FASE 3: Página de Categorias e Integração com os-category-manager [Status: ⏳]
+## 📅 FASE 3: Página de Categorias e Integração com os-category-manager [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -160,7 +160,7 @@ Entregar a página `/categories` com layout definido em `layout-specification.md
 
 ### 📋 Tarefas
 
-#### 1. Criar CategoriesPage e Rotas [⏳]
+#### 1. Criar CategoriesPage e Rotas [✅]
 
 **Descrição**:  
 Criar `CategoriesPage` em `src/app/features/categories/pages/categories-page/categories-page.component.ts` e configurar:
@@ -174,7 +174,7 @@ Criar `CategoriesPage` em `src/app/features/categories/pages/categories-page/cat
 
 - Navegar para `/categories` carrega a página de categorias.
 
-#### 2. Layout da Página com Design System [⏳]
+#### 2. Layout da Página com Design System [✅]
 
 **Descrição**:  
 Montar layout conforme `layout-specification.md`:
@@ -191,7 +191,7 @@ Montar layout conforme `layout-specification.md`:
 
 - Layout responsivo (mobile/tablet/desktop) conforme wireframes textuais.
 
-#### 3. Conectar CategoriesPage ao CategoryState e os-category-manager [⏳]
+#### 3. Conectar CategoriesPage ao CategoryState e os-category-manager [✅]
 
 **Descrição**:  
 Integrar:
@@ -208,14 +208,17 @@ Integrar:
 
 ### 🧪 Critérios de Validação
 
-- [ ] Navegar até `/categories` carrega e exibe categorias do orçamento atual.
-- [ ] Criar/editar/excluir (soft delete) categoria funciona do ponto de vista de usuário.
-- [ ] Layout segue especificação (header, filtros, lista, estados).
-- [ ] Testes básicos de renderização de `CategoriesPage` e integração com `CategoryState`.
+- [x] Navegar até `/categories` carrega e exibe categorias do orçamento atual.
+- [x] Criar/editar/excluir (soft delete) categoria funciona do ponto de vista de usuário (via integração `CategoriesPage` → `CategoryState` → `CategoriesApiService`).
+- [x] Layout segue especificação (header, filtros embutidos no `os-category-manager`, lista, estados de erro/empty).
+- [ ] Testes básicos de renderização de `CategoriesPage` e integração com `CategoryState` (a serem cobertos em fase posterior junto com ajustes globais de testes de páginas e resolução de estilos).
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Rotas**: Criado `CATEGORIES_ROUTES` em `features/categories/categories.routes.ts` e registrada rota lazy em `app.routes.ts` (`/categories`), seguindo o padrão das demais features.
+- **Página**: Implementada `CategoriesPage` como componente standalone que usa `os-page` + `os-page-header` + `os-category-manager` e `os-alert` para estados de erro/nenhum orçamento selecionado.
+- **Integração com estado**: `CategoriesPage` injeta `CategoryState` e `BudgetSelectionService`, chama `loadCategories()` reagindo ao orçamento selecionado e mapeia eventos de `os-category-manager` (`categoryAdded`, `categoryUpdated`, `categoryDeleted`) para `createCategory`, `updateCategory` e `deleteCategory`.
+- **Mapeamento de tipos**: Implementado mapeamento entre `CategoryDto` (`INCOME`/`EXPENSE`/`TRANSFER`) e os tipos de UI do `os-category-manager` (`income`/`expense`/`transfer`), garantindo consistência entre backend/domínio e camada visual.
 
 ---
 

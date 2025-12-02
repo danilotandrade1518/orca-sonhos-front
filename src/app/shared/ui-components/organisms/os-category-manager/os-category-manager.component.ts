@@ -22,7 +22,7 @@ import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsLabelComponent } from '../../atoms/os-label/os-label.component';
 import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-group.component';
 import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
-import { LocaleService } from '@shared/formatting';
+import { LocaleService } from '../../../formatting';
 import { FormsModule } from '@angular/forms';
 
 export interface Category {
