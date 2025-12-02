@@ -14,7 +14,7 @@ Implementar um **sistema completo de categorias** (preset + custom) por orçamen
 
 ---
 
-## 📅 FASE 1: DTOs, Contratos e API de Categorias [Status: ⏳]
+## 📅 FASE 1: DTOs, Contratos e API de Categorias [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -22,7 +22,7 @@ Estabelecer a base de dados de categorias no frontend: DTOs, tipos e serviço de
 
 ### 📋 Tarefas
 
-#### 1. Criar DTOs de Categoria [⏳]
+#### 1. Criar DTOs de Categoria [✅]
 
 **Descrição**:  
 Criar pasta `src/dtos/category/` com:
@@ -38,7 +38,7 @@ Criar pasta `src/dtos/category/` com:
 - Tipos compilando sem erros.
 - Estrutura consistente com padrões de `src/dtos/account/`.
 
-#### 2. Implementar CategoriesApiService (CRUD base) [⏳]
+#### 2. Implementar CategoriesApiService (CRUD base) [✅]
 
 **Descrição**:  
 Criar `CategoriesApiService` em `src/app/core/services/category/categories-api.service.ts`:
@@ -55,7 +55,7 @@ Criar `CategoriesApiService` em `src/app/core/services/category/categories-api.s
 - Serviço injetável (`providedIn: 'root'`), tipado, sem `any`.
 - Chamadas HTTP montadas com as rotas/contratos definidos pelo backend.
 
-#### 3. Ajustar Handlers MSW para Listagem de Categorias [⏳]
+#### 3. Ajustar Handlers MSW para Listagem de Categorias [✅]
 
 **Descrição**:  
 Atualizar `src/app/core/mocks/handlers/categories.handlers.ts` para:
@@ -69,13 +69,16 @@ Atualizar `src/app/core/mocks/handlers/categories.handlers.ts` para:
 
 ### 🧪 Critérios de Validação
 
-- [ ] Projeto compila com DTOs novos.
-- [ ] `CategoriesApiService` coberto por testes unitários básicos (sucesso/erro de cada método).
-- [ ] Chamada simulada de `listCategories` contra MSW funciona e retorna dados tipados.
+- [x] Projeto compila com DTOs novos.
+- [x] `CategoriesApiService` coberto por testes unitários básicos (sucesso/erro de cada método).
+- [x] Chamada simulada de `listCategories` contra MSW funciona e retorna dados tipados.
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **DTOs**: Criados DTOs de categoria em `src/dtos/category/` (`CategoryDto`, `CategoryType`, `CategoryKind`, requests/responses e `ListCategoriesResponseDto`) seguindo o padrão de `dtos/account`.
+- **API Service**: Implementado `CategoriesApiService` com methods `list/create/update/delete`, estado interno com signals (`loading`, `error`) e integração com `ApiService`/`AuthService`, espelhando `AccountsApiService`.
+- **MSW**: Atualizado `categories.handlers.ts` para devolver objetos no shape de `CategoryDto` (incluindo `budgetId`, `kind`, `active`, `createdAt`, `updatedAt`, `order`) e `meta.count`, respeitando o contrato de `ListCategoriesResponseDto`.
+- **Testes**: Adicionados testes unitários dedicados para `CategoriesApiService` cobrindo cenários de sucesso, usuário não autenticado, parâmetros inválidos e erros de API (executados com sucesso via Vitest).
 
 ---
 

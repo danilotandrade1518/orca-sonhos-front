@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const mockCategories = [
+const baseMockCategories = [
   // Income categories
   {
     id: 'category-salary',
@@ -85,20 +85,30 @@ export const categoryHandlers = [
     }
 
     const url = new URL(request.url);
-    const budgetId = url.searchParams.get('budgetId');
+    const budgetId = url.searchParams.get('budgetId') ?? 'mock-budget-id';
 
-    // Categories are global, but we can filter by budgetId if needed
-    // For now, we'll return all categories regardless of budgetId
-    let filteredCategories = mockCategories;
+    const now = new Date().toISOString();
 
-    if (budgetId) {
-      // In a real implementation, you might filter categories by budget
-      // For now, we'll return all categories
-      filteredCategories = mockCategories;
-    }
+    const categories = baseMockCategories.map((category, index) => ({
+      id: category.id,
+      budgetId,
+      name: category.name,
+      description: undefined,
+      type: category.type,
+      kind: 'PRESET',
+      color: undefined,
+      icon: undefined,
+      active: true,
+      createdAt: now,
+      updatedAt: now,
+      order: index,
+    }));
 
     return HttpResponse.json({
-      data: filteredCategories,
+      data: categories,
+      meta: {
+        count: categories.length,
+      },
     });
   }),
 ];
