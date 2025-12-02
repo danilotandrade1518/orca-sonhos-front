@@ -144,8 +144,8 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  onSidebarItemClick(item: SidebarItem): void {
-    console.log('Sidebar item clicked:', item);
+  onSidebarItemClick(_item: SidebarItem): void {
+    // Navigation handled by router
   }
 
   onSidebarCollapseChange(collapsed: boolean): void {

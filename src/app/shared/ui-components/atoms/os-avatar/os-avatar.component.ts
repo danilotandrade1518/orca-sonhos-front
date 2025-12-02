@@ -206,10 +206,7 @@ export class OsAvatarComponent {
   }
 
   handleClick(): void {
-    if (this.clickable()) {
-      
-      console.log('Avatar clicked');
-    }
+    // Click handling is done via template events
   }
 
   previousImage(event: Event): void {

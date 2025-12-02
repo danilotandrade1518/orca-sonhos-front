@@ -95,8 +95,8 @@ export class OsSelectComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
   openedChange = output<boolean>();
 
-  private _onChange = (value: string | number) => {
-    console.debug('onChange called with:', value);
+  private _onChange = (_value: string | number) => {
+    // Value change handled by valueChange output
   };
   private _onTouched = () => {};
 
