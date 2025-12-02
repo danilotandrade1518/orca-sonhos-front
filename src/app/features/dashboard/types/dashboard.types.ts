@@ -28,7 +28,11 @@ export type WidgetType =
   | 'transaction-list'
   | 'account-balance'
   | 'monthly-trends'
-  | 'quick-actions';
+  | 'quick-actions'
+  | 'financial-health'
+  | 'suggested-actions'
+  | 'category-spending'
+  | 'recent-achievements';
 
 export type WidgetSize = 'small' | 'medium' | 'large' | 'full-width';
 
@@ -63,4 +67,50 @@ export interface DashboardMetrics {
   netMonthly: number;
   goalsProgress: number;
   recentTransactionsCount: number;
+}
+
+export type HealthIndicatorStatus = 'healthy' | 'warning' | 'critical';
+
+export interface HealthIndicator {
+  value: number;
+  status: HealthIndicatorStatus;
+  label: string;
+  description: string;
+}
+
+export interface BudgetUsageIndicator extends HealthIndicator {
+  percentage: number;
+}
+
+export interface CashFlowIndicator extends HealthIndicator {
+  ratio: number;
+  absoluteValue: number;
+}
+
+export interface GoalsOnTrackIndicator extends HealthIndicator {
+  percentage: number;
+  onTrackCount: number;
+  totalActiveCount: number;
+}
+
+export interface EmergencyReserveIndicator extends HealthIndicator {
+  monthsCovered: number;
+}
+
+export interface SuggestedAction {
+  id: string;
+  type: 'goal-contribution' | 'emergency-reserve' | 'budget-adjustment' | 'cash-flow';
+  title: string;
+  description: string;
+  icon: string;
+  route: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface RecentAchievement {
+  id: string;
+  type: 'goal-completed' | 'reserve-milestone' | 'budget-maintained';
+  message: string;
+  date: Date;
+  icon: string;
 }

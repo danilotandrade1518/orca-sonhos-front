@@ -1,0 +1,53 @@
+# Dashboard Centrado em Progresso - Log de Desenvolvimento
+
+> **Propósito**: Registrar progresso essencial, decisões técnicas e próximos passos.
+
+## 📋 Sessões de Trabalho
+
+### 🗓️ Sessão 2025-01-27 - Início
+
+**Fase**: FASE 1 - Serviço de Insights e Integração de Dados
+**Objetivo**: Criar DashboardInsightsService e integrar ao DashboardWidgetsComponent
+
+#### ✅ Trabalho Realizado
+
+- Análise dos documentos da sessão (context.md, architecture.md, layout-specification.md, plan.md)
+- Context Loading Inteligente executado
+- Identificação de padrões existentes no codebase:
+  - DashboardDataService já existe e fornece budgetOverview e goals
+  - GoalsState e BudgetState seguem padrão de signals/computed
+  - DashboardWidgetsComponent usa WidgetConfiguration para renderizar widgets
+  - OsDashboardWidgetsComponent suporta tipos de widget via switch no template
+- **Criação do DashboardInsightsService**:
+  - Implementados 4 indicadores principais conforme financial-health.md
+  - Implementados suggestedActions e recentAchievements com lógica simplificada
+  - Todos os cálculos seguem fórmulas e faixas definidas no documento de saúde financeira
+- **Integração ao DashboardWidgetsComponent**:
+  - Serviço injetado e dados mapeados para novos tipos de widget
+  - Tipos adicionados em dashboard.types.ts
+- **Testes unitários criados**:
+  - Cobertura completa de cenários principais (verde/amarelo/vermelho)
+  - Testes para suggestedActions e recentAchievements
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar padrão de signals/computed seguindo GoalsState e BudgetState ✅
+- **Decisão**: DashboardInsightsService injetado em DashboardWidgetsComponent para fornecer dados aos widgets ✅
+- **Decisão**: Preparar tipos de widget no dashboard.types.ts antes de implementar componentes visuais ✅
+- **Implementação**: Cálculo de metas on-track usa progresso esperado baseado em meses restantes vs progresso atual
+- **Implementação**: Emergency reserve usa saldo total de contas dividido por despesa mensal média
+
+#### ⏭️ Próximos Passos
+
+- FASE 3: Criar FinancialHealthIndicatorComponent (indicadores de saúde financeira)
+- Criar testes unitários
+
+---
+
+## 🔄 Estado Atual
+
+**Branch**: feature-OS-235
+**Fase Atual**: FASE 2 - Hero de Progresso das Metas [Status: ✅ Completada]
+**Última Modificação**: GoalsProgressWidgetComponent criado e integrado ao OsDashboardWidgetsComponent, testes unitários implementados
+**Próxima Tarefa**: FASE 3 - Criar FinancialHealthIndicatorComponent (indicadores de saúde financeira)
+

@@ -5,6 +5,8 @@ import {
   OsGoalProgressCardComponent,
   GoalProgressData,
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
+import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goals-progress-widget/goals-progress-widget.component';
+import { GoalDto } from '@dtos/goal';
 
 export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
@@ -61,6 +63,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   imports: [
     CommonModule,
     OsGoalProgressCardComponent,
+    GoalsProgressWidgetComponent,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
@@ -154,12 +157,20 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           (click)="onWidgetClick(widget)"
           (keydown)="onWidgetKeyDown($event, widget)"
         >
+          @if (widget.type !== 'goal-progress' || !hasGoalsListData(widget)) {
           <div class="os-dashboard-widgets__widget-header">
             <h4 class="os-dashboard-widgets__widget-title">{{ widget.title }}</h4>
           </div>
+          }
 
           <div class="os-dashboard-widgets__widget-content">
             @switch (widget.type) { @case ('goal-progress') {
+            @if (hasGoalsListData(widget)) {
+            <os-goals-progress-widget
+              [goals]="getGoalsList(widget)"
+              [isLoading]="getGoalsLoading(widget)"
+            />
+            } @else {
             <os-goal-progress-card
               [goalData]="getGoalData(widget)"
               [variant]="'default'"
@@ -167,6 +178,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               [state]="getGoalState(widget)"
               [ariaLabel]="'Progresso da meta'"
             />
+            }
             } @case ('budget-summary') {
             <div class="os-dashboard-widgets__budget-summary">
               <div class="os-dashboard-widgets__metric">
@@ -396,6 +408,21 @@ export class OsDashboardWidgetsComponent {
       default:
         return 'medium';
     }
+  }
+
+  hasGoalsListData(widget: DashboardWidget): boolean {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data !== null && Array.isArray(data?.goals);
+  }
+
+  getGoalsList(widget: DashboardWidget): GoalDto[] {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data?.goals || [];
+  }
+
+  getGoalsLoading(widget: DashboardWidget): boolean {
+    const data = widget.data as { goals?: GoalDto[]; isLoading?: boolean } | null;
+    return data?.isLoading || false;
   }
 
   getGoalData(widget: DashboardWidget): GoalProgressData | null {

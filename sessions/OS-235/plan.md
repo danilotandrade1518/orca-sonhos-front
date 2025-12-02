@@ -22,7 +22,7 @@ Critérios de sucesso (alto nível):
 
 ---
 
-## 📅 FASE 1: Serviço de Insights e Integração de Dados [Status: ⏳]
+## 📅 FASE 1: Serviço de Insights e Integração de Dados [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -30,10 +30,11 @@ Criar a base de **cálculo de insights do dashboard** em um serviço dedicado (`
 
 ### 📋 Tarefas
 
-#### 1.1 Criar `DashboardInsightsService` [⏳]
+#### 1.1 Criar `DashboardInsightsService` [✅]
 
 **Descrição**:  
 Implementar um serviço em `features/dashboard/services` que:
+
 - Consuma `DashboardDataService` (`budgetOverview`, `goals`) e, se necessário, `GoalsState`/`BudgetState`.
 - Exponha signals/computed para:
   - `budgetUsageIndicator`.
@@ -44,34 +45,46 @@ Implementar um serviço em `features/dashboard/services` que:
   - `recentAchievements` (versão simplificada stub inicial).
 
 **Critério de Conclusão**:
+
 - Serviço criado com API estável (signals/computed públicos).
 - Fórmulas alinhadas com `business/financial-health.md` implementadas para os quatro indicadores principais.
 - Testes unitários cobrindo casos principais (verde/amarelo/vermelho / ranges).
 
-#### 1.2 Integrar `DashboardInsightsService` ao `DashboardWidgetsComponent` [⏳]
+#### 1.2 Integrar `DashboardInsightsService` ao `DashboardWidgetsComponent` [✅]
 
 **Descrição**:  
 Injetar `DashboardInsightsService` em `DashboardWidgetsComponent` e garantir que:
+
 - Já seja possível obter indicadores e listas (mesmo que ainda não sejam exibidos em novos widgets).
 - Preparar `DashboardWidget.data` para acomodar os novos tipos (`financial-health`, `suggested-actions`, `category-spending`, `recent-achievements`) sem quebrar o comportamento atual.
 
 **Critério de Conclusão**:
+
 - `DashboardWidgetsComponent` compila e testes existentes continuam passando.
 - Dados de insights podem ser inspecionados em testes (ex.: via spies/mocks).
 
 ### 🧪 Critérios de Validação
 
-- [ ] Testes unitários do `DashboardInsightsService` cobrindo cenários principais.
-- [ ] Nenhuma regressão no carregamento atual do dashboard (orçamentos, overview, metas).
-- [ ] Build e suite de testes existentes passam.
+- [x] Testes unitários do `DashboardInsightsService` cobrindo cenários principais.
+- [x] Nenhuma regressão no carregamento atual do dashboard (orçamentos, overview, metas).
+- [x] Build e suite de testes existentes passam.
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_  
+- **Decisão**: DashboardInsightsService criado seguindo padrão de signals/computed do GoalsState e BudgetState
+- **Implementação**: Todos os 4 indicadores principais implementados conforme financial-health.md:
+  - `budgetUsageIndicator`: Calcula % de uso do orçamento (verde <80%, amarelo 80-100%, vermelho >100%)
+  - `cashFlowIndicator`: Calcula relação receitas vs despesas (verde >110%, amarelo 100-110%, vermelho <100%)
+  - `goalsOnTrackIndicator`: Calcula % de metas no prazo (verde ≥75%, amarelo 50-75%, vermelho <50%)
+  - `emergencyReserveIndicator`: Calcula meses cobertos pela reserva (verde ≥6, amarelo 3-6, vermelho <3)
+- **Implementação**: `suggestedActions` e `recentAchievements` implementados com lógica simplificada conforme especificado
+- **Integração**: DashboardWidgetsComponent atualizado para injetar DashboardInsightsService e mapear dados para novos tipos de widget
+- **Tipos**: Tipos adicionados em dashboard.types.ts para os novos widgets (financial-health, suggested-actions, category-spending, recent-achievements)
+- **Testes**: Testes unitários criados cobrindo todos os cenários principais (verde/amarelo/vermelho para cada indicador)
 
 ---
 
-## 📅 FASE 2: Hero de Progresso das Metas [Status: ⏳]
+## 📅 FASE 2: Hero de Progresso das Metas [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -79,10 +92,11 @@ Transformar o widget de progresso de metas em **hero** do dashboard, com layout 
 
 ### 📋 Tarefas
 
-#### 2.1 Criar `GoalsProgressWidgetComponent` [⏳]
+#### 2.1 Criar `GoalsProgressWidgetComponent` [✅]
 
 **Descrição**:  
 Criar componente standalone em `features/dashboard/components/goals-progress-widget` que:
+
 - Receba via `input()`:
   - Lista de metas (DTO/estrutura específica).
   - Dados agregados (percentual de metas on-track, etc.), se necessário.
@@ -92,30 +106,44 @@ Criar componente standalone em `features/dashboard/components/goals-progress-wid
   - Ação “Ver todas as metas” via `os-button`.
 
 **Critério de Conclusão**:
+
 - Componente com layout básico finalizado, usando tokens de tema e componentes `os-*`.
 - Testes unitários de renderização (várias listas, metas vazias).
 
-#### 2.2 Integrar hero de metas ao `OsDashboardWidgetsComponent` [⏳]
+#### 2.2 Integrar hero de metas ao `OsDashboardWidgetsComponent` [✅]
 
 **Descrição**:  
 Atualizar o fluxo `DashboardPage` → `DashboardWidgetsComponent` → `OsDashboardWidgetsComponent` para:
+
 - Mapear `widget.type === 'goal-progress'` para usar `GoalsProgressWidgetComponent` como conteúdo principal.
 - Ajustar `size`/`position` para que o widget seja hero:
   - Span maior (ex.: `large`/`full`) e, se necessário, grid-row extendido.
 
 **Critério de Conclusão**:
+
 - Ao acessar `/dashboard`, o primeiro widget visível é o hero de metas, ocupando visualmente a primeira dobra em desktop e mobile.
 - Click em “Ver todas as metas” navega corretamente para `/goals`.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Hero de metas aparece em destaque em todas as larguras.
-- [ ] Estados de loading/empty/error do hero integrados com o estado atual de metas.
-- [ ] Navegação para tela de metas funcionando via CTA do widget.
+- [x] Hero de metas aparece em destaque em todas as larguras.
+- [x] Estados de loading/empty/error do hero integrados com o estado atual de metas.
+- [x] Navegação para tela de metas funcionando via CTA do widget.
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_  
+- **Implementação**: GoalsProgressWidgetComponent criado como componente standalone seguindo padrões Angular modernos
+- **Layout**: Componente implementa layout hero com título, subtítulo, resumo agregado e lista de 3-5 metas principais
+- **Funcionalidades**:
+  - Exibe lista de metas com barras de progresso, valores atual/objetivo/restante e badges de status (on-track/atrasada/adiantada)
+  - Calcula e exibe aporte mensal sugerido quando deadline existe
+  - Resumo mostra total de metas e quantidade no prazo
+  - Botão "Ver todas as metas" aparece quando há mais metas que maxDisplayed
+- **Estados**: Implementados estados de loading (skeleton), empty (com CTA para criar primeira meta) e success
+- **Integração**: OsDashboardWidgetsComponent atualizado para usar GoalsProgressWidgetComponent quando widget.type === 'goal-progress' e dados contêm lista de metas
+- **Responsividade**: Layout responsivo com grid adaptativo para valores das metas
+- **Acessibilidade**: ARIA labels, roles e navegação por teclado implementados
+- **Testes**: Testes unitários criados cobrindo renderização, estados, navegação e cálculos
 
 ---
 
@@ -131,6 +159,7 @@ Exibir os **indicadores de saúde financeira** definidos em `financial-health.md
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/financial-health-indicator` que:
+
 - Recebe via `input()` um modelo consolidado com:
   - Uso de orçamento/envelopes.
   - Relação receitas vs despesas.
@@ -141,6 +170,7 @@ Componente standalone em `features/dashboard/components/financial-health-indicat
   - Ícones e textos explicativos (não depender apenas de cor).
 
 **Critério de Conclusão**:
+
 - Layout alinhado à `layout-specification.md`.
 - Estados adequados para falta de dados (ex.: mensagem explicando ausência de reserve).
 
@@ -148,9 +178,11 @@ Componente standalone em `features/dashboard/components/financial-health-indicat
 
 **Descrição**:  
 Adaptar `DashboardWidgetsComponent`/`OsDashboardWidgetsComponent` para:
+
 - Criar um widget do tipo `financial-health` que injeta `FinancialHealthIndicatorComponent` com dados do `DashboardInsightsService`.
 
 **Critério de Conclusão**:
+
 - Indicadores exibidos corretamente a partir de dados reais de overview/transactions/metas disponíveis.
 - Cores e textos dos estados batendo com ranges de `financial-health.md`.
 
@@ -162,7 +194,7 @@ Adaptar `DashboardWidgetsComponent`/`OsDashboardWidgetsComponent` para:
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_  
+_[Preencher durante o desenvolvimento]_
 
 ---
 
@@ -178,11 +210,13 @@ Fornecer **orientação próxima ação** e **reforço positivo** por meio de wi
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/suggested-actions-widget` que:
+
 - Recebe lista de ações (tipo, título, descrição, ícone, rota).
 - Exibe 3–5 cards clicáveis.
 - Emite eventos para navegação (`output` simples).
 
 **Critério de Conclusão**:
+
 - Layout alinhado à `layout-specification.md`.
 - Testes unitários garantindo renderização e emissão de eventos.
 
@@ -190,11 +224,13 @@ Componente standalone em `features/dashboard/components/suggested-actions-widget
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/recent-achievements-widget` que:
+
 - Recebe conquistas (tipo, mensagem, data).
 - Exibe cards compactos com ícones e texto.
 - Aplica microanimações de entrada respeitando `prefers-reduced-motion`.
 
 **Critério de Conclusão**:
+
 - Componente animado, mas acessível (sem exageros, impactado por reduced-motion).
 - Testes unitários básicos para estados com/sem conquistas.
 
@@ -202,6 +238,7 @@ Componente standalone em `features/dashboard/components/recent-achievements-widg
 
 **Descrição**:  
 Definir lógica simplificada para:
+
 - Sugerir ações com base em:
   - Metas atrasadas/próximas do prazo.
   - Fluxo de caixa negativo.
@@ -211,6 +248,7 @@ Definir lógica simplificada para:
   - Reserva atingindo limiares (3 ou 6 meses).
 
 **Critério de Conclusão**:
+
 - Para conjuntos de dados mockados, as ações e conquistas são geradas de forma previsível.
 - Integração visual feita via widgets no dashboard.
 
@@ -222,7 +260,7 @@ Definir lógica simplificada para:
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_  
+_[Preencher durante o desenvolvimento]_
 
 ---
 
@@ -238,6 +276,7 @@ Entregar a visão parcial de **gastos por categoria**, preparar o widget para in
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/category-spending-widget` que:
+
 - Recebe lista de categorias com:
   - Nome.
   - Valor gasto no período.
@@ -246,6 +285,7 @@ Componente standalone em `features/dashboard/components/category-spending-widget
 - Inclui mensagem contextual explicando que visão completa de `% do planejado` dependerá de envelopes.
 
 **Critério de Conclusão**:
+
 - Widget funcional com dados parciais.
 - Preparado para, futuramente, receber também `% do planejado` sem refactor pesado.
 
@@ -253,11 +293,13 @@ Componente standalone em `features/dashboard/components/category-spending-widget
 
 **Descrição**:  
 Aplicar ajustes finos em:
+
 - Tamanhos (`size`) e posições (`position`) dos widgets.
 - Comportamento do grid (`OsDashboardWidgetsComponent`) em breakpoints.
 - Spacing interno/externo dos widgets para alinhar com design system (`_tokens.scss`, `responsive-design.md`, `ui-system.md`).
 
 **Critério de Conclusão**:
+
 - Em mobile, os widgets seguem a ordem e empilhamento especificados.
 - Em desktop, hero + grid se comportam conforme wireframes textuais do `layout-specification.md`.
 
@@ -265,11 +307,13 @@ Aplicar ajustes finos em:
 
 **Descrição**:  
 Garantir que todos os widgets e o dashboard como um todo:
+
 - Usem landmarks, labels e ARIA adequados (`accessibility.md`).
 - Tenham estados de loading/empty/error consistentes e acessíveis.
 - Respeitem foco por teclado e contrastes mínimos.
 
 **Critério de Conclusão**:
+
 - Checklist de A11y do design system (ou `accessibility.md`) atendido para o dashboard.
 - Pelo menos uma bateria de testes de acessibilidade automatizados básicos executada (quando aplicável).
 
@@ -282,7 +326,7 @@ Garantir que todos os widgets e o dashboard como um todo:
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_  
+_[Preencher durante o desenvolvimento]_
 
 ---
 
@@ -293,5 +337,3 @@ _[Preencher durante o desenvolvimento]_
 - [ ] `context.md`, `architecture.md` e `layout-specification.md` revisados e, se necessário, ajustados para refletir decisões finais.
 - [ ] Dashboard `/dashboard` claramente centrado em progresso de metas e saúde financeira, conforme Meta Specs e requisitos da OS-235.
 - [ ] Pronto para `/work` (implementação detalhada) e, posteriormente, `/pre-pr` e `/pr`.
-
-

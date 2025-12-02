@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, ou
 
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { DashboardDataService } from '../../services/dashboard-data.service';
+import { DashboardInsightsService } from '../../services/dashboard-insights.service';
 import { WidgetConfiguration } from '../../types/dashboard.types';
 import {
   OsDashboardWidgetsComponent,
@@ -46,6 +47,7 @@ import { LocaleService } from '@shared/formatting';
 export class DashboardWidgetsComponent {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly dashboardDataService = inject(DashboardDataService);
+  private readonly dashboardInsightsService = inject(DashboardInsightsService);
   private readonly accountState = inject(AccountState);
   private readonly localeService = inject(LocaleService);
 
@@ -116,10 +118,11 @@ export class DashboardWidgetsComponent {
       };
 
       if (widget.type === 'goal-progress') {
-        const firstGoal = this.getFirstGoal();
-        if (firstGoal) {
-          dashboardWidget.data = this.convertGoalToProgressData(firstGoal);
-        }
+        const goals = this.goals();
+        dashboardWidget.data = {
+          goals: goals,
+          isLoading: this.isLoading(),
+        };
       }
 
       if (widget.type === 'account-balance') {
@@ -127,6 +130,28 @@ export class DashboardWidgetsComponent {
         if (accounts.length > 0) {
           dashboardWidget.data = this.convertAccountsToBalanceData(accounts);
         }
+      }
+
+      if (widget.type === 'financial-health') {
+        const indicators = {
+          budgetUsage: this.dashboardInsightsService.budgetUsageIndicator(),
+          cashFlow: this.dashboardInsightsService.cashFlowIndicator(),
+          goalsOnTrack: this.dashboardInsightsService.goalsOnTrackIndicator(),
+          emergencyReserve: this.dashboardInsightsService.emergencyReserveIndicator(),
+        };
+        dashboardWidget.data = indicators;
+      }
+
+      if (widget.type === 'suggested-actions') {
+        dashboardWidget.data = this.dashboardInsightsService.suggestedActions();
+      }
+
+      if (widget.type === 'category-spending') {
+        dashboardWidget.data = null;
+      }
+
+      if (widget.type === 'recent-achievements') {
+        dashboardWidget.data = this.dashboardInsightsService.recentAchievements();
       }
 
       return dashboardWidget;
