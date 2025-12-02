@@ -4,7 +4,10 @@ import { delay, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BudgetOverviewDto, BudgetParticipantDto } from '../../../../dtos/budget';
+import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
+import { PresetCategoriesService } from '../category/preset-categories.service';
 import { BudgetService } from '../budget/budget.service';
+import { BudgetState } from '../budget/budget.state';
 import { SharingService } from './sharing.service';
 import { SharingState } from './sharing.state';
 
@@ -16,6 +19,18 @@ describe('SharingState', () => {
   };
   let budgetService: {
     getBudgetOverview: ReturnType<typeof vi.fn>;
+  };
+  let budgetState: {
+    updateBudgetParticipantsCount: ReturnType<typeof vi.fn>;
+  };
+  let budgetSelectionService: {
+    setSelectedBudget: ReturnType<typeof vi.fn>;
+    setAvailableBudgets: ReturnType<typeof vi.fn>;
+    selectedBudget: ReturnType<typeof vi.fn>;
+    selectedBudgetId: ReturnType<typeof vi.fn>;
+  };
+  let presetCategoriesService: {
+    seedPresetCategories: ReturnType<typeof vi.fn>;
   };
 
   const mockParticipants: BudgetParticipantDto[] = [
@@ -55,11 +70,29 @@ describe('SharingState', () => {
       getBudgetOverview: vi.fn(),
     };
 
+    budgetState = {
+      updateBudgetParticipantsCount: vi.fn(),
+    };
+
+    budgetSelectionService = {
+      setSelectedBudget: vi.fn(),
+      setAvailableBudgets: vi.fn(),
+      selectedBudget: vi.fn(() => null),
+      selectedBudgetId: vi.fn(() => null),
+    };
+
+    presetCategoriesService = {
+      seedPresetCategories: vi.fn().mockResolvedValue({ success: true, created: 14, errors: [] }),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         SharingState,
         { provide: SharingService, useValue: sharingService },
         { provide: BudgetService, useValue: budgetService },
+        { provide: BudgetState, useValue: budgetState },
+        { provide: BudgetSelectionService, useValue: budgetSelectionService },
+        { provide: PresetCategoriesService, useValue: presetCategoriesService },
         provideZonelessChangeDetection(),
       ],
     });

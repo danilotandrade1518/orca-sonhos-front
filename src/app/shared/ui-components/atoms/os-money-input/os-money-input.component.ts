@@ -86,8 +86,8 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: number) => {
-    console.debug('onChange called with:', value);
+  private _onChange = (_value: number) => {
+    // Value change handled by valueChange output
   };
   private _onTouched = () => {};
 

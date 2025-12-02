@@ -61,7 +61,6 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
 
       <os-transactions-filters
         [accountOptions]="accountOptions()"
-        [categoryOptions]="categoryOptions()"
         (filtersChange)="onFiltersChange($event)"
         [attr.aria-label]="'Filtros de transações'"
       />
@@ -87,7 +86,6 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
       @if (showCreateModal()) {
       <os-transaction-form
         [accountOptions]="accountOptions()"
-        [categoryOptions]="categoryOptions()"
         (saved)="onFormSaved()"
         (cancelled)="onFormCancelled()"
       />
@@ -95,7 +93,6 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
       <os-transaction-form
         [transaction]="editingTransaction()"
         [accountOptions]="accountOptions()"
-        [categoryOptions]="categoryOptions()"
         (saved)="onFormSaved()"
         (cancelled)="onFormCancelled()"
       />
@@ -143,7 +140,6 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
       label: account.name,
     }));
   });
-  readonly categoryOptions = signal<{ value: string; label: string }[]>([]);
 
   private readonly _showCreateModal = signal<boolean>(false);
   readonly showCreateModal = this._showCreateModal.asReadonly();

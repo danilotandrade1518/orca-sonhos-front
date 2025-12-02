@@ -22,7 +22,7 @@ import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
 import { OsLabelComponent } from '../../atoms/os-label/os-label.component';
 import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-group.component';
 import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
-import { LocaleService } from '@shared/formatting';
+import { LocaleService } from '../../../formatting';
 import { FormsModule } from '@angular/forms';
 
 export interface Category {
@@ -80,8 +80,9 @@ export interface CategoryFormData {
             (click)="onAddCategory()"
             [disabled]="loading()"
             [loading]="loading()"
+            aria-label="Adicionar nova categoria"
           >
-            <os-icon name="plus" size="sm"></os-icon>
+            <os-icon name="plus" size="sm" [attr.aria-hidden]="'true'"></os-icon>
             Adicionar Categoria
           </os-button>
         </div>
@@ -108,6 +109,8 @@ export interface CategoryFormData {
                 <span>Nome é obrigatório</span>
                 } @if (categoryForm.get('name')?.errors?.['minlength']) {
                 <span>Nome deve ter pelo menos 2 caracteres</span>
+                } @if (categoryForm.get('name')?.errors?.['uniqueName']) {
+                <span>Já existe uma categoria com este nome</span>
                 }
               </div>
               }
@@ -272,15 +275,17 @@ export interface CategoryFormData {
                 size="small"
                 (click)="onToggleFilter()"
                 [disabled]="loading()"
+                [attr.aria-label]="showFilter() ? 'Ocultar filtros de categorias' : 'Mostrar filtros de categorias'"
+                [attr.aria-expanded]="showFilter()"
               >
-                <os-icon name="filter" size="sm"></os-icon>
+                <os-icon name="filter" size="sm" [attr.aria-hidden]="'true'"></os-icon>
                 {{ showFilter() ? 'Ocultar Filtros' : 'Mostrar Filtros' }}
               </os-button>
             </div>
           </div>
 
           @if (showFilter()) {
-          <div class="os-category-manager__filters">
+          <div class="os-category-manager__filters" role="search" aria-label="Filtros de categorias">
             <os-form-group variant="default" size="small">
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Buscar </os-label>
@@ -366,16 +371,18 @@ export interface CategoryFormData {
                   size="small"
                   (click)="onEditCategory(category)"
                   [disabled]="loading()"
+                  [attr.aria-label]="'Editar categoria ' + category.name"
                 >
-                  <os-icon name="edit" size="sm"></os-icon>
+                  <os-icon name="edit" size="sm" [attr.aria-hidden]="'true'"></os-icon>
                 </os-button>
                 <os-button
                   variant="danger"
                   size="small"
                   (click)="onDeleteCategory(category)"
                   [disabled]="loading()"
+                  [attr.aria-label]="'Excluir categoria ' + category.name"
                 >
-                  <os-icon name="trash" size="sm"></os-icon>
+                  <os-icon name="trash" size="sm" [attr.aria-hidden]="'true'"></os-icon>
                 </os-button>
               </div>
             </div>
@@ -491,7 +498,14 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
   constructor() {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          this.uniqueNameValidator.bind(this),
+        ],
+      ],
       description: [''],
       type: ['expense', [Validators.required]],
       color: ['#3B82F6'],
@@ -507,6 +521,31 @@ export class OsCategoryManagerComponent implements AfterViewInit {
         this.categoryForm.enable();
       }
     });
+
+    effect(() => {
+      const nameControl = this.categoryForm.get('name');
+      if (nameControl) {
+        nameControl.updateValueAndValidity();
+      }
+    });
+  }
+
+  uniqueNameValidator(control: { value: string }): Record<string, boolean> | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const editingCategory = this.editingCategory();
+    const categories = this.categories();
+    const nameLower = control.value.toLowerCase().trim();
+
+    const duplicate = categories.find(
+      (cat) =>
+        cat.name.toLowerCase().trim() === nameLower &&
+        (!editingCategory || cat.id !== editingCategory.id)
+    );
+
+    return duplicate ? { uniqueName: true } : null;
   }
 
   ngAfterViewInit(): void {

@@ -103,6 +103,12 @@ export class AppLayoutComponent implements OnInit {
       route: '/transactions',
     },
     {
+      id: 'categories',
+      label: 'Categorias',
+      icon: 'category',
+      route: '/categories',
+    },
+    {
       id: 'reports',
       label: 'Relatórios',
       icon: 'analytics',
@@ -138,8 +144,8 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  onSidebarItemClick(item: SidebarItem): void {
-    console.log('Sidebar item clicked:', item);
+  onSidebarItemClick(_item: SidebarItem): void {
+    // Navigation handled by router
   }
 
   onSidebarCollapseChange(collapsed: boolean): void {

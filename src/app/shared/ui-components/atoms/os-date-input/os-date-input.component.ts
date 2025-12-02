@@ -115,8 +115,8 @@ export class OsDateInputComponent implements ControlValueAccessor {
   blurEvent = output<FocusEvent>();
   focusEvent = output<FocusEvent>();
 
-  private _onChange = (value: Date | null) => {
-    console.debug('onChange called with:', value);
+  private _onChange = (_value: Date | null) => {
+    // Value change handled by valueChange output
   };
   private _onTouched = () => {};
 

@@ -121,6 +121,14 @@ export default tseslint.config(
           allow: ['arrowFunctions', 'functions', 'methods'],
         },
       ],
+      // Permitir parâmetros não usados que começam com underscore
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
     ignores: ['src/app/core/mocks/**/*.ts'],
   },

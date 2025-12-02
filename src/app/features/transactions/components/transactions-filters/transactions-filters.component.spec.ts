@@ -1,20 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   TransactionsFiltersComponent,
   type TransactionsFilters,
 } from './transactions-filters.component';
+import { CategoryState } from '../../../../core/services/category/category.state';
+import type { CategoryDto } from '../../../../../dtos/category';
 
 describe('TransactionsFiltersComponent', () => {
   let component: TransactionsFiltersComponent;
   let fixture: ComponentFixture<TransactionsFiltersComponent>;
+  let categoryState: {
+    activeCategories: ReturnType<typeof computed<CategoryDto[]>>;
+  };
+  let categoriesSignal: ReturnType<typeof signal<CategoryDto[]>>;
 
   beforeEach(async () => {
+    categoriesSignal = signal<CategoryDto[]>([]);
+    categoryState = {
+      activeCategories: computed(() => categoriesSignal().filter((c) => c.active)),
+    };
+
     await TestBed.configureTestingModule({
       imports: [TransactionsFiltersComponent],
-      providers: [provideZonelessChangeDetection()],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: CategoryState, useValue: categoryState },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TransactionsFiltersComponent);

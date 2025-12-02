@@ -338,17 +338,6 @@
     pointer-events: none;
   }
 
-  &__spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: os-button-spin 1s linear infinite;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-
   &__icon {
     display: flex;
     align-items: center;
@@ -375,6 +364,8 @@
     border-top: 2px solid currentColor;
     border-radius: 50%;
     animation: os-button-spin 1s linear infinite;
+    opacity: 1 !important;
+    visibility: visible !important;
     margin-right: var(--os-spacing-xs);
   }
 }
