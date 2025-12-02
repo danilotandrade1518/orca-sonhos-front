@@ -108,6 +108,8 @@ export interface CategoryFormData {
                 <span>Nome é obrigatório</span>
                 } @if (categoryForm.get('name')?.errors?.['minlength']) {
                 <span>Nome deve ter pelo menos 2 caracteres</span>
+                } @if (categoryForm.get('name')?.errors?.['uniqueName']) {
+                <span>Já existe uma categoria com este nome</span>
                 }
               </div>
               }
@@ -491,7 +493,14 @@ export class OsCategoryManagerComponent implements AfterViewInit {
 
   constructor() {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          this.uniqueNameValidator.bind(this),
+        ],
+      ],
       description: [''],
       type: ['expense', [Validators.required]],
       color: ['#3B82F6'],
@@ -507,6 +516,31 @@ export class OsCategoryManagerComponent implements AfterViewInit {
         this.categoryForm.enable();
       }
     });
+
+    effect(() => {
+      const nameControl = this.categoryForm.get('name');
+      if (nameControl) {
+        nameControl.updateValueAndValidity();
+      }
+    });
+  }
+
+  uniqueNameValidator(control: { value: string }): { [key: string]: boolean } | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const editingCategory = this.editingCategory();
+    const categories = this.categories();
+    const nameLower = control.value.toLowerCase().trim();
+
+    const duplicate = categories.find(
+      (cat) =>
+        cat.name.toLowerCase().trim() === nameLower &&
+        (!editingCategory || cat.id !== editingCategory.id)
+    );
+
+    return duplicate ? { uniqueName: true } : null;
   }
 
   ngAfterViewInit(): void {

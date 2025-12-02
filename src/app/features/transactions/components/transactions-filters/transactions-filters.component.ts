@@ -4,10 +4,12 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
+import { CategoryState } from '../../../../core/services/category/category.state';
 import { OsFilterBarComponent } from '../../../../shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
 import type { OsFilterOption } from '../../../../shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
 
@@ -157,8 +159,9 @@ export interface TransactionsFilters {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsFiltersComponent {
+  private readonly categoryState = inject(CategoryState);
+
   readonly accountOptions = input<{ value: string; label: string }[]>([]);
-  readonly categoryOptions = input<{ value: string; label: string }[]>([]);
   readonly initialFilters = input<Partial<TransactionsFilters>>({});
 
   readonly filtersChange = output<TransactionsFilters>();
@@ -168,6 +171,14 @@ export class TransactionsFiltersComponent {
   readonly hasActiveFilters = computed(() => {
     const f = this.filters();
     return !!(f.accountId || f.categoryId || f.dateFrom || f.dateTo || f.type || f.amount);
+  });
+
+  readonly categoryOptions = computed<{ value: string; label: string }[]>(() => {
+    const activeCategories = this.categoryState.activeCategories();
+    return activeCategories.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
   });
 
   readonly filterOptions = computed(() => {

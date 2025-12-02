@@ -222,7 +222,7 @@ Integrar:
 
 ---
 
-## 📅 FASE 4: Integração com Transações, Presets, MSW CRUD e Polimento [Status: ⏳]
+## 📅 FASE 4: Integração com Transações, Presets, MSW CRUD e Polimento [Status: ⏰ Em Progresso]
 
 ### 🎯 Objetivo
 
@@ -230,7 +230,7 @@ Conectar o sistema de categorias às transações, implementar categorias preset
 
 ### 📋 Tarefas
 
-#### 1. Integração com TransactionFormComponent [⏳]
+#### 1. Integração com TransactionFormComponent [✅]
 
 **Descrição**:  
 Atualizar `TransactionFormComponent` para:
@@ -245,7 +245,7 @@ Atualizar `TransactionFormComponent` para:
 - Dropdown de categoria no formulário mostra apenas categorias reais e ativas.
 - Mensagem “Nenhuma categoria disponível. Configure categorias primeiro.” continua coerente.
 
-#### 2. Implementar PresetCategoriesService e Seed por Orçamento [⏳]
+#### 2. Implementar PresetCategoriesService e Seed por Orçamento [✅]
 
 **Descrição**:  
 Criar `PresetCategoriesService` e integrar com fluxo de criação de orçamento:
@@ -261,7 +261,7 @@ Criar `PresetCategoriesService` e integrar com fluxo de criação de orçamento:
 
 - Ao criar novo orçamento, usuário vê categorias preset automaticamente criadas.
 
-#### 3. Completar CRUD MSW para Categorias [⏳]
+#### 3. Completar CRUD MSW para Categorias [✅]
 
 **Descrição**:  
 Atualizar `categories.handlers.ts` para:
@@ -273,7 +273,7 @@ Atualizar `categories.handlers.ts` para:
 
 - Fluxos de criar/editar/desativar categoria funcionam em ambiente com MSW.
 
-#### 4. Validações de Formulário e Regras de Negócio [⏳]
+#### 4. Validações de Formulário e Regras de Negócio [✅]
 
 **Descrição**:  
 Implementar:
@@ -317,7 +317,10 @@ Revisar:
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+- **Integração com transações**: `TransactionFormComponent` e `TransactionsFiltersComponent` agora usam `CategoryState` diretamente, removendo dependência de inputs mockados. Categorias são filtradas por tipo de transação e apenas ativas são exibidas.
+- **PresetCategoriesService**: Criado serviço com catálogo de 14 categorias preset (4 INCOME, 8 EXPENSE, 2 TRANSFER). Seed automático integrado ao `BudgetState.createBudget()` usando `firstValueFrom` para aguardar criação assíncrona.
+- **MSW CRUD completo**: Implementados handlers POST, PUT e DELETE com persistência em memória usando `Map`. Validação de unicidade de nome implementada no handler POST/PUT. Soft delete implementado via flag `active: false`.
+- **Validações**: Adicionado validador customizado `uniqueNameValidator` no `os-category-manager` que verifica unicidade case-insensitive contra categorias existentes. Validação também implementada no MSW para garantir integridade no backend.
 
 ---
 

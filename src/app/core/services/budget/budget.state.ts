@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BudgetDto } from '../../../../dtos/budget';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
+import { PresetCategoriesService } from '../category/preset-categories.service';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -11,6 +12,7 @@ import { BudgetService } from './budget.service';
 export class BudgetState {
   private readonly budgetService = inject(BudgetService);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
+  private readonly presetCategoriesService = inject(PresetCategoriesService);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _budgets = signal<BudgetDto[]>([]);
@@ -74,8 +76,13 @@ export class BudgetState {
       .createBudget({ name, type, ownerId })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (budgetId) => {
+        next: async (budgetId) => {
           if (budgetId) {
+            try {
+              await this.presetCategoriesService.seedPresetCategories(ownerId, budgetId);
+            } catch (error) {
+              console.warn('Failed to seed preset categories:', error);
+            }
             this.loadBudgets();
           } else {
             this._error.set('Failed to create budget');

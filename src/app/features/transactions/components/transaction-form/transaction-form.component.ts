@@ -21,6 +21,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
+import { CategoryState } from '@core/services/category/category.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
@@ -194,10 +195,10 @@ export class TransactionFormComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly creditCardState = inject(CreditCardState);
+  private readonly categoryState = inject(CategoryState);
 
   readonly transaction = input<TransactionDto | null>(null);
   readonly accountOptions = input<{ value: string; label: string }[]>([]);
-  readonly categoryOptions = input<{ value: string; label: string }[]>([]);
 
   readonly saved = output<void>();
   readonly cancelled = output<void>();
@@ -240,6 +241,33 @@ export class TransactionFormComponent implements OnInit {
         label: card.name,
       })),
     ];
+  });
+
+  readonly categoryOptions = computed<OsDropdownOption[]>(() => {
+    const transactionType = this.typeControl()?.value as TransactionType | null;
+    const activeCategories = this.categoryState.activeCategories();
+
+    if (!transactionType) {
+      return activeCategories.map((category) => ({
+        value: category.id,
+        label: category.name,
+      }));
+    }
+
+    const typeMap: Record<TransactionType, string> = {
+      INCOME: 'INCOME',
+      EXPENSE: 'EXPENSE',
+      TRANSFER: 'TRANSFER',
+    };
+
+    const categoryType = typeMap[transactionType];
+
+    return activeCategories
+      .filter((category) => category.type === categoryType)
+      .map((category) => ({
+        value: category.id,
+        label: category.name,
+      }));
   });
 
   readonly typeOptions = computed<OsDropdownOption[]>(() => [
@@ -319,6 +347,7 @@ export class TransactionFormComponent implements OnInit {
       const budgetId = this.budgetSelection.selectedBudgetId();
       if (budgetId) {
         this.creditCardState.loadCreditCards();
+        this.categoryState.loadCategories();
       }
     });
 

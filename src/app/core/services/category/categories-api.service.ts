@@ -79,7 +79,13 @@ export class CategoriesApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<CreateCategoryResponseDto>('/categories/create-category', dto).pipe(
+    const body = {
+      name: dto.name,
+      type: dto.type,
+      budgetId: dto.budgetId,
+    };
+
+    return this.api.postRaw<CreateCategoryResponseDto>('/category/create-category', body).pipe(
       map((response) => {
         this._loading.set(false);
         return response.id;
@@ -107,10 +113,16 @@ export class CategoriesApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<UpdateCategoryResponseDto>('/categories/update-category', dto).pipe(
+    const body = {
+      id: dto.id,
+      name: dto.name,
+      type: dto.type,
+    };
+
+    return this.api.postRaw<UpdateCategoryResponseDto>('/category/update-category', body).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        return !!response.id;
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
@@ -135,10 +147,14 @@ export class CategoriesApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<DeleteCategoryResponseDto>('/categories/delete-category', dto).pipe(
+    const body = {
+      id: dto.categoryId,
+    };
+
+    return this.api.postRaw<DeleteCategoryResponseDto>('/category/delete-category', body).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        return !!response.id;
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
