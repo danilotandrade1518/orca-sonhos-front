@@ -345,7 +345,7 @@ Revisar:
 
 ---
 
-## 📅 FASE 5 (Opcional / Extensões Futuras): Integração com Dashboard e Relatórios [Status: ⏳]
+## 📅 FASE 5 (Opcional / Extensões Futuras): Integração com Dashboard e Relatórios [Status: ⏰ Em Progresso]
 
 ### 🎯 Objetivo
 
@@ -353,10 +353,23 @@ Preparar e/ou conectar o sistema de categorias a dashboards, relatórios e envel
 
 ### 📋 Tarefas
 
-#### 1. Expor Dados de Categoria para Dashboard [⏳]
+#### 1. Expor Dados de Categoria para Dashboard [✅]
 
 **Descrição**:  
 Garantir que `CategoryState` ofereça shape adequado (tipo, cor, ícone, agrupamentos) para widgets de gasto por categoria.
+
+**Critério de Conclusão**:
+
+- `CategoryState` expõe métodos auxiliares para facilitar uso no dashboard.
+- Métodos testados e documentados.
+
+**Implementação**:
+
+- Adicionado `categoriesMap` computed para acesso rápido por ID.
+- Adicionado `categoriesByType` computed que agrupa categorias por tipo (INCOME/EXPENSE/TRANSFER).
+- Adicionado método `getCategoryById(id: string)` para buscar categoria específica.
+- Adicionado método `getCategoriesForWidgets()` que retorna categorias formatadas com metadados visuais (cor, ícone, tipo, active).
+- Testes unitários adicionados para todos os novos métodos.
 
 #### 2. Hooks para Relatórios e Envelopes [⏳]
 

@@ -16,5 +16,3 @@ export interface CategoryDto {
   updatedAt: string;
   order?: number;
 }
-
-

@@ -15,5 +15,3 @@ export interface CreateCategoryRequestDto {
 export interface CreateCategoryResponseDto {
   id: string;
 }
-
-

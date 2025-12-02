@@ -8,7 +8,7 @@ import type {
   CreateCategoryRequestDto,
   DeleteCategoryRequestDto,
   UpdateCategoryRequestDto,
-} from '../../../../../dtos/category';
+} from '../../../../dtos/category';
 import type { ApiError } from '../api/api.service';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
 import { CategoriesApiService } from './categories-api.service';
@@ -129,8 +129,7 @@ describe('CategoryState', () => {
       categoriesApiService.listCategories.mockReturnValue(of(mockCategories));
 
       state.loadCategories();
-
-      // aguarda o fluxo se completar
+      
       await firstValueFrom(of(true));
 
       expect(categoriesApiService.listCategories).toHaveBeenCalledWith(budgetId);
@@ -217,6 +216,54 @@ describe('CategoryState', () => {
       expect(inactive).toHaveLength(1);
       expect(inactive[0].active).toBe(false);
       expect(inactive[0].budgetId).toBe(budgetId);
+    });
+
+    it('should expose categories map for quick lookup', () => {
+      const map = state.categoriesMap();
+
+      expect(map.size).toBe(2);
+      expect(map.get('category-1')).toBeDefined();
+      expect(map.get('category-1')?.name).toBe('Alimentação');
+      expect(map.get('category-2')).toBeDefined();
+      expect(map.get('category-2')?.name).toBe('Salário');
+    });
+
+    it('should group categories by type', () => {
+      const byType = state.categoriesByType();
+
+      expect(byType.EXPENSE).toHaveLength(1);
+      expect(byType.EXPENSE[0].type).toBe('EXPENSE');
+      expect(byType.INCOME).toHaveLength(1);
+      expect(byType.INCOME[0].type).toBe('INCOME');
+      expect(byType.TRANSFER).toHaveLength(0);
+    });
+
+    it('should get category by id', () => {
+      const category = state.getCategoryById('category-1');
+
+      expect(category).toBeDefined();
+      expect(category?.name).toBe('Alimentação');
+      expect(category?.type).toBe('EXPENSE');
+    });
+
+    it('should return undefined for non-existent category id', () => {
+      const category = state.getCategoryById('non-existent');
+
+      expect(category).toBeUndefined();
+    });
+
+    it('should get categories formatted for widgets', () => {
+      const widgets = state.getCategoriesForWidgets();
+
+      expect(widgets).toHaveLength(1);
+      expect(widgets[0]).toEqual({
+        id: 'category-1',
+        name: 'Alimentação',
+        type: 'EXPENSE',
+        color: '#FF0000',
+        icon: 'restaurant',
+        active: true,
+      });
     });
   });
 
@@ -390,5 +437,3 @@ describe('CategoryState', () => {
     });
   });
 });
-
-

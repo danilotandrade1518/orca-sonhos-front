@@ -235,8 +235,7 @@ describe('CategoriesPage', () => {
         size: 'medium',
         disabled: false,
       };
-
-      // Should not throw
+      
       expect(() => component.onPageHeaderActionClick(action)).not.toThrow();
     });
   });
@@ -253,6 +252,7 @@ describe('CategoriesPage', () => {
         type: 'expense' as const,
         color: '#FF0000',
         icon: 'icon',
+        active: true,
       };
 
       component.onCategoryAdded(formData);
@@ -279,6 +279,7 @@ describe('CategoriesPage', () => {
         type: 'expense' as const,
         color: '#FF0000',
         icon: 'icon',
+        active: true,
       };
 
       component.onCategoryAdded(formData);
@@ -295,6 +296,7 @@ describe('CategoriesPage', () => {
           type: 'income' as const,
           color: '#00FF00',
           icon: 'new-icon',
+          active: true,
         },
       };
 
@@ -322,15 +324,15 @@ describe('CategoriesPage', () => {
   });
 
   describe('Effect - Auto Load Categories', () => {
-    it('should call loadCategories when budget is selected', () => {
+    it('should call loadCategories when budget is selected', async () => {
       budgetSelectionService.selectedBudgetId.set(budgetId);
       categoryState.loading.set(false);
       fixture.detectChanges();
-
-      // Wait for effect to run
-      setTimeout(() => {
-        expect(categoryState.loadCategories).toHaveBeenCalled();
-      }, 0);
+      
+      // Aguardar o effect ser executado
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      
+      expect(categoryState.loadCategories).toHaveBeenCalled();
     });
 
     it('should not call loadCategories when no budget is selected', () => {
@@ -349,4 +351,3 @@ describe('CategoriesPage', () => {
     });
   });
 });
-

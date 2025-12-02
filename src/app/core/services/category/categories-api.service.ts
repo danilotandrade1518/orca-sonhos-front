@@ -10,7 +10,7 @@ import {
   ListCategoriesResponseDto,
   UpdateCategoryRequestDto,
   UpdateCategoryResponseDto,
-} from '../../../../../dtos/category';
+} from '../../../../dtos/category';
 import { ApiError, ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';
 
@@ -168,5 +168,3 @@ export class CategoriesApiService {
     this._error.set(null);
   }
 }
-
-

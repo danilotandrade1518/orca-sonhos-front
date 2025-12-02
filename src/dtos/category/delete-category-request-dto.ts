@@ -4,7 +4,6 @@ export interface DeleteCategoryRequestDto {
 }
 
 export interface DeleteCategoryResponseDto {
-  success: boolean;
+  id: string;
+  traceId: string;
 }
-
-

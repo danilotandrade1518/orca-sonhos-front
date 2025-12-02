@@ -1,8 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
-import type { CategoryDto } from '../../../../dtos/category/category-types';
+import type { CategoryDto, CategoryType } from '../../../../dtos/category';
 
-const baseMockCategories = [
+const baseMockCategories: Array<{ id: string; name: string; type: CategoryType }> = [
   {
     id: 'category-salary',
     name: 'Salário',
@@ -88,7 +88,7 @@ function initializeStoreForBudget(budgetId: string): void {
     budgetId,
     name: category.name,
     description: undefined,
-    type: category.type,
+    type: category.type as CategoryType,
     kind: 'PRESET',
     color: undefined,
     icon: undefined,

@@ -530,7 +530,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
     });
   }
 
-  uniqueNameValidator(control: { value: string }): { [key: string]: boolean } | null {
+  uniqueNameValidator(control: { value: string }): Record<string, boolean> | null {
     if (!control.value) {
       return null;
     }

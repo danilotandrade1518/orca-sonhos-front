@@ -14,7 +14,6 @@ export interface UpdateCategoryRequestDto {
 }
 
 export interface UpdateCategoryResponseDto {
-  success: boolean;
+  id: string;
+  traceId: string;
 }
-
-

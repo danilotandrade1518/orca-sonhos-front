@@ -8,5 +8,3 @@ export const CATEGORIES_ROUTES: Routes = [
     title: 'Categorias',
   },
 ];
-
-

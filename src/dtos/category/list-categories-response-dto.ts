@@ -6,5 +6,3 @@ export interface ListCategoriesResponseDto {
     count: number;
   };
 }
-
-

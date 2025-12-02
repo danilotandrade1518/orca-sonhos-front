@@ -12,7 +12,7 @@ import {
   ListCategoriesResponseDto,
   UpdateCategoryRequestDto,
   UpdateCategoryResponseDto,
-} from '../../../../../dtos/category';
+} from '../../../../dtos/category';
 import type { ApiError } from '../api/api.service';
 import { ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';
@@ -199,7 +199,11 @@ describe('CategoriesApiService', () => {
       const categoryId = await firstValueFrom(service.createCategory(createDto));
 
       expect(categoryId).toBe('category-new');
-      expect(apiService.postRaw).toHaveBeenCalledWith('/categories/create-category', createDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/category/create-category', {
+        name: createDto.name,
+        type: createDto.type,
+        budgetId: createDto.budgetId,
+      });
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -245,7 +249,8 @@ describe('CategoriesApiService', () => {
     };
 
     const updateResponse: UpdateCategoryResponseDto = {
-      success: true,
+      id: 'category-1',
+      traceId: 'trace-123',
     };
 
     it('should update category successfully', async () => {
@@ -254,7 +259,11 @@ describe('CategoriesApiService', () => {
       const success = await firstValueFrom(service.updateCategory(updateDto));
 
       expect(success).toBe(true);
-      expect(apiService.postRaw).toHaveBeenCalledWith('/categories/update-category', updateDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/category/update-category', {
+        id: updateDto.id,
+        name: updateDto.name,
+        type: updateDto.type,
+      });
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -292,7 +301,8 @@ describe('CategoriesApiService', () => {
     };
 
     const deleteResponse: DeleteCategoryResponseDto = {
-      success: true,
+      id: 'category-1',
+      traceId: 'trace-123',
     };
 
     it('should delete category successfully', async () => {
@@ -301,7 +311,9 @@ describe('CategoriesApiService', () => {
       const success = await firstValueFrom(service.deleteCategory(deleteDto));
 
       expect(success).toBe(true);
-      expect(apiService.postRaw).toHaveBeenCalledWith('/categories/delete-category', deleteDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/category/delete-category', {
+        id: deleteDto.categoryId,
+      });
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -339,5 +351,3 @@ describe('CategoriesApiService', () => {
     });
   });
 });
-
-

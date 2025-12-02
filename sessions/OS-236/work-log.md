@@ -63,11 +63,78 @@
 
 ---
 
+### 🗓️ Sessão 2025-12-02 (Finalização) - Correções e Validação Final
+
+**Fase**: Finalização - Correções de Build e Testes  
+**Objetivo**: Corrigir erros de compilação, ajustar testes e validar que tudo está funcionando
+
+#### ✅ Trabalho Realizado
+
+- **Correção de imports**: Ajustados caminhos de import incorretos nos serviços de categoria (`../../../../../dtos/category` → `../../../../dtos/category`).
+- **Correção de tipos**: Corrigido tipo `CategoryType` no `categories.handlers.ts` adicionando tipagem explícita e import correto.
+- **Ajuste de DTOs**: Atualizados `UpdateCategoryResponseDto` e `DeleteCategoryResponseDto` para refletir estrutura real do backend (`{ id, traceId }` em vez de `{ success: boolean }`).
+- **Correção de testes**: Ajustados testes unitários para usar estrutura correta de DTOs e adicionar propriedade `active` faltante em `CategoryFormData`.
+- **Validação de build**: Build compilando sem erros (apenas warnings de budget de CSS, não críticos).
+
+#### 🤔 Decisões/Problemas
+
+- **Problema**: Imports incorretos causavam erros de módulo não encontrado.
+  - **Solução**: Verificado estrutura de diretórios e corrigido caminhos relativos (4 níveis acima em vez de 6).
+- **Problema**: DTOs de resposta não correspondiam ao que o backend realmente retorna.
+  - **Solução**: Atualizados DTOs conforme documentado no plan.md (respostas com `{ id, traceId }`).
+- **Problema**: Testes falhando por estrutura de DTOs desatualizada e propriedade `active` faltante.
+  - **Solução**: Atualizados mocks de testes e adicionada propriedade `active: true` nos objetos de teste.
+
+#### 🧪 Validações
+
+- Build compilando sem erros TypeScript.
+- Imports corrigidos e módulos resolvendo corretamente.
+- Testes ajustados para estrutura correta de DTOs.
+
+#### ⏭️ Próximos Passos
+
+- Executar suite completa de testes para validar funcionalidade.
+- Preparar para PR conforme critérios de aceitação.
+
+---
+
+### 🗓️ Sessão 2025-12-02 (Fase 5 - Tarefa 1) - Exposição de Dados para Dashboard
+
+**Fase**: FASE 5 - Tarefa 1 - Expor Dados de Categoria para Dashboard  
+**Objetivo**: Facilitar uso de categorias no dashboard adicionando métodos auxiliares no CategoryState
+
+#### ✅ Trabalho Realizado
+
+- **categoriesMap computed**: Adicionado Map<string, CategoryDto> para acesso rápido por ID de categoria.
+- **categoriesByType computed**: Agrupamento de categorias por tipo (INCOME/EXPENSE/TRANSFER) para facilitar filtragem.
+- **getCategoryById()**: Método helper para buscar categoria específica por ID, retornando undefined se não encontrada.
+- **getCategoriesForWidgets()**: Método que retorna categorias formatadas com metadados visuais (id, name, type, color, icon, active) prontas para uso em widgets do dashboard.
+- **Testes unitários**: Adicionados testes completos para todos os novos métodos, garantindo cobertura adequada.
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `Map` para `categoriesMap` em vez de `Record` para melhor performance em lookups frequentes.
+- **Decisão**: `getCategoriesForWidgets()` retorna apenas categorias ativas, já que widgets não devem exibir categorias inativas.
+- **Decisão**: Manter formato simples e direto nos métodos auxiliares, facilitando uso em diferentes contextos (dashboard, relatórios).
+
+#### 🧪 Validações
+
+- Build compilando sem erros.
+- Testes unitários passando para todos os novos métodos.
+- Métodos seguem padrões existentes do CategoryState (signals, computeds).
+
+#### ⏭️ Próximos Passos
+
+- Tarefa 2 da Fase 5 (Hooks para Relatórios e Envelopes) pode ser implementada quando necessário.
+- Dashboard pode agora usar `CategoryState.getCategoryById()` para enriquecer `CategorySpendingDto` com metadados visuais.
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-236  
-**Fase Atual**: FASE 4 - Integração com Transações, Presets, MSW CRUD e Polimento (⏰ Em Progresso)  
-**Última Modificação**: Implementação de integração com transações, PresetCategoriesService, CRUD MSW completo e validações  
-**Próxima Tarefa**: Revisar acessibilidade e responsividade conforme layout-specification.md
+**Fase Atual**: FASE 5 - Tarefa 1 completa ✅, Tarefa 2 pendente ⏳  
+**Última Modificação**: Implementação de métodos auxiliares no CategoryState para dashboard  
+**Próxima Tarefa**: Validação final e preparação para PR
 
 

@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +27,13 @@ import type {
 @Component({
   selector: 'os-categories-page',
   standalone: true,
-  imports: [CommonModule, OsPageComponent, OsPageHeaderComponent, OsAlertComponent, OsCategoryManagerComponent],
+  imports: [
+    CommonModule,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsAlertComponent,
+    OsCategoryManagerComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de categorias">
@@ -38,37 +45,35 @@ import type {
       />
 
       @if (currentState() === 'error') {
-        <os-alert
-          type="error"
-          [title]="'Erro ao carregar categorias'"
-          [role]="'alert'"
-          [ariaLive]="'assertive'"
-          [showIcon]="true"
-          [dismissible]="false"
-        >
-          {{ errorMessage() }}
-        </os-alert>
-      }
-
-      @if (!selectedBudgetId()) {
-        <os-alert
-          type="info"
-          [title]="'Nenhum orçamento selecionado'"
-          [role]="'status'"
-          [ariaLive]="'polite'"
-          [showIcon]="true"
-          [dismissible]="false"
-        >
-          Selecione um orçamento para gerenciar categorias.
-        </os-alert>
+      <os-alert
+        type="error"
+        [title]="'Erro ao carregar categorias'"
+        [role]="'alert'"
+        [ariaLive]="'assertive'"
+        [showIcon]="true"
+        [dismissible]="false"
+      >
+        {{ errorMessage() }}
+      </os-alert>
+      } @if (!selectedBudgetId()) {
+      <os-alert
+        type="info"
+        [title]="'Nenhum orçamento selecionado'"
+        [role]="'status'"
+        [ariaLive]="'polite'"
+        [showIcon]="true"
+        [dismissible]="false"
+      >
+        Selecione um orçamento para gerenciar categorias.
+      </os-alert>
       } @else {
-        <os-category-manager
-          [categories]="uiCategories()"
-          [loading]="isLoading()"
-          (categoryAdded)="onCategoryAdded($event)"
-          (categoryUpdated)="onCategoryUpdated($event)"
-          (categoryDeleted)="onCategoryDeleted($event)"
-        />
+      <os-category-manager
+        [categories]="uiCategories()"
+        [loading]="isLoading()"
+        (categoryAdded)="onCategoryAdded($event)"
+        (categoryUpdated)="onCategoryUpdated($event)"
+        (categoryDeleted)="onCategoryDeleted($event)"
+      />
       }
     </os-page>
   `,
@@ -76,6 +81,8 @@ import type {
 export class CategoriesPage {
   private readonly state = inject(CategoryState);
   private readonly budgetSelection = inject(BudgetSelectionService);
+
+  private readonly categoryManager = viewChild(OsCategoryManagerComponent);
 
   readonly selectedBudgetId = this.budgetSelection.selectedBudgetId;
 
@@ -93,7 +100,7 @@ export class CategoriesPage {
   readonly errorMessage = computed(() => this.state.error() || 'Erro ao carregar categorias');
 
   readonly uiCategories = computed<Category[]>(() =>
-    this.categories().map((category) => this.mapToUiCategory(category)),
+    this.categories().map((category) => this.mapToUiCategory(category))
   );
 
   readonly pageHeaderActions = computed<PageHeaderAction[]>(() => [
@@ -122,8 +129,10 @@ export class CategoriesPage {
 
   onPageHeaderActionClick(action: PageHeaderAction): void {
     if (action.label === 'Nova Categoria') {
-      // Apenas abre o form via CategoryManager (emitiremos um evento "add" vazio)
-      // O próprio organismo controla a UI do formulário.
+      const manager = this.categoryManager();
+      if (manager) {
+        manager.onAddCategory();
+      }
     }
   }
 
@@ -201,5 +210,3 @@ export class CategoriesPage {
     }
   }
 }
-
-

@@ -6,7 +6,7 @@ import type {
   CreateCategoryRequestDto,
   DeleteCategoryRequestDto,
   UpdateCategoryRequestDto,
-} from '../../../../../dtos/category';
+} from '../../../../dtos/category';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
 import { CategoriesApiService } from './categories-api.service';
 
@@ -55,6 +55,45 @@ export class CategoryState {
   readonly inactiveCategories = computed(() =>
     this.categoriesByBudgetId().filter((category) => !category.active)
   );
+
+  readonly categoriesMap = computed(() => {
+    const map = new Map<string, CategoryDto>();
+    this.categoriesByBudgetId().forEach((category) => {
+      map.set(category.id, category);
+    });
+    return map;
+  });
+
+  readonly categoriesByType = computed(() => {
+    const categories = this.categoriesByBudgetId();
+    return {
+      INCOME: categories.filter((c) => c.type === 'INCOME'),
+      EXPENSE: categories.filter((c) => c.type === 'EXPENSE'),
+      TRANSFER: categories.filter((c) => c.type === 'TRANSFER'),
+    };
+  });
+
+  getCategoryById(id: string): CategoryDto | undefined {
+    return this.categoriesMap().get(id);
+  }
+
+  getCategoriesForWidgets(): {
+    id: string;
+    name: string;
+    type: string;
+    color?: string;
+    icon?: string;
+    active: boolean;
+  }[] {
+    return this.activeCategories().map((category) => ({
+      id: category.id,
+      name: category.name,
+      type: category.type,
+      color: category.color,
+      icon: category.icon,
+      active: category.active,
+    }));
+  }
 
   loadCategories(force = false): void {
     const budgetId = this.budgetSelectionService.selectedBudgetId();
@@ -162,5 +201,3 @@ export class CategoryState {
     this._error.set(null);
   }
 }
-
-
