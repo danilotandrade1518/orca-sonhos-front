@@ -6,6 +6,7 @@ import {
   GoalProgressData,
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
 import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goals-progress-widget/goals-progress-widget.component';
+import { FinancialHealthIndicatorComponent, FinancialHealthIndicators } from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
 import { GoalDto } from '@dtos/goal';
 
 export type { GoalProgressData };
@@ -23,7 +24,11 @@ export interface DashboardWidget {
     | 'transaction-list'
     | 'account-balance'
     | 'monthly-trends'
-    | 'quick-actions';
+    | 'quick-actions'
+    | 'financial-health'
+    | 'suggested-actions'
+    | 'category-spending'
+    | 'recent-achievements';
   title: string;
   size: 'small' | 'medium' | 'large' | 'full-width';
   position: { row: number; column: number };
@@ -64,6 +69,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
     CommonModule,
     OsGoalProgressCardComponent,
     GoalsProgressWidgetComponent,
+    FinancialHealthIndicatorComponent,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
@@ -309,6 +315,14 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                 Relatórios
               </os-button>
             </div>
+            } @case ('financial-health') {
+            @if (getFinancialHealthIndicators(widget)) {
+            <os-financial-health-indicator [indicators]="getFinancialHealthIndicators(widget)!" />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há dados de saúde financeira disponíveis</p>
+            </div>
+            }
             } @default {
             <div class="os-dashboard-widgets__placeholder">
               <p>Widget não implementado: {{ widget.type }}</p>
@@ -521,6 +535,27 @@ export class OsDashboardWidgetsComponent {
       default:
         return 'account_balance';
     }
+  }
+
+  getFinancialHealthIndicators(widget: DashboardWidget): FinancialHealthIndicators | null {
+    if (widget.data && typeof widget.data === 'object') {
+      const data = widget.data as {
+        budgetUsage?: unknown;
+        cashFlow?: unknown;
+        goalsOnTrack?: unknown;
+        emergencyReserve?: unknown;
+      };
+      
+      if (data.budgetUsage || data.cashFlow || data.goalsOnTrack || data.emergencyReserve) {
+        return {
+          budgetUsage: data.budgetUsage as FinancialHealthIndicators['budgetUsage'],
+          cashFlow: data.cashFlow as FinancialHealthIndicators['cashFlow'],
+          goalsOnTrack: data.goalsOnTrack as FinancialHealthIndicators['goalsOnTrack'],
+          emergencyReserve: data.emergencyReserve as FinancialHealthIndicators['emergencyReserve'],
+        };
+      }
+    }
+    return null;
   }
 
   formatCurrency(value: number): string {
