@@ -7,7 +7,10 @@ import {
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
 import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goals-progress-widget/goals-progress-widget.component';
 import { FinancialHealthIndicatorComponent, FinancialHealthIndicators } from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
+import { SuggestedActionsWidgetComponent } from '@features/dashboard/components/suggested-actions-widget/suggested-actions-widget.component';
+import { RecentAchievementsWidgetComponent } from '@features/dashboard/components/recent-achievements-widget/recent-achievements-widget.component';
 import { GoalDto } from '@dtos/goal';
+import { SuggestedAction, RecentAchievement } from '@features/dashboard/types/dashboard.types';
 
 export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
@@ -70,6 +73,8 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
     OsGoalProgressCardComponent,
     GoalsProgressWidgetComponent,
     FinancialHealthIndicatorComponent,
+    SuggestedActionsWidgetComponent,
+    RecentAchievementsWidgetComponent,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
@@ -323,6 +328,29 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               <p>Não há dados de saúde financeira disponíveis</p>
             </div>
             }
+            } @case ('suggested-actions') {
+            @if (getSuggestedActions(widget)) {
+            <os-suggested-actions-widget
+              [actions]="getSuggestedActions(widget)!"
+              [isLoading]="false"
+              (actionClick)="onSuggestedActionClick($event)"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há ações sugeridas disponíveis</p>
+            </div>
+            }
+            } @case ('recent-achievements') {
+            @if (getRecentAchievements(widget)) {
+            <os-recent-achievements-widget
+              [achievements]="getRecentAchievements(widget)!"
+              [isLoading]="false"
+            />
+            } @else {
+            <div class="os-dashboard-widgets__placeholder">
+              <p>Não há conquistas recentes disponíveis</p>
+            </div>
+            }
             } @default {
             <div class="os-dashboard-widgets__placeholder">
               <p>Widget não implementado: {{ widget.type }}</p>
@@ -357,6 +385,7 @@ export class OsDashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<GoalProgressData>();
   readonly goalCardExpand = output<GoalProgressData>();
+  readonly suggestedActionClick = output<SuggestedAction>();
 
   readonly isLoading = computed(() => this.state() === 'loading');
   readonly hasError = computed(() => this.state() === 'error');
@@ -558,6 +587,20 @@ export class OsDashboardWidgetsComponent {
     return null;
   }
 
+  getSuggestedActions(widget: DashboardWidget): SuggestedAction[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as SuggestedAction[];
+    }
+    return null;
+  }
+
+  getRecentAchievements(widget: DashboardWidget): RecentAchievement[] | null {
+    if (widget.data && Array.isArray(widget.data)) {
+      return widget.data as RecentAchievement[];
+    }
+    return null;
+  }
+
   formatCurrency(value: number): string {
     return this.localeService.formatCurrency(value, 'BRL');
   }
@@ -599,5 +642,9 @@ export class OsDashboardWidgetsComponent {
 
   onGoalCardExpand(goalData: GoalProgressData): void {
     this.goalCardExpand.emit(goalData);
+  }
+
+  onSuggestedActionClick(action: SuggestedAction): void {
+    this.suggestedActionClick.emit(action);
   }
 }

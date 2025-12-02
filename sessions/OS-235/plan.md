@@ -228,7 +228,7 @@ Adaptar `DashboardWidgetsComponent`/`OsDashboardWidgetsComponent` para:
 
 ---
 
-## 📅 FASE 4: Próximas Ações e Conquistas Recentes [Status: ⏳]
+## 📅 FASE 4: Próximas Ações e Conquistas Recentes [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -236,7 +236,7 @@ Fornecer **orientação próxima ação** e **reforço positivo** por meio de wi
 
 ### 📋 Tarefas
 
-#### 4.1 Implementar `SuggestedActionsComponent` (versão simplificada) [⏳]
+#### 4.1 Implementar `SuggestedActionsComponent` (versão simplificada) [✅]
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/suggested-actions-widget` que:
@@ -250,7 +250,7 @@ Componente standalone em `features/dashboard/components/suggested-actions-widget
 - Layout alinhado à `layout-specification.md`.
 - Testes unitários garantindo renderização e emissão de eventos.
 
-#### 4.2 Implementar `RecentAchievementsComponent` [⏳]
+#### 4.2 Implementar `RecentAchievementsComponent` [✅]
 
 **Descrição**:  
 Componente standalone em `features/dashboard/components/recent-achievements-widget` que:
@@ -264,7 +264,7 @@ Componente standalone em `features/dashboard/components/recent-achievements-widg
 - Componente animado, mas acessível (sem exageros, impactado por reduced-motion).
 - Testes unitários básicos para estados com/sem conquistas.
 
-#### 4.3 Integrar ações e conquistas ao `DashboardInsightsService` [⏳]
+#### 4.3 Integrar ações e conquistas ao `DashboardInsightsService` [✅]
 
 **Descrição**:  
 Definir lógica simplificada para:
@@ -284,13 +284,45 @@ Definir lógica simplificada para:
 
 ### 🧪 Critérios de Validação
 
-- [ ] Ao simular metas atrasadas, aparecem ações de aporte/ajuste.
-- [ ] Ao simular reserva baixa/adequada, conquistas/alertas coerentes.
-- [ ] Navegação a partir de ações sugeridas leva às telas corretas.
+- [x] Ao simular metas atrasadas, aparecem ações de aporte/ajuste.
+- [x] Ao simular reserva baixa/adequada, conquistas/alertas coerentes.
+- [x] Navegação a partir de ações sugeridas leva às telas corretas.
 
 ### 📝 Comentários da Fase
 
-_[Preencher durante o desenvolvimento]_
+- **Implementação**: SuggestedActionsWidgetComponent criado como componente standalone seguindo padrões Angular modernos (OnPush, signals, input/output functions)
+- **Layout**: Componente implementa layout de cards clicáveis conforme layout-specification.md:
+  - Cards com borda esquerda colorida por prioridade (high/medium/low)
+  - Ícones contextuais com variantes semânticas
+  - Estados de loading (skeleton) e empty implementados
+  - Navegação automática ao clicar no card
+- **Funcionalidades**:
+  - Exibe até 5 ações sugeridas ordenadas por prioridade
+  - Cada card mostra título, descrição e ícone contextual
+  - Cards são totalmente clicáveis e navegam para a rota especificada
+  - Estados visuais diferenciados por prioridade (vermelho/amarelo/azul)
+- **Acessibilidade**: ARIA labels, roles e navegação por teclado implementados
+- **Implementação**: RecentAchievementsWidgetComponent criado como componente standalone seguindo padrões Angular modernos
+- **Layout**: Componente implementa layout de cards compactos com animações:
+  - Cards com borda esquerda colorida por tipo de conquista
+  - Ícones de sucesso (trophy, shield, etc.)
+  - Animações de entrada suaves (slideInFade) respeitando prefers-reduced-motion
+  - Estados de loading (skeleton) e empty implementados
+- **Funcionalidades**:
+  - Exibe até 5 conquistas recentes
+  - Cada card mostra mensagem, data formatada e ícone
+  - Animações escalonadas (delay baseado no índice)
+  - Tipos de conquista: goal-completed, reserve-milestone, budget-maintained
+- **Acessibilidade**: ARIA labels, roles e animações respeitando prefers-reduced-motion
+- **Integração**:
+  - OsDashboardWidgetsComponent atualizado para renderizar ambos os componentes quando widget.type === 'suggested-actions' ou 'recent-achievements'
+  - Métodos helper criados: getSuggestedActions e getRecentAchievements
+  - Output suggestedActionClick adicionado para propagar eventos de navegação
+  - DashboardWidgetsComponent atualizado para propagar eventos de ação sugerida
+- **DashboardPage**: Configuração de widgets atualizada para incluir os novos widgets conforme layout-specification.md:
+  - financial-health na linha 2, coluna 1
+  - suggested-actions na linha 2, coluna 2
+  - recent-achievements na linha 3, coluna 1
 
 ---
 

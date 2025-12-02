@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, ou
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { DashboardDataService } from '../../services/dashboard-data.service';
 import { DashboardInsightsService } from '../../services/dashboard-insights.service';
-import { WidgetConfiguration } from '../../types/dashboard.types';
+import { WidgetConfiguration, SuggestedAction } from '../../types/dashboard.types';
 import {
   OsDashboardWidgetsComponent,
   DashboardState,
@@ -38,6 +38,7 @@ import { LocaleService } from '@shared/formatting';
       (viewReportsRequested)="onViewReportsRequested()"
       (goalCardClick)="onGoalCardClick($event)"
       (goalCardExpand)="onGoalCardExpand($event)"
+      (suggestedActionClick)="onSuggestedActionClick($event)"
       class="os-dashboard-widgets"
     />
   `,
@@ -67,6 +68,7 @@ export class DashboardWidgetsComponent {
   readonly viewReportsRequested = output<void>();
   readonly goalCardClick = output<unknown>();
   readonly goalCardExpand = output<unknown>();
+  readonly suggestedActionClick = output<SuggestedAction>();
 
   readonly selectedBudget = computed(() => this.budgetSelectionService.selectedBudget());
   readonly hasSelectedBudget = computed(() => this.budgetSelectionService.hasSelectedBudget());
@@ -313,6 +315,10 @@ export class DashboardWidgetsComponent {
 
   onGoalCardExpand(data: unknown): void {
     this.goalCardExpand.emit(data);
+  }
+
+  onSuggestedActionClick(action: SuggestedAction): void {
+    this.suggestedActionClick.emit(action);
   }
 
   getDashboardWidgets() {
