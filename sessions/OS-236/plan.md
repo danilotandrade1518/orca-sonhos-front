@@ -82,7 +82,7 @@ Atualizar `src/app/core/mocks/handlers/categories.handlers.ts` para:
 
 ---
 
-## 📅 FASE 2: CategoryState, Signals e Integração com BudgetSelection [Status: ⏳]
+## 📅 FASE 2: CategoryState, Signals e Integração com BudgetSelection [Status: Completada ✅]
 
 ### 🎯 Objetivo
 
@@ -90,7 +90,7 @@ Introduzir um estado reativo de categorias no core (`CategoryState`), integrado 
 
 ### 📋 Tarefas
 
-#### 1. Implementar CategoryState [⏳]
+#### 1. Implementar CategoryState [✅]
 
 **Descrição**:  
 Criar `CategoryState` em `src/app/core/services/category/category.state.ts` com:
@@ -112,7 +112,7 @@ Criar `CategoryState` em `src/app/core/services/category/category.state.ts` com:
 - State compilando, integrado ao `CategoriesApiService`.
 - Não há loops ou efeitos colaterais indevidos.
 
-#### 2. Integração com BudgetSelectionService [⏳]
+#### 2. Integração com BudgetSelectionService [✅]
 
 **Descrição**:  
 Conectar `CategoryState` ao `BudgetSelectionService`:
@@ -124,7 +124,7 @@ Conectar `CategoryState` ao `BudgetSelectionService`:
 
 - Mudança de orçamento resulta em recarregamento adequado (ou estado consistente) das categorias.
 
-#### 3. Testes Unitários de CategoryState [⏳]
+#### 3. Testes Unitários de CategoryState [✅]
 
 **Descrição**:  
 Escrever testes unitários para:
@@ -139,13 +139,16 @@ Escrever testes unitários para:
 
 ### 🧪 Critérios de Validação
 
-- [ ] `CategoryState` responde corretamente ao orçamento selecionado.
-- [ ] Métodos de mutate (`create/update/delete`) atualizam a lista.
-- [ ] Erros de API refletem-se em `error` e `loading` retorna a `false`.
+- [x] `CategoryState` responde corretamente ao orçamento selecionado.
+- [x] Métodos de mutate (`create/update/delete`) atualizam a lista (via reload com `loadCategories(true)`).
+- [x] Erros de API refletem-se em `error` e `loading` retorna a `false`.
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **State**: Implementado `CategoryState` em `core/services/category/category.state.ts` com signals (`_categories`, `_loading`, `_error`) e readonly signals expostos (`categories`, `loading`, `error`), espelhando o padrão de `AccountState`.
+- **Integração com orçamento**: `CategoryState` injeta `BudgetSelectionService` e expõe `selectedBudgetId`; os computed `categoriesByBudgetId`, `presetCategories`, `customCategories`, `activeCategories` e `inactiveCategories` filtram sempre pelo orçamento selecionado.
+- **Carregamento e mutations**: `loadCategories` usa `CategoriesApiService.listCategories(budgetId)` e trata ausência de orçamento; `createCategory`, `updateCategory` e `deleteCategory` orquestram as operações e fazem reload com `loadCategories(true)` em caso de sucesso.
+- **Testes**: Criado `category.state.spec.ts` com cenários para carregamento (sucesso/erro/sem orçamento), computed por orçamento/kind/status e fluxo de `create/update/delete`, garantindo que `loading`/`error` sejam atualizados corretamente.
 
 ---
 
