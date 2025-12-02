@@ -117,11 +117,15 @@ export class CategoriesPage {
     effect(() => {
       const budgetId = this.selectedBudgetId();
 
-      if (!budgetId || this.state.loading()) {
+      if (!budgetId) {
         return;
       }
 
       untracked(() => {
+        // Verificar loading dentro do untracked para evitar loop
+        if (this.state.loading()) {
+          return;
+        }
         this.state.loadCategories();
       });
     });

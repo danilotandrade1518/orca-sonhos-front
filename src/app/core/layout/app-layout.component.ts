@@ -103,6 +103,12 @@ export class AppLayoutComponent implements OnInit {
       route: '/transactions',
     },
     {
+      id: 'categories',
+      label: 'Categorias',
+      icon: 'category',
+      route: '/categories',
+    },
+    {
       id: 'reports',
       label: 'Relatórios',
       icon: 'analytics',

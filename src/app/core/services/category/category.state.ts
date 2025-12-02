@@ -95,6 +95,8 @@ export class CategoryState {
     }));
   }
 
+  private _lastLoadedBudgetId: string | null = null;
+
   loadCategories(force = false): void {
     const budgetId = this.budgetSelectionService.selectedBudgetId();
 
@@ -102,15 +104,23 @@ export class CategoryState {
       this._error.set('Nenhum orçamento selecionado');
       this._categories.set([]);
       this._loading.set(false);
+      this._lastLoadedBudgetId = null;
       return;
     }
 
-    if (!force && this._loading()) {
+    // Se o budgetId mudou, resetar o cache
+    if (this._lastLoadedBudgetId !== null && this._lastLoadedBudgetId !== budgetId) {
+      this._lastLoadedBudgetId = null;
+    }
+
+    // Evitar recarregar se já está carregando ou se já carregou para este budgetId (a menos que force)
+    if (!force && (this._loading() || this._lastLoadedBudgetId === budgetId)) {
       return;
     }
 
     this._loading.set(true);
     this._error.set(null);
+    this._lastLoadedBudgetId = budgetId;
 
     this.categoriesApi
       .listCategories(budgetId)
@@ -124,6 +134,7 @@ export class CategoryState {
           this._error.set(error?.message || 'Erro ao carregar categorias');
           this._loading.set(false);
           this._categories.set([]);
+          this._lastLoadedBudgetId = null;
         },
       });
   }

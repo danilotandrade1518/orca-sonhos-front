@@ -113,7 +113,7 @@ function generateCategoryId(): string {
 }
 
 export const categoryHandlers = [
-  http.get('/categories', ({ request }) => {
+  http.get('/api/categories', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -133,7 +133,7 @@ export const categoryHandlers = [
     });
   }),
 
-  http.post('/category/create-category', async ({ request }) => {
+  http.post('/api/category/create-category', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -182,7 +182,7 @@ export const categoryHandlers = [
     return HttpResponse.json({ id: categoryId, traceId: 'mock-trace-id' }, { status: 201 });
   }),
 
-  http.post('/category/update-category', async ({ request }) => {
+  http.post('/api/category/update-category', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -234,7 +234,7 @@ export const categoryHandlers = [
     return HttpResponse.json({ id: body.id, traceId: 'mock-trace-id' }, { status: 200 });
   }),
 
-  http.post('/category/delete-category', async ({ request }) => {
+  http.post('/api/category/delete-category', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
