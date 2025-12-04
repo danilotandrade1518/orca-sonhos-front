@@ -511,7 +511,7 @@ Migrar `pay-bill-modal` para página dedicada `/credit-cards/bills/:id/pay`.
 
 ---
 
-## 📅 FASE 6: Migração - Goal Amount Modal [Status: ⏳]
+## 📅 FASE 6: Migração - Goal Amount Modal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -519,7 +519,7 @@ Migrar `goal-amount-modal` para páginas `/goals/:id/add-amount` e `/goals/:id/r
 
 ### 📋 Tarefas
 
-#### Criar Página goal-amount.page.ts [⏳]
+#### Criar Página goal-amount.page.ts [✅]
 
 **Descrição**:
 
@@ -531,21 +531,21 @@ Migrar `goal-amount-modal` para páginas `/goals/:id/add-amount` e `/goals/:id/r
   **Dependências**: Fase 5 completa
   **Critério de Conclusão**: Página criada e funcional
 
-#### Implementar Estilos [⏳]
+#### Implementar Estilos [✅]
 
 **Descrição**: Estilos responsivos
 **Arquivo**: `src/app/features/goals/pages/goal-amount/goal-amount.page.scss`
 **Dependências**: Página criada
 **Critério de Conclusão**: Estilos aplicados
 
-#### Adicionar Rotas [⏳]
+#### Adicionar Rotas [✅]
 
 **Descrição**: Adicionar rotas `/goals/:id/add-amount` e `/goals/:id/remove-amount`
 **Arquivo**: `src/app/features/goals/goals.routes.ts`
 **Dependências**: Página criada
 **Critério de Conclusão**: Rotas funcionando
 
-#### Atualizar Navegação e Remover Modal [⏳]
+#### Atualizar Navegação e Remover Modal [✅]
 
 **Descrição**: Atualizar links e remover componente modal antigo
 **Dependências**: Rotas criadas
@@ -553,16 +553,51 @@ Migrar `goal-amount-modal` para páginas `/goals/:id/add-amount` e `/goals/:id/r
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página adiciona aporte corretamente
-- [ ] Página remove aporte corretamente
-- [ ] Validação funcionando
-- [ ] Cálculos corretos
-- [ ] Navegação funcionando
-- [ ] Responsividade validada
+- [x] Página adiciona aporte corretamente
+- [x] Página remove aporte corretamente
+- [x] Validação funcionando
+- [x] Cálculos corretos
+- [x] Navegação funcionando
+- [x] Responsividade validada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre migração do goal-amount-modal]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Página `goal-amount.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-form-template`
+  - Lógica migrada do componente modal original
+  - Suporte a modo add/remove via detecção do último segmento da rota
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta para detalhes da meta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+  - Validação customizada para modo remove (não permite saldo negativo)
+  - Informações adicionais exibidas no modo remove (valor atual e após remoção)
+  - Integração com `GoalsState` para adicionar/remover aporte
+- ✅ Estilos criados (`goal-amount.page.scss`)
+- ✅ Rotas adicionadas em `goals.routes.ts`:
+  - `/goals/:id/add-amount` - Adicionar aporte (lazy loading)
+  - `/goals/:id/remove-amount` - Remover aporte (lazy loading)
+- ✅ Navegação atualizada em `goals.page.ts`:
+  - `onAportar()` agora navega para `/goals/:id/add-amount`
+  - Removidos modais e lógica relacionada (`showAddModal`, `showRemoveModal`, `selectedGoalId`)
+  - Removido import do `GoalAmountModalComponent`
+  - Removidos métodos `onAddAmount()`, `onRemoveAmount()`, `closeAddModal()`, `closeRemoveModal()`
+- ✅ Navegação atualizada em `goal-detail.page.ts`:
+  - `openAddModal()` agora navega para `/goals/:id/add-amount`
+  - `openRemoveModal()` agora navega para `/goals/:id/remove-amount`
+  - Removidos modais e lógica relacionada (`showAddModal`, `showRemoveModal`)
+  - Removido import do `GoalAmountModalComponent`
+  - Removidos métodos `onAddAmount()`, `onRemoveAmount()`, `closeAddModal()`, `closeRemoveModal()`
+- ✅ Componente modal antigo removido:
+  - `goal-amount-modal.component.ts` removido
+  - `goal-amount-modal.component.scss` removido
+  - Diretório `components/goal-amount-modal/` removido
+
+**Próximo Passo:**
+
+- Iniciar Fase 7: Migração - Transfer Modal
 
 ---
 
@@ -757,11 +792,11 @@ _[Observações finais sobre validação e limpeza]_
 ### Checklist de Conclusão
 
 - [x] Fase 1: Componente e Serviço Base ✅
-- [ ] Fase 2: Testes e Acessibilidade ✅
-- [ ] Fase 3: Substituição de Modais Duplicados ✅
-- [ ] Fase 4: Migração - Envelope Form ✅
-- [ ] Fase 5: Migração - Pay Bill Modal ✅
-- [ ] Fase 6: Migração - Goal Amount Modal ✅
+- [x] Fase 2: Testes e Acessibilidade ✅
+- [x] Fase 3: Substituição de Modais Duplicados ✅
+- [x] Fase 4: Migração - Envelope Form ✅
+- [x] Fase 5: Migração - Pay Bill Modal ✅
+- [x] Fase 6: Migração - Goal Amount Modal ✅
 - [ ] Fase 7: Migração - Transfer Modal ✅
 - [ ] Fase 8: Migração - Reconcile Modal ✅
 - [ ] Fase 9: Validação Final e Limpeza ✅
@@ -791,9 +826,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 5/9
-**Tarefas Completas**: 22/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Próxima: Fase 6 - Migração - Goal Amount Modal)
+**Fases Completas**: 6/9
+**Tarefas Completas**: 28/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Fase 6: ✅ Completa | Próxima: Fase 7 - Migração - Transfer Modal)
 
 ---
 

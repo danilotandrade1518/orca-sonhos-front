@@ -22,7 +22,6 @@ import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { OsProgressBarComponent } from '@shared/ui-components/atoms/os-progress-bar/os-progress-bar.component';
 import { LocaleService } from '@shared/formatting';
-import { GoalAmountModalComponent } from '../../components/goal-amount-modal/goal-amount-modal.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -37,7 +36,6 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsSkeletonComponent,
     OsAlertComponent,
     OsProgressBarComponent,
-    GoalAmountModalComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -212,26 +210,6 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         (cancelled)="onDeleteCancelled()"
         (closed)="onDeleteCancelled()"
       />
-      } @if (showAddModal() && goalId()) {
-      <os-goal-amount-modal
-        [mode]="'add'"
-        [goalId]="goalId()!"
-        [currentAmount]="goal()?.accumulatedAmount ?? 0"
-        [submitting]="loading()"
-        [error]="error()"
-        (save)="onAddAmount($event)"
-        (cancelled)="closeAddModal()"
-      />
-      } @if (showRemoveModal() && goalId()) {
-      <os-goal-amount-modal
-        [mode]="'remove'"
-        [goalId]="goalId()!"
-        [currentAmount]="goal()?.accumulatedAmount ?? 0"
-        [submitting]="loading()"
-        [error]="error()"
-        (save)="onRemoveAmount($event)"
-        (cancelled)="closeRemoveModal()"
-      />
       }
     </os-page>
   `,
@@ -249,8 +227,6 @@ export class GoalDetailPage implements OnInit {
 
   readonly goalId = signal<string | null>(null);
   readonly showDeleteConfirm = signal(false);
-  readonly showAddModal = signal(false);
-  readonly showRemoveModal = signal(false);
 
   readonly goal = computed(() => {
     const id = this.goalId();
@@ -405,29 +381,17 @@ export class GoalDetailPage implements OnInit {
   }
 
   openAddModal(): void {
-    this.showAddModal.set(true);
-  }
-
-  closeAddModal(): void {
-    this.showAddModal.set(false);
+    const id = this.goalId();
+    if (id) {
+      this.router.navigate(['/goals', id, 'add-amount']);
+    }
   }
 
   openRemoveModal(): void {
-    this.showRemoveModal.set(true);
-  }
-
-  closeRemoveModal(): void {
-    this.showRemoveModal.set(false);
-  }
-
-  onAddAmount(event: { goalId: string; amount: number }): void {
-    this.state.addAmount({ id: event.goalId, amount: event.amount });
-    this.closeAddModal();
-  }
-
-  onRemoveAmount(event: { goalId: string; amount: number }): void {
-    this.state.removeAmount({ id: event.goalId, amount: event.amount });
-    this.closeRemoveModal();
+    const id = this.goalId();
+    if (id) {
+      this.router.navigate(['/goals', id, 'remove-amount']);
+    }
   }
 
   onPageHeaderActionClick(action: PageHeaderAction): void {

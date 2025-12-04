@@ -11,7 +11,6 @@ import {
   untracked,
 } from '@angular/core';
 import { GoalListComponent } from '../../components/goal-list/goal-list.component';
-import { GoalAmountModalComponent } from '../../components/goal-amount-modal/goal-amount-modal.component';
 import { GoalsState } from '../../state/goals-state/goals.state';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
@@ -27,7 +26,6 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
   imports: [
     CommonModule,
     GoalListComponent,
-    GoalAmountModalComponent,
     OsFilterBarComponent,
     OsInputComponent,
     OsSelectComponent,
@@ -100,28 +98,6 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
         (editar)="onEditar($event)"
         (excluir)="onExcluir($event)"
       />
-
-      @if (showAddModal()) {
-      <os-goal-amount-modal
-        [mode]="'add'"
-        [goalId]="selectedGoalId()!"
-        [currentAmount]="selectedGoal()?.accumulatedAmount ?? 0"
-        [submitting]="state.isLoading()"
-        [error]="state.error()"
-        (save)="onAddAmount($event)"
-        (cancelled)="closeAddModal()"
-      />
-      } @if (showRemoveModal()) {
-      <os-goal-amount-modal
-        [mode]="'remove'"
-        [goalId]="selectedGoalId()!"
-        [currentAmount]="selectedGoal()?.accumulatedAmount ?? 0"
-        [submitting]="state.isLoading()"
-        [error]="state.error()"
-        (save)="onRemoveAmount($event)"
-        (cancelled)="closeRemoveModal()"
-      />
-      }
     </os-page>
   `,
   styleUrl: './goals.page.scss',
@@ -133,24 +109,12 @@ export class GoalsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly budgetSelection = inject(BudgetSelectionService);
 
-  private readonly _showAddModal = signal(false);
-  private readonly _showRemoveModal = signal(false);
-  private readonly _selectedGoalId = signal<string | null>(null);
   private readonly _searchTerm = signal('');
   private readonly _selectedDeadlineFilter = signal<'all' | 'with-deadline' | 'without-deadline'>('all');
   private _lastBudgetId: string | null = null;
 
-  readonly showAddModal = this._showAddModal.asReadonly();
-  readonly showRemoveModal = this._showRemoveModal.asReadonly();
-  readonly selectedGoalId = this._selectedGoalId.asReadonly();
   readonly searchTerm = this._searchTerm.asReadonly();
   readonly selectedDeadlineFilter = this._selectedDeadlineFilter.asReadonly();
-
-  readonly selectedGoal = computed(() => {
-    const id = this._selectedGoalId();
-    if (!id) return null;
-    return this.state.items().find((g) => g.id === id) || null;
-  });
 
   readonly hasActiveFilters = computed(() => {
     return this._searchTerm().length > 0 || this._selectedDeadlineFilter() !== 'all';
@@ -225,8 +189,7 @@ export class GoalsPage implements OnInit {
   }
 
   onAportar(goalId: string): void {
-    this._selectedGoalId.set(goalId);
-    this._showAddModal.set(true);
+    this.router.navigate([goalId, 'add-amount'], { relativeTo: this.route });
   }
 
   onEditar(goalId: string): void {
@@ -235,26 +198,6 @@ export class GoalsPage implements OnInit {
 
   onExcluir(goalId: string): void {
     this.state.delete({ id: goalId });
-  }
-
-  onAddAmount(event: { goalId: string; amount: number }): void {
-    this.state.addAmount({ id: event.goalId, amount: event.amount });
-    this.closeAddModal();
-  }
-
-  onRemoveAmount(event: { goalId: string; amount: number }): void {
-    this.state.removeAmount({ id: event.goalId, amount: event.amount });
-    this.closeRemoveModal();
-  }
-
-  closeAddModal(): void {
-    this._showAddModal.set(false);
-    this._selectedGoalId.set(null);
-  }
-
-  closeRemoveModal(): void {
-    this._showRemoveModal.set(false);
-    this._selectedGoalId.set(null);
   }
 
   onSearchChange(value: string): void {

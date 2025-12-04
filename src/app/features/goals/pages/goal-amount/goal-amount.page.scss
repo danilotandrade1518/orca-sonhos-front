@@ -1,0 +1,19 @@
+.goal-amount-page__info {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--os-color-gray-100, #f5f5f5);
+  margin-top: 16px;
+
+  p {
+    margin: 0 0 8px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
