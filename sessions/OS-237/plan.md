@@ -16,7 +16,7 @@ Implementar o sistema completo de envelopes (limite de gastos por categoria) den
 
 ---
 
-## 📅 FASE 1: DTOs e Contratos Base [Status: ⏳]
+## 📅 FASE 1: DTOs e Contratos Base [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -24,7 +24,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend, seguindo padrões ex
 
 ### 📋 Tarefas
 
-#### 1. Criar estrutura de DTOs em `src/dtos/envelope/` [⏳]
+#### 1. Criar estrutura de DTOs em `src/dtos/envelope/` [✅]
 
 **Descrição**: Criar todos os DTOs necessários seguindo padrão de `account` e `category`:
 
@@ -49,7 +49,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend, seguindo padrões ex
 - `src/dtos/account/account-types.ts` para padrão de estrutura
 - `src/dtos/category/category-types.ts` para padrão de DTOs
 
-#### 2. Atualizar `src/dtos/index.ts` [⏳]
+#### 2. Atualizar `src/dtos/index.ts` [✅]
 
 **Descrição**: Adicionar re-exports do módulo de envelopes
 
@@ -71,7 +71,11 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend, seguindo padrões ex
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Seguir exatamente o padrão de `account` e `category` para consistência
+- **Decisão**: Usar `meta?` opcional em `ListEnvelopesResponseDto` para flexibilidade
+- **Decisão**: Manter `categoryName` no `EnvelopeDto` para facilitar exibição (vem do backend)
+- Todos os DTOs criados seguindo padrões TypeScript strict (sem `any`)
+- Valores monetários sempre em centavos conforme convenção do projeto
 
 ---
 

@@ -2,6 +2,7 @@ export * from './budget';
 export * from './transaction';
 export * from './goal';
 export * from './category';
+export * from './envelope';
 
 export type { AccountType } from './account/account-types';
 export type { AccountDto } from './account/account-types';
