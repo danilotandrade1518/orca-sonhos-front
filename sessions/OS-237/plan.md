@@ -79,7 +79,7 @@ Estabelecer contratos de dados (DTOs) alinhados ao backend, seguindo padrões ex
 
 ---
 
-## 📅 FASE 2: Core Services (API Service e State) [Status: ⏳]
+## 📅 FASE 2: Core Services (API Service e State) [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -87,7 +87,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrão de `
 
 ### 📋 Tarefas
 
-#### 1. Criar `EnvelopesApiService` [⏳]
+#### 1. Criar `EnvelopesApiService` [✅]
 
 **Descrição**: Criar serviço em `src/app/core/services/envelope/envelopes-api/envelopes-api.service.ts` com:
 
@@ -114,7 +114,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrão de `
 
 - `src/app/core/services/account/accounts-api/accounts-api.service.ts` para padrão
 
-#### 2. Criar `EnvelopeState` [⏳]
+#### 2. Criar `EnvelopeState` [✅]
 
 **Descrição**: Criar estado em `src/app/core/services/envelope/envelope-state/envelope.state.ts` com:
 
@@ -150,7 +150,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrão de `
 
 - `src/app/core/services/account/account-state/account.state.ts` para padrão
 
-#### 3. Atualizar MSW Handlers [⏳]
+#### 3. Atualizar MSW Handlers [✅]
 
 **Descrição**: Atualizar `src/app/core/mocks/handlers/envelopes.handlers.ts`:
 
@@ -176,16 +176,20 @@ Implementar serviços de API e estado reativo com signals, seguindo padrão de `
 
 ### 🧪 Critérios de Validação
 
-- [ ] `EnvelopesApiService` com todos os métodos funcionando
-- [ ] `EnvelopeState` com signals reativos
-- [ ] Integração com `BudgetSelectionService` funcionando
-- [ ] MSW handlers atualizados e funcionando
-- [ ] Testes unitários criados (estrutura básica)
-- [ ] Sem erros de lint/type-check
+- [x] `EnvelopesApiService` com todos os métodos funcionando
+- [x] `EnvelopeState` com signals reativos
+- [x] Integração com `BudgetSelectionService` funcionando
+- [x] MSW handlers atualizados e funcionando
+- [x] Testes unitários criados (estrutura básica)
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Seguir padrão de `AccountsApiService` e `AccountState` para consistência
+- **Decisão**: Recarga completa da lista após mutations ao invés de write-through - Simplicidade e garantia de dados atualizados
+- **Decisão**: Valores monetários sempre em centavos no mock data - Alinhado com convenção do projeto
+- Todos os serviços criados seguindo padrões TypeScript strict (sem `any`)
+- MSW handlers atualizados removendo operações add/remove amount e transfer (conforme especificação)
 
 ---
 

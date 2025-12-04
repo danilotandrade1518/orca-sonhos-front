@@ -1,45 +1,72 @@
 import { http, HttpResponse } from 'msw';
 
-const mockEnvelopes = [
+import type { EnvelopeDto } from '../../../../dtos/envelope';
+
+const mockEnvelopes: EnvelopeDto[] = [
   {
     id: 'envelope-1',
     name: 'Alimentação',
-    monthlyLimit: 800.0,
-    currentAmount: 450.0,
     budgetId: 'budget-1',
     categoryId: 'category-groceries',
+    categoryName: 'Alimentação',
+    limit: 80000,
+    currentUsage: 45000,
+    usagePercentage: 56.25,
+    active: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-12-03T00:00:00Z',
   },
   {
     id: 'envelope-2',
     name: 'Transporte',
-    monthlyLimit: 300.0,
-    currentAmount: 180.0,
     budgetId: 'budget-1',
     categoryId: 'category-transport',
+    categoryName: 'Transporte',
+    limit: 30000,
+    currentUsage: 35000,
+    usagePercentage: 116.67,
+    active: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-12-03T00:00:00Z',
   },
   {
     id: 'envelope-3',
     name: 'Entretenimento',
-    monthlyLimit: 200.0,
-    currentAmount: 75.0,
     budgetId: 'budget-1',
     categoryId: 'category-entertainment',
+    categoryName: 'Entretenimento',
+    limit: 20000,
+    currentUsage: 7500,
+    usagePercentage: 37.5,
+    active: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-12-03T00:00:00Z',
   },
   {
     id: 'envelope-4',
     name: 'Saúde',
-    monthlyLimit: 500.0,
-    currentAmount: 320.0,
     budgetId: 'budget-1',
     categoryId: 'category-health',
+    categoryName: 'Saúde',
+    limit: 50000,
+    currentUsage: 32000,
+    usagePercentage: 64.0,
+    active: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-12-03T00:00:00Z',
   },
   {
     id: 'envelope-5',
     name: 'Educação',
-    monthlyLimit: 400.0,
-    currentAmount: 0.0,
     budgetId: 'budget-1',
     categoryId: 'category-education',
+    categoryName: 'Educação',
+    limit: 40000,
+    currentUsage: 0,
+    usagePercentage: 0,
+    active: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-12-03T00:00:00Z',
   },
 ];
 
@@ -77,24 +104,17 @@ export const envelopeHandlers = [
 
     const body = (await request.json()) as any;
 
-    if (!body.name || !body.monthlyLimit || !body.budgetId || !body.categoryId || !body.userId) {
+    if (!body.name || body.limit === undefined || !body.budgetId || !body.categoryId) {
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    if (body.monthlyLimit <= 0) {
-      return HttpResponse.json({ error: 'Monthly limit must be positive' }, { status: 400 });
+    if (body.limit <= 0) {
+      return HttpResponse.json({ error: 'Limit must be positive' }, { status: 400 });
     }
 
-    const newEnvelope = {
-      id: 'envelope-' + Date.now(),
-      name: body.name,
-      monthlyLimit: body.monthlyLimit,
-      currentAmount: 0,
-      budgetId: body.budgetId,
-      categoryId: body.categoryId,
-    };
+    const newEnvelopeId = 'envelope-' + Date.now();
 
-    return HttpResponse.json({ id: newEnvelope.id }, { status: 201 });
+    return HttpResponse.json({ id: newEnvelopeId }, { status: 201 });
   }),
 
   http.post('/envelope/update-envelope', async ({ request }) => {
@@ -106,12 +126,12 @@ export const envelopeHandlers = [
 
     const body = (await request.json()) as any;
 
-    if (!body.envelopeId || !body.userId || !body.budgetId) {
+    if (!body.envelopeId || !body.budgetId) {
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    if (body.monthlyLimit !== undefined && body.monthlyLimit <= 0) {
-      return HttpResponse.json({ error: 'Monthly limit must be positive' }, { status: 400 });
+    if (body.limit !== undefined && body.limit <= 0) {
+      return HttpResponse.json({ error: 'Limit must be positive' }, { status: 400 });
     }
 
     return HttpResponse.json({ success: true }, { status: 200 });
@@ -126,81 +146,8 @@ export const envelopeHandlers = [
 
     const body = (await request.json()) as any;
 
-    if (!body.envelopeId || !body.userId || !body.budgetId) {
+    if (!body.envelopeId || !body.budgetId) {
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    return HttpResponse.json({ success: true }, { status: 200 });
-  }),
-
-  http.post('/envelope/add-amount-envelope', async ({ request }) => {
-    const authHeader = request.headers.get('authorization');
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = (await request.json()) as any;
-
-    if (!body.envelopeId || !body.userId || !body.budgetId || !body.amount) {
-      return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    if (body.amount <= 0) {
-      return HttpResponse.json({ error: 'Amount must be positive' }, { status: 400 });
-    }
-
-    return HttpResponse.json({ success: true }, { status: 200 });
-  }),
-
-  http.post('/envelope/remove-amount-envelope', async ({ request }) => {
-    const authHeader = request.headers.get('authorization');
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = (await request.json()) as any;
-
-    if (!body.envelopeId || !body.userId || !body.budgetId || !body.amount) {
-      return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    if (body.amount <= 0) {
-      return HttpResponse.json({ error: 'Amount must be positive' }, { status: 400 });
-    }
-
-    return HttpResponse.json({ success: true }, { status: 200 });
-  }),
-
-  http.post('/envelope/transfer-between-envelopes', async ({ request }) => {
-    const authHeader = request.headers.get('authorization');
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = (await request.json()) as any;
-
-    if (
-      !body.sourceEnvelopeId ||
-      !body.targetEnvelopeId ||
-      !body.userId ||
-      !body.budgetId ||
-      !body.amount
-    ) {
-      return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    if (body.amount <= 0) {
-      return HttpResponse.json({ error: 'Amount must be positive' }, { status: 400 });
-    }
-
-    if (body.sourceEnvelopeId === body.targetEnvelopeId) {
-      return HttpResponse.json(
-        { error: 'Source and target envelopes must be different' },
-        { status: 400 }
-      );
     }
 
     return HttpResponse.json({ success: true }, { status: 200 });
