@@ -228,4 +228,3 @@ export class EnvelopesPage implements OnInit {
     this.router.navigate(['/envelopes'], { replaceUrl: true });
   }
 }
-

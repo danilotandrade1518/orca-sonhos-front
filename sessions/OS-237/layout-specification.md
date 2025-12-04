@@ -703,3 +703,4 @@ Todas já disponíveis no projeto:
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Dashboard Centrado em Progresso
 - **Financial Health**: `business/financial-health.md` - Indicador "Uso de Orçamento e Envelopes"
 
+

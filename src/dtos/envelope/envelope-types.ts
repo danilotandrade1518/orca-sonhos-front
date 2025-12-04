@@ -11,4 +11,3 @@ export interface EnvelopeDto {
   createdAt: string;
   updatedAt: string;
 }
-

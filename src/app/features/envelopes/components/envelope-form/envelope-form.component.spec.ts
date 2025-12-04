@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { signal, of } from 'rxjs';
+import { signal } from '@angular/core';
+import { of } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { EnvelopeFormComponent } from './envelope-form.component';
 import { EnvelopeDto } from '../../../../../dtos/envelope';
@@ -59,6 +60,8 @@ describe('EnvelopeFormComponent', () => {
       type: 'EXPENSE',
       active: true,
       kind: 'CUSTOM',
+      createdAt: '2025-01-01T00:00:00Z',
+      updatedAt: '2025-01-01T00:00:00Z',
     },
     {
       id: 'category-2',
@@ -67,6 +70,8 @@ describe('EnvelopeFormComponent', () => {
       type: 'EXPENSE',
       active: true,
       kind: 'CUSTOM',
+      createdAt: '2025-01-01T00:00:00Z',
+      updatedAt: '2025-01-01T00:00:00Z',
     },
   ];
 
@@ -120,7 +125,7 @@ describe('EnvelopeFormComponent', () => {
 
   describe('Initialization', () => {
     it('should initialize form with empty values in create mode', () => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
       component.ngOnInit();
 
@@ -128,11 +133,11 @@ describe('EnvelopeFormComponent', () => {
       expect(form).toBeTruthy();
       expect(form?.get('name')?.value).toBe('');
       expect(form?.get('categoryId')?.value).toBeNull();
-      expect(form?.get('limit')?.value).toBe(0);
+      expect(form?.get('limit')?.value).toBeNull();
     });
 
     it('should load categories on init', async () => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
       component.ngOnInit();
 
@@ -143,8 +148,8 @@ describe('EnvelopeFormComponent', () => {
     });
 
     it('should populate form with envelope data in edit mode', () => {
-      component.mode = signal('edit');
-      component.envelope = signal(mockEnvelope);
+      fixture.componentRef.setInput('mode', 'edit');
+      fixture.componentRef.setInput('envelope', mockEnvelope);
       fixture.detectChanges();
       component.ngOnInit();
 
@@ -157,7 +162,7 @@ describe('EnvelopeFormComponent', () => {
 
   describe('Form Validation', () => {
     beforeEach(() => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
       component.ngOnInit();
     });
@@ -204,6 +209,14 @@ describe('EnvelopeFormComponent', () => {
     it('should validate limit as required', () => {
       const limitControl = component.limitControl();
       expect(limitControl?.hasError('required')).toBe(true);
+      
+      limitControl?.markAsDirty();
+      limitControl?.markAsTouched();
+      
+      component['_validationTrigger'].update((v) => v + 1);
+      fixture.detectChanges();
+
+      expect(limitControl?.hasError('required')).toBe(true);
     });
 
     it('should validate limit min (>= 0.01)', () => {
@@ -223,7 +236,7 @@ describe('EnvelopeFormComponent', () => {
 
   describe('Category Options', () => {
     beforeEach(() => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
       component.ngOnInit();
     });
@@ -247,6 +260,8 @@ describe('EnvelopeFormComponent', () => {
           type: 'EXPENSE',
           active: false,
           kind: 'CUSTOM',
+          createdAt: '2025-01-01T00:00:00Z',
+          updatedAt: '2025-01-01T00:00:00Z',
         },
       ];
 
@@ -263,7 +278,7 @@ describe('EnvelopeFormComponent', () => {
 
   describe('Submit', () => {
     beforeEach(() => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
       component.ngOnInit();
     });
@@ -300,8 +315,8 @@ describe('EnvelopeFormComponent', () => {
     });
 
     it('should update envelope in edit mode', async () => {
-      component.mode = signal('edit');
-      component.envelope = signal(mockEnvelope);
+      fixture.componentRef.setInput('mode', 'edit');
+      fixture.componentRef.setInput('envelope', mockEnvelope);
       fixture.detectChanges();
       component.ngOnInit();
 
@@ -326,8 +341,17 @@ describe('EnvelopeFormComponent', () => {
       );
     });
 
-    it('should show error if no budget is selected', () => {
-      budgetSelection.selectedBudgetId = signal(null);
+    it('should show error if no budget is selected', async () => {
+      await firstValueFrom(of(true));
+      
+      const form = component.form();
+      form?.patchValue({
+        name: 'Novo Envelope',
+        categoryId: 'category-1',
+        limit: 500,
+      });
+      
+      budgetSelection.selectedBudgetId.set(null);
 
       component.onSubmit();
 
@@ -349,7 +373,7 @@ describe('EnvelopeFormComponent', () => {
 
   describe('Modal Config', () => {
     it('should show create title in create mode', () => {
-      component.mode = signal('create');
+      fixture.componentRef.setInput('mode', 'create');
       fixture.detectChanges();
 
       const config = component.modalConfig();
@@ -358,7 +382,7 @@ describe('EnvelopeFormComponent', () => {
     });
 
     it('should show edit title in edit mode', () => {
-      component.mode = signal('edit');
+      fixture.componentRef.setInput('mode', 'edit');
       fixture.detectChanges();
 
       const config = component.modalConfig();
@@ -367,4 +391,3 @@ describe('EnvelopeFormComponent', () => {
     });
   });
 });
-

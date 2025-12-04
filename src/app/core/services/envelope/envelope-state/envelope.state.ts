@@ -161,4 +161,3 @@ export class EnvelopeState {
     this._error.set(null);
   }
 }
-

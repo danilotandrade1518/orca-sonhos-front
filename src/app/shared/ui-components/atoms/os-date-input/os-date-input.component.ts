@@ -116,7 +116,7 @@ export class OsDateInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (_value: Date | null) => {
-    // Value change handled by valueChange output
+    
   };
   private _onTouched = () => {};
 

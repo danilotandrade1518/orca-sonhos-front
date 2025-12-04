@@ -8,4 +8,3 @@ export interface CreateEnvelopeRequestDto {
 export interface CreateEnvelopeResponseDto {
   id: string;
 }
-

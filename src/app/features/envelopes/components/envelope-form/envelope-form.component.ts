@@ -215,7 +215,7 @@ export class EnvelopeFormComponent implements OnInit {
         Validators.maxLength(100),
       ]),
       categoryId: new FormControl<string | null>(null, [Validators.required]),
-      limit: new FormControl(0, [Validators.required, Validators.min(0.01)]),
+      limit: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     });
 
     const envelope = this.envelope();
@@ -298,4 +298,3 @@ export class EnvelopeFormComponent implements OnInit {
     this.cancelled.emit();
   }
 }
-

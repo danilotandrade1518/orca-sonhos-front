@@ -171,8 +171,9 @@ describe('EnvelopeCardComponent', () => {
   describe('accessibility', () => {
     it('should have aria-label on card', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const card = compiled.querySelector('os-card');
-      expect(card?.getAttribute('ariaLabel')).toBeTruthy();
+      const cardElement = compiled.querySelector('os-card');
+      const cardDiv = cardElement?.querySelector('.os-card');
+      expect(cardDiv?.getAttribute('aria-label')).toBeTruthy();
     });
 
     it('should have descriptive aria-label text', () => {
@@ -183,4 +184,3 @@ describe('EnvelopeCardComponent', () => {
     });
   });
 });
-

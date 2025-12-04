@@ -20,17 +20,27 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
 @Component({
   selector: 'os-category-spending-widget',
   standalone: true,
-  imports: [CommonModule, RouterModule, OsProgressBarComponent, OsMoneyDisplayComponent, OsIconComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    OsProgressBarComponent,
+    OsMoneyDisplayComponent,
+    OsIconComponent,
+  ],
   template: `
-    <div class="category-spending-widget" role="region" [attr.aria-labelledby]="'category-spending-title'">
+    <div
+      class="category-spending-widget"
+      role="region"
+      [attr.aria-labelledby]="'category-spending-title'"
+    >
       <header class="category-spending-widget__header">
-        <h2 id="category-spending-title" class="category-spending-widget__title">Gastos por Categoria</h2>
+        <h2 id="category-spending-title" class="category-spending-widget__title">
+          Gastos por Categoria
+        </h2>
         @if (subtitle()) {
         <p class="category-spending-widget__subtitle">{{ subtitle() }}</p>
         } @else {
-        <p class="category-spending-widget__subtitle">
-          Distribuição de gastos no período atual
-        </p>
+        <p class="category-spending-widget__subtitle">Distribuição de gastos no período atual</p>
         }
       </header>
 
@@ -57,7 +67,12 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
       <div class="category-spending-widget__content">
         <ul class="category-spending-widget__list" role="list">
           @for (category of displayedCategories(); track category.categoryId) {
-          <li class="category-spending-widget__item" role="listitem" [class.category-spending-widget__item--over-budget]="category.isOverBudget" [class.category-spending-widget__item--near-limit]="category.isNearLimit">
+          <li
+            class="category-spending-widget__item"
+            role="listitem"
+            [class.category-spending-widget__item--over-budget]="category.isOverBudget"
+            [class.category-spending-widget__item--near-limit]="category.isNearLimit"
+          >
             <div class="category-spending-widget__item-header">
               <h3 class="category-spending-widget__item-name">{{ category.categoryName }}</h3>
               <div class="category-spending-widget__item-percentages">
@@ -65,12 +80,25 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
                   {{ formatPercentage(category.percentage) }} do total
                 </span>
                 @if (category.hasEnvelope && category.envelopeUsagePercentage !== undefined) {
-                <span class="category-spending-widget__item-envelope-percentage" [class.category-spending-widget__item-envelope-percentage--over]="category.isOverBudget" [class.category-spending-widget__item-envelope-percentage--near]="category.isNearLimit">
-                  {{ formatPercentage(category.envelopeUsagePercentage) }} do planejado
-                  @if (category.isOverBudget) {
-                  <os-icon name="alert" size="xs" variant="danger" aria-label="Limite excedido" />
+                <span
+                  class="category-spending-widget__item-envelope-percentage"
+                  [class.category-spending-widget__item-envelope-percentage--over]="
+                    category.isOverBudget
+                  "
+                  [class.category-spending-widget__item-envelope-percentage--near]="
+                    category.isNearLimit
+                  "
+                >
+                  {{ formatPercentage(category.envelopeUsagePercentage) }} do planejado @if
+                  (category.isOverBudget) {
+                  <os-icon name="alert" size="xs" variant="error" aria-label="Limite excedido" />
                   } @else if (category.isNearLimit) {
-                  <os-icon name="warning" size="xs" variant="warning" aria-label="Próximo do limite" />
+                  <os-icon
+                    name="warning"
+                    size="xs"
+                    variant="warning"
+                    aria-label="Próximo do limite"
+                  />
                   }
                 </span>
                 }
@@ -80,13 +108,20 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
               <os-progress-bar
                 [value]="category.percentage"
                 [variant]="getProgressVariant(category.percentage)"
-                [ariaLabel]="category.categoryName + ': ' + formatPercentage(category.percentage) + ' do total'"
+                [ariaLabel]="
+                  category.categoryName + ': ' + formatPercentage(category.percentage) + ' do total'
+                "
               />
               @if (category.hasEnvelope && category.envelopeUsagePercentage !== undefined) {
               <os-progress-bar
                 [value]="category.envelopeUsagePercentage"
                 [variant]="getEnvelopeProgressVariant(category.envelopeUsagePercentage)"
-                [ariaLabel]="category.categoryName + ': ' + formatPercentage(category.envelopeUsagePercentage) + ' do planejado'"
+                [ariaLabel]="
+                  category.categoryName +
+                  ': ' +
+                  formatPercentage(category.envelopeUsagePercentage) +
+                  ' do planejado'
+                "
                 class="category-spending-widget__item-envelope-progress"
               />
               }
@@ -106,10 +141,10 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
                 [ariaLabel]="'Limite planejado: ' + formatCurrency(category.envelope.limit)"
                 class="category-spending-widget__item-limit"
               />
-              }
-              @if (category.transactionCount > 0) {
+              } @if (category.transactionCount > 0) {
               <span class="category-spending-widget__item-count">
-                {{ category.transactionCount }} {{ category.transactionCount === 1 ? 'transação' : 'transações' }}
+                {{ category.transactionCount }}
+                {{ category.transactionCount === 1 ? 'transação' : 'transações' }}
               </span>
               }
             </div>
@@ -123,14 +158,18 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
             Mostrando {{ displayedCategories().length }} de {{ categories().length }} categorias
           </p>
         </footer>
-        }
-
-        @if (!hasAnyEnvelope()) {
-        <div class="category-spending-widget__info" role="note" aria-label="Informação sobre envelopes">
+        } @if (!hasAnyEnvelope()) {
+        <div
+          class="category-spending-widget__info"
+          role="note"
+          aria-label="Informação sobre envelopes"
+        >
           <os-icon name="info" size="sm" variant="info" aria-hidden="true" />
           <p class="category-spending-widget__info-text">
             Crie envelopes para ver o <strong>% do planejado</strong> para cada categoria.
-            <a routerLink="/envelopes" class="category-spending-widget__info-link">Criar envelopes</a>
+            <a routerLink="/envelopes" class="category-spending-widget__info-link"
+              >Criar envelopes</a
+            >
           </p>
         </div>
         }
@@ -151,20 +190,19 @@ export class CategorySpendingWidgetComponent {
   readonly maxDisplayed = input<number>(5);
 
   readonly isEmpty = computed(() => !this.isLoading() && this.categories().length === 0);
-  
+
   readonly categoriesWithEnvelopes = computed(() => {
     const categories = this.categories();
     const envelopes = this.envelopes();
     const envelopeMap = new Map<string, EnvelopeDto>();
-    
+
     envelopes.forEach((envelope) => {
       envelopeMap.set(envelope.categoryId, envelope);
     });
 
     return categories.map((category): CategoryWithEnvelope => {
       const envelope = envelopeMap.get(category.categoryId);
-      const hasEnvelope = !!envelope;
-      
+
       if (!envelope) {
         return {
           ...category,
@@ -203,7 +241,9 @@ export class CategorySpendingWidgetComponent {
     return `${value.toFixed(1)}%`;
   }
 
-  getProgressVariant(percentage: number): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
+  getProgressVariant(
+    percentage: number
+  ): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
     if (percentage >= 30) {
       return 'danger';
     } else if (percentage >= 20) {
@@ -214,7 +254,9 @@ export class CategorySpendingWidgetComponent {
     return 'success';
   }
 
-  getEnvelopeProgressVariant(percentage: number): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
+  getEnvelopeProgressVariant(
+    percentage: number
+  ): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
     if (percentage > 100) {
       return 'danger';
     } else if (percentage >= 80) {

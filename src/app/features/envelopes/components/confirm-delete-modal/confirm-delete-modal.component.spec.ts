@@ -69,7 +69,7 @@ describe('ConfirmDeleteEnvelopeModalComponent', () => {
 
     fixture = TestBed.createComponent(ConfirmDeleteEnvelopeModalComponent);
     component = fixture.componentInstance;
-    component.envelope = signal(mockEnvelope);
+    fixture.componentRef.setInput('envelope', mockEnvelope);
     fixture.detectChanges();
   });
 
@@ -110,7 +110,7 @@ describe('ConfirmDeleteEnvelopeModalComponent', () => {
     });
 
     it('should show error if envelope is null', () => {
-      component.envelope = signal(null);
+      fixture.componentRef.setInput('envelope', null as unknown);
       fixture.detectChanges();
 
       component.onConfirm();
@@ -123,7 +123,7 @@ describe('ConfirmDeleteEnvelopeModalComponent', () => {
     });
 
     it('should show error if budgetId is null', () => {
-      budgetSelection.selectedBudgetId = signal(null);
+      budgetSelection.selectedBudgetId.set(null);
 
       component.onConfirm();
 
@@ -172,8 +172,10 @@ describe('ConfirmDeleteEnvelopeModalComponent', () => {
 
       fixture.detectChanges();
 
-      expect(notificationService.showError).toHaveBeenCalledWith('Erro ao excluir envelope', 'Erro ao excluir');
+      expect(notificationService.showError).toHaveBeenCalledWith(
+        'Erro ao excluir envelope',
+        'Erro ao excluir'
+      );
     });
   });
 });
-

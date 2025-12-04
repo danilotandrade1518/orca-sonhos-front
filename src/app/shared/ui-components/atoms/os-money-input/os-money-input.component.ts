@@ -87,7 +87,7 @@ export class OsMoneyInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (_value: number) => {
-    // Value change handled by valueChange output
+    
   };
   private _onTouched = () => {};
 

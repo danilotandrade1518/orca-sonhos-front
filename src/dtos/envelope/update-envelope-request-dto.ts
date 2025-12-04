@@ -8,4 +8,3 @@ export interface UpdateEnvelopeRequestDto {
 export interface UpdateEnvelopeResponseDto {
   success: boolean;
 }
-

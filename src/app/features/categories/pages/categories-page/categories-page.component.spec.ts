@@ -329,7 +329,6 @@ describe('CategoriesPage', () => {
       categoryState.loading.set(false);
       fixture.detectChanges();
       
-      // Aguardar o effect ser executado
       await new Promise((resolve) => setTimeout(resolve, 0));
       
       expect(categoryState.loadCategories).toHaveBeenCalled();

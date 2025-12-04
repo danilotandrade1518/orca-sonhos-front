@@ -151,7 +151,7 @@ export class AppLayoutComponent implements OnInit {
   ]);
 
   onSidebarItemClick(_item: SidebarItem): void {
-    // Navigation handled by router
+    
   }
 
   onSidebarCollapseChange(collapsed: boolean): void {

@@ -125,7 +125,6 @@ export class EnvelopeCardComponent {
     return classes.join(' ');
   });
 
-
   readonly ariaLabelText = computed(() => {
     const env = this.envelope();
     if (!env) return 'Card de envelope';
@@ -172,4 +171,3 @@ export class EnvelopeCardComponent {
     return this.localeService.formatCurrency(value, 'BRL');
   }
 }
-

@@ -6,4 +6,3 @@ export interface DeleteEnvelopeRequestDto {
 export interface DeleteEnvelopeResponseDto {
   success: boolean;
 }
-

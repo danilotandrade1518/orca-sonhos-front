@@ -122,7 +122,7 @@ export class CategoriesPage {
       }
 
       untracked(() => {
-        // Verificar loading dentro do untracked para evitar loop
+        
         if (this.state.loading()) {
           return;
         }

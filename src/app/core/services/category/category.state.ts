@@ -107,13 +107,11 @@ export class CategoryState {
       this._lastLoadedBudgetId = null;
       return;
     }
-
-    // Se o budgetId mudou, resetar o cache
+    
     if (this._lastLoadedBudgetId !== null && this._lastLoadedBudgetId !== budgetId) {
       this._lastLoadedBudgetId = null;
     }
-
-    // Evitar recarregar se já está carregando ou se já carregou para este budgetId (a menos que force)
+    
     if (!force && (this._loading() || this._lastLoadedBudgetId === budgetId)) {
       return;
     }

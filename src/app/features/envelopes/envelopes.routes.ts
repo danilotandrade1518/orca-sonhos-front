@@ -15,4 +15,3 @@ export const ENVELOPES_ROUTES: Routes = [
     data: { modalMode: 'create' },
   },
 ];
-

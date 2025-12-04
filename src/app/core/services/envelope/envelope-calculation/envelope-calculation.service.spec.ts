@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { EnvelopeCalculationService } from './envelope-calculation.service';
 import { EnvelopeDto } from '../../../../../dtos/envelope';
-import { HealthIndicatorStatus } from '../../../../features/dashboard/types/dashboard.types';
 
 describe('EnvelopeCalculationService', () => {
   let service: EnvelopeCalculationService;
@@ -222,7 +221,9 @@ describe('EnvelopeCalculationService', () => {
 
     it('should return null for null/undefined', () => {
       expect(service.calculateBudgetUsageIndicator(null as unknown as EnvelopeDto[])).toBeNull();
-      expect(service.calculateBudgetUsageIndicator(undefined as unknown as EnvelopeDto[])).toBeNull();
+      expect(
+        service.calculateBudgetUsageIndicator(undefined as unknown as EnvelopeDto[])
+      ).toBeNull();
     });
 
     it('should calculate healthy status when usage < 80%', () => {
@@ -279,4 +280,3 @@ describe('EnvelopeCalculationService', () => {
     });
   });
 });
-

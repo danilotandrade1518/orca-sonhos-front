@@ -120,4 +120,3 @@ export class ConfirmDeleteEnvelopeModalComponent {
     this.closed.emit();
   }
 }
-
