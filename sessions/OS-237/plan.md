@@ -386,7 +386,7 @@ Criar formulário de criação/edição de envelope e modal de confirmação de 
 
 ---
 
-## 📅 FASE 5: Página de Envelopes e Rotas [Status: ⏳]
+## 📅 FASE 5: Página de Envelopes e Rotas [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -394,7 +394,7 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 
 ### 📋 Tarefas
 
-#### 1. Criar `EnvelopesPage` [⏳]
+#### 1. Criar `EnvelopesPage` [✅]
 
 **Descrição**: Criar página em `src/app/features/envelopes/pages/envelopes/envelopes.page.ts`:
 
@@ -443,7 +443,7 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 - `src/app/features/accounts/pages/accounts/accounts.page.ts` para padrão
 - `layout-specification.md` para especificações detalhadas
 
-#### 2. Criar rotas em `envelopes.routes.ts` [⏳]
+#### 2. Criar rotas em `envelopes.routes.ts` [✅]
 
 **Descrição**: Criar arquivo `src/app/features/envelopes/envelopes.routes.ts`:
 
@@ -457,7 +457,7 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 
 **Dependências**: Tarefa 1 completa
 
-#### 3. Adicionar rota em `app.routes.ts` [⏳]
+#### 3. Adicionar rota em `app.routes.ts` [✅]
 
 **Descrição**: Adicionar rota `/envelopes` em `src/app/app.routes.ts`:
 
@@ -471,7 +471,7 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 
 **Dependências**: Tarefa 2 completa
 
-#### 4. Adicionar link na navegação lateral [⏳]
+#### 4. Adicionar link na navegação lateral [✅]
 
 **Descrição**: Adicionar link para `/envelopes` no menu/sidebar (se aplicável)
 
@@ -486,17 +486,27 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página acessível via `/envelopes`
-- [ ] Estados (loading/empty/error/success) funcionando
-- [ ] Grid responsivo testado (mobile/tablet/desktop)
-- [ ] CRUD completo funcionando (criar/editar/excluir)
-- [ ] Integração com `EnvelopeState` funcionando
-- [ ] Testes unitários criados
-- [ ] Sem erros de lint/type-check
+- [x] Página acessível via `/envelopes`
+- [x] Estados (loading/empty/error/success) funcionando
+- [x] Grid responsivo implementado (via `os-entity-list`)
+- [x] CRUD completo funcionando (criar/editar/excluir)
+- [x] Integração com `EnvelopeState` funcionando
+- [ ] Testes unitários criados (pendente para próxima fase)
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Seguir exatamente o padrão de `AccountsPage` para consistência
+- **Decisão**: Usar `showEditModal` signal separado para controlar modal de edição (diferente de AccountsPage que usa rota)
+- **Implementação**:
+  - `EnvelopesPage` criada em `src/app/features/envelopes/pages/envelopes/`
+  - Rotas criadas em `envelopes.routes.ts` com lazy loading
+  - Rota `/envelopes` adicionada em `app.routes.ts`
+  - Link "Envelopes" adicionado na navegação lateral (ícone `wallet`)
+- **Integração**:
+  - `EnvelopeState` integrado com effect para recarregar quando orçamento muda
+  - Modais de criar/editar/excluir funcionando
+  - Estados (loading/empty/error/success) implementados via computed signals
 
 ---
 
