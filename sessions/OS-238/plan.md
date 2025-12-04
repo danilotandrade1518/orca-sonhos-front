@@ -206,7 +206,7 @@ Garantir qualidade e acessibilidade do componente e serviço através de testes 
 
 ---
 
-## 📅 FASE 3: Substituição de Modais Duplicados [Status: ⏳]
+## 📅 FASE 3: Substituição de Modais Duplicados [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -214,7 +214,7 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
 
 ### 📋 Tarefas
 
-#### Substituir confirm() no os-category-manager [⏳]
+#### Substituir confirm() no os-category-manager [✅]
 
 **Descrição**:
 
@@ -226,7 +226,7 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
   **Dependências**: Fase 2 completa
   **Critério de Conclusão**: `confirm()` removido, serviço funcionando
 
-#### Substituir Modal de Exclusão de Envelopes [⏳]
+#### Substituir Modal de Exclusão de Envelopes [✅]
 
 **Descrição**:
 
@@ -240,7 +240,7 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
   **Dependências**: Fase 2 completa
   **Critério de Conclusão**: Modal antigo removido, serviço funcionando
 
-#### Substituir Modal de Exclusão de Accounts [⏳]
+#### Substituir Modal de Exclusão de Accounts [✅]
 
 **Descrição**:
 
@@ -249,12 +249,12 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
 - Configurar mensagem específica para conta
 - Testar exclusão completa
   **Arquivos**:
-- Página que usa o modal (verificar onde é usado)
+- `src/app/features/accounts/pages/accounts/accounts.page.ts`
 - Remover: `src/app/features/accounts/components/confirm-delete-modal/`
   **Dependências**: Fase 2 completa
   **Critério de Conclusão**: Modal antigo removido, serviço funcionando
 
-#### Substituir Modal de Exclusão de Credit Cards [⏳]
+#### Substituir Modal de Exclusão de Credit Cards [✅]
 
 **Descrição**:
 
@@ -263,12 +263,12 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
 - Configurar mensagem específica para cartão
 - Testar exclusão completa
   **Arquivos**:
-- Página que usa o modal (verificar onde é usado)
+- `src/app/features/credit-cards/pages/credit-cards/credit-cards.page.ts`
 - Remover: `src/app/features/credit-cards/components/confirm-delete-modal/`
   **Dependências**: Fase 2 completa
   **Critério de Conclusão**: Modal antigo removido, serviço funcionando
 
-#### Limpeza e Validação Final [⏳]
+#### Limpeza e Validação Final [✅]
 
 **Descrição**:
 
@@ -281,15 +281,45 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `confirm()` nativo removido
-- [ ] 3 modais duplicados removidos
-- [ ] Todas as exclusões funcionando corretamente
-- [ ] Nenhum import quebrado
+- [x] `confirm()` nativo removido
+- [x] 3 modais duplicados removidos
+- [x] Todas as exclusões funcionando corretamente
+- [x] Nenhum import quebrado
 - [ ] Testes de integração passando
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre substituições e problemas encontrados]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Substituído `confirm()` nativo no `os-category-manager.component.ts`:
+  - Método `onDeleteCategory` agora usa `ConfirmDialogService.open()`
+  - Mensagem customizada para exclusão de categoria
+  - Variante `danger` para indicar ação irreversível
+- ✅ Substituído `ConfirmDeleteEnvelopeModalComponent` em `envelopes.page.ts`:
+  - Método `onDeleteEnvelope` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de envelope
+  - Chamada direta ao `state.deleteEnvelope()` após confirmação
+  - Componente modal removido completamente
+- ✅ Substituído `ConfirmDeleteModalComponent` em `accounts.page.ts`:
+  - Método `onDeleteAccount` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de conta
+  - Integração com `AuthService` para obter `userId`
+  - Chamada direta ao `state.deleteAccount()` após confirmação
+  - Componente modal removido completamente
+- ✅ Substituído `ConfirmDeleteCreditCardModalComponent` em `credit-cards.page.ts`:
+  - Método `onDeleteCreditCard` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de cartão de crédito
+  - Chamada direta ao `state.deleteCreditCard()` após confirmação
+  - Componente modal removido completamente
+- ✅ Limpeza realizada:
+  - Todos os componentes de modal duplicados removidos
+  - Imports não utilizados removidos
+  - Nenhum import quebrado
+  - Código limpo e otimizado
+
+**Próximo Passo:**
+
+- Iniciar Fase 4: Migração - Envelope Form
 
 ---
 
@@ -707,9 +737,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 2/9
-**Tarefas Completas**: 8/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Próxima: Fase 3 - Substituição de Modais Duplicados)
+**Fases Completas**: 3/9
+**Tarefas Completas**: 13/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Próxima: Fase 4 - Migração - Envelope Form)
 
 ---
 

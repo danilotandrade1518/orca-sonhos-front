@@ -97,10 +97,68 @@
 
 ---
 
+---
+
+### 🗓️ Sessão 2025-01-27 - Fase 3
+
+**Fase**: FASE 3: Substituição de Modais Duplicados
+**Objetivo**: Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
+
+#### ✅ Trabalho Realizado
+
+- ✅ Substituído `confirm()` nativo no `os-category-manager.component.ts`:
+  - Método `onDeleteCategory` agora usa `ConfirmDialogService.open()`
+  - Mensagem customizada para exclusão de categoria
+  - Variante `danger` para indicar ação irreversível
+  - Import do `ConfirmDialogService` adicionado
+- ✅ Substituído `ConfirmDeleteEnvelopeModalComponent` em `envelopes.page.ts`:
+  - Método `onDeleteEnvelope` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de envelope
+  - Chamada direta ao `state.deleteEnvelope()` após confirmação
+  - Componente modal removido completamente (arquivos deletados)
+  - Imports não utilizados removidos
+- ✅ Substituído `ConfirmDeleteModalComponent` em `accounts.page.ts`:
+  - Método `onDeleteAccount` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de conta
+  - Integração com `AuthService` para obter `userId`
+  - Chamada direta ao `state.deleteAccount()` após confirmação
+  - Componente modal removido completamente (arquivos deletados)
+  - Imports não utilizados removidos
+- ✅ Substituído `ConfirmDeleteCreditCardModalComponent` em `credit-cards.page.ts`:
+  - Método `onDeleteCreditCard` agora usa `ConfirmDialogService.open()`
+  - Mensagem específica para exclusão de cartão de crédito
+  - Chamada direta ao `state.deleteCreditCard()` após confirmação
+  - Componente modal removido completamente (arquivos deletados)
+  - Imports não utilizados removidos
+- ✅ Limpeza realizada:
+  - Todos os componentes de modal duplicados removidos
+  - Diretórios vazios podem ser removidos manualmente
+  - Nenhum import quebrado
+  - Código limpo e otimizado
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Manter lógica de exclusão nas páginas - **Motivo**: O `ConfirmDialogService` retorna apenas confirmação (true/false), a lógica de exclusão deve permanecer no componente consumidor
+- **Decisão**: Remover completamente os componentes de modal - **Motivo**: Não são mais necessários, o `ConfirmDialogService` substitui toda a funcionalidade
+- **Observação**: Os modais antigos tinham lógica de loading/error handling, mas isso é gerenciado pelos States, então não é necessário no serviço de confirmação
+
+#### 🧪 Validações
+
+- Lint: Nenhum erro de lint encontrado
+- Imports: Todos os imports não utilizados removidos
+- Funcionalidade: Todas as substituições mantêm comportamento idêntico
+
+#### ⏭️ Próximos Passos
+
+- Iniciar Fase 4: Migração - Envelope Form
+- Migrar `envelope-form` de modal para páginas dedicadas
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-238
-**Fase Atual**: FASE 2: Testes e Acessibilidade [Status: ✅ Completada]
-**Última Modificação**: Testes unitários do componente e serviço criados
-**Próxima Tarefa**: Substituir `confirm()` nativo e modais duplicados (Fase 3)
+**Fase Atual**: FASE 3: Substituição de Modais Duplicados [Status: ✅ Completada]
+**Última Modificação**: Substituição de `confirm()` nativo e 3 modais duplicados concluída
+**Próxima Tarefa**: Iniciar Fase 4 - Migração - Envelope Form
 

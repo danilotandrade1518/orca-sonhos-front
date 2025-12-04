@@ -12,10 +12,11 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
 import { AccountFormComponent } from '../../components/account-form/account-form.component';
 import { TransferModalComponent } from '../../components/transfer-modal/transfer-modal.component';
-import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
   OsPageHeaderComponent,
@@ -34,7 +35,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
     AccountCardComponent,
     AccountFormComponent,
     TransferModalComponent,
-    ConfirmDeleteModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
@@ -104,9 +104,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
       <os-account-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
       } @if (showTransferModal()) {
       <os-transfer-modal (closed)="closeTransferModal()" />
-      } @if (showDeleteModal() && deletingAccount()) {
-      <os-confirm-delete-modal [account]="deletingAccount()!" (closed)="closeDeleteModal()" />
-      }
     </os-page>
   `,
   styleUrl: './accounts.page.scss',
@@ -116,6 +113,8 @@ export class AccountsPage implements OnInit {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly authService = inject(AuthService);
 
   private _lastBudgetId: string | null = null;
 
@@ -123,14 +122,11 @@ export class AccountsPage implements OnInit {
   readonly accounts = computed(() => this.state.accountsByBudgetId());
   readonly hasAccounts = computed(() => this.accounts().length > 0);
 
-  readonly deletingAccount = signal<AccountDto | null>(null);
-
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
   });
 
   readonly showTransferModal = signal(false);
-  readonly showDeleteModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -215,18 +211,28 @@ export class AccountsPage implements OnInit {
     this.router.navigate([account.id], { relativeTo: this.route });
   }
 
-  onDeleteAccount(account: AccountDto): void {
-    this.deletingAccount.set(account);
-    this.showDeleteModal.set(true);
+  async onDeleteAccount(account: AccountDto): Promise<void> {
+    const confirmed = await this.confirmDialogService.open({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir a conta "${account.name}"? Esta ação não pode ser desfeita. Se a conta possuir transações vinculadas, a exclusão será bloqueada.`,
+      variant: 'danger',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+    });
+
+    if (confirmed) {
+      const user = this.authService.currentUser();
+      if (user) {
+        this.state.deleteAccount({
+          userId: user.id,
+          accountId: account.id,
+        });
+      }
+    }
   }
 
   closeTransferModal(): void {
     this.showTransferModal.set(false);
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal.set(false);
-    this.deletingAccount.set(null);
   }
 
   onFormSaved(): void {
