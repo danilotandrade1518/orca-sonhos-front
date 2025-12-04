@@ -96,7 +96,7 @@ export class OsSelectComponent implements ControlValueAccessor {
   openedChange = output<boolean>();
 
   private _onChange = (_value: string | number) => {
-    // Value change handled by valueChange output
+    
   };
   private _onTouched = () => {};
 

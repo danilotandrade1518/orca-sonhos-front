@@ -53,6 +53,11 @@ export const routes: Routes = [
           import('./features/categories/categories.routes').then((m) => m.CATEGORIES_ROUTES),
       },
       {
+        path: 'envelopes',
+        loadChildren: () =>
+          import('./features/envelopes/envelopes.routes').then((m) => m.ENVELOPES_ROUTES),
+      },
+      {
         path: 'credit-cards',
         loadChildren: () =>
           import('./features/credit-cards/credit-cards.routes').then((m) => m.CREDIT_CARDS_ROUTES),

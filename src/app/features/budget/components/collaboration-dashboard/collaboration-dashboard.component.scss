@@ -97,6 +97,10 @@
   &__participant-actions {
     display: flex;
     gap: var(--os-spacing-xs, 4px);
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: var(--os-spacing-sm);
+    margin-top: var(--os-spacing-sm);
   }
 
   &__loading {
@@ -132,6 +136,15 @@
     font-size: var(--os-font-size-md, 16px);
     color: var(--os-color-text-secondary, #666);
     margin: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .collaboration-dashboard {
+    &__participant-actions {
+      padding-top: var(--os-spacing-xs);
+      margin-top: var(--os-spacing-xs);
+    }
   }
 }
 

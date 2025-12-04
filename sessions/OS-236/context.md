@@ -184,3 +184,4 @@ Implementar um **sistema completo de categorias** para organização de transaç
   - `src/app/shared/ui-components/organisms/os-category-manager/os-category-manager.component.ts` (organismo de UI genérico).
   - `src/app/features/transactions/components/transaction-form/transaction-form.component.ts` (uso atual de categorias em transações).
   - `src/dtos/account/*` e `AccountState` (padrões de DTOs e estado).
+

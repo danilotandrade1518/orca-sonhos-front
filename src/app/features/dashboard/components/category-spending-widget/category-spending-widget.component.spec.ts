@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CategorySpendingWidgetComponent } from './category-spending-widget.component';
@@ -47,11 +48,21 @@ describe('CategorySpendingWidgetComponent', () => {
       formatCurrency: vi.fn((value: number) => `R$ ${value.toFixed(2).replace('.', ',')}`),
     } as unknown as LocaleService;
 
+    const mockActivatedRoute = {
+      snapshot: {
+        data: {},
+        paramMap: {
+          get: vi.fn(() => null),
+        },
+      },
+    };
+
     await TestBed.configureTestingModule({
       imports: [CategorySpendingWidgetComponent],
       providers: [
         provideZonelessChangeDetection(),
         { provide: LocaleService, useValue: localeService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
     }).compileComponents();
 

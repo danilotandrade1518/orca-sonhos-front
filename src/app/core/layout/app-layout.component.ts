@@ -109,6 +109,12 @@ export class AppLayoutComponent implements OnInit {
       route: '/categories',
     },
     {
+      id: 'envelopes',
+      label: 'Envelopes',
+      icon: 'folder',
+      route: '/envelopes',
+    },
+    {
       id: 'reports',
       label: 'Relatórios',
       icon: 'analytics',
@@ -145,7 +151,7 @@ export class AppLayoutComponent implements OnInit {
   ]);
 
   onSidebarItemClick(_item: SidebarItem): void {
-    // Navigation handled by router
+    
   }
 
   onSidebarCollapseChange(collapsed: boolean): void {

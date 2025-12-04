@@ -206,7 +206,7 @@ export class OsAvatarComponent {
   }
 
   handleClick(): void {
-    // Click handling is done via template events
+    
   }
 
   previousImage(event: Event): void {

@@ -19,3 +19,4 @@ export * from './credit-card-card/credit-card-card.component';
 export * from './credit-card-bill-item/credit-card-bill-item.component';
 export * from './chart-container/chart-container.component';
 export * from './report-summary-card/report-summary-card.component';
+export * from './envelope-card';
