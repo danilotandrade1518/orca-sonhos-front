@@ -111,7 +111,7 @@ export class AppLayoutComponent implements OnInit {
     {
       id: 'envelopes',
       label: 'Envelopes',
-      icon: 'wallet',
+      icon: 'folder',
       route: '/envelopes',
     },
     {

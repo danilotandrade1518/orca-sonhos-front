@@ -25,5 +25,15 @@
   gap: var(--os-spacing-xs, 4px);
   justify-content: flex-end;
   align-items: center;
+  padding-top: var(--os-spacing-sm);
+  margin-top: var(--os-spacing-sm);
+}
+
+// ===== RESPONSIVE ADJUSTMENTS =====
+@media (max-width: 575px) {
+  .budget-card__actions {
+    padding-top: var(--os-spacing-xs);
+    margin-top: var(--os-spacing-xs);
+  }
 }
 

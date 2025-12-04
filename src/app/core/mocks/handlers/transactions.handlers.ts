@@ -128,6 +128,18 @@ const mockTransactions = [
     categoryId: 'category-health',
     budgetId: 'budget-1',
   },
+  {
+    id: 'transaction-11',
+    date: getCurrentMonthDate(16),
+    transactionDate: getCurrentMonthDate(16),
+    description: 'Roupas',
+    amount: 250.0,
+    type: 'EXPENSE',
+    direction: 'EXPENSE',
+    accountId: 'account-1',
+    categoryId: 'category-clothing',
+    budgetId: 'budget-1',
+  },
 ];
 
 export const transactionHandlers = [

@@ -51,7 +51,7 @@ import { EnvelopeDto } from '../../../../../dtos/envelope';
           <div class="os-envelope-card__spent">
             <span class="os-envelope-card__value-label">Gasto</span>
             <os-money-display
-              [value]="envelope().currentUsage"
+              [value]="envelope().currentUsage / 100"
               [currency]="'BRL'"
               [size]="'sm'"
               [ariaLabel]="getSpentAriaLabel()"
@@ -60,7 +60,7 @@ import { EnvelopeDto } from '../../../../../dtos/envelope';
           <div class="os-envelope-card__limit">
             <span class="os-envelope-card__value-label">Limite</span>
             <os-money-display
-              [value]="envelope().limit"
+              [value]="envelope().limit / 100"
               [currency]="'BRL'"
               [size]="'sm'"
               [ariaLabel]="getLimitAriaLabel()"
@@ -139,12 +139,12 @@ export class EnvelopeCardComponent {
 
   readonly getSpentAriaLabel = computed(() => {
     const env = this.envelope();
-    return `Gasto do envelope ${env.name}: ${this.formatCurrency(env.currentUsage)}`;
+    return `Gasto do envelope ${env.name}: ${this.formatCurrency(env.currentUsage / 100)}`;
   });
 
   readonly getLimitAriaLabel = computed(() => {
     const env = this.envelope();
-    return `Limite do envelope ${env.name}: ${this.formatCurrency(env.limit)}`;
+    return `Limite do envelope ${env.name}: ${this.formatCurrency(env.limit / 100)}`;
   });
 
   formatPercentage(): string {

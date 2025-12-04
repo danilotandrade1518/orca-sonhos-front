@@ -71,7 +71,7 @@ const mockEnvelopes: EnvelopeDto[] = [
 ];
 
 export const envelopeHandlers = [
-  http.get('/envelopes', ({ request }) => {
+  http.get('/api/envelopes', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -95,7 +95,7 @@ export const envelopeHandlers = [
     });
   }),
 
-  http.post('/envelope/create-envelope', async ({ request }) => {
+  http.post('/api/envelope/create-envelope', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -117,7 +117,7 @@ export const envelopeHandlers = [
     return HttpResponse.json({ id: newEnvelopeId }, { status: 201 });
   }),
 
-  http.post('/envelope/update-envelope', async ({ request }) => {
+  http.post('/api/envelope/update-envelope', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -137,7 +137,7 @@ export const envelopeHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/envelope/delete-envelope', async ({ request }) => {
+  http.post('/api/envelope/delete-envelope', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
