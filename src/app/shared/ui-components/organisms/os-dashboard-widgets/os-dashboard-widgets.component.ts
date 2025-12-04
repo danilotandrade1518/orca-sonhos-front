@@ -13,6 +13,7 @@ import { CategorySpendingWidgetComponent } from '@features/dashboard/components/
 import { GoalDto } from '@dtos/goal';
 import { SuggestedAction, RecentAchievement } from '@features/dashboard/types/dashboard.types';
 import { CategorySpendingDto } from '@dtos/report/category-spending.dto';
+import { EnvelopeDto } from '@dtos/envelope';
 
 export type { GoalProgressData };
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
@@ -359,6 +360,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             @if (getCategorySpending(widget)) {
             <os-category-spending-widget
               [categories]="getCategorySpending(widget)!"
+              [envelopes]="getCategorySpendingEnvelopes(widget)"
               [isLoading]="false"
             />
             } @else {
@@ -652,10 +654,22 @@ export class OsDashboardWidgetsComponent {
   }
 
   getCategorySpending(widget: DashboardWidget): CategorySpendingDto[] | null {
+    if (widget.data && typeof widget.data === 'object' && 'categories' in widget.data) {
+      const data = widget.data as { categories: CategorySpendingDto[]; envelopes?: EnvelopeDto[] };
+      return Array.isArray(data.categories) ? data.categories : null;
+    }
     if (widget.data && Array.isArray(widget.data)) {
       return widget.data as CategorySpendingDto[];
     }
     return null;
+  }
+
+  getCategorySpendingEnvelopes(widget: DashboardWidget): EnvelopeDto[] {
+    if (widget.data && typeof widget.data === 'object' && 'envelopes' in widget.data) {
+      const data = widget.data as { categories?: CategorySpendingDto[]; envelopes?: EnvelopeDto[] };
+      return Array.isArray(data.envelopes) ? data.envelopes : [];
+    }
+    return [];
   }
 
   formatCurrency(value: number): string {

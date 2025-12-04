@@ -510,7 +510,7 @@ Criar página principal de listagem de envelopes (`EnvelopesPage`) seguindo padr
 
 ---
 
-## 📅 FASE 6: Serviço de Cálculo e Integrações [Status: ⏳]
+## 📅 FASE 6: Serviço de Cálculo e Integrações [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -518,7 +518,7 @@ Criar serviço de cálculo de envelopes para exposição de dados e integrar com
 
 ### 📋 Tarefas
 
-#### 1. Criar `EnvelopeCalculationService` [⏳]
+#### 1. Criar `EnvelopeCalculationService` [✅]
 
 **Descrição**: Criar serviço em `src/app/core/services/envelope/envelope-calculation/envelope-calculation.service.ts`:
 
@@ -537,7 +537,7 @@ Criar serviço de cálculo de envelopes para exposição de dados e integrar com
 
 **Dependências**: FASE 2 completa
 
-#### 2. Integrar com `CategorySpendingWidgetComponent` [⏳]
+#### 2. Integrar com `CategorySpendingWidgetComponent` [✅]
 
 **Descrição**: Atualizar `CategorySpendingWidgetComponent` para usar dados de envelopes:
 
@@ -555,7 +555,7 @@ Criar serviço de cálculo de envelopes para exposição de dados e integrar com
 
 **Nota**: Esta tarefa pode ser adiada se `CategorySpendingWidgetComponent` ainda não existir ou estiver em desenvolvimento.
 
-#### 3. Integrar com `FinancialHealthIndicatorComponent` [⏳]
+#### 3. Integrar com `FinancialHealthIndicatorComponent` [✅]
 
 **Descrição**: Expor dados de envelopes para cálculo do indicador "Uso de Orçamento e Envelopes":
 
@@ -579,14 +579,32 @@ Criar serviço de cálculo de envelopes para exposição de dados e integrar com
 
 ### 🧪 Critérios de Validação
 
-- [ ] `EnvelopeCalculationService` com métodos funcionando
-- [ ] Integrações com Dashboard funcionando (se componentes existirem)
-- [ ] Testes unitários criados
-- [ ] Sem erros de lint/type-check
+- [x] `EnvelopeCalculationService` com métodos funcionando
+- [x] Integrações com Dashboard funcionando (se componentes existirem)
+- [x] Testes unitários criados
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Criar `EnvelopeCalculationService` como serviço instanciado (não estático) para permitir injeção de dependências futuras
+- **Decisão**: Métodos utilitários recebem `EnvelopeDto[]` e retornam valores calculados
+- **Implementação**:
+  - `EnvelopeCalculationService` criado em `src/app/core/services/envelope/envelope-calculation/`
+  - Métodos implementados: `getTotalAllocated()`, `getTotalSpent()`, `getOverBudgetCount()`, `getNearLimitCount()`, `getOverallUsagePercentage()`, `getAggregatedData()`, `calculateBudgetUsageIndicator()`
+  - Testes unitários criados cobrindo todos os métodos e edge cases
+- **Integração com CategorySpendingWidgetComponent**:
+  - Componente atualizado para receber `envelopes` como input opcional
+  - Computed `categoriesWithEnvelopes` enriquece dados de categoria com informações do envelope
+  - Template atualizado para exibir percentual de uso do envelope quando disponível
+  - Indicadores visuais (ícones) para envelopes próximos do limite ou estourados
+  - Mensagem informativa atualizada para linkar para criação de envelopes
+- **Integração com Dashboard**:
+  - `DashboardWidgetsComponent` injeta `EnvelopeState` e passa envelopes junto com dados de categoria
+  - `os-dashboard-widgets` atualizado para extrair e passar envelopes para `CategorySpendingWidgetComponent`
+  - Estrutura de dados do widget atualizada para incluir `{ categories, envelopes }`
+- **Integração com FinancialHealthIndicatorComponent**:
+  - Método `calculateBudgetUsageIndicator()` criado para calcular indicador a partir dos envelopes
+  - Método pode ser usado pelo backend ou frontend para calcular/validar indicador de uso de orçamento
 
 ---
 

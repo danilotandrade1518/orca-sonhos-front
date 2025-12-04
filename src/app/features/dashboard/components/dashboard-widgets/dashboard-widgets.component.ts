@@ -16,6 +16,7 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
 import { AccountDto } from '@dtos/account';
 import { AccountBalanceData } from '../../../../shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { LocaleService } from '@shared/formatting';
+import { EnvelopeState } from '../../../../core/services/envelope/envelope-state/envelope.state';
 
 @Component({
   selector: 'os-dashboard-widgets-container',
@@ -50,6 +51,7 @@ export class DashboardWidgetsComponent {
   private readonly dashboardDataService = inject(DashboardDataService);
   private readonly dashboardInsightsService = inject(DashboardInsightsService);
   private readonly accountState = inject(AccountState);
+  private readonly envelopeState = inject(EnvelopeState);
   private readonly localeService = inject(LocaleService);
 
   private _lastBudgetId: string | null = null;
@@ -86,17 +88,24 @@ export class DashboardWidgetsComponent {
   constructor() {
     effect(() => {
       const budgetId = this.budgetSelectionService.selectedBudgetId();
-      const hasWidget = untracked(() => this.hasAccountBalanceWidget());
-      const isLoading = untracked(() => this.accountState.loading());
+      const hasAccountWidget = untracked(() => this.hasAccountBalanceWidget());
+      const hasCategorySpendingWidget = untracked(() => this.hasCategorySpendingWidget());
+      const isAccountLoading = untracked(() => this.accountState.loading());
+      const isEnvelopeLoading = untracked(() => this.envelopeState.loading());
       
-      if (budgetId === this._lastBudgetId || isLoading) {
+      if (budgetId === this._lastBudgetId || isAccountLoading || isEnvelopeLoading) {
         return;
       }
 
-      if (budgetId && hasWidget) {
+      if (budgetId) {
         untracked(() => {
           this._lastBudgetId = budgetId;
-          this.accountState.loadAccounts();
+          if (hasAccountWidget) {
+            this.accountState.loadAccounts();
+          }
+          if (hasCategorySpendingWidget) {
+            this.envelopeState.loadEnvelopes();
+          }
         });
       } else {
         this._lastBudgetId = null;
@@ -106,6 +115,10 @@ export class DashboardWidgetsComponent {
 
   private hasAccountBalanceWidget(): boolean {
     return this.widgets().some((widget) => widget.type === 'account-balance' && widget.enabled);
+  }
+
+  private hasCategorySpendingWidget(): boolean {
+    return this.widgets().some((widget) => widget.type === 'category-spending' && widget.enabled);
   }
 
   readonly dashboardWidgets = computed(() => {
@@ -149,7 +162,10 @@ export class DashboardWidgetsComponent {
       }
 
       if (widget.type === 'category-spending') {
-        dashboardWidget.data = this.dashboardInsightsService.categorySpending();
+        dashboardWidget.data = {
+          categories: this.dashboardInsightsService.categorySpending(),
+          envelopes: this.envelopeState.envelopesByBudgetId(),
+        };
       }
 
       if (widget.type === 'recent-achievements') {
