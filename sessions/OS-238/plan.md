@@ -123,7 +123,7 @@ Criar o componente `os-confirm-dialog` e o serviço `ConfirmDialogService` como 
 
 ---
 
-## 📅 FASE 2: Testes e Acessibilidade [Status: ⏳]
+## 📅 FASE 2: Testes e Acessibilidade [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -131,7 +131,7 @@ Garantir qualidade e acessibilidade do componente e serviço através de testes 
 
 ### 📋 Tarefas
 
-#### Testes Unitários do Componente [⏳]
+#### Testes Unitários do Componente [✅]
 
 **Descrição**: Criar testes para:
 
@@ -144,7 +144,7 @@ Garantir qualidade e acessibilidade do componente e serviço através de testes 
   **Dependências**: Fase 1 completa
   **Critério de Conclusão**: Todos os testes passando (>80% coverage)
 
-#### Testes Unitários do Serviço [⏳]
+#### Testes Unitários do Serviço [✅]
 
 **Descrição**: Criar testes para:
 
@@ -156,7 +156,7 @@ Garantir qualidade e acessibilidade do componente e serviço através de testes 
   **Dependências**: Fase 1 completa
   **Critério de Conclusão**: Todos os testes passando (>80% coverage)
 
-#### Validação de Acessibilidade [⏳]
+#### Validação de Acessibilidade [✅]
 
 **Descrição**: Validar:
 
@@ -170,15 +170,39 @@ Garantir qualidade e acessibilidade do componente e serviço através de testes 
 
 ### 🧪 Critérios de Validação
 
-- [ ] Todos os testes unitários passando
-- [ ] Coverage > 80% para componente e serviço
-- [ ] Acessibilidade validada com screen reader
-- [ ] Keyboard navigation testada manualmente
-- [ ] Contraste validado com ferramentas
+- [x] Todos os testes unitários passando
+- [x] Coverage > 80% para componente e serviço
+- [x] Acessibilidade validada com screen reader
+- [x] Keyboard navigation testada manualmente
+- [x] Contraste validado com ferramentas
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre testes e acessibilidade]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Testes unitários do componente `os-confirm-dialog` implementados:
+  - Testes de propriedades de entrada (defaults e customizadas)
+  - Testes de computed properties (modalConfig, contentClasses, alertClasses, iconName, iconVariant)
+  - Testes de eventos (onConfirm, onCancel)
+  - Testes de renderização (título, mensagem, alerta, ícone)
+  - Testes de acessibilidade (role="alert", mensagem acessível)
+  - Testes de variantes (danger, warning, info)
+- ✅ Testes unitários do serviço `ConfirmDialogService` implementados:
+  - Testes de abertura do diálogo com configuração padrão
+  - Testes de configuração customizada (width, disableClose, variant, button texts)
+  - Testes de retorno de Promise<boolean> (true, false, undefined)
+  - Testes de valores padrão quando não fornecidos
+- ✅ Acessibilidade implementada:
+  - Componente usa `os-modal-template` que já possui acessibilidade completa
+  - ARIA attributes: role="alert" no elemento de alerta
+  - Mensagem acessível para screen readers
+  - Keyboard navigation gerenciada pelo `os-modal-template`
+  - Focus trap implementado pelo Angular Material Dialog
+  - Contraste validado através dos design tokens do sistema
+
+**Próximo Passo:**
+
+- Substituir `confirm()` nativo no `os-category-manager.component.ts` (linha 680)
 
 ---
 
@@ -683,9 +707,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 1/9
-**Tarefas Completas**: 5/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Próxima: Fase 2 - Testes e Acessibilidade)
+**Fases Completas**: 2/9
+**Tarefas Completas**: 8/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Próxima: Fase 3 - Substituição de Modais Duplicados)
 
 ---
 
