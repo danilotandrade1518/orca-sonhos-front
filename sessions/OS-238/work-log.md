@@ -155,10 +155,64 @@
 
 ---
 
+---
+
+### 🗓️ Sessão 2025-01-27 - Fase 4
+
+**Fase**: FASE 4: Migração - Envelope Form
+**Objetivo**: Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/envelopes/:id/edit`.
+
+#### ✅ Trabalho Realizado
+
+- ✅ Página `envelope-form.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-form-template`
+  - Lógica migrada do componente modal original
+  - Suporte a modo create/edit via parâmetro de rota `:id`
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+- ✅ Estilos criados (`envelope-form.page.scss`)
+- ✅ Rotas adicionadas em `envelopes.routes.ts`:
+  - `/envelopes/new` - Criar envelope (lazy loading)
+  - `/envelopes/:id/edit` - Editar envelope (lazy loading)
+- ✅ Navegação atualizada em `envelopes.page.ts`:
+  - `openCreateModal()` agora navega para `/envelopes/new`
+  - `onEditEnvelope()` agora navega para `/envelopes/:id/edit`
+  - Removidos modais e lógica relacionada (`showCreateModal`, `showEditModal`, `editingEnvelope`)
+  - Removido import do `EnvelopeFormComponent`
+  - Removidos métodos `onFormSaved()` e `onFormCancelled()`
+- ✅ Componente modal antigo removido:
+  - `envelope-form.component.ts` removido
+  - `envelope-form.component.scss` removido
+  - `envelope-form.component.spec.ts` removido
+  - Diretório `components/envelope-form/` vazio
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-page` e `os-page-header` ao invés de manter estrutura de modal - **Motivo**: Seguir padrão de páginas dedicadas do projeto, melhor UX com URLs próprias e navegação
+- **Decisão**: Detectar modo create/edit via parâmetro de rota `:id` - **Motivo**: Mais simples e alinhado com padrão RESTful do projeto
+- **Decisão**: Carregar envelope do state ao invés de receber via input - **Motivo**: Página standalone não recebe inputs, dados vêm do state ou rota
+- **Observação**: Breadcrumbs implementados para melhor navegação e contexto do usuário
+
+#### 🧪 Validações
+
+- Lint: Nenhum erro de lint encontrado
+- Imports: Todos os imports não utilizados removidos
+- Funcionalidade: Toda a lógica do formulário preservada
+- Navegação: Rotas funcionando corretamente com lazy loading
+
+#### ⏭️ Próximos Passos
+
+- Iniciar Fase 5: Migração - Pay Bill Modal
+- Migrar `pay-bill-modal` para página dedicada
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-238
-**Fase Atual**: FASE 3: Substituição de Modais Duplicados [Status: ✅ Completada]
-**Última Modificação**: Substituição de `confirm()` nativo e 3 modais duplicados concluída
-**Próxima Tarefa**: Iniciar Fase 4 - Migração - Envelope Form
+**Fase Atual**: FASE 4: Migração - Envelope Form [Status: ✅ Completada]
+**Última Modificação**: Migração de `envelope-form` de modal para páginas dedicadas concluída
+**Próxima Tarefa**: Iniciar Fase 5 - Migração - Pay Bill Modal
 

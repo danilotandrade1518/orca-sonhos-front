@@ -323,7 +323,7 @@ Substituir os 3 modais duplicados e o `confirm()` nativo pelo novo serviço.
 
 ---
 
-## 📅 FASE 4: Migração - Envelope Form [Status: ⏳]
+## 📅 FASE 4: Migração - Envelope Form [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -331,7 +331,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
 
 ### 📋 Tarefas
 
-#### Criar Página envelope-form.page.ts [⏳]
+#### Criar Página envelope-form.page.ts [✅]
 
 **Descrição**:
 
@@ -343,7 +343,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
   **Dependências**: Fase 3 completa
   **Critério de Conclusão**: Página criada e funcional
 
-#### Implementar Estilos da Página [⏳]
+#### Implementar Estilos da Página [✅]
 
 **Descrição**:
 
@@ -354,7 +354,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
   **Dependências**: Página criada
   **Critério de Conclusão**: Estilos aplicados e responsivos
 
-#### Adicionar Rotas [⏳]
+#### Adicionar Rotas [✅]
 
 **Descrição**:
 
@@ -366,7 +366,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
   **Dependências**: Página criada
   **Critério de Conclusão**: Rotas funcionando, navegação correta
 
-#### Atualizar Navegação [⏳]
+#### Atualizar Navegação [✅]
 
 **Descrição**:
 
@@ -377,7 +377,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
   **Dependências**: Rotas criadas
   **Critério de Conclusão**: Navegação funcionando corretamente
 
-#### Remover Componente Modal Antigo [⏳]
+#### Remover Componente Modal Antigo [✅]
 
 **Descrição**:
 
@@ -390,17 +390,44 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página cria envelope corretamente
-- [ ] Página edita envelope corretamente
-- [ ] Validação funcionando
-- [ ] Loading states funcionando
-- [ ] Tratamento de erros funcionando
-- [ ] Navegação funcionando (voltar, histórico)
-- [ ] Responsividade validada
+- [x] Página cria envelope corretamente
+- [x] Página edita envelope corretamente
+- [x] Validação funcionando
+- [x] Loading states funcionando
+- [x] Tratamento de erros funcionando
+- [x] Navegação funcionando (voltar, histórico)
+- [x] Responsividade validada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre migração do envelope-form]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Página `envelope-form.page.ts` criada:
+  - Usa `os-page` e `os-page-header` para estrutura de página
+  - Usa `os-form-template` para formulário
+  - Mantém toda a lógica do componente modal original
+  - Suporta modo create/edit via parâmetro de rota `:id`
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta após salvar/cancelar
+- ✅ Estilos criados (`envelope-form.page.scss`)
+- ✅ Rotas adicionadas:
+  - `/envelopes/new` - Criar envelope
+  - `/envelopes/:id/edit` - Editar envelope
+  - Lazy loading configurado
+- ✅ Navegação atualizada em `envelopes.page.ts`:
+  - `openCreateModal()` agora navega para `/envelopes/new`
+  - `onEditEnvelope()` agora navega para `/envelopes/:id/edit`
+  - Removidos modais e lógica relacionada
+  - Removido import do `EnvelopeFormComponent`
+- ✅ Componente modal antigo removido:
+  - `envelope-form.component.ts` removido
+  - `envelope-form.component.scss` removido
+  - `envelope-form.component.spec.ts` removido
+  - Diretório `components/envelope-form/` vazio
+
+**Próximo Passo:**
+
+- Iniciar Fase 5: Migração - Pay Bill Modal
 
 ---
 
@@ -737,9 +764,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 3/9
-**Tarefas Completas**: 13/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Próxima: Fase 4 - Migração - Envelope Form)
+**Fases Completas**: 4/9
+**Tarefas Completas**: 18/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Próxima: Fase 5 - Migração - Pay Bill Modal)
 
 ---
 

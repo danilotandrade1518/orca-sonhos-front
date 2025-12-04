@@ -1,7 +1,5 @@
 import {
   Component,
-  input,
-  output,
   computed,
   inject,
   OnInit,
@@ -11,13 +9,15 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EnvelopeState } from '@core/services/envelope/envelope-state/envelope.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { CategoriesApiService } from '@core/services/category/categories-api.service';
 import { NotificationService } from '@core/services/notification/notification.service';
-import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent, type BreadcrumbItem } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
 import {
@@ -29,11 +29,12 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
 import type { CategoryDto } from '../../../../../dtos/category';
 
 @Component({
-  selector: 'os-envelope-form',
+  selector: 'os-envelope-form-page',
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    OsModalTemplateComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsSelectComponent,
@@ -41,17 +42,22 @@ import type { CategoryDto } from '../../../../../dtos/category';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <os-modal-template
-      [config]="modalConfig()"
-      [variant]="'default'"
-      [disabled]="loading()"
-      [loading]="loading()"
-      [valid]="form()?.valid ?? false"
-      (confirmed)="onSubmit()"
-      (cancelled)="onCancel()"
-      (closed)="onCancel()"
-    >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+    <os-page variant="default" size="medium" ariaLabel="Formulário de envelope">
+      <os-page-header
+        [title]="pageTitle()"
+        [subtitle]="pageSubtitle()"
+        [breadcrumbs]="breadcrumbs()"
+        (breadcrumbClick)="onBreadcrumbClick($event)"
+      />
+
+      <os-form-template
+        [config]="formConfig()"
+        [form]="form()"
+        [loading]="loading()"
+        [disabled]="loading()"
+        (save)="onSave()"
+        (cancelClick)="onCancel()"
+      >
         @if (form()) {
         <div [formGroup]="form()!">
           <os-form-field
@@ -81,22 +87,18 @@ import type { CategoryDto } from '../../../../../dtos/category';
         </div>
         }
       </os-form-template>
-    </os-modal-template>
+    </os-page>
   `,
-  styleUrl: './envelope-form.component.scss',
+  styleUrl: './envelope-form.page.scss',
 })
-export class EnvelopeFormComponent implements OnInit {
+export class EnvelopeFormPage implements OnInit {
   private readonly envelopeState = inject(EnvelopeState);
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly categoriesApi = inject(CategoriesApiService);
   private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-
-  readonly envelope = input<EnvelopeDto | null>(null);
-  readonly mode = input<'create' | 'edit'>('create');
-
-  readonly saved = output<void>();
-  readonly cancelled = output<void>();
 
   readonly loading = computed(() => this.envelopeState.loading());
   readonly categoriesLoading = computed(() => this.categoriesApi.loading());
@@ -107,7 +109,34 @@ export class EnvelopeFormComponent implements OnInit {
   private readonly _categories = signal<CategoryDto[]>([]);
   readonly categories = this._categories.asReadonly();
 
+  private readonly _envelope = signal<EnvelopeDto | null>(null);
+  readonly envelope = this._envelope.asReadonly();
+
   private readonly _validationTrigger = signal(0);
+
+  readonly mode = computed<'create' | 'edit'>(() => {
+    const id = this.route.snapshot.paramMap.get('id');
+    return id ? 'edit' : 'create';
+  });
+
+  readonly pageTitle = computed(() => {
+    return this.mode() === 'create' ? 'Criar Envelope' : 'Editar Envelope';
+  });
+
+  readonly pageSubtitle = computed(() => {
+    return this.mode() === 'create'
+      ? 'Defina um limite de gastos para uma categoria'
+      : 'Atualize as informações do envelope';
+  });
+
+  readonly breadcrumbs = computed((): BreadcrumbItem[] => {
+    const base: BreadcrumbItem[] = [{ label: 'Envelopes', route: '/envelopes' }];
+    if (this.mode() === 'edit' && this.envelope()) {
+      base.push({ label: this.envelope()!.name, route: undefined });
+    }
+    base.push({ label: this.mode() === 'create' ? 'Novo' : 'Editar', route: undefined });
+    return base;
+  });
 
   readonly nameControl = computed(() => {
     this._validationTrigger();
@@ -132,24 +161,15 @@ export class EnvelopeFormComponent implements OnInit {
     }));
   });
 
-  readonly modalConfig = computed(() => ({
-    title: this.mode() === 'create' ? 'Criar Envelope' : 'Editar Envelope',
-    subtitle:
-      this.mode() === 'create'
-        ? 'Defina um limite de gastos para uma categoria'
-        : 'Atualize as informações do envelope',
-    showActions: true,
-    showCancelButton: true,
-    showConfirmButton: true,
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: this.mode() === 'create' ? 'Criar' : 'Salvar',
-  }));
-
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
     showProgress: false,
-    showActions: false,
+    showActions: true,
+    showSaveButton: true,
+    showCancelButton: true,
+    saveButtonText: this.mode() === 'create' ? 'Criar' : 'Salvar',
+    cancelButtonText: 'Cancelar',
   }));
 
   readonly getNameErrorMessage = computed(() => {
@@ -218,13 +238,9 @@ export class EnvelopeFormComponent implements OnInit {
       limit: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     });
 
-    const envelope = this.envelope();
-    if (envelope) {
-      form.patchValue({
-        name: envelope.name,
-        categoryId: envelope.categoryId,
-        limit: envelope.limit / 100,
-      });
+    const envelopeId = this.route.snapshot.paramMap.get('id');
+    if (envelopeId) {
+      this.loadEnvelope(envelopeId);
     }
 
     this._form.set(form);
@@ -232,10 +248,30 @@ export class EnvelopeFormComponent implements OnInit {
     this.loadCategories();
   }
 
+  private loadEnvelope(id: string): void {
+    const envelopes = this.envelopeState.envelopesByBudgetId();
+    const envelope = envelopes.find((e) => e.id === id);
+    if (envelope) {
+      this._envelope.set(envelope);
+      const form = this._form();
+      if (form) {
+        form.patchValue({
+          name: envelope.name,
+          categoryId: envelope.categoryId,
+          limit: envelope.limit / 100,
+        });
+      }
+    } else {
+      this.notificationService.showError('Envelope não encontrado');
+      this.navigateBack();
+    }
+  }
+
   private loadCategories(): void {
     const budgetId = this.budgetSelection.selectedBudgetId();
     if (!budgetId) {
       this.notificationService.showError('Nenhum orçamento selecionado');
+      this.navigateBack();
       return;
     }
 
@@ -252,7 +288,7 @@ export class EnvelopeFormComponent implements OnInit {
       });
   }
 
-  onSubmit(): void {
+  onSave(): void {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
@@ -280,7 +316,7 @@ export class EnvelopeFormComponent implements OnInit {
       });
 
       this.notificationService.showSuccess('Envelope criado com sucesso!');
-      this.saved.emit();
+      this.navigateBack();
     } else if (envelope) {
       this.envelopeState.updateEnvelope({
         envelopeId: envelope.id,
@@ -290,11 +326,22 @@ export class EnvelopeFormComponent implements OnInit {
       });
 
       this.notificationService.showSuccess('Envelope atualizado com sucesso!');
-      this.saved.emit();
+      this.navigateBack();
     }
   }
 
   onCancel(): void {
-    this.cancelled.emit();
+    this.navigateBack();
+  }
+
+  onBreadcrumbClick(breadcrumb: BreadcrumbItem): void {
+    if (breadcrumb.route) {
+      this.router.navigate([breadcrumb.route]);
+    }
+  }
+
+  private navigateBack(): void {
+    this.router.navigate(['/envelopes'], { replaceUrl: true });
   }
 }
+

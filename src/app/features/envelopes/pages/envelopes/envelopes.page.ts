@@ -13,7 +13,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EnvelopeState } from '@core/services/envelope/envelope-state/envelope.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { EnvelopeCardComponent } from '@shared/ui-components/molecules/envelope-card';
-import { EnvelopeFormComponent } from '../../components/envelope-form/envelope-form.component';
 import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -31,7 +30,6 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
   imports: [
     CommonModule,
     EnvelopeCardComponent,
-    EnvelopeFormComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
@@ -95,16 +93,6 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
         />
         }
       </os-entity-list>
-
-      @if (showCreateModal()) {
-      <os-envelope-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showEditModal() && editingEnvelope()) {
-      <os-envelope-form
-        [mode]="'edit'"
-        [envelope]="editingEnvelope()!"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
     </os-page>
   `,
   styleUrl: './envelopes.page.scss',
@@ -121,14 +109,6 @@ export class EnvelopesPage implements OnInit {
   readonly selectedBudgetId = this.budgetSelection.selectedBudgetId;
   readonly envelopes = computed(() => this.state.envelopesByBudgetId());
   readonly hasEnvelopes = computed(() => this.envelopes().length > 0);
-
-  readonly editingEnvelope = signal<EnvelopeDto | null>(null);
-
-  readonly showCreateModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'create';
-  });
-
-  readonly showEditModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -190,12 +170,11 @@ export class EnvelopesPage implements OnInit {
   }
 
   openCreateModal(): void {
-    this.router.navigate(['new'], { relativeTo: this.route });
+    this.router.navigate(['/envelopes/new']);
   }
 
   onEditEnvelope(envelope: EnvelopeDto): void {
-    this.editingEnvelope.set(envelope);
-    this.showEditModal.set(true);
+    this.router.navigate(['/envelopes', envelope.id, 'edit']);
   }
 
   async onDeleteEnvelope(envelope: EnvelopeDto): Promise<void> {
@@ -213,17 +192,5 @@ export class EnvelopesPage implements OnInit {
         budgetId: this.selectedBudgetId()!,
       });
     }
-  }
-
-  onFormSaved(): void {
-    this.showEditModal.set(false);
-    this.editingEnvelope.set(null);
-    this.router.navigate(['/envelopes'], { replaceUrl: true });
-  }
-
-  onFormCancelled(): void {
-    this.showEditModal.set(false);
-    this.editingEnvelope.set(null);
-    this.router.navigate(['/envelopes'], { replaceUrl: true });
   }
 }
