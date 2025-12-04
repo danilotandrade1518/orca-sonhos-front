@@ -193,7 +193,7 @@ Implementar serviços de API e estado reativo com signals, seguindo padrão de `
 
 ---
 
-## 📅 FASE 3: Componente EnvelopeCard (Molécula) [Status: ⏳]
+## 📅 FASE 3: Componente EnvelopeCard (Molécula) [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -201,7 +201,7 @@ Criar componente de card de envelope reutilizável (`os-envelope-card`) seguindo
 
 ### 📋 Tarefas
 
-#### 1. Criar `EnvelopeCardComponent` [⏳]
+#### 1. Criar `EnvelopeCardComponent` [✅]
 
 **Descrição**: Criar componente em `src/app/shared/ui-components/molecules/envelope-card/`:
 
@@ -248,7 +248,7 @@ Criar componente de card de envelope reutilizável (`os-envelope-card`) seguindo
 - `src/app/shared/ui-components/molecules/account-card/account-card.component.ts` para padrão
 - `layout-specification.md` para especificações detalhadas
 
-#### 2. Criar `index.ts` para exportação [⏳]
+#### 2. Criar `index.ts` para exportação [✅]
 
 **Descrição**: Criar `src/app/shared/ui-components/molecules/envelope-card/index.ts` exportando o componente
 
@@ -263,17 +263,23 @@ Criar componente de card de envelope reutilizável (`os-envelope-card`) seguindo
 
 ### 🧪 Critérios de Validação
 
-- [ ] Componente renderizando com dados mock
-- [ ] Progress bar com variantes (success/warning/danger) funcionando
-- [ ] Indicadores visuais de status implementados
-- [ ] Responsividade testada (mobile/tablet/desktop)
-- [ ] Acessibilidade validada (keyboard nav, ARIA, screen reader)
-- [ ] Testes unitários criados
-- [ ] Sem erros de lint/type-check
+- [x] Componente renderizando com dados mock
+- [x] Progress bar com variantes (success/warning/danger) funcionando
+- [x] Indicadores visuais de status implementados
+- [x] Responsividade testada (mobile/tablet/desktop)
+- [x] Acessibilidade validada (keyboard nav, ARIA, screen reader)
+- [x] Testes unitários criados
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Usar wrapper div para aplicar estilos de status (border-left) ao invés de `::ng-deep` - Melhor prática e isolamento de estilos
+- **Decisão**: Seguir padrão de `AccountCardComponent` e `OsGoalProgressCard` para consistência
+- **Implementação**: Componente criado em `src/app/shared/ui-components/molecules/envelope-card/`
+- **Acessibilidade**: ARIA labels completos, role="article" implícito via os-card, keyboard navigation funcional
+- **Responsividade**: Mobile-first com breakpoints em 576px e 992px, grid adaptativo para valores
+- **Status Indicators**: Border-left colorido (4px) baseado em status: verde (normal), laranja (near-limit), vermelho (over-budget)
+- **Testes**: Testes unitários criados cobrindo computed signals, eventos e acessibilidade
 
 ---
 
