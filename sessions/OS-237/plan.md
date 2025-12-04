@@ -283,7 +283,7 @@ Criar componente de card de envelope reutilizável (`os-envelope-card`) seguindo
 
 ---
 
-## 📅 FASE 4: Componentes de Formulário e Modal [Status: ⏳]
+## 📅 FASE 4: Componentes de Formulário e Modal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -291,7 +291,7 @@ Criar formulário de criação/edição de envelope e modal de confirmação de 
 
 ### 📋 Tarefas
 
-#### 1. Criar `EnvelopeFormComponent` [⏳]
+#### 1. Criar `EnvelopeFormComponent` [✅]
 
 **Descrição**: Criar componente em `src/app/features/envelopes/components/envelope-form/`:
 
@@ -330,7 +330,7 @@ Criar formulário de criação/edição de envelope e modal de confirmação de 
 
 - `src/app/features/accounts/components/account-form/account-form.component.ts` para padrão
 
-#### 2. Criar `ConfirmDeleteEnvelopeModalComponent` [⏳]
+#### 2. Criar `ConfirmDeleteEnvelopeModalComponent` [✅]
 
 **Descrição**: Criar componente em `src/app/features/envelopes/components/confirm-delete-modal/`:
 
@@ -363,17 +363,26 @@ Criar formulário de criação/edição de envelope e modal de confirmação de 
 
 ### 🧪 Critérios de Validação
 
-- [ ] Formulário de criação funcionando
-- [ ] Formulário de edição funcionando (preenchido com dados existentes)
-- [ ] Validações inline funcionando
-- [ ] Integração com categorias funcionando
-- [ ] Modal de confirmação de exclusão funcionando
-- [ ] Testes unitários criados
-- [ ] Sem erros de lint/type-check
+- [x] Formulário de criação funcionando
+- [x] Formulário de edição funcionando (preenchido com dados existentes)
+- [x] Validações inline funcionando
+- [x] Integração com categorias funcionando
+- [x] Modal de confirmação de exclusão funcionando
+- [x] Testes unitários criados
+- [x] Sem erros de lint/type-check
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- **Decisão**: Seguir exatamente o padrão de `AccountFormComponent` para consistência
+- **Decisão**: Usar `os-modal-template` e `os-form-template` para estrutura padronizada
+- **Decisão**: Converter limite de centavos para reais no formulário (divisão por 100) para melhor UX
+- **Decisão**: Filtrar apenas categorias ativas no select de categorias
+- **Implementação**:
+  - `EnvelopeFormComponent` criado em `src/app/features/envelopes/components/envelope-form/`
+  - `ConfirmDeleteEnvelopeModalComponent` criado em `src/app/features/envelopes/components/confirm-delete-modal/`
+  - Validações inline implementadas com computed signals para mensagens de erro
+  - Integração completa com `CategoriesApiService` e `EnvelopeState`
+- **Testes**: Testes unitários criados cobrindo validações, submit, cancel e integrações
 
 ---
 
