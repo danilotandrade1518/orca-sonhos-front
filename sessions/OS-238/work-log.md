@@ -209,10 +209,61 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-27 - Fase 5
+
+**Fase**: FASE 5: Migração - Pay Bill Modal
+**Objetivo**: Migrar `pay-bill-modal` para página dedicada `/credit-cards/bills/:id/pay`.
+
+#### ✅ Trabalho Realizado
+
+- ✅ Página `pay-bill.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-form-template`
+  - Lógica migrada do componente modal original
+  - Suporte a parâmetro de rota `:id` para identificar a fatura
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+  - Integração com `CreditCardState`, `AccountState` e `CategoriesApiService`
+- ✅ Estilos criados (`pay-bill.page.scss`)
+- ✅ Rota adicionada em `credit-cards.routes.ts`:
+  - `/credit-cards/bills/:id/pay` - Pagar fatura (lazy loading)
+- ✅ Navegação atualizada em `credit-cards.page.ts`:
+  - `onPayBill()` agora navega para `/credit-cards/bills/:id/pay`
+  - Removidos modais e lógica relacionada (`showPayBillModal`, `payingBill`)
+  - Removido import do `PayBillModalComponent`
+  - Removidos métodos `openPayBillModal()` e `closePayBillModal()`
+- ✅ Componente modal antigo removido:
+  - `pay-bill-modal.component.ts` removido
+  - `pay-bill-modal.component.scss` removido
+  - `pay-bill-modal/index.ts` removido
+  - Diretório `components/pay-bill-modal/` removido
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `os-page` e `os-page-header` ao invés de manter estrutura de modal - **Motivo**: Seguir padrão de páginas dedicadas do projeto, melhor UX com URLs próprias e navegação
+- **Decisão**: Carregar fatura do state ao invés de receber via input - **Motivo**: Página standalone não recebe inputs, dados vêm do state ou rota
+- **Decisão**: Buscar fatura no state ou carregar bills se não encontrada - **Motivo**: Garantir que a fatura esteja disponível mesmo se não estiver no state inicialmente
+- **Observação**: Breadcrumbs implementados para melhor navegação e contexto do usuário
+
+#### 🧪 Validações
+
+- Lint: Nenhum erro de lint encontrado
+- Imports: Todos os imports não utilizados removidos
+- Funcionalidade: Toda a lógica do formulário preservada
+- Navegação: Rotas funcionando corretamente com lazy loading
+
+#### ⏭️ Próximos Passos
+
+- Iniciar Fase 6: Migração - Goal Amount Modal
+- Migrar `goal-amount-modal` para páginas dedicadas
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-238
-**Fase Atual**: FASE 4: Migração - Envelope Form [Status: ✅ Completada]
-**Última Modificação**: Migração de `envelope-form` de modal para páginas dedicadas concluída
-**Próxima Tarefa**: Iniciar Fase 5 - Migração - Pay Bill Modal
+**Fase Atual**: FASE 5: Migração - Pay Bill Modal [Status: ✅ Completada]
+**Última Modificação**: Migração de `pay-bill-modal` de modal para página dedicada concluída
+**Próxima Tarefa**: Iniciar Fase 6 - Migração - Goal Amount Modal
 

@@ -431,7 +431,7 @@ Migrar `envelope-form` de modal para páginas dedicadas `/envelopes/new` e `/env
 
 ---
 
-## 📅 FASE 5: Migração - Pay Bill Modal [Status: ⏳]
+## 📅 FASE 5: Migração - Pay Bill Modal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -439,7 +439,7 @@ Migrar `pay-bill-modal` para página dedicada `/credit-cards/bills/:id/pay`.
 
 ### 📋 Tarefas
 
-#### Criar Página pay-bill.page.ts [⏳]
+#### Criar Página pay-bill.page.ts [✅]
 
 **Descrição**:
 
@@ -451,21 +451,21 @@ Migrar `pay-bill-modal` para página dedicada `/credit-cards/bills/:id/pay`.
   **Dependências**: Fase 4 completa
   **Critério de Conclusão**: Página criada e funcional
 
-#### Implementar Estilos [⏳]
+#### Implementar Estilos [✅]
 
 **Descrição**: Estilos responsivos para página
 **Arquivo**: `src/app/features/credit-cards/pages/pay-bill/pay-bill.page.scss`
 **Dependências**: Página criada
 **Critério de Conclusão**: Estilos aplicados
 
-#### Adicionar Rota [⏳]
+#### Adicionar Rota [✅]
 
 **Descrição**: Adicionar rota `/credit-cards/bills/:id/pay` com lazy loading
 **Arquivo**: `src/app/features/credit-cards/credit-cards.routes.ts`
 **Dependências**: Página criada
 **Critério de Conclusão**: Rota funcionando
 
-#### Atualizar Navegação e Remover Modal [⏳]
+#### Atualizar Navegação e Remover Modal [✅]
 
 **Descrição**: Atualizar links e remover componente modal antigo
 **Dependências**: Rota criada
@@ -473,14 +473,41 @@ Migrar `pay-bill-modal` para página dedicada `/credit-cards/bills/:id/pay`.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página paga fatura corretamente
-- [ ] Validação funcionando
-- [ ] Navegação funcionando
-- [ ] Responsividade validada
+- [x] Página paga fatura corretamente
+- [x] Validação funcionando
+- [x] Navegação funcionando
+- [x] Responsividade validada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre migração do pay-bill-modal]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Página `pay-bill.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-form-template`
+  - Lógica migrada do componente modal original
+  - Suporte a parâmetro de rota `:id` para identificar a fatura
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+  - Integração com `CreditCardState`, `AccountState` e `CategoriesApiService`
+- ✅ Estilos criados (`pay-bill.page.scss`)
+- ✅ Rota adicionada em `credit-cards.routes.ts`:
+  - `/credit-cards/bills/:id/pay` - Pagar fatura (lazy loading)
+- ✅ Navegação atualizada em `credit-cards.page.ts`:
+  - `onPayBill()` agora navega para `/credit-cards/bills/:id/pay`
+  - Removidos modais e lógica relacionada (`showPayBillModal`, `payingBill`)
+  - Removido import do `PayBillModalComponent`
+  - Removidos métodos `openPayBillModal()` e `closePayBillModal()`
+- ✅ Componente modal antigo removido:
+  - `pay-bill-modal.component.ts` removido
+  - `pay-bill-modal.component.scss` removido
+  - `pay-bill-modal/index.ts` removido
+  - Diretório `components/pay-bill-modal/` removido
+
+**Próximo Passo:**
+
+- Iniciar Fase 6: Migração - Goal Amount Modal
 
 ---
 
@@ -764,9 +791,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 4/9
-**Tarefas Completas**: 18/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Próxima: Fase 5 - Migração - Pay Bill Modal)
+**Fases Completas**: 5/9
+**Tarefas Completas**: 22/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Próxima: Fase 6 - Migração - Goal Amount Modal)
 
 ---
 

@@ -1,23 +1,28 @@
 import {
   Component,
-  input,
-  output,
   computed,
   inject,
   OnInit,
   ChangeDetectionStrategy,
   signal,
   effect,
+  DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
-import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import { CategoriesApiService } from '@core/services/category/categories-api.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import {
+  OsPageHeaderComponent,
+  type BreadcrumbItem,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 import {
   OsSelectComponent,
@@ -25,31 +30,37 @@ import {
 } from '@shared/ui-components/atoms/os-select/os-select.component';
 import { OsMoneyInputComponent } from '@shared/ui-components/atoms/os-money-input/os-money-input.component';
 import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
+import type { CategoryDto } from '../../../../../dtos/category';
 
 @Component({
-  selector: 'os-pay-bill-modal',
-  standalone: true,
+  selector: 'os-pay-bill-page',
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    OsModalTemplateComponent,
+    OsPageComponent,
+    OsPageHeaderComponent,
     OsFormTemplateComponent,
     OsSelectComponent,
     OsMoneyInputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <os-modal-template
-      [config]="modalConfig()"
-      [variant]="'default'"
-      [disabled]="loading()"
-      [loading]="loading()"
-      [valid]="form()?.valid ?? false"
-      (confirmed)="onSubmit()"
-      (cancelled)="onCancel()"
-      (closed)="onCancel()"
-    >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+    <os-page variant="default" size="medium" ariaLabel="Pagar fatura">
+      <os-page-header
+        title="Pagar Fatura"
+        subtitle="Selecione a conta e categoria para realizar o pagamento"
+        [breadcrumbs]="breadcrumbs()"
+        (breadcrumbClick)="onBreadcrumbClick($event)"
+      />
+
+      <os-form-template
+        [config]="formConfig()"
+        [form]="form()"
+        [loading]="loading()"
+        [disabled]="loading()"
+        (save)="onSave()"
+        (cancelClick)="onCancel()"
+      >
         @if (form() && creditCardBill()) {
         <div [formGroup]="form()!">
           <os-select
@@ -81,28 +92,41 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         </div>
         }
       </os-form-template>
-    </os-modal-template>
+    </os-page>
   `,
-  styleUrl: './pay-bill-modal.component.scss',
+  styleUrl: './pay-bill.page.scss',
 })
-export class PayBillModalComponent implements OnInit {
+export class PayBillPage implements OnInit {
   private readonly creditCardState = inject(CreditCardState);
   private readonly accountState = inject(AccountState);
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
+  private readonly categoriesApi = inject(CategoriesApiService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
-  readonly creditCardBill = input.required<CreditCardBillDto>();
-
-  readonly closed = output<void>();
-
-  readonly loading = computed(() => this.creditCardState.loading());
+  readonly loading = computed(() => this.creditCardState.loading() || this.accountState.loading());
 
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
+  private readonly _creditCardBill = signal<CreditCardBillDto | null>(null);
+  readonly creditCardBill = this._creditCardBill.asReadonly();
+
+  private readonly _categories = signal<CategoryDto[]>([]);
+  readonly categories = this._categories.asReadonly();
+
   private readonly _validationTrigger = signal(0);
+
+  readonly breadcrumbs = computed((): BreadcrumbItem[] => {
+    const base: BreadcrumbItem[] = [{ label: 'Cartões de Crédito', route: '/credit-cards' }];
+    if (this._creditCardBill()) {
+      base.push({ label: 'Pagar Fatura', route: undefined });
+    }
+    return base;
+  });
 
   readonly accountOptions = computed<OsSelectOption[]>(() => {
     const accounts = this.accountState.accountsByBudgetId();
@@ -112,16 +136,14 @@ export class PayBillModalComponent implements OnInit {
     }));
   });
 
-  readonly categoryOptions = computed<OsSelectOption[]>(() => [
-    { value: 'category-utilities', label: 'Contas' },
-    { value: 'category-groceries', label: 'Supermercado' },
-    { value: 'category-transport', label: 'Transporte' },
-    { value: 'category-health', label: 'Saúde' },
-    { value: 'category-education', label: 'Educação' },
-    { value: 'category-entertainment', label: 'Entretenimento' },
-    { value: 'category-clothing', label: 'Roupas' },
-    { value: 'category-home', label: 'Casa' },
-  ]);
+  readonly categoryOptions = computed<OsSelectOption[]>(() => {
+    return this._categories()
+      .filter((category) => category.active)
+      .map((category) => ({
+        value: category.id,
+        label: category.name,
+      }));
+  });
 
   readonly accountIdControl = computed(() => {
     this._validationTrigger();
@@ -138,21 +160,15 @@ export class PayBillModalComponent implements OnInit {
     return this._form()?.get('amount') as FormControl | null;
   });
 
-  readonly modalConfig = computed(() => ({
-    title: 'Pagar Fatura',
-    subtitle: 'Selecione a conta e categoria para realizar o pagamento',
-    showActions: true,
-    showCancelButton: true,
-    showConfirmButton: true,
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Pagar',
-  }));
-
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
     showProgress: false,
-    showActions: false,
+    showActions: true,
+    showSaveButton: true,
+    showCancelButton: true,
+    saveButtonText: 'Pagar',
+    cancelButtonText: 'Cancelar',
   }));
 
   readonly getAccountErrorMessage = computed(() => {
@@ -190,26 +206,90 @@ export class PayBillModalComponent implements OnInit {
         }
       }
     });
+
+    effect(() => {
+      const bill = this._creditCardBill();
+      const form = this._form();
+      if (form && bill) {
+        form.patchValue({
+          amount: bill.amount / 100,
+        });
+        this._validationTrigger.update((v) => v + 1);
+      }
+    });
   }
 
   ngOnInit(): void {
-    const bill = this.creditCardBill();
-    if (!bill) {
+    const billId = this.route.snapshot.paramMap.get('id');
+    if (!billId) {
+      this.notificationService.showError('ID da fatura não fornecido');
+      this.navigateBack();
       return;
     }
 
-    this.accountState.loadAccounts();
+    this.loadBill(billId);
+    this.loadAccounts();
+    this.loadCategories();
 
     const form = new FormGroup({
       accountId: new FormControl<string | null>(null, [Validators.required]),
       paymentCategoryId: new FormControl<string | null>(null, [Validators.required]),
-      amount: new FormControl(bill.amount / 100, [Validators.required]),
+      amount: new FormControl<number | null>(null, [Validators.required]),
     });
 
     this._form.set(form);
   }
 
-  onSubmit(): void {
+  private loadBill(billId: string): void {
+    const bills = this.creditCardState.bills();
+    const bill = bills.find((b) => b.id === billId);
+
+    if (bill) {
+      this._creditCardBill.set(bill);
+    } else {
+      const budgetId = this.budgetSelection.selectedBudgetId();
+      if (budgetId) {
+        this.creditCardState.loadCreditCardBills(undefined, budgetId);
+      }
+
+      const allBills = this.creditCardState.bills();
+      const foundBill = allBills.find((b) => b.id === billId);
+
+      if (foundBill) {
+        this._creditCardBill.set(foundBill);
+      } else {
+        this.notificationService.showError('Fatura não encontrada');
+        this.navigateBack();
+      }
+    }
+  }
+
+  private loadAccounts(): void {
+    this.accountState.loadAccounts();
+  }
+
+  private loadCategories(): void {
+    const budgetId = this.budgetSelection.selectedBudgetId();
+    if (!budgetId) {
+      this.notificationService.showError('Nenhum orçamento selecionado');
+      this.navigateBack();
+      return;
+    }
+
+    this.categoriesApi
+      .listCategories(budgetId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (categories) => {
+          this._categories.set(categories);
+        },
+        error: () => {
+          this.notificationService.showError('Erro ao carregar categorias');
+        },
+      });
+  }
+
+  onSave(): void {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
@@ -219,7 +299,7 @@ export class PayBillModalComponent implements OnInit {
 
     const user = this.authService.currentUser();
     const budgetId = this.budgetSelection.selectedBudgetId();
-    const bill = this.creditCardBill();
+    const bill = this._creditCardBill();
 
     if (!user || !budgetId || !bill) {
       this.notificationService.showError('Usuário, orçamento ou fatura não encontrado');
@@ -238,12 +318,21 @@ export class PayBillModalComponent implements OnInit {
     });
 
     this.notificationService.showSuccess('Fatura paga com sucesso!');
-    this.closed.emit();
-    this.router.navigate(['/credit-cards'], { replaceUrl: true });
+    this.navigateBack();
   }
 
   onCancel(): void {
-    this.closed.emit();
+    this.navigateBack();
+  }
+
+  onBreadcrumbClick(breadcrumb: BreadcrumbItem): void {
+    if (breadcrumb.route) {
+      this.router.navigate([breadcrumb.route]);
+    }
+  }
+
+  private navigateBack(): void {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 }
+

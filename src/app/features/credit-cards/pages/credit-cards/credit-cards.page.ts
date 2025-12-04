@@ -15,7 +15,6 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { CreditCardCardComponent } from '@shared/ui-components/molecules/credit-card-card';
 import { CreditCardFormComponent } from '../../components/credit-card-form';
 import { CreditCardBillFormComponent } from '../../components/credit-card-bill-form';
-import { PayBillModalComponent } from '../../components/pay-bill-modal';
 import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
 import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -37,7 +36,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     CreditCardCardComponent,
     CreditCardFormComponent,
     CreditCardBillFormComponent,
-    PayBillModalComponent,
     ReopenBillModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
@@ -119,8 +117,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         (saved)="onBillFormSaved()"
         (cancelled)="onBillFormCancelled()"
       />
-      } @if (showPayBillModal() && payingBill()) {
-      <os-pay-bill-modal [creditCardBill]="payingBill()!" (closed)="closePayBillModal()" />
       } @if (showReopenBillModal() && reopeningBill()) {
       <os-reopen-bill-modal [creditCardBill]="reopeningBill()!" (closed)="closeReopenBillModal()" />
       }
@@ -141,7 +137,6 @@ export class CreditCardsPage implements OnInit {
   readonly creditCards = computed(() => this.state.creditCardsByBudgetId());
   readonly hasCreditCards = computed(() => this.creditCards().length > 0);
 
-  readonly payingBill = signal<CreditCardBillDto | null>(null);
   readonly reopeningBill = signal<CreditCardBillDto | null>(null);
 
   readonly showCreateModal = computed(() => {
@@ -149,7 +144,6 @@ export class CreditCardsPage implements OnInit {
   });
 
   readonly showCreateBillModal = signal(false);
-  readonly showPayBillModal = signal(false);
   readonly showReopenBillModal = signal(false);
 
   readonly currentState = computed(() => {
@@ -270,15 +264,6 @@ export class CreditCardsPage implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 
-  openPayBillModal(bill: CreditCardBillDto): void {
-    this.payingBill.set(bill);
-    this.showPayBillModal.set(true);
-  }
-
-  closePayBillModal(): void {
-    this.showPayBillModal.set(false);
-    this.payingBill.set(null);
-  }
 
   openReopenBillModal(bill: CreditCardBillDto): void {
     this.reopeningBill.set(bill);
@@ -291,7 +276,7 @@ export class CreditCardsPage implements OnInit {
   }
 
   onPayBill(bill: CreditCardBillDto): void {
-    this.openPayBillModal(bill);
+    this.router.navigate(['/credit-cards/bills', bill.id, 'pay']);
   }
 
   onReopenBill(bill: CreditCardBillDto): void {
