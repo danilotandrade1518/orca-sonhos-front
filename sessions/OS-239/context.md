@@ -13,12 +13,14 @@ Finalizar a implementação do componente `budget-detail.page.ts`, substituindo 
 ### Funcionalidades Principais
 
 1. **Seção "Visão Geral"**: Substituir placeholder por dados reais do orçamento
+
    - Exibir resumo financeiro (saldo total, receitas mensais, despesas mensais)
    - Integrar com widgets de dashboard existentes (`os-dashboard-widgets`)
    - Mostrar indicadores de saúde financeira quando disponíveis
    - Manter botão "Ver Transações" funcional
 
 2. **Corrigir Carregamento de Recursos**: Garantir que recursos sejam carregados corretamente
+
    - Chamar método `loadResources()` quando o orçamento for carregado com sucesso
    - Garantir que contas sejam carregadas via `accountState.loadAccounts()`
    - Garantir que participantes sejam carregados via `sharingState.loadParticipants(id)`
@@ -26,6 +28,7 @@ Finalizar a implementação do componente `budget-detail.page.ts`, substituindo 
    - Evitar carregamentos duplicados (verificar flag `resourcesLoaded`)
 
 3. **Melhorar Visualização de Participantes**: Substituir apenas contagem por lista completa
+
    - Exibir informações básicas: nome, email, papel (criador/participante)
    - Considerar reutilizar componente `collaboration-dashboard` existente
    - Manter funcionalidade de gerenciar participantes via modal
@@ -52,6 +55,7 @@ Finalizar a implementação do componente `budget-detail.page.ts`, substituindo 
 ### Arquitetura
 
 O componente segue o padrão **Clean Architecture** do projeto:
+
 - **Presentation Layer**: Componente Angular standalone
 - **State Management**: Uso de signals e serviços de estado (`BudgetState`, `AccountState`, `SharingState`, `ReportsState`)
 - **Componentes Reutilizáveis**: Integração com componentes existentes do design system
@@ -83,7 +87,8 @@ O componente segue o padrão **Clean Architecture** do projeto:
 
 ### Testes Necessários
 
-- **Testes Unitários**: 
+- **Testes Unitários**:
+
   - Verificar carregamento de recursos quando orçamento é selecionado
   - Validar chamadas corretas aos serviços de estado
   - Testar estados de loading, error e success
@@ -158,4 +163,3 @@ O componente segue o padrão **Clean Architecture** do projeto:
   - `AccountState`: `src/app/core/services/account/account-state/account.state.ts`
   - `SharingState`: `src/app/core/services/sharing/sharing.state.ts`
   - `ReportsState`: `src/app/features/reports/state/reports-state/reports.state.ts`
-

@@ -1,16 +1,19 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   OnInit,
   OnDestroy,
   signal,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
+import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { SharingState } from '@core/services/sharing/sharing.state';
@@ -291,6 +294,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 })
 export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly budgetState = inject(BudgetState);
+  private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
   private readonly sharingState = inject(SharingState);
@@ -298,6 +302,8 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly localeService = inject(LocaleService);
+
+  private _lastBudgetId: string | null = null;
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -384,6 +390,42 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
 
   private resourcesLoaded = signal(false);
 
+  readonly selectedBudgetId = computed(() => this.budgetSelectionService.selectedBudgetId());
+
+  constructor() {
+    effect(() => {
+      const budgets = this.budgetState.budgets();
+      const routeBudgetId = this.budgetId();
+      const currentSelectedId = this.selectedBudgetId();
+
+      if (routeBudgetId && budgets.length > 0 && currentSelectedId !== routeBudgetId) {
+        untracked(() => {
+          const budget = budgets.find((b) => b.id === routeBudgetId);
+          if (budget) {
+            this.budgetState.selectBudget(routeBudgetId);
+          }
+        });
+      }
+    });
+
+    effect(() => {
+      const budgetId = this.selectedBudgetId();
+
+      if (budgetId === this._lastBudgetId || this.resourcesLoaded()) {
+        return;
+      }
+
+      untracked(() => {
+        if (budgetId) {
+          this._lastBudgetId = budgetId;
+          this.loadResources(budgetId);
+        } else {
+          this._lastBudgetId = null;
+        }
+      });
+    });
+  }
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -404,6 +446,12 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   }
 
   private loadResources(id: string): void {
+    const selectedBudgetId = this.selectedBudgetId();
+
+    if (!selectedBudgetId || selectedBudgetId !== id) {
+      return;
+    }
+
     if (this.resourcesLoaded()) {
       return;
     }
