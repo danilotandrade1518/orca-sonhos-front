@@ -685,7 +685,7 @@ Migrar `transfer-modal` para página dedicada `/accounts/transfer`.
 
 ---
 
-## 📅 FASE 8: Migração - Reconcile Modal [Status: ⏳]
+## 📅 FASE 8: Migração - Reconcile Modal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -693,7 +693,7 @@ Migrar `reconcile-modal` para página dedicada `/accounts/:id/reconcile`.
 
 ### 📋 Tarefas
 
-#### Criar Página reconcile.page.ts [⏳]
+#### Criar Página reconcile.page.ts [✅]
 
 **Descrição**:
 
@@ -706,21 +706,21 @@ Migrar `reconcile-modal` para página dedicada `/accounts/:id/reconcile`.
   **Dependências**: Fase 7 completa
   **Critério de Conclusão**: Página criada e funcional
 
-#### Implementar Estilos [⏳]
+#### Implementar Estilos [✅]
 
 **Descrição**: Estilos responsivos
 **Arquivo**: `src/app/features/accounts/pages/reconcile/reconcile.page.scss`
 **Dependências**: Página criada
 **Critério de Conclusão**: Estilos aplicados
 
-#### Adicionar Rota [⏳]
+#### Adicionar Rota [✅]
 
 **Descrição**: Adicionar rota `/accounts/:id/reconcile` com lazy loading
 **Arquivo**: `src/app/features/accounts/accounts.routes.ts`
 **Dependências**: Página criada
 **Critério de Conclusão**: Rota funcionando
 
-#### Atualizar Navegação e Remover Modal [⏳]
+#### Atualizar Navegação e Remover Modal [✅]
 
 **Descrição**: Atualizar links e remover componente modal antigo
 **Dependências**: Rota criada
@@ -728,14 +728,42 @@ Migrar `reconcile-modal` para página dedicada `/accounts/:id/reconcile`.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página reconcilia conta corretamente
-- [ ] Validação funcionando
-- [ ] Navegação funcionando
-- [ ] Responsividade validada
+- [x] Página reconcilia conta corretamente
+- [x] Validação funcionando
+- [x] Navegação funcionando
+- [x] Responsividade validada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre migração do reconcile-modal]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Página `reconcile.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-reconcile-form` (molecule existente)
+  - Lógica migrada do componente modal original
+  - Suporte a parâmetro de rota `:id` para identificar a conta
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta para detalhes da conta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+  - Effect para monitorar loading e exibir notificações
+  - Integração com `AccountState`, `BudgetSelectionService` e `AuthService`
+- ✅ Estilos criados (`reconcile.page.scss`)
+- ✅ Rota adicionada em `accounts.routes.ts`:
+  - `/accounts/:id/reconcile` - Reconciliar conta (lazy loading)
+  - Rota posicionada antes de `:id` para evitar conflitos de roteamento
+- ✅ Navegação atualizada em `account-detail.page.ts`:
+  - `navigateToReconcile()` agora navega para `/accounts/:id/reconcile`
+  - Removida navegação antiga com query params
+- ✅ Componente modal antigo removido:
+  - `reconcile-modal.component.ts` removido
+  - `reconcile-modal.component.scss` removido
+  - `reconcile-modal.component.spec.ts` removido
+  - `reconcile-modal/index.ts` removido
+  - Diretório `components/reconcile-modal/` removido
+
+**Próximo Passo:**
+
+- Iniciar Fase 9: Validação Final e Limpeza
 
 ---
 
@@ -829,7 +857,7 @@ _[Observações finais sobre validação e limpeza]_
 - [x] Fase 5: Migração - Pay Bill Modal ✅
 - [x] Fase 6: Migração - Goal Amount Modal ✅
 - [x] Fase 7: Migração - Transfer Modal ✅
-- [ ] Fase 8: Migração - Reconcile Modal ✅
+- [x] Fase 8: Migração - Reconcile Modal ✅
 - [ ] Fase 9: Validação Final e Limpeza ✅
 
 ### Critérios de Aceitação
@@ -857,9 +885,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 7/9
-**Tarefas Completas**: 32/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Fase 6: ✅ Completa | Fase 7: ✅ Completa | Próxima: Fase 8 - Migração - Reconcile Modal)
+**Fases Completas**: 8/9
+**Tarefas Completas**: 36/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Fase 6: ✅ Completa | Fase 7: ✅ Completa | Fase 8: ✅ Completa | Próxima: Fase 9 - Validação Final e Limpeza)
 
 ---
 
