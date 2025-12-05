@@ -120,12 +120,6 @@ export class AppLayoutComponent implements OnInit {
       icon: 'analytics',
       route: '/reports',
     },
-    {
-      id: 'settings',
-      label: 'Configurações',
-      icon: 'settings',
-      route: '/settings',
-    },
   ]);
 
   headerUser = computed(() => ({

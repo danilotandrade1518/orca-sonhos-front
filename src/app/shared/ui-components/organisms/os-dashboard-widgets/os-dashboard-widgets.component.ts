@@ -29,7 +29,6 @@ export interface DashboardWidget {
     | 'budget-summary'
     | 'transaction-list'
     | 'account-balance'
-    | 'monthly-trends'
     | 'quick-actions'
     | 'financial-health'
     | 'suggested-actions'
@@ -290,10 +289,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                 />
               </div>
               }
-            </div>
-            } @case ('monthly-trends') {
-            <div class="os-dashboard-widgets__monthly-trends">
-              <p>Gráficos de tendências mensais serão exibidos aqui</p>
             </div>
             } @case ('quick-actions') {
             <div class="os-dashboard-widgets__quick-actions">

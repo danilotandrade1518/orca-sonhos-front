@@ -667,3 +667,4 @@ Componente genérico de confirmação reutilizável para substituir modais dupli
 - **Conceitos Centrais**: `core-concepts.md` - Domínio financeiro e regras de negócio
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Diferenciação e valor único (4 funcionalidades core mapeadas)
 
+

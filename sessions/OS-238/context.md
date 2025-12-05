@@ -158,3 +158,4 @@ Padronizar e consolidar os componentes de modal de confirmação espalhados pela
 - **Padrão de Rotas**: Verificar `src/app/features/*/routes.ts`
 - **Angular Material Dialog**: [Documentação oficial](https://material.angular.io/components/dialog)
 
+

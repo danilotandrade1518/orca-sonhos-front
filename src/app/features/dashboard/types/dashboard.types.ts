@@ -27,7 +27,6 @@ export type WidgetType =
   | 'goal-progress'
   | 'transaction-list'
   | 'account-balance'
-  | 'monthly-trends'
   | 'quick-actions'
   | 'financial-health'
   | 'suggested-actions'

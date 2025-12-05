@@ -185,3 +185,4 @@ Implementar um **sistema completo de categorias** para organização de transaç
   - `src/app/features/transactions/components/transaction-form/transaction-form.component.ts` (uso atual de categorias em transações).
   - `src/dtos/account/*` e `AccountState` (padrões de DTOs e estado).
 
+

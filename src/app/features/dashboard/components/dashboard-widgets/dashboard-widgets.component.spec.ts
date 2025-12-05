@@ -489,14 +489,6 @@ describe('DashboardWidgetsComponent', () => {
         enabled: true,
       },
       {
-        id: '5',
-        type: 'monthly-trends',
-        size: 'medium',
-        position: { row: 3, column: 1 },
-        title: 'Monthly Trends',
-        enabled: true,
-      },
-      {
         id: '6',
         type: 'quick-actions',
         size: 'medium',

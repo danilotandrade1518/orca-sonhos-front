@@ -704,3 +704,4 @@ Todas já disponíveis no projeto:
 - **Financial Health**: `business/financial-health.md` - Indicador "Uso de Orçamento e Envelopes"
 
 
+
