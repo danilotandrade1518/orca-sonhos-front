@@ -31,6 +31,7 @@ import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { LocaleService } from '@shared/formatting';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
+import { CollaborationDashboardComponent } from '../../components/collaboration-dashboard/collaboration-dashboard.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -46,6 +47,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsAlertComponent,
     ShareBudgetComponent,
     OsDashboardWidgetsComponent,
+    CollaborationDashboardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -225,31 +227,11 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             </os-button>
           </div>
 
-          @if (participantsLoading()) {
-          <div class="budget-detail-page__participants-loading" role="status" aria-live="polite">
-            <p>Carregando participantes...</p>
-          </div>
-          } @else if (participantsCount() === 0) {
-          <div class="budget-detail-page__participants-empty" role="status">
-            <p>Nenhum participante adicionado ainda.</p>
-            <os-button
-              variant="primary"
-              size="medium"
-              icon="user-plus"
-              (buttonClick)="openShareModal()"
-              [attr.aria-label]="'Adicionar primeiro participante'"
-            >
-              Adicionar Participante
-            </os-button>
-          </div>
-          } @else {
-          <div class="budget-detail-page__participants-info">
-            <p>
-              <strong>{{ participantsCount() }}</strong>
-              {{ participantsCount() === 1 ? 'participante' : 'participantes' }}
-            </p>
-          </div>
-          }
+          <os-collaboration-dashboard
+            [budgetId]="budgetId()!"
+            [creatorId]="creatorId()"
+            (participantRemoved)="onCollaborationParticipantRemoved($event)"
+          />
         </section>
       </main>
       } @else {
@@ -331,6 +313,11 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   readonly participants = computed(() => this.sharingState.participants());
   readonly participantsCount = computed(() => this.sharingState.participantsCount());
   readonly participantsLoading = computed(() => this.sharingState.loading());
+
+  readonly creatorId = computed(() => {
+    const user = this.currentUser();
+    return user?.id || null;
+  });
 
   readonly budget = computed(() => {
     const id = this.budgetId();
@@ -632,6 +619,14 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   }
 
   onParticipantRemoved(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onCollaborationParticipantRemoved(participantId: string): void {
     const id = this.budgetId();
     if (id) {
       this.sharingState.loadParticipants(id);

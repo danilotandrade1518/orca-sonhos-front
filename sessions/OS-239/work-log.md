@@ -78,10 +78,44 @@
 
 ---
 
+### 🗓️ Sessão 2025-01-XX - Continuação
+
+**Fase**: FASE 3 - Melhoria da Visualização de Participantes
+**Objetivo**: Substituir contagem de participantes por componente collaboration-dashboard completo
+
+#### ✅ Trabalho Realizado
+
+- **Importação do componente**: `CollaborationDashboardComponent` importado e adicionado ao array de imports
+- **Computed property creatorId**: Criada computed property que retorna `currentUser()?.id || null`
+- **Substituição completa**: Removida toda a lógica de exibição de contagem (loading, empty, list) e substituída por componente `<os-collaboration-dashboard>`
+- **Tratamento de evento**: Criado método `onCollaborationParticipantRemoved()` que recarrega participantes e orçamentos quando um participante é removido
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Usar `currentUser().id` como `creatorId` já que o usuário atual provavelmente é o criador quando está visualizando o orçamento próprio
+- **Decisão**: Simplificar template removendo lógica de estados (loading, empty, error) já que o componente `collaboration-dashboard` trata tudo internamente
+- **Observação**: O componente `collaboration-dashboard` já tem lógica para detectar o criador usando `currentUser().id` se `creatorId` não for fornecido, então passar `null` também funcionaria
+
+#### 🧪 Validações
+
+- ✅ Código compila sem erros
+- ✅ Sem erros de lint
+- ✅ Componente importado corretamente
+- ✅ Computed property criada
+- ✅ Template simplificado
+- ⏳ Validação funcional pendente (teste manual necessário)
+
+#### ⏭️ Próximos Passos
+
+- Validar funcionalmente que lista de participantes é exibida corretamente
+- Prosseguir para FASE 4: Melhoria do Layout de Contas
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-239
-**Fase Atual**: FASE 2 - Implementação da Seção "Visão Geral" [Status: ✅ Completada]
-**Última Modificação**: Implementação completa da FASE 2 com integração de os-dashboard-widgets e cálculo de dados financeiros
-**Próxima Tarefa**: Prosseguir para FASE 3 - Melhoria da Visualização de Participantes
+**Fase Atual**: FASE 3 - Melhoria da Visualização de Participantes [Status: ✅ Completada]
+**Última Modificação**: Implementação completa da FASE 3 com substituição de contagem por componente collaboration-dashboard completo
+**Próxima Tarefa**: Prosseguir para FASE 4 - Melhoria do Layout de Contas
 

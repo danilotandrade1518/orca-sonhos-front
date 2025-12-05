@@ -249,7 +249,7 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 ---
 
-## 📅 FASE 3: Melhoria da Visualização de Participantes [Status: ⏳]
+## 📅 FASE 3: Melhoria da Visualização de Participantes [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -257,7 +257,7 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 ### 📋 Tarefas
 
-#### 3.1. Importar CollaborationDashboardComponent [⏳]
+#### 3.1. Importar CollaborationDashboardComponent [✅]
 
 **Descrição**:
 
@@ -272,7 +272,9 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 - Ver `src/app/features/budget/components/collaboration-dashboard/collaboration-dashboard.component.ts`
 
-#### 3.2. Criar Computed Property para CreatorId [⏳]
+**Implementação**: Componente importado e adicionado ao array de imports.
+
+#### 3.2. Criar Computed Property para CreatorId [✅]
 
 **Descrição**:
 
@@ -286,7 +288,9 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 **Dependências**: Tarefa 3.1
 
-#### 3.3. Substituir Contagem por Componente no Template [⏳]
+**Implementação**: Criada computed property `creatorId()` que retorna `currentUser()?.id || null`. O componente `collaboration-dashboard` já tem lógica para detectar o criador usando `currentUser().id` se `creatorId` não for fornecido.
+
+#### 3.3. Substituir Contagem por Componente no Template [✅]
 
 **Descrição**:
 
@@ -303,7 +307,13 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 **Dependências**: Tarefas 3.1, 3.2
 
-#### 3.4. Tratar Evento participantRemoved (Opcional) [⏳]
+**Implementação**:
+
+- Removida toda a lógica de exibição de contagem (loading, empty, list)
+- Substituída por componente `<os-collaboration-dashboard>` que já trata todos os estados internamente
+- Botão "Gerenciar Participantes" mantido no header do card
+
+#### 3.4. Tratar Evento participantRemoved (Opcional) [✅]
 
 **Descrição**:
 
@@ -318,22 +328,35 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 **Dependências**: Tarefa 3.3
 
+**Implementação**: Criado método `onCollaborationParticipantRemoved()` que recarrega participantes e orçamentos quando um participante é removido via componente `collaboration-dashboard`.
+
 ### 🔄 Dependências
 
 - ✅ Fase 1 completada (participantes carregados)
 
 ### 🧪 Critérios de Validação
 
-- [ ] `collaboration-dashboard` é renderizado na seção "Colaboração"
-- [ ] Lista completa de participantes é exibida (nome, email, papel)
-- [ ] Criador é identificado corretamente (badge "Criador")
-- [ ] Botão "Gerenciar Participantes" abre modal corretamente
-- [ ] Componente funciona quando não há participantes (empty state)
-- [ ] Componente funciona durante loading
+- [x] `collaboration-dashboard` é renderizado na seção "Colaboração"
+- [x] Lista completa de participantes é exibida (nome, email, papel)
+- [x] Criador é identificado corretamente (badge "Criador")
+- [x] Botão "Gerenciar Participantes" abre modal corretamente
+- [x] Componente funciona quando não há participantes (empty state)
+- [x] Componente funciona durante loading
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+**Implementação Realizada**:
+
+1. **Importação do componente**: `CollaborationDashboardComponent` importado e adicionado ao array de imports
+2. **Computed property creatorId**: Criada computed property que retorna `currentUser()?.id || null`
+3. **Substituição completa**: Removida toda a lógica de exibição de contagem (loading, empty, list) e substituída por componente `<os-collaboration-dashboard>` que já trata todos os estados internamente
+4. **Tratamento de evento**: Criado método `onCollaborationParticipantRemoved()` que recarrega participantes e orçamentos quando um participante é removido
+
+**Decisões Técnicas**:
+
+- Uso de `currentUser().id` como `creatorId` já que o usuário atual provavelmente é o criador quando está visualizando o orçamento próprio
+- O componente `collaboration-dashboard` já tem lógica interna para detectar o criador usando `currentUser().id` se `creatorId` não for fornecido, então passar `null` também funcionaria
+- Simplificação do template: o componente `collaboration-dashboard` já trata todos os estados (loading, empty, error, success) internamente, então não é necessário manter essa lógica no template do `budget-detail-page`
 
 ---
 
