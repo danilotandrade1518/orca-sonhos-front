@@ -4,7 +4,6 @@ import {
   effect,
   inject,
   OnInit,
-  signal,
   ChangeDetectionStrategy,
   untracked,
 } from '@angular/core';
@@ -13,8 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EnvelopeState } from '@core/services/envelope/envelope-state/envelope.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { EnvelopeCardComponent } from '@shared/ui-components/molecules/envelope-card';
-import { EnvelopeFormComponent } from '../../components/envelope-form/envelope-form.component';
-import { ConfirmDeleteEnvelopeModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
   OsPageHeaderComponent,
@@ -31,8 +29,6 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
   imports: [
     CommonModule,
     EnvelopeCardComponent,
-    EnvelopeFormComponent,
-    ConfirmDeleteEnvelopeModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
@@ -96,22 +92,6 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
         />
         }
       </os-entity-list>
-
-      @if (showCreateModal()) {
-      <os-envelope-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showEditModal() && editingEnvelope()) {
-      <os-envelope-form
-        [mode]="'edit'"
-        [envelope]="editingEnvelope()!"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
-      } @if (showDeleteModal() && deletingEnvelope()) {
-      <os-confirm-delete-envelope-modal
-        [envelope]="deletingEnvelope()!"
-        (closed)="closeDeleteModal()"
-      />
-      }
     </os-page>
   `,
   styleUrl: './envelopes.page.scss',
@@ -121,22 +101,13 @@ export class EnvelopesPage implements OnInit {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
 
   private _lastBudgetId: string | null = null;
 
   readonly selectedBudgetId = this.budgetSelection.selectedBudgetId;
   readonly envelopes = computed(() => this.state.envelopesByBudgetId());
   readonly hasEnvelopes = computed(() => this.envelopes().length > 0);
-
-  readonly deletingEnvelope = signal<EnvelopeDto | null>(null);
-  readonly editingEnvelope = signal<EnvelopeDto | null>(null);
-
-  readonly showCreateModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'create';
-  });
-
-  readonly showEditModal = signal(false);
-  readonly showDeleteModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -198,33 +169,27 @@ export class EnvelopesPage implements OnInit {
   }
 
   openCreateModal(): void {
-    this.router.navigate(['new'], { relativeTo: this.route });
+    this.router.navigate(['/envelopes/new']);
   }
 
   onEditEnvelope(envelope: EnvelopeDto): void {
-    this.editingEnvelope.set(envelope);
-    this.showEditModal.set(true);
+    this.router.navigate(['/envelopes', envelope.id, 'edit']);
   }
 
-  onDeleteEnvelope(envelope: EnvelopeDto): void {
-    this.deletingEnvelope.set(envelope);
-    this.showDeleteModal.set(true);
-  }
+  async onDeleteEnvelope(envelope: EnvelopeDto): Promise<void> {
+    const confirmed = await this.confirmDialogService.open({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir o envelope "${envelope.name}"? Esta ação não pode ser desfeita. O envelope será removido permanentemente e não será mais possível controlar o limite de gastos para esta categoria.`,
+      variant: 'danger',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+    });
 
-  closeDeleteModal(): void {
-    this.showDeleteModal.set(false);
-    this.deletingEnvelope.set(null);
-  }
-
-  onFormSaved(): void {
-    this.showEditModal.set(false);
-    this.editingEnvelope.set(null);
-    this.router.navigate(['/envelopes'], { replaceUrl: true });
-  }
-
-  onFormCancelled(): void {
-    this.showEditModal.set(false);
-    this.editingEnvelope.set(null);
-    this.router.navigate(['/envelopes'], { replaceUrl: true });
+    if (confirmed && this.selectedBudgetId()) {
+      this.state.deleteEnvelope({
+        envelopeId: envelope.id,
+        budgetId: this.selectedBudgetId()!,
+      });
+    }
   }
 }

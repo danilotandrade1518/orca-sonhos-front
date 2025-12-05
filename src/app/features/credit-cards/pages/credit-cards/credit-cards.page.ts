@@ -15,9 +15,8 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { CreditCardCardComponent } from '@shared/ui-components/molecules/credit-card-card';
 import { CreditCardFormComponent } from '../../components/credit-card-form';
 import { CreditCardBillFormComponent } from '../../components/credit-card-bill-form';
-import { PayBillModalComponent } from '../../components/pay-bill-modal';
 import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
-import { ConfirmDeleteCreditCardModalComponent } from '../../components/confirm-delete-modal';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
   OsPageHeaderComponent,
@@ -37,9 +36,7 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     CreditCardCardComponent,
     CreditCardFormComponent,
     CreditCardBillFormComponent,
-    PayBillModalComponent,
     ReopenBillModalComponent,
-    ConfirmDeleteCreditCardModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
@@ -120,13 +117,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         (saved)="onBillFormSaved()"
         (cancelled)="onBillFormCancelled()"
       />
-      } @if (showDeleteModal() && deletingCreditCard()) {
-      <os-confirm-delete-credit-card-modal
-        [creditCard]="deletingCreditCard()!"
-        (closed)="closeDeleteModal()"
-      />
-      } @if (showPayBillModal() && payingBill()) {
-      <os-pay-bill-modal [creditCardBill]="payingBill()!" (closed)="closePayBillModal()" />
       } @if (showReopenBillModal() && reopeningBill()) {
       <os-reopen-bill-modal [creditCardBill]="reopeningBill()!" (closed)="closeReopenBillModal()" />
       }
@@ -139,6 +129,7 @@ export class CreditCardsPage implements OnInit {
   private readonly budgetSelection = inject(BudgetSelectionService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
 
   private _lastBudgetId: string | null = null;
 
@@ -146,8 +137,6 @@ export class CreditCardsPage implements OnInit {
   readonly creditCards = computed(() => this.state.creditCardsByBudgetId());
   readonly hasCreditCards = computed(() => this.creditCards().length > 0);
 
-  readonly deletingCreditCard = signal<CreditCardDto | null>(null);
-  readonly payingBill = signal<CreditCardBillDto | null>(null);
   readonly reopeningBill = signal<CreditCardBillDto | null>(null);
 
   readonly showCreateModal = computed(() => {
@@ -155,8 +144,6 @@ export class CreditCardsPage implements OnInit {
   });
 
   readonly showCreateBillModal = signal(false);
-  readonly showDeleteModal = signal(false);
-  readonly showPayBillModal = signal(false);
   readonly showReopenBillModal = signal(false);
 
   readonly currentState = computed(() => {
@@ -243,14 +230,20 @@ export class CreditCardsPage implements OnInit {
     this.router.navigate([creditCard.id], { relativeTo: this.route });
   }
 
-  onDeleteCreditCard(creditCard: CreditCardDto): void {
-    this.deletingCreditCard.set(creditCard);
-    this.showDeleteModal.set(true);
-  }
+  async onDeleteCreditCard(creditCard: CreditCardDto): Promise<void> {
+    const confirmed = await this.confirmDialogService.open({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir o cartão "${creditCard.name}"? Esta ação não pode ser desfeita. Se o cartão possuir faturas vinculadas, a exclusão será bloqueada.`,
+      variant: 'danger',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+    });
 
-  closeDeleteModal(): void {
-    this.showDeleteModal.set(false);
-    this.deletingCreditCard.set(null);
+    if (confirmed) {
+      this.state.deleteCreditCard({
+        id: creditCard.id,
+      });
+    }
   }
 
   onFormSaved(): void {
@@ -271,16 +264,6 @@ export class CreditCardsPage implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 
-  openPayBillModal(bill: CreditCardBillDto): void {
-    this.payingBill.set(bill);
-    this.showPayBillModal.set(true);
-  }
-
-  closePayBillModal(): void {
-    this.showPayBillModal.set(false);
-    this.payingBill.set(null);
-  }
-
   openReopenBillModal(bill: CreditCardBillDto): void {
     this.reopeningBill.set(bill);
     this.showReopenBillModal.set(true);
@@ -292,7 +275,7 @@ export class CreditCardsPage implements OnInit {
   }
 
   onPayBill(bill: CreditCardBillDto): void {
-    this.openPayBillModal(bill);
+    this.router.navigate(['/credit-cards/bills', bill.id, 'pay']);
   }
 
   onReopenBill(bill: CreditCardBillDto): void {

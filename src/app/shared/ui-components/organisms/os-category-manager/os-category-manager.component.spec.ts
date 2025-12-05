@@ -13,10 +13,14 @@ import { OsSelectComponent } from '../../atoms/os-select/os-select.component';
 import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
 import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-group.component';
 import { Category, OsCategoryManagerComponent } from './os-category-manager.component';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 
 describe('OsCategoryManagerComponent', () => {
   let component: OsCategoryManagerComponent;
   let fixture: ComponentFixture<OsCategoryManagerComponent>;
+  let confirmDialogService: {
+    open: ReturnType<typeof vi.fn>;
+  };
 
   const mockCategories: Category[] = [
     {
@@ -55,6 +59,10 @@ describe('OsCategoryManagerComponent', () => {
   ];
 
   beforeEach(async () => {
+    confirmDialogService = {
+      open: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         OsCategoryManagerComponent,
@@ -69,7 +77,11 @@ describe('OsCategoryManagerComponent', () => {
         OsFormGroupComponent,
         OsFormFieldComponent,
       ],
-      providers: [FormBuilder, provideZonelessChangeDetection()],
+      providers: [
+        FormBuilder,
+        provideZonelessChangeDetection(),
+        { provide: ConfirmDialogService, useValue: confirmDialogService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OsCategoryManagerComponent);
@@ -207,29 +219,30 @@ describe('OsCategoryManagerComponent', () => {
     });
   });
 
-  it('should emit categoryDeleted when delete button is clicked', () => {
+  it('should emit categoryDeleted when delete button is clicked', async () => {
     const spy = vi.spyOn(component.categoryDeleted, 'emit');
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+    confirmDialogService.open.mockResolvedValue(true);
 
-    component.onDeleteCategory(mockCategories[0]);
+    await component.onDeleteCategory(mockCategories[0]);
 
-    expect(confirmSpy).toHaveBeenCalledWith(
-      'Tem certeza que deseja excluir a categoria "Alimentação"?'
-    );
+    expect(confirmDialogService.open).toHaveBeenCalledWith({
+      title: 'Confirmar Exclusão',
+      message: 'Tem certeza que deseja excluir a categoria "Alimentação"? Esta ação não pode ser desfeita.',
+      variant: 'danger',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+    });
     expect(spy).toHaveBeenCalledWith('1');
-
-    confirmSpy.mockRestore();
   });
 
-  it('should not emit categoryDeleted when delete is cancelled', () => {
+  it('should not emit categoryDeleted when delete is cancelled', async () => {
     const spy = vi.spyOn(component.categoryDeleted, 'emit');
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    confirmDialogService.open.mockResolvedValue(false);
 
-    component.onDeleteCategory(mockCategories[0]);
+    await component.onDeleteCategory(mockCategories[0]);
 
+    expect(confirmDialogService.open).toHaveBeenCalled();
     expect(spy).not.toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
   });
 
   it('should show filter toggle button', () => {

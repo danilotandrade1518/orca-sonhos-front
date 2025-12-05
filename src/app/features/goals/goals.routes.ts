@@ -12,6 +12,18 @@ export const GOALS_ROUTES: Routes = [
       import('./pages/goals-new/goals-new.page').then((m) => m.GoalsNewPage),
   },
   {
+    path: ':id/add-amount',
+    loadComponent: () =>
+      import('./pages/goal-amount/goal-amount.page').then((m) => m.GoalAmountPage),
+    title: 'Adicionar Aporte',
+  },
+  {
+    path: ':id/remove-amount',
+    loadComponent: () =>
+      import('./pages/goal-amount/goal-amount.page').then((m) => m.GoalAmountPage),
+    title: 'Remover Aporte',
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/goal-detail/goal-detail.page').then((m) => m.GoalDetailPage),

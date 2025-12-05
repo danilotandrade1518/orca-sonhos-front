@@ -24,6 +24,7 @@ import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-grou
 import { OsFormFieldComponent } from '../../molecules/os-form-field/os-form-field.component';
 import { LocaleService } from '../../../formatting';
 import { FormsModule } from '@angular/forms';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 
 export interface Category {
   id: string;
@@ -407,6 +408,7 @@ export interface CategoryFormData {
 })
 export class OsCategoryManagerComponent implements AfterViewInit {
   private readonly localeService = inject(LocaleService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
 
   title = input<string>('Gerenciador de Categorias');
   variant = input<'default' | 'compact' | 'detailed'>('default');
@@ -676,8 +678,16 @@ export class OsCategoryManagerComponent implements AfterViewInit {
     this.categoryForm.reset();
   }
 
-  onDeleteCategory(category: Category): void {
-    if (confirm(`Tem certeza que deseja excluir a categoria "${category.name}"?`)) {
+  async onDeleteCategory(category: Category): Promise<void> {
+    const confirmed = await this.confirmDialogService.open({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir a categoria "${category.name}"? Esta ação não pode ser desfeita.`,
+      variant: 'danger',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+    });
+
+    if (confirmed) {
       this.categoryDeleted.emit(category.id);
     }
   }

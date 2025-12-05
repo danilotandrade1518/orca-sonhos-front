@@ -282,7 +282,7 @@ export class AccountDetailPage implements OnInit {
   navigateToReconcile(): void {
     const id = this.accountId();
     if (id) {
-      this.router.navigate(['/accounts'], { queryParams: { reconcile: id } });
+      this.router.navigate(['/accounts', id, 'reconcile']);
     }
   }
 

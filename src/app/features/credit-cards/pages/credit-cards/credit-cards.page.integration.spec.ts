@@ -12,6 +12,7 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { CreditCardApiService } from '@core/services/credit-card/credit-card-api/credit-card-api.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import type { CreditCardDto } from '../../../../../dtos/credit-card/credit-card-types';
 import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
 
@@ -22,6 +23,9 @@ describe('CreditCardsPage - Integration Tests', () => {
   let creditCardApiService: CreditCardApiService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
+  let confirmDialogService: {
+    open: ReturnType<typeof vi.fn>;
+  };
 
   const mockBudgetId = 'budget-1';
   const mockUserId = 'user-1';
@@ -69,6 +73,10 @@ describe('CreditCardsPage - Integration Tests', () => {
       },
     };
 
+    confirmDialogService = {
+      open: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [CreditCardsPage],
       providers: [
@@ -82,6 +90,7 @@ describe('CreditCardsPage - Integration Tests', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: AccountState, useValue: {} },
+        { provide: ConfirmDialogService, useValue: confirmDialogService },
       ],
     }).compileComponents();
 
@@ -214,28 +223,42 @@ describe('CreditCardsPage - Integration Tests', () => {
   });
 
   describe('Modal State Management', () => {
-    it('should open and close delete modal correctly', () => {
-      component.onDeleteCreditCard(mockCreditCard);
+    it('should open confirm dialog and delete credit card when confirmed', async () => {
+      confirmDialogService.open.mockResolvedValue(true);
+      const deleteCreditCardSpy = vi.spyOn(creditCardState, 'deleteCreditCard');
 
-      expect(component.deletingCreditCard()).toEqual(mockCreditCard);
-      expect(component.showDeleteModal()).toBe(true);
+      await component.onDeleteCreditCard(mockCreditCard);
 
-      component.closeDeleteModal();
-
-      expect(component.showDeleteModal()).toBe(false);
-      expect(component.deletingCreditCard()).toBeNull();
+      expect(confirmDialogService.open).toHaveBeenCalledWith({
+        title: 'Confirmar Exclusão',
+        message: `Tem certeza que deseja excluir o cartão "${mockCreditCard.name}"? Esta ação não pode ser desfeita. Se o cartão possuir faturas vinculadas, a exclusão será bloqueada.`,
+        variant: 'danger',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+      });
+      expect(deleteCreditCardSpy).toHaveBeenCalledWith({
+        id: mockCreditCard.id,
+      });
     });
 
-    it('should open and close pay bill modal correctly', () => {
+    it('should not delete credit card when dialog is cancelled', async () => {
+      confirmDialogService.open.mockResolvedValue(false);
+      const deleteCreditCardSpy = vi.spyOn(creditCardState, 'deleteCreditCard');
+
+      await component.onDeleteCreditCard(mockCreditCard);
+
+      expect(confirmDialogService.open).toHaveBeenCalled();
+      expect(deleteCreditCardSpy).not.toHaveBeenCalled();
+    });
+
+    it('should navigate to pay bill page when paying bill', () => {
       component.onPayBill(mockCreditCardBill);
 
-      expect(component.payingBill()).toEqual(mockCreditCardBill);
-      expect(component.showPayBillModal()).toBe(true);
-
-      component.closePayBillModal();
-
-      expect(component.showPayBillModal()).toBe(false);
-      expect(component.payingBill()).toBeNull();
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/credit-cards/bills',
+        mockCreditCardBill.id,
+        'pay',
+      ]);
     });
 
     it('should open and close reopen bill modal correctly', () => {

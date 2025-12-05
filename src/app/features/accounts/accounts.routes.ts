@@ -15,6 +15,12 @@ export const ACCOUNTS_ROUTES: Routes = [
     data: { modalMode: 'create' },
   },
   {
+    path: ':id/reconcile',
+    loadComponent: () =>
+      import('./pages/reconcile/reconcile.page').then((m) => m.ReconcilePage),
+    title: 'Reconciliar Conta',
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/account-detail/account-detail.page').then((m) => m.AccountDetailPage),
@@ -26,5 +32,11 @@ export const ACCOUNTS_ROUTES: Routes = [
       import('./pages/account-detail/account-detail.page').then((m) => m.AccountDetailPage),
     title: 'Editar Conta',
     data: { modalMode: 'edit' },
+  },
+  {
+    path: 'transfer',
+    loadComponent: () =>
+      import('./pages/transfer/transfer.page').then((m) => m.TransferPage),
+    title: 'Transferir entre Contas',
   },
 ];

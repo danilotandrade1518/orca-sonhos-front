@@ -10,8 +10,13 @@ export const ENVELOPES_ROUTES: Routes = [
   {
     path: 'new',
     loadComponent: () =>
-      import('./pages/envelopes/envelopes.page').then((m) => m.EnvelopesPage),
+      import('./pages/envelope-form/envelope-form.page').then((m) => m.EnvelopeFormPage),
     title: 'Novo Envelope',
-    data: { modalMode: 'create' },
+  },
+  {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./pages/envelope-form/envelope-form.page').then((m) => m.EnvelopeFormPage),
+    title: 'Editar Envelope',
   },
 ];

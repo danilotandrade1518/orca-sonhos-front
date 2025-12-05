@@ -15,6 +15,12 @@ export const CREDIT_CARDS_ROUTES: Routes = [
     data: { modalMode: 'create' },
   },
   {
+    path: 'bills/:id/pay',
+    loadComponent: () =>
+      import('./pages/pay-bill/pay-bill.page').then((m) => m.PayBillPage),
+    title: 'Pagar Fatura',
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/credit-card-detail/credit-card-detail.page').then(
