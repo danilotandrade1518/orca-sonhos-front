@@ -25,7 +25,6 @@ describe('EnvelopesPage - Integration Tests', () => {
   let envelopeState: EnvelopeState;
   let envelopesApiService: EnvelopesApiService;
   let router: Router;
-  let activatedRoute: ActivatedRoute;
   let confirmDialogService: {
     open: ReturnType<typeof vi.fn>;
   };
@@ -97,7 +96,6 @@ describe('EnvelopesPage - Integration Tests', () => {
     envelopeState = TestBed.inject(EnvelopeState);
     envelopesApiService = TestBed.inject(EnvelopesApiService);
     router = TestBed.inject(Router);
-    activatedRoute = TestBed.inject(ActivatedRoute);
 
     vi.spyOn(envelopesApiService, 'listEnvelopes').mockReturnValue(of([mockEnvelope]));
     vi.spyOn(envelopesApiService, 'createEnvelope').mockReturnValue(of('envelope-2'));
