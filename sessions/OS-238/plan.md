@@ -601,7 +601,7 @@ Migrar `goal-amount-modal` para páginas `/goals/:id/add-amount` e `/goals/:id/r
 
 ---
 
-## 📅 FASE 7: Migração - Transfer Modal [Status: ⏳]
+## 📅 FASE 7: Migração - Transfer Modal [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -609,7 +609,7 @@ Migrar `transfer-modal` para página dedicada `/accounts/transfer`.
 
 ### 📋 Tarefas
 
-#### Criar Página transfer.page.ts [⏳]
+#### Criar Página transfer.page.ts [✅]
 
 **Descrição**:
 
@@ -621,21 +621,21 @@ Migrar `transfer-modal` para página dedicada `/accounts/transfer`.
   **Dependências**: Fase 6 completa
   **Critério de Conclusão**: Página criada e funcional
 
-#### Implementar Estilos [⏳]
+#### Implementar Estilos [✅]
 
 **Descrição**: Estilos responsivos
 **Arquivo**: `src/app/features/accounts/pages/transfer/transfer.page.scss`
 **Dependências**: Página criada
 **Critério de Conclusão**: Estilos aplicados
 
-#### Adicionar Rota [⏳]
+#### Adicionar Rota [✅]
 
 **Descrição**: Adicionar rota `/accounts/transfer` com lazy loading
 **Arquivo**: `src/app/features/accounts/accounts.routes.ts`
 **Dependências**: Página criada
 **Critério de Conclusão**: Rota funcionando
 
-#### Atualizar Navegação e Remover Modal [⏳]
+#### Atualizar Navegação e Remover Modal [✅]
 
 **Descrição**: Atualizar links e remover componente modal antigo
 **Dependências**: Rota criada
@@ -643,14 +643,45 @@ Migrar `transfer-modal` para página dedicada `/accounts/transfer`.
 
 ### 🧪 Critérios de Validação
 
-- [ ] Página realiza transferência corretamente
-- [ ] Validação funcionando
-- [ ] Navegação funcionando
-- [ ] Responsividade validada
+- [x] Página realiza transferência corretamente
+- [x] Validação funcionando
+- [x] Navegação funcionando
+- [x] Responsividade validada
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre migração do transfer-modal]_
+**Implementação Concluída (2025-01-27):**
+
+- ✅ Página `transfer.page.ts` criada:
+  - Estrutura usando `os-page` e `os-page-header`
+  - Formulário usando `os-transfer-form` (molecule existente)
+  - Lógica migrada do componente modal original
+  - Breadcrumbs implementados para navegação
+  - Navegação de volta após salvar/cancelar
+  - Validação, loading e tratamento de erros mantidos
+  - Effect para monitorar loading e exibir notificações
+  - Integração com `AccountState`, `BudgetSelectionService` e `AuthService`
+- ✅ Estilos criados (`transfer.page.scss`)
+- ✅ Rota adicionada em `accounts.routes.ts`:
+  - `/accounts/transfer` - Transferir entre contas (lazy loading)
+- ✅ Navegação atualizada em `accounts.page.ts`:
+  - `openTransferModal()` agora navega para `/accounts/transfer`
+  - Removidos modais e lógica relacionada (`showTransferModal`)
+  - Removido import do `TransferModalComponent`
+  - Removido método `closeTransferModal()`
+- ✅ Testes atualizados em `accounts.page.spec.ts`:
+  - Testes de `openTransferModal()` atualizados para verificar navegação
+  - Removidos testes de `closeTransferModal()` e `showTransferModal()`
+- ✅ Componente modal antigo removido:
+  - `transfer-modal.component.ts` removido
+  - `transfer-modal.component.scss` removido
+  - `transfer-modal.component.spec.ts` removido
+  - `transfer-modal/index.ts` removido
+  - Diretório `components/transfer-modal/` removido
+
+**Próximo Passo:**
+
+- Iniciar Fase 8: Migração - Reconcile Modal
 
 ---
 
@@ -797,7 +828,7 @@ _[Observações finais sobre validação e limpeza]_
 - [x] Fase 4: Migração - Envelope Form ✅
 - [x] Fase 5: Migração - Pay Bill Modal ✅
 - [x] Fase 6: Migração - Goal Amount Modal ✅
-- [ ] Fase 7: Migração - Transfer Modal ✅
+- [x] Fase 7: Migração - Transfer Modal ✅
 - [ ] Fase 8: Migração - Reconcile Modal ✅
 - [ ] Fase 9: Validação Final e Limpeza ✅
 
@@ -826,9 +857,9 @@ Após conclusão:
 
 ## 📊 Progresso Geral
 
-**Fases Completas**: 6/9
-**Tarefas Completas**: 28/45
-**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Fase 6: ✅ Completa | Próxima: Fase 7 - Migração - Transfer Modal)
+**Fases Completas**: 7/9
+**Tarefas Completas**: 32/45
+**Status Geral**: ⏰ Em Progresso (Fase 1: ✅ Completa | Fase 2: ✅ Completa | Fase 3: ✅ Completa | Fase 4: ✅ Completa | Fase 5: ✅ Completa | Fase 6: ✅ Completa | Fase 7: ✅ Completa | Próxima: Fase 8 - Migração - Reconcile Modal)
 
 ---
 

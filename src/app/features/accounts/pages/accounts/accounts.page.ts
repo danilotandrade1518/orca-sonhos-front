@@ -15,7 +15,6 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
 import { AccountFormComponent } from '../../components/account-form/account-form.component';
-import { TransferModalComponent } from '../../components/transfer-modal/transfer-modal.component';
 import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -34,7 +33,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
     CommonModule,
     AccountCardComponent,
     AccountFormComponent,
-    TransferModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
@@ -102,8 +100,7 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
 
       @if (showCreateModal()) {
       <os-account-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showTransferModal()) {
-      <os-transfer-modal (closed)="closeTransferModal()" />
+      }
     </os-page>
   `,
   styleUrl: './accounts.page.scss',
@@ -125,8 +122,6 @@ export class AccountsPage implements OnInit {
   readonly showCreateModal = computed(() => {
     return this.route.snapshot.data['modalMode'] === 'create';
   });
-
-  readonly showTransferModal = signal(false);
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -204,7 +199,7 @@ export class AccountsPage implements OnInit {
     if (!this.selectedBudgetId() || !this.hasAccounts()) {
       return;
     }
-    this.showTransferModal.set(true);
+    this.router.navigate(['transfer'], { relativeTo: this.route });
   }
 
   onEditAccount(account: AccountDto): void {
@@ -229,10 +224,6 @@ export class AccountsPage implements OnInit {
         });
       }
     }
-  }
-
-  closeTransferModal(): void {
-    this.showTransferModal.set(false);
   }
 
   onFormSaved(): void {

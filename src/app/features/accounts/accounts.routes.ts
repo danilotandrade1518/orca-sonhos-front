@@ -27,4 +27,10 @@ export const ACCOUNTS_ROUTES: Routes = [
     title: 'Editar Conta',
     data: { modalMode: 'edit' },
   },
+  {
+    path: 'transfer',
+    loadComponent: () =>
+      import('./pages/transfer/transfer.page').then((m) => m.TransferPage),
+    title: 'Transferir entre Contas',
+  },
 ];

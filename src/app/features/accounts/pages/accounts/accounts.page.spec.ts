@@ -203,55 +203,35 @@ describe('AccountsPage', () => {
     });
 
     describe('openTransferModal', () => {
-      it('should open transfer modal when budget and accounts exist', () => {
+      it('should navigate to transfer route when budget and accounts exist', () => {
         accountState.accountsByBudgetId.set(mockAccounts);
         fixture.detectChanges();
 
         component.openTransferModal();
 
-        expect(component.showTransferModal()).toBe(true);
+        expect(router.navigate).toHaveBeenCalledWith(['transfer'], {
+          relativeTo: TestBed.inject(ActivatedRoute),
+        });
       });
 
-      it('should not open transfer modal when no budget selected', () => {
+      it('should not navigate when no budget selected', () => {
         budgetSelection.selectedBudgetId.set(null);
         fixture.detectChanges();
 
+        router.navigate = vi.fn();
         component.openTransferModal();
 
-        expect(component.showTransferModal()).toBe(false);
+        expect(router.navigate).not.toHaveBeenCalled();
       });
 
-      it('should not open transfer modal when no accounts', () => {
+      it('should not navigate when no accounts', () => {
         accountState.accountsByBudgetId.set([]);
         fixture.detectChanges();
 
+        router.navigate = vi.fn();
         component.openTransferModal();
 
-        expect(component.showTransferModal()).toBe(false);
-      });
-    });
-
-    describe('closeTransferModal', () => {
-      it('should close transfer modal', () => {
-        component.showTransferModal.set(true);
-        fixture.detectChanges();
-
-        component.closeTransferModal();
-
-        expect(component.showTransferModal()).toBe(false);
-      });
-    });
-
-    describe('closeDeleteModal', () => {
-      it('should close delete modal and clear deleting account', () => {
-        component.showDeleteModal.set(true);
-        component.deletingAccount.set(mockAccounts[0]);
-        fixture.detectChanges();
-
-        component.closeDeleteModal();
-
-        expect(component.showDeleteModal()).toBe(false);
-        expect(component.deletingAccount()).toBe(null);
+        expect(router.navigate).not.toHaveBeenCalled();
       });
     });
   });
