@@ -1,18 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of } from 'rxjs';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ConfirmDialogService, ConfirmDialogConfig } from './confirm-dialog.service';
-import { OsConfirmDialogComponent, ConfirmDialogData } from '@shared/ui-components/organisms/os-confirm-dialog/os-confirm-dialog.component';
+import {
+  OsConfirmDialogComponent,
+  ConfirmDialogData,
+} from '@shared/ui-components/organisms/os-confirm-dialog/os-confirm-dialog.component';
 
 describe('ConfirmDialogService', () => {
   let service: ConfirmDialogService;
   let dialog: MatDialog;
-  let mockDialogRef: {
-    afterClosed: ReturnType<typeof vi.fn>;
-    close: ReturnType<typeof vi.fn>;
-  };
 
   const createMockConfig = (overrides: Partial<ConfirmDialogConfig> = {}): ConfirmDialogConfig => ({
     title: 'Test Title',
@@ -24,17 +23,8 @@ describe('ConfirmDialogService', () => {
   });
 
   beforeEach(async () => {
-    mockDialogRef = {
-      afterClosed: vi.fn(),
-      close: vi.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-      providers: [
-        ConfirmDialogService,
-        provideZonelessChangeDetection(),
-      ],
+      providers: [ConfirmDialogService, provideZonelessChangeDetection()],
     }).compileComponents();
 
     service = TestBed.inject(ConfirmDialogService);
@@ -48,12 +38,9 @@ describe('ConfirmDialogService', () => {
   describe('open', () => {
     it('should open dialog with default configuration', async () => {
       const config = createMockConfig();
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -82,12 +69,9 @@ describe('ConfirmDialogService', () => {
 
     it('should open dialog with custom width', async () => {
       const config = createMockConfig({ width: '600px' });
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(false),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(false),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -103,12 +87,9 @@ describe('ConfirmDialogService', () => {
 
     it('should open dialog with disableClose option', async () => {
       const config = createMockConfig({ disableClose: true });
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(false),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(false),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -124,12 +105,9 @@ describe('ConfirmDialogService', () => {
 
     it('should open dialog with danger variant', async () => {
       const config = createMockConfig({ variant: 'danger' });
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -147,12 +125,9 @@ describe('ConfirmDialogService', () => {
 
     it('should open dialog with warning variant', async () => {
       const config = createMockConfig({ variant: 'warning' });
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(false),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(false),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -173,12 +148,9 @@ describe('ConfirmDialogService', () => {
         confirmText: 'Delete',
         cancelText: 'Keep',
       });
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -197,12 +169,9 @@ describe('ConfirmDialogService', () => {
 
     it('should return true when user confirms', async () => {
       const config = createMockConfig();
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -213,12 +182,9 @@ describe('ConfirmDialogService', () => {
 
     it('should return false when user cancels', async () => {
       const config = createMockConfig();
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(false),
-      });
 
       vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(false),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -229,12 +195,9 @@ describe('ConfirmDialogService', () => {
 
     it('should return false when dialog is closed without result', async () => {
       const config = createMockConfig();
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(undefined),
-      });
 
       vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(undefined),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -248,12 +211,9 @@ describe('ConfirmDialogService', () => {
         title: 'Test',
         message: 'Test Message',
       };
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -274,12 +234,9 @@ describe('ConfirmDialogService', () => {
         title: 'Test',
         message: 'Test Message',
       };
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -298,12 +255,9 @@ describe('ConfirmDialogService', () => {
         title: 'Test',
         message: 'Test Message',
       };
-      const mockAfterClosed = vi.fn().mockReturnValue({
-        toPromise: () => Promise.resolve(true),
-      });
 
       const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
-        afterClosed: mockAfterClosed,
+        afterClosed: () => of(true),
         close: vi.fn(),
       } as unknown as MatDialogRef<OsConfirmDialogComponent, boolean>);
 
@@ -318,4 +272,3 @@ describe('ConfirmDialogService', () => {
     });
   });
 });
-

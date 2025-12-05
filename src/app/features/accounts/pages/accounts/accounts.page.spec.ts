@@ -9,6 +9,8 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AccountDto } from '../../../../../dtos/account/account-types';
 import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '@core/adapters/external-auth-service.adapter';
 import { MockExternalAuthServiceAdapter } from '@core/services/auth/__mocks__/external-auth-service.adapter.mock';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
+import { AuthService } from '@core/services/auth/auth.service';
 
 describe('AccountsPage', () => {
   let component: AccountsPage;
@@ -20,11 +22,18 @@ describe('AccountsPage', () => {
     error: ReturnType<typeof signal<string | null>>;
     loadAccounts: ReturnType<typeof vi.fn>;
     clearError: ReturnType<typeof vi.fn>;
+    deleteAccount: ReturnType<typeof vi.fn>;
   };
   let budgetSelection: {
     selectedBudgetId: ReturnType<typeof signal<string | null>>;
   };
   let router: Router;
+  let confirmDialogService: {
+    open: ReturnType<typeof vi.fn>;
+  };
+  let authService: {
+    currentUser: ReturnType<typeof vi.fn>;
+  };
 
   const mockAccounts: AccountDto[] = [
     {
@@ -49,6 +58,7 @@ describe('AccountsPage', () => {
       error: signal(null),
       loadAccounts: vi.fn(),
       clearError: vi.fn(),
+      deleteAccount: vi.fn(),
     };
 
     budgetSelection = {
@@ -58,6 +68,14 @@ describe('AccountsPage', () => {
     router = {
       navigate: vi.fn(),
     } as unknown as Router;
+
+    confirmDialogService = {
+      open: vi.fn(),
+    };
+
+    authService = {
+      currentUser: vi.fn(() => ({ id: 'user-1' })),
+    };
 
     TestBed.configureTestingModule({
       imports: [AccountsPage],
@@ -88,6 +106,14 @@ describe('AccountsPage', () => {
         {
           provide: EXTERNAL_AUTH_SERVICE_ADAPTER,
           useValue: new MockExternalAuthServiceAdapter(),
+        },
+        {
+          provide: ConfirmDialogService,
+          useValue: confirmDialogService,
+        },
+        {
+          provide: AuthService,
+          useValue: authService,
         },
       ],
     });
@@ -250,13 +276,35 @@ describe('AccountsPage', () => {
     });
 
     describe('onDeleteAccount', () => {
-      it('should set deleting account and open delete modal', () => {
+      it('should open confirm dialog and delete account when confirmed', async () => {
         const account = mockAccounts[0];
+        confirmDialogService.open.mockResolvedValue(true);
+        const deleteAccountSpy = vi.spyOn(accountState, 'deleteAccount');
 
-        component.onDeleteAccount(account);
+        await component.onDeleteAccount(account);
 
-        expect(component.deletingAccount()).toEqual(account);
-        expect(component.showDeleteModal()).toBe(true);
+        expect(confirmDialogService.open).toHaveBeenCalledWith({
+          title: 'Confirmar Exclusão',
+          message: `Tem certeza que deseja excluir a conta "${account.name}"? Esta ação não pode ser desfeita. Se a conta possuir transações vinculadas, a exclusão será bloqueada.`,
+          variant: 'danger',
+          confirmText: 'Excluir',
+          cancelText: 'Cancelar',
+        });
+        expect(deleteAccountSpy).toHaveBeenCalledWith({
+          userId: 'user-1',
+          accountId: account.id,
+        });
+      });
+
+      it('should not delete account when dialog is cancelled', async () => {
+        const account = mockAccounts[0];
+        confirmDialogService.open.mockResolvedValue(false);
+        const deleteAccountSpy = vi.spyOn(accountState, 'deleteAccount');
+
+        await component.onDeleteAccount(account);
+
+        expect(confirmDialogService.open).toHaveBeenCalled();
+        expect(deleteAccountSpy).not.toHaveBeenCalled();
       });
     });
   });

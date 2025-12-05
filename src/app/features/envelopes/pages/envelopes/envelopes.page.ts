@@ -4,7 +4,6 @@ import {
   effect,
   inject,
   OnInit,
-  signal,
   ChangeDetectionStrategy,
   untracked,
 } from '@angular/core';

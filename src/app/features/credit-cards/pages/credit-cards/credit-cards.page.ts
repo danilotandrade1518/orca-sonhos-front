@@ -264,7 +264,6 @@ export class CreditCardsPage implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 
-
   openReopenBillModal(bill: CreditCardBillDto): void {
     this.reopeningBill.set(bill);
     this.showReopenBillModal.set(true);

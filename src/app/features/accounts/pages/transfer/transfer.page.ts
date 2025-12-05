@@ -135,4 +135,3 @@ export class TransferPage {
     this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }
-

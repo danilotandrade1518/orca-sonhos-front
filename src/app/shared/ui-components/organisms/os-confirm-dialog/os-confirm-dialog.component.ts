@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   inject,
   signal,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -122,4 +123,3 @@ export class OsConfirmDialogComponent {
     this.dialogRef?.close(false);
   }
 }
-

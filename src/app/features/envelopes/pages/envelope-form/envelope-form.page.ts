@@ -344,4 +344,3 @@ export class EnvelopeFormPage implements OnInit {
     this.router.navigate(['/envelopes'], { replaceUrl: true });
   }
 }
-

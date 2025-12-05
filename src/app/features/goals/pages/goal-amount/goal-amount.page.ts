@@ -11,15 +11,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GoalsState } from '@features/goals/state/goals-state/goals.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { NotificationService } from '@core/services/notification/notification.service';
-import { LocaleService } from '@core/services/locale/locale.service';
+import { LocaleService } from '@shared/formatting/locale.service';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import { OsPageHeaderComponent, type BreadcrumbItem } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
-import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
 import { OsMoneyInputComponent } from '@shared/ui-components/atoms/os-money-input/os-money-input.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
 import { CurrencyPipe as OsCurrencyPipe } from '@shared/formatting';
@@ -33,7 +31,6 @@ import type { GoalDto } from '../../../../../dtos/goal';
     OsPageComponent,
     OsPageHeaderComponent,
     OsFormTemplateComponent,
-    OsFormFieldComponent,
     OsMoneyInputComponent,
     OsAlertComponent,
     OsCurrencyPipe,
@@ -314,4 +311,3 @@ export class GoalAmountPage implements OnInit {
     }
   }
 }
-

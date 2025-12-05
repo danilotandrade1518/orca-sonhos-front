@@ -1,6 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { OsConfirmDialogComponent, ConfirmDialogData, ConfirmDialogVariant } from '@shared/ui-components/organisms/os-confirm-dialog/os-confirm-dialog.component';
+import { firstValueFrom } from 'rxjs';
+import {
+  OsConfirmDialogComponent,
+  ConfirmDialogData,
+  ConfirmDialogVariant,
+} from '@shared/ui-components/organisms/os-confirm-dialog/os-confirm-dialog.component';
 
 export interface ConfirmDialogConfig {
   title: string;
@@ -37,7 +42,7 @@ export class ConfirmDialogService {
       dialogConfig
     );
 
-    return dialogRef.afterClosed().toPromise().then((result) => result === true);
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    return result === true;
   }
 }
-

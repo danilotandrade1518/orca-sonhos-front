@@ -895,17 +895,17 @@ Validar toda a implementação, garantir qualidade e fazer limpeza final.
 
 ### Critérios de Aceitação
 
-- [ ] Componente `os-confirm-dialog` criado com variantes (danger, warning, info)
-- [ ] Serviço `ConfirmDialogService` criado e funcionando
-- [ ] 3 modais duplicados removidos e substituídos
-- [ ] Uso de `confirm()` nativo removido
-- [ ] 5 formulários migrados para páginas
-- [ ] Rotas configuradas corretamente
-- [ ] Navegação funcionando (voltar, histórico)
-- [ ] Todos os testes passando
-- [ ] Acessibilidade validada (WCAG 2.1 AA)
-- [ ] Responsividade validada (mobile, tablet, desktop)
-- [ ] Código limpo e documentado
+- [x] Componente `os-confirm-dialog` criado com variantes (danger, warning, info)
+- [x] Serviço `ConfirmDialogService` criado e funcionando
+- [x] 3 modais duplicados removidos e substituídos
+- [x] Uso de `confirm()` nativo removido
+- [x] 5 formulários migrados para páginas
+- [x] Rotas configuradas corretamente
+- [x] Navegação funcionando (voltar, histórico)
+- [x] Todos os testes passando
+- [x] Acessibilidade validada (WCAG 2.1 AA)
+- [x] Responsividade validada (mobile, tablet, desktop)
+- [x] Código limpo e documentado
 
 ### Próximos Passos
 

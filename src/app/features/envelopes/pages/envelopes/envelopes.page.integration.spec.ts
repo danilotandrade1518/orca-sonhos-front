@@ -11,6 +11,7 @@ import { EnvelopeState } from '@core/services/envelope/envelope-state/envelope.s
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { EnvelopesApiService } from '@core/services/envelope/envelopes-api/envelopes-api.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import type {
   EnvelopeDto,
   CreateEnvelopeRequestDto,
@@ -25,6 +26,9 @@ describe('EnvelopesPage - Integration Tests', () => {
   let envelopesApiService: EnvelopesApiService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
+  let confirmDialogService: {
+    open: ReturnType<typeof vi.fn>;
+  };
 
   const mockBudgetId = 'budget-1';
   const mockUserId = 'user-1';
@@ -68,6 +72,10 @@ describe('EnvelopesPage - Integration Tests', () => {
       },
     };
 
+    confirmDialogService = {
+      open: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [EnvelopesPage],
       providers: [
@@ -80,6 +88,7 @@ describe('EnvelopesPage - Integration Tests', () => {
         { provide: BudgetSelectionService, useValue: mockBudgetSelectionService },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ConfirmDialogService, useValue: confirmDialogService },
       ],
     }).compileComponents();
 
@@ -166,51 +175,44 @@ describe('EnvelopesPage - Integration Tests', () => {
     it('should navigate to create route when opening create modal', () => {
       component.openCreateModal();
 
-      expect(router.navigate).toHaveBeenCalledWith(['new'], {
-        relativeTo: activatedRoute,
-      });
+      expect(router.navigate).toHaveBeenCalledWith(['/envelopes/new']);
     });
 
-    it('should navigate back to list after form save', () => {
-      component.onFormSaved();
+    it('should navigate to edit route when editing envelope', () => {
+      component.onEditEnvelope(mockEnvelope);
 
-      expect(router.navigate).toHaveBeenCalledWith(['/envelopes'], {
-        replaceUrl: true,
-      });
-    });
-
-    it('should navigate back to list after form cancel', () => {
-      component.onFormCancelled();
-
-      expect(router.navigate).toHaveBeenCalledWith(['/envelopes'], {
-        replaceUrl: true,
-      });
+      expect(router.navigate).toHaveBeenCalledWith(['/envelopes', mockEnvelope.id, 'edit']);
     });
   });
 
   describe('Modal State Management', () => {
-    it('should open and close delete modal correctly', () => {
-      component.onDeleteEnvelope(mockEnvelope);
+    it('should open confirm dialog and delete envelope when confirmed', async () => {
+      confirmDialogService.open.mockResolvedValue(true);
+      const deleteEnvelopeSpy = vi.spyOn(envelopeState, 'deleteEnvelope');
 
-      expect(component.deletingEnvelope()).toEqual(mockEnvelope);
-      expect(component.showDeleteModal()).toBe(true);
+      await component.onDeleteEnvelope(mockEnvelope);
 
-      component.closeDeleteModal();
-
-      expect(component.showDeleteModal()).toBe(false);
-      expect(component.deletingEnvelope()).toBeNull();
+      expect(confirmDialogService.open).toHaveBeenCalledWith({
+        title: 'Confirmar Exclusão',
+        message: `Tem certeza que deseja excluir o envelope "${mockEnvelope.name}"? Esta ação não pode ser desfeita. O envelope será removido permanentemente e não será mais possível controlar o limite de gastos para esta categoria.`,
+        variant: 'danger',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+      });
+      expect(deleteEnvelopeSpy).toHaveBeenCalledWith({
+        envelopeId: mockEnvelope.id,
+        budgetId: mockBudgetId,
+      });
     });
 
-    it('should open and close edit modal correctly', () => {
-      component.onEditEnvelope(mockEnvelope);
+    it('should not delete envelope when dialog is cancelled', async () => {
+      confirmDialogService.open.mockResolvedValue(false);
+      const deleteEnvelopeSpy = vi.spyOn(envelopeState, 'deleteEnvelope');
 
-      expect(component.editingEnvelope()).toEqual(mockEnvelope);
-      expect(component.showEditModal()).toBe(true);
+      await component.onDeleteEnvelope(mockEnvelope);
 
-      component.onFormCancelled();
-
-      expect(component.showEditModal()).toBe(false);
-      expect(component.editingEnvelope()).toBeNull();
+      expect(confirmDialogService.open).toHaveBeenCalled();
+      expect(deleteEnvelopeSpy).not.toHaveBeenCalled();
     });
   });
 
