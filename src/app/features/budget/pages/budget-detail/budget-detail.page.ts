@@ -17,6 +17,8 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { SharingState } from '@core/services/sharing/sharing.state';
+import { ReportsState } from '@features/reports/state/reports-state/reports.state';
+import { OsDashboardWidgetsComponent, type DashboardWidget, type BudgetSummaryData } from '@shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -43,6 +45,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsSkeletonComponent,
     OsAlertComponent,
     ShareBudgetComponent,
+    OsDashboardWidgetsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -121,12 +124,20 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 
         <section class="budget-detail-page__card">
           <h2 class="budget-detail-page__card-title">Visão Geral</h2>
-          <p class="budget-detail-page__placeholder">
-            Detalhes do orçamento serão exibidos aqui nas próximas fases.
-          </p>
-          <p class="budget-detail-page__placeholder-subtitle">
-            Aguarde a implementação dos componentes de overview e participants.
-          </p>
+          @if (dashboardWidgets().length > 0) {
+          <os-dashboard-widgets
+            [widgets]="dashboardWidgets()"
+            [variant]="'default'"
+            [size]="'medium'"
+            [state]="'success'"
+            [showCreateActions]="false"
+            [ariaLabel]="'Resumo financeiro do orçamento ' + budget.name"
+          />
+          } @else {
+          <div class="budget-detail-page__placeholder" role="status">
+            <p>Carregando dados financeiros...</p>
+          </div>
+          }
           <div class="budget-detail-page__actions-section">
             <os-button
               variant="primary"
@@ -298,6 +309,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
   private readonly sharingState = inject(SharingState);
+  private readonly reportsState = inject(ReportsState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -392,6 +404,44 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
 
   readonly selectedBudgetId = computed(() => this.budgetSelectionService.selectedBudgetId());
 
+  readonly budgetSummaryData = computed((): BudgetSummaryData | null => {
+    const accounts = this.accounts();
+    const revenueExpense = this.reportsState.revenueExpense();
+
+    const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
+    const monthlyIncome = revenueExpense?.revenue || 0;
+    const monthlyExpense = revenueExpense?.expense || 0;
+    const savingsRate = monthlyIncome > 0 ? ((monthlyIncome - monthlyExpense) / monthlyIncome) * 100 : 0;
+    const budgetUtilization = monthlyIncome > 0 ? (monthlyExpense / monthlyIncome) * 100 : 0;
+
+    return {
+      totalBalance,
+      monthlyIncome,
+      monthlyExpense,
+      savingsRate: Math.max(0, savingsRate),
+      budgetUtilization: Math.min(100, Math.max(0, budgetUtilization)),
+    };
+  });
+
+  readonly dashboardWidgets = computed((): DashboardWidget[] => {
+    const summaryData = this.budgetSummaryData();
+    if (!summaryData) {
+      return [];
+    }
+
+    return [
+      {
+        id: 'widget-budget-summary',
+        type: 'budget-summary',
+        title: 'Resumo Financeiro',
+        size: 'full-width',
+        position: { row: 1, column: 1 },
+        enabled: true,
+        data: summaryData,
+      },
+    ];
+  });
+
   constructor() {
     effect(() => {
       const budgets = this.budgetState.budgets();
@@ -419,6 +469,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
         if (budgetId) {
           this._lastBudgetId = budgetId;
           this.loadResources(budgetId);
+          this.reportsState.loadReports();
         } else {
           this._lastBudgetId = null;
         }

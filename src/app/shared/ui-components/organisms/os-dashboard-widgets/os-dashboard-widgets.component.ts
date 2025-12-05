@@ -6,7 +6,10 @@ import {
   GoalProgressData,
 } from '@shared/ui-components/molecules/os-goal-progress-card/os-goal-progress-card.component';
 import { GoalsProgressWidgetComponent } from '@features/dashboard/components/goals-progress-widget/goals-progress-widget.component';
-import { FinancialHealthIndicatorComponent, FinancialHealthIndicators } from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
+import {
+  FinancialHealthIndicatorComponent,
+  FinancialHealthIndicators,
+} from '@features/dashboard/components/financial-health-indicator/financial-health-indicator.component';
 import { SuggestedActionsWidgetComponent } from '@features/dashboard/components/suggested-actions-widget/suggested-actions-widget.component';
 import { RecentAchievementsWidgetComponent } from '@features/dashboard/components/recent-achievements-widget/recent-achievements-widget.component';
 import { CategorySpendingWidgetComponent } from '@features/dashboard/components/category-spending-widget/category-spending-widget.component';
@@ -179,8 +182,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
           }
 
           <div class="os-dashboard-widgets__widget-content">
-            @switch (widget.type) { @case ('goal-progress') {
-            @if (hasGoalsListData(widget)) {
+            @switch (widget.type) { @case ('goal-progress') { @if (hasGoalsListData(widget)) {
             <os-goals-progress-widget
               [goals]="getGoalsList(widget)"
               [isLoading]="getGoalsLoading(widget)"
@@ -193,17 +195,16 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               [state]="getGoalState(widget)"
               [ariaLabel]="'Progresso da meta'"
             />
-            }
-            } @case ('budget-summary') {
+            } } @case ('budget-summary') {
             <div class="os-dashboard-widgets__budget-summary">
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Saldo Total</span>
                 <os-money-display
-                  [value]="getBudgetSummary()?.totalBalance || 0"
+                  [value]="getBudgetSummary(widget)?.totalBalance || 0"
                   [currency]="'BRL'"
                   [size]="'md'"
                   [ariaLabel]="
-                    'Saldo total: ' + formatCurrency(getBudgetSummary()?.totalBalance || 0)
+                    'Saldo total: ' + formatCurrency(getBudgetSummary(widget)?.totalBalance || 0)
                   "
                   class="os-dashboard-widgets__metric-value"
                 />
@@ -211,12 +212,13 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Receita Mensal</span>
                 <os-money-display
-                  [value]="getBudgetSummary()?.monthlyIncome || 0"
+                  [value]="getBudgetSummary(widget)?.monthlyIncome || 0"
                   [currency]="'BRL'"
                   [size]="'md'"
                   [variant]="'positive'"
                   [ariaLabel]="
-                    'Receita mensal: ' + formatCurrency(getBudgetSummary()?.monthlyIncome || 0)
+                    'Receita mensal: ' +
+                    formatCurrency(getBudgetSummary(widget)?.monthlyIncome || 0)
                   "
                   class="os-dashboard-widgets__metric-value"
                 />
@@ -224,12 +226,13 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               <div class="os-dashboard-widgets__metric">
                 <span class="os-dashboard-widgets__metric-label">Despesa Mensal</span>
                 <os-money-display
-                  [value]="getBudgetSummary()?.monthlyExpense || 0"
+                  [value]="getBudgetSummary(widget)?.monthlyExpense || 0"
                   [currency]="'BRL'"
                   [size]="'md'"
                   [variant]="'negative'"
                   [ariaLabel]="
-                    'Despesa mensal: ' + formatCurrency(getBudgetSummary()?.monthlyExpense || 0)
+                    'Despesa mensal: ' +
+                    formatCurrency(getBudgetSummary(widget)?.monthlyExpense || 0)
                   "
                   class="os-dashboard-widgets__metric-value"
                 />
@@ -237,10 +240,12 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
               <div class="os-dashboard-widgets__progress">
                 <span class="os-dashboard-widgets__progress-label">Utilização do Orçamento</span>
                 <os-progress-bar
-                  [value]="getBudgetSummary()?.budgetUtilization || 0"
-                  [variant]="getBudgetProgressVariant()"
+                  [value]="getBudgetSummary(widget)?.budgetUtilization || 0"
+                  [variant]="getBudgetProgressVariant(widget)"
                   [ariaLabel]="
-                    'Utilização do orçamento: ' + (getBudgetSummary()?.budgetUtilization || 0) + '%'
+                    'Utilização do orçamento: ' +
+                    (getBudgetSummary(widget)?.budgetUtilization || 0) +
+                    '%'
                   "
                 />
               </div>
@@ -320,16 +325,13 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
                 Relatórios
               </os-button>
             </div>
-            } @case ('financial-health') {
-            @if (getFinancialHealthIndicators(widget)) {
+            } @case ('financial-health') { @if (getFinancialHealthIndicators(widget)) {
             <os-financial-health-indicator [indicators]="getFinancialHealthIndicators(widget)!" />
             } @else {
             <div class="os-dashboard-widgets__placeholder">
               <p>Não há dados de saúde financeira disponíveis</p>
             </div>
-            }
-            } @case ('suggested-actions') {
-            @if (getSuggestedActions(widget)) {
+            } } @case ('suggested-actions') { @if (getSuggestedActions(widget)) {
             <os-suggested-actions-widget
               [actions]="getSuggestedActions(widget)!"
               [isLoading]="false"
@@ -339,9 +341,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             <div class="os-dashboard-widgets__placeholder">
               <p>Não há ações sugeridas disponíveis</p>
             </div>
-            }
-            } @case ('recent-achievements') {
-            @if (getRecentAchievements(widget)) {
+            } } @case ('recent-achievements') { @if (getRecentAchievements(widget)) {
             <os-recent-achievements-widget
               [achievements]="getRecentAchievements(widget)!"
               [isLoading]="false"
@@ -350,9 +350,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             <div class="os-dashboard-widgets__placeholder">
               <p>Não há conquistas recentes disponíveis</p>
             </div>
-            }
-            } @case ('category-spending') {
-            @if (getCategorySpending(widget)) {
+            } } @case ('category-spending') { @if (getCategorySpending(widget)) {
             <os-category-spending-widget
               [categories]="getCategorySpending(widget)!"
               [envelopes]="getCategorySpendingEnvelopes(widget)"
@@ -362,8 +360,7 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
             <div class="os-dashboard-widgets__placeholder">
               <p>Não há dados de gastos por categoria disponíveis</p>
             </div>
-            }
-            } @default {
+            } } @default {
             <div class="os-dashboard-widgets__placeholder">
               <p>Widget não implementado: {{ widget.type }}</p>
             </div>
@@ -441,11 +438,11 @@ export class OsDashboardWidgetsComponent {
     }
 
     classes.push(`os-dashboard-widgets__widget--${widget.type}`);
-    
+
     if (!this.isWidgetClickable(widget)) {
       classes.push('os-dashboard-widgets__widget--non-clickable');
     }
-    
+
     if (this.hasWidgetOwnTitle(widget)) {
       classes.push('os-dashboard-widgets__widget--has-internal-style');
     }
@@ -454,7 +451,6 @@ export class OsDashboardWidgetsComponent {
   }
 
   isWidgetClickable(widget: DashboardWidget): boolean {
-    
     const clickableTypes: DashboardWidget['type'][] = [
       'goal-progress',
       'budget-summary',
@@ -465,18 +461,17 @@ export class OsDashboardWidgetsComponent {
   }
 
   hasWidgetOwnTitle(widget: DashboardWidget): boolean {
-    
     const widgetsWithOwnTitle: DashboardWidget['type'][] = [
       'financial-health',
       'suggested-actions',
       'category-spending',
       'recent-achievements',
     ];
-    
+
     if (widget.type === 'goal-progress' && this.hasGoalsListData(widget)) {
       return true;
     }
-    
+
     return widgetsWithOwnTitle.includes(widget.type);
   }
 
@@ -528,7 +523,17 @@ export class OsDashboardWidgetsComponent {
     return 'default';
   }
 
-  getBudgetSummary(): BudgetSummaryData | null {
+  getBudgetSummary(widget?: DashboardWidget): BudgetSummaryData | null {
+    if (widget?.data && typeof widget.data === 'object') {
+      const data = widget.data as BudgetSummaryData;
+      if (
+        typeof data.totalBalance === 'number' &&
+        typeof data.monthlyIncome === 'number' &&
+        typeof data.monthlyExpense === 'number'
+      ) {
+        return data;
+      }
+    }
     return {
       totalBalance: 25000.5,
       monthlyIncome: 8000.0,
@@ -538,8 +543,10 @@ export class OsDashboardWidgetsComponent {
     };
   }
 
-  getBudgetProgressVariant(): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
-    const utilization = this.getBudgetSummary()?.budgetUtilization || 0;
+  getBudgetProgressVariant(
+    widget?: DashboardWidget
+  ): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' {
+    const utilization = this.getBudgetSummary(widget)?.budgetUtilization || 0;
     if (utilization >= 90) return 'danger';
     if (utilization >= 75) return 'warning';
     return 'primary';
@@ -621,7 +628,7 @@ export class OsDashboardWidgetsComponent {
         goalsOnTrack?: unknown;
         emergencyReserve?: unknown;
       };
-      
+
       if (data.budgetUsage || data.cashFlow || data.goalsOnTrack || data.emergencyReserve) {
         return {
           budgetUsage: data.budgetUsage as FinancialHealthIndicators['budgetUsage'],

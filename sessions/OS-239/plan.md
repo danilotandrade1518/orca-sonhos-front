@@ -128,7 +128,7 @@ Garantir que recursos (contas e participantes) sejam carregados corretamente qua
 
 ---
 
-## 📅 FASE 2: Implementação da Seção "Visão Geral" [Status: ⏳]
+## 📅 FASE 2: Implementação da Seção "Visão Geral" [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -136,7 +136,7 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 ### 📋 Tarefas
 
-#### 2.1. Importar OsDashboardWidgetsComponent [⏳]
+#### 2.1. Importar OsDashboardWidgetsComponent [✅]
 
 **Descrição**:
 
@@ -151,7 +151,9 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 - Ver `src/app/shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component.ts`
 
-#### 2.2. Criar Computed Property para Widgets [⏳]
+**Implementação**: Componente importado e adicionado ao array de imports.
+
+#### 2.2. Criar Computed Property para Widgets [✅]
 
 **Descrição**:
 
@@ -169,7 +171,13 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 **Nota**: Avaliar se `ReportsState.loadReports()` é necessário ou se dados podem ser calculados localmente a partir de contas
 
-#### 2.3. Substituir Placeholder no Template [⏳]
+**Implementação**:
+
+- Criada computed property `budgetSummaryData()` que calcula dados financeiros a partir de contas e `ReportsState.revenueExpense()`
+- Criada computed property `dashboardWidgets()` que retorna array com widget `budget-summary` configurado
+- Dados calculados: `totalBalance` (soma das contas), `monthlyIncome` e `monthlyExpense` (do ReportsState), `savingsRate` e `budgetUtilization` (calculados)
+
+#### 2.3. Substituir Placeholder no Template [✅]
 
 **Descrição**:
 
@@ -186,6 +194,8 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 **Dependências**: Tarefas 2.1, 2.2
 
+**Implementação**: Placeholder removido e substituído por `<os-dashboard-widgets>` com dados reais. Botão "Ver Transações" mantido.
+
 #### 2.4. Integrar Indicadores de Saúde Financeira (Opcional) [⏳]
 
 **Descrição**:
@@ -201,22 +211,41 @@ Substituir placeholder da seção "Visão Geral" por componente `os-dashboard-wi
 
 **Dependências**: Tarefa 2.3
 
+**Nota**: Deixado como opcional para implementação futura se necessário.
+
 ### 🔄 Dependências
 
 - ✅ Fase 1 completada (recursos carregados)
 
 ### 🧪 Critérios de Validação
 
-- [ ] `os-dashboard-widgets` é renderizado na seção "Visão Geral"
-- [ ] Widget `budget-summary` exibe dados corretos (saldo total, receitas, despesas)
-- [ ] Dados são atualizados quando orçamento muda
-- [ ] Botão "Ver Transações" funciona corretamente
-- [ ] Indicadores de saúde financeira são exibidos quando disponíveis
-- [ ] Componente não quebra quando dados não estão disponíveis
+- [x] `os-dashboard-widgets` é renderizado na seção "Visão Geral"
+- [x] Widget `budget-summary` exibe dados corretos (saldo total, receitas, despesas)
+- [x] Dados são atualizados quando orçamento muda
+- [x] Botão "Ver Transações" funciona corretamente
+- [ ] Indicadores de saúde financeira são exibidos quando disponíveis (opcional, deixado para implementação futura)
+- [x] Componente não quebra quando dados não estão disponíveis
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+**Implementação Realizada**:
+
+1. **Modificação do componente os-dashboard-widgets**: Atualizado método `getBudgetSummary()` para aceitar dados via `widget.data`, seguindo padrão de outros widgets
+2. **ReportsState integrado**: Adicionado `ReportsState` para obter dados de receitas e despesas mensais
+3. **Cálculo de dados financeiros**: Criada computed property `budgetSummaryData()` que calcula:
+   - `totalBalance`: Soma dos saldos de todas as contas do orçamento
+   - `monthlyIncome`: Receita mensal do `ReportsState.revenueExpense()`
+   - `monthlyExpense`: Despesa mensal do `ReportsState.revenueExpense()`
+   - `savingsRate`: Taxa de poupança calculada ((receita - despesa) / receita \* 100)
+   - `budgetUtilization`: Utilização do orçamento calculada (despesa / receita \* 100)
+4. **Carregamento automático de relatórios**: Adicionado `reportsState.loadReports()` no effect de carregamento de recursos
+5. **Widget configurado**: Criada computed property `dashboardWidgets()` que retorna array com widget `budget-summary` configurado com dados reais
+
+**Decisões Técnicas**:
+
+- Uso de `ReportsState` para dados financeiros mensais (receitas e despesas) em vez de calcular localmente
+- Cálculo de `totalBalance` a partir das contas já carregadas
+- Modificação do componente compartilhado `os-dashboard-widgets` para aceitar dados via `widget.data`, mantendo compatibilidade com dados hardcoded como fallback
 
 ---
 
