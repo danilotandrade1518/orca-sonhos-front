@@ -226,16 +226,14 @@ describe('CreditCardsPage - Integration Tests', () => {
       expect(component.deletingCreditCard()).toBeNull();
     });
 
-    it('should open and close pay bill modal correctly', () => {
+    it('should navigate to pay bill page when paying bill', () => {
       component.onPayBill(mockCreditCardBill);
 
-      expect(component.payingBill()).toEqual(mockCreditCardBill);
-      expect(component.showPayBillModal()).toBe(true);
-
-      component.closePayBillModal();
-
-      expect(component.showPayBillModal()).toBe(false);
-      expect(component.payingBill()).toBeNull();
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/credit-cards/bills',
+        mockCreditCardBill.id,
+        'pay',
+      ]);
     });
 
     it('should open and close reopen bill modal correctly', () => {
