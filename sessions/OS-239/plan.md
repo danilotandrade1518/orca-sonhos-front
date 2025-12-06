@@ -360,7 +360,7 @@ Substituir apenas contagem de participantes por componente `collaboration-dashbo
 
 ---
 
-## 📅 FASE 4: Melhoria do Layout de Contas [Status: ⏳]
+## 📅 FASE 4: Melhoria do Layout de Contas [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -368,7 +368,7 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 
 ### 📋 Tarefas
 
-#### 4.1. Decisão: os-account-card vs Estilos CSS [⏳]
+#### 4.1. Decisão: os-account-card vs Estilos CSS [✅]
 
 **Descrição**:
 
@@ -383,7 +383,9 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 
 **Recomendação**: Usar `os-account-card` para consistência visual
 
-#### 4.2a. Opção A: Implementar os-account-card [⏳]
+**Implementação**: Decisão tomada de usar `os-account-card` para consistência visual e reutilização de componente já testado e responsivo.
+
+#### 4.2a. Opção A: Implementar os-account-card [✅]
 
 **Descrição**:
 
@@ -400,6 +402,13 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 - Estados de loading e empty mantidos
 
 **Dependências**: Tarefa 4.1 (se escolhida opção A)
+
+**Implementação**:
+
+- `AccountCardComponent` importado e adicionado ao array de imports
+- Lista simples substituída por loop de `<os-account-card>`
+- Cards configurados com `[account]="account"` e `[actions]="{ edit: false, delete: false }"`
+- Estados de loading e empty mantidos no template
 
 #### 4.2b. Opção B: Adicionar Estilos CSS [⏳]
 
@@ -427,7 +436,7 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 
 **Dependências**: Tarefa 4.1 (se escolhida opção B)
 
-#### 4.3. Adicionar Estilos para Estados [⏳]
+#### 4.3. Adicionar Estilos para Estados [✅]
 
 **Descrição**:
 
@@ -443,7 +452,13 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 
 **Dependências**: Tarefa 4.2a ou 4.2b
 
-#### 4.4. Garantir Responsividade [⏳]
+**Implementação**:
+
+- Estilos adicionados para `.budget-detail-page__card-header`, `.budget-detail-page__accounts-list`, `.budget-detail-page__accounts-loading`, `.budget-detail-page__accounts-empty`, `.budget-detail-page__accounts-actions`
+- Estilos seguem padrão do design system usando design tokens (`--os-*`)
+- Consistência visual garantida entre estados
+
+#### 4.4. Garantir Responsividade [✅]
 
 **Descrição**:
 
@@ -461,22 +476,41 @@ Melhorar visualização da listagem de contas, decidindo entre usar componente `
 
 **Dependências**: Tarefa 4.3
 
+**Implementação**:
+
+- Grid responsivo implementado: 1 coluna (mobile), 2 colunas (tablet), 3 colunas (desktop)
+- Media queries adicionadas para breakpoints conforme layout-specification
+- Layout mobile-first com progressive enhancement
+- Cards se adaptam corretamente em todos os tamanhos de tela
+
 ### 🔄 Dependências
 
 - ✅ Fase 1 completada (contas carregadas)
 
 ### 🧪 Critérios de Validação
 
-- [ ] Listagem de contas tem layout melhorado (cards ou lista estilizada)
-- [ ] Informações são claras e legíveis (nome, tipo, saldo)
-- [ ] Estados de loading, empty e list funcionam corretamente
-- [ ] Layout é responsivo em mobile, tablet e desktop
-- [ ] Botão "Criar Nova Conta" funciona
-- [ ] Botão "Ver Todas as Contas" funciona
+- [x] Listagem de contas tem layout melhorado (cards implementados)
+- [x] Informações são claras e legíveis (nome, tipo, saldo via os-account-card)
+- [x] Estados de loading, empty e list funcionam corretamente
+- [x] Layout é responsivo em mobile, tablet e desktop
+- [x] Botão "Criar Nova Conta" funciona
+- [x] Botão "Ver Todas as Contas" funciona
 
 ### 📝 Comentários da Fase
 
-_[Observações sobre decisões tomadas]_
+**Implementação Realizada**:
+
+1. **Decisão arquitetural**: Optado por usar `os-account-card` para consistência visual e reutilização de componente já testado
+2. **Importação e integração**: `AccountCardComponent` importado e integrado no template substituindo lista simples
+3. **Estilos adicionados**: Estilos para `card-header`, `accounts-list`, `accounts-loading`, `accounts-empty`, `accounts-actions` seguindo padrão do design system
+4. **Responsividade**: Grid responsivo implementado (1/2/3 colunas) conforme layout-specification
+5. **Limpeza de código**: Removidos métodos não utilizados (`getAccountTypeLabel`, `formatCurrency`) e imports desnecessários (`LocaleService`, `AccountDto`)
+
+**Decisões Técnicas**:
+
+- Uso de `os-account-card` sem ações (edit/delete) já que a página de detalhes do orçamento é principalmente informativa
+- Grid responsivo usando CSS Grid com `grid-template-columns` para melhor controle do layout
+- Estilos seguem padrão BEM e usam design tokens do sistema para consistência
 
 ---
 

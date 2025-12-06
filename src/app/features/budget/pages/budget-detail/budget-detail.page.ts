@@ -29,9 +29,9 @@ import {
 } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
-import { LocaleService } from '@shared/formatting';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
 import { CollaborationDashboardComponent } from '../../components/collaboration-dashboard/collaboration-dashboard.component';
+import { AccountCardComponent } from '@shared/ui-components/molecules/account-card/account-card.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -48,6 +48,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     ShareBudgetComponent,
     OsDashboardWidgetsComponent,
     CollaborationDashboardComponent,
+    AccountCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -187,17 +188,10 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           } @else {
           <div class="budget-detail-page__accounts-list" role="list" aria-label="Lista de contas">
             @for (account of accounts(); track account.id) {
-            <div class="budget-detail-page__account-item" role="listitem">
-              <div class="budget-detail-page__account-info">
-                <span class="budget-detail-page__account-name">{{ account.name }}</span>
-                <span class="budget-detail-page__account-type">{{
-                  getAccountTypeLabel(account.type)
-                }}</span>
-              </div>
-              <span class="budget-detail-page__account-balance">
-                {{ formatCurrency(account.balance) }}
-              </span>
-            </div>
+            <os-account-card
+              [account]="account"
+              [actions]="{ edit: false, delete: false }"
+            />
             }
           </div>
           <div class="budget-detail-page__accounts-actions">
@@ -295,7 +289,6 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly localeService = inject(LocaleService);
 
   private _lastBudgetId: string | null = null;
 
@@ -538,22 +531,6 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
 
   navigateToAccounts(): void {
     this.router.navigate(['/accounts']);
-  }
-
-  getAccountTypeLabel(type: string): string {
-    const labels: Record<string, string> = {
-      CHECKING_ACCOUNT: 'Conta Corrente',
-      SAVINGS_ACCOUNT: 'Poupança',
-      PHYSICAL_WALLET: 'Carteira Física',
-      DIGITAL_WALLET: 'Carteira Digital',
-      INVESTMENT_ACCOUNT: 'Investimento',
-      OTHER: 'Outros',
-    };
-    return labels[type] || type;
-  }
-
-  formatCurrency(value: number): string {
-    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   confirmDelete(): void {
