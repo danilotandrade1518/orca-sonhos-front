@@ -79,6 +79,12 @@ export class AppLayoutComponent implements OnInit {
       route: '/budgets',
     },
     {
+      id: 'goals',
+      label: 'Metas',
+      icon: 'flag',
+      route: '/goals',
+    },
+    {
       id: 'accounts',
       label: 'Contas',
       icon: 'account_balance_wallet',
@@ -89,12 +95,6 @@ export class AppLayoutComponent implements OnInit {
       label: 'Cartões de Crédito',
       icon: 'credit_card',
       route: '/credit-cards',
-    },
-    {
-      id: 'goals',
-      label: 'Metas',
-      icon: 'flag',
-      route: '/goals',
     },
     {
       id: 'transactions',
@@ -144,9 +144,7 @@ export class AppLayoutComponent implements OnInit {
     },
   ]);
 
-  onSidebarItemClick(_item: SidebarItem): void {
-    
-  }
+  onSidebarItemClick(_item: SidebarItem): void {}
 
   onSidebarCollapseChange(collapsed: boolean): void {
     this.sidebarCollapsed.set(collapsed);
