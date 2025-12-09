@@ -160,8 +160,9 @@ export class TransferFormComponent {
     if (!fromAccount) {
       return null;
     }
-
-    if (fromAccount.balance < amount) {
+    
+    const amountInCents = Math.round(amount * 100);
+    if (fromAccount.balance < amountInCents) {
       return { insufficientBalance: true };
     }
 
@@ -186,7 +187,7 @@ export class TransferFormComponent {
   readonly fromAccountOptions = computed<OsSelectOption[]>(() => {
     return this.accounts().map((account) => ({
       value: account.id,
-      label: `${account.name} (Saldo: ${this.formatCurrency(account.balance)})`,
+      label: `${account.name} (Saldo: ${this.formatCurrency(account.balance / 100)})`,
       disabled: account.balance <= 0,
     }));
   });
@@ -225,7 +226,7 @@ export class TransferFormComponent {
       return 'Esta conta não possui saldo disponível';
     }
 
-    return account ? `Saldo disponível: ${this.formatCurrency(account.balance)}` : '';
+    return account ? `Saldo disponível: ${this.formatCurrency(account.balance / 100)}` : '';
   }
 
   getToAccountErrorMessage(): string {
@@ -277,10 +278,11 @@ export class TransferFormComponent {
     }
 
     const formValue = this.form.value;
+    const amountInCents = Math.round(formValue.amount * 100);
     this.transferSubmit.emit({
       fromAccountId: formValue.fromAccountId,
       toAccountId: formValue.toAccountId,
-      amount: formValue.amount,
+      amount: amountInCents,
     });
   }
 

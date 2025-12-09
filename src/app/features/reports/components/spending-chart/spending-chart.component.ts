@@ -112,7 +112,7 @@ export class SpendingChartComponent {
     if (spending.length === 0) {
       return 'Gráfico de pizza vazio - nenhum gasto por categoria';
     }
-    const total = spending.reduce((sum, item) => sum + item.totalAmount, 0);
+    const total = spending.reduce((sum, item) => sum + item.totalAmount, 0) / 100;
     const formattedTotal = this.currencyPipe.transform(total, 'BRL', 'symbol', '1.2-2') || '';
     return `Gráfico de pizza mostrando distribuição de gastos por categoria. Total: ${formattedTotal}`;
   });

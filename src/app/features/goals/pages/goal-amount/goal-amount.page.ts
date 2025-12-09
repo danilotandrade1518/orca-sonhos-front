@@ -81,11 +81,11 @@ import type { GoalDto } from '../../../../../dtos/goal';
           <div class="goal-amount-page__info">
             <p>
               <strong>Valor atual acumulado:</strong>
-              {{ goal()!.accumulatedAmount | osCurrency : 'BRL' }}
+              {{ goal()!.accumulatedAmount / 100 | osCurrency : 'BRL' }}
             </p>
             <p>
               <strong>Valor após remoção:</strong>
-              {{ remainingAfter() | osCurrency : 'BRL' }}
+              {{ remainingAfter() / 100 | osCurrency : 'BRL' }}
             </p>
           </div>
           }
@@ -150,10 +150,11 @@ export class GoalAmountPage implements OnInit {
   });
 
   readonly remainingAfter = computed(() => {
-    const amount = this._form()?.get('amount')?.value as number | null;
-    const currentAmount = this.goal()?.accumulatedAmount ?? 0;
-    if (!amount || amount <= 0) return currentAmount;
-    return Math.max(currentAmount - amount, 0);
+    const amountReais = this._form()?.get('amount')?.value as number | null;
+    const currentAmountCents = this.goal()?.accumulatedAmount ?? 0;
+    if (!amountReais || amountReais <= 0) return currentAmountCents;
+    const amountCents = Math.round(amountReais * 100);
+    return Math.max(currentAmountCents - amountCents, 0);
   });
 
   readonly formConfig = computed(() => ({
@@ -252,12 +253,13 @@ export class GoalAmountPage implements OnInit {
   }
 
   private amountValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value as number | null;
-    if (!value || value <= 0) return null;
+    const valueReais = control.value as number | null;
+    if (!valueReais || valueReais <= 0) return null;
 
     if (this.mode() === 'remove') {
-      const currentAmount = this.goal()?.accumulatedAmount ?? 0;
-      const remaining = currentAmount - value;
+      const currentAmountCents = this.goal()?.accumulatedAmount ?? 0;
+      const valueCents = Math.round(valueReais * 100);
+      const remaining = currentAmountCents - valueCents;
       if (remaining < 0) {
         return { invalidAmount: 'Não é possível remover valor que resulte em saldo negativo' };
       }
@@ -280,7 +282,8 @@ export class GoalAmountPage implements OnInit {
       return;
     }
 
-    const amount = Number(form.get('amount')!.value);
+    const amountReais = Number(form.get('amount')!.value);
+    const amount = Math.round(amountReais * 100);
     const goalId = goal.id;
 
     if (this.mode() === 'add') {

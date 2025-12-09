@@ -43,12 +43,13 @@ export class GoalCardComponent {
     return {
       id: g.id,
       title: g.name,
-      currentValue: g.accumulatedAmount,
-      targetValue: g.totalAmount,
+      // GoalDto usa centavos; o card trabalha em reais
+      currentValue: g.accumulatedAmount / 100,
+      targetValue: g.totalAmount / 100,
       unit: 'BRL',
       deadline: deadline,
       priority: this.getPriorityFromProgress(),
-      suggestedAmount: this.suggested(),
+      suggestedAmount: this.suggested() !== null ? this.suggested()! / 100 : null,
     };
   });
 

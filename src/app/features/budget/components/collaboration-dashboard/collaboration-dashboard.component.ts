@@ -186,8 +186,7 @@ export class CollaborationDashboardComponent {
             this.participantRemoved.emit(removedId);
           }
         }
-      },
-      { allowSignalWrites: true }
+      }
     );
   }
   

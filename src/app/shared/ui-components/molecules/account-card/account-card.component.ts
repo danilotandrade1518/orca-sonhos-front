@@ -36,13 +36,13 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
         </div>
 
         <div class="os-account-card__balance">
-          <span class="os-account-card__balance-label">Saldo</span>
-          <os-money-display
-            [value]="account().balance || 0"
-            [currency]="'BRL'"
-            [size]="'lg'"
-            [ariaLabel]="getBalanceAriaLabel()"
-          />
+        <span class="os-account-card__balance-label">Saldo</span>
+        <os-money-display
+          [value]="(account().balance || 0) / 100"
+          [currency]="'BRL'"
+          [size]="'lg'"
+          [ariaLabel]="getBalanceAriaLabel()"
+        />
         </div>
       </div>
 
@@ -103,6 +103,6 @@ export class AccountCardComponent {
   }
 
   private formatBalance(balance: number): string {
-    return this.localeService.formatCurrency(balance, 'BRL');
+    return this.localeService.formatCurrency(balance / 100, 'BRL');
   }
 }

@@ -141,7 +141,8 @@ describe('RevenueExpenseChartComponent', () => {
       const chartData = component.chartData();
       expect(chartData.labels).toEqual(['Receitas', 'Despesas']);
       expect(chartData.datasets).toHaveLength(1);
-      expect(chartData.datasets[0].data).toEqual([5000, 3000]);
+      // RevenueExpenseDto.revenue e expense vêm em centavos; o ChartDataTransformer converte para reais
+      expect(chartData.datasets[0].data).toEqual([5000 / 100, 3000 / 100]);
       expect(chartData.datasets[0].label).toBe('Valor');
     });
 

@@ -203,8 +203,9 @@ export class DashboardWidgetsComponent {
     return {
       id: goal.id,
       title: goal.name,
-      currentValue: goal.accumulatedAmount,
-      targetValue: goal.totalAmount,
+      
+      currentValue: goal.accumulatedAmount / 100,
+      targetValue: goal.totalAmount / 100,
       unit: 'BRL',
       deadline,
       priority,
@@ -222,7 +223,8 @@ export class DashboardWidgetsComponent {
 
       return {
         accountName: account.name,
-        balance: account.balance,
+        // AccountDto.balance vem em centavos; widget trabalha em reais
+        balance: account.balance / 100,
         type,
         lastUpdated: new Date(),
       };

@@ -91,7 +91,12 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
                 >
                   {{ formatPercentage(category.envelopeUsagePercentage) }} do planejado @if
                   (category.isOverBudget) {
-                  <os-icon name="alert" size="xs" variant="error" aria-label="Limite excedido" />
+                  <os-icon
+                    name="alert-circle"
+                    size="xs"
+                    variant="error"
+                    aria-label="Limite excedido"
+                  />
                   } @else if (category.isNearLimit) {
                   <os-icon
                     name="warning"
@@ -128,17 +133,17 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
             </div>
             <div class="category-spending-widget__item-footer">
               <os-money-display
-                [value]="category.totalAmount"
+                [value]="category.totalAmount / 100"
                 [currency]="'BRL'"
                 [size]="'sm'"
-                [ariaLabel]="'Valor gasto: ' + formatCurrency(category.totalAmount)"
+                [ariaLabel]="'Valor gasto: ' + formatCurrency(category.totalAmount / 100)"
               />
               @if (category.hasEnvelope && category.envelope) {
               <os-money-display
-                [value]="category.envelope.limit"
+                [value]="category.envelope.limit / 100"
                 [currency]="'BRL'"
                 [size]="'sm'"
-                [ariaLabel]="'Limite planejado: ' + formatCurrency(category.envelope.limit)"
+                [ariaLabel]="'Limite planejado: ' + formatCurrency(category.envelope.limit / 100)"
                 class="category-spending-widget__item-limit"
               />
               } @if (category.transactionCount > 0) {

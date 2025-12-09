@@ -214,17 +214,20 @@ export class ReportsPage implements OnInit {
   });
 
   readonly totalExpenses = computed(() => {
-    const total = this.totals().totalExpense;
+    const totalInCents = this.totals().totalExpense;
+    const total = totalInCents / 100;
     return this.localeService.formatCurrency(total, 'BRL');
   });
 
   readonly totalRevenue = computed(() => {
-    const total = this.totals().totalRevenue;
+    const totalInCents = this.totals().totalRevenue;
+    const total = totalInCents / 100;
     return this.localeService.formatCurrency(total, 'BRL');
   });
 
   readonly difference = computed(() => {
-    const diff = this.totals().totalDifference;
+    const diffInCents = this.totals().totalDifference;
+    const diff = diffInCents / 100;
     return this.localeService.formatCurrency(diff, 'BRL');
   });
 

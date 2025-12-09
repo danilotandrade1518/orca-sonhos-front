@@ -1,24 +1,24 @@
 import {
   Component,
   computed,
-  effect,
   inject,
   OnInit,
-  OnDestroy,
   signal,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
-import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { ReportsState } from '@features/reports/state/reports-state/reports.state';
-import { OsDashboardWidgetsComponent, type DashboardWidget, type BudgetSummaryData } from '@shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
+import {
+  OsDashboardWidgetsComponent,
+  type DashboardWidget,
+  type BudgetSummaryData,
+} from '@shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -188,10 +188,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           } @else {
           <div class="budget-detail-page__accounts-list" role="list" aria-label="Lista de contas">
             @for (account of accounts(); track account.id) {
-            <os-account-card
-              [account]="account"
-              [actions]="{ edit: false, delete: false }"
-            />
+            <os-account-card [account]="account" [actions]="{ edit: false, delete: false }" />
             }
           </div>
           <div class="budget-detail-page__accounts-actions">
@@ -224,7 +221,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           <os-collaboration-dashboard
             [budgetId]="budgetId()!"
             [creatorId]="creatorId()"
-            (participantRemoved)="onCollaborationParticipantRemoved($event)"
+            (participantRemoved)="onCollaborationParticipantRemoved()"
           />
         </section>
       </main>
@@ -279,9 +276,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   `,
   styleUrl: './budget-detail.page.scss',
 })
-export class BudgetDetailPage implements OnInit, OnDestroy {
+export class BudgetDetailPage implements OnInit {
   private readonly budgetState = inject(BudgetState);
-  private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
   private readonly sharingState = inject(SharingState);
@@ -289,8 +285,6 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
-
-  private _lastBudgetId: string | null = null;
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -380,18 +374,19 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     ];
   });
 
-  private resourcesLoaded = signal(false);
-
-  readonly selectedBudgetId = computed(() => this.budgetSelectionService.selectedBudgetId());
-
   readonly budgetSummaryData = computed((): BudgetSummaryData | null => {
     const accounts = this.accounts();
     const revenueExpense = this.reportsState.revenueExpense();
 
-    const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
-    const monthlyIncome = revenueExpense?.revenue || 0;
-    const monthlyExpense = revenueExpense?.expense || 0;
-    const savingsRate = monthlyIncome > 0 ? ((monthlyIncome - monthlyExpense) / monthlyIncome) * 100 : 0;
+    const totalBalanceCents = accounts.reduce((sum, account) => sum + account.balance, 0);
+    const revenueCents = revenueExpense?.revenue || 0;
+    const expenseCents = revenueExpense?.expense || 0;
+
+    const totalBalance = totalBalanceCents / 100;
+    const monthlyIncome = revenueCents / 100;
+    const monthlyExpense = expenseCents / 100;
+    const savingsRate =
+      monthlyIncome > 0 ? ((monthlyIncome - monthlyExpense) / monthlyIncome) * 100 : 0;
     const budgetUtilization = monthlyIncome > 0 ? (monthlyExpense / monthlyIncome) * 100 : 0;
 
     return {
@@ -422,41 +417,6 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     ];
   });
 
-  constructor() {
-    effect(() => {
-      const budgets = this.budgetState.budgets();
-      const routeBudgetId = this.budgetId();
-      const currentSelectedId = this.selectedBudgetId();
-
-      if (routeBudgetId && budgets.length > 0 && currentSelectedId !== routeBudgetId) {
-        untracked(() => {
-          const budget = budgets.find((b) => b.id === routeBudgetId);
-          if (budget) {
-            this.budgetState.selectBudget(routeBudgetId);
-          }
-        });
-      }
-    });
-
-    effect(() => {
-      const budgetId = this.selectedBudgetId();
-
-      if (budgetId === this._lastBudgetId || this.resourcesLoaded()) {
-        return;
-      }
-
-      untracked(() => {
-        if (budgetId) {
-          this._lastBudgetId = budgetId;
-          this.loadResources(budgetId);
-          this.reportsState.loadReports();
-        } else {
-          this._lastBudgetId = null;
-        }
-      });
-    });
-  }
-
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -471,40 +431,21 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
       const budget = this.budgetState.budgets().find((b) => b.id === id);
       if (budget) {
         this.budgetState.selectBudget(id);
+        this.loadResources(id);
+        this.reportsState.loadReports();
         this.cdr.markForCheck();
       }
     }
   }
 
   private loadResources(id: string): void {
-    const selectedBudgetId = this.selectedBudgetId();
-
-    if (!selectedBudgetId || selectedBudgetId !== id) {
-      return;
-    }
-
-    if (this.resourcesLoaded()) {
-      return;
-    }
-
     try {
       this.accountState.loadAccounts();
       this.sharingState.loadParticipants(id);
-      this.sharingState.startPolling(id);
-      this.resourcesLoaded.set(true);
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Error loading resources', error);
     }
-  }
-
-  ngOnDestroy(): void {
-    const id = this.budgetId();
-    if (id) {
-      this.sharingState.stopPolling();
-    }
-
-    this.resourcesLoaded.set(false);
   }
 
   navigateToList(): void {
@@ -603,7 +544,7 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  onCollaborationParticipantRemoved(participantId: string): void {
+  onCollaborationParticipantRemoved(): void {
     const id = this.budgetId();
     if (id) {
       this.sharingState.loadParticipants(id);

@@ -103,8 +103,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             </div>
 
             <div class="info-item">
-              <span class="info-item__label">Saldo:</span>
-              <span class="info-item__value">{{ formatCurrency(account.balance) }}</span>
+            <span class="info-item__label">Saldo:</span>
+            <span class="info-item__value">{{ formatCurrency(account.balance / 100) }}</span>
             </div>
           </div>
         </section>

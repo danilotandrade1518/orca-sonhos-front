@@ -42,7 +42,8 @@ describe('ChartDataTransformer', () => {
       expect(result.labels).toEqual(['Alimentação', 'Transporte']);
       expect(result.datasets).toHaveLength(1);
       expect(result.datasets[0].label).toBe('Gastos por Categoria');
-      expect(result.datasets[0].data).toEqual([1500.0, 800.0]);
+      // CategorySpendingDto.totalAmount vem em centavos; o serviço converte para reais
+      expect(result.datasets[0].data).toEqual([1500.0 / 100, 800.0 / 100]);
       expect(result.datasets[0].backgroundColor).toHaveLength(2);
       expect(result.datasets[0].borderColor).toHaveLength(2);
       expect(result.datasets[0].borderWidth).toBe(1);
@@ -99,7 +100,8 @@ describe('ChartDataTransformer', () => {
       const result = transformer.transformCategorySpendingToChartData(categorySpending);
       
       expect(result.labels).toEqual(['Alimentação']);
-      expect(result.datasets[0].data).toEqual([1500.0]);
+      // CategorySpendingDto.totalAmount vem em centavos; o serviço converte para reais
+      expect(result.datasets[0].data).toEqual([1500.0 / 100]);
       expect(result.datasets[0].backgroundColor).toHaveLength(1);
       expect(result.datasets[0].borderColor).toHaveLength(1);
     });
@@ -120,7 +122,8 @@ describe('ChartDataTransformer', () => {
       expect(result.labels).toEqual(['Receitas', 'Despesas']);
       expect(result.datasets).toHaveLength(1);
       expect(result.datasets[0].label).toBe('Valor');
-      expect(result.datasets[0].data).toEqual([5000.0, 3000.0]);
+      // RevenueExpenseDto.revenue e expense vêm em centavos; o serviço converte para reais
+      expect(result.datasets[0].data).toEqual([5000.0 / 100, 3000.0 / 100]);
       expect(result.datasets[0].backgroundColor).toEqual(['#4CAF50', '#F44336']);
       expect(result.datasets[0].borderColor).toEqual(['#388E3C', '#D32F2F']);
       expect(result.datasets[0].borderWidth).toBe(1);
@@ -151,7 +154,8 @@ describe('ChartDataTransformer', () => {
       
       const result = transformer.transformRevenueExpenseToChartData(revenueExpense);
       
-      expect(result.datasets[0].data).toEqual([5000.0, -1000.0]);
+      // RevenueExpenseDto.revenue e expense vêm em centavos; o serviço converte para reais
+      expect(result.datasets[0].data).toEqual([5000.0 / 100, -1000.0 / 100]);
     });
   });
 });

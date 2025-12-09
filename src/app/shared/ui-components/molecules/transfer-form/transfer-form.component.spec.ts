@@ -57,7 +57,8 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 1000.0,
+        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount deve ser <= 50.00
+        amount: 40.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.valid).toBe(true);
@@ -67,7 +68,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: '',
         toAccountId: 'account-2',
-        amount: 1000.0,
+        amount: 10.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.get('fromAccountId')?.hasError('required')).toBe(true);
@@ -77,7 +78,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: '',
-        amount: 1000.0,
+        amount: 10.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.get('toAccountId')?.hasError('required')).toBe(true);
@@ -109,7 +110,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-1',
-        amount: 1000.0,
+        amount: 10.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.hasError('sameAccount')).toBe(true);
@@ -119,7 +120,8 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 6000.0,
+        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount > 50.00 deve falhar
+        amount: 60.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.hasError('insufficientBalance')).toBe(true);
@@ -129,7 +131,8 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 4000.0,
+        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount <= 50.00 deve ser válido
+        amount: 40.0,
       });
       component.form.updateValueAndValidity();
       expect(component.form.valid).toBe(true);
@@ -201,7 +204,8 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 6000.0,
+        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount > 50.00 deve gerar erro
+        amount: 60.0,
       });
       component.form.updateValueAndValidity();
       const control = component.form.get('amount');
@@ -233,7 +237,8 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        amount: 1000.0,
+        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount deve ser <= 50.00
+        amount: 40.0,
       });
       component.form.updateValueAndValidity();
 
@@ -242,7 +247,8 @@ describe('TransferFormComponent', () => {
       expect(emittedData).toBeDefined();
       expect(emittedData?.fromAccountId).toBe('account-1');
       expect(emittedData?.toAccountId).toBe('account-2');
-      expect(emittedData?.amount).toBe(1000.0);
+      // O componente converte o valor de reais para centavos antes de emitir
+      expect(emittedData?.amount).toBe(4000);
     });
 
     it('should not emit when form is invalid', () => {
