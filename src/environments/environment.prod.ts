@@ -2,7 +2,7 @@ import { Environment } from './environment.interface';
 
 export const environment: Environment = {
   production: true,
-  apiUrl: 'https://api.orca-sonhos.com',
+  apiUrl: '/api',
   version: '1.0.0',
   debug: false,
   enableLogging: false,
