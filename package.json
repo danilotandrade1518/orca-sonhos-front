@@ -16,7 +16,10 @@
     "storybook": "ng run orca-sonhos-front:storybook",
     "build-storybook": "ng run orca-sonhos-front:build-storybook",
     "docs:json": "npx @compodoc/compodoc -p .storybook/tsconfig.doc.json -e json -d . --disableSourceCode --disableGraph --disableCoverage --disablePrivate --disableInternal --disableLifeCycleHooks --disableRoutesGraph --disableSearch --disableTemplateTab --disableStyleTab",
-    "docs:clean": "rm -f documentation.json"
+    "docs:clean": "rm -f documentation.json",
+    "deploy": "npm run build:prod && firebase deploy",
+    "deploy:hosting": "npm run build:prod && firebase deploy --only hosting",
+    "firebase:init": "firebase login && firebase init hosting"
   },
   "prettier": {
     "printWidth": 100,
