@@ -186,3 +186,6 @@ Implementar um **sistema completo de categorias** para organização de transaç
   - `src/dtos/account/*` e `AccountState` (padrões de DTOs e estado).
 
 
+
+
+

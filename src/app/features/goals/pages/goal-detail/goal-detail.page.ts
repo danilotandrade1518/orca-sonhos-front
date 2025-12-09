@@ -101,17 +101,19 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 
             <div class="info-item">
               <span class="info-item__label">Valor Alvo:</span>
-              <span class="info-item__value">{{ formatCurrency(goal.totalAmount) }}</span>
+              <span class="info-item__value">{{ formatCurrency(goal.totalAmount / 100) }}</span>
             </div>
 
             <div class="info-item">
               <span class="info-item__label">Acumulado:</span>
-              <span class="info-item__value">{{ formatCurrency(goal.accumulatedAmount) }}</span>
+              <span class="info-item__value">{{
+                formatCurrency(goal.accumulatedAmount / 100)
+              }}</span>
             </div>
 
             <div class="info-item">
               <span class="info-item__label">Restante:</span>
-              <span class="info-item__value">{{ formatCurrency(remaining()) }}</span>
+              <span class="info-item__value">{{ formatCurrency(remaining() / 100) }}</span>
             </div>
 
             @if (goal.deadline) {
@@ -144,7 +146,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             <div class="goal-detail-page__suggested">
               <span class="goal-detail-page__suggested-label">Aporte sugerido (mês):</span>
               <span class="goal-detail-page__suggested-value">{{
-                formatCurrency(suggestedMonthly()!)
+                formatCurrency((suggestedMonthly() ?? 0) / 100)
               }}</span>
             </div>
             }

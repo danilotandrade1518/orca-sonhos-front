@@ -358,7 +358,8 @@ export class TransactionFormComponent implements OnInit {
         const transactionDate = transaction.transactionDate || transaction.date;
         form.patchValue({
           description: transaction.description,
-          amount: transaction.amount,
+          // TransactionDto.amount vem em centavos; o formulário trabalha em reais
+          amount: transaction.amount / 100,
           type: transaction.type || transaction.direction || 'EXPENSE',
           accountId: transaction.accountId || '',
           categoryId: transaction.categoryId || '',
@@ -377,10 +378,11 @@ export class TransactionFormComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(200),
       ]),
-      amount: new FormControl<number | null>(initialTransaction?.amount || null, [
-        Validators.required,
-        Validators.min(0.01),
-      ]),
+      // Formulário trabalha em reais; DTO/estado usam centavos
+      amount: new FormControl<number | null>(
+        initialTransaction ? initialTransaction.amount / 100 : null,
+        [Validators.required, Validators.min(0.01)]
+      ),
       type: new FormControl<TransactionType>(
         (initialTransaction?.type || initialTransaction?.direction || 'EXPENSE') as TransactionType,
         [Validators.required]
@@ -467,6 +469,7 @@ export class TransactionFormComponent implements OnInit {
     this._loading.set(true);
     try {
       const formValue = form.value;
+      const amountInCents = Math.round((formValue.amount || 0) * 100);
       const transactionDate = formValue.transactionDate
         ? new Date(formValue.transactionDate).toISOString()
         : undefined;
@@ -476,7 +479,7 @@ export class TransactionFormComponent implements OnInit {
           this.api.create({
             userId: user.id,
             description: formValue.description,
-            amount: formValue.amount,
+            amount: amountInCents,
             type: formValue.type,
             accountId: formValue.accountId,
             categoryId: formValue.categoryId,
@@ -500,7 +503,7 @@ export class TransactionFormComponent implements OnInit {
             userId: user.id,
             id: currentTransaction.id,
             description: formValue.description,
-            amount: formValue.amount,
+            amount: amountInCents,
             type: formValue.type,
             accountId: formValue.accountId,
             categoryId: formValue.categoryId,

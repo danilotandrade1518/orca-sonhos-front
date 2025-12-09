@@ -215,9 +215,12 @@ export class GoalFormComponent {
     const budgetId = this.budgetSelection.selectedBudgetId();
     if (!budgetId) return;
 
+    const totalAmountReais = Number(this.form.get('totalAmount')!.value);
+    const totalAmountCents = Math.round(totalAmountReais * 100);
+
     const dto: CreateGoalDto = {
       name: this.form.get('name')!.value,
-      totalAmount: Number(this.form.get('totalAmount')!.value),
+      totalAmount: totalAmountCents,
       deadline: this.form.get('deadline')!.value || undefined,
       accumulatedAmount: 0,
       budgetId,

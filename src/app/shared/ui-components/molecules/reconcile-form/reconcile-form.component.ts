@@ -111,7 +111,7 @@ export class ReconcileFormComponent {
     return [
       {
         value: account.id,
-        label: `${account.name} (${this.formatCurrency(account.balance)})`,
+        label: `${account.name} (${this.formatCurrency(account.balance / 100)})`,
       },
     ];
   });
@@ -178,7 +178,7 @@ export class ReconcileFormComponent {
   getFormattedBalance(): string {
     const account = this.account();
     if (!account) return '';
-    return this.localeService.formatCurrency(account.balance, 'BRL');
+    return this.localeService.formatCurrency(account.balance / 100, 'BRL');
   }
 
   private formatCurrency(value: number): string {

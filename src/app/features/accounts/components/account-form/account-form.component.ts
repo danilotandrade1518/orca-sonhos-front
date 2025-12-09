@@ -178,7 +178,7 @@ export class AccountFormComponent implements OnInit {
         form.patchValue({
           name: account.name,
           type: account.type,
-          initialBalance: account.balance || 0,
+          initialBalance: (account.balance || 0) / 100,
         });
 
         this._validationTrigger.update((v) => v + 1);
@@ -214,7 +214,7 @@ export class AccountFormComponent implements OnInit {
       form.patchValue({
         name: account.name,
         type: account.type,
-        initialBalance: account.balance || 0,
+        initialBalance: (account.balance || 0) / 100,
       });
     }
 
@@ -238,13 +238,15 @@ export class AccountFormComponent implements OnInit {
     const formValue = form.value;
     const account = this.account();
 
+    const initialBalanceInCents = Math.round((formValue.initialBalance || 0) * 100);
+
     if (this.mode() === 'create') {
       this.accountState.createAccount({
         userId: user.id,
         name: formValue.name,
         type: formValue.type as AccountType,
         budgetId: budgetId,
-        initialBalance: formValue.initialBalance || 0,
+        initialBalance: initialBalanceInCents,
       });
 
       this.notificationService.showSuccess('Conta criada com sucesso!');

@@ -211,8 +211,9 @@ export class GoalsProgressWidgetComponent {
     return goals
       .filter((goal) => goal.totalAmount > 0)
       .map((goal) => {
+        // DTOs de metas usam centavos; aqui convertemos para reais para exibição
         const progress = (goal.accumulatedAmount / goal.totalAmount) * 100;
-        const remaining = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
+        const remainingCents = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
 
         let status: 'on-track' | 'atrasada' | 'adiantada' = 'on-track';
         let suggestedMonthly: number | null = null;
@@ -233,8 +234,9 @@ export class GoalsProgressWidgetComponent {
               status = 'adiantada';
             }
 
-            if (monthsRemaining > 0 && remaining > 0) {
-              suggestedMonthly = Math.round((remaining / monthsRemaining) * 100) / 100;
+            if (monthsRemaining > 0 && remainingCents > 0) {
+              const remainingReais = remainingCents / 100;
+              suggestedMonthly = Math.round((remainingReais / monthsRemaining) * 100) / 100;
             }
           }
         }
@@ -242,10 +244,10 @@ export class GoalsProgressWidgetComponent {
         return {
           id: goal.id,
           name: goal.name,
-          currentValue: goal.accumulatedAmount,
-          targetValue: goal.totalAmount,
+          currentValue: goal.accumulatedAmount / 100,
+          targetValue: goal.totalAmount / 100,
           progress: Math.min(Math.max(progress, 0), 100),
-          remaining,
+          remaining: remainingCents / 100,
           status,
           suggestedMonthly,
         };

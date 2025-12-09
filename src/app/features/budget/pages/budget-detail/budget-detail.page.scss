@@ -2,84 +2,190 @@
   &__loading {
     display: flex;
     flex-direction: column;
-    gap: var(--os-spacing-lg, 24px);
-    padding: var(--os-spacing-xl, 32px) 0;
+    gap: var(--os-spacing-lg);
+    padding: var(--os-spacing-xl) 0;
+    min-height: 200px;
   }
 
   &__error-action {
-    margin-top: var(--os-spacing-md, 16px);
+    margin-top: var(--os-spacing-md);
+    display: flex;
+    justify-content: center;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
-    gap: var(--os-spacing-lg, 24px);
+    gap: var(--os-spacing-lg);
   }
 
   &__card {
-    padding: var(--os-spacing-lg, 24px);
-    background-color: white;
-    border: 1px solid var(--os-border-color, #e0e0e0);
-    border-radius: var(--os-border-radius-lg, 12px);
+    padding: var(--os-spacing-lg);
+    background-color: var(--os-color-surface, #ffffff);
+    border: var(--os-border-width-1) solid var(--os-color-border);
+    border-radius: var(--os-border-radius-xl);
+    box-shadow: var(--os-shadow-sm);
+    transition: box-shadow 200ms ease-in-out, border-color 200ms ease-in-out;
+
+    @media (min-width: 992px) {
+      &:hover {
+        box-shadow: var(--os-shadow-md);
+        border-color: var(--os-color-border-hover);
+      }
+    }
   }
 
   &__card-title {
-    font-size: var(--os-font-size-lg, 18px);
-    font-weight: 600;
-    color: var(--os-text-primary, #212121);
-    margin: 0 0 var(--os-spacing-md, 16px) 0;
+    font-size: var(--os-font-size-lg);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-primary);
+    margin: 0 0 var(--os-spacing-md) 0;
+    line-height: var(--os-line-height-tight);
   }
 
   &__info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--os-spacing-md, 16px);
+    grid-template-columns: 1fr;
+    gap: var(--os-spacing-md);
   }
 
   &__placeholder {
-    color: var(--os-text-secondary, #757575);
-    font-size: var(--os-font-size-md, 16px);
+    color: var(--os-color-text-secondary);
+    font-size: var(--os-font-size-base);
     margin: 0;
     text-align: center;
-    padding: var(--os-spacing-xl, 32px) 0;
+    padding: var(--os-spacing-xl) 0;
+    line-height: var(--os-line-height-normal);
   }
 
   &__placeholder-subtitle {
-    color: var(--os-text-tertiary, #9e9e9e);
-    font-size: var(--os-font-size-sm, 14px);
-    margin: var(--os-spacing-sm, 8px) 0 0 0;
+    color: var(--os-color-text-muted);
+    font-size: var(--os-font-size-sm);
+    margin: var(--os-spacing-sm) 0 0 0;
     text-align: center;
+    line-height: var(--os-line-height-normal);
+  }
+
+  &__card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--os-spacing-md);
+    gap: var(--os-spacing-md);
+    flex-wrap: wrap;
+  }
+
+  &__accounts-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--os-spacing-md);
+    margin-bottom: var(--os-spacing-md);
+  }
+
+  &__accounts-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--os-spacing-xl);
+    color: var(--os-color-text-secondary);
+    font-size: var(--os-font-size-base);
+    text-align: center;
+    line-height: var(--os-line-height-normal);
+    min-height: 120px;
+  }
+
+  &__accounts-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--os-spacing-xl);
+    gap: var(--os-spacing-md);
+    text-align: center;
+    min-height: 200px;
+
+    p {
+      color: var(--os-color-text-secondary);
+      font-size: var(--os-font-size-base);
+      margin: 0;
+      line-height: var(--os-line-height-normal);
+    }
+  }
+
+  &__accounts-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--os-spacing-md);
+    padding-top: var(--os-spacing-md);
+    border-top: var(--os-border-width-1) solid var(--os-color-border);
+  }
+
+  &__actions-section {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--os-spacing-md);
+    padding-top: var(--os-spacing-md);
+    border-top: var(--os-border-width-1) solid var(--os-color-border);
   }
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: var(--os-spacing-xs, 4px);
+  gap: var(--os-spacing-xs);
+  padding: var(--os-spacing-sm);
+  border-radius: var(--os-border-radius-md);
+  transition: background-color 200ms ease-in-out;
+
+  @media (min-width: 992px) {
+    &:hover {
+      background-color: var(--os-color-surface-variant);
+    }
+  }
 
   &__label {
-    font-size: var(--os-font-size-sm, 14px);
-    font-weight: 600;
-    color: var(--os-text-secondary, #757575);
+    font-size: var(--os-font-size-sm);
+    font-weight: var(--os-font-weight-semibold);
+    color: var(--os-color-text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: var(--os-letter-spacing-wide);
+    line-height: var(--os-line-height-normal);
   }
 
   &__value {
-    font-size: var(--os-font-size-md, 16px);
-    color: var(--os-text-primary, #212121);
+    font-size: var(--os-font-size-base);
+    font-weight: var(--os-font-weight-normal);
+    color: var(--os-color-text-primary);
+    line-height: var(--os-line-height-normal);
   }
 }
 
 @media (max-width: 575px) {
   .budget-detail-page {
     &__card {
-      padding: var(--os-spacing-md, 16px);
+      padding: var(--os-spacing-md);
     }
 
     &__info-grid {
       grid-template-columns: 1fr;
     }
+
+    &__card-header {
+      flex-direction: column;
+      align-items: stretch;
+
+      > * {
+        width: 100%;
+      }
+    }
+
+    &__accounts-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .info-item {
+    padding: var(--os-spacing-xs);
   }
 }
 
@@ -88,6 +194,47 @@
     &__info-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    &__accounts-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__card-header {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .budget-detail-page {
+    &__content {
+      gap: var(--os-spacing-xl);
+    }
+
+    &__card {
+      padding: var(--os-spacing-xl);
+    }
+
+    &__info-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &__accounts-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .budget-detail-page {
+    &__card {
+      transition: none;
+    }
+  }
+
+  .info-item {
+    transition: none;
   }
 }
 

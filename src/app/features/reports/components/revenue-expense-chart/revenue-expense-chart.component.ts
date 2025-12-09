@@ -129,9 +129,9 @@ export class RevenueExpenseChartComponent {
     if (!data) {
       return 'Gráfico de barras vazio - nenhum dado de receitas vs despesas';
     }
-    const formattedRevenue = this.currencyPipe.transform(data.revenue, 'BRL', 'symbol', '1.2-2') || '';
-    const formattedExpense = this.currencyPipe.transform(data.expense, 'BRL', 'symbol', '1.2-2') || '';
-    const formattedDifference = this.currencyPipe.transform(data.difference, 'BRL', 'symbol', '1.2-2') || '';
+    const formattedRevenue = this.currencyPipe.transform(data.revenue / 100, 'BRL', 'symbol', '1.2-2') || '';
+    const formattedExpense = this.currencyPipe.transform(data.expense / 100, 'BRL', 'symbol', '1.2-2') || '';
+    const formattedDifference = this.currencyPipe.transform(data.difference / 100, 'BRL', 'symbol', '1.2-2') || '';
     return `Gráfico de barras comparando receitas (${formattedRevenue}) e despesas (${formattedExpense}). Diferença: ${formattedDifference}`;
   });
 

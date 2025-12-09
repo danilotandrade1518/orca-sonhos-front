@@ -10,7 +10,7 @@ import type { ChartData } from '../interfaces/chart-data.interface';
 export class ChartDataTransformer {
   transformCategorySpendingToChartData(categorySpending: CategorySpendingDto[]): ChartData {
     const labels = categorySpending.map((item) => item.categoryName);
-    const data = categorySpending.map((item) => item.totalAmount);
+    const data = categorySpending.map((item) => item.totalAmount / 100);
 
     const colors = this.generateColors(categorySpending.length);
 
@@ -34,7 +34,7 @@ export class ChartDataTransformer {
       datasets: [
         {
           label: 'Valor',
-          data: [revenueExpense.revenue, revenueExpense.expense],
+          data: [revenueExpense.revenue / 100, revenueExpense.expense / 100],
           backgroundColor: ['#4CAF50', '#F44336'],
           borderColor: ['#388E3C', '#D32F2F'],
           borderWidth: 1,

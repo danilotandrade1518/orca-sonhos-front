@@ -3,7 +3,6 @@ import {
   computed,
   inject,
   OnInit,
-  OnDestroy,
   signal,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,6 +13,12 @@ import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { SharingState } from '@core/services/sharing/sharing.state';
+import { ReportsState } from '@features/reports/state/reports-state/reports.state';
+import {
+  OsDashboardWidgetsComponent,
+  type DashboardWidget,
+  type BudgetSummaryData,
+} from '@shared/ui-components/organisms/os-dashboard-widgets/os-dashboard-widgets.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -24,8 +29,9 @@ import {
 } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsSkeletonComponent } from '@shared/ui-components/atoms/os-skeleton/os-skeleton.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
-import { LocaleService } from '@shared/formatting';
 import { ShareBudgetComponent } from '../../components/share-budget/share-budget.component';
+import { CollaborationDashboardComponent } from '../../components/collaboration-dashboard/collaboration-dashboard.component';
+import { AccountCardComponent } from '@shared/ui-components/molecules/account-card/account-card.component';
 import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 
 @Component({
@@ -40,6 +46,9 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsSkeletonComponent,
     OsAlertComponent,
     ShareBudgetComponent,
+    OsDashboardWidgetsComponent,
+    CollaborationDashboardComponent,
+    AccountCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -118,12 +127,20 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
 
         <section class="budget-detail-page__card">
           <h2 class="budget-detail-page__card-title">Visão Geral</h2>
-          <p class="budget-detail-page__placeholder">
-            Detalhes do orçamento serão exibidos aqui nas próximas fases.
-          </p>
-          <p class="budget-detail-page__placeholder-subtitle">
-            Aguarde a implementação dos componentes de overview e participants.
-          </p>
+          @if (dashboardWidgets().length > 0) {
+          <os-dashboard-widgets
+            [widgets]="dashboardWidgets()"
+            [variant]="'default'"
+            [size]="'medium'"
+            [state]="'success'"
+            [showCreateActions]="false"
+            [ariaLabel]="'Resumo financeiro do orçamento ' + budget.name"
+          />
+          } @else {
+          <div class="budget-detail-page__placeholder" role="status">
+            <p>Carregando dados financeiros...</p>
+          </div>
+          }
           <div class="budget-detail-page__actions-section">
             <os-button
               variant="primary"
@@ -171,17 +188,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
           } @else {
           <div class="budget-detail-page__accounts-list" role="list" aria-label="Lista de contas">
             @for (account of accounts(); track account.id) {
-            <div class="budget-detail-page__account-item" role="listitem">
-              <div class="budget-detail-page__account-info">
-                <span class="budget-detail-page__account-name">{{ account.name }}</span>
-                <span class="budget-detail-page__account-type">{{
-                  getAccountTypeLabel(account.type)
-                }}</span>
-              </div>
-              <span class="budget-detail-page__account-balance">
-                {{ formatCurrency(account.balance) }}
-              </span>
-            </div>
+            <os-account-card [account]="account" [actions]="{ edit: false, delete: false }" />
             }
           </div>
           <div class="budget-detail-page__accounts-actions">
@@ -211,31 +218,11 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
             </os-button>
           </div>
 
-          @if (participantsLoading()) {
-          <div class="budget-detail-page__participants-loading" role="status" aria-live="polite">
-            <p>Carregando participantes...</p>
-          </div>
-          } @else if (participantsCount() === 0) {
-          <div class="budget-detail-page__participants-empty" role="status">
-            <p>Nenhum participante adicionado ainda.</p>
-            <os-button
-              variant="primary"
-              size="medium"
-              icon="user-plus"
-              (buttonClick)="openShareModal()"
-              [attr.aria-label]="'Adicionar primeiro participante'"
-            >
-              Adicionar Participante
-            </os-button>
-          </div>
-          } @else {
-          <div class="budget-detail-page__participants-info">
-            <p>
-              <strong>{{ participantsCount() }}</strong>
-              {{ participantsCount() === 1 ? 'participante' : 'participantes' }}
-            </p>
-          </div>
-          }
+          <os-collaboration-dashboard
+            [budgetId]="budgetId()!"
+            [creatorId]="creatorId()"
+            (participantRemoved)="onCollaborationParticipantRemoved()"
+          />
         </section>
       </main>
       } @else {
@@ -289,15 +276,15 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   `,
   styleUrl: './budget-detail.page.scss',
 })
-export class BudgetDetailPage implements OnInit, OnDestroy {
+export class BudgetDetailPage implements OnInit {
   private readonly budgetState = inject(BudgetState);
   private readonly authService = inject(AuthService);
   private readonly accountState = inject(AccountState);
   private readonly sharingState = inject(SharingState);
+  private readonly reportsState = inject(ReportsState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly localeService = inject(LocaleService);
 
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
@@ -313,6 +300,11 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   readonly participants = computed(() => this.sharingState.participants());
   readonly participantsCount = computed(() => this.sharingState.participantsCount());
   readonly participantsLoading = computed(() => this.sharingState.loading());
+
+  readonly creatorId = computed(() => {
+    const user = this.currentUser();
+    return user?.id || null;
+  });
 
   readonly budget = computed(() => {
     const id = this.budgetId();
@@ -382,7 +374,48 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
     ];
   });
 
-  private resourcesLoaded = signal(false);
+  readonly budgetSummaryData = computed((): BudgetSummaryData | null => {
+    const accounts = this.accounts();
+    const revenueExpense = this.reportsState.revenueExpense();
+
+    const totalBalanceCents = accounts.reduce((sum, account) => sum + account.balance, 0);
+    const revenueCents = revenueExpense?.revenue || 0;
+    const expenseCents = revenueExpense?.expense || 0;
+
+    const totalBalance = totalBalanceCents / 100;
+    const monthlyIncome = revenueCents / 100;
+    const monthlyExpense = expenseCents / 100;
+    const savingsRate =
+      monthlyIncome > 0 ? ((monthlyIncome - monthlyExpense) / monthlyIncome) * 100 : 0;
+    const budgetUtilization = monthlyIncome > 0 ? (monthlyExpense / monthlyIncome) * 100 : 0;
+
+    return {
+      totalBalance,
+      monthlyIncome,
+      monthlyExpense,
+      savingsRate: Math.max(0, savingsRate),
+      budgetUtilization: Math.min(100, Math.max(0, budgetUtilization)),
+    };
+  });
+
+  readonly dashboardWidgets = computed((): DashboardWidget[] => {
+    const summaryData = this.budgetSummaryData();
+    if (!summaryData) {
+      return [];
+    }
+
+    return [
+      {
+        id: 'widget-budget-summary',
+        type: 'budget-summary',
+        title: 'Resumo Financeiro',
+        size: 'full-width',
+        position: { row: 1, column: 1 },
+        enabled: true,
+        data: summaryData,
+      },
+    ];
+  });
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -398,34 +431,21 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
       const budget = this.budgetState.budgets().find((b) => b.id === id);
       if (budget) {
         this.budgetState.selectBudget(id);
+        this.loadResources(id);
+        this.reportsState.loadReports();
         this.cdr.markForCheck();
       }
     }
   }
 
   private loadResources(id: string): void {
-    if (this.resourcesLoaded()) {
-      return;
-    }
-
     try {
       this.accountState.loadAccounts();
       this.sharingState.loadParticipants(id);
-      this.sharingState.startPolling(id);
-      this.resourcesLoaded.set(true);
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Error loading resources', error);
     }
-  }
-
-  ngOnDestroy(): void {
-    const id = this.budgetId();
-    if (id) {
-      this.sharingState.stopPolling();
-    }
-
-    this.resourcesLoaded.set(false);
   }
 
   navigateToList(): void {
@@ -452,22 +472,6 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
 
   navigateToAccounts(): void {
     this.router.navigate(['/accounts']);
-  }
-
-  getAccountTypeLabel(type: string): string {
-    const labels: Record<string, string> = {
-      CHECKING_ACCOUNT: 'Conta Corrente',
-      SAVINGS_ACCOUNT: 'Poupança',
-      PHYSICAL_WALLET: 'Carteira Física',
-      DIGITAL_WALLET: 'Carteira Digital',
-      INVESTMENT_ACCOUNT: 'Investimento',
-      OTHER: 'Outros',
-    };
-    return labels[type] || type;
-  }
-
-  formatCurrency(value: number): string {
-    return this.localeService.formatCurrency(value, 'BRL');
   }
 
   confirmDelete(): void {
@@ -533,6 +537,14 @@ export class BudgetDetailPage implements OnInit, OnDestroy {
   }
 
   onParticipantRemoved(): void {
+    const id = this.budgetId();
+    if (id) {
+      this.sharingState.loadParticipants(id);
+      this.budgetState.loadBudgets();
+    }
+  }
+
+  onCollaborationParticipantRemoved(): void {
     const id = this.budgetId();
     if (id) {
       this.sharingState.loadParticipants(id);

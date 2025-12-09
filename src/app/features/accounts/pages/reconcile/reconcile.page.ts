@@ -144,13 +144,15 @@ export class ReconcilePage implements OnInit {
       return;
     }
 
+    const realBalanceInCents = Math.round(data.realBalance * 100);
+
     this.accountState.clearError();
     this.reconcileInitiated.set(true);
     this.accountState.reconcileAccount({
       userId: user.id,
       budgetId,
       accountId: data.accountId,
-      realBalance: data.realBalance,
+      realBalance: realBalanceInCents,
     });
   }
 

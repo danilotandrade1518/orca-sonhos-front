@@ -668,3 +668,6 @@ Componente genérico de confirmação reutilizável para substituir modais dupli
 - **Funcionalidades Core**: `03_funcionalidades_core.md` - Diferenciação e valor único (4 funcionalidades core mapeadas)
 
 
+
+
+
