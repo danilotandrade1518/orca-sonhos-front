@@ -223,7 +223,7 @@ export class DashboardWidgetsComponent {
 
       return {
         accountName: account.name,
-        // AccountDto.balance vem em centavos; widget trabalha em reais
+        
         balance: account.balance / 100,
         type,
         lastUpdated: new Date(),

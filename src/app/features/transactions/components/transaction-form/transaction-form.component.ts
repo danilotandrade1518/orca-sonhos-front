@@ -358,7 +358,7 @@ export class TransactionFormComponent implements OnInit {
         const transactionDate = transaction.transactionDate || transaction.date;
         form.patchValue({
           description: transaction.description,
-          // TransactionDto.amount vem em centavos; o formulário trabalha em reais
+          
           amount: transaction.amount / 100,
           type: transaction.type || transaction.direction || 'EXPENSE',
           accountId: transaction.accountId || '',
@@ -378,7 +378,7 @@ export class TransactionFormComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(200),
       ]),
-      // Formulário trabalha em reais; DTO/estado usam centavos
+      
       amount: new FormControl<number | null>(
         initialTransaction ? initialTransaction.amount / 100 : null,
         [Validators.required, Validators.min(0.01)]

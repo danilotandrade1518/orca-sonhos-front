@@ -211,7 +211,7 @@ export class GoalsProgressWidgetComponent {
     return goals
       .filter((goal) => goal.totalAmount > 0)
       .map((goal) => {
-        // DTOs de metas usam centavos; aqui convertemos para reais para exibição
+        
         const progress = (goal.accumulatedAmount / goal.totalAmount) * 100;
         const remainingCents = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
 

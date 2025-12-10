@@ -57,7 +57,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount deve ser <= 50.00
+        
         amount: 40.0,
       });
       component.form.updateValueAndValidity();
@@ -120,7 +120,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount > 50.00 deve falhar
+        
         amount: 60.0,
       });
       component.form.updateValueAndValidity();
@@ -131,7 +131,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount <= 50.00 deve ser válido
+        
         amount: 40.0,
       });
       component.form.updateValueAndValidity();
@@ -204,7 +204,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount > 50.00 deve gerar erro
+        
         amount: 60.0,
       });
       component.form.updateValueAndValidity();
@@ -237,7 +237,7 @@ describe('TransferFormComponent', () => {
       component.form.patchValue({
         fromAccountId: 'account-1',
         toAccountId: 'account-2',
-        // account-1 tem balance: 5000.0 centavos (R$ 50,00); amount deve ser <= 50.00
+        
         amount: 40.0,
       });
       component.form.updateValueAndValidity();
@@ -247,7 +247,7 @@ describe('TransferFormComponent', () => {
       expect(emittedData).toBeDefined();
       expect(emittedData?.fromAccountId).toBe('account-1');
       expect(emittedData?.toAccountId).toBe('account-2');
-      // O componente converte o valor de reais para centavos antes de emitir
+      
       expect(emittedData?.amount).toBe(4000);
     });
 

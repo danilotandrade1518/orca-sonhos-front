@@ -517,7 +517,7 @@ describe('BudgetDetailPage', () => {
       const summaryData = component.budgetSummaryData();
 
       expect(summaryData).toBeTruthy();
-      // AccountDto.balance e RevenueExpenseDto vêm em centavos; o componente converte para reais
+      
       expect(summaryData?.totalBalance).toBe((5000 + 10000) / 100);
       expect(summaryData?.monthlyIncome).toBe(10000 / 100);
       expect(summaryData?.monthlyExpense).toBe(5000 / 100);

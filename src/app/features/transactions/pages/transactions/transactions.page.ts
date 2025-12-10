@@ -607,7 +607,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
     return {
       id: t.id,
       description: t.description,
-      // TransactionDto.amount vem em centavos; a UI trabalha em reais
+      
       amount: t.amount / 100,
       date,
       category: '',

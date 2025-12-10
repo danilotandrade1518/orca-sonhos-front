@@ -43,7 +43,7 @@ export class GoalCardComponent {
     return {
       id: g.id,
       title: g.name,
-      // GoalDto usa centavos; o card trabalha em reais
+      
       currentValue: g.accumulatedAmount / 100,
       targetValue: g.totalAmount / 100,
       unit: 'BRL',

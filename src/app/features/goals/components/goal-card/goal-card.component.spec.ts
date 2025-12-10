@@ -200,17 +200,17 @@ describe('GoalCardComponent', () => {
     it('should pass goal data to progress card component', () => {
       const goalData = component.goalProgressData();
       expect(goalData.title).toBe('Meta de Teste');
-      // GoalDto usa centavos; o componente converte para reais
+      
       expect(goalData.currentValue).toBe(4500 / 100);
       expect(goalData.targetValue).toBe(10000 / 100);
     });
 
     it('should pass correct progress values', () => {
       const goalData = component.goalProgressData();
-      // GoalDto usa centavos; o componente converte para reais
+      
       expect(goalData.currentValue).toBe(4500 / 100);
       expect(goalData.targetValue).toBe(10000 / 100);
-      // suggested vem em centavos; o componente converte para reais
+      
       expect(goalData.suggestedAmount).toBeCloseTo(916.67 / 100, 2);
     });
 

@@ -158,7 +158,7 @@ describe('SpendingChartComponent', () => {
       const chartData = component.chartData();
       expect(chartData.labels).toEqual(['Alimentação', 'Transporte', 'Lazer']);
       expect(chartData.datasets).toHaveLength(1);
-      // CategorySpendingDto.totalAmount vem em centavos; o ChartDataTransformer converte para reais
+      
       expect(chartData.datasets[0].data).toEqual([1000 / 100, 500 / 100, 500 / 100]);
       expect(chartData.datasets[0].label).toBe('Gastos por Categoria');
     });

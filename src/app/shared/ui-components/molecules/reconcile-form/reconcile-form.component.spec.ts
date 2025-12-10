@@ -156,7 +156,7 @@ describe('ReconcileFormComponent', () => {
     it('should format balance correctly', () => {
       const formatted = component.getFormattedBalance();
       expect(formatted).toContain('R$');
-      // AccountDto.balance vem em centavos; o componente converte para reais
+      
       expect(formatted).toContain('50');
     });
 

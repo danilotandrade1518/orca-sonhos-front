@@ -134,7 +134,7 @@ describe('AccountFormComponent', () => {
       const form = component.form();
       expect(form?.get('name')?.value).toBe(mockAccount.name);
       expect(form?.get('type')?.value).toBe(mockAccount.type);
-      // AccountDto.balance vem em centavos; o formulário trabalha em reais
+      
       expect(form?.get('initialBalance')?.value).toBe(mockAccount.balance / 100);
     });
   });
@@ -303,7 +303,7 @@ describe('AccountFormComponent', () => {
         name: 'Nova Conta',
         type: 'CHECKING_ACCOUNT',
         budgetId: 'budget-1',
-        // Formulário trabalha em reais; o componente converte para centavos antes de enviar
+        
         initialBalance: 100000,
       });
       expect(notificationService.showSuccess).toHaveBeenCalledWith('Conta criada com sucesso!');
@@ -441,7 +441,7 @@ describe('AccountFormComponent', () => {
       const form = component.form();
       expect(form?.get('name')?.value).toBe(mockAccount.name);
       expect(form?.get('type')?.value).toBe(mockAccount.type);
-      // AccountDto.balance vem em centavos; o formulário trabalha em reais
+      
       expect(form?.get('initialBalance')?.value).toBe(mockAccount.balance / 100);
     });
   });
