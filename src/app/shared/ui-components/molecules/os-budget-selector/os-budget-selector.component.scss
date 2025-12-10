@@ -2,24 +2,13 @@
 // Design System OrçaSonhos - Molecule Component
 
 .os-budget-selector {
-  // Base styles
-  background-color: var(--os-color-background-primary);
-  border: 1px solid var(--os-color-border);
-  border-radius: var(--os-border-radius-md);
-  padding: var(--os-spacing-2) var(--os-spacing-3);
-  transition: all var(--os-transition-normal) ease-in-out;
+  // Base styles - container transparente, deixa o dropdown interno gerenciar sua aparência
+  display: block;
   position: relative;
 
-  // Hover effects
-  &:hover {
-    border-color: var(--os-color-primary-300);
-    box-shadow: var(--os-shadow-sm);
-  }
-
-  // Focus styles
+  // Focus styles - delegados ao dropdown interno
   &:focus-visible {
-    outline: 2px solid var(--os-color-primary-500);
-    outline-offset: 2px;
+    outline: none;
   }
 
   // Main selector section
@@ -131,41 +120,11 @@
     font-weight: var(--os-font-weight-medium);
   }
 
-  // Variants
-  &--primary {
-    border-color: var(--os-color-primary-300);
-    background-color: var(--os-color-primary-50);
+  // Variants - estilos visuais agora são controlados via variant do os-dropdown interno
+  // Apenas estilos adicionais específicos do budget-selector aqui
 
-    &:hover {
-      border-color: var(--os-color-primary-400);
-      background-color: var(--os-color-primary-100);
-    }
-  }
-
-  &--secondary {
-    border-color: var(--os-color-secondary-300);
-    background-color: var(--os-color-secondary-50);
-
-    &:hover {
-      border-color: var(--os-color-secondary-400);
-      background-color: var(--os-color-secondary-100);
-    }
-  }
-
-  &--accent {
-    border-color: var(--os-color-accent-300);
-    background-color: var(--os-color-accent-50);
-
-    &:hover {
-      border-color: var(--os-color-accent-400);
-      background-color: var(--os-color-accent-100);
-    }
-  }
-
-  // Sizes
+  // Sizes - tamanhos controlados via size do os-dropdown interno
   &--small {
-    padding: var(--os-spacing-1) var(--os-spacing-2);
-
     .os-budget-selector__info {
       gap: var(--os-spacing-1);
     }
@@ -176,8 +135,6 @@
   }
 
   &--large {
-    padding: var(--os-spacing-3) var(--os-spacing-4);
-
     .os-budget-selector__info {
       gap: var(--os-spacing-3);
     }
@@ -197,26 +154,8 @@
     }
   }
 
-  &--error {
-    border-color: var(--os-color-error);
-    background-color: var(--os-color-error-50);
-
-    &:hover {
-      border-color: var(--os-color-error-600);
-      box-shadow: 0 0 0 1px var(--os-color-error-200);
-    }
-  }
-
-  &--empty {
-    border-style: dashed;
-    border-color: var(--os-color-neutral-300);
-    background-color: var(--os-color-neutral-50);
-
-    &:hover {
-      border-color: var(--os-color-primary-300);
-      background-color: var(--os-color-primary-50);
-    }
-  }
+  // Estados de erro e vazio - bordas são gerenciadas pelo dropdown interno
+  // ou por elementos específicos como __error
 
   // Mobile specific
   &--mobile {
@@ -259,8 +198,6 @@
 
 @media (max-width: 480px) {
   .os-budget-selector {
-    padding: var(--os-spacing-2);
-
     &__main {
       gap: var(--os-spacing-1);
     }
@@ -274,14 +211,8 @@
 // High contrast mode
 @media (prefers-contrast: high) {
   .os-budget-selector {
-    border-width: 2px;
-
-    &:focus-visible {
-      outline-width: 3px;
-    }
-
-    &--error {
-      border-width: 3px;
+    &__error {
+      border-width: 2px;
     }
   }
 }
@@ -289,10 +220,9 @@
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
   .os-budget-selector {
-    transition: none;
-
-    &:hover {
-      transform: none;
+    &__loading,
+    &__error {
+      transition: none;
     }
   }
 }
@@ -300,11 +230,6 @@
 // Dark mode support (preparado para futuro)
 @media (prefers-color-scheme: dark) {
   .os-budget-selector {
-    &--empty {
-      background-color: var(--os-color-neutral-800);
-      border-color: var(--os-color-neutral-600);
-    }
-
     &__error {
       background-color: var(--os-color-error-900);
       border-color: var(--os-color-error-700);

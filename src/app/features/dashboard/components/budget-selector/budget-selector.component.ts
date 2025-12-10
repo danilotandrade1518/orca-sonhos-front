@@ -30,7 +30,6 @@ import { BudgetDto } from '../../../../../dtos/budget/budget-types';
       [ariaLabel]="ariaLabel()"
       [state]="selectorState()"
       (budgetSelected)="onBudgetSelected($event)"
-      class="os-budget-selector"
     />
   `,
   styleUrls: ['./budget-selector.component.scss'],

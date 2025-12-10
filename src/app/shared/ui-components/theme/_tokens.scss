@@ -76,6 +76,8 @@
   --os-color-surface: #ffffff;
   --os-color-surface-variant: #f8fafc;
   --os-color-background: #ffffff;
+  --os-color-background-primary: #ffffff;
+  --os-color-background-secondary: #f8fafc;
   --os-color-on-surface: #1f2937;
   --os-color-on-surface-variant: #6b7280;
 
@@ -386,16 +388,22 @@
   }
 
   // ===== DARK MODE SUPPORT =====
-  @media (prefers-color-scheme: dark) {
-    --os-color-surface: #1e293b;
-    --os-color-surface-variant: #334155;
-    --os-color-background: #0f172a;
-    --os-color-on-surface: #f8fafc;
-    --os-color-on-surface-variant: #cbd5e1;
-    --os-color-text-primary: #f8fafc;
-    --os-color-text-secondary: #cbd5e1;
-    --os-color-text-muted: #94a3b8;
-    --os-color-border: #475569;
-    --os-color-border-hover: #64748b;
-  }
+  // Dark mode é aplicado apenas quando explicitamente ativado via data-theme
+  // Não usamos prefers-color-scheme para evitar conflitos com preferências do sistema
+  // que podem quebrar o contraste em componentes com backgrounds específicos
+}
+
+// Dark mode explícito via data-theme
+[data-theme='dark'] {
+  --os-color-surface: #1e293b;
+  --os-color-surface-variant: #334155;
+  --os-color-background: #0f172a;
+  --os-color-on-surface: #f8fafc;
+  --os-color-on-surface-variant: #cbd5e1;
+  --os-color-text-primary: #f8fafc;
+  --os-color-text-secondary: #cbd5e1;
+  --os-color-text-muted: #94a3b8;
+  --os-color-border: #475569;
+  --os-color-border-hover: #64748b;
+  --os-color-background-primary: #1e293b;
 }

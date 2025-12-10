@@ -246,55 +246,55 @@
 // Hover states are now handled by Material Design Form Field
 // No additional hover styles needed for tablet and desktop
 
-// Dark Mode Support
+// Dark Mode Support - Aplicado apenas quando o tema escuro é explicitamente ativado via data-theme
 [data-theme='dark'] {
   .os-input__form-field {
     .mat-mdc-form-field {
       .mat-mdc-input-element {
-        background-color: var(--os-color-surface);
-        color: var(--os-color-on-surface);
+        background-color: #1e293b;
+        color: #f8fafc;
 
         &::placeholder {
-          color: var(--os-color-neutral-400);
+          color: #94a3b8;
         }
       }
 
       .mat-mdc-form-field-outline {
-        color: var(--os-color-neutral-600);
+        color: #475569;
       }
 
       &.mat-focused .mat-mdc-form-field-outline {
-        color: var(--os-color-primary-400);
+        color: #60a5fa;
       }
 
       &.mat-form-field-invalid .mat-mdc-form-field-outline {
-        color: var(--os-color-error-500);
+        color: #ef4444;
       }
 
       .mat-mdc-form-field-label {
-        color: var(--os-color-neutral-400);
+        color: #94a3b8;
       }
 
       .mat-mdc-form-field-hint {
-        color: var(--os-color-neutral-400);
+        color: #94a3b8;
 
         &.mat-mdc-form-field-hint-error {
-          color: var(--os-color-error-400);
+          color: #f87171;
         }
       }
     }
 
     .mat-mdc-form-field-icon-prefix,
     .mat-mdc-form-field-icon-suffix {
-      color: var(--os-color-neutral-400);
+      color: #94a3b8;
     }
 
     .mat-mdc-icon-button {
-      color: var(--os-color-neutral-400);
+      color: #94a3b8;
 
       &:hover {
-        background-color: var(--os-color-neutral-700);
-        color: var(--os-color-neutral-200);
+        background-color: #334155;
+        color: #e2e8f0;
       }
     }
   }

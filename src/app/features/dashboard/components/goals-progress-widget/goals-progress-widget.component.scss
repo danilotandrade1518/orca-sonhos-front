@@ -157,13 +157,13 @@
     flex-direction: column;
     gap: var(--os-spacing-3);
     padding: var(--os-spacing-4);
-    background-color: var(--os-color-background-secondary);
-    border: 1px solid var(--os-color-border);
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: var(--os-border-radius-md);
     transition: all var(--os-transition-normal) ease-in-out;
 
     &:hover {
-      border-color: var(--os-color-primary-300);
+      border-color: #93c5fd;
       box-shadow: var(--os-shadow-sm);
     }
   }
@@ -193,19 +193,20 @@
     font-weight: var(--os-font-weight-medium);
     white-space: nowrap;
 
+    // Usando cores fixas para garantir contraste independente do tema do sistema
     &--on-track {
-      background-color: var(--os-color-success-50);
-      color: var(--os-color-success-700);
+      background-color: #ecfdf5;
+      color: #047857;
     }
 
     &--atrasada {
-      background-color: var(--os-color-error-50);
-      color: var(--os-color-error-700);
+      background-color: #fef2f2;
+      color: #b91c1c;
     }
 
     &--adiantada {
-      background-color: var(--os-color-info-50);
-      color: var(--os-color-info-700);
+      background-color: #ecfeff;
+      color: #0e7490;
     }
   }
 

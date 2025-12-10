@@ -5,10 +5,10 @@
   gap: var(--os-spacing-md);
   padding: var(--os-spacing-sm);
 
-  // Appearance
-  background: var(--os-color-background-secondary);
+  // Appearance - Usando cores fixas para garantir consistência independente do tema do sistema
+  background: #ffffff;
   border-radius: var(--os-border-radius-md);
-  border: 1px solid var(--os-color-border);
+  border: 1px solid #e2e8f0;
 
   // Animations
   transition: background-color var(--os-animation-duration-fast) var(--os-animation-easing-standard),
@@ -129,10 +129,10 @@
     }
   }
 
-  // Dark mode support
-  @media (prefers-color-scheme: dark) {
-    background: var(--os-color-background-secondary-dark, var(--os-color-background-secondary));
-    border-color: var(--os-color-border-dark, var(--os-color-border));
+  // Dark mode support - Aplicado apenas quando o tema escuro é explicitamente ativado
+  :host-context([data-theme='dark']) & {
+    background: #1e293b;
+    border-color: #475569;
   }
 
   // High contrast mode
