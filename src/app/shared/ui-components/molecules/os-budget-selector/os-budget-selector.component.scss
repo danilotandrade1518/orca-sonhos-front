@@ -5,6 +5,8 @@
   // Base styles - container transparente, deixa o dropdown interno gerenciar sua aparência
   display: block;
   position: relative;
+  border: none; // Remove qualquer borda do container principal
+  background: transparent; // Garante que não há fundo que possa criar bordas visuais
 
   // Focus styles - delegados ao dropdown interno
   &:focus-visible {
@@ -17,11 +19,16 @@
     align-items: center;
     gap: var(--os-spacing-2);
     width: 100%;
+    border: none; // Remove qualquer borda do container main
+    background: transparent; // Garante fundo transparente
   }
 
   &__dropdown {
     flex: 1;
     min-width: 0;
+    // A borda será gerenciada apenas pelo dropdown interno (os-dropdown__trigger)
+    border: none; // Remove qualquer borda do wrapper do dropdown
+    background: transparent; // Garante fundo transparente
   }
 
   &__quick-actions {

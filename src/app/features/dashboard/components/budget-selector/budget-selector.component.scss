@@ -11,4 +11,6 @@
 os-budget-selector {
   display: block;
   width: 100%;
+  border: none; // Remove qualquer borda do componente
+  background: transparent; // Garante fundo transparente
 }
