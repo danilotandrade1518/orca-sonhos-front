@@ -1,8 +1,18 @@
 {
-  "/api/*": {
+  "/*": {
     "target": "http://localhost:4200",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "bypass": function(req, res, proxyOptions) {
+      // Bypass proxy for static assets
+      if (req.url.startsWith('/assets/') ||
+          req.url.startsWith('/favicon.ico') ||
+          req.url.startsWith('/mockServiceWorker.js') ||
+          req.url.match(/\.(html|css|js|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
+        return req.url;
+      }
+      return null;
+    }
   }
 }

@@ -143,7 +143,7 @@ const mockTransactions = [
 ];
 
 export const transactionHandlers = [
-  http.get('/api/transactions', ({ request }) => {
+  http.get('/transactions', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -218,7 +218,7 @@ export const transactionHandlers = [
     });
   }),
 
-  http.post('/api/transaction/create-transaction', async ({ request }) => {
+  http.post('/transaction/create-transaction', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -257,7 +257,7 @@ export const transactionHandlers = [
     return HttpResponse.json({ id: newTransaction.id }, { status: 201 });
   }),
 
-  http.post('/api/transaction/update-transaction', async ({ request }) => {
+  http.post('/transaction/update-transaction', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -277,7 +277,7 @@ export const transactionHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/transaction/delete-transaction', async ({ request }) => {
+  http.post('/transaction/delete-transaction', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -293,7 +293,7 @@ export const transactionHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/transaction/cancel-scheduled-transaction', async ({ request }) => {
+  http.post('/transaction/cancel-scheduled-transaction', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -309,7 +309,7 @@ export const transactionHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/transaction/mark-transaction-late', async ({ request }) => {
+  http.post('/transaction/mark-transaction-late', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

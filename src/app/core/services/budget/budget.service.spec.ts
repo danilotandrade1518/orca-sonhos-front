@@ -112,7 +112,7 @@ describe('BudgetService', () => {
 
       service.getBudgets().subscribe((budgets) => {
         expect(budgets).toEqual(mockBudgets);
-        expect(apiService.getRaw).toHaveBeenCalledWith('/budget');
+        expect(apiService.getRaw).toHaveBeenCalledWith('/budgets');
       });
     });
 

@@ -26,7 +26,7 @@ export class AccountsHelperService {
     this._isLoading.set(true);
     this._error.set(null);
 
-    return this.api.get<AccountDto[]>('accounts', { budgetId }).pipe(
+    return this.api.get<AccountDto[]>('account', { budgetId }).pipe(
       map((response: ApiResponse<AccountDto[]>) => {
         const accounts = response.data || [];
         this._accounts.set(accounts);

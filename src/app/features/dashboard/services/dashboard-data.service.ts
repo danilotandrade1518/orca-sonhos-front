@@ -41,7 +41,7 @@ export class DashboardDataService {
     this._isLoading.set(true);
     this._error.set(null);
 
-    return this.apiService.get<GetBudgetsResponseDto['data']>('budget').pipe(
+    return this.apiService.get<GetBudgetsResponseDto['data']>('budgets').pipe(
       map((response) => {
         this._budgets.set(response.data);
         this._isLoading.set(false);
@@ -80,7 +80,7 @@ export class DashboardDataService {
   }
 
   loadGoals(budgetId: string): Observable<GoalDto[]> {
-    return this.apiService.get<GoalDto[]>('goals', { budgetId }).pipe(
+    return this.apiService.get<GoalDto[]>('goal', { budgetId }).pipe(
       map((response: ApiResponse<GoalDto[]>) => {
         this._goals.set(response.data || []);
         return response.data || [];

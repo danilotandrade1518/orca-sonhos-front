@@ -109,7 +109,7 @@ describe('AccountsApiService', () => {
       const accounts = await firstValueFrom(service.listAccounts('budget-1'));
 
       expect(accounts).toEqual(mockAccounts);
-      expect(apiService.getRaw).toHaveBeenCalledWith('/accounts', { budgetId: 'budget-1' });
+      expect(apiService.getRaw).toHaveBeenCalledWith('/account', { budgetId: 'budget-1' });
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -212,7 +212,7 @@ describe('AccountsApiService', () => {
       const accountId = await firstValueFrom(service.createAccount(createDto));
 
       expect(accountId).toBe('account-new');
-      expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/create-account', createDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/account/create-account', createDto);
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -261,7 +261,7 @@ describe('AccountsApiService', () => {
       const success = await firstValueFrom(service.updateAccount(updateDto));
 
       expect(success).toBe(true);
-      expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/update-account', updateDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/account/update-account', updateDto);
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -308,7 +308,7 @@ describe('AccountsApiService', () => {
       const success = await firstValueFrom(service.deleteAccount(deleteDto));
 
       expect(success).toBe(true);
-      expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/delete-account', deleteDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/account/delete-account', deleteDto);
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });
@@ -373,7 +373,7 @@ describe('AccountsApiService', () => {
 
       expect(success).toBe(true);
       expect(apiService.postRaw).toHaveBeenCalledWith(
-        '/accounts/transfer-between-accounts',
+        '/account/transfer-between-accounts',
         transferDto
       );
       expect(service.loading()).toBe(false);
@@ -439,7 +439,7 @@ describe('AccountsApiService', () => {
       const success = await firstValueFrom(service.reconcileAccount(reconcileDto));
 
       expect(success).toBe(true);
-      expect(apiService.postRaw).toHaveBeenCalledWith('/accounts/reconcile-account', reconcileDto);
+      expect(apiService.postRaw).toHaveBeenCalledWith('/account/reconcile-account', reconcileDto);
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
     });

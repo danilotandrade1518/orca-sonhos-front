@@ -22,7 +22,7 @@ export interface FirebaseConfig {
 export class ConfigService {
   private readonly _isDevelopment = signal(environment.production === false);
   private readonly _apiConfig = signal<ApiConfig>({
-    baseUrl: environment.apiUrl || 'http://localhost:3000/api',
+    baseUrl: environment.apiUrl || 'http://localhost:3000',
     timeout: 30000,
     retryAttempts: 3,
   });

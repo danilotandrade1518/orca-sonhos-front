@@ -34,7 +34,7 @@ const mockAccounts = [
 ];
 
 export const accountHandlers = [
-  http.get('/api/accounts', ({ request }) => {
+  http.get('/account', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -56,7 +56,7 @@ export const accountHandlers = [
     });
   }),
 
-  http.post('/api/accounts/create-account', async ({ request }) => {
+  http.post('/account/create-account', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -79,7 +79,7 @@ export const accountHandlers = [
     return HttpResponse.json({ id: newAccount.id }, { status: 201 });
   }),
 
-  http.post('/api/accounts/update-account', async ({ request }) => {
+  http.post('/account/update-account', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -95,7 +95,7 @@ export const accountHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/accounts/delete-account', async ({ request }) => {
+  http.post('/account/delete-account', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -111,7 +111,7 @@ export const accountHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/accounts/reconcile-account', async ({ request }) => {
+  http.post('/account/reconcile-account', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -127,7 +127,7 @@ export const accountHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/accounts/transfer-between-accounts', async ({ request }) => {
+  http.post('/account/transfer-between-accounts', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

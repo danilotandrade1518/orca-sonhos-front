@@ -2,7 +2,7 @@ import { Environment } from './environment.interface';
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'http://localhost:3001/api',
+  apiUrl: 'http://localhost:3001',
   version: '1.0.0-test',
   debug: true,
   enableLogging: true,

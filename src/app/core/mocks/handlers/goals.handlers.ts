@@ -44,7 +44,7 @@ const mockGoals = [
 ];
 
 export const goalHandlers = [
-  http.get('/api/goals', ({ request }) => {
+  http.get('/goal', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -68,7 +68,7 @@ export const goalHandlers = [
     });
   }),
 
-  http.post('/api/goals/create-goal', async ({ request }) => {
+  http.post('/goal/create-goal', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -97,7 +97,7 @@ export const goalHandlers = [
     return HttpResponse.json({ id: newGoal.id }, { status: 201 });
   }),
 
-  http.post('/api/goals/update-goal', async ({ request }) => {
+  http.post('/goal/update-goal', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -117,7 +117,7 @@ export const goalHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/goals/delete-goal', async ({ request }) => {
+  http.post('/goal/delete-goal', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -133,7 +133,7 @@ export const goalHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/goals/add-amount-goal', async ({ request }) => {
+  http.post('/goal/add-amount-goal', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -153,7 +153,7 @@ export const goalHandlers = [
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post('/api/goals/remove-amount-goal', async ({ request }) => {
+  http.post('/goal/remove-amount-goal', async ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

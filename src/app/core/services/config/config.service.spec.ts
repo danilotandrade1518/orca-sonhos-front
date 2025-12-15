@@ -27,7 +27,7 @@ describe('ConfigService', () => {
 
     it('should initialize with correct API config', () => {
       const apiConfig = service.apiConfig();
-      expect(apiConfig.baseUrl).toBe(environment.apiUrl || 'http://localhost:3000/api');
+      expect(apiConfig.baseUrl).toBe(environment.apiUrl || 'http://localhost:3000');
       expect(apiConfig.timeout).toBe(30000);
       expect(apiConfig.retryAttempts).toBe(3);
     });
@@ -45,7 +45,7 @@ describe('ConfigService', () => {
 
   describe('computed properties', () => {
     it('should return correct API base URL', () => {
-      expect(service.apiBaseUrl()).toBe(environment.apiUrl || 'http://localhost:3000/api');
+      expect(service.apiBaseUrl()).toBe(environment.apiUrl || 'http://localhost:3000');
     });
 
     it('should return correct API timeout', () => {
@@ -60,19 +60,19 @@ describe('ConfigService', () => {
   describe('getApiUrl', () => {
     it('should return correct URL for endpoint without leading slash', () => {
       const endpoint = 'budget';
-      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budget`;
+      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000'}/budget`;
       expect(service.getApiUrl(endpoint)).toBe(expectedUrl);
     });
 
     it('should return correct URL for endpoint with leading slash', () => {
-      const endpoint = '/budget';
-      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/budget`;
+      const endpoint = '/budgets';
+      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000'}/budgets`;
       expect(service.getApiUrl(endpoint)).toBe(expectedUrl);
     });
 
     it('should handle empty endpoint', () => {
       const endpoint = '';
-      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000/api'}/`;
+      const expectedUrl = `${environment.apiUrl || 'http://localhost:3000'}/`;
       expect(service.getApiUrl(endpoint)).toBe(expectedUrl);
     });
   });
@@ -83,8 +83,7 @@ describe('ConfigService', () => {
     });
 
     it('should return false for undefined feature in production mode', () => {
-      
-      expect(service.isFeatureEnabled('undefined-feature')).toBe(true); 
+      expect(service.isFeatureEnabled('undefined-feature')).toBe(true);
     });
 
     it('should return feature value from environment in production mode', () => {
@@ -124,7 +123,6 @@ describe('ConfigService', () => {
 
   describe('signals are readonly', () => {
     it('should have readonly signals', () => {
-      
       expect(service.isDevelopment).toBeDefined();
       expect(service.apiConfig).toBeDefined();
       expect(service.firebaseConfig).toBeDefined();

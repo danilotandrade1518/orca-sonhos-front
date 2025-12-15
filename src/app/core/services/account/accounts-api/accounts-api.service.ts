@@ -55,7 +55,7 @@ export class AccountsApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.getRaw<ListAccountsResponseDto>('/accounts', { budgetId }).pipe(
+    return this.api.getRaw<ListAccountsResponseDto>('/account', { budgetId }).pipe(
       map((response) => {
         this._loading.set(false);
         return response.data;
@@ -83,7 +83,7 @@ export class AccountsApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<CreateAccountResponseDto>('/accounts/create-account', dto).pipe(
+    return this.api.postRaw<CreateAccountResponseDto>('/account/create-account', dto).pipe(
       map((response) => {
         this._loading.set(false);
         return response.id;
@@ -111,7 +111,7 @@ export class AccountsApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<UpdateAccountResponseDto>('/accounts/update-account', dto).pipe(
+    return this.api.postRaw<UpdateAccountResponseDto>('/account/update-account', dto).pipe(
       map((response) => {
         this._loading.set(false);
         return response.success;
@@ -139,7 +139,7 @@ export class AccountsApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<DeleteAccountResponseDto>('/accounts/delete-account', dto).pipe(
+    return this.api.postRaw<DeleteAccountResponseDto>('/account/delete-account', dto).pipe(
       map((response) => {
         this._loading.set(false);
         return response.success;
@@ -168,7 +168,7 @@ export class AccountsApiService {
     this._error.set(null);
 
     return this.api
-      .postRaw<TransferBetweenAccountsResponseDto>('/accounts/transfer-between-accounts', dto)
+      .postRaw<TransferBetweenAccountsResponseDto>('/account/transfer-between-accounts', dto)
       .pipe(
         map((response) => {
           this._loading.set(false);
@@ -197,7 +197,7 @@ export class AccountsApiService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<ReconcileAccountResponseDto>('/accounts/reconcile-account', dto).pipe(
+    return this.api.postRaw<ReconcileAccountResponseDto>('/account/reconcile-account', dto).pipe(
       map((response) => {
         this._loading.set(false);
         return response.success;

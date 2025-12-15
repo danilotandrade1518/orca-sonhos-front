@@ -44,7 +44,7 @@ export class BudgetService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.getRaw<GetBudgetsResponseDto>('/budget').pipe(
+    return this.api.getRaw<GetBudgetsResponseDto>('/budgets').pipe(
       map((response) => {
         this._loading.set(false);
         return response.data;

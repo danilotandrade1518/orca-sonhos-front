@@ -47,7 +47,7 @@ describe('GoalsApiService', () => {
 
       service.listByBudget(budgetId).subscribe();
 
-      expect(apiService.get).toHaveBeenCalledWith('goals', { budgetId });
+      expect(apiService.get).toHaveBeenCalledWith('goal', { budgetId });
     });
   });
 

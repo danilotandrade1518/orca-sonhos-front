@@ -17,13 +17,12 @@ describe('ApiService', () => {
   };
 
   beforeEach(async () => {
-    
     TestBed.resetTestingModule();
 
     configSpy = {
       getApiUrl: vi.fn().mockImplementation((endpoint: string) => {
         const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-        return `http://localhost:3000/api/${cleanEndpoint}`;
+        return `http://localhost:3000/${cleanEndpoint}`;
       }),
       apiTimeout: vi.fn().mockReturnValue(30000),
       apiRetryAttempts: vi.fn().mockReturnValue(3),
@@ -72,7 +71,6 @@ describe('ApiService', () => {
 
   describe('utility methods', () => {
     it('should clear error manually', () => {
-      
       service.setLoading(true);
       expect(service.isLoading()).toBe(true);
 
@@ -93,17 +91,15 @@ describe('ApiService', () => {
 
   describe('headers', () => {
     it('should create headers with default Content-Type', () => {
-      
       service.get('/test-endpoint').subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/test-endpoint');
+      const req = httpMock.expectOne('http://localhost:3000/test-endpoint');
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
       req.flush({ data: 'test' });
     });
 
     it('should create headers with custom Content-Type', () => {
-      
       service.post('/test-endpoint', {}).subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/test-endpoint');
+      const req = httpMock.expectOne('http://localhost:3000/test-endpoint');
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
       req.flush({ data: 'test' });
     });
@@ -111,7 +107,6 @@ describe('ApiService', () => {
 
   describe('signals are readonly', () => {
     it('should have readonly signals', () => {
-      
       expect(service.isLoading).toBeDefined();
       expect(service.error).toBeDefined();
     });

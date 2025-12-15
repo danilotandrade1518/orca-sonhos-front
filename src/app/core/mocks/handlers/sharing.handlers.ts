@@ -28,7 +28,7 @@ const mockUsers = [
 ];
 
 export const sharingHandlers = [
-  http.get('/api/users/search', ({ request }) => {
+  http.get('/users/search', ({ request }) => {
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -53,4 +53,3 @@ export const sharingHandlers = [
     return HttpResponse.json(filteredUsers.slice(0, 5));
   }),
 ];
-

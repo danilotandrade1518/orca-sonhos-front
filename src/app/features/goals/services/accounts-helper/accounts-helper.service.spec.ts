@@ -27,7 +27,7 @@ describe('AccountsHelperService', () => {
     configSpy = {
       getApiUrl: vi.fn().mockImplementation((endpoint: string) => {
         const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-        return `http://localhost:3000/api/${cleanEndpoint}`;
+        return `http://localhost:3000/${cleanEndpoint}`;
       }),
       apiTimeout: vi.fn().mockReturnValue(30000),
       apiRetryAttempts: vi.fn().mockReturnValue(3),
@@ -66,7 +66,12 @@ describe('AccountsHelperService', () => {
     it('should load accounts successfully', () => {
       const budgetId = 'budget-1';
       const mockAccounts = [
-        { id: 'account-1', name: 'Conta Corrente', type: 'CHECKING_ACCOUNT' as const, balance: 1000 },
+        {
+          id: 'account-1',
+          name: 'Conta Corrente',
+          type: 'CHECKING_ACCOUNT' as const,
+          balance: 1000,
+        },
         { id: 'account-2', name: 'Poupança', type: 'SAVINGS_ACCOUNT' as const, balance: 2000 },
       ];
 
@@ -77,7 +82,7 @@ describe('AccountsHelperService', () => {
         expect(service.error()).toBeNull();
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('accounts'));
+      const req = httpMock.expectOne((request) => request.url.includes('account'));
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('budgetId')).toBe(budgetId);
       req.flush({ data: mockAccounts });
@@ -93,7 +98,7 @@ describe('AccountsHelperService', () => {
         expect(service.isLoading()).toBe(false);
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('accounts'));
+      const req = httpMock.expectOne((request) => request.url.includes('account'));
       req.error(new ErrorEvent('Network error'), { status: 500 });
     });
 
@@ -108,7 +113,12 @@ describe('AccountsHelperService', () => {
   describe('getAccountById', () => {
     it('should return account by id', () => {
       const mockAccounts = [
-        { id: 'account-1', name: 'Conta Corrente', type: 'CHECKING_ACCOUNT' as const, balance: 1000 },
+        {
+          id: 'account-1',
+          name: 'Conta Corrente',
+          type: 'CHECKING_ACCOUNT' as const,
+          balance: 1000,
+        },
         { id: 'account-2', name: 'Poupança', type: 'SAVINGS_ACCOUNT' as const, balance: 2000 },
       ];
 
@@ -117,13 +127,18 @@ describe('AccountsHelperService', () => {
         expect(account).toEqual(mockAccounts[0]);
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('accounts'));
+      const req = httpMock.expectOne((request) => request.url.includes('account'));
       req.flush({ data: mockAccounts });
     });
 
     it('should return undefined if account not found', () => {
       const mockAccounts = [
-        { id: 'account-1', name: 'Conta Corrente', type: 'CHECKING_ACCOUNT' as const, balance: 1000 },
+        {
+          id: 'account-1',
+          name: 'Conta Corrente',
+          type: 'CHECKING_ACCOUNT' as const,
+          balance: 1000,
+        },
       ];
 
       service.loadAccounts('budget-1').subscribe(() => {
@@ -131,7 +146,7 @@ describe('AccountsHelperService', () => {
         expect(account).toBeUndefined();
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('accounts'));
+      const req = httpMock.expectOne((request) => request.url.includes('account'));
       req.flush({ data: mockAccounts });
     });
   });
@@ -139,7 +154,12 @@ describe('AccountsHelperService', () => {
   describe('clear', () => {
     it('should clear accounts and error', () => {
       const mockAccounts = [
-        { id: 'account-1', name: 'Conta Corrente', type: 'CHECKING_ACCOUNT' as const, balance: 1000 },
+        {
+          id: 'account-1',
+          name: 'Conta Corrente',
+          type: 'CHECKING_ACCOUNT' as const,
+          balance: 1000,
+        },
       ];
 
       service.loadAccounts('budget-1').subscribe(() => {
@@ -148,7 +168,7 @@ describe('AccountsHelperService', () => {
         expect(service.error()).toBeNull();
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('accounts'));
+      const req = httpMock.expectOne((request) => request.url.includes('account'));
       req.flush({ data: mockAccounts });
     });
   });

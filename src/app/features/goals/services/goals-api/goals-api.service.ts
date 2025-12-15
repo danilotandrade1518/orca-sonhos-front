@@ -23,7 +23,7 @@ export class GoalsApiService {
   private readonly api = inject(ApiService);
 
   listByBudget(budgetId: string): Observable<ApiResponse<GoalDto[]>> {
-    return this.api.get<GoalDto[]>('goals', { budgetId });
+    return this.api.get<GoalDto[]>('goal', { budgetId });
   }
 
   create(body: CreateGoalDto): Observable<ApiResponse<CreateGoalResponseDto>> {
@@ -42,7 +42,9 @@ export class GoalsApiService {
     return this.api.post<AddAmountToGoalResponseDto>('goal/add-amount-goal', body);
   }
 
-  removeAmount(body: RemoveAmountFromGoalDto): Observable<ApiResponse<RemoveAmountFromGoalResponseDto>> {
+  removeAmount(
+    body: RemoveAmountFromGoalDto
+  ): Observable<ApiResponse<RemoveAmountFromGoalResponseDto>> {
     return this.api.post<RemoveAmountFromGoalResponseDto>('goal/remove-amount-goal', body);
   }
 }
