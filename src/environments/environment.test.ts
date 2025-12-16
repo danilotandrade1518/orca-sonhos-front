@@ -1,4 +1,5 @@
 import { Environment } from './environment.interface';
+import { describe, it, expect } from 'vitest';
 
 export const environment: Environment = {
   production: false,
@@ -21,3 +22,12 @@ export const environment: Environment = {
     errorReporting: false,
   },
 };
+
+// Test suite to prevent "No test suite found" error
+describe('Environment Test Configuration', () => {
+  it('should export test environment configuration', () => {
+    expect(environment).toBeDefined();
+    expect(environment.production).toBe(false);
+    expect(environment.apiUrl).toBe('http://localhost:3001');
+  });
+});

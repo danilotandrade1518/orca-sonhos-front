@@ -7,6 +7,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['src/test-setup.ts'],
+    include: ['**/*.spec.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/environment.test.ts',
+      'src/environments/environment.test.ts',
+    ],
   },
   resolve: {
     alias: {
@@ -28,4 +35,3 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.scss'],
 });
-

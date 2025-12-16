@@ -1,7 +1,7 @@
 import { HttpRequest, HttpErrorResponse, HttpHandlerFn } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { firstValueFrom, of, throwError } from 'rxjs';
 
 import { errorInterceptor } from './error.interceptor';

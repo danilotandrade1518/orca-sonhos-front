@@ -9,18 +9,21 @@ import { OsDataTableComponent } from '../../molecules/os-data-table/os-data-tabl
 import { OsFilterBarComponent } from '../../molecules/os-filter-bar/os-filter-bar.component';
 import { OsTransactionListComponent, Transaction } from './os-transaction-list.component';
 
-const mockResizeObserver = vi.fn();
+class MockResizeObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
 
-mockResizeObserver.mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+  constructor() {
+    // Constructor implementation
+  }
+}
 
+// Use a class constructor directly instead of vi.fn()
 Object.defineProperty(window, 'ResizeObserver', {
   writable: true,
   configurable: true,
-  value: mockResizeObserver,
+  value: MockResizeObserver,
 });
 
 describe('OsTransactionListComponent', () => {
@@ -210,33 +213,42 @@ describe('OsTransactionListComponent', () => {
 
   it('should setup ResizeObserver on ngAfterViewInit', () => {
     const observeSpy = vi.fn();
-    const mockObserver = {
-      observe: observeSpy,
-      unobserve: vi.fn(),
-      disconnect: vi.fn(),
-    };
+    const originalResizeObserver = window.ResizeObserver;
 
-    mockResizeObserver.mockReturnValue(mockObserver);
+    // Create a mock that tracks observe calls
+    window.ResizeObserver = class extends MockResizeObserver {
+      constructor() {
+        super();
+        this.observe = observeSpy;
+      }
+    } as typeof ResizeObserver;
 
     component.ngAfterViewInit();
 
-    expect(mockResizeObserver).toHaveBeenCalled();
     expect(observeSpy).toHaveBeenCalled();
+
+    // Restore original
+    window.ResizeObserver = originalResizeObserver;
   });
 
   it('should disconnect ResizeObserver on ngOnDestroy', () => {
     const disconnectSpy = vi.fn();
-    const mockObserver = {
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: disconnectSpy,
-    };
+    const originalResizeObserver = window.ResizeObserver;
 
-    mockResizeObserver.mockReturnValue(mockObserver);
+    // Create a mock that tracks disconnect calls
+    window.ResizeObserver = class extends MockResizeObserver {
+      constructor() {
+        super();
+        this.disconnect = disconnectSpy;
+      }
+    } as typeof ResizeObserver;
 
     component.ngAfterViewInit();
     component.ngOnDestroy();
 
     expect(disconnectSpy).toHaveBeenCalled();
+
+    // Restore original
+    window.ResizeObserver = originalResizeObserver;
   });
 });
