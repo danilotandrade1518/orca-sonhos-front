@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { RecentAchievement } from '../../types/dashboard.types';
@@ -9,7 +8,7 @@ import { LocaleService } from '@shared/formatting';
 @Component({
   selector: 'os-recent-achievements-widget',
   standalone: true,
-  imports: [CommonModule, OsCardComponent, OsIconComponent],
+  imports: [OsCardComponent, OsIconComponent],
   template: `
     <div class="recent-achievements-widget" role="region" [attr.aria-labelledby]="'recent-achievements-title'">
       <header class="recent-achievements-widget__header">

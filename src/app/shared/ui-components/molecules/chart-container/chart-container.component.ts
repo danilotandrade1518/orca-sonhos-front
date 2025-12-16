@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
@@ -9,7 +9,7 @@ export type ChartContainerVariant = 'default' | 'compact';
 @Component({
   selector: 'os-chart-container',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsSpinnerComponent, OsButtonComponent],
+  imports: [OsIconComponent, OsSpinnerComponent, OsButtonComponent],
   template: `
     <div
       [class]="containerClasses()"

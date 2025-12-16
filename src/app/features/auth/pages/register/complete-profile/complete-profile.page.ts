@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -12,13 +12,12 @@ import { OsAlertComponent } from '../../../../../shared/ui-components/molecules/
 @Component({
   selector: 'os-complete-profile-page',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsButtonComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-form-template

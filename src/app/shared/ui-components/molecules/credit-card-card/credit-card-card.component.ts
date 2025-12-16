@@ -7,7 +7,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsCardComponent } from '../os-card/os-card.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsDeleteButtonComponent } from '../../atoms/os-delete-button';
@@ -22,14 +22,13 @@ import { CreditCardState } from '../../../../core/services/credit-card/credit-ca
 @Component({
   selector: 'os-credit-card-card',
   imports: [
-    CommonModule,
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsDeleteButtonComponent,
     OsEditButtonComponent,
     OsIconComponent,
-    CreditCardBillItemComponent,
-  ],
+    CreditCardBillItemComponent
+],
   template: `
     <os-card
       [variant]="'default'"

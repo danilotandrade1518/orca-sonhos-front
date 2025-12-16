@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
 import { OsButtonComponent, OsButtonVariant } from '../../atoms/os-button/os-button.component';
 import { OsEntityActionsComponent } from '../os-entity-actions/os-entity-actions.component';
@@ -18,7 +18,7 @@ export interface OsEntityCardAction {
 @Component({
   selector: 'os-entity-card',
   standalone: true,
-  imports: [CommonModule, OsCardComponent, OsButtonComponent, OsEntityActionsComponent],
+  imports: [OsCardComponent, OsButtonComponent, OsEntityActionsComponent],
   template: `
     <os-card
       [variant]="variant()"
@@ -39,7 +39,7 @@ export interface OsEntityCardAction {
           @if (title()) {
           <h3 class="os-entity-card__title">{{ title() }}</h3>
           }
-          <ng-content select="[slot=title]"></ng-content>
+          <ng-content select="[slot=title]" />
         </div>
         @if (hasActions() && showActionsMenu()) {
         <os-entity-actions
@@ -54,21 +54,21 @@ export interface OsEntityCardAction {
       <div class="os-entity-card__content">
         @if (meta()) {
         <div class="os-entity-card__meta">
-          <ng-content select="[slot=meta]"></ng-content>
+          <ng-content select="[slot=meta]" />
           <span class="os-entity-card__meta-text">{{ meta() }}</span>
         </div>
         } @if (hasMetrics()) {
         <div class="os-entity-card__metrics">
-          <ng-content select="[slot=metrics]"></ng-content>
+          <ng-content select="[slot=metrics]" />
         </div>
         }
 
-        <ng-content></ng-content>
+        <ng-content />
       </div>
 
       @if ((customActions() || hasActions()) && !showActionsMenu()) {
       <div slot="actions" class="os-entity-card__actions">
-        <ng-content select="[slot=actions]"></ng-content>
+        <ng-content select="[slot=actions]" />
         @if (hasActions()) {
           @for (action of actions(); track action.id) {
           <os-button

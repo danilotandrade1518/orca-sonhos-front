@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -9,7 +8,7 @@ import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.com
 @Component({
   selector: 'os-suggested-actions-widget',
   standalone: true,
-  imports: [CommonModule, OsCardComponent, OsIconComponent],
+  imports: [OsCardComponent, OsIconComponent],
   template: `
     <div class="suggested-actions-widget" role="region" [attr.aria-labelledby]="'suggested-actions-title'">
       <header class="suggested-actions-widget__header">

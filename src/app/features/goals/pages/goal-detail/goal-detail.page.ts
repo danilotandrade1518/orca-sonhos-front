@@ -6,7 +6,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { GoalsState } from '../../state/goals-state/goals.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -28,15 +28,14 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   selector: 'os-goal-detail-page',
   standalone: true,
   imports: [
-    CommonModule,
     OsModalTemplateComponent,
     OsButtonComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsSkeletonComponent,
     OsAlertComponent,
-    OsProgressBarComponent,
-  ],
+    OsProgressBarComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Detalhes da meta">

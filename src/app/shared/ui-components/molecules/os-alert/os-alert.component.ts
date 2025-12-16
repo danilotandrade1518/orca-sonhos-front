@@ -7,7 +7,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
@@ -18,7 +18,7 @@ export type OsAlertRole = 'alert' | 'status' | 'alertdialog';
 @Component({
   selector: 'os-alert',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsButtonComponent],
+  imports: [OsIconComponent, OsButtonComponent],
   template: `
     @if (visible()) {
     <div
@@ -43,7 +43,7 @@ export type OsAlertRole = 'alert' | 'status' | 'alertdialog';
         <div class="os-alert__title">{{ title() }}</div>
         }
         <div class="os-alert__message">
-          <ng-content></ng-content>
+          <ng-content />
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 
 import { ChartContainerComponent } from '@shared/ui-components/molecules/chart-container/chart-container.component';
 import { BarChartComponent } from '@shared/charts/components/bar-chart/bar-chart.component';
@@ -35,7 +35,7 @@ import type { RevenueExpenseDto } from '@dtos/report/revenue-expense.dto';
     </os-chart-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ChartContainerComponent, BarChartComponent],
+  imports: [ChartContainerComponent, BarChartComponent],
   providers: [CurrencyPipe],
 })
 export class RevenueExpenseChartComponent {

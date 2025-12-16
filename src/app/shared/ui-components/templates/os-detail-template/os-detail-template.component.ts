@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -66,13 +65,12 @@ export interface DetailTemplateBreadcrumb {
   selector: 'os-detail-template',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     OsButtonComponent,
     OsCardComponent,
     OsNavigationComponent,
-    OsPageHeaderComponent,
-  ],
+    OsPageHeaderComponent
+],
   template: `
     <div [class]="templateClass()" role="main" [attr.aria-label]="title()">
       @if (showHeader()) {

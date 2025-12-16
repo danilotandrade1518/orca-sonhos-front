@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
@@ -162,15 +162,14 @@ export interface WizardTemplateConfig {
   styleUrls: ['./os-wizard-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     OsButtonComponent,
     OsCardComponent,
     OsProgressBarComponent,
     OsPageHeaderComponent,
     OsIconComponent,
-    OsBadgeComponent,
-  ],
+    OsBadgeComponent
+],
 })
 export class OsWizardTemplateComponent {
   config = input.required<WizardTemplateConfig>();

@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export type OsSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -17,7 +17,7 @@ export type OsSpinnerType = 'default' | 'overlay';
 @Component({
   selector: 'os-spinner',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
+  imports: [MatProgressSpinnerModule],
   template: `
     <div
       [class]="spinnerWrapperClass()"
@@ -25,13 +25,12 @@ export type OsSpinnerType = 'default' | 'overlay';
       [attr.aria-label]="ariaLabel()"
       [attr.role]="spinnerRole()"
     >
-      <mat-spinner
-        [class]="spinnerClass()"
+      <mat-spinner [class]="spinnerClass()"
         [attr.aria-label]="ariaLabel() || 'Loading'"
         [attr.aria-hidden]="ariaHidden()"
         [diameter]="matDiameter()"
         [color]="matColor()"
-      ></mat-spinner>
+       />
     </div>
   `,
   styleUrls: ['./os-spinner.component.scss'],

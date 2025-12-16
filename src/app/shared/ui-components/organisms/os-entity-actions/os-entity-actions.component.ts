@@ -1,5 +1,5 @@
 import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,7 @@ export type OsEntityActionsSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-entity-actions',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatMenuModule, MatIconModule, OsIconComponent, OsIconMenuButtonComponent],
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, OsIconComponent, OsIconMenuButtonComponent],
   template: `
     <div class="os-entity-actions">
       <os-icon-menu-button

@@ -1,5 +1,5 @@
 import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -30,13 +30,12 @@ export interface OsDataTableAction {
   selector: 'os-data-table',
   standalone: true,
   imports: [
-    CommonModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
     OsButtonComponent,
-    OsIconComponent,
-  ],
+    OsIconComponent
+],
   template: `
     <div class="os-data-table" [class]="dataTableClasses()">
       @if (title()) {
@@ -103,15 +102,14 @@ export interface OsDataTableAction {
       </div>
 
       @if (showPagination() && data().length > 0) {
-      <mat-paginator
-        [length]="totalItems()"
+      <mat-paginator [length]="totalItems()"
         [pageSize]="pageSize()"
         [pageIndex]="pageIndex()"
         [pageSizeOptions]="pageSizeOptions()"
         [showFirstLastButtons]="showFirstLastButtons()"
         (page)="onPageChange($event)"
         class="os-data-table__paginator"
-      ></mat-paginator>
+       />
       }
     </div>
   `,

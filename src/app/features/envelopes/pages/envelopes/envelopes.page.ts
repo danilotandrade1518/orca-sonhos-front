@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   untracked,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { EnvelopeState } from '@core/services/envelope/envelope-state/envelope.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -27,14 +27,13 @@ import type { EnvelopeDto } from '../../../../../dtos/envelope';
   selector: 'os-envelopes-page',
   standalone: true,
   imports: [
-    CommonModule,
     EnvelopeCardComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de envelopes">

@@ -7,7 +7,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
 export type OsFilterBarVariant = 'default' | 'compact' | 'expanded';
@@ -24,7 +24,7 @@ export interface OsFilterOption {
 @Component({
   selector: 'os-filter-bar',
   standalone: true,
-  imports: [CommonModule, OsButtonComponent],
+  imports: [OsButtonComponent],
   template: `
     <div
       class="os-filter-bar"
@@ -34,7 +34,7 @@ export interface OsFilterOption {
       [attr.aria-describedby]="ariaDescribedBy() || null"
     >
       <div class="os-filter-bar__content">
-        <ng-content></ng-content>
+        <ng-content />
       </div>
 
       @if (showActions()) {

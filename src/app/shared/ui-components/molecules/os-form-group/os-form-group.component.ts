@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 export type OsFormGroupVariant = 'default' | 'compact' | 'spaced';
@@ -17,7 +17,7 @@ export type OsFormGroupColumns = 1 | 2 | 3;
 @Component({
   selector: 'os-form-group',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <fieldset
       class="os-form-group"
@@ -50,7 +50,7 @@ export type OsFormGroupColumns = 1 | 2 | 3;
       }
 
       <div class="os-form-group__content">
-        <ng-content></ng-content>
+        <ng-content />
       </div>
 
       @if (helperText() && !invalid()) {

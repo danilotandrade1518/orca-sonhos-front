@@ -1,5 +1,4 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 export type OsMoneyDisplayVariant =
   | 'default'
@@ -15,7 +14,7 @@ export type OsMoneyDisplaySize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'small' | 'm
 @Component({
   selector: 'os-money-display',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="os-money-display"

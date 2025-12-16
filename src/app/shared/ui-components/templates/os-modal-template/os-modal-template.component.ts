@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OsModalComponent } from '../../organisms/os-modal/os-modal.component';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
@@ -80,7 +79,7 @@ export interface ModalTemplateConfig {
   `,
   styleUrls: ['./os-modal-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, OsModalComponent, OsButtonComponent],
+  imports: [OsModalComponent, OsButtonComponent],
 })
 export class OsModalTemplateComponent {
   config = input.required<ModalTemplateConfig>();

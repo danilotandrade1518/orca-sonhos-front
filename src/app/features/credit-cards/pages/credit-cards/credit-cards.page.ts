@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
   untracked,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -32,7 +32,6 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
   selector: 'os-credit-cards-page',
   standalone: true,
   imports: [
-    CommonModule,
     CreditCardCardComponent,
     CreditCardFormComponent,
     CreditCardBillFormComponent,
@@ -41,8 +40,8 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de cartões de crédito">

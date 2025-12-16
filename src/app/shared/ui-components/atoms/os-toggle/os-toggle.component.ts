@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
@@ -10,7 +10,7 @@ export type OsToggleRole = 'switch' | 'checkbox';
 @Component({
   selector: 'os-toggle',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSlideToggleModule],
+  imports: [FormsModule, MatSlideToggleModule],
   template: `
     <div
       [class]="toggleClasses()"

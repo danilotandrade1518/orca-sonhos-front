@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GoalFormComponent } from '../../components/goal-form/goal-form.component';
@@ -7,7 +6,7 @@ import type { CreateGoalDto } from '../../../../../dtos/goal/create-goal-request
 
 @Component({
   selector: 'os-goals-new-page',
-  imports: [CommonModule, GoalFormComponent],
+  imports: [GoalFormComponent],
   template: `
     <section class="os-goals-new" role="main" aria-label="Nova meta">
       <os-goal-form

@@ -6,7 +6,7 @@ import {
   signal,
   output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OsModalTemplateComponent, ModalTemplateConfig } from '../../templates/os-modal-template/os-modal-template.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
@@ -23,7 +23,7 @@ export interface ConfirmDialogData {
 
 @Component({
   selector: 'os-confirm-dialog',
-  imports: [CommonModule, OsModalTemplateComponent, OsIconComponent],
+  imports: [OsModalTemplateComponent, OsIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-modal-template

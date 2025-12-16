@@ -9,7 +9,6 @@ import {
   ChangeDetectionStrategy,
   DestroyRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { BudgetParticipantDto } from '../../../../../dtos/budget';
 import { SharingState } from '@core/services/sharing/sharing.state';
@@ -21,7 +20,7 @@ import { OsBadgeComponent } from '@shared/ui-components/atoms/os-badge/os-badge.
 @Component({
   selector: 'os-collaboration-dashboard',
   standalone: true,
-  imports: [CommonModule, OsCardComponent, OsButtonComponent, OsBadgeComponent],
+  imports: [OsCardComponent, OsButtonComponent, OsBadgeComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="collaboration-dashboard" [class]="containerClass()">

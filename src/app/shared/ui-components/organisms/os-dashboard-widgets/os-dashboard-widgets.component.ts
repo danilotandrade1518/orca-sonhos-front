@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import {
@@ -74,7 +73,6 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
   selector: 'os-dashboard-widgets',
   standalone: true,
   imports: [
-    CommonModule,
     OsGoalProgressCardComponent,
     GoalsProgressWidgetComponent,
     FinancialHealthIndicatorComponent,
@@ -84,8 +82,8 @@ export type DashboardState = 'loading' | 'error' | 'empty' | 'success';
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
-    OsMoneyDisplayComponent,
-  ],
+    OsMoneyDisplayComponent
+],
   template: `
     <div
       class="os-dashboard-widgets"

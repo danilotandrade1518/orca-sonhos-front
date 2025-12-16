@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ChangeDetectionStrategy,
@@ -24,15 +23,14 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 @Component({
   selector: 'os-goals-page',
   imports: [
-    CommonModule,
     GoalListComponent,
     OsFilterBarComponent,
     OsInputComponent,
     OsSelectComponent,
     OsPageComponent,
     OsPageHeaderComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de metas">
       <os-page-header

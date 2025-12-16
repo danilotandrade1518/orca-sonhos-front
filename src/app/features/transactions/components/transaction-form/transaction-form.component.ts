@@ -9,7 +9,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 import type {
@@ -32,14 +32,13 @@ import type { OsDropdownOption } from '@shared/ui-components/molecules/os-dropdo
 @Component({
   selector: 'os-transaction-form',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsModalTemplateComponent,
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsDropdownComponent,
-    OsDatePickerComponent,
-  ],
+    OsDatePickerComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-modal-template

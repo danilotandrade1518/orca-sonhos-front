@@ -12,7 +12,7 @@ import {
   afterNextRender,
   DestroyRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
@@ -31,7 +31,7 @@ export interface OsModalAction {
 @Component({
   selector: 'os-modal',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, OsButtonComponent, OsCardComponent],
+  imports: [MatDialogModule, OsButtonComponent, OsCardComponent],
   template: `
     <div
       class="os-modal"
@@ -77,7 +77,7 @@ export interface OsModalAction {
           }
 
           <div class="os-modal__content" [class]="contentClasses()">
-            <ng-content></ng-content>
+            <ng-content />
           </div>
 
           @if (showActions()) {

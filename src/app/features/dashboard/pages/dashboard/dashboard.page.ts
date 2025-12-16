@@ -1,5 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -15,7 +21,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, DashboardWidgetsComponent, OsPageComponent, OsPageHeaderComponent],
+  imports: [DashboardWidgetsComponent, OsPageComponent, OsPageHeaderComponent],
   template: `
     <os-page variant="default" size="medium" ariaLabel="Dashboard principal">
       <os-page-header
@@ -38,6 +44,7 @@ import {
     </os-page>
   `,
   styleUrl: './dashboard.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);

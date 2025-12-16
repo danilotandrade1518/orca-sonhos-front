@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -7,7 +6,7 @@ import {
   output,
   signal,
   ChangeDetectionStrategy,
-  ViewChild,
+  viewChild
 } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -110,7 +109,7 @@ export interface AppShellLayout {
             >
               <!-- Header Content Slot (for Budget Selector) -->
               <div slot="header-content">
-                <ng-content select="[slot=header-content]"></ng-content>
+                <ng-content select="[slot=header-content]" />
               </div>
             </os-header>
           </header>
@@ -165,7 +164,7 @@ export interface AppShellLayout {
             <!-- Contextual Actions Slot -->
             @if (showContextualActions()) {
             <div class="os-app-shell-template__contextual-actions">
-              <ng-content select="[slot=contextual-actions]"></ng-content>
+              <ng-content select="[slot=contextual-actions]" />
             </div>
             }
 
@@ -182,19 +181,18 @@ export interface AppShellLayout {
   styleUrls: ['./os-app-shell-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     RouterOutlet,
     OsHeaderComponent,
     OsSidebarComponent,
-    OsIconButtonComponent,
-  ],
+    OsIconButtonComponent
+],
 })
 export class OsAppShellTemplateComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);
   readonly themeService = inject(ThemeService);
-  @ViewChild('sidebarRef') sidebarComponent?: OsSidebarComponent;
-  @ViewChild('headerRef') headerComponent?: OsHeaderComponent;
+  readonly sidebarComponent = viewChild<OsSidebarComponent>('sidebarRef');
+  readonly headerComponent = viewChild<OsHeaderComponent>('headerRef');
 
   layout = input<AppShellLayout>({
     variant: 'default',
@@ -361,11 +359,12 @@ export class OsAppShellTemplateComponent {
 
   onHeaderMobileMenuToggle(open: boolean): void {
     this.headerMobileMenuToggle.emit({ open });
-    if (this.computedLayout().showSidebar && this.isMobileSignal() && this.sidebarComponent) {
+    const sidebarComponent = this.sidebarComponent();
+    if (this.computedLayout().showSidebar && this.isMobileSignal() && sidebarComponent) {
       if (open) {
-        this.sidebarComponent.openSidebar();
+        sidebarComponent.openSidebar();
       } else {
-        this.sidebarComponent.closeSidebar();
+        sidebarComponent.closeSidebar();
       }
     }
   }
@@ -385,8 +384,9 @@ export class OsAppShellTemplateComponent {
   onSidebarOpenChange(open: boolean): void {
     this.sidebarOpenSignal.set(open);
     this.sidebarOpenChange.emit(open);
-    if (this.computedLayout().showSidebar && this.isMobileSignal() && this.headerComponent) {
-      this.headerComponent.setMobileMenuOpen(open);
+    const headerComponent = this.headerComponent();
+    if (this.computedLayout().showSidebar && this.isMobileSignal() && headerComponent) {
+      headerComponent.setMobileMenuOpen(open);
     }
   }
 

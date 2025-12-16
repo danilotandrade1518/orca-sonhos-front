@@ -9,7 +9,7 @@ import {
   AfterViewInit,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -52,7 +52,6 @@ export interface CategoryFormData {
   selector: 'os-category-manager',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     CdkDrag,
@@ -64,8 +63,8 @@ export interface CategoryFormData {
     OsBadgeComponent,
     OsLabelComponent,
     OsFormGroupComponent,
-    OsFormFieldComponent,
-  ],
+    OsFormFieldComponent
+],
   template: `
     <div
       class="os-category-manager"
@@ -83,7 +82,7 @@ export interface CategoryFormData {
             [loading]="loading()"
             aria-label="Adicionar nova categoria"
           >
-            <os-icon name="plus" size="sm" [attr.aria-hidden]="'true'"></os-icon>
+            <os-icon name="plus" size="sm" [attr.aria-hidden]="'true'" />
             Adicionar Categoria
           </os-button>
         </div>
@@ -97,13 +96,12 @@ export interface CategoryFormData {
               <os-label variant="default" size="medium" [required]="true">
                 Nome da Categoria
               </os-label>
-              <os-input
-                formControlName="name"
+              <os-input formControlName="name"
                 variant="default"
                 size="medium"
                 placeholder="Digite o nome da categoria"
                 [required]="true"
-              ></os-input>
+               />
               @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
               <div class="os-category-manager__error">
                 @if (categoryForm.get('name')?.errors?.['required']) {
@@ -119,23 +117,21 @@ export interface CategoryFormData {
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium"> Descrição </os-label>
-              <os-input
-                formControlName="description"
+              <os-input formControlName="description"
                 variant="default"
                 size="medium"
                 placeholder="Descrição opcional da categoria"
-              ></os-input>
+               />
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium" [required]="true"> Tipo </os-label>
-              <os-select
-                formControlName="type"
+              <os-select formControlName="type"
                 variant="default"
                 size="medium"
                 [options]="categoryTypeOptions"
                 [required]="true"
-              ></os-select>
+               />
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
@@ -151,13 +147,12 @@ export interface CategoryFormData {
                   role="button"
                   tabindex="0"
                 ></div>
-                <os-input
-                  formControlName="color"
+                <os-input formControlName="color"
                   variant="default"
                   size="medium"
                   type="text"
                   placeholder="#3B82F6"
-                ></os-input>
+                 />
                 <os-button
                   variant="tertiary"
                   size="small"
@@ -165,7 +160,7 @@ export interface CategoryFormData {
                   [disabled]="loading()"
                   [attr.aria-label]="'Abrir seletor de cores'"
                 >
-                  <os-icon name="palette" size="sm"></os-icon>
+                  <os-icon name="palette" size="sm" />
                 </os-button>
               </div>
 
@@ -197,14 +192,13 @@ export interface CategoryFormData {
               <os-label variant="default" size="medium"> Ícone </os-label>
               <div class="os-category-manager__icon-picker">
                 <div class="os-category-manager__icon-preview">
-                  <os-icon [name]="selectedIcon()" size="md"></os-icon>
+                  <os-icon [name]="selectedIcon()" size="md" />
                 </div>
-                <os-input
-                  formControlName="icon"
+                <os-input formControlName="icon"
                   variant="default"
                   size="medium"
                   placeholder="Nome do ícone"
-                ></os-input>
+                 />
                 <os-button
                   variant="tertiary"
                   size="small"
@@ -212,7 +206,7 @@ export interface CategoryFormData {
                   [disabled]="loading()"
                   [attr.aria-label]="'Abrir seletor de ícones'"
                 >
-                  <os-icon name="search" size="sm"></os-icon>
+                  <os-icon name="search" size="sm" />
                 </os-button>
               </div>
 
@@ -234,7 +228,7 @@ export interface CategoryFormData {
                   role="option"
                   tabindex="0"
                 >
-                  <os-icon [name]="icon" size="md"></os-icon>
+                  <os-icon [name]="icon" size="md" />
                 </div>
                 }
               </div>
@@ -279,7 +273,7 @@ export interface CategoryFormData {
                 [attr.aria-label]="showFilter() ? 'Ocultar filtros de categorias' : 'Mostrar filtros de categorias'"
                 [attr.aria-expanded]="showFilter()"
               >
-                <os-icon name="filter" size="sm" [attr.aria-hidden]="'true'"></os-icon>
+                <os-icon name="filter" size="sm" [attr.aria-hidden]="'true'" />
                 {{ showFilter() ? 'Ocultar Filtros' : 'Mostrar Filtros' }}
               </os-button>
             </div>
@@ -290,35 +284,32 @@ export interface CategoryFormData {
             <os-form-group variant="default" size="small">
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Buscar </os-label>
-                <os-input
-                  [(ngModel)]="searchTerm"
+                <os-input [(ngModel)]="searchTerm"
                   variant="default"
                   size="small"
                   placeholder="Buscar por nome ou descrição"
                   [disabled]="loading()"
-                ></os-input>
+                 />
               </os-form-field>
 
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Tipo </os-label>
-                <os-select
-                  [(ngModel)]="filterType"
+                <os-select [(ngModel)]="filterType"
                   variant="default"
                   size="small"
                   [options]="filterTypeOptions"
                   [disabled]="loading()"
-                ></os-select>
+                 />
               </os-form-field>
 
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Status </os-label>
-                <os-select
-                  [(ngModel)]="filterStatus"
+                <os-select [(ngModel)]="filterStatus"
                   variant="default"
                   size="small"
                   [options]="filterStatusOptions"
                   [disabled]="loading()"
-                ></os-select>
+                 />
               </os-form-field>
             </os-form-group>
           </div>
@@ -346,7 +337,7 @@ export interface CategoryFormData {
               <div class="os-category-manager__item-content">
                 @if (category.icon) {
                 <div class="os-category-manager__item-icon">
-                  <os-icon [name]="category.icon" size="md"></os-icon>
+                  <os-icon [name]="category.icon" size="md" />
                 </div>
                 }
                 <div class="os-category-manager__item-info">
@@ -374,7 +365,7 @@ export interface CategoryFormData {
                   [disabled]="loading()"
                   [attr.aria-label]="'Editar categoria ' + category.name"
                 >
-                  <os-icon name="edit" size="sm" [attr.aria-hidden]="'true'"></os-icon>
+                  <os-icon name="edit" size="sm" [attr.aria-hidden]="'true'" />
                 </os-button>
                 <os-button
                   variant="danger"
@@ -383,13 +374,13 @@ export interface CategoryFormData {
                   [disabled]="loading()"
                   [attr.aria-label]="'Excluir categoria ' + category.name"
                 >
-                  <os-icon name="trash" size="sm" [attr.aria-hidden]="'true'"></os-icon>
+                  <os-icon name="trash" size="sm" [attr.aria-hidden]="'true'" />
                 </os-button>
               </div>
             </div>
             } @if (filteredCategories().length === 0) {
             <div class="os-category-manager__empty">
-              <os-icon name="folder-open" size="lg"></os-icon>
+              <os-icon name="folder-open" size="lg" />
               <h3>Nenhuma categoria encontrada</h3>
               @if (searchTerm || filterType || filterStatus) {
               <p>Tente ajustar os filtros para encontrar mais categorias.</p>

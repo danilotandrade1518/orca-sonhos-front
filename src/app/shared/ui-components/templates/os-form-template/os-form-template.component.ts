@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 
@@ -127,14 +127,13 @@ export interface FormTemplateConfig {
   styleUrls: ['./os-form-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     ReactiveFormsModule,
     OsButtonComponent,
     OsCardComponent,
     OsProgressBarComponent,
-    OsPageHeaderComponent,
-  ],
+    OsPageHeaderComponent
+],
 })
 export class OsFormTemplateComponent {
   config = input.required<FormTemplateConfig>();

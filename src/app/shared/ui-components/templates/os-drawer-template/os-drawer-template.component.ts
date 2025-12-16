@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, input, output, ChangeDetectionStrategy, signal } from '@angular/core';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
@@ -115,7 +114,7 @@ export interface DrawerTemplateConfig {
   `,
   styleUrls: ['./os-drawer-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, OsButtonComponent],
+  imports: [OsButtonComponent],
 })
 export class OsDrawerTemplateComponent {
   config = input.required<DrawerTemplateConfig>();

@@ -9,7 +9,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BudgetDto, BudgetType } from '../../../../../dtos/budget';
@@ -26,13 +26,12 @@ import type { OsDropdownOption } from '@shared/ui-components/molecules/os-dropdo
   selector: 'os-budget-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsModalTemplateComponent,
     OsFormTemplateComponent,
     OsFormFieldComponent,
-    OsDropdownComponent,
-  ],
+    OsDropdownComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-modal-template

@@ -8,9 +8,9 @@ import {
   signal,
   inject,
   ElementRef,
-  ViewChild,
   AfterViewInit,
   OnDestroy,
+  viewChild
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -245,7 +245,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
   private elementRef = inject(ElementRef);
   
-  @ViewChild('infiniteTrigger') infiniteTrigger?: ElementRef;
+  readonly infiniteTrigger = viewChild<ElementRef>('infiniteTrigger');
   
   mobileFiltersOpen = signal(false);
   infiniteScrollLoading = signal(false);
@@ -577,7 +577,7 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   
   ngAfterViewInit() {
     
-    if (this.infiniteScroll().enabled && this.infiniteTrigger) {
+    if (this.infiniteScroll().enabled && this.infiniteTrigger()) {
       this.setupIntersectionObserver();
     }
   }
@@ -589,7 +589,8 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
   }
 
   private setupIntersectionObserver() {
-    if (!this.infiniteTrigger) return;
+    const infiniteTrigger = this.infiniteTrigger();
+    if (!infiniteTrigger) return;
 
     this.intersectionObserver = new IntersectionObserver(
       (entries) => {
@@ -609,6 +610,6 @@ export class OsListTemplateComponent implements AfterViewInit, OnDestroy {
       }
     );
 
-    this.intersectionObserver.observe(this.infiniteTrigger.nativeElement);
+    this.intersectionObserver.observe(infiniteTrigger.nativeElement);
   }
 }

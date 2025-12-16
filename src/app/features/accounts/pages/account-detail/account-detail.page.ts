@@ -6,7 +6,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -27,14 +27,13 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   selector: 'os-account-detail-page',
   standalone: true,
   imports: [
-    CommonModule,
     OsModalTemplateComponent,
     OsButtonComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsSkeletonComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Detalhes da conta">

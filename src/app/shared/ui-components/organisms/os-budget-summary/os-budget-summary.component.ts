@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
@@ -24,12 +23,11 @@ export interface BudgetSummaryData {
   selector: 'os-budget-summary',
   standalone: true,
   imports: [
-    CommonModule,
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsBadgeComponent,
-    OsIconComponent,
-  ],
+    OsIconComponent
+],
   templateUrl: './os-budget-summary.component.html',
   styleUrls: ['./os-budget-summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

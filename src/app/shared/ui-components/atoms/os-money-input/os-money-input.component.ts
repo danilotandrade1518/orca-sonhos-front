@@ -9,7 +9,7 @@ import {
   DestroyRef,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
@@ -20,7 +20,7 @@ export type OsMoneyInputSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-money-input',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatFormFieldModule, OsIconComponent],
+  imports: [MatInputModule, MatFormFieldModule, OsIconComponent],
   template: `
     <div [class]="containerClass()">
       <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
@@ -28,7 +28,7 @@ export type OsMoneyInputSize = 'small' | 'medium' | 'large';
         <mat-label>{{ label() }}</mat-label>
         }
 
-        <os-icon name="attach_money" matPrefix class="os-money-input__currency-icon"></os-icon>
+        <os-icon name="attach_money" matPrefix class="os-money-input__currency-icon" />
 
         <input
           matInput

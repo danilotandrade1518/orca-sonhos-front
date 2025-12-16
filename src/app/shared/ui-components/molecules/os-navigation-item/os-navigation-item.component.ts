@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
@@ -10,7 +10,7 @@ export type OsNavigationItemRole = 'navigation' | 'menuitem' | 'tab' | 'button';
 @Component({
   selector: 'os-navigation-item',
   standalone: true,
-  imports: [CommonModule, RouterModule, OsIconComponent],
+  imports: [RouterModule, OsIconComponent],
   template: `
     <div
       [class]="containerClass()"

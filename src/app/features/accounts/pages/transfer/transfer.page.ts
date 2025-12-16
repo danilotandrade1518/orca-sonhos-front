@@ -6,7 +6,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -25,11 +25,10 @@ import {
 @Component({
   selector: 'os-transfer-page',
   imports: [
-    CommonModule,
     OsPageComponent,
     OsPageHeaderComponent,
-    TransferFormComponent,
-  ],
+    TransferFormComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Transferência entre contas">

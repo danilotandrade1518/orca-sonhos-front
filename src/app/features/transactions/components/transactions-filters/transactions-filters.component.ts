@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,7 +23,7 @@ export interface TransactionsFilters {
 
 @Component({
   selector: 'os-transactions-filters',
-  imports: [CommonModule, OsFilterBarComponent],
+  imports: [OsFilterBarComponent],
   template: `
     <os-filter-bar
       [variant]="'compact'"

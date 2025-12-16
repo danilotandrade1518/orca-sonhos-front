@@ -8,7 +8,7 @@ import {
   effect,
   DestroyRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { GoalsState } from '@features/goals/state/goals-state/goals.state';
@@ -26,15 +26,14 @@ import type { GoalDto } from '../../../../../dtos/goal';
 @Component({
   selector: 'os-goal-amount-page',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsPageComponent,
     OsPageHeaderComponent,
     OsFormTemplateComponent,
     OsMoneyInputComponent,
     OsAlertComponent,
-    OsCurrencyPipe,
-  ],
+    OsCurrencyPipe
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Formulário de aporte">

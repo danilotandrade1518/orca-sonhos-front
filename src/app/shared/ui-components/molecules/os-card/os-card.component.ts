@@ -1,5 +1,4 @@
 import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 export type OsCardVariant = 'default' | 'outlined' | 'elevated' | 'flat';
 export type OsCardSize = 'small' | 'medium' | 'large';
@@ -7,7 +6,7 @@ export type OsCardSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       [class]="cardClasses()"
@@ -25,17 +24,17 @@ export type OsCardSize = 'small' | 'medium' | 'large';
     >
       @if (header()) {
       <div class="os-card__header">
-        <ng-content select="[slot=header]"></ng-content>
+        <ng-content select="[slot=header]" />
       </div>
       }
 
       <div class="os-card__content">
-        <ng-content></ng-content>
+        <ng-content />
       </div>
 
       @if (actions()) {
       <div class="os-card__actions">
-        <ng-content select="[slot=actions]"></ng-content>
+        <ng-content select="[slot=actions]" />
       </div>
       }
     </div>

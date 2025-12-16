@@ -9,7 +9,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
@@ -30,14 +30,13 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
   selector: 'os-credit-card-bill-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsModalTemplateComponent,
     OsFormTemplateComponent,
     OsSelectComponent,
     OsMoneyInputComponent,
-    OsDateInputComponent,
-  ],
+    OsDateInputComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-modal-template

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 
 import { ChartContainerComponent } from '@shared/ui-components/molecules/chart-container/chart-container.component';
 import { PieChartComponent } from '@shared/charts/components/pie-chart/pie-chart.component';
@@ -35,7 +35,7 @@ import type { CategorySpendingDto } from '@dtos/report/category-spending.dto';
     </os-chart-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ChartContainerComponent, PieChartComponent],
+  imports: [ChartContainerComponent, PieChartComponent],
   providers: [CurrencyPipe],
 })
 export class SpendingChartComponent {

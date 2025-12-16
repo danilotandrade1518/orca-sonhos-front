@@ -1,5 +1,4 @@
 import { Component, input, computed, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 export type OsLabelVariant =
   | 'default'
@@ -15,7 +14,7 @@ export type OsLabelWeight = 'light' | 'regular' | 'medium' | 'semibold' | 'bold'
 @Component({
   selector: 'os-label',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <label
       [id]="labelId"

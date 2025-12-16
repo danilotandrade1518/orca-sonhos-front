@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsAlertComponent } from '../../molecules/os-alert/os-alert.component';
 import { OsSpinnerComponent } from '../../atoms/os-spinner/os-spinner.component';
 import { NotificationService } from '../../../../core/services/notification/notification.service';
@@ -7,7 +7,7 @@ import { NotificationService } from '../../../../core/services/notification/noti
 @Component({
   selector: 'os-notification-container',
   standalone: true,
-  imports: [CommonModule, OsAlertComponent, OsSpinnerComponent],
+  imports: [OsAlertComponent, OsSpinnerComponent],
   template: `
     <div class="os-notification-container">
       @if (isLoading()) {

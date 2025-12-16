@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +14,7 @@ export type OsIconMenuButtonVariant = 'default' | 'primary' | 'secondary' | 'dan
 @Component({
   selector: 'os-icon-menu-button',
   standalone: true,
-  imports: [CommonModule, MatMenuModule, OsIconComponent],
+  imports: [MatMenuModule, OsIconComponent],
   template: `
     <button
       type="button"

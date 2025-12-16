@@ -61,12 +61,12 @@ describe('OsNavigationComponent', () => {
 
   describe('Input Properties', () => {
     it('should set default values', () => {
-      expect(component.variant()).toBe('default');
-      expect(component.size()).toBe('medium');
-      expect(component.orientation()).toBe('horizontal');
-      expect(component.activeItemId()).toBeNull();
-      expect(component.ariaLabel).toBe('Navegação principal');
-      expect(component.showCustomContent()).toBe(false);
+      expect(component.variant()()).toBe('default');
+      expect(component.size()()).toBe('medium');
+      expect(component.orientation()()).toBe('horizontal');
+      expect(component.activeItemId()()).toBeNull();
+      expect(component.ariaLabel()).toBe('Navegação principal');
+      expect(component.showCustomContent()()).toBe(false);
     });
 
     it('should accept custom items', () => {
@@ -78,39 +78,39 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should accept custom variant', () => {
-      component.variant.set('sidebar');
+      component.variant().set('sidebar');
       fixture.detectChanges();
 
-      expect(component.variant()).toBe('sidebar');
+      expect(component.variant()()).toBe('sidebar');
     });
 
     it('should accept custom size', () => {
-      component.size.set('large');
+      component.size().set('large');
       fixture.detectChanges();
 
-      expect(component.size()).toBe('large');
+      expect(component.size()()).toBe('large');
     });
 
     it('should accept custom orientation', () => {
-      component.orientation.set('vertical');
+      component.orientation().set('vertical');
       fixture.detectChanges();
 
-      expect(component.orientation()).toBe('vertical');
+      expect(component.orientation()()).toBe('vertical');
     });
 
     it('should accept active item id', () => {
-      component.activeItemId.set('home');
+      component.activeItemId().set('home');
       fixture.detectChanges();
 
-      expect(component.activeItemId()).toBe('home');
+      expect(component.activeItemId()()).toBe('home');
     });
   });
 
   describe('Computed Properties', () => {
     it('should generate correct navigation classes', () => {
-      component.variant.set('tabs');
-      component.size.set('large');
-      component.orientation.set('vertical');
+      component.variant().set('tabs');
+      component.size().set('large');
+      component.orientation().set('vertical');
       fixture.detectChanges();
 
       const classes = component.navigationClasses();
@@ -121,8 +121,8 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should generate correct list classes', () => {
-      component.variant.set('sidebar');
-      component.orientation.set('vertical');
+      component.variant().set('sidebar');
+      component.orientation().set('vertical');
       fixture.detectChanges();
 
       const classes = component.listClasses();
@@ -140,7 +140,7 @@ describe('OsNavigationComponent', () => {
       };
 
       Object.entries(variantMap).forEach(([variant, expected]) => {
-        component.variant.set(variant as NavigationVariant);
+        component.variant().set(variant as NavigationVariant);
         fixture.detectChanges();
         expect(component.itemVariant()).toBe(expected);
       });
@@ -154,7 +154,7 @@ describe('OsNavigationComponent', () => {
       };
 
       Object.entries(sizeMap).forEach(([size, expected]) => {
-        component.size.set(size as NavigationSize);
+        component.size().set(size as NavigationSize);
         fixture.detectChanges();
         expect(component.itemSize()).toBe(expected);
       });
@@ -163,7 +163,7 @@ describe('OsNavigationComponent', () => {
 
   describe('Active Item Detection', () => {
     it('should identify active item correctly', () => {
-      component.activeItemId.set('budgets');
+      component.activeItemId().set('budgets');
       fixture.detectChanges();
 
       const budgetsItem = mockItems[1];
@@ -174,7 +174,7 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should return false when no active item is set', () => {
-      component.activeItemId.set(null);
+      component.activeItemId().set(null);
       fixture.detectChanges();
 
       const homeItem = mockItems[0];
@@ -228,7 +228,7 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should render custom content when enabled', () => {
-      component.showCustomContent.set(true);
+      component.showCustomContent().set(true);
       fixture.detectChanges();
 
       const customContent = fixture.nativeElement.querySelector('.os-navigation__custom');
@@ -261,7 +261,7 @@ describe('OsNavigationComponent', () => {
       const variants: NavigationVariant[] = ['default', 'minimal', 'sidebar', 'tabs'];
 
       variants.forEach((variant) => {
-        component.variant.set(variant);
+        component.variant().set(variant);
         fixture.detectChanges();
 
         const navElement = fixture.nativeElement.querySelector('nav');
@@ -273,7 +273,7 @@ describe('OsNavigationComponent', () => {
       const sizes: NavigationSize[] = ['small', 'medium', 'large'];
 
       sizes.forEach((size) => {
-        component.size.set(size);
+        component.size().set(size);
         fixture.detectChanges();
 
         const navElement = fixture.nativeElement.querySelector('nav');
@@ -285,7 +285,7 @@ describe('OsNavigationComponent', () => {
       const orientations: NavigationOrientation[] = ['horizontal', 'vertical'];
 
       orientations.forEach((orientation) => {
-        component.orientation.set(orientation);
+        component.orientation().set(orientation);
         fixture.detectChanges();
 
         const navElement = fixture.nativeElement.querySelector('nav');
@@ -296,10 +296,10 @@ describe('OsNavigationComponent', () => {
 
   describe('Integration with Navigation Items', () => {
     it('should render navigation items correctly', () => {
-      component.variant.set('sidebar');
-      component.size.set('large');
-      component.orientation.set('vertical');
-      component.activeItemId.set('home');
+      component.variant().set('sidebar');
+      component.size().set('large');
+      component.orientation().set('vertical');
+      component.activeItemId().set('home');
       fixture.detectChanges();
 
       const navigationItems = fixture.nativeElement.querySelectorAll('os-navigation-item');

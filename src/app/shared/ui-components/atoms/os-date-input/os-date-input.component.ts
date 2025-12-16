@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
@@ -23,21 +23,20 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
   selector: 'os-date-input',
   standalone: true,
   imports: [
-    CommonModule,
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
     MatButtonModule,
     MatNativeDateModule,
-    OsIconComponent,
-  ],
+    OsIconComponent
+],
   template: `
     <div [class]="containerClass()">
       <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
         @if (label()) {
         <mat-label>{{ label() }}</mat-label>
         } @if (prefixIcon()) {
-        <os-icon [name]="prefixIcon()" matPrefix [class]="prefixIconClass()"></os-icon>
+        <os-icon [name]="prefixIcon()" matPrefix [class]="prefixIconClass()" />
         }
 
         <input
@@ -66,13 +65,13 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
         />
 
         @if (suffixIcon()) {
-        <os-icon [name]="suffixIcon()" matSuffix [class]="suffixIconClass()"></os-icon>
+        <os-icon [name]="suffixIcon()" matSuffix [class]="suffixIconClass()" />
         } @else {
         <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disabled()">
-          <os-icon name="calendar_today" matDatepickerToggleIcon></os-icon>
+          <os-icon name="calendar_today" matDatepickerToggleIcon />
         </mat-datepicker-toggle>
         }
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-datepicker #picker />
 
         @if (helperText() || hasError()) {
         <mat-hint [id]="inputId + '-helper'" [class]="helperClass()">

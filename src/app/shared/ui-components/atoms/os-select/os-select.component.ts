@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
@@ -24,7 +24,7 @@ export interface OsSelectOption {
 @Component({
   selector: 'os-select',
   standalone: true,
-  imports: [CommonModule, MatSelectModule, MatFormFieldModule],
+  imports: [MatSelectModule, MatFormFieldModule],
   template: `
     <div [class]="containerClass()">
       <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">

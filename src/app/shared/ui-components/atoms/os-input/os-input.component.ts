@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
@@ -20,14 +20,14 @@ export type OsInputSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-input',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatButtonModule, OsIconComponent],
+  imports: [MatInputModule, MatFormFieldModule, MatButtonModule, OsIconComponent],
   template: `
     <div [class]="containerClass()">
       <mat-form-field [appearance]="appearance()" [class]="formFieldClass()">
         @if (label()) {
         <mat-label>{{ label() }}</mat-label>
         } @if (prefixIcon()) {
-        <os-icon [name]="prefixIcon()" matPrefix [class]="prefixIconClass()"></os-icon>
+        <os-icon [name]="prefixIcon()" matPrefix [class]="prefixIconClass()" />
         }
 
         <input
@@ -50,7 +50,7 @@ export type OsInputSize = 'small' | 'medium' | 'large';
         />
 
         @if (suffixIcon()) {
-        <os-icon [name]="suffixIcon()" matSuffix [class]="suffixIconClass()"></os-icon>
+        <os-icon [name]="suffixIcon()" matSuffix [class]="suffixIconClass()" />
         } @if (clearable() && value() && !disabled()) {
         <button
           matSuffix
@@ -60,7 +60,7 @@ export type OsInputSize = 'small' | 'medium' | 'large';
           (click)="handleClear()"
           [attr.aria-label]="'Clear ' + (label() || 'input')"
         >
-          <os-icon name="close"></os-icon>
+          <os-icon name="close" />
         </button>
         } @if (helperText() || hasError()) {
         <mat-hint [class]="helperClass()" [id]="inputId + '-helper'">

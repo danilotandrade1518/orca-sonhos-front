@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -21,12 +20,11 @@ interface CategoryWithEnvelope extends CategorySpendingDto {
   selector: 'os-category-spending-widget',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     OsProgressBarComponent,
     OsMoneyDisplayComponent,
-    OsIconComponent,
-  ],
+    OsIconComponent
+],
   template: `
     <div
       class="category-spending-widget"

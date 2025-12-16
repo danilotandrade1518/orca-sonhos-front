@@ -6,7 +6,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
@@ -26,14 +26,13 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   selector: 'os-credit-card-detail-page',
   standalone: true,
   imports: [
-    CommonModule,
     OsModalTemplateComponent,
     OsButtonComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsSkeletonComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Detalhes do cartão de crédito">

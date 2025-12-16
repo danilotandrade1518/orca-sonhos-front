@@ -9,7 +9,7 @@ import {
   DestroyRef,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
@@ -24,7 +24,7 @@ import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-butt
 @Component({
   selector: 'os-user-invite',
   standalone: true,
-  imports: [CommonModule, OsSearchBoxComponent, OsButtonComponent],
+  imports: [OsSearchBoxComponent, OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="user-invite" [class]="containerClass()">

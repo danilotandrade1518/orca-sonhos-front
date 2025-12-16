@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 
@@ -82,7 +81,7 @@ export interface PanelTemplateConfig {
   `,
   styleUrls: ['./os-panel-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, OsButtonComponent],
+  imports: [OsButtonComponent],
 })
 export class OsPanelTemplateComponent {
   config = input.required<PanelTemplateConfig>();

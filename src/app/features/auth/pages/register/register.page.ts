@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
   afterNextRender,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -21,12 +21,11 @@ import { environment } from '../../../../../environments/environment';
 @Component({
   selector: 'os-register-page',
   imports: [
-    CommonModule,
     RouterModule,
     OsFormTemplateComponent,
     OsButtonComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-form-template

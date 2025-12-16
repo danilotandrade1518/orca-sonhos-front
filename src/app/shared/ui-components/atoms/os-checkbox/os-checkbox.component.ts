@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -24,7 +24,7 @@ export type OsCheckboxRole = 'checkbox' | 'switch';
 @Component({
   selector: 'os-checkbox',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule],
+  imports: [MatCheckboxModule],
   template: `
     <mat-checkbox
       [id]="inputId"

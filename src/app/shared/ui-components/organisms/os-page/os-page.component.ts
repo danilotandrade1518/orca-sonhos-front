@@ -1,11 +1,11 @@
 import { Component, computed, input, signal, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'os-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="os-page" [class]="pageClasses()" [attr.aria-label]="ariaLabel()" role="main">
       <ng-content />

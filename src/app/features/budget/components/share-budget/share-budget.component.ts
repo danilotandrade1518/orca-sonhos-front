@@ -10,7 +10,6 @@ import {
   OnInit,
   ElementRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { SharingState } from '@core/services/sharing/sharing.state';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -26,11 +25,10 @@ import { CollaborationDashboardComponent } from '../collaboration-dashboard/coll
   selector: 'os-share-budget',
   standalone: true,
   imports: [
-    CommonModule,
     OsModalTemplateComponent,
     UserInviteComponent,
-    CollaborationDashboardComponent,
-  ],
+    CollaborationDashboardComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (isOpen()) {

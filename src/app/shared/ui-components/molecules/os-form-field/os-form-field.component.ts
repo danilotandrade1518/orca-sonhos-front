@@ -8,7 +8,7 @@ import {
   forwardRef,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -27,7 +27,7 @@ export type OsFormFieldValidationState = 'pristine' | 'dirty' | 'touched' | 'inv
 @Component({
   selector: 'os-form-field',
   standalone: true,
-  imports: [CommonModule, FormsModule, OsInputComponent, OsLabelComponent, OsIconComponent],
+  imports: [FormsModule, OsInputComponent, OsLabelComponent, OsIconComponent],
   template: `
     <div
       [class]="containerClass()"

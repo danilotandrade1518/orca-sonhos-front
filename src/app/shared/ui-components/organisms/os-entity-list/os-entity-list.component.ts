@@ -1,5 +1,5 @@
 import { Component, input, output, ChangeDetectionStrategy, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsEmptyStateComponent } from '../../molecules/os-empty-state/os-empty-state.component';
 import { OsSkeletonComponent } from '../../atoms/os-skeleton/os-skeleton.component';
 
@@ -10,7 +10,7 @@ export type OsEntityListVariant = 'default' | 'compact';
 @Component({
   selector: 'os-entity-list',
   standalone: true,
-  imports: [CommonModule, OsEmptyStateComponent, OsSkeletonComponent],
+  imports: [OsEmptyStateComponent, OsSkeletonComponent],
   template: `
     <div
       class="os-entity-list"
@@ -44,7 +44,7 @@ export type OsEntityListVariant = 'default' | 'compact';
       />
       } @else {
       <div class="os-entity-list__container" [class]="containerClasses()">
-        <ng-content></ng-content>
+        <ng-content />
       </div>
       }
     </div>

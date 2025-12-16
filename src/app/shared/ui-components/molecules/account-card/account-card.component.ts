@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsCardComponent } from '../os-card/os-card.component';
 import { AccountTypeBadgeComponent } from '../../atoms/account-type-badge/account-type-badge.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
@@ -12,13 +12,12 @@ import { AccountDto } from '../../../../../dtos/account/account-types';
   selector: 'os-account-card',
   standalone: true,
   imports: [
-    CommonModule,
     OsCardComponent,
     AccountTypeBadgeComponent,
     OsMoneyDisplayComponent,
     OsDeleteButtonComponent,
-    OsEditButtonComponent,
-  ],
+    OsEditButtonComponent
+],
   template: `
     <os-card
       [variant]="'default'"

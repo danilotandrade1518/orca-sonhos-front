@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { OsIconComponent } from '../os-icon';
@@ -16,7 +16,7 @@ export type OsButtonSize = 'small' | 'medium' | 'large';
 @Component({
   selector: 'os-button',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatRippleModule, OsIconComponent],
+  imports: [MatButtonModule, MatRippleModule, OsIconComponent],
   template: `
     <button
       [matButton]="buttonVariant"

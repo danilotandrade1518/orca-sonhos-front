@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 
@@ -18,7 +18,7 @@ export type OsRadioRole = 'radio' | 'switch';
 @Component({
   selector: 'os-radio',
   standalone: true,
-  imports: [CommonModule, MatRadioModule],
+  imports: [MatRadioModule],
   template: `
     <mat-radio-button
       [id]="inputId"

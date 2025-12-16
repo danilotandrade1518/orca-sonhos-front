@@ -10,7 +10,7 @@ import {
   effect,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { LocaleService } from '@shared/formatting';
@@ -22,7 +22,7 @@ export type OsSliderRole = 'slider' | 'progressbar';
 @Component({
   selector: 'os-slider',
   standalone: true,
-  imports: [CommonModule, MatSliderModule],
+  imports: [MatSliderModule],
   template: `
     <div
       [class]="containerClass()"

@@ -213,16 +213,14 @@
                 <label class="os-goal-tracker__filter-label" for="status-filter">Filtrar por Status:</label>
                 <os-dropdown id="status-filter" [options]="statusFilterOptions()" [selectedValue]="selectedStatus()"
                     (valueChange)="onStatusFilterChange($event)" placeholder="Selecionar status" size="small"
-                    [aria-label]="'Filtrar metas por status'">
-                </os-dropdown>
+                    [aria-label]="'Filtrar metas por status'" />
             </div>
 
             <div class="os-goal-tracker__filter-group">
                 <label class="os-goal-tracker__filter-label" for="priority-filter">Filtrar por Prioridade:</label>
                 <os-dropdown id="priority-filter" [options]="priorityFilterOptions()"
                     [selectedValue]="selectedPriority()" (valueChange)="onPriorityFilterChange($event)"
-                    placeholder="Selecionar prioridade" size="small" [aria-label]="'Filtrar metas por prioridade'">
-                </os-dropdown>
+                    placeholder="Selecionar prioridade" size="small" [aria-label]="'Filtrar metas por prioridade'" />
             </div>
         </div>
         }

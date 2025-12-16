@@ -7,7 +7,7 @@ import {
   effect,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsFormGroupComponent } from '../../molecules/os-form-group/os-form-group.component';
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -50,7 +50,7 @@ export interface FormSectionValidation {
 
 @Component({
   selector: 'os-form-section',
-  imports: [CommonModule, OsFormGroupComponent, OsIconComponent],
+  imports: [OsFormGroupComponent, OsIconComponent],
   template: `
     <section
       [class]="sectionClasses()"
@@ -109,10 +109,10 @@ export interface FormSectionValidation {
           [invalid]="validation()?.isValid === false"
           [errorMessage]="validation()?.errors?.join(', ') || ''"
         >
-          <ng-content></ng-content>
+          <ng-content />
         </os-form-group>
         } @else {
-        <ng-content></ng-content>
+        <ng-content />
         } @if (validation() && !validation()?.isValid && validation()?.touched) {
         <div class="os-form-section__validation" role="alert" [attr.aria-live]="'polite'">
           <os-icon name="error" size="sm" />
@@ -123,7 +123,7 @@ export interface FormSectionValidation {
 
       @if (actions().length > 0) {
       <footer class="os-form-section__actions">
-        <ng-content select="[slot=actions]"></ng-content>
+        <ng-content select="[slot=actions]" />
       </footer>
       }
     </section>

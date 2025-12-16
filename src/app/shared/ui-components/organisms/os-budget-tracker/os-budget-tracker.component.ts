@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -55,14 +54,13 @@ export interface BudgetTrends {
   selector: 'os-budget-tracker',
   standalone: true,
   imports: [
-    CommonModule,
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsBadgeComponent,
     OsIconComponent,
     OsProgressBarComponent,
-    OsSpinnerComponent,
-  ],
+    OsSpinnerComponent
+],
   templateUrl: './os-budget-tracker.component.html',
   styleUrls: ['./os-budget-tracker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

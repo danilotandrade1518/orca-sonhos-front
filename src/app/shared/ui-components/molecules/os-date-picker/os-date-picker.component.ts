@@ -9,7 +9,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { OsDateInputComponent } from '../../atoms/os-date-input/os-date-input.component';
@@ -28,7 +28,7 @@ export interface QuickDateOption {
 @Component({
   selector: 'os-date-picker',
   standalone: true,
-  imports: [CommonModule, FormsModule, OsDateInputComponent, OsButtonComponent],
+  imports: [FormsModule, OsDateInputComponent, OsButtonComponent],
   template: `
     <div class="os-date-picker" [class]="datePickerClasses()" [attr.role]="role()">
       <!-- Quick Selection Buttons -->

@@ -42,7 +42,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 
       <!-- Contextual Actions Slot -->
       <div slot="contextual-actions">
-        <ng-content select="[slot=contextual-actions]"></ng-content>
+        <ng-content select="[slot=contextual-actions]" />
       </div>
     </os-app-shell-template>
   `,

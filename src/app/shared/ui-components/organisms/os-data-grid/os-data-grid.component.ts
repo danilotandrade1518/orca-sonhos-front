@@ -232,7 +232,7 @@ export interface OsDataGridPagination {
 
         @if (showFooterActions()) {
         <div class="os-data-grid__footer-actions">
-          <ng-content select="[slot=footer-actions]"></ng-content>
+          <ng-content select="[slot=footer-actions]" />
         </div>
         }
       </div>

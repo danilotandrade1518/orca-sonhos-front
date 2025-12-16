@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
   ChangeDetectionStrategy,
@@ -30,7 +29,7 @@ export type OsTooltipRole = 'tooltip' | 'status' | 'alert';
 @Component({
   selector: 'os-tooltip',
   standalone: true,
-  imports: [CommonModule, MatTooltipModule],
+  imports: [MatTooltipModule],
   template: `
     <div
       [class]="containerClass()"

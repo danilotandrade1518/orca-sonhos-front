@@ -6,7 +6,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -30,7 +30,6 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   selector: 'os-budget-list-page',
   standalone: true,
   imports: [
-    CommonModule,
     BudgetCardComponent,
     BudgetFormComponent,
     OsModalTemplateComponent,
@@ -41,8 +40,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsEntityListComponent,
     OsAlertComponent,
     OsPageComponent,
-    OsPageHeaderComponent,
-  ],
+    OsPageHeaderComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de orçamentos">

@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BudgetDto } from '../../../../../dtos/budget';
 import { OsEntityCardComponent } from '@shared/ui-components/organisms/os-entity-card/os-entity-card.component';
 import { OsDeleteButtonComponent } from '@shared/ui-components/atoms/os-delete-button';
@@ -8,7 +8,7 @@ import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-butto
 @Component({
   selector: 'os-budget-card',
   standalone: true,
-  imports: [CommonModule, OsEntityCardComponent, OsDeleteButtonComponent, OsEditButtonComponent],
+  imports: [OsEntityCardComponent, OsDeleteButtonComponent, OsEditButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-entity-card

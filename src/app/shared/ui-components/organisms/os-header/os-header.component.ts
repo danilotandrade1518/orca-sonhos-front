@@ -1,5 +1,5 @@
 import { Component, computed, input, output, signal, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -44,7 +44,7 @@ export interface BreadcrumbItem {
 @Component({
   selector: 'os-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, OsButtonComponent, OsAvatarComponent, OsIconComponent],
+  imports: [RouterModule, OsButtonComponent, OsAvatarComponent, OsIconComponent],
   template: `
     <div [class]="stickyClasses()">
       <header class="os-header" [class]="headerClasses()" [attr.aria-label]="ariaLabel()">
@@ -67,7 +67,7 @@ export interface BreadcrumbItem {
 
           <!-- Custom Header Content Slot -->
           <div class="os-header__custom-content">
-            <ng-content select="[slot=header-content]"></ng-content>
+            <ng-content select="[slot=header-content]" />
           </div>
 
           <div class="os-header__actions">

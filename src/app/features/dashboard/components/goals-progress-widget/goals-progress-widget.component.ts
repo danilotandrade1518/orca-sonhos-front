@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -24,12 +23,11 @@ interface GoalProgressItem {
   selector: 'os-goals-progress-widget',
   standalone: true,
   imports: [
-    CommonModule,
     OsButtonComponent,
     OsIconComponent,
     OsProgressBarComponent,
-    OsMoneyDisplayComponent,
-  ],
+    OsMoneyDisplayComponent
+],
   template: `
     <div class="goals-progress-widget" role="region" [attr.aria-labelledby]="'goals-progress-title'">
       <header class="goals-progress-widget__header">

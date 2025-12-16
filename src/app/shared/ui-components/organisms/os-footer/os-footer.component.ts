@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 
 export interface FooterLink {
@@ -18,7 +18,7 @@ export interface FooterSection {
 @Component({
   selector: 'os-footer',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   template: `
     <footer class="os-footer" [class]="footerClasses()">
       <div class="os-footer__container">

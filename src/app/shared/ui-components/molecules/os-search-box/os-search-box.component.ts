@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, signal, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -20,7 +19,7 @@ export interface OsSearchSuggestion {
 @Component({
   selector: 'os-search-box',
   standalone: true,
-  imports: [CommonModule, OsInputComponent, OsButtonComponent],
+  imports: [OsInputComponent, OsButtonComponent],
   template: `
     <div
       class="os-search-box"

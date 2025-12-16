@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 
 export type OsIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -16,7 +16,7 @@ export type OsIconRole = 'decorative' | 'informative' | 'interactive';
 @Component({
   selector: 'os-icon',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   template: `
     @if (svgContent()) {
     <div
@@ -38,8 +38,7 @@ export type OsIconRole = 'decorative' | 'informative' | 'interactive';
       role="img"
     />
     } @else {
-    <mat-icon
-      [class]="iconClass()"
+    <mat-icon [class]="iconClass()"
       [attr.aria-hidden]="ariaHidden()"
       [attr.aria-label]="ariaLabel() || null"
       [attr.title]="title() || null"
@@ -48,8 +47,7 @@ export type OsIconRole = 'decorative' | 'informative' | 'interactive';
       [color]="matColor()"
       [inline]="inline()"
       [attr.role]="iconRole()"
-    >
-    </mat-icon>
+     />
     }
   `,
   styleUrls: ['./os-icon.component.scss'],

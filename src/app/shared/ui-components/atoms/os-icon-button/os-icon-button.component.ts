@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,7 +13,7 @@ export type OsIconButtonVariant = 'default' | 'primary' | 'secondary' | 'danger'
 @Component({
   selector: 'os-icon-button',
   standalone: true,
-  imports: [CommonModule, OsIconComponent],
+  imports: [OsIconComponent],
   template: `
     <button
       type="button"

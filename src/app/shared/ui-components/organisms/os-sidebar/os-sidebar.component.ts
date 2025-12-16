@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,10 +10,10 @@ import {
   OnDestroy,
   effect,
   ElementRef,
-  ViewChild,
   afterNextRender,
   Injector,
   runInInjectionContext,
+  viewChild
 } from '@angular/core';
 import { Subscription, filter, fromEvent } from 'rxjs';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
@@ -45,7 +45,7 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
 @Component({
   selector: 'os-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, OsNavigationItemComponent, OsIconComponent],
+  imports: [RouterModule, OsNavigationItemComponent, OsIconComponent],
   host: {
     '(keydown.escape)': 'onEscapeKey()',
   },
@@ -100,8 +100,7 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
         <ul class="os-sidebar__list" role="list">
           @for (item of items(); track item.id) {
           <li class="os-sidebar__item" role="none">
-            <os-navigation-item
-              [label]="item.label"
+            <os-navigation-item [label]="item.label"
               [icon]="item.icon || ''"
               [routerLink]="item.route"
               [variant]="itemVariant()"
@@ -111,16 +110,14 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
               [badge]="item.badge ? +item.badge : null"
               [ariaLabel]="item.label"
               (itemClick)="onItemClick(item)"
-            >
-            </os-navigation-item>
+             />
 
             <!-- Sub-items -->
             @if (item.children && item.children.length > 0 && !isCollapsed()) {
             <ul class="os-sidebar__sub-list" role="list">
               @for (subItem of item.children; track subItem.id) {
               <li class="os-sidebar__sub-item" role="none">
-                <os-navigation-item
-                  [label]="subItem.label"
+                <os-navigation-item [label]="subItem.label"
                   [icon]="subItem.icon || ''"
                   [routerLink]="subItem.route"
                   [variant]="subItemVariant()"
@@ -130,8 +127,7 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
                   [badge]="subItem.badge ? +subItem.badge : null"
                   [ariaLabel]="subItem.label"
                   (itemClick)="onItemClick(subItem)"
-                >
-                </os-navigation-item>
+                 />
               </li>
               }
             </ul>
@@ -144,14 +140,14 @@ export type SidebarAnimation = 'slide' | 'fade' | 'scale';
       <!-- Footer -->
       @if (showFooter()) {
       <div class="os-sidebar__footer">
-        <ng-content select="[slot=footer]"></ng-content>
+        <ng-content select="[slot=footer]" />
       </div>
       }
 
       <!-- Custom Content -->
       @if (showCustomContent()) {
       <div class="os-sidebar__custom">
-        <ng-content select="[slot=custom]"></ng-content>
+        <ng-content select="[slot=custom]" />
       </div>
       }
     </aside>
@@ -164,7 +160,7 @@ export class OsSidebarComponent implements OnDestroy {
   private router = inject(Router);
   private document = inject(DOCUMENT);
   private injector = inject(Injector);
-  @ViewChild('sidebarElement') sidebarElement?: ElementRef<HTMLElement>;
+  readonly sidebarElement = viewChild<ElementRef<HTMLElement>>('sidebarElement');
   private isOpenSignal = signal(false);
   private isMobileSignal = signal(false);
   private currentUrlSignal = signal<string>('');
@@ -251,11 +247,12 @@ export class OsSidebarComponent implements OnDestroy {
     setTimeout(() => {
       this.clickOutsideSubscription = fromEvent<MouseEvent>(this.document, 'click').subscribe(
         (event) => {
-          if (!this.sidebarElement?.nativeElement) {
+          const sidebarElement = this.sidebarElement();
+          if (!sidebarElement?.nativeElement) {
             return;
           }
 
-          const sidebarEl = this.sidebarElement.nativeElement;
+          const sidebarEl = sidebarElement.nativeElement;
           const target = event.target as HTMLElement;
 
           if (sidebarEl.contains(target) || target.closest('.os-sidebar__backdrop')) {

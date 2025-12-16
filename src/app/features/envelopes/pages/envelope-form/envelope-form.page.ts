@@ -8,7 +8,7 @@ import {
   effect,
   DestroyRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -31,15 +31,14 @@ import type { CategoryDto } from '../../../../../dtos/category';
 @Component({
   selector: 'os-envelope-form-page',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsPageComponent,
     OsPageHeaderComponent,
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsSelectComponent,
-    OsMoneyInputComponent,
-  ],
+    OsMoneyInputComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Formulário de envelope">

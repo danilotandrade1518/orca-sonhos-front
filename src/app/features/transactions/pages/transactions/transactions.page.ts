@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,14 +40,13 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
 @Component({
   selector: 'os-transactions-page',
   imports: [
-    CommonModule,
     OsPageComponent,
     OsPageHeaderComponent,
     OsTransactionListComponent,
     TransactionsFiltersComponent,
     TransactionFormComponent,
-    OsModalTemplateComponent,
-  ],
+    OsModalTemplateComponent
+],
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de transações">
       <os-page-header

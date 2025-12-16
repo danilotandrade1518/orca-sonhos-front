@@ -1,5 +1,5 @@
 import { Component, computed, input, output, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -24,7 +24,7 @@ export interface PageHeaderAction {
 @Component({
   selector: 'os-page-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, OsButtonComponent, OsIconComponent],
+  imports: [RouterModule, OsButtonComponent, OsIconComponent],
   template: `
     <header
       class="os-page-header"

@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatBadgeModule } from '@angular/material/badge';
 import { OsIconComponent } from '../os-icon/os-icon.component';
 
@@ -21,7 +21,7 @@ export type OsBadgeRole = 'status' | 'alert' | 'decorative';
 @Component({
   selector: 'os-badge',
   standalone: true,
-  imports: [CommonModule, MatBadgeModule, OsIconComponent],
+  imports: [MatBadgeModule, OsIconComponent],
   template: `
     <div
       [class]="badgeClass()"

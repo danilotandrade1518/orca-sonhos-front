@@ -7,7 +7,7 @@ import {
   effect,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -26,11 +26,10 @@ import {
 @Component({
   selector: 'os-reconcile-page',
   imports: [
-    CommonModule,
     OsPageComponent,
     OsPageHeaderComponent,
-    ReconcileFormComponent,
-  ],
+    ReconcileFormComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Reconciliar conta">

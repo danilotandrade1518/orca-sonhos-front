@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsCardComponent } from '../os-card/os-card.component';
 import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
@@ -12,13 +12,12 @@ import { EnvelopeDto } from '../../../../../dtos/envelope';
   selector: 'os-envelope-card',
   standalone: true,
   imports: [
-    CommonModule,
     OsCardComponent,
     OsProgressBarComponent,
     OsMoneyDisplayComponent,
     OsDeleteButtonComponent,
-    OsEditButtonComponent,
-  ],
+    OsEditButtonComponent
+],
   template: `
     <div [class]="cardWrapperClass()">
       <os-card

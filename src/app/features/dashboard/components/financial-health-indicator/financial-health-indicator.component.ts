@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import {
@@ -24,12 +23,11 @@ export interface FinancialHealthIndicators {
   selector: 'os-financial-health-indicator',
   standalone: true,
   imports: [
-    CommonModule,
     OsBadgeComponent,
     OsIconComponent,
     OsProgressBarComponent,
-    OsMoneyDisplayComponent,
-  ],
+    OsMoneyDisplayComponent
+],
   template: `
     <div class="financial-health-indicator" role="region" [attr.aria-labelledby]="'financial-health-title'">
       <header class="financial-health-indicator__header">

@@ -6,7 +6,6 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -152,7 +151,6 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
   styleUrl: './reports.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     OsPageComponent,
     OsPageHeaderComponent,
     OsAlertComponent,
@@ -161,8 +159,8 @@ import type { BudgetOption } from '@shared/ui-components/molecules/os-budget-sel
     ReportFiltersComponent,
     ReportSummaryCardComponent,
     SpendingChartComponent,
-    RevenueExpenseChartComponent,
-  ],
+    RevenueExpenseChartComponent
+],
 })
 export class ReportsPage implements OnInit {
   private readonly reportsState = inject(ReportsState);

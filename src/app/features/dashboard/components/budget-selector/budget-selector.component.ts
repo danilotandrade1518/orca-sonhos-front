@@ -7,7 +7,6 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import {
   OsBudgetSelectorComponent,
@@ -19,7 +18,7 @@ import { BudgetDto } from '../../../../../dtos/budget/budget-types';
 @Component({
   selector: 'os-dashboard-budget-selector',
   standalone: true,
-  imports: [CommonModule, OsBudgetSelectorComponent],
+  imports: [OsBudgetSelectorComponent],
   template: `
     <os-budget-selector
       [budgets]="budgetOptions()"

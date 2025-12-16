@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import {
   OsMoneyDisplayComponent,
@@ -35,34 +35,34 @@ export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
 @Component({
   selector: 'os-goal-progress',
   standalone: true,
-  imports: [CommonModule, OsProgressBarComponent, OsMoneyDisplayComponent, OsIconComponent],
+  imports: [OsProgressBarComponent, OsMoneyDisplayComponent, OsIconComponent],
   template: `
     <div class="os-goal-progress" [class]="goalClasses()" [attr.aria-label]="ariaLabel()">
       <div class="os-goal-progress__header">
         @if (showIcon()) {
-        <div class="os-goal-progress__icon">
-          <os-icon [name]="iconName()" [size]="iconSize()" [attr.aria-hidden]="true" />
-        </div>
+          <div class="os-goal-progress__icon">
+            <os-icon [name]="iconName()" [size]="iconSize()" [attr.aria-hidden]="true" />
+          </div>
         }
-
+    
         <div class="os-goal-progress__title-section">
           <h3 class="os-goal-progress__title" [id]="titleId()">
             {{ goalData().title }}
           </h3>
           @if (goalData().description && showDescription()) {
-          <p class="os-goal-progress__description" [id]="descriptionId()">
-            {{ goalData().description }}
-          </p>
+            <p class="os-goal-progress__description" [id]="descriptionId()">
+              {{ goalData().description }}
+            </p>
           }
         </div>
-
+    
         @if (showCategory() && goalData().category) {
-        <div class="os-goal-progress__category">
-          <span class="os-goal-progress__category-text">{{ goalData().category }}</span>
-        </div>
+          <div class="os-goal-progress__category">
+            <span class="os-goal-progress__category-text">{{ goalData().category }}</span>
+          </div>
         }
       </div>
-
+    
       <div class="os-goal-progress__content">
         <div class="os-goal-progress__amounts">
           <div class="os-goal-progress__current">
@@ -71,21 +71,21 @@ export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
               [currency]="goalData().currency"
               [variant]="currentAmountVariant()"
               [size]="amountSize()"
-            />
+              />
             <span class="os-goal-progress__current-label">Arrecadado</span>
           </div>
-
+    
           <div class="os-goal-progress__target">
             <os-money-display
               [value]="goalData().targetAmount"
               [currency]="goalData().currency"
               [variant]="targetAmountVariant()"
               [size]="amountSize()"
-            />
+              />
             <span class="os-goal-progress__target-label">Meta</span>
           </div>
         </div>
-
+    
         <div class="os-goal-progress__progress">
           <os-progress-bar
             [value]="progressPercentage()"
@@ -95,67 +95,68 @@ export type GoalProgressMilestone = 25 | 50 | 75 | 90 | 100;
             [animated]="animated()"
             [showCelebration]="shouldShowCelebration()"
             [celebrationText]="celebrationText()"
-          />
-
+            />
+    
           @if (shouldShowMilestone()) {
-          <div class="os-goal-progress__milestone" [attr.aria-live]="'polite'">
-            <os-icon name="celebration" size="sm" [attr.aria-hidden]="true" />
-            <span class="os-goal-progress__milestone-text">
-              {{ currentMilestone() }}% alcançado! 🎯
-            </span>
-          </div>
+            <div class="os-goal-progress__milestone" [attr.aria-live]="'polite'">
+              <os-icon name="celebration" size="sm" [attr.aria-hidden]="true" />
+              <span class="os-goal-progress__milestone-text">
+                {{ currentMilestone() }}% alcançado! 🎯
+              </span>
+            </div>
           }
         </div>
-
+    
         @if (showStats()) {
-        <div class="os-goal-progress__stats">
-          <div class="os-goal-progress__stat">
-            <span class="os-goal-progress__stat-label">Progresso</span>
-            <span class="os-goal-progress__stat-value">{{ progressPercentage() }}%</span>
+          <div class="os-goal-progress__stats">
+            <div class="os-goal-progress__stat">
+              <span class="os-goal-progress__stat-label">Progresso</span>
+              <span class="os-goal-progress__stat-value">{{ progressPercentage() }}%</span>
+            </div>
+    
+            @if (remainingAmount() > 0) {
+              <div class="os-goal-progress__stat">
+                <span class="os-goal-progress__stat-label">Restante</span>
+                <span class="os-goal-progress__stat-value">
+                  <os-money-display
+                    [value]="remainingAmount()"
+                    [currency]="goalData().currency"
+                    [variant]="'default'"
+                    [size]="'small'"
+                    />
+                </span>
+              </div>
+              } @if (goalData().deadline && showDeadline()) {
+              <div class="os-goal-progress__stat">
+                <span class="os-goal-progress__stat-label">Prazo</span>
+                <span class="os-goal-progress__stat-value">{{ formattedDeadline() }}</span>
+              </div>
+            }
           </div>
-
-          @if (remainingAmount() > 0) {
-          <div class="os-goal-progress__stat">
-            <span class="os-goal-progress__stat-label">Restante</span>
-            <span class="os-goal-progress__stat-value">
-              <os-money-display
-                [value]="remainingAmount()"
-                [currency]="goalData().currency"
-                [variant]="'default'"
-                [size]="'small'"
-              />
-            </span>
-          </div>
-          } @if (goalData().deadline && showDeadline()) {
-          <div class="os-goal-progress__stat">
-            <span class="os-goal-progress__stat-label">Prazo</span>
-            <span class="os-goal-progress__stat-value">{{ formattedDeadline() }}</span>
-          </div>
-          }
-        </div>
         }
       </div>
-
+    
       @if (showActions() && actions().length > 0) {
-      <div class="os-goal-progress__actions">
-        <ng-content select="[slot=actions]"></ng-content>
-      </div>
-      } @if (shouldShowCelebration()) {
-      <div class="os-goal-progress__celebration" [attr.aria-live]="'assertive'">
-        <div class="os-goal-progress__celebration-content">
-          <os-icon name="celebration" size="lg" [attr.aria-hidden]="true" />
-          <span class="os-goal-progress__celebration-text">{{ celebrationText() }}</span>
+        <div class="os-goal-progress__actions">
+          <ng-content select="[slot=actions]" />
         </div>
-        <div class="os-goal-progress__confetti">
-          <div
-            class="os-goal-progress__confetti-piece"
-            *ngFor="let piece of [1, 2, 3, 4, 5, 6, 7, 8]"
-          ></div>
+        } @if (shouldShowCelebration()) {
+        <div class="os-goal-progress__celebration" [attr.aria-live]="'assertive'">
+          <div class="os-goal-progress__celebration-content">
+            <os-icon name="celebration" size="lg" [attr.aria-hidden]="true" />
+            <span class="os-goal-progress__celebration-text">{{ celebrationText() }}</span>
+          </div>
+          <div class="os-goal-progress__confetti">
+            @for (piece of [1, 2, 3, 4, 5, 6, 7, 8]; track piece) {
+              <div
+                class="os-goal-progress__confetti-piece"
+              ></div>
+            }
+          </div>
         </div>
-      </div>
       }
     </div>
-  `,
+    `,
   styleUrls: ['./os-goal-progress.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

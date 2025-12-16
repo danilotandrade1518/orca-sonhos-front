@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, computed } from '@angular/core';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 import { GoalCardComponent } from '../goal-card/goal-card.component';
@@ -6,7 +5,7 @@ import { OsEntityListComponent } from '../../../../shared/ui-components/organism
 
 @Component({
   selector: 'os-goal-list',
-  imports: [CommonModule, GoalCardComponent, OsEntityListComponent],
+  imports: [GoalCardComponent, OsEntityListComponent],
   template: `
     <section class="os-goal-list" role="region" aria-label="Lista de metas">
       <div class="os-goal-list__live" role="status" aria-live="polite" aria-atomic="true">

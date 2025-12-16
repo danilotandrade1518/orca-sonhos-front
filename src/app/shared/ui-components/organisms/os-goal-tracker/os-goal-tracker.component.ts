@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -48,7 +47,6 @@ export interface ProgressHistory {
   selector: 'os-goal-tracker',
   standalone: true,
   imports: [
-    CommonModule,
     OsCardComponent,
     OsMoneyDisplayComponent,
     OsBadgeComponent,
@@ -56,8 +54,8 @@ export interface ProgressHistory {
     OsProgressBarComponent,
     OsSpinnerComponent,
     OsButtonComponent,
-    OsDropdownComponent,
-  ],
+    OsDropdownComponent
+],
   templateUrl: './os-goal-tracker.component.html',
   styleUrls: ['./os-goal-tracker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

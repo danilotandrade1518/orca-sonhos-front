@@ -13,7 +13,7 @@
 
         @if (showStatus()) {
         <os-badge [variant]="statusInfo().type" [size]="size() === 'large' ? 'md' : 'sm'">
-            <os-icon [name]="statusInfo().icon" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+            <os-icon [name]="statusInfo().icon" [size]="size() === 'large' ? 'md' : 'sm'" />
             {{ statusInfo().label }}
         </os-badge>
         }
@@ -41,19 +41,19 @@
             <div class="os-budget-summary__amount" [class]="getTotalHighlightClass()">
                 <span class="os-budget-summary__amount-label">Orçamento Total</span>
                 <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()"
-                    [class]="highlightTotals() ? 'os-budget-summary__total--highlighted' : ''"></os-money-display>
+                    [class]="highlightTotals() ? 'os-budget-summary__total--highlighted' : ''" />
             </div>
 
             <div class="os-budget-summary__amount">
                 <span class="os-budget-summary__amount-label">Gasto</span>
                 <os-money-display [value]="data.spentAmount" [variant]="isOverBudget() ? 'error' : 'default'"
-                    [size]="size()"></os-money-display>
+                    [size]="size()" />
             </div>
 
             <div class="os-budget-summary__amount">
                 <span class="os-budget-summary__amount-label">Restante</span>
                 <os-money-display [value]="data.remainingAmount"
-                    [variant]="data.remainingAmount >= 0 ? 'success' : 'error'" [size]="size()"></os-money-display>
+                    [variant]="data.remainingAmount >= 0 ? 'success' : 'error'" [size]="size()" />
             </div>
         </div>
     </div>
@@ -65,7 +65,7 @@
             <span class="os-budget-summary__chart-title">Distribuição</span>
             <button class="os-budget-summary__chart-toggle" (click)="onChartClick(getChartType())"
                 [attr.aria-label]="'Alternar tipo de gráfico'">
-                <os-icon [name]="getChartType() === 'pie' ? 'bar_chart' : 'pie_chart'" size="sm"></os-icon>
+                <os-icon [name]="getChartType() === 'pie' ? 'bar_chart' : 'pie_chart'" size="sm" />
             </button>
         </div>
 
@@ -100,19 +100,19 @@
     @if (variant() === 'detailed' && showDates() && formattedDates(); as dates) {
     <div class="os-budget-summary__dates">
         <div class="os-budget-summary__date-item">
-            <os-icon name="calendar_today" size="sm"></os-icon>
+            <os-icon name="calendar_today" size="sm" />
             <span class="os-budget-summary__date-label">Início:</span>
             <span class="os-budget-summary__date-value">{{ dates.start }}</span>
         </div>
 
         <div class="os-budget-summary__date-item">
-            <os-icon name="event" size="sm"></os-icon>
+            <os-icon name="event" size="sm" />
             <span class="os-budget-summary__date-label">Fim:</span>
             <span class="os-budget-summary__date-value">{{ dates.end }}</span>
         </div>
 
         <div class="os-budget-summary__date-item">
-            <os-icon name="update" size="sm"></os-icon>
+            <os-icon name="update" size="sm" />
             <span class="os-budget-summary__date-label">Atualizado:</span>
             <span class="os-budget-summary__date-value">{{ dates.lastUpdated }}</span>
         </div>

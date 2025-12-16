@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   untracked,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
@@ -29,15 +29,14 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
   selector: 'os-accounts-page',
   standalone: true,
   imports: [
-    CommonModule,
     AccountCardComponent,
     AccountFormComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsAlertComponent,
-  ],
+    OsAlertComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de contas">

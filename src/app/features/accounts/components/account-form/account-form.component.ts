@@ -9,7 +9,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountState } from '@core/services/account/account-state/account.state';
@@ -30,14 +30,13 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
   selector: 'os-account-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsModalTemplateComponent,
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsSelectComponent,
-    OsMoneyInputComponent,
-  ],
+    OsMoneyInputComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-modal-template

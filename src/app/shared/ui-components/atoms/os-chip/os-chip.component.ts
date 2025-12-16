@@ -1,5 +1,5 @@
 import { Component, input, output, computed, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatChipsModule } from '@angular/material/chips';
 import { OsIconComponent } from '../os-icon';
 
@@ -9,7 +9,7 @@ export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'd
 @Component({
   selector: 'os-chip',
   standalone: true,
-  imports: [CommonModule, MatChipsModule, OsIconComponent],
+  imports: [MatChipsModule, OsIconComponent],
   template: `
     <mat-chip
       [id]="chipId"
@@ -30,7 +30,7 @@ export type OsChipVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'd
       (blur)="onBlur($event)"
     >
       @if (icon()) {
-      <os-icon [name]="icon()" [ariaLabel]="ariaLabel()"></os-icon>
+      <os-icon [name]="icon()" [ariaLabel]="ariaLabel()" />
       }
       <span class="os-chip__text">{{ text() }}</span>
       @if (removable()) {

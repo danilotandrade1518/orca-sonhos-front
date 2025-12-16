@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +8,7 @@ import {
   input,
   output,
   signal,
-  ViewChild,
+  viewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -43,15 +42,14 @@ export interface OsDropdownGroup {
   selector: 'os-dropdown',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatMenuModule,
     MatDividerModule,
     ScrollingModule,
     OsIconComponent,
-    OsInputComponent,
-  ],
+    OsInputComponent
+],
   template: `
     <div
       [class]="containerClass()"
@@ -121,7 +119,7 @@ export interface OsDropdownGroup {
             (keydown)="handleSearchKeydown($event)"
           />
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider />
         } @if (placeholder() && !searchQuery()) {
         <button
           mat-menu-item
@@ -133,7 +131,7 @@ export interface OsDropdownGroup {
           {{ placeholder() }}
         </button>
         @if (filteredOptions().length > 0) {
-        <mat-divider></mat-divider>
+        <mat-divider />
         } } @if (useVirtualScroll() && filteredOptions().length > virtualScrollThreshold()) {
         <cdk-virtual-scroll-viewport
           [itemSize]="getItemHeight()"
@@ -142,7 +140,7 @@ export interface OsDropdownGroup {
         >
           @for (item of virtualScrollItems(); track item.value; let idx = $index) { @if
           (item.divider) {
-          <mat-divider></mat-divider>
+          <mat-divider />
           } @else if (item.isGroupHeader) {
           <div [class]="groupHeaderClass()" role="group" [attr.aria-label]="item.label">
             {{ item.label }}
@@ -176,7 +174,7 @@ export interface OsDropdownGroup {
         </cdk-virtual-scroll-viewport>
         } @else { @for (item of flattenedOptions(); track item.value; let idx = $index) { @if
         (item.divider) {
-        <mat-divider></mat-divider>
+        <mat-divider />
         } @else if (item.isGroupHeader) {
         <div [class]="groupHeaderClass()" role="group" [attr.aria-label]="item.label">
           {{ item.label }}
@@ -247,9 +245,9 @@ export class OsDropdownComponent {
   menuClose = output<void>();
   searchChange = output<string>();
 
-  @ViewChild('menu') menu!: MatMenu;
-  @ViewChild('trigger', { read: ElementRef }) triggerElement!: ElementRef;
-  @ViewChild('searchInput', { read: ElementRef }) searchInputElement!: ElementRef;
+  readonly menu = viewChild.required<MatMenu>('menu');
+  readonly triggerElement = viewChild.required('trigger', { read: ElementRef });
+  readonly searchInputElement = viewChild.required('searchInput', { read: ElementRef });
 
   private _isOpen = signal(false);
   private _searchQuery = signal('');
@@ -499,7 +497,7 @@ export class OsDropdownComponent {
 
     if (this.searchable() && this.filteredOptions().length > this.searchThreshold()) {
       setTimeout(() => {
-        this.searchInputElement?.nativeElement?.querySelector('input')?.focus();
+        this.searchInputElement()?.nativeElement?.querySelector('input')?.focus();
       }, 100);
     }
   }
@@ -559,7 +557,7 @@ export class OsDropdownComponent {
       case 'Escape':
         event.preventDefault();
         this._isOpen.set(false);
-        this.triggerElement?.nativeElement?.focus();
+        this.triggerElement()?.nativeElement?.focus();
         break;
       case 'ArrowDown':
         event.preventDefault();
@@ -578,7 +576,7 @@ export class OsDropdownComponent {
         event.preventDefault();
         this._searchQuery.set('');
         this._isOpen.set(false);
-        this.triggerElement?.nativeElement?.focus();
+        this.triggerElement()?.nativeElement?.focus();
         break;
       case 'ArrowDown':
         event.preventDefault();
@@ -600,7 +598,7 @@ export class OsDropdownComponent {
     if (event.key === 'Escape') {
       event.preventDefault();
       this._isOpen.set(false);
-      this.triggerElement?.nativeElement?.focus();
+      this.triggerElement()?.nativeElement?.focus();
     }
   }
 

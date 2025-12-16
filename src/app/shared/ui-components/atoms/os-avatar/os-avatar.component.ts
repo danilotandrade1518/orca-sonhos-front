@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsIconComponent } from '../os-icon/os-icon.component';
 import { OsBadgeComponent } from '../os-badge/os-badge.component';
 
@@ -11,7 +11,7 @@ export type OsAvatarRole = 'img' | 'button' | 'presentation';
 @Component({
   selector: 'os-avatar',
   standalone: true,
-  imports: [CommonModule, OsIconComponent, OsBadgeComponent],
+  imports: [OsIconComponent, OsBadgeComponent],
   template: `
     <div
       [class]="avatarClass()"

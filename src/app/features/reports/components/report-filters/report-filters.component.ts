@@ -7,7 +7,6 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
 import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-select.component';
@@ -87,7 +86,7 @@ import { ReportPeriod as ReportPeriodEnum } from '../../types/reports.types';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, OsFilterBarComponent, OsSelectComponent, OsBudgetSelectorComponent],
+  imports: [OsFilterBarComponent, OsSelectComponent, OsBudgetSelectorComponent],
 })
 export class ReportFiltersComponent {
   initialFilters = input<Partial<ReportFilters>>({});

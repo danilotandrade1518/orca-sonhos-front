@@ -1,5 +1,5 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsIconComponent } from '../../atoms/os-icon/os-icon.component';
 
 export type ReportSummaryCardVariant = 'positive' | 'negative' | 'neutral';
@@ -7,7 +7,7 @@ export type ReportSummaryCardVariant = 'positive' | 'negative' | 'neutral';
 @Component({
   selector: 'os-report-summary-card',
   standalone: true,
-  imports: [CommonModule, OsIconComponent],
+  imports: [OsIconComponent],
   template: `
     <article
       [class]="cardClasses()"

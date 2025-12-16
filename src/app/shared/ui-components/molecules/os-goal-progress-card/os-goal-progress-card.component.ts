@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 
 import { OsIconComponent } from '@shared/ui-components/atoms/os-icon/os-icon.component';
@@ -28,14 +27,13 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
   selector: 'os-goal-progress-card',
   standalone: true,
   imports: [
-    CommonModule,
     OsIconComponent,
     OsProgressBarComponent,
     OsMoneyDisplayComponent,
     OsButtonComponent,
     OsDeleteButtonComponent,
-    OsEditButtonComponent,
-  ],
+    OsEditButtonComponent
+],
   template: `
     <div
       class="os-goal-progress-card"

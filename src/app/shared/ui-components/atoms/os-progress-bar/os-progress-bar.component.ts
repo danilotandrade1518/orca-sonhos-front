@@ -1,11 +1,11 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'os-progress-bar',
   standalone: true,
-  imports: [CommonModule, MatProgressBarModule],
+  imports: [MatProgressBarModule],
   template: `
     <div
       class="os-progress-bar"
@@ -27,14 +27,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
       }
 
       <div class="os-progress-bar__container" [class]="'os-progress-bar__container--' + variant()">
-        <mat-progress-bar
-          [mode]="mode()"
+        <mat-progress-bar [mode]="mode()"
           [value]="percentage()"
           [bufferValue]="bufferValue()"
           [color]="matColor()"
           [class]="progressBarClass()"
           [attr.data-variant]="variant()"
-        ></mat-progress-bar>
+         />
       </div>
 
       @if (hint()) {

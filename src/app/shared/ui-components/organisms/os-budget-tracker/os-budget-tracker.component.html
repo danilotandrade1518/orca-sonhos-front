@@ -2,7 +2,7 @@
 <div class="os-budget-tracker os-budget-tracker--loading">
     <div class="os-budget-tracker__loading">
         <os-spinner [variant]="'default'"
-            [size]="size() === 'large' ? 'md' : size() === 'medium' ? 'sm' : 'xs'"></os-spinner>
+            [size]="size() === 'large' ? 'md' : size() === 'medium' ? 'sm' : 'xs'" />
         <span class="os-budget-tracker__loading-text">Carregando dados do orçamento...</span>
     </div>
 </div>
@@ -21,7 +21,7 @@
                 (click)="onCategoryClick()" (keydown.enter)="onCategoryClick()" (keydown.space)="onCategoryClick()"
                 [attr.tabindex]="category.clickable ? 0 : -1" [attr.role]="category.clickable ? 'button' : null"
                 [attr.aria-label]="category.clickable ? 'Ver detalhes da categoria ' + category.name : null">
-                <os-icon [name]="category.icon" size="sm" [style.color]="category.color"></os-icon>
+                <os-icon [name]="category.icon" size="sm" [style.color]="category.color" />
                 <span [style.color]="category.color">{{ category.name }}</span>
             </div>
             }
@@ -30,7 +30,7 @@
         <div class="os-budget-tracker__actions">
             @if (showStatus()) {
             <os-badge [variant]="statusInfo().type" [size]="size() === 'large' ? 'md' : 'sm'">
-                <os-icon [name]="statusInfo().icon" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+                <os-icon [name]="statusInfo().icon" [size]="size() === 'large' ? 'md' : 'sm'" />
                 {{ statusInfo().label }}
             </os-badge>
             }
@@ -38,11 +38,11 @@
             <div class="os-budget-tracker__action-buttons">
                 <button class="os-budget-tracker__action-btn" (click)="onRefreshClick()"
                     [attr.aria-label]="'Atualizar dados do orçamento'">
-                    <os-icon name="refresh" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+                    <os-icon name="refresh" [size]="size() === 'large' ? 'md' : 'sm'" />
                 </button>
                 <button class="os-budget-tracker__action-btn" (click)="onExportClick()"
                     [attr.aria-label]="'Exportar dados do orçamento'">
-                    <os-icon name="download" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+                    <os-icon name="download" [size]="size() === 'large' ? 'md' : 'sm'" />
                 </button>
             </div>
         </div>
@@ -54,10 +54,10 @@
         [style.border-color]="alert.color" (click)="onAlertClick()" (keydown.enter)="onAlertClick()"
         (keydown.space)="onAlertClick()" [attr.tabindex]="0" role="button"
         [attr.aria-label]="'Alerta: ' + alert.message">
-        <os-icon [name]="alert.icon" [size]="size() === 'large' ? 'md' : 'sm'" [style.color]="alert.color"></os-icon>
+        <os-icon [name]="alert.icon" [size]="size() === 'large' ? 'md' : 'sm'" [style.color]="alert.color" />
         <span class="os-budget-tracker__alert-message" [style.color]="alert.color">{{ alert.message }}</span>
         @if (alert.urgent) {
-        <os-icon name="priority_high" size="sm" [style.color]="alert.color"></os-icon>
+        <os-icon name="priority_high" size="sm" [style.color]="alert.color" />
         }
     </div>
     }
@@ -70,8 +70,7 @@
         </div>
 
         <os-progress-bar [value]="progressPercentage()"
-            [variant]="isOverBudget() ? 'danger' : isCompleted() ? 'success' : 'primary'" [size]="size()">
-        </os-progress-bar>
+            [variant]="isOverBudget() ? 'danger' : isCompleted() ? 'success' : 'primary'" [size]="size()" />
     </div>
 
     <!-- Financial Summary -->
@@ -79,19 +78,19 @@
         <div class="os-budget-tracker__amount-group">
             <div class="os-budget-tracker__amount">
                 <span class="os-budget-tracker__amount-label">Orçamento Total</span>
-                <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()"></os-money-display>
+                <os-money-display [value]="data.totalBudget" [variant]="'default'" [size]="size()" />
             </div>
 
             <div class="os-budget-tracker__amount">
                 <span class="os-budget-tracker__amount-label">Gasto</span>
                 <os-money-display [value]="data.spentAmount" [variant]="isOverBudget() ? 'error' : 'default'"
-                    [size]="size()"></os-money-display>
+                    [size]="size()" />
             </div>
 
             <div class="os-budget-tracker__amount">
                 <span class="os-budget-tracker__amount-label">Restante</span>
                 <os-money-display [value]="data.remainingAmount"
-                    [variant]="data.remainingAmount >= 0 ? 'success' : 'error'" [size]="size()"></os-money-display>
+                    [variant]="data.remainingAmount >= 0 ? 'success' : 'error'" [size]="size()" />
             </div>
         </div>
     </div>
@@ -100,7 +99,7 @@
     @if (showTrends() && trendInfo(); as trend) {
     <div class="os-budget-tracker__trends">
         <div class="os-budget-tracker__trend-header">
-            <os-icon [name]="trend.icon" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+            <os-icon [name]="trend.icon" [size]="size() === 'large' ? 'md' : 'sm'" />
             <span class="os-budget-tracker__trend-label">Tendência de Gastos</span>
         </div>
 
@@ -121,13 +120,13 @@
     @if (showProjections() && projectionInfo(); as projection) {
     <div class="os-budget-tracker__projections">
         <div class="os-budget-tracker__projection-header">
-            <os-icon name="trending_up" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+            <os-icon name="trending_up" [size]="size() === 'large' ? 'md' : 'sm'" />
             <span class="os-budget-tracker__projection-label">Projeção</span>
         </div>
 
         <div class="os-budget-tracker__projection-info">
             <os-money-display [value]="projection.value" [variant]="projection.isOver ? 'error' : 'default'"
-                [size]="size()"></os-money-display>
+                [size]="size()" />
             <span class="os-budget-tracker__projection-percentage">
                 {{ projection.percentage.toFixed(1) }}% do orçamento
             </span>
@@ -139,7 +138,7 @@
     @if (variant() === 'detailed' && chartData(); as chart) {
     <div class="os-budget-tracker__chart">
         <div class="os-budget-tracker__chart-header">
-            <os-icon name="bar_chart" [size]="size() === 'large' ? 'md' : 'sm'"></os-icon>
+            <os-icon name="bar_chart" [size]="size() === 'large' ? 'md' : 'sm'" />
             <span class="os-budget-tracker__chart-label">Gastos Mensais (Últimos 6 meses)</span>
             <span class="os-budget-tracker__chart-average">Média: {{ chart.average.toFixed(1) }}%</span>
         </div>
@@ -173,19 +172,19 @@
     @if (variant() === 'detailed' && formattedDates(); as dates) {
     <div class="os-budget-tracker__dates">
         <div class="os-budget-tracker__date-item">
-            <os-icon name="calendar_today" size="sm"></os-icon>
+            <os-icon name="calendar_today" size="sm" />
             <span class="os-budget-tracker__date-label">Início:</span>
             <span class="os-budget-tracker__date-value">{{ dates.start }}</span>
         </div>
 
         <div class="os-budget-tracker__date-item">
-            <os-icon name="event" size="sm"></os-icon>
+            <os-icon name="event" size="sm" />
             <span class="os-budget-tracker__date-label">Fim:</span>
             <span class="os-budget-tracker__date-value">{{ dates.end }}</span>
         </div>
 
         <div class="os-budget-tracker__date-item">
-            <os-icon name="update" size="sm"></os-icon>
+            <os-icon name="update" size="sm" />
             <span class="os-budget-tracker__date-label">Atualizado:</span>
             <span class="os-budget-tracker__date-value">{{ dates.lastUpdated }}</span>
         </div>

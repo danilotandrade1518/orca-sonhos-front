@@ -1,12 +1,12 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsBadgeComponent } from '../os-badge/os-badge.component';
 import { AccountType } from '../../../../../dtos/account/account-types';
 
 @Component({
   selector: 'os-account-type-badge',
   standalone: true,
-  imports: [CommonModule, OsBadgeComponent],
+  imports: [OsBadgeComponent],
   template: `
     <os-badge
       [variant]="badgeVariant()"

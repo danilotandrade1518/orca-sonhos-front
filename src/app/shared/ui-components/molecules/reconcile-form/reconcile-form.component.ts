@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { OsFormGroupComponent } from '../os-form-group/os-form-group.component';
@@ -26,13 +26,12 @@ export interface ReconcileFormData {
   selector: 'os-reconcile-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsFormGroupComponent,
     OsSelectComponent,
     OsMoneyInputComponent,
-    OsButtonComponent,
-  ],
+    OsButtonComponent
+],
   template: `
     <form
       [formGroup]="form"

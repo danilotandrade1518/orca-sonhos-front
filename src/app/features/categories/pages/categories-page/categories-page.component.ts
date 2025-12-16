@@ -7,7 +7,6 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { CategoryState } from '../../../../core/services/category/category.state';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
@@ -28,12 +27,11 @@ import type {
   selector: 'os-categories-page',
   standalone: true,
   imports: [
-    CommonModule,
     OsPageComponent,
     OsPageHeaderComponent,
     OsAlertComponent,
-    OsCategoryManagerComponent,
-  ],
+    OsCategoryManagerComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de categorias">

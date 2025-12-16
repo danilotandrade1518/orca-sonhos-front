@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { BaseChartComponent } from '../base-chart/base-chart.component';
 import type { ChartConfig } from '../../interfaces/chart-config.interface';
@@ -20,7 +19,7 @@ import { ChartType } from '../../interfaces/chart-type.enum';
     />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, BaseChartComponent],
+  imports: [BaseChartComponent],
 })
 export class BarChartComponent {
   readonly ChartType = ChartType;

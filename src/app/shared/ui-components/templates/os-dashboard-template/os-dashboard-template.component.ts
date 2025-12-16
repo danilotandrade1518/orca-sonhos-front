@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, computed, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 
 import {
@@ -194,7 +194,6 @@ export interface DashboardLayout {
   styleUrls: ['./os-dashboard-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     OsHeaderComponent,
     OsFooterComponent,
@@ -204,8 +203,8 @@ export interface DashboardLayout {
     OsTransactionListComponent,
     OsCategoryManagerComponent,
     OsBudgetTrackerComponent,
-    OsGoalTrackerComponent,
-  ],
+    OsGoalTrackerComponent
+],
 })
 export class OsDashboardTemplateComponent {
   layout = input<DashboardLayout>({

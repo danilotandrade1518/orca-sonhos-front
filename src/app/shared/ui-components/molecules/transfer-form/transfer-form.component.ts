@@ -8,7 +8,7 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -35,13 +35,12 @@ export interface TransferFormData {
   selector: 'os-transfer-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     OsFormGroupComponent,
     OsSelectComponent,
     OsMoneyInputComponent,
-    OsButtonComponent,
-  ],
+    OsButtonComponent
+],
   template: `
     <form
       [formGroup]="form"

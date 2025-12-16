@@ -1,5 +1,4 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 export type OsSkeletonVariant = 'text' | 'rectangular' | 'circular' | 'card';
 export type OsSkeletonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -7,7 +6,7 @@ export type OsSkeletonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 @Component({
   selector: 'os-skeleton',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       [class]="skeletonClasses()"

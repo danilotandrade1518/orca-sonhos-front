@@ -9,9 +9,9 @@ import {
   signal,
   inject,
   ElementRef,
-  ViewChild,
   AfterViewInit,
   OnDestroy,
+  viewChild
 } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
@@ -361,7 +361,7 @@ export interface TransactionCardAction {
 
         @if (showFooterActions()) {
         <div class="os-transaction-list__footer-actions">
-          <ng-content select="[slot=footer-actions]"></ng-content>
+          <ng-content select="[slot=footer-actions]" />
         </div>
         }
       </div>
@@ -379,7 +379,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private readonly localeService = inject(LocaleService);
 
-  @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
+  readonly scrollContainer = viewChild<ElementRef<HTMLElement>>('scrollContainer');
 
   private scrollObserver?: IntersectionObserver;
   private resizeObserver?: ResizeObserver;
@@ -782,7 +782,8 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
   }
 
   private setupInfiniteScroll(): void {
-    if (!this.enableInfiniteScroll() || !this.scrollContainer) return;
+    const scrollContainer = this.scrollContainer();
+    if (!this.enableInfiniteScroll() || !scrollContainer) return;
 
     this.scrollObserver = new IntersectionObserver(
       (entries) => {
@@ -798,7 +799,7 @@ export class OsTransactionListComponent implements AfterViewInit, OnDestroy {
       { threshold: 0.1 }
     );
 
-    this.scrollObserver.observe(this.scrollContainer.nativeElement);
+    this.scrollObserver.observe(scrollContainer.nativeElement);
   }
 
   private setupResizeObserver(): void {

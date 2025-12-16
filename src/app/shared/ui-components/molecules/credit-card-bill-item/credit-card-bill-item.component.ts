@@ -1,5 +1,5 @@
 import { Component, input, output, computed, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsMoneyDisplayComponent } from '../os-money-display/os-money-display.component';
 import { OsButtonComponent } from '../../atoms/os-button';
 import { OsBadgeComponent } from '../../atoms/os-badge/os-badge.component';
@@ -9,11 +9,10 @@ import { LocaleService } from '@shared/formatting';
 @Component({
   selector: 'os-credit-card-bill-item',
   imports: [
-    CommonModule,
     OsMoneyDisplayComponent,
     OsButtonComponent,
-    OsBadgeComponent,
-  ],
+    OsBadgeComponent
+],
   template: `
     <div class="os-credit-card-bill-item" [attr.aria-label]="ariaLabelText()">
       <div class="os-credit-card-bill-item__content">

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 import {
@@ -24,7 +23,7 @@ export type BudgetSelectorState = 'default' | 'loading' | 'error' | 'empty';
 @Component({
   selector: 'os-budget-selector',
   standalone: true,
-  imports: [CommonModule, OsDropdownComponent, OsIconComponent, OsSpinnerComponent],
+  imports: [OsDropdownComponent, OsIconComponent, OsSpinnerComponent],
   template: `
     <div
       class="os-budget-selector"

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
 
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
@@ -21,7 +20,7 @@ import { EnvelopeState } from '../../../../core/services/envelope/envelope-state
 @Component({
   selector: 'os-dashboard-widgets-container',
   standalone: true,
-  imports: [CommonModule, OsDashboardWidgetsComponent],
+  imports: [OsDashboardWidgetsComponent],
   template: `
     <os-dashboard-widgets
       [widgets]="getDashboardWidgets()"

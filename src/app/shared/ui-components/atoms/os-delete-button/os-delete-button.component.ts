@@ -1,11 +1,11 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OsButtonComponent } from '../os-button/os-button.component';
 
 @Component({
   selector: 'os-delete-button',
   standalone: true,
-  imports: [CommonModule, OsButtonComponent],
+  imports: [OsButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./os-delete-button.component.scss'],
   template: `

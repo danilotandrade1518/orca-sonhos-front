@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 import {
@@ -8,7 +7,7 @@ import {
 
 @Component({
   selector: 'os-goal-card',
-  imports: [CommonModule, OsGoalProgressCardComponent],
+  imports: [OsGoalProgressCardComponent],
   template: `
     <os-goal-progress-card
       [goalData]="goalProgressData()"

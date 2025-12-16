@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +27,7 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
 
 @Component({
   selector: 'os-goal-form',
-  imports: [CommonModule, ReactiveFormsModule, OsFormTemplateComponent, OsSelectComponent],
+  imports: [ReactiveFormsModule, OsFormTemplateComponent, OsSelectComponent],
   template: `
     <os-form-template
       [config]="formConfig()"
