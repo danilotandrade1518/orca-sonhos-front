@@ -3,7 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 
 import { ApiService } from '../../../core/services/api/api.service';
 import { DashboardDataService } from './dashboard-data.service';
@@ -119,7 +119,7 @@ describe('DashboardDataService', () => {
     it('should load budgets successfully', async () => {
       vi.spyOn(apiService, 'get').mockReturnValue(of(mockBudgetsResponse));
 
-      const result = await service.loadBudgets().toPromise();
+      const result = await firstValueFrom(service.loadBudgets());
 
       expect(result).toEqual(mockBudgetsResponse.data);
       expect(service.budgets()).toEqual(mockBudgetsResponse.data);
@@ -131,7 +131,7 @@ describe('DashboardDataService', () => {
       const error = new Error('API Error');
       vi.spyOn(apiService, 'get').mockReturnValue(throwError(() => error));
 
-      const result = await service.loadBudgets().toPromise();
+      const result = await firstValueFrom(service.loadBudgets());
 
       expect(result).toEqual([]);
       expect(service.error()).toBe('API Error');
@@ -143,7 +143,7 @@ describe('DashboardDataService', () => {
     it('should load budget overview successfully', async () => {
       vi.spyOn(apiService, 'get').mockReturnValue(of(mockOverviewResponse));
 
-      const result = await service.loadBudgetOverview('budget-1').toPromise();
+      const result = await firstValueFrom(service.loadBudgetOverview('budget-1'));
 
       expect(result).toEqual(mockOverviewResponse.data);
       expect(service.budgetOverview()).toEqual(mockOverviewResponse.data);
@@ -155,7 +155,7 @@ describe('DashboardDataService', () => {
       const error = new Error('API Error');
       vi.spyOn(apiService, 'get').mockReturnValue(throwError(() => error));
 
-      const result = await service.loadBudgetOverview('budget-1').toPromise();
+      const result = await firstValueFrom(service.loadBudgetOverview('budget-1'));
 
       expect(result).toBeNull();
       expect(service.error()).toBe('API Error');

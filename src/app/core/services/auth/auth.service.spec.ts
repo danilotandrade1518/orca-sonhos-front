@@ -8,6 +8,7 @@ import {
 } from '../../adapters/external-auth-service.adapter';
 import { MockExternalAuthServiceAdapter } from './__mocks__/external-auth-service.adapter.mock';
 import { AuthService } from './auth.service';
+import { firstValueFrom } from 'rxjs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -239,9 +240,10 @@ describe('AuthService', () => {
 
   describe('Observable Methods', () => {
     it('should return observable for sign in', async () => {
-      const user = await service
-        .signInWithEmailObservable('test@example.com', 'password')
-        .toPromise();
+      const user = await firstValueFrom(
+        service.signInWithEmailObservable('test@example.com', 'password')
+      );
+
       expect(user).toEqual({
         id: 'mock-user-id',
         email: 'test@example.com',
@@ -252,7 +254,7 @@ describe('AuthService', () => {
     });
 
     it('should return observable for sign out', async () => {
-      await service.signOutObservable().toPromise();
+      await firstValueFrom(service.signOutObservable());
       expect(service.user()).toBeNull();
     });
   });

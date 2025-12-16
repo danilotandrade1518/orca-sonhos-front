@@ -1,8 +1,8 @@
-import { HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { HttpRequest, HttpErrorResponse, HttpHandlerFn } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 
 import { errorInterceptor } from './error.interceptor';
 import { NotificationService } from '../../services/notification/notification.service';
@@ -43,9 +43,9 @@ describe('ErrorInterceptor', () => {
       const response = { status: 200, data: 'success' };
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        errorInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+      );
       expect(result).toBe(response);
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
@@ -62,7 +62,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Dados inválidos. Verifique as informações enviadas.');
@@ -89,7 +91,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Não autorizado. Faça login novamente.');
@@ -116,7 +120,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -145,7 +151,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Recurso não encontrado.');
@@ -172,7 +180,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -201,7 +211,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe(
@@ -232,7 +244,9 @@ describe('ErrorInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => errorInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect((err as Error).message).toBe('Erro de cliente: Network connection failed');

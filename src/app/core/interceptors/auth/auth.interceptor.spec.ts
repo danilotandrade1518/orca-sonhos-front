@@ -1,8 +1,8 @@
-import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpErrorResponse, HttpHandlerFn } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { of, throwError, firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../services/auth/auth.service';
 import { authInterceptor } from './auth.interceptor';
@@ -79,9 +79,9 @@ describe('AuthInterceptor', () => {
       const response = new HttpResponse({ status: 200 });
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        authInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+      );
 
       expect(result).toBe(response);
       expect(mockNext).toHaveBeenCalledWith(request);
@@ -96,9 +96,9 @@ describe('AuthInterceptor', () => {
       mockAuthService.getToken.mockReturnValue(Promise.resolve(token));
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        authInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+      );
 
       expect(result).toBe(response);
       const authRequest = mockNext.mock.calls[0][0];
@@ -113,9 +113,9 @@ describe('AuthInterceptor', () => {
       mockAuthService.getToken.mockReturnValue(Promise.resolve(null));
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        authInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+      );
 
       expect(result).toBe(response);
       expect(mockNext).toHaveBeenCalledWith(request);
@@ -129,9 +129,9 @@ describe('AuthInterceptor', () => {
       mockAuthService.getToken.mockReturnValue(Promise.resolve(undefined));
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        authInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+      );
 
       expect(result).toBe(response);
       expect(mockNext).toHaveBeenCalledWith(request);
@@ -147,7 +147,9 @@ describe('AuthInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => authInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect(err).toBe(error);
@@ -164,7 +166,9 @@ describe('AuthInterceptor', () => {
       mockNext.mockReturnValue(throwError(() => error));
 
       try {
-        await TestBed.runInInjectionContext(() => authInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect(err).toBe(error);
@@ -180,7 +184,9 @@ describe('AuthInterceptor', () => {
       mockNext.mockReturnValue(of(new HttpResponse({ status: 200 })));
 
       try {
-        await TestBed.runInInjectionContext(() => authInterceptor(request, mockNext)).toPromise();
+        await firstValueFrom(
+          TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+        );
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect(err).toBe(error);
@@ -195,9 +201,9 @@ describe('AuthInterceptor', () => {
       mockAuthService.getToken.mockReturnValue(Promise.resolve(token));
       mockNext.mockReturnValue(of(response));
 
-      const result = await TestBed.runInInjectionContext(() =>
-        authInterceptor(request, mockNext)
-      ).toPromise();
+      const result = await firstValueFrom(
+        TestBed.runInInjectionContext(() => authInterceptor(request, mockNext as HttpHandlerFn))
+      );
 
       expect(result).toBe(response);
       const authRequest = mockNext.mock.calls[0][0];
