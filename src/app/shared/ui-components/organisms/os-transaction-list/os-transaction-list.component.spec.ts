@@ -13,13 +13,8 @@ class MockResizeObserver {
   observe = vi.fn();
   unobserve = vi.fn();
   disconnect = vi.fn();
-
-  constructor() {
-    // Constructor implementation
-  }
 }
 
-// Use a class constructor directly instead of vi.fn()
 Object.defineProperty(window, 'ResizeObserver', {
   writable: true,
   configurable: true,
@@ -215,7 +210,6 @@ describe('OsTransactionListComponent', () => {
     const observeSpy = vi.fn();
     const originalResizeObserver = window.ResizeObserver;
 
-    // Create a mock that tracks observe calls
     window.ResizeObserver = class extends MockResizeObserver {
       constructor() {
         super();
@@ -227,7 +221,6 @@ describe('OsTransactionListComponent', () => {
 
     expect(observeSpy).toHaveBeenCalled();
 
-    // Restore original
     window.ResizeObserver = originalResizeObserver;
   });
 
@@ -235,7 +228,6 @@ describe('OsTransactionListComponent', () => {
     const disconnectSpy = vi.fn();
     const originalResizeObserver = window.ResizeObserver;
 
-    // Create a mock that tracks disconnect calls
     window.ResizeObserver = class extends MockResizeObserver {
       constructor() {
         super();
@@ -248,7 +240,6 @@ describe('OsTransactionListComponent', () => {
 
     expect(disconnectSpy).toHaveBeenCalled();
 
-    // Restore original
     window.ResizeObserver = originalResizeObserver;
   });
 });

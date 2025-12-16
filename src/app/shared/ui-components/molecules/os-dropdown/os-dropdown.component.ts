@@ -3,12 +3,13 @@ import {
   Component,
   computed,
   ElementRef,
-  HostListener,
   inject,
   input,
   output,
   signal,
-  viewChild
+  viewChild,
+  DestroyRef,
+  effect,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -48,8 +49,8 @@ export interface OsDropdownGroup {
     MatDividerModule,
     ScrollingModule,
     OsIconComponent,
-    OsInputComponent
-],
+    OsInputComponent,
+  ],
   template: `
     <div
       [class]="containerClass()"
@@ -220,6 +221,7 @@ export interface OsDropdownGroup {
 })
 export class OsDropdownComponent {
   private breakpointObserver = inject(BreakpointObserver);
+  private destroyRef = inject(DestroyRef);
 
   options = input<OsDropdownOption[]>([]);
   groups = input<OsDropdownGroup[]>([]);
@@ -263,6 +265,18 @@ export class OsDropdownComponent {
   constructor() {
     this.breakpointObserver.observe([Breakpoints.HandsetPortrait]).subscribe((result) => {
       this._isMobile.set(result.matches);
+    });
+
+    this.destroyRef.onDestroy(() => {
+      document.removeEventListener('keydown', this.handleDocumentKeydown);
+    });
+
+    effect(() => {
+      if (this.isOpen()) {
+        document.addEventListener('keydown', this.handleDocumentKeydown);
+      } else {
+        document.removeEventListener('keydown', this.handleDocumentKeydown);
+      }
     });
   }
 
@@ -589,8 +603,7 @@ export class OsDropdownComponent {
     }
   }
 
-  @HostListener('document:keydown', ['$event'])
-  handleDocumentKeydown(event: KeyboardEvent): void {
+  private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {
     if (!this.isOpen()) {
       return;
     }
@@ -600,7 +613,7 @@ export class OsDropdownComponent {
       this._isOpen.set(false);
       this.triggerElement()?.nativeElement?.focus();
     }
-  }
+  };
 
   private focusNextOption(): void {
     const options = this.filteredOptions().filter((opt) => !opt.disabled && !opt.isGroupHeader);

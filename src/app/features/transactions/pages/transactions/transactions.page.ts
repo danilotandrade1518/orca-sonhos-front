@@ -5,7 +5,6 @@ import {
   effect,
   inject,
   signal,
-  HostListener,
   ElementRef,
   AfterViewInit,
   OnDestroy,
@@ -45,8 +44,8 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
     OsTransactionListComponent,
     TransactionsFiltersComponent,
     TransactionFormComponent,
-    OsModalTemplateComponent
-],
+    OsModalTemplateComponent,
+  ],
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de transações">
       <os-page-header
@@ -317,6 +316,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
     if (skipLink) {
       skipLink.addEventListener('click', this.handleSkipLinkClick);
     }
+    document.addEventListener('keydown', this.handleKeyboardEvent);
   }
 
   ngOnDestroy(): void {
@@ -326,6 +326,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
     if (skipLink) {
       skipLink.removeEventListener('click', this.handleSkipLinkClick);
     }
+    document.removeEventListener('keydown', this.handleKeyboardEvent);
   }
 
   private readonly handleSkipLinkClick = (e: Event): void => {
@@ -336,8 +337,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent): void {
+  private readonly handleKeyboardEvent = (event: KeyboardEvent): void => {
     if (event.key === 'Escape') {
       if (this.showCreateModal()) {
         this.onFormCancelled();
@@ -347,7 +347,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
         this.onConfirmCancelled();
       }
     }
-  }
+  };
 
   onFiltersChange(filters: TransactionsFilters): void {
     const serverFilters: Partial<TransactionsFilters> = {};
@@ -605,7 +605,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
     return {
       id: t.id,
       description: t.description,
-      
+
       amount: t.amount / 100,
       date,
       category: '',

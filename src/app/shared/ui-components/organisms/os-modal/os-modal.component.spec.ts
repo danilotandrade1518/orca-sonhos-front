@@ -4,6 +4,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { OsModalComponent, OsModalVariant, OsModalSize, OsModalAction } from './os-modal.component';
 
+interface ComponentWithPrivateMethods {
+  handleDocumentKeydown(event: KeyboardEvent): void;
+}
+
 describe('OsModalComponent', () => {
   let component: OsModalComponent;
   let fixture: ComponentFixture<OsModalComponent>;
@@ -280,7 +284,7 @@ describe('OsModalComponent', () => {
 
       const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
 
-      component.onEscapeKey(event);
+      (component as unknown as ComponentWithPrivateMethods).handleDocumentKeydown(event);
 
       expect(preventDefaultSpy).toHaveBeenCalled();
       expect(onCloseSpy).toHaveBeenCalled();
@@ -292,7 +296,7 @@ describe('OsModalComponent', () => {
       fixture.componentRef.setInput('closeOnEscape', false);
       const event = new KeyboardEvent('keydown', { key: 'Escape' });
 
-      component.onEscapeKey(event);
+      (component as unknown as ComponentWithPrivateMethods).handleDocumentKeydown(event);
 
       expect(event.defaultPrevented).toBe(false);
       expect(onCloseSpy).not.toHaveBeenCalled();
@@ -302,11 +306,11 @@ describe('OsModalComponent', () => {
       const onConfirmSpy = vi.spyOn(component, 'onConfirm');
 
       const ctrlEvent = new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true });
-      component.onEnterKey(ctrlEvent);
+      (component as unknown as ComponentWithPrivateMethods).handleDocumentKeydown(ctrlEvent);
       expect(onConfirmSpy).toHaveBeenCalled();
 
       const cmdEvent = new KeyboardEvent('keydown', { key: 'Enter', metaKey: true });
-      component.onEnterKey(cmdEvent);
+      (component as unknown as ComponentWithPrivateMethods).handleDocumentKeydown(cmdEvent);
       expect(onConfirmSpy).toHaveBeenCalledTimes(2);
     });
 
@@ -314,7 +318,7 @@ describe('OsModalComponent', () => {
       const onConfirmSpy = vi.spyOn(component, 'onConfirm');
 
       const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onEnterKey(event);
+      (component as unknown as ComponentWithPrivateMethods).handleDocumentKeydown(event);
 
       expect(onConfirmSpy).not.toHaveBeenCalled();
     });

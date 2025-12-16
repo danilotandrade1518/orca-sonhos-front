@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy,
   inject,
   ElementRef,
-  HostListener,
   effect,
   signal,
   afterNextRender,
@@ -119,7 +118,6 @@ export interface OsModalAction {
   },
 })
 export class OsModalComponent {
-  
   readonly title = input<string | null>(null);
   readonly subtitle = input<string | null>(null);
   readonly variant = input<OsModalVariant>('default');
@@ -137,23 +135,23 @@ export class OsModalComponent {
   readonly centered = input<boolean>(true);
   readonly animated = input<boolean>(true);
   readonly hapticFeedback = input<boolean>(true);
-  
+
   readonly closed = output<void>();
   readonly confirmed = output<void>();
   readonly backdropClicked = output<void>();
   readonly opened = output<void>();
   readonly animationEnd = output<'enter' | 'leave'>();
-  
+
   private readonly elementRef = inject(ElementRef);
   private readonly dialogRef = inject(MatDialogRef<OsModalComponent>, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
-  
+
   private readonly isVisible = signal(false);
   private readonly isAnimating = signal(false);
   private readonly focusableElements: HTMLElement[] = [];
   private readonly previousActiveElement: HTMLElement | null = null;
   private isDestroyed = false;
-  
+
   readonly titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
   readonly descriptionId = computed(
     () => `modal-description-${Math.random().toString(36).substr(2, 9)}`
@@ -257,6 +255,7 @@ export class OsModalComponent {
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.isDestroyed = true;
+      this.removeKeyboardListeners();
     });
 
     afterNextRender(() => {
@@ -282,13 +281,34 @@ export class OsModalComponent {
 
     return classes.join(' ');
   });
-  
+
   private initializeModal(): void {
     this.isVisible.set(true);
     this.onOpen();
     this.setupFocusTrap();
     this.animateIn();
+    this.setupKeyboardListeners();
   }
+
+  private setupKeyboardListeners(): void {
+    document.addEventListener('keydown', this.handleDocumentKeydown);
+  }
+
+  private removeKeyboardListeners(): void {
+    document.removeEventListener('keydown', this.handleDocumentKeydown);
+  }
+
+  private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape' && this.closeOnEscape()) {
+      event.preventDefault();
+      this.onClose();
+    } else if (event.key === 'Tab') {
+      this.handleTabNavigation(event);
+    } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.onConfirm();
+    }
+  };
 
   private setupFocusTrap(): void {
     const modalElement = this.elementRef.nativeElement;
@@ -365,6 +385,7 @@ export class OsModalComponent {
 
   private closeModal(): void {
     if (!this.isDestroyed) {
+      this.removeKeyboardListeners();
       this.closed.emit();
       if (this.dialogRef) {
         this.dialogRef.close();
@@ -391,7 +412,7 @@ export class OsModalComponent {
       navigator.vibrate(50);
     }
   }
-  
+
   onClose(): void {
     this.triggerHapticFeedback();
     this.animateOut();
@@ -411,30 +432,6 @@ export class OsModalComponent {
       this.triggerHapticFeedback();
       this.backdropClicked.emit();
       this.onClose();
-    }
-  }
-
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscapeKey(event: Event): void {
-    const keyboardEvent = event as KeyboardEvent;
-    if (this.closeOnEscape()) {
-      keyboardEvent.preventDefault();
-      this.onClose();
-    }
-  }
-
-  @HostListener('document:keydown.tab', ['$event'])
-  onTabKey(event: Event): void {
-    const keyboardEvent = event as KeyboardEvent;
-    this.handleTabNavigation(keyboardEvent);
-  }
-
-  @HostListener('document:keydown.enter', ['$event'])
-  onEnterKey(event: Event): void {
-    const keyboardEvent = event as KeyboardEvent;
-    if (keyboardEvent.ctrlKey || keyboardEvent.metaKey) {
-      keyboardEvent.preventDefault();
-      this.onConfirm();
     }
   }
 }

@@ -23,7 +23,6 @@ export const environment: Environment = {
   },
 };
 
-// Test suite to prevent "No test suite found" error
 describe('Environment Test Configuration', () => {
   it('should export test environment configuration', () => {
     expect(environment).toBeDefined();
