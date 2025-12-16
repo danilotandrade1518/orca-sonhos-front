@@ -69,8 +69,8 @@ export interface DetailTemplateBreadcrumb {
     OsButtonComponent,
     OsCardComponent,
     OsNavigationComponent,
-    OsPageHeaderComponent
-],
+    OsPageHeaderComponent,
+  ],
   template: `
     <div [class]="templateClass()" role="main" [attr.aria-label]="title()">
       @if (showHeader()) {
@@ -86,7 +86,7 @@ export interface DetailTemplateBreadcrumb {
       } @if (tabs().length > 0) {
       <div class="os-detail-template__tabs" role="tablist" [attr.aria-label]="tabsAriaLabel()">
         <os-navigation
-          [items]="navigationItems"
+          [items]="navigationItems()"
           [variant]="navigationVariant"
           [size]="navigationSize"
           [orientation]="navigationOrientation"

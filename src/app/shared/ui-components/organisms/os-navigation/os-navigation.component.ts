@@ -5,12 +5,11 @@ import {
   Component,
   computed,
   inject,
-  Input,
   OnDestroy,
   OnInit,
   signal,
   output,
-  input
+  input,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -100,7 +99,7 @@ export type NavigationOrientation = 'horizontal' | 'vertical';
 export class OsNavigationComponent implements OnInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
 
-  @Input({ required: true }) items = signal<NavigationItem[]>([]);
+  readonly items = input.required<NavigationItem[]>();
   readonly variant = input(signal<NavigationVariant>('default'));
   readonly size = input(signal<NavigationSize>('medium'));
   readonly orientation = input(signal<NavigationOrientation>('horizontal'));
@@ -117,7 +116,7 @@ export class OsNavigationComponent implements OnInit, OnDestroy {
     item: NavigationItem;
     route?: string;
     href?: string;
-}>();
+  }>();
   readonly mobileDetected = output<boolean>();
 
   private isMobileSignal = signal(false);
@@ -208,10 +207,8 @@ export class OsNavigationComponent implements OnInit, OnDestroy {
   }
 
   private focusFirstItem(): void {
-    
     const firstEnabledItem = this.items().find((item) => !item.disabled);
     if (firstEnabledItem) {
-      
       setTimeout(() => {
         const firstItemElement = document.querySelector(
           `[data-navigation-item="${firstEnabledItem.id}"]`

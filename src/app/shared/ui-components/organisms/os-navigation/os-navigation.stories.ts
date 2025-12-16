@@ -151,7 +151,7 @@ const itemsWithDisabled = [
 
 export const Default: Story = {
   args: {
-    items: signal(sampleItems),
+    items: sampleItems,
     variant: signal('default'),
     size: signal('medium'),
     orientation: signal('horizontal'),
@@ -536,7 +536,7 @@ export const TabNavigation: Story = {
 
 export const Interactive: Story = {
   args: {
-    items: signal(sampleItems),
+    items: sampleItems,
     variant: signal('default'),
     size: signal('medium'),
     orientation: signal('horizontal'),
@@ -580,7 +580,7 @@ export const Interactive: Story = {
 
 export const WithLoadingState: Story = {
   args: {
-    items: signal(sampleItems),
+    items: sampleItems,
     variant: signal('default'),
     size: signal('medium'),
     orientation: signal('horizontal'),
@@ -617,7 +617,7 @@ export const WithLoadingState: Story = {
 
 export const MobileOptimized: Story = {
   args: {
-    items: signal(sampleItems),
+    items: sampleItems,
     variant: signal('default'),
     size: signal('large'),
     orientation: signal('horizontal'),
@@ -658,7 +658,7 @@ export const MobileOptimized: Story = {
 
 export const WithPriorityItems: Story = {
   args: {
-    items: signal(sampleItems),
+    items: sampleItems,
     variant: signal('sidebar'),
     size: signal('medium'),
     orientation: signal('vertical'),

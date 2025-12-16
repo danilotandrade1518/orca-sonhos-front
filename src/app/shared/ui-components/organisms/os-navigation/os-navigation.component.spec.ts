@@ -51,7 +51,7 @@ describe('OsNavigationComponent', () => {
 
     fixture = TestBed.createComponent(OsNavigationComponent);
     component = fixture.componentInstance;
-    component.items.set(mockItems);
+    fixture.componentRef.setInput('items', mockItems);
     fixture.detectChanges();
   });
 
@@ -71,7 +71,7 @@ describe('OsNavigationComponent', () => {
 
     it('should accept custom items', () => {
       const customItems: NavigationItem[] = [{ id: 'test', label: 'Test', route: '/test' }];
-      component.items.set(customItems);
+      fixture.componentRef.setInput('items', customItems);
       fixture.detectChanges();
 
       expect(component.items()).toEqual(customItems);
@@ -189,7 +189,7 @@ describe('OsNavigationComponent', () => {
     });
 
     it('should handle disabled item click without errors', () => {
-      const disabledItem = mockItems[3]; 
+      const disabledItem = mockItems[3];
       expect(() => component.onItemClick(disabledItem)).not.toThrow();
     });
 
