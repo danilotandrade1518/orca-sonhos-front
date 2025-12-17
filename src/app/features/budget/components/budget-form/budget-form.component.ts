@@ -191,12 +191,10 @@ export class BudgetFormComponent implements OnInit {
 
     if (this.mode() === 'create') {
       this.budgetState.createBudget(formValue.name, formValue.type, user.id);
-      this.notificationService.showSuccess('Orçamento criado com sucesso!');
       this.saved.emit();
       this.onCancel();
     } else if (currentBudget) {
       this.budgetState.updateBudget(user.id, currentBudget.id, formValue.name);
-      this.notificationService.showSuccess('Orçamento atualizado com sucesso!');
       this.saved.emit();
       this.onCancel();
     }

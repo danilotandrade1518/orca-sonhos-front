@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { BudgetParticipantDto } from '../../../../dtos/budget';
 import { BudgetService } from '../budget/budget.service';
 import { BudgetState } from '../budget/budget.state';
+import { NotificationService } from '../notification/notification.service';
 import { SharingService } from './sharing.service';
 
 @Injectable({
@@ -14,6 +15,7 @@ export class SharingState {
   private readonly sharingService = inject(SharingService);
   private readonly budgetService = inject(BudgetService);
   private readonly budgetState = inject(BudgetState);
+  private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
   private pollingSubscription: Subscription | null = null;
@@ -90,6 +92,7 @@ export class SharingState {
       .subscribe({
         next: (success) => {
           if (success) {
+            this.notificationService.showSuccess('Participante adicionado com sucesso!');
             this.loadParticipants(budgetId);
           } else {
             this._error.set('Falha ao adicionar participante. Tente novamente.');
@@ -122,6 +125,7 @@ export class SharingState {
       .subscribe({
         next: (success) => {
           if (success) {
+            this.notificationService.showSuccess('Participante removido com sucesso!');
             this.loadParticipants(budgetId);
           } else {
             this._error.set('Falha ao remover participante. Tente novamente.');

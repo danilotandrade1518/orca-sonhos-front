@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BudgetDto } from '../../../../dtos/budget';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
 import { PresetCategoriesService } from '../category/preset-categories.service';
+import { NotificationService } from '../notification/notification.service';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -13,6 +14,7 @@ export class BudgetState {
   private readonly budgetService = inject(BudgetService);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
   private readonly presetCategoriesService = inject(PresetCategoriesService);
+  private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _budgets = signal<BudgetDto[]>([]);
@@ -83,6 +85,7 @@ export class BudgetState {
             } catch (error) {
               console.warn('Failed to seed preset categories:', error);
             }
+            this.notificationService.showSuccess('Orçamento criado com sucesso!');
             this.loadBudgets();
           } else {
             this._error.set('Failed to create budget');
@@ -106,6 +109,7 @@ export class BudgetState {
       .subscribe({
         next: (success) => {
           if (success) {
+            this.notificationService.showSuccess('Orçamento atualizado com sucesso!');
             this.loadBudgets();
           } else {
             this._error.set('Failed to update budget');
@@ -131,6 +135,7 @@ export class BudgetState {
           if (success) {
             const wasSelected = this.selectedBudgetId() === budgetId;
 
+            this.notificationService.showSuccess('Orçamento excluído com sucesso!');
             this.loadBudgets();
 
             if (wasSelected) {
