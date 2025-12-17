@@ -16,23 +16,23 @@ export function getBudgetErrorMessage(
   if (!error) {
     return getDefaultErrorMessage(operation);
   }
-  
+
   if (error.code) {
     const codeMessage = getMessageByErrorCode(error.code, operation);
     if (codeMessage) {
       return codeMessage;
     }
   }
-  
+
   const statusMessage = getMessageByStatusAndOperation(error.status, operation);
   if (statusMessage) {
     return statusMessage;
   }
-  
+
   if (error.message && error.message !== 'User not authenticated') {
     return error.message;
   }
-  
+
   return getDefaultErrorMessage(operation);
 }
 
@@ -55,7 +55,7 @@ function getMessageByErrorCode(
   operation: BudgetOperation
 ): string | null {
   const codeUpper = code.toUpperCase();
-  
+
   if (codeUpper === 'UNAUTHORIZED' || codeUpper === 'NOT_AUTHENTICATED') {
     return 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.';
   }
@@ -66,14 +66,14 @@ function getMessageByErrorCode(
     }
     return 'Você não tem permissão para realizar esta ação.';
   }
-  
+
   if (codeUpper.includes('VALIDATION') || codeUpper.includes('INVALID')) {
     if (operation === 'create' || operation === 'update') {
       return 'Dados inválidos. Verifique o nome do orçamento e tente novamente.';
     }
     return 'Dados inválidos. Verifique as informações e tente novamente.';
   }
-  
+
   if (codeUpper.includes('NOT_FOUND') || codeUpper === 'BUDGET_NOT_FOUND') {
     return 'Orçamento não encontrado.';
   }
@@ -85,8 +85,20 @@ function getMessageByErrorCode(
     return 'Este orçamento já existe.';
   }
 
-  if (codeUpper.includes('PERSONAL_BUDGET') || codeUpper.includes('NOT_SHARED')) {
+  if (
+    codeUpper.includes('PERSONAL_BUDGET') ||
+    codeUpper.includes('NOT_SHARED') ||
+    codeUpper === 'BUDGETNOTSHAREDERROR' ||
+    codeUpper.includes('BUDGET_NOT_SHARED')
+  ) {
     return 'Orçamentos pessoais não permitem adicionar participantes.';
+  }
+
+  if (
+    codeUpper === 'ONLYOWNERCANDELETEBUDGETERROR' ||
+    codeUpper.includes('ONLY_OWNER_CAN_DELETE')
+  ) {
+    return 'Apenas o dono do orçamento pode excluí-lo.';
   }
 
   if (codeUpper.includes('HAS_TRANSACTIONS') || codeUpper.includes('HAS_ACCOUNTS')) {
