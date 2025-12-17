@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "types": ["node", "@playwright/test"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/app/features/**/*.e2e.spec.ts",
+    "src/app/features/**/e2e/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
