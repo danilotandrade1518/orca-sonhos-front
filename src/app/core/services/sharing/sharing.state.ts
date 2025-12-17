@@ -50,6 +50,7 @@ export class SharingState {
   }
 
   loadParticipants(budgetId: string): void {
+    this.currentBudgetId = budgetId;
     this._loading.set(true);
     this._error.set(null);
 
@@ -94,6 +95,7 @@ export class SharingState {
           if (success) {
             this.notificationService.showSuccess('Participante adicionado com sucesso!');
             this.loadParticipants(budgetId);
+            this.budgetState.loadBudgets();
           } else {
             this._error.set('Falha ao adicionar participante. Tente novamente.');
             this._loading.set(false);
@@ -127,6 +129,7 @@ export class SharingState {
           if (success) {
             this.notificationService.showSuccess('Participante removido com sucesso!');
             this.loadParticipants(budgetId);
+            this.budgetState.loadBudgets();
           } else {
             this._error.set('Falha ao remover participante. Tente novamente.');
             this._loading.set(false);
