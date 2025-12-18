@@ -11,12 +11,25 @@
 
 #### ✅ Trabalho Realizado
 
+**FASE 0: Preparação e Setup**
+
 - ✅ Análise do padrão de referência em `budget-list.page.ts` e `budget-create.page.ts`
-- ✅ Identificação da estrutura atual:
-  - `BudgetListPage` ainda usa modal de criação via `showCreateModal()` computed que verifica `route.snapshot.data['modalMode'] === 'create'`
-  - `BudgetCreatePage` já existe e está implementada corretamente seguindo padrão estabelecido
-  - Rota `/budgets/new` ainda aponta para `BudgetListPage` com `data: { modalMode: 'create' }` em vez de `BudgetCreatePage`
-- ✅ Verificação de Envelopes: Já está correto - usa `router.navigate(['/envelopes/new'])` e rota aponta para `EnvelopeFormPage`
+- ✅ Identificação da estrutura atual
+- ✅ Verificação de Envelopes: Já está correto
+
+**FASE 1: Orçamentos - Padrão de Referência**
+
+- ✅ Removido modal de criação de `BudgetListPage` (removido `showCreateModal`, import de `BudgetFormComponent` e template do modal)
+- ✅ Atualizada rota `/budgets/new` para usar `BudgetCreatePage` em vez de `BudgetListPage` com `modalMode`
+- ✅ Criada `BudgetEditPage` seguindo padrão de `BudgetCreatePage`
+  - Breadcrumbs: `Orçamentos > [Nome] > Editar`
+  - Campo `type` desabilitado (não pode ser alterado após criação)
+  - Carrega dados do orçamento existente
+  - Integração com `BudgetState.updateBudget()`
+- ✅ Atualizada rota `/budgets/:id/edit` para usar `BudgetEditPage`
+- ✅ Verificado que `BudgetDetailPage` não usa modal de edição (já navega para página)
+- ✅ Criados testes unitários completos para `BudgetCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+- ✅ Criados testes unitários completos para `BudgetEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
 
 #### 🤔 Decisões/Problemas
 
@@ -43,9 +56,8 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 1: Orçamentos - Padrão de Referência (⏰ Em Progresso)
-**Última Modificação**: Criado BudgetEditPage e atualizado rotas
+**Fase Atual**: FASE 1: Orçamentos - Padrão de Referência (✅ Completada)
+**Última Modificação**: Criados testes unitários para BudgetCreatePage e BudgetEditPage
 **Próximas Tarefas**:
 
-- Criar testes unitários para BudgetCreatePage (se não existirem)
-- Criar testes unitários para BudgetEditPage
+- Iniciar FASE 2: Contas
