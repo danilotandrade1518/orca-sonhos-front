@@ -10,14 +10,14 @@ export const CREDIT_CARDS_ROUTES: Routes = [
   {
     path: 'new',
     loadComponent: () =>
-      import('./pages/credit-cards/credit-cards.page').then((m) => m.CreditCardsPage),
+      import('./pages/credit-cards-create/credit-cards-create.page').then(
+        (m) => m.CreditCardsCreatePage
+      ),
     title: 'Novo Cartão',
-    data: { modalMode: 'create' },
   },
   {
     path: 'bills/:id/pay',
-    loadComponent: () =>
-      import('./pages/pay-bill/pay-bill.page').then((m) => m.PayBillPage),
+    loadComponent: () => import('./pages/pay-bill/pay-bill.page').then((m) => m.PayBillPage),
     title: 'Pagar Fatura',
   },
   {
@@ -31,10 +31,7 @@ export const CREDIT_CARDS_ROUTES: Routes = [
   {
     path: ':id/edit',
     loadComponent: () =>
-      import('./pages/credit-card-detail/credit-card-detail.page').then(
-        (m) => m.CreditCardDetailPage
-      ),
+      import('./pages/credit-cards-edit/credit-cards-edit.page').then((m) => m.CreditCardsEditPage),
     title: 'Editar Cartão',
-    data: { modalMode: 'edit' },
   },
 ];

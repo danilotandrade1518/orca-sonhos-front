@@ -48,6 +48,24 @@
 - ✅ Criados testes unitários completos para `AccountsCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs, conversão de valores)
 - ✅ Criados testes unitários completos para `AccountsEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
 
+**FASE 3: Cartões de Crédito**
+
+- ✅ Criada `CreditCardsCreatePage` seguindo padrão estabelecido
+  - Breadcrumbs: `Cartões de Crédito > Novo`
+  - Campos: nome, limite, dia de fechamento, dia de vencimento
+  - Integração com `CreditCardState.createCreditCard()`
+  - Conversão de limite para centavos
+- ✅ Criada `CreditCardsEditPage` seguindo padrão estabelecido
+  - Breadcrumbs: `Cartões de Crédito > [Nome] > Editar`
+  - Campos: nome, limite, dia de fechamento, dia de vencimento
+  - Carrega dados do cartão existente
+  - Integração com `CreditCardState.updateCreditCard()`
+- ✅ Atualizadas rotas `/credit-cards/new` e `/credit-cards/:id/edit` para usar páginas
+- ✅ Removido modal de criação de `CreditCardsPage` (removido `showCreateModal`, import de `CreditCardFormComponent` e template do modal)
+- ✅ Verificado que `CreditCardDetailPage` não usa modal de edição (já navega para página)
+- ✅ Criados testes unitários completos para `CreditCardsCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs, conversão de valores)
+- ✅ Criados testes unitários completos para `CreditCardsEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+
 #### 🤔 Decisões/Problemas
 
 - **Padrão Identificado**:
@@ -73,8 +91,8 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 2: Contas (✅ Completada)
-**Última Modificação**: Criados testes unitários para AccountsCreatePage e AccountsEditPage
+**Fase Atual**: FASE 3: Cartões de Crédito (✅ Completada)
+**Última Modificação**: Criados testes unitários para CreditCardsCreatePage e CreditCardsEditPage
 **Próximas Tarefas**:
 
-- Iniciar FASE 3: Cartões de Crédito
+- Iniciar FASE 4: Transações

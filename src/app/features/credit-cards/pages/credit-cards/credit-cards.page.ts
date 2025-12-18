@@ -13,7 +13,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CreditCardState } from '@core/services/credit-card/credit-card-state/credit-card.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { CreditCardCardComponent } from '@shared/ui-components/molecules/credit-card-card';
-import { CreditCardFormComponent } from '../../components/credit-card-form';
 import { CreditCardBillFormComponent } from '../../components/credit-card-bill-form';
 import { ReopenBillModalComponent } from '../../components/reopen-bill-modal';
 import { ConfirmDialogService } from '@core/services/confirm-dialog';
@@ -33,15 +32,14 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
   standalone: true,
   imports: [
     CreditCardCardComponent,
-    CreditCardFormComponent,
     CreditCardBillFormComponent,
     ReopenBillModalComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsAlertComponent
-],
+    OsAlertComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de cartões de crédito">
@@ -104,13 +102,7 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
         }
       </os-entity-list>
 
-      @if (showCreateModal()) {
-      <os-credit-card-form
-        [mode]="'create'"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
-      } @if (showCreateBillModal()) {
+      @if (showCreateBillModal()) {
       <os-credit-card-bill-form
         [mode]="'create'"
         (saved)="onBillFormSaved()"
@@ -137,10 +129,6 @@ export class CreditCardsPage implements OnInit {
   readonly hasCreditCards = computed(() => this.creditCards().length > 0);
 
   readonly reopeningBill = signal<CreditCardBillDto | null>(null);
-
-  readonly showCreateModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'create';
-  });
 
   readonly showCreateBillModal = signal(false);
   readonly showReopenBillModal = signal(false);
@@ -243,14 +231,6 @@ export class CreditCardsPage implements OnInit {
         id: creditCard.id,
       });
     }
-  }
-
-  onFormSaved(): void {
-    this.router.navigate(['/credit-cards'], { replaceUrl: true });
-  }
-
-  onFormCancelled(): void {
-    this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 
   onBillFormSaved(): void {
