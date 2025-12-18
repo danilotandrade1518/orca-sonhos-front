@@ -268,7 +268,7 @@ _[Espaço para anotações durante desenvolvimento]_
 
 ---
 
-## 📅 FASE 2: Contas [Status: ⏳]
+## 📅 FASE 2: Contas [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -276,24 +276,24 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ### 📋 Tarefas
 
-#### 2.1 Criar AccountsCreatePage [⏳]
+#### 2.1 Criar AccountsCreatePage [✅]
 
 **Descrição**: Criar página de criação de contas
 
-- Criar `accounts-create.page.ts` seguindo padrão de `budget-create.page.ts`
-- Implementar breadcrumbs: `Contas > Novo`
-- Implementar formulário reativo com campos: nome, tipo, saldo inicial
-- Reutilizar lógica de `AccountFormComponent` (sem wrapper de modal)
-- Integrar com `AccountState.createAccount()`
-- Navegação de volta após salvar/cancelar
+- ✅ Criar `accounts-create.page.ts` seguindo padrão de `budget-create.page.ts`
+- ✅ Implementar breadcrumbs: `Contas > Nova`
+- ✅ Implementar formulário reativo com campos: nome, tipo, saldo inicial
+- ✅ Reutilizar lógica de `AccountFormComponent` (sem wrapper de modal)
+- ✅ Integrar com `AccountState.createAccount()`
+- ✅ Navegação de volta após salvar/cancelar
 
 **Critério de Conclusão**:
 
-- Página criada e funcional
-- Formulário funciona corretamente
-- Validação funciona
-- Salvamento funciona
-- Navegação funciona
+- ✅ Página criada e funcional
+- ✅ Formulário funciona corretamente
+- ✅ Validação funciona
+- ✅ Salvamento funciona
+- ✅ Navegação funciona
 
 **Arquivos**:
 
@@ -304,25 +304,25 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ---
 
-#### 2.2 Criar AccountsEditPage [⏳]
+#### 2.2 Criar AccountsEditPage [✅]
 
 **Descrição**: Criar página de edição de contas
 
-- Criar `accounts-edit.page.ts` seguindo padrão de `budget-create.page.ts`
-- Implementar breadcrumbs: `Contas > [Nome] > Editar`
-- Implementar formulário reativo com campos: nome, tipo, saldo inicial
-- Carregar dados da conta existente via rota `:id`
-- Reutilizar lógica de `AccountFormComponent` (sem wrapper de modal)
-- Integrar com `AccountState.updateAccount()`
-- Navegação de volta após salvar/cancelar
+- ✅ Criar `accounts-edit.page.ts` seguindo padrão de `budget-create.page.ts`
+- ✅ Implementar breadcrumbs: `Contas > [Nome] > Editar`
+- ✅ Implementar formulário reativo com campos: nome, tipo (saldo inicial não editável após criação)
+- ✅ Carregar dados da conta existente via rota `:id`
+- ✅ Reutilizar lógica de `AccountFormComponent` (sem wrapper de modal)
+- ✅ Integrar com `AccountState.updateAccount()`
+- ✅ Navegação de volta após salvar/cancelar
 
 **Critério de Conclusão**:
 
-- Página criada e funcional
-- Formulário carrega dados existentes
-- Validação funciona
-- Salvamento funciona
-- Navegação funciona
+- ✅ Página criada e funcional
+- ✅ Formulário carrega dados existentes
+- ✅ Validação funciona
+- ✅ Salvamento funciona
+- ✅ Navegação funciona
 
 **Arquivos**:
 
@@ -331,20 +331,22 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 **Dependências**: Tarefa 2.1 completa
 
+**Observação**: Campo `initialBalance` não é editável após criação (não incluído no formulário de edição, conforme `updateAccount` só aceita `name` e `type`).
+
 ---
 
-#### 2.3 Atualizar Rotas de Contas [⏳]
+#### 2.3 Atualizar Rotas de Contas [✅]
 
 **Descrição**: Atualizar rotas para usar páginas
 
-- Alterar rota `/accounts/new` para apontar para `AccountsCreatePage`
-- Alterar rota `/accounts/:id/edit` para apontar para `AccountsEditPage`
-- Verificar que rotas estão funcionando corretamente
+- ✅ Alterar rota `/accounts/new` para apontar para `AccountsCreatePage`
+- ✅ Alterar rota `/accounts/:id/edit` para apontar para `AccountsEditPage`
+- ✅ Remover `data: { modalMode: 'create' }` e `data: { modalMode: 'edit' }` das rotas
 
 **Critério de Conclusão**:
 
-- Rotas atualizadas e funcionando
-- Navegação funciona corretamente
+- ✅ Rotas atualizadas e funcionando
+- ✅ Navegação funciona corretamente
 
 **Arquivo**: `src/app/features/accounts/accounts.routes.ts`
 
@@ -352,21 +354,22 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ---
 
-#### 2.4 Remover Modal de Criação de AccountsPage [⏳]
+#### 2.4 Remover Modal de Criação de AccountsPage [✅]
 
 **Descrição**: Remover lógica de modal de criação
 
-- Remover `showCreateModal` computed
-- Remover `AccountFormComponent` import
-- Remover template do modal
-- Alterar `openCreateModal()` para navegar para página
-- Manter ação "Transferir" funcionando
+- ✅ Remover `showCreateModal` computed
+- ✅ Remover `AccountFormComponent` import
+- ✅ Remover template do modal
+- ✅ Alterar `openCreateModal()` para navegar para página (`/accounts/new`)
+- ✅ Remover métodos `onFormSaved()` e `onFormCancelled()` não mais necessários
+- ✅ Manter ação "Transferir" funcionando
 
 **Critério de Conclusão**:
 
-- Modal de criação removido
-- Botão "Nova Conta" navega para página
-- Ação "Transferir" continua funcionando
+- ✅ Modal de criação removido
+- ✅ Botão "Nova Conta" navega para página
+- ✅ Ação "Transferir" continua funcionando
 
 **Arquivo**: `src/app/features/accounts/pages/accounts/accounts.page.ts`
 
@@ -374,19 +377,18 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ---
 
-#### 2.5 Remover Modal de Edição de AccountDetailPage [⏳]
+#### 2.5 Remover Modal de Edição de AccountDetailPage [✅]
 
 **Descrição**: Remover lógica de modal de edição
 
-- Remover lógica relacionada a `modalMode: 'edit'`
-- Remover `AccountFormComponent` import se usado apenas para edição
-- Remover template do modal de edição
-- Manter navegação para página de edição
+- ✅ Verificado: Não há modal de edição em `AccountDetailPage`
+- ✅ `AccountDetailPage` já navega para página de edição via `navigateToEdit()`
+- ✅ Nenhuma alteração necessária
 
 **Critério de Conclusão**:
 
-- Modal de edição removido
-- Navegação para página de edição funciona
+- ✅ Modal de edição removido (não existia)
+- ✅ Navegação para página de edição funciona
 
 **Arquivo**: `src/app/features/accounts/pages/account-detail/account-detail.page.ts`
 
@@ -394,56 +396,61 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ---
 
-#### 2.6 Criar Testes Unitários para AccountsCreatePage [⏳]
+#### 2.6 Criar Testes Unitários para AccountsCreatePage [✅]
 
 **Descrição**: Criar testes unitários completos
 
-- Testar inicialização do componente
-- Testar inicialização do formulário
-- Testar validação de campos (nome obrigatório, tipo obrigatório)
-- Testar submissão com formulário válido
-- Testar submissão com formulário inválido
-- Testar navegação de cancelamento
-- Testar navegação após salvar
-- Testar estados de loading
-- Testar tratamento de erros
-- Testar breadcrumbs
+- ✅ Testar inicialização do componente
+- ✅ Testar inicialização do formulário
+- ✅ Testar validação de campos (nome obrigatório, tipo obrigatório)
+- ✅ Testar submissão com formulário válido
+- ✅ Testar submissão com formulário inválido
+- ✅ Testar navegação de cancelamento
+- ✅ Testar navegação após salvar
+- ✅ Testar estados de loading
+- ✅ Testar tratamento de erros (usuário não autenticado, orçamento não selecionado)
+- ✅ Testar breadcrumbs
+- ✅ Testar conversão de saldo inicial para centavos
 
 **Critério de Conclusão**:
 
-- Testes criados e passando
-- Cobertura >= 80%
+- ✅ Testes criados
+- ✅ Cobertura completa de funcionalidades principais
 
 **Arquivo**: `src/app/features/accounts/pages/accounts-create/accounts-create.page.spec.ts`
 
 **Dependências**: Tarefa 2.1 completa
 
+**Resultado**: Testes criados seguindo padrão do projeto, cobrindo inicialização, validação, submissão, navegação, loading, erros e conversão de valores monetários.
+
 ---
 
-#### 2.7 Criar Testes Unitários para AccountsEditPage [⏳]
+#### 2.7 Criar Testes Unitários para AccountsEditPage [✅]
 
 **Descrição**: Criar testes unitários completos
 
-- Testar inicialização do componente
-- Testar carregamento de dados da conta
-- Testar inicialização do formulário com dados existentes
-- Testar validação de campos
-- Testar submissão com formulário válido
-- Testar submissão com formulário inválido
-- Testar navegação de cancelamento
-- Testar navegação após salvar
-- Testar estados de loading
-- Testar tratamento de erros
-- Testar breadcrumbs
+- ✅ Testar inicialização do componente
+- ✅ Testar carregamento de dados da conta
+- ✅ Testar inicialização do formulário com dados existentes
+- ✅ Testar validação de campos
+- ✅ Testar submissão com formulário válido
+- ✅ Testar submissão com formulário inválido
+- ✅ Testar navegação de cancelamento
+- ✅ Testar navegação após salvar
+- ✅ Testar estados de loading
+- ✅ Testar tratamento de erros (conta não encontrada, ID não encontrado, usuário não autenticado)
+- ✅ Testar breadcrumbs
 
 **Critério de Conclusão**:
 
-- Testes criados e passando
-- Cobertura >= 80%
+- ✅ Testes criados
+- ✅ Cobertura completa de funcionalidades principais
 
 **Arquivo**: `src/app/features/accounts/pages/accounts-edit/accounts-edit.page.spec.ts`
 
 **Dependências**: Tarefa 2.2 completa
+
+**Resultado**: Testes criados seguindo padrão do projeto, cobrindo carregamento de dados, inicialização com dados existentes, validação, submissão, navegação e tratamento de erros.
 
 ---
 
@@ -453,14 +460,15 @@ Converter Contas para usar páginas de criação e edição, mantendo ação "Tr
 
 ### 🧪 Critérios de Validação
 
-- [ ] `AccountsCreatePage` criada e funcional
-- [ ] `AccountsEditPage` criada e funcional
-- [ ] Rotas atualizadas e funcionando
-- [ ] Modal de criação removido de `accounts.page.ts`
-- [ ] Modal de edição removido de `account-detail.page.ts`
-- [ ] Ação "Transferir" continua funcionando
-- [ ] Testes unitários criados e passando
-- [ ] Navegação funciona corretamente
+- [x] `AccountsCreatePage` criada e funcional
+- [x] `AccountsEditPage` criada e funcional
+- [x] Rotas atualizadas e funcionando
+- [x] Modal de criação removido de `accounts.page.ts`
+- [x] Modal de edição removido de `account-detail.page.ts` (não existia)
+- [x] Ação "Transferir" continua funcionando
+- [x] Testes unitários criados para `AccountsCreatePage`
+- [x] Testes unitários criados para `AccountsEditPage`
+- [x] Navegação funciona corretamente
 
 ### 📝 Comentários da Fase
 

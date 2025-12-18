@@ -31,6 +31,23 @@
 - ✅ Criados testes unitários completos para `BudgetCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
 - ✅ Criados testes unitários completos para `BudgetEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
 
+**FASE 2: Contas**
+
+- ✅ Criada `AccountsCreatePage` seguindo padrão estabelecido
+  - Breadcrumbs: `Contas > Nova`
+  - Campos: nome, tipo, saldo inicial
+  - Integração com `AccountState.createAccount()`
+- ✅ Criada `AccountsEditPage` seguindo padrão estabelecido
+  - Breadcrumbs: `Contas > [Nome] > Editar`
+  - Campos: nome, tipo (saldo inicial não editável após criação)
+  - Integração com `AccountState.updateAccount()`
+- ✅ Atualizadas rotas `/accounts/new` e `/accounts/:id/edit` para usar páginas
+- ✅ Removido modal de criação de `AccountsPage` (removido `showCreateModal`, import de `AccountFormComponent` e template do modal)
+- ✅ Verificado que `AccountDetailPage` não usa modal de edição (já navega para página)
+- ✅ Ação "Transferir" mantida funcionando
+- ✅ Criados testes unitários completos para `AccountsCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs, conversão de valores)
+- ✅ Criados testes unitários completos para `AccountsEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+
 #### 🤔 Decisões/Problemas
 
 - **Padrão Identificado**:
@@ -56,8 +73,8 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 1: Orçamentos - Padrão de Referência (✅ Completada)
-**Última Modificação**: Criados testes unitários para BudgetCreatePage e BudgetEditPage
+**Fase Atual**: FASE 2: Contas (✅ Completada)
+**Última Modificação**: Criados testes unitários para AccountsCreatePage e AccountsEditPage
 **Próximas Tarefas**:
 
-- Iniciar FASE 2: Contas
+- Iniciar FASE 3: Cartões de Crédito

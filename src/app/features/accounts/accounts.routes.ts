@@ -3,21 +3,18 @@ import { Routes } from '@angular/router';
 export const ACCOUNTS_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./pages/accounts/accounts.page').then((m) => m.AccountsPage),
+    loadComponent: () => import('./pages/accounts/accounts.page').then((m) => m.AccountsPage),
     title: 'Contas',
   },
   {
     path: 'new',
     loadComponent: () =>
-      import('./pages/accounts/accounts.page').then((m) => m.AccountsPage),
+      import('./pages/accounts-create/accounts-create.page').then((m) => m.AccountsCreatePage),
     title: 'Nova Conta',
-    data: { modalMode: 'create' },
   },
   {
     path: ':id/reconcile',
-    loadComponent: () =>
-      import('./pages/reconcile/reconcile.page').then((m) => m.ReconcilePage),
+    loadComponent: () => import('./pages/reconcile/reconcile.page').then((m) => m.ReconcilePage),
     title: 'Reconciliar Conta',
   },
   {
@@ -29,14 +26,12 @@ export const ACCOUNTS_ROUTES: Routes = [
   {
     path: ':id/edit',
     loadComponent: () =>
-      import('./pages/account-detail/account-detail.page').then((m) => m.AccountDetailPage),
+      import('./pages/accounts-edit/accounts-edit.page').then((m) => m.AccountsEditPage),
     title: 'Editar Conta',
-    data: { modalMode: 'edit' },
   },
   {
     path: 'transfer',
-    loadComponent: () =>
-      import('./pages/transfer/transfer.page').then((m) => m.TransferPage),
+    loadComponent: () => import('./pages/transfer/transfer.page').then((m) => m.TransferPage),
     title: 'Transferir entre Contas',
   },
 ];
