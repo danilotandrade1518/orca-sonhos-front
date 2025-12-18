@@ -133,17 +133,46 @@
 - ✅ Navegação funciona corretamente
 - ✅ Testes unitários criados e sem erros de lint
 
+**FASE 6: Envelopes - Validação**
+
+- ✅ Verificada navegação de Envelopes
+  - `EnvelopesPage.openCreateModal()` navega corretamente para `/envelopes/new`
+  - `EnvelopesPage.onEditEnvelope()` navega corretamente para `/envelopes/:id/edit`
+- ✅ Verificada estrutura de `EnvelopeFormPage`
+  - Usa `os-page` e `os-page-header` com breadcrumbs
+  - Usa `os-form-template` para formulário
+  - Detecta modo create/edit via parâmetro de rota `:id`
+  - Breadcrumbs implementados corretamente
+  - Navegação de volta após salvar/cancelar
+  - Validação, loading e tratamento de erros implementados
+- ✅ Verificadas rotas em `envelopes.routes.ts`
+  - Rota `/envelopes/new` aponta para `EnvelopeFormPage`
+  - Rota `/envelopes/:id/edit` aponta para `EnvelopeFormPage`
+- ✅ Nenhum ajuste necessário - Envelopes já segue padrão estabelecido completamente
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Não fazer ajustes em Envelopes
+  - **Motivo**: Implementação já está correta e segue completamente o padrão estabelecido. Foi migrado anteriormente em OS-238 e está funcionando perfeitamente.
+
+#### 🧪 Validações
+
+- ✅ Navegação funciona corretamente
+- ✅ Páginas seguem padrão estabelecido
+- ✅ Rotas configuradas corretamente
+- ✅ Sem erros de lint
+
 #### ⏭️ Próximos Passos
 
-- Iniciar FASE 6: Envelopes - Validação
+- Iniciar FASE 7: Validação Final e Testes
 
 ---
 
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 5: Categorias (✅ Completada)
-**Última Modificação**: Criadas páginas de criação e edição de categorias com testes unitários
+**Fase Atual**: FASE 6: Envelopes - Validação (✅ Completada)
+**Última Modificação**: Verificada implementação de Envelopes - nenhum ajuste necessário
 **Próximas Tarefas**:
 
-- Iniciar FASE 6: Envelopes - Validação
+- Iniciar FASE 7: Validação Final e Testes
