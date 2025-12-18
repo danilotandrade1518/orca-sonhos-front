@@ -8,10 +8,9 @@ import {
   effect,
 } from '@angular/core';
 
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { CategoryState } from '@core/services/category/category.state';
-import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
@@ -25,11 +24,10 @@ import {
   OsSelectComponent,
   type OsSelectOption,
 } from '@shared/ui-components/atoms/os-select/os-select.component';
-import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.component';
-import type { CategoryType } from '../../../../../dtos/category/category-types';
+import type { BudgetType } from '../../../../../dtos/budget';
 
 @Component({
-  selector: 'os-categories-edit-page',
+  selector: 'os-budget-create-page',
   imports: [
     ReactiveFormsModule,
     OsPageComponent,
@@ -37,11 +35,10 @@ import type { CategoryType } from '../../../../../dtos/category/category-types';
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsSelectComponent,
-    OsInputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <os-page variant="default" size="medium" ariaLabel="Editar categoria">
+    <os-page variant="default" size="medium" ariaLabel="Criar novo orçamento">
       <os-page-header
         [title]="pageTitle()"
         [subtitle]="pageSubtitle()"
@@ -60,19 +57,11 @@ import type { CategoryType } from '../../../../../dtos/category/category-types';
         @if (form()) {
         <div [formGroup]="form()!">
           <os-form-field
-            label="Nome da Categoria"
+            label="Nome do Orçamento"
             [required]="true"
             [control]="nameControl()"
             [errorMessage]="getNameErrorMessage()"
           />
-
-          <os-form-field
-            label="Descrição"
-            [control]="descriptionControl()"
-            [errorMessage]="getDescriptionErrorMessage()"
-          >
-            <os-input formControlName="description" placeholder="Descrição opcional da categoria" />
-          </os-form-field>
 
           <os-select
             label="Tipo"
@@ -87,56 +76,35 @@ import type { CategoryType } from '../../../../../dtos/category/category-types';
       </os-form-template>
     </os-page>
   `,
-  styleUrl: './categories-edit.page.scss',
+  styleUrl: './budget-create.page.scss',
 })
-export class CategoriesEditPage implements OnInit {
-  private readonly categoryState = inject(CategoryState);
-  private readonly budgetSelection = inject(BudgetSelectionService);
+export class BudgetCreatePage implements OnInit {
+  private readonly budgetState = inject(BudgetState);
   private readonly authService = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
-  readonly loading = computed(() => this.categoryState.loading());
+  readonly loading = computed(() => this.budgetState.loading());
 
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
   private readonly _validationTrigger = signal(0);
-  private readonly _categoryId = signal<string | null>(null);
 
-  readonly category = computed(() => {
-    const id = this._categoryId();
-    if (!id) return null;
+  readonly pageTitle = computed(() => 'Criar Orçamento');
 
-    return this.categoryState.getCategoryById(id) || null;
-  });
-
-  readonly pageTitle = computed(() => {
-    const category = this.category();
-    return category ? `Editar ${category.name}` : 'Editar Categoria';
-  });
-
-  readonly pageSubtitle = computed(() => 'Atualize as informações da categoria');
+  readonly pageSubtitle = computed(() => 'Preencha os dados para criar um novo orçamento');
 
   readonly breadcrumbs = computed((): BreadcrumbItem[] => {
-    const category = this.category();
-    const base: BreadcrumbItem[] = [{ label: 'Categorias', route: '/categories' }];
-    if (category) {
-      base.push({ label: category.name, route: undefined });
-    }
-    base.push({ label: 'Editar', route: undefined });
-    return base;
+    return [
+      { label: 'Orçamentos', route: '/budgets' },
+      { label: 'Novo', route: undefined },
+    ];
   });
 
   readonly nameControl = computed(() => {
     this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
-  });
-
-  readonly descriptionControl = computed(() => {
-    this._validationTrigger();
-    return this._form()?.get('description') as FormControl | null;
   });
 
   readonly typeControl = computed(() => {
@@ -145,9 +113,8 @@ export class CategoriesEditPage implements OnInit {
   });
 
   readonly typeOptions = computed<OsSelectOption[]>(() => [
-    { value: 'EXPENSE', label: 'Despesa' },
-    { value: 'INCOME', label: 'Receita' },
-    { value: 'TRANSFER', label: 'Transferência' },
+    { value: 'PERSONAL', label: 'Pessoal' },
+    { value: 'SHARED', label: 'Compartilhado' },
   ]);
 
   readonly formConfig = computed(() => ({
@@ -157,7 +124,7 @@ export class CategoriesEditPage implements OnInit {
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
-    saveButtonText: 'Salvar',
+    saveButtonText: 'Criar',
     cancelButtonText: 'Cancelar',
   }));
 
@@ -165,17 +132,9 @@ export class CategoriesEditPage implements OnInit {
     this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
-    if (control.hasError('required')) return 'Nome da categoria é obrigatório';
-    if (control.hasError('minlength')) return 'Nome deve ter pelo menos 2 caracteres';
+    if (control.hasError('required')) return 'Nome do orçamento é obrigatório';
+    if (control.hasError('minlength')) return 'Nome deve ter pelo menos 3 caracteres';
     if (control.hasError('maxlength')) return 'Nome deve ter no máximo 100 caracteres';
-    return '';
-  });
-
-  readonly getDescriptionErrorMessage = computed(() => {
-    this._validationTrigger();
-    const control = this.descriptionControl();
-    if (!control || (!control.touched && !control.dirty)) return '';
-    if (control.hasError('maxlength')) return 'Descrição deve ter no máximo 500 caracteres';
     return '';
   });
 
@@ -183,7 +142,7 @@ export class CategoriesEditPage implements OnInit {
     this._validationTrigger();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
-    if (control.hasError('required')) return 'Tipo da categoria é obrigatório';
+    if (control.hasError('required')) return 'Tipo do orçamento é obrigatório';
     return '';
   });
 
@@ -202,41 +161,13 @@ export class CategoriesEditPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const categoryId = this.route.snapshot.paramMap.get('id');
-    if (!categoryId) {
-      this.notificationService.showError('ID da categoria não encontrado');
-      this.navigateBack();
-      return;
-    }
-
-    this._categoryId.set(categoryId);
-
-    const budgetId = this.budgetSelection.selectedBudgetId();
-    if (!budgetId) {
-      this.notificationService.showError('Nenhum orçamento selecionado');
-      this.navigateBack();
-      return;
-    }
-
-    if (this.categoryState.categoriesByBudgetId().length === 0) {
-      this.categoryState.loadCategories(true);
-    }
-
-    const category = this.category();
-    if (!category) {
-      this.notificationService.showError('Categoria não encontrada');
-      this.navigateBack();
-      return;
-    }
-
     const form = new FormGroup({
-      name: new FormControl(category.name, [
+      name: new FormControl('', [
         Validators.required,
-        Validators.minLength(2),
+        Validators.minLength(3),
         Validators.maxLength(100),
       ]),
-      description: new FormControl(category.description || '', [Validators.maxLength(500)]),
-      type: new FormControl<CategoryType>(category.type, [Validators.required]),
+      type: new FormControl<BudgetType>('PERSONAL', [Validators.required]),
     });
 
     this._form.set(form);
@@ -250,23 +181,16 @@ export class CategoriesEditPage implements OnInit {
       return;
     }
 
-    const categoryId = this._categoryId();
     const user = this.authService.currentUser();
-    if (!categoryId || !user) {
-      this.notificationService.showError('Dados insuficientes para atualizar a categoria');
+    if (!user) {
+      this.notificationService.showError('Usuário não autenticado');
       return;
     }
 
     const formValue = form.value;
-    this.categoryState.updateCategory({
-      id: categoryId,
-      userId: user.id,
-      name: formValue.name,
-      type: formValue.type as CategoryType,
-      description: formValue.description || undefined,
-    });
+    this.budgetState.createBudget(formValue.name, formValue.type as 'PERSONAL' | 'SHARED', user.id);
 
-    this.notificationService.showSuccess('Categoria atualizada com sucesso!');
+    this.notificationService.showSuccess('Orçamento criado com sucesso!');
     this.navigateBack();
   }
 
@@ -281,6 +205,6 @@ export class CategoriesEditPage implements OnInit {
   }
 
   private navigateBack(): void {
-    this.router.navigate(['/categories'], { replaceUrl: true });
+    this.router.navigate(['/budgets'], { replaceUrl: true });
   }
 }

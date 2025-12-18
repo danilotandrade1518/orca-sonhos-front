@@ -68,7 +68,6 @@ import type { BudgetType } from '../../../../../dtos/budget';
             [options]="typeOptions()"
             formControlName="type"
             [required]="true"
-            [disabled]="true"
             [errorMessage]="getTypeErrorMessage()"
             placeholder="Selecione o tipo"
           />

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { CreditCardsCreatePage } from './credit-cards-create.page';
@@ -9,6 +9,9 @@ import { CreditCardState } from '@core/services/credit-card/credit-card-state/cr
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('CreditCardsCreatePage', () => {
   let component: CreditCardsCreatePage;
@@ -61,10 +64,15 @@ describe('CreditCardsCreatePage', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [CreditCardsCreatePage],
+      imports: [
+        CreditCardsCreatePage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: CreditCardState,
           useValue: creditCardState,
@@ -78,20 +86,41 @@ describe('CreditCardsCreatePage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: NotificationService,
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(CreditCardsCreatePage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      });
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreditCardsCreatePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -123,7 +152,7 @@ describe('CreditCardsCreatePage', () => {
       const dueDayControl = form?.get('dueDay');
 
       expect(nameControl?.hasError('required')).toBe(true);
-      expect(limitControl?.hasError('required')).toBe(true);
+      expect(limitControl?.hasError('min')).toBe(true);
       expect(closingDayControl?.hasError('required')).toBe(true);
       expect(dueDayControl?.hasError('required')).toBe(true);
     });

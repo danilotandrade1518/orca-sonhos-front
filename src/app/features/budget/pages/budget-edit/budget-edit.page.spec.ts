@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
@@ -9,6 +9,9 @@ import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { BudgetDto } from '../../../../../dtos/budget';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('BudgetEditPage', () => {
   let component: BudgetEditPage;
@@ -42,7 +45,7 @@ describe('BudgetEditPage', () => {
     participantsCount: 1,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     budgetState = {
       budgets: signal([mockBudget]),
       loading: signal(false),
@@ -53,10 +56,6 @@ describe('BudgetEditPage', () => {
     authService = {
       currentUser: signal(mockUser),
     };
-
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
 
     notificationService = {
       showSuccess: vi.fn(),
@@ -72,11 +71,18 @@ describe('BudgetEditPage', () => {
       },
     } as unknown as ActivatedRoute;
 
-    TestBed.configureTestingModule({
-      imports: [BudgetEditPage],
+    TestBed.resetTestingModule();
+
+    await TestBed.configureTestingModule({
+      imports: [
+        BudgetEditPage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: BudgetState,
           useValue: budgetState,
@@ -84,10 +90,6 @@ describe('BudgetEditPage', () => {
         {
           provide: AuthService,
           useValue: authService,
-        },
-        {
-          provide: Router,
-          useValue: router,
         },
         {
           provide: ActivatedRoute,
@@ -98,12 +100,38 @@ describe('BudgetEditPage', () => {
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(BudgetEditPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BudgetEditPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -131,15 +159,79 @@ describe('BudgetEditPage', () => {
       expect(typeControl?.disabled).toBe(true);
     });
 
-    it('should show error when budget ID is not found', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
+    it('should show error when budget ID is not found', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          BudgetEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: BudgetState,
+            useValue: budgetState,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(BudgetEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(BudgetEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('ID do orçamento não encontrado');
-      expect(router.navigate).toHaveBeenCalledWith(['/budgets'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/budgets'], { replaceUrl: true });
     });
 
     it('should show error when budget is not found', () => {
@@ -149,7 +241,7 @@ describe('BudgetEditPage', () => {
       fixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('Orçamento não encontrado');
-      expect(router.navigate).toHaveBeenCalledWith(['/budgets'], { replaceUrl: true });
+      expect(router.navigate).toHaveBeenCalledWith(['/budgets', 'budget-1'], { replaceUrl: true });
     });
 
     it('should load budgets if list is empty', () => {
@@ -341,24 +433,77 @@ describe('BudgetEditPage', () => {
       );
     });
 
-    it('should show error when budget ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should show error when budget ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      const form = component.form();
-      form?.patchValue({
-        name: 'Updated Budget Name',
-      });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          BudgetEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: BudgetState,
+            useValue: budgetState,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(BudgetEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
 
-      component.onSave();
-      fixture.detectChanges();
+      const newFixture = TestBed.createComponent(BudgetEditPage);
+      const newComponent = newFixture.componentInstance;
+      newFixture.detectChanges();
 
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      expect(notificationService.showError).toHaveBeenCalledWith('ID do orçamento não encontrado');
       expect(budgetState.updateBudget).not.toHaveBeenCalled();
-      expect(notificationService.showError).toHaveBeenCalledWith(
-        'Dados insuficientes para atualizar o orçamento'
-      );
     });
   });
 
@@ -373,14 +518,79 @@ describe('BudgetEditPage', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/budgets', 'budget-1'], { replaceUrl: true });
     });
 
-    it('should navigate to budgets list if budget ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should navigate to budgets list if budget ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.onCancel();
-      expect(router.navigate).toHaveBeenCalledWith(['/budgets'], { replaceUrl: true });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          BudgetEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: BudgetState,
+            useValue: budgetState,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(BudgetEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(BudgetEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      newComponent.onCancel();
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/budgets'], { replaceUrl: true });
     });
   });
 

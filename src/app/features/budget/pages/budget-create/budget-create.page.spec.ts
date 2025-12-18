@@ -1,13 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { BudgetCreatePage } from './budget-create.page';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('BudgetCreatePage', () => {
   let component: BudgetCreatePage;
@@ -51,10 +54,15 @@ describe('BudgetCreatePage', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [BudgetCreatePage],
+      imports: [
+        BudgetCreatePage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: BudgetState,
           useValue: budgetState,
@@ -64,20 +72,41 @@ describe('BudgetCreatePage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: NotificationService,
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(BudgetCreatePage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      });
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BudgetCreatePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 

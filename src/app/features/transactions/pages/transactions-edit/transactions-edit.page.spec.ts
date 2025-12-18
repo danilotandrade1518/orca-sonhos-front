@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
@@ -14,6 +14,9 @@ import { CreditCardState } from '@core/services/credit-card/credit-card-state/cr
 import { CategoryState } from '@core/services/category/category.state';
 import { of, throwError } from 'rxjs';
 import type { TransactionDto } from '../../../../../dtos/transaction/transaction-types';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('TransactionsEditPage', () => {
   let component: TransactionsEditPage;
@@ -82,7 +85,9 @@ describe('TransactionsEditPage', () => {
     creditCardId: '',
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    TestBed.resetTestingModule();
+
     transactionsApi = {
       list: vi.fn().mockReturnValue(
         of({
@@ -102,10 +107,6 @@ describe('TransactionsEditPage', () => {
     authService = {
       currentUser: signal(mockUser),
     };
-
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
 
     notificationService = {
       showSuccess: vi.fn(),
@@ -136,11 +137,16 @@ describe('TransactionsEditPage', () => {
       },
     } as unknown as ActivatedRoute;
 
-    TestBed.configureTestingModule({
-      imports: [TransactionsEditPage],
+    await TestBed.configureTestingModule({
+      imports: [
+        TransactionsEditPage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: TransactionsApiService,
           useValue: transactionsApi,
@@ -152,10 +158,6 @@ describe('TransactionsEditPage', () => {
         {
           provide: AuthService,
           useValue: authService,
-        },
-        {
-          provide: Router,
-          useValue: router,
         },
         {
           provide: ActivatedRoute,
@@ -178,12 +180,38 @@ describe('TransactionsEditPage', () => {
           useValue: categoryState,
         },
       ],
-    });
+    })
+      .overrideComponent(TransactionsEditPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionsEditPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -220,14 +248,94 @@ describe('TransactionsEditPage', () => {
     });
 
     it('should show error when transaction ID is not found', async () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      await component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          TransactionsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: TransactionsApiService,
+            useValue: transactionsApi,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+          {
+            provide: AccountState,
+            useValue: accountState,
+          },
+          {
+            provide: CreditCardState,
+            useValue: creditCardState,
+          },
+          {
+            provide: CategoryState,
+            useValue: categoryState,
+          },
+        ],
+      })
+        .overrideComponent(TransactionsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(TransactionsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      await newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('ID da transação não encontrado');
-      expect(router.navigate).toHaveBeenCalledWith(['/transactions'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/transactions'], { replaceUrl: true });
     });
 
     it('should show error when transaction is not found', async () => {
@@ -432,12 +540,91 @@ describe('TransactionsEditPage', () => {
     });
 
     it('should show error when transaction ID is missing', async () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      await component.ngOnInit();
-      fixture.detectChanges();
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      const form = component.form();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          TransactionsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: TransactionsApiService,
+            useValue: transactionsApi,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+          {
+            provide: AccountState,
+            useValue: accountState,
+          },
+          {
+            provide: CreditCardState,
+            useValue: creditCardState,
+          },
+          {
+            provide: CategoryState,
+            useValue: categoryState,
+          },
+        ],
+      })
+        .overrideComponent(TransactionsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(TransactionsEditPage);
+      const newComponent = newFixture.componentInstance;
+      newFixture.detectChanges();
+
+      await newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      const form = newComponent.form();
       if (form) {
         form.patchValue({
           description: 'Compra atualizada',
@@ -447,8 +634,8 @@ describe('TransactionsEditPage', () => {
           categoryId: mockCategory.id,
         });
 
-        await component.onSave();
-        fixture.detectChanges();
+        await newComponent.onSave();
+        newFixture.detectChanges();
 
         expect(transactionsApi.update).not.toHaveBeenCalled();
         expect(notificationService.showError).toHaveBeenCalledWith(

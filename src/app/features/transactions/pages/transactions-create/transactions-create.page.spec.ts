@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { TransactionsCreatePage } from './transactions-create.page';
@@ -80,10 +80,6 @@ describe('TransactionsCreatePage', () => {
       currentUser: signal(mockUser),
     };
 
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
-
     notificationService = {
       showSuccess: vi.fn(),
       showError: vi.fn(),
@@ -105,10 +101,9 @@ describe('TransactionsCreatePage', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [TransactionsCreatePage],
+      imports: [TransactionsCreatePage, RouterTestingModule],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: TransactionsApiService,
           useValue: transactionsApi,
@@ -120,10 +115,6 @@ describe('TransactionsCreatePage', () => {
         {
           provide: AuthService,
           useValue: authService,
-        },
-        {
-          provide: Router,
-          useValue: router,
         },
         {
           provide: NotificationService,
@@ -148,6 +139,8 @@ describe('TransactionsCreatePage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionsCreatePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 

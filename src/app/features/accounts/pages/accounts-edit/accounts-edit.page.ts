@@ -25,8 +25,7 @@ import {
   OsSelectComponent,
   type OsSelectOption,
 } from '@shared/ui-components/atoms/os-select/os-select.component';
-import { OsMoneyInputComponent } from '@shared/ui-components/atoms/os-money-input/os-money-input.component';
-import type { AccountDto, AccountType } from '../../../../../dtos/account/account-types';
+import type { AccountType } from '../../../../../dtos/account/account-types';
 
 @Component({
   selector: 'os-accounts-edit-page',
@@ -37,7 +36,6 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
     OsFormTemplateComponent,
     OsFormFieldComponent,
     OsSelectComponent,
-    OsMoneyInputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { CategoriesCreatePage } from './categories-create.page';
@@ -9,6 +9,9 @@ import { CategoryState } from '@core/services/category/category.state';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('CategoriesCreatePage', () => {
   let component: CategoriesCreatePage;
@@ -61,10 +64,15 @@ describe('CategoriesCreatePage', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [CategoriesCreatePage],
+      imports: [
+        CategoriesCreatePage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: CategoryState,
           useValue: categoryState,
@@ -78,20 +86,41 @@ describe('CategoriesCreatePage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: NotificationService,
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(CategoriesCreatePage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      });
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CategoriesCreatePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 

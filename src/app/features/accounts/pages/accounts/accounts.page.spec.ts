@@ -222,9 +222,7 @@ describe('AccountsPage', () => {
     describe('openCreateModal', () => {
       it('should navigate to create route', () => {
         component.openCreateModal();
-        expect(router.navigate).toHaveBeenCalledWith(['new'], {
-          relativeTo: TestBed.inject(ActivatedRoute),
-        });
+        expect(router.navigate).toHaveBeenCalledWith(['/accounts/new']);
       });
     });
 
@@ -305,24 +303,6 @@ describe('AccountsPage', () => {
 
         expect(confirmDialogService.open).toHaveBeenCalled();
         expect(deleteAccountSpy).not.toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('Form Handlers', () => {
-    describe('onFormSaved', () => {
-      it('should navigate to accounts list', () => {
-        component.onFormSaved();
-
-        expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
-      });
-    });
-
-    describe('onFormCancelled', () => {
-      it('should navigate to accounts list', () => {
-        component.onFormCancelled();
-
-        expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
       });
     });
   });

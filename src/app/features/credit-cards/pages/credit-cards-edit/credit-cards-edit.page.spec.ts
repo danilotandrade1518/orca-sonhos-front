@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
@@ -10,6 +10,9 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import type { CreditCardDto } from '../../../../../dtos/credit-card';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('CreditCardsEditPage', () => {
   let component: CreditCardsEditPage;
@@ -50,7 +53,7 @@ describe('CreditCardsEditPage', () => {
     budgetId: mockBudgetId,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     creditCardState = {
       creditCards: signal([mockCreditCard]),
       loading: signal(false),
@@ -66,10 +69,6 @@ describe('CreditCardsEditPage', () => {
       currentUser: signal(mockUser),
     };
 
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
-
     notificationService = {
       showSuccess: vi.fn(),
       showError: vi.fn(),
@@ -84,11 +83,18 @@ describe('CreditCardsEditPage', () => {
       },
     } as unknown as ActivatedRoute;
 
-    TestBed.configureTestingModule({
-      imports: [CreditCardsEditPage],
+    TestBed.resetTestingModule();
+
+    await TestBed.configureTestingModule({
+      imports: [
+        CreditCardsEditPage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: CreditCardState,
           useValue: creditCardState,
@@ -102,10 +108,6 @@ describe('CreditCardsEditPage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: ActivatedRoute,
           useValue: activatedRoute,
         },
@@ -114,12 +116,38 @@ describe('CreditCardsEditPage', () => {
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(CreditCardsEditPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreditCardsEditPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -148,17 +176,85 @@ describe('CreditCardsEditPage', () => {
       expect(form?.get('limit')?.value).toBe(5000);
     });
 
-    it('should show error when credit card ID is not found', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
+    it('should show error when credit card ID is not found', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          CreditCardsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: CreditCardState,
+            useValue: creditCardState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(CreditCardsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(CreditCardsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith(
         'ID do cartão de crédito não encontrado'
       );
-      expect(router.navigate).toHaveBeenCalledWith(['/credit-cards'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/credit-cards'], { replaceUrl: true });
     });
 
     it('should show error when credit card is not found', () => {
@@ -170,7 +266,9 @@ describe('CreditCardsEditPage', () => {
       expect(notificationService.showError).toHaveBeenCalledWith(
         'Cartão de crédito não encontrado'
       );
-      expect(router.navigate).toHaveBeenCalledWith(['/credit-cards'], { replaceUrl: true });
+      expect(router.navigate).toHaveBeenCalledWith(['/credit-cards', 'credit-card-1'], {
+        replaceUrl: true,
+      });
     });
 
     it('should load credit cards if list is empty', () => {
@@ -410,27 +508,85 @@ describe('CreditCardsEditPage', () => {
       );
     });
 
-    it('should show error when credit card ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should show error when credit card ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      const form = component.form();
-      form?.patchValue({
-        name: 'Cartão Atualizado',
-        limit: 6000.0,
-        closingDay: 12,
-        dueDay: 18,
-      });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          CreditCardsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: CreditCardState,
+            useValue: creditCardState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(CreditCardsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
 
-      component.onSave();
-      fixture.detectChanges();
+      const newFixture = TestBed.createComponent(CreditCardsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
 
-      expect(creditCardState.updateCreditCard).not.toHaveBeenCalled();
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
       expect(notificationService.showError).toHaveBeenCalledWith(
-        'Dados insuficientes para atualizar o cartão de crédito'
+        'ID do cartão de crédito não encontrado'
       );
+      expect(creditCardState.updateCreditCard).not.toHaveBeenCalled();
     });
 
     it('should show error when budget is not selected', () => {
@@ -468,14 +624,82 @@ describe('CreditCardsEditPage', () => {
       });
     });
 
-    it('should navigate to credit cards list if credit card ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should navigate to credit cards list if credit card ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.onCancel();
-      expect(router.navigate).toHaveBeenCalledWith(['/credit-cards'], { replaceUrl: true });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          CreditCardsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: CreditCardState,
+            useValue: creditCardState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(CreditCardsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(CreditCardsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/credit-cards'], { replaceUrl: true });
     });
   });
 

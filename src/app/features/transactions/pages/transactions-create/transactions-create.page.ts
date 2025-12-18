@@ -90,7 +90,6 @@ import type { TransactionType } from '../../../../../dtos/transaction/transactio
           <os-dropdown
             [options]="typeOptions()"
             [selectedValue]="typeControl()?.value ?? 'EXPENSE'"
-            [disabled]="loading()"
             (valueChange)="onTypeChange($event)"
             size="medium"
             variant="default"
@@ -109,7 +108,7 @@ import type { TransactionType } from '../../../../../dtos/transaction/transactio
           <os-dropdown
             [options]="accountOptions()"
             [selectedValue]="accountIdControl()?.value ?? ''"
-            [disabled]="loading() || accountOptions().length === 0"
+            [disabled]="accountOptions().length === 0"
             (valueChange)="onAccountChange($event)"
             size="medium"
             variant="default"
@@ -133,7 +132,7 @@ import type { TransactionType } from '../../../../../dtos/transaction/transactio
           <os-dropdown
             [options]="categoryOptions()"
             [selectedValue]="categoryIdControl()?.value ?? ''"
-            [disabled]="loading() || categoryOptions().length === 0"
+            [disabled]="categoryOptions().length === 0"
             (valueChange)="onCategoryChange($event)"
             size="medium"
             variant="default"
@@ -152,7 +151,6 @@ import type { TransactionType } from '../../../../../dtos/transaction/transactio
               [placeholder]="'Selecione a data'"
               [value]="transactionDateValue()"
               [required]="false"
-              [disabled]="loading()"
               (valueChange)="onDateChange($event)"
             />
           </div>
@@ -168,7 +166,7 @@ import type { TransactionType } from '../../../../../dtos/transaction/transactio
           <os-dropdown
             [options]="creditCardOptions()"
             [selectedValue]="creditCardIdControl()?.value ?? ''"
-            [disabled]="loading() || creditCardOptions().length === 0"
+            [disabled]="creditCardOptions().length === 0"
             (valueChange)="onCreditCardChange($event)"
             size="medium"
             variant="default"

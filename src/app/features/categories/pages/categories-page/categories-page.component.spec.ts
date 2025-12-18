@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CategoriesPage } from './categories-page.component';
@@ -74,11 +76,19 @@ describe('CategoriesPage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CategoriesPage],
+      imports: [CategoriesPage, RouterTestingModule],
       providers: [
         provideZonelessChangeDetection(),
         { provide: CategoryState, useValue: categoryState },
         { provide: BudgetSelectionService, useValue: budgetSelectionService },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: new Map(),
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -235,7 +245,7 @@ describe('CategoriesPage', () => {
         size: 'medium',
         disabled: false,
       };
-      
+
       expect(() => component.onPageHeaderActionClick(action)).not.toThrow();
     });
   });
@@ -328,9 +338,9 @@ describe('CategoriesPage', () => {
       budgetSelectionService.selectedBudgetId.set(budgetId);
       categoryState.loading.set(false);
       fixture.detectChanges();
-      
+
       await new Promise((resolve) => setTimeout(resolve, 0));
-      
+
       expect(categoryState.loadCategories).toHaveBeenCalled();
     });
 

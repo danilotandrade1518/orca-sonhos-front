@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal, computed } from '@angular/core';
@@ -10,6 +10,9 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import type { CategoryDto } from '../../../../../dtos/category/category-types';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('CategoriesEditPage', () => {
   let component: CategoriesEditPage;
@@ -57,14 +60,14 @@ describe('CategoriesEditPage', () => {
     order: 0,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const categoriesSignal = signal<CategoryDto[]>([mockCategory]);
     categoryState = {
       categoriesByBudgetId: computed(() => categoriesSignal()),
       loading: signal(false),
       getCategoryById: vi.fn((id: string) => {
         return categoriesSignal().find((c) => c.id === id);
-      }),
+      }) as ReturnType<typeof vi.fn>,
       updateCategory: vi.fn(),
       loadCategories: vi.fn(),
     };
@@ -76,10 +79,6 @@ describe('CategoriesEditPage', () => {
     authService = {
       currentUser: signal(mockUser),
     };
-
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
 
     notificationService = {
       showSuccess: vi.fn(),
@@ -95,11 +94,18 @@ describe('CategoriesEditPage', () => {
       },
     } as unknown as ActivatedRoute;
 
-    TestBed.configureTestingModule({
-      imports: [CategoriesEditPage],
+    TestBed.resetTestingModule();
+
+    await TestBed.configureTestingModule({
+      imports: [
+        CategoriesEditPage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: CategoryState,
           useValue: categoryState,
@@ -113,10 +119,6 @@ describe('CategoriesEditPage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: ActivatedRoute,
           useValue: activatedRoute,
         },
@@ -125,12 +127,38 @@ describe('CategoriesEditPage', () => {
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(CategoriesEditPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CategoriesEditPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -150,15 +178,83 @@ describe('CategoriesEditPage', () => {
       expect(form?.get('type')?.value).toBe(mockCategory.type);
     });
 
-    it('should show error when category ID is not found', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
+    it('should show error when category ID is not found', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          CategoriesEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: CategoryState,
+            useValue: categoryState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(CategoriesEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(CategoriesEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('ID da categoria não encontrado');
-      expect(router.navigate).toHaveBeenCalledWith(['/categories'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/categories'], { replaceUrl: true });
     });
 
     it('should show error when budget is not selected', () => {
@@ -172,14 +268,87 @@ describe('CategoriesEditPage', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/categories'], { replaceUrl: true });
     });
 
-    it('should show error when category is not found', () => {
-      categoryState.getCategoryById.mockReturnValue(undefined);
+    it('should show error when category is not found', async () => {
+      const emptyCategoriesSignal = signal<CategoryDto[]>([]);
+      const emptyCategoryState = {
+        categoriesByBudgetId: computed(() => emptyCategoriesSignal()),
+        loading: signal(false),
+        getCategoryById: vi.fn((id: string) => {
+          return emptyCategoriesSignal().find((c) => c.id === id);
+        }) as ReturnType<typeof vi.fn>,
+        updateCategory: vi.fn(),
+        loadCategories: vi.fn(),
+      };
 
-      component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          CategoriesEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: CategoryState,
+            useValue: emptyCategoryState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: activatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(CategoriesEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(CategoriesEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('Categoria não encontrada');
-      expect(router.navigate).toHaveBeenCalledWith(['/categories'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/categories'], { replaceUrl: true });
     });
 
     it('should load categories if list is empty', () => {
@@ -411,7 +580,7 @@ describe('CategoriesEditPage', () => {
       );
     });
 
-    it('should show error when category ID is missing', () => {
+    it('should show error when category ID is missing', async () => {
       component['_categoryId'].set(null);
       fixture.detectChanges();
 

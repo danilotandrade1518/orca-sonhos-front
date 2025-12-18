@@ -25,7 +25,6 @@ import { OsInputComponent } from '@shared/ui-components/atoms/os-input/os-input.
 import { OsMoneyInputComponent } from '@shared/ui-components/atoms/os-money-input/os-money-input.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import type { CreditCardDto } from '../../../../../dtos/credit-card';
 
 @Component({
   selector: 'os-credit-cards-edit-page',

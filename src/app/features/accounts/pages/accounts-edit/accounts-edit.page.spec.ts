@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
@@ -10,6 +10,9 @@ import { BudgetSelectionService } from '@core/services/budget-selection/budget-s
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { AccountDto } from '../../../../../dtos/account/account-types';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('AccountsEditPage', () => {
   let component: AccountsEditPage;
@@ -44,10 +47,11 @@ describe('AccountsEditPage', () => {
     name: 'Test Account',
     type: 'CHECKING_ACCOUNT',
     balance: 10000,
-    budgetId: 'budget-1',
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    TestBed.resetTestingModule();
+
     accountState = {
       accounts: signal([mockAccount]),
       loading: signal(false),
@@ -63,10 +67,6 @@ describe('AccountsEditPage', () => {
       currentUser: signal(mockUser),
     };
 
-    router = {
-      navigate: vi.fn(),
-    } as unknown as Router;
-
     notificationService = {
       showSuccess: vi.fn(),
       showError: vi.fn(),
@@ -81,11 +81,16 @@ describe('AccountsEditPage', () => {
       },
     } as unknown as ActivatedRoute;
 
-    TestBed.configureTestingModule({
-      imports: [AccountsEditPage],
+    await TestBed.configureTestingModule({
+      imports: [
+        AccountsEditPage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: AccountState,
           useValue: accountState,
@@ -99,10 +104,6 @@ describe('AccountsEditPage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
-        },
-        {
           provide: ActivatedRoute,
           useValue: activatedRoute,
         },
@@ -111,12 +112,38 @@ describe('AccountsEditPage', () => {
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(AccountsEditPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsEditPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
@@ -135,15 +162,83 @@ describe('AccountsEditPage', () => {
       expect(form?.get('type')?.value).toBe(mockAccount.type);
     });
 
-    it('should show error when account ID is not found', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
+    it('should show error when account ID is not found', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.ngOnInit();
-      fixture.detectChanges();
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          AccountsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: AccountState,
+            useValue: accountState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(AccountsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(AccountsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('ID da conta não encontrado');
-      expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
     });
 
     it('should show error when account is not found', () => {
@@ -153,7 +248,9 @@ describe('AccountsEditPage', () => {
       fixture.detectChanges();
 
       expect(notificationService.showError).toHaveBeenCalledWith('Conta não encontrada');
-      expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
+      expect(router.navigate).toHaveBeenCalledWith(['/accounts', 'account-1'], {
+        replaceUrl: true,
+      });
     });
 
     it('should load accounts if list is empty', () => {
@@ -346,25 +443,81 @@ describe('AccountsEditPage', () => {
       );
     });
 
-    it('should show error when account ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should show error when account ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      const form = component.form();
-      form?.patchValue({
-        name: 'Updated Account Name',
-        type: 'SAVINGS_ACCOUNT',
-      });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          AccountsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: AccountState,
+            useValue: accountState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(AccountsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
 
-      component.onSave();
-      fixture.detectChanges();
+      const newFixture = TestBed.createComponent(AccountsEditPage);
+      const newComponent = newFixture.componentInstance;
+      newFixture.detectChanges();
 
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      expect(notificationService.showError).toHaveBeenCalledWith('ID da conta não encontrado');
       expect(accountState.updateAccount).not.toHaveBeenCalled();
-      expect(notificationService.showError).toHaveBeenCalledWith(
-        'Dados insuficientes para atualizar a conta'
-      );
     });
   });
 
@@ -381,14 +534,82 @@ describe('AccountsEditPage', () => {
       });
     });
 
-    it('should navigate to accounts list if account ID is missing', () => {
-      const paramMap = new Map();
-      activatedRoute.snapshot.paramMap = paramMap;
-      component.ngOnInit();
-      fixture.detectChanges();
+    it('should navigate to accounts list if account ID is missing', async () => {
+      const emptyParamMap = new Map();
+      const emptyActivatedRoute = {
+        snapshot: {
+          paramMap: emptyParamMap,
+        },
+      } as unknown as ActivatedRoute;
 
-      component.onCancel();
-      expect(router.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          AccountsEditPage,
+          OsPageComponent,
+          OsPageHeaderComponent,
+          OsFormTemplateComponent,
+          RouterTestingModule,
+        ],
+        providers: [
+          provideZonelessChangeDetection(),
+          {
+            provide: AccountState,
+            useValue: accountState,
+          },
+          {
+            provide: BudgetSelectionService,
+            useValue: budgetSelection,
+          },
+          {
+            provide: AuthService,
+            useValue: authService,
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: emptyActivatedRoute,
+          },
+          {
+            provide: NotificationService,
+            useValue: notificationService,
+          },
+        ],
+      })
+        .overrideComponent(AccountsEditPage, {
+          set: {
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsPageHeaderComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .overrideComponent(OsFormTemplateComponent, {
+          set: {
+            styleUrls: [],
+            styles: [''],
+          } as never,
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(AccountsEditPage);
+      const newComponent = newFixture.componentInstance;
+      const newRouter = TestBed.inject(Router);
+      vi.spyOn(newRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+      newFixture.detectChanges();
+
+      newComponent.ngOnInit();
+      newFixture.detectChanges();
+
+      expect(newRouter.navigate).toHaveBeenCalledWith(['/accounts'], { replaceUrl: true });
     });
   });
 

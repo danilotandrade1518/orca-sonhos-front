@@ -212,14 +212,6 @@ describe('CreditCardsPage - Integration Tests', () => {
         relativeTo: activatedRoute,
       });
     });
-
-    it('should navigate back to list after form save', () => {
-      component.onFormSaved();
-
-      expect(router.navigate).toHaveBeenCalledWith(['/credit-cards'], {
-        replaceUrl: true,
-      });
-    });
   });
 
   describe('Modal State Management', () => {

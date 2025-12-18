@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { AccountsCreatePage } from './accounts-create.page';
@@ -9,6 +9,9 @@ import { AccountState } from '@core/services/account/account-state/account.state
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
 
 describe('AccountsCreatePage', () => {
   let component: AccountsCreatePage;
@@ -53,6 +56,8 @@ describe('AccountsCreatePage', () => {
 
     router = {
       navigate: vi.fn(),
+      createUrlTree: vi.fn().mockReturnValue({}),
+      serializeUrl: vi.fn().mockReturnValue('/test'),
     } as unknown as Router;
 
     notificationService = {
@@ -61,10 +66,15 @@ describe('AccountsCreatePage', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [AccountsCreatePage],
+      imports: [
+        AccountsCreatePage,
+        OsPageComponent,
+        OsPageHeaderComponent,
+        OsFormTemplateComponent,
+        RouterTestingModule,
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
         {
           provide: AccountState,
           useValue: accountState,
@@ -78,20 +88,50 @@ describe('AccountsCreatePage', () => {
           useValue: authService,
         },
         {
-          provide: Router,
-          useValue: router,
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: new Map(),
+              queryParamMap: new Map(),
+            },
+          },
         },
         {
           provide: NotificationService,
           useValue: notificationService,
         },
       ],
-    });
+    })
+      .overrideComponent(AccountsCreatePage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsFormTemplateComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      });
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsCreatePage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
