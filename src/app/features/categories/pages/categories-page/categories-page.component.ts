@@ -8,6 +8,7 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryState } from '../../../../core/services/category/category.state';
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { OsPageComponent } from '../../../../shared/ui-components/organisms/os-page/os-page.component';
@@ -26,12 +27,7 @@ import type {
 @Component({
   selector: 'os-categories-page',
   standalone: true,
-  imports: [
-    OsPageComponent,
-    OsPageHeaderComponent,
-    OsAlertComponent,
-    OsCategoryManagerComponent
-],
+  imports: [OsPageComponent, OsPageHeaderComponent, OsAlertComponent, OsCategoryManagerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de categorias">
@@ -79,6 +75,8 @@ import type {
 export class CategoriesPage {
   private readonly state = inject(CategoryState);
   private readonly budgetSelection = inject(BudgetSelectionService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly categoryManager = viewChild(OsCategoryManagerComponent);
 
@@ -120,7 +118,6 @@ export class CategoriesPage {
       }
 
       untracked(() => {
-        
         if (this.state.loading()) {
           return;
         }
@@ -131,10 +128,7 @@ export class CategoriesPage {
 
   onPageHeaderActionClick(action: PageHeaderAction): void {
     if (action.label === 'Nova Categoria') {
-      const manager = this.categoryManager();
-      if (manager) {
-        manager.onAddCategory();
-      }
+      this.router.navigate(['new'], { relativeTo: this.route });
     }
   }
 

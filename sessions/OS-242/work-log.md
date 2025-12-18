@@ -104,11 +104,46 @@
 
 ---
 
+**FASE 5: Categorias**
+
+- ✅ Criada `CategoriesCreatePage` seguindo padrão estabelecido
+  - Breadcrumbs: `Categorias > Nova`
+  - Campos: nome (obrigatório), descrição (opcional), tipo (obrigatório)
+  - Integração com `CategoryState.createCategory()` usando `kind: 'CUSTOM'`
+- ✅ Criada `CategoriesEditPage` seguindo padrão estabelecido
+  - Breadcrumbs: `Categorias > [Nome] > Editar`
+  - Campos: nome, descrição, tipo
+  - Carrega dados da categoria via `CategoryState.getCategoryById()`
+  - Integração com `CategoryState.updateCategory()`
+- ✅ Adicionadas rotas `/categories/new` e `/categories/:id/edit` para usar páginas
+- ✅ Atualizada `CategoriesPage` para navegar para `/categories/new` em vez de chamar `categoryManager.onAddCategory()`
+- ✅ Criados testes unitários completos para `CategoriesCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+- ✅ Criados testes unitários completos para `CategoriesEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+
+#### 🤔 Decisões/Problemas
+
+- **Decisão**: Formulário simplificado sem campos de cor e ícone na página de criação/edição
+  - **Motivo**: Manter consistência com outras páginas e simplificar o fluxo. Campos de cor e ícone podem ser adicionados posteriormente se necessário.
+
+#### 🧪 Validações
+
+- ✅ `CategoriesCreatePage` segue padrão completo estabelecido
+- ✅ `CategoriesEditPage` segue padrão completo estabelecido
+- ✅ Rotas configuradas corretamente
+- ✅ Navegação funciona corretamente
+- ✅ Testes unitários criados e sem erros de lint
+
+#### ⏭️ Próximos Passos
+
+- Iniciar FASE 6: Envelopes - Validação
+
+---
+
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 4: Transações (✅ Completada)
-**Última Modificação**: Criados testes unitários para TransactionsCreatePage e TransactionsEditPage
+**Fase Atual**: FASE 5: Categorias (✅ Completada)
+**Última Modificação**: Criadas páginas de criação e edição de categorias com testes unitários
 **Próximas Tarefas**:
 
-- Iniciar FASE 5: Categorias
+- Iniciar FASE 6: Envelopes - Validação

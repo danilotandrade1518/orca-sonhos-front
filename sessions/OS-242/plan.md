@@ -860,7 +860,7 @@ Converter Transações para usar páginas de criação e edição.
 
 ---
 
-## 📅 FASE 5: Categorias [Status: ⏳]
+## 📅 FASE 5: Categorias [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -868,7 +868,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ### 📋 Tarefas
 
-#### 5.1 Criar CategoriesCreatePage [⏳]
+#### 5.1 Criar CategoriesCreatePage [✅]
 
 **Descrição**: Criar página de criação de categorias
 
@@ -896,7 +896,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ---
 
-#### 5.2 Criar CategoriesEditPage [⏳]
+#### 5.2 Criar CategoriesEditPage [✅]
 
 **Descrição**: Criar página de edição de categorias
 
@@ -925,7 +925,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ---
 
-#### 5.3 Adicionar Rotas de Categorias [⏳]
+#### 5.3 Adicionar Rotas de Categorias [✅]
 
 **Descrição**: Adicionar rotas para páginas de criação e edição
 
@@ -944,7 +944,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ---
 
-#### 5.4 Atualizar CategoriesPage para Navegar [⏳]
+#### 5.4 Atualizar CategoriesPage para Navegar [✅]
 
 **Descrição**: Atualizar botão "Nova Categoria" para navegar para página
 
@@ -962,7 +962,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ---
 
-#### 5.5 Criar Testes Unitários para CategoriesCreatePage [⏳]
+#### 5.5 Criar Testes Unitários para CategoriesCreatePage [✅]
 
 **Descrição**: Criar testes unitários completos
 
@@ -988,7 +988,7 @@ Converter Categorias para usar páginas de criação e edição.
 
 ---
 
-#### 5.6 Criar Testes Unitários para CategoriesEditPage [⏳]
+#### 5.6 Criar Testes Unitários para CategoriesEditPage [✅]
 
 **Descrição**: Criar testes unitários completos
 
@@ -1021,16 +1021,21 @@ Converter Categorias para usar páginas de criação e edição.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `CategoriesCreatePage` criada e funcional
-- [ ] `CategoriesEditPage` criada e funcional
-- [ ] Rotas adicionadas e funcionando
-- [ ] `CategoriesPage` atualizada para navegar
-- [ ] Testes unitários criados e passando
-- [ ] Navegação funciona corretamente
+- [x] `CategoriesCreatePage` criada e funcional
+- [x] `CategoriesEditPage` criada e funcional
+- [x] Rotas adicionadas e funcionando
+- [x] `CategoriesPage` atualizada para navegar
+- [x] Testes unitários criados e passando
+- [x] Navegação funciona corretamente
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- Páginas criadas seguindo padrão estabelecido em Orçamentos, Contas, Cartões de Crédito e Transações
+- Formulário com campos: nome (obrigatório), descrição (opcional), tipo (obrigatório)
+- `CategoriesCreatePage` integra com `CategoryState.createCategory()` usando `kind: 'CUSTOM'`
+- `CategoriesEditPage` busca categoria via `CategoryState.getCategoryById()` e integra com `CategoryState.updateCategory()`
+- `CategoriesPage` atualizada para navegar para `/categories/new` em vez de chamar `categoryManager.onAddCategory()`
+- Testes unitários criados cobrindo inicialização, validação, submissão, navegação, loading e tratamento de erros
 
 ---
 
