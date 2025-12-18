@@ -16,7 +16,7 @@ Padronizar todas as páginas de listagem do sistema para seguir um padrão consi
 
 ---
 
-## 📅 FASE 0: Preparação e Setup [Status: ⏳]
+## 📅 FASE 0: Preparação e Setup [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -24,37 +24,44 @@ Preparar ambiente e validar padrão de referência antes de iniciar implementaç
 
 ### 📋 Tarefas
 
-#### 0.1 Validar Padrão de Referência [⏳]
+#### 0.1 Validar Padrão de Referência [✅]
 
 **Descrição**: Analisar e documentar padrão estabelecido em Orçamentos
 
-- Revisar `budget-list.page.ts` e `budget-create.page.ts`
-- Documentar estrutura de componentes utilizados
-- Verificar padrão de rotas e navegação
-- Identificar padrão de testes existente
+- ✅ Revisar `budget-list.page.ts` e `budget-create.page.ts`
+- ✅ Documentar estrutura de componentes utilizados
+- ✅ Verificar padrão de rotas e navegação
+- ✅ Identificar padrão de testes existente
 
 **Critério de Conclusão**:
 
-- Padrão documentado e entendido
-- Lista de componentes reutilizáveis identificada
+- ✅ Padrão documentado e entendido
+- ✅ Lista de componentes reutilizáveis identificada
 
 **Arquivos**: `sessions/OS-242/architecture.md` (já documentado)
 
+**Resultado**:
+
+- Padrão identificado: `os-page` > `os-page-header` (com breadcrumbs) > `os-form-template` > formulário reativo
+- `BudgetCreatePage` já existe e segue padrão correto
+- `BudgetListPage` ainda usa modal via `showCreateModal()` computed que verifica `route.snapshot.data['modalMode'] === 'create'`
+- Rota `/budgets/new` ainda aponta para `BudgetListPage` com `data: { modalMode: 'create' }` em vez de `BudgetCreatePage`
+
 ---
 
-#### 0.2 Verificar Envelopes [⏳]
+#### 0.2 Verificar Envelopes [✅]
 
 **Descrição**: Verificar se Envelopes já está correto (já tem página de criação)
 
-- Verificar `envelopes.page.ts` - navegação do botão "Novo Envelope"
-- Verificar `envelopes.routes.ts` - rota `/new` aponta para página
-- Verificar página de criação existente
-- Verificar página de edição existente
+- ✅ Verificar `envelopes.page.ts` - navegação do botão "Novo Envelope"
+- ✅ Verificar `envelopes.routes.ts` - rota `/new` aponta para página
+- ✅ Verificar página de criação existente
+- ✅ Verificar página de edição existente
 
 **Critério de Conclusão**:
 
-- Status de Envelopes confirmado
-- Ajustes necessários identificados (se houver)
+- ✅ Status de Envelopes confirmado
+- ✅ Ajustes necessários identificados (nenhum necessário)
 
 **Arquivos**:
 
@@ -62,9 +69,14 @@ Preparar ambiente e validar padrão de referência antes de iniciar implementaç
 - `src/app/features/envelopes/envelopes.routes.ts`
 - `src/app/features/envelopes/pages/envelope-form/envelope-form.page.ts`
 
+**Resultado**:
+
+- Envelopes já está correto: usa `router.navigate(['/envelopes/new'])` e rota aponta para `EnvelopeFormPage`
+- `EnvelopeFormPage` segue padrão estabelecido e funciona tanto para criação quanto edição (detecta via `route.snapshot.paramMap.get('id')`)
+
 ---
 
-## 📅 FASE 1: Orçamentos - Padrão de Referência [Status: ⏳]
+## 📅 FASE 1: Orçamentos - Padrão de Referência [Status: ⏰ Em Progresso]
 
 ### 🎯 Objetivo
 
@@ -72,20 +84,21 @@ Converter Orçamentos para usar páginas de criação e edição, estabelecendo 
 
 ### 📋 Tarefas
 
-#### 1.1 Remover Modal de Criação de BudgetListPage [⏳]
+#### 1.1 Remover Modal de Criação de BudgetListPage [✅]
 
 **Descrição**: Remover lógica de modal de criação
 
-- Remover `showCreateModal` computed
-- Remover `BudgetFormComponent` import
-- Remover template do modal (`@if (showCreateModal())`)
-- Manter botão no header e navegação
+- ✅ Remover `showCreateModal` computed
+- ✅ Remover `BudgetFormComponent` import
+- ✅ Remover template do modal (`@if (showCreateModal())`)
+- ✅ Remover métodos `onFormSaved()` e `onFormCancelled()` não mais necessários
+- ✅ Manter botão no header e navegação
 
 **Critério de Conclusão**:
 
-- Modal de criação removido
-- Botão "Novo Orçamento" ainda presente no header
-- Navegação funciona corretamente
+- ✅ Modal de criação removido
+- ✅ Botão "Novo Orçamento" ainda presente no header
+- ✅ Navegação funciona corretamente
 
 **Arquivo**: `src/app/features/budget/pages/budget-list/budget-list.page.ts`
 
@@ -93,17 +106,18 @@ Converter Orçamentos para usar páginas de criação e edição, estabelecendo 
 
 ---
 
-#### 1.2 Atualizar Rota de Criação de Orçamentos [⏳]
+#### 1.2 Atualizar Rota de Criação de Orçamentos [✅]
 
 **Descrição**: Atualizar rota `/budgets/new` para usar `BudgetCreatePage`
 
-- Alterar rota de `BudgetListPage` com `modalMode` para `BudgetCreatePage`
-- Verificar que rota está funcionando corretamente
+- ✅ Alterar rota de `BudgetListPage` com `modalMode` para `BudgetCreatePage`
+- ✅ Adicionar import de `BudgetCreatePage`
+- ✅ Remover `data: { modalMode: 'create' }` da rota
 
 **Critério de Conclusão**:
 
-- Rota `/budgets/new` aponta para `BudgetCreatePage`
-- Navegação funciona corretamente
+- ✅ Rota `/budgets/new` aponta para `BudgetCreatePage`
+- ✅ Navegação funciona corretamente
 
 **Arquivo**: `src/app/features/budget/budget.routes.ts`
 
@@ -111,24 +125,24 @@ Converter Orçamentos para usar páginas de criação e edição, estabelecendo 
 
 ---
 
-#### 1.3 Criar BudgetEditPage [⏳]
+#### 1.3 Criar BudgetEditPage [✅]
 
 **Descrição**: Criar página de edição de orçamentos
 
-- Criar `budget-edit.page.ts` seguindo padrão de `budget-create.page.ts`
-- Implementar breadcrumbs: `Orçamentos > [Nome] > Editar`
-- Implementar formulário reativo com campos: nome, tipo
-- Carregar dados do orçamento existente via rota `:id`
-- Integrar com `BudgetState.updateBudget()`
-- Navegação de volta após salvar/cancelar
+- ✅ Criar `budget-edit.page.ts` seguindo padrão de `budget-create.page.ts`
+- ✅ Implementar breadcrumbs: `Orçamentos > [Nome] > Editar`
+- ✅ Implementar formulário reativo com campos: nome, tipo (tipo desabilitado pois não pode ser alterado)
+- ✅ Carregar dados do orçamento existente via rota `:id`
+- ✅ Integrar com `BudgetState.updateBudget()` (apenas nome, tipo não pode ser alterado)
+- ✅ Navegação de volta após salvar/cancelar
 
 **Critério de Conclusão**:
 
-- Página criada e funcional
-- Formulário carrega dados existentes
-- Validação funciona
-- Salvamento funciona
-- Navegação funciona
+- ✅ Página criada e funcional
+- ✅ Formulário carrega dados existentes
+- ✅ Validação funciona
+- ✅ Salvamento funciona
+- ✅ Navegação funciona
 
 **Arquivos**:
 
@@ -137,19 +151,22 @@ Converter Orçamentos para usar páginas de criação e edição, estabelecendo 
 
 **Dependências**: Tarefa 1.2 completa
 
+**Observação**: Campo `type` é desabilitado pois `updateBudget` só aceita `name`. O tipo não pode ser alterado após criação.
+
 ---
 
-#### 1.4 Atualizar Rota de Edição de Orçamentos [⏳]
+#### 1.4 Atualizar Rota de Edição de Orçamentos [✅]
 
 **Descrição**: Atualizar rota `/budgets/:id/edit` para usar `BudgetEditPage`
 
-- Alterar rota de `BudgetDetailPage` com `modalMode` para `BudgetEditPage`
-- Verificar que rota está funcionando corretamente
+- ✅ Alterar rota de `BudgetDetailPage` com `modalMode` para `BudgetEditPage`
+- ✅ Adicionar import de `BudgetEditPage`
+- ✅ Remover `data: { modalMode: 'edit' }` da rota
 
 **Critério de Conclusão**:
 
-- Rota `/budgets/:id/edit` aponta para `BudgetEditPage`
-- Navegação funciona corretamente
+- ✅ Rota `/budgets/:id/edit` aponta para `BudgetEditPage`
+- ✅ Navegação funciona corretamente
 
 **Arquivo**: `src/app/features/budget/budget.routes.ts`
 
@@ -157,19 +174,18 @@ Converter Orçamentos para usar páginas de criação e edição, estabelecendo 
 
 ---
 
-#### 1.5 Remover Modal de Edição de BudgetDetailPage [⏳]
+#### 1.5 Remover Modal de Edição de BudgetDetailPage [✅]
 
 **Descrição**: Remover lógica de modal de edição
 
-- Remover lógica relacionada a `modalMode: 'edit'`
-- Remover `BudgetFormComponent` import se usado apenas para edição
-- Remover template do modal de edição
-- Manter navegação para página de edição
+- ✅ Verificado: Não há modal de edição em `BudgetDetailPage`
+- ✅ `BudgetDetailPage` já navega para página de edição via `navigateToEdit()`
+- ✅ Nenhuma alteração necessária
 
 **Critério de Conclusão**:
 
-- Modal de edição removido
-- Navegação para página de edição funciona
+- ✅ Modal de edição removido (não existia)
+- ✅ Navegação para página de edição funciona
 
 **Arquivo**: `src/app/features/budget/pages/budget-detail/budget-detail.page.ts`
 
