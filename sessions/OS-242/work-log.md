@@ -66,6 +66,22 @@
 - ✅ Criados testes unitários completos para `CreditCardsCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs, conversão de valores)
 - ✅ Criados testes unitários completos para `CreditCardsEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
 
+**FASE 4: Transações**
+
+- ✅ Criada `TransactionsCreatePage` seguindo padrão estabelecido
+  - Breadcrumbs: `Transações > Nova`
+  - Campos: descrição, valor, tipo, conta, categoria, data da transação, forma de pagamento
+  - Integração direta com `TransactionsApiService.create()`
+  - Conversão de valor para centavos
+- ✅ Criada `TransactionsEditPage` seguindo padrão estabelecido
+  - Breadcrumbs: `Transações > [Descrição] > Editar`
+  - Carrega dados da transação via API (busca na lista)
+  - Integração direta com `TransactionsApiService.update()`
+- ✅ Adicionadas rotas `/transactions/new` e `/transactions/:id/edit` para usar páginas
+- ✅ Removidos modais de criação e edição de `TransactionsPage` (removidos `_showCreateModal`, `_editingTransaction`, import de `TransactionFormComponent` e templates dos modais)
+- ✅ Criados testes unitários completos para `TransactionsCreatePage` (inicialização, validação, submissão, navegação, loading, erros, breadcrumbs, conversão de valores, dropdowns)
+- ✅ Criados testes unitários completos para `TransactionsEditPage` (carregamento de dados, inicialização, validação, submissão, navegação, loading, erros, breadcrumbs)
+
 #### 🤔 Decisões/Problemas
 
 - **Padrão Identificado**:
@@ -91,8 +107,8 @@
 ## 🔄 Estado Atual
 
 **Branch**: feature-OS-242
-**Fase Atual**: FASE 3: Cartões de Crédito (✅ Completada)
-**Última Modificação**: Criados testes unitários para CreditCardsCreatePage e CreditCardsEditPage
+**Fase Atual**: FASE 4: Transações (✅ Completada)
+**Última Modificação**: Criados testes unitários para TransactionsCreatePage e TransactionsEditPage
 **Próximas Tarefas**:
 
-- Iniciar FASE 4: Transações
+- Iniciar FASE 5: Categorias

@@ -676,7 +676,7 @@ Converter Cartões de Crédito para usar páginas de criação e edição.
 
 ---
 
-## 📅 FASE 4: Transações [Status: ⏳]
+## 📅 FASE 4: Transações [Status: ✅ Completada]
 
 ### 🎯 Objetivo
 
@@ -684,7 +684,7 @@ Converter Transações para usar páginas de criação e edição.
 
 ### 📋 Tarefas
 
-#### 4.1 Criar TransactionsCreatePage [⏳]
+#### 4.1 Criar TransactionsCreatePage [✅]
 
 **Descrição**: Criar página de criação de transações
 
@@ -741,7 +741,7 @@ Converter Transações para usar páginas de criação e edição.
 
 ---
 
-#### 4.3 Adicionar Rotas de Transações [⏳]
+#### 4.3 Adicionar Rotas de Transações [✅]
 
 **Descrição**: Adicionar rotas para páginas de criação e edição
 
@@ -783,7 +783,7 @@ Converter Transações para usar páginas de criação e edição.
 
 ---
 
-#### 4.5 Criar Testes Unitários para TransactionsCreatePage [⏳]
+#### 4.5 Criar Testes Unitários para TransactionsCreatePage [✅]
 
 **Descrição**: Criar testes unitários completos
 
@@ -809,7 +809,7 @@ Converter Transações para usar páginas de criação e edição.
 
 ---
 
-#### 4.6 Criar Testes Unitários para TransactionsEditPage [⏳]
+#### 4.6 Criar Testes Unitários para TransactionsEditPage [✅]
 
 **Descrição**: Criar testes unitários completos
 
@@ -842,16 +842,21 @@ Converter Transações para usar páginas de criação e edição.
 
 ### 🧪 Critérios de Validação
 
-- [ ] `TransactionsCreatePage` criada e funcional
-- [ ] `TransactionsEditPage` criada e funcional
-- [ ] Rotas adicionadas e funcionando
-- [ ] Modais removidos de `transactions.page.ts`
-- [ ] Testes unitários criados e passando
-- [ ] Navegação funciona corretamente
+- [x] `TransactionsCreatePage` criada e funcional
+- [x] `TransactionsEditPage` criada e funcional
+- [x] Rotas adicionadas e funcionando
+- [x] Modais removidos de `transactions.page.ts`
+- [x] Testes unitários criados e passando
+- [x] Navegação funciona corretamente
 
 ### 📝 Comentários da Fase
 
-_[Espaço para anotações durante desenvolvimento]_
+- Páginas criadas seguindo padrão estabelecido
+- Formulário complexo com múltiplos campos (descrição, valor, tipo, conta, categoria, data, forma de pagamento)
+- `TransactionsEditPage` busca transação da lista via API (não há método getById)
+- Integração direta com `TransactionsApiService` (não há TransactionState)
+- Testes unitários criados cobrindo inicialização, validação, submissão, navegação, loading e tratamento de erros
+- Conversão de valores monetários para centavos implementada corretamente
 
 ---
 
