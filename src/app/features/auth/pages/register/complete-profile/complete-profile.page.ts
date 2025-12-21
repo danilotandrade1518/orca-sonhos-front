@@ -27,8 +27,9 @@ import { OsAlertComponent } from '../../../../../shared/ui-components/molecules/
       [showHeader]="true"
       [showActions]="false"
       [disabled]="isLoading()"
+      [isInvalid]="form.invalid"
+      [saveButtonDisabled]="isLoading() || form.invalid"
       [loading]="isLoading()"
-      [form]="form"
     >
       @if (errorMessage()) {
       <os-alert
@@ -108,7 +109,6 @@ export class CompleteProfilePage implements OnInit {
     showBackButton: false,
     showSaveButton: false,
     showCancelButton: false,
-    showProgress: false,
     showActions: false,
   }));
 

@@ -107,7 +107,7 @@ export interface PageHeaderAction {
               [loading]="action.loading || false"
               [icon]="action.icon || ''"
               [attr.aria-label]="action.label + (action.loading ? ' (carregando)' : '')"
-              (clicked)="onActionClick(action)"
+              (buttonClick)="onActionClick(action)"
             >
               {{ action.label }}
             </os-button>

@@ -34,7 +34,6 @@ import { environment } from '../../../../../environments/environment';
       [variant]="'compact'"
       [showHeader]="true"
       [showActions]="false"
-      [showProgress]="false"
       [disabled]="isLoading()"
       [ariaLabel]="'Tela de entrada com Google para acessar o OrçaSonhos'"
     >
@@ -109,7 +108,6 @@ export class RegisterPage {
     showBackButton: false,
     showSaveButton: false,
     showCancelButton: false,
-    showProgress: false,
     showActions: false,
   }));
 

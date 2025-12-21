@@ -211,3 +211,175 @@
 **Fase Atual**: FASE 7: Validação Final e Testes (✅ Completada)
 **Última Modificação**: Validação final completa - todas as fases concluídas
 **Status**: ✅ **PRONTO PARA PR**
+
+---
+
+### 🗓️ Sessão 2025-12-18 - Correção de Bug
+
+**Fase**: Correção de Bug - Botão Criar desabilitado
+**Objetivo**: Corrigir problema onde botões "Criar" ficavam desabilitados mesmo após preencher todos os campos
+
+#### ✅ Trabalho Realizado
+
+**Bug Identificado:**
+
+- Formulários reativos não disparavam atualização do `computed` do template devido ao `ChangeDetection.OnPush`
+- O `isFormValid()` do `os-form-template` usa `computed(() => form.valid)`, mas o computed não era reavaliado quando o usuário digitava
+- Faltava subscription ao `valueChanges` do formulário para atualizar o `_validationTrigger`
+
+**Correções Aplicadas:**
+
+- ✅ Adicionado `form.valueChanges.subscribe()` em todas as páginas de criação:
+  - `budget-create.page.ts`
+  - `accounts-create.page.ts`
+  - `categories-create.page.ts`
+  - `credit-cards-create.page.ts`
+  - `transactions-create.page.ts`
+- ✅ Adicionado `form.valueChanges.subscribe()` em todas as páginas de edição:
+  - `budget-edit.page.ts`
+  - `accounts-edit.page.ts`
+  - `categories-edit.page.ts`
+  - `credit-cards-edit.page.ts`
+  - `transactions-edit.page.ts`
+- ✅ Inicializado campos de select obrigatórios com valores padrão:
+  - `accounts-create`: tipo inicializado com `'CHECKING_ACCOUNT'`
+  - `categories-create`: tipo inicializado com `'EXPENSE'`
+
+**Melhores Práticas Aplicadas:**
+
+- Seguido padrão Angular moderno com Reactive Forms
+- Garantido que `computed()` seja reavaliado ao mudar valores do formulário
+- Mantido `ChangeDetection.OnPush` para performance
+- Usado subscription ao `valueChanges` para trigger de validação reativa
+
+#### 🤔 Decisões/Problemas
+
+- **Problema**: `form.valid` não dispara mudança em computed com OnPush
+- **Solução**: Adicionar subscription ao `valueChanges` para atualizar `_validationTrigger` signal
+- **Alternativa Descartada**: Mudar para `ChangeDetection.Default` (pior performance)
+
+#### 🧪 Validações
+
+- ✅ Código segue melhores práticas Angular 20+
+- ✅ Usa signals e computed() corretamente
+- ✅ Mantém performance com OnPush
+- ✅ valueChanges subscription garante reatividade
+
+#### ⏭️ Próximos Passos
+
+- Testar manualmente em todas as páginas de criação e edição
+- Verificar se botão habilita corretamente ao preencher campos
+
+---
+
+## 🔄 Estado Atual
+
+**Branch**: feature-OS-242
+**Fase Atual**: Correção de Bug
+**Última Modificação**: Adicionado valueChanges subscription em todas as páginas de criação e edição
+**Status**: ⚠️ **AGUARDANDO TESTES**
+
+---
+
+### 🗓️ Sessão 2025-12-18 - Correção Adicional
+
+**Fase**: Correção de Bug - Botão Criar desabilitado (Parte 2)
+**Objetivo**: Corrigir problema no `os-form-template` que não detectava mudanças no formulário
+
+#### ✅ Trabalho Realizado
+
+**Problema Adicional Identificado:**
+
+- O `isFormValid()` computed no `os-form-template` não estava sendo reavaliado quando o formulário mudava
+- O `computed()` precisa rastrear uma dependência que muda, mas `form.valid` não é reativo com OnPush
+- A subscription ao `valueChanges` nas páginas atualizava o `_validationTrigger` local, mas o `os-form-template` não sabia disso
+
+**Correção Aplicada:**
+
+- ✅ Adicionado `effect()` no `os-form-template` para observar mudanças no formulário
+- ✅ Criado `_formValidTrigger` signal interno no `os-form-template`
+- ✅ Subscription ao `statusChanges` do formulário para atualizar o trigger
+- ✅ Modificado `isFormValid()` para rastrear o `_formValidTrigger`
+
+**Código da Correção:**
+
+```typescript
+// os-form-template.component.ts
+private _formValidTrigger = signal(0);
+
+constructor() {
+  // Observar mudanças no formulário para atualizar o computed isFormValid
+  effect(() => {
+    const form = this.form();
+    if (form) {
+      form.statusChanges.subscribe(() => {
+        this._formValidTrigger.update((v) => v + 1);
+      });
+    }
+  });
+}
+
+protected isFormValid = computed(() => {
+  this._formValidTrigger(); // Rastrear mudanças no formulário
+  const form = this.form();
+  return form ? form.valid : true;
+});
+```
+
+#### 🤔 Decisões/Problemas
+
+- **Problema**: `computed()` não rastreava mudanças em `form.valid` com OnPush
+- **Solução**: Adicionar trigger interno no `os-form-template` que observa `statusChanges`
+- **Vantagem**: Solução centralizada que funciona para todos os formulários
+
+#### 🧪 Validações
+
+- ✅ Compilação bem-sucedida
+- ✅ Código segue melhores práticas Angular 20+
+- ✅ Usa signals, computed() e effect() corretamente
+- ✅ Mantém performance com OnPush
+
+#### ⏭️ Próximos Passos
+
+- Testar manualmente para confirmar que botão habilita ao preencher campos
+
+---
+
+## 🔄 Estado Atual
+
+**Branch**: feature-OS-242
+**Fase Atual**: Correção de Bug (Parte 2)
+**Última Modificação**: Adicionado effect() e trigger no os-form-template
+**Status**: ⚠️ **AGUARDANDO VALIDAÇÃO DO USUÁRIO**
+
+#### 🔧 Correção Final Aplicada
+
+**Solução Implementada:**
+
+1. **Adicionado input `formValidTrigger` no `os-form-template`**
+
+   - Permite que as páginas notifiquem o template quando o formulário muda
+   - O `computed()` do `isFormValid` agora rastreia esse input signal
+
+2. **Tornado `_validationTrigger` público (readonly) em todas as páginas**
+
+   - Necessário para passar como input para o template
+   - Mantém encapsulamento com readonly
+
+3. **Passado `[formValidTrigger]="_validationTrigger()"` em todos os templates**
+   - Conecta o trigger da página com o computed do template
+   - Garante que o botão seja reavaliado quando o formulário muda
+
+**Arquivos Modificados:**
+
+- `os-form-template.component.ts`: Adicionado input `formValidTrigger` e rastreamento no `isFormValid()`
+- Todas as 10 páginas de criação e edição: Passado `formValidTrigger` como input e tornado signal público
+
+**Fluxo de Reatividade:**
+
+1. Usuário digita no formulário
+2. `valueChanges` dispara (subscription nas páginas)
+3. `_validationTrigger.update()` é chamado
+4. Input `formValidTrigger` do template é atualizado
+5. `isFormValid()` computed é reavaliado
+6. Botão é habilitado/desabilitado conforme validação ✅

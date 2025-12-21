@@ -51,7 +51,8 @@ import type { CategoryType } from '../../../../../dtos/category/category-types';
 
       <os-form-template
         [config]="formConfig()"
-        [form]="form()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
         [loading]="loading()"
         [disabled]="loading()"
         (save)="onSave()"
@@ -101,7 +102,17 @@ export class CategoriesCreatePage implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly pageTitle = computed(() => 'Criar Categoria');
 
@@ -115,17 +126,14 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   readonly nameControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
 
   readonly descriptionControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('description') as FormControl | null;
   });
 
   readonly typeControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('type') as FormControl | null;
   });
 
@@ -138,7 +146,6 @@ export class CategoriesCreatePage implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
@@ -147,7 +154,6 @@ export class CategoriesCreatePage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da categoria é obrigatório';
@@ -157,7 +163,6 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   readonly getDescriptionErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.descriptionControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('maxlength')) return 'Descrição deve ter no máximo 500 caracteres';
@@ -165,7 +170,6 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo da categoria é obrigatório';
@@ -173,6 +177,15 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const form = this._form();
       const isLoading = this.loading();
@@ -194,7 +207,7 @@ export class CategoriesCreatePage implements OnInit {
         Validators.maxLength(100),
       ]),
       description: new FormControl('', [Validators.maxLength(500)]),
-      type: new FormControl<CategoryType | null>(null, [Validators.required]),
+      type: new FormControl<CategoryType>('EXPENSE' as CategoryType, [Validators.required]),
     });
 
     this._form.set(form);
@@ -204,7 +217,6 @@ export class CategoriesCreatePage implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

@@ -44,7 +44,12 @@ import type { OsDropdownOption } from '@shared/ui-components/molecules/os-dropdo
       (cancelled)="onCancel()"
       (closed)="onCancel()"
     >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+      <os-form-template
+        [config]="formConfig()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
+        [showHeader]="false"
+      >
         <os-form-field
           label="Nome do Orçamento"
           [required]="true"
@@ -92,6 +97,18 @@ export class BudgetFormComponent implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
+
   readonly nameControl = computed(() => this._form()?.get('name') as FormControl | null);
   readonly typeControl = computed(() => this._form()?.get('type') as FormControl | null);
 
@@ -116,7 +133,6 @@ export class BudgetFormComponent implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: false,
   }));
 
@@ -137,6 +153,15 @@ export class BudgetFormComponent implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const budget = this.budget();
       const form = this._form();

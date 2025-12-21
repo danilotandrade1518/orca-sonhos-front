@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { FormTemplateConfig, OsFormTemplateComponent } from './os-form-template.component';
@@ -8,7 +8,6 @@ import { FormTemplateConfig, OsFormTemplateComponent } from './os-form-template.
 describe('OsFormTemplateComponent', () => {
   let component: OsFormTemplateComponent;
   let fixture: ComponentFixture<OsFormTemplateComponent>;
-  let formBuilder: FormBuilder;
 
   const defaultConfig: FormTemplateConfig = {
     title: 'Test Form',
@@ -19,8 +18,6 @@ describe('OsFormTemplateComponent', () => {
     showCancelButton: true,
     saveButtonText: 'Save',
     cancelButtonText: 'Cancel',
-    showProgress: true,
-    progressValue: 50,
     showActions: true,
     actions: [
       {
@@ -42,7 +39,6 @@ describe('OsFormTemplateComponent', () => {
 
     fixture = TestBed.createComponent(OsFormTemplateComponent);
     component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
   });
 
   describe('Component Initialization', () => {
@@ -102,33 +98,6 @@ describe('OsFormTemplateComponent', () => {
     });
   });
 
-  describe('Progress Bar', () => {
-    it('should show progress bar when showProgress is true and progressValue is set', () => {
-      fixture.componentRef.setInput('config', { ...defaultConfig, progressValue: 75 });
-      fixture.componentRef.setInput('showProgress', true);
-      fixture.detectChanges();
-
-      expect(fixture.nativeElement.querySelector('.os-form-template__progress')).toBeTruthy();
-    });
-
-    it('should hide progress bar when showProgress is false', () => {
-      fixture.componentRef.setInput('config', defaultConfig);
-      fixture.componentRef.setInput('showProgress', false);
-      fixture.detectChanges();
-
-      expect(fixture.nativeElement.querySelector('.os-form-template__progress')).toBeFalsy();
-    });
-
-    it('should display correct progress value', () => {
-      fixture.componentRef.setInput('config', { ...defaultConfig, progressValue: 60 });
-      fixture.componentRef.setInput('showProgress', true);
-      fixture.detectChanges();
-
-      const progressBar = fixture.nativeElement.querySelector('os-progress-bar');
-      expect(progressBar).toBeTruthy();
-    });
-  });
-
   describe('Form Actions', () => {
     it('should show actions when showActions is true', () => {
       fixture.componentRef.setInput('config', defaultConfig);
@@ -179,13 +148,8 @@ describe('OsFormTemplateComponent', () => {
 
   describe('Form Validation', () => {
     it('should disable save button when form is invalid', () => {
-      const form = formBuilder.group({
-        name: ['', { validators: [() => ({ required: true })] }],
-      });
-      form.setErrors({ required: true });
-
       fixture.componentRef.setInput('config', { ...defaultConfig, showSaveButton: true });
-      fixture.componentRef.setInput('form', form);
+      fixture.componentRef.setInput('isInvalid', true);
       fixture.componentRef.setInput('showActions', true);
       fixture.detectChanges();
 
@@ -194,12 +158,8 @@ describe('OsFormTemplateComponent', () => {
     });
 
     it('should enable save button when form is valid', () => {
-      const form = formBuilder.group({
-        name: ['valid name'],
-      });
-
       fixture.componentRef.setInput('config', { ...defaultConfig, showSaveButton: true });
-      fixture.componentRef.setInput('form', form);
+      fixture.componentRef.setInput('isInvalid', false);
       fixture.componentRef.setInput('showActions', true);
       fixture.detectChanges();
 

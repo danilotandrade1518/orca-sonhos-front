@@ -9,7 +9,13 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+  type FormControlStatus,
+} from '@angular/forms';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationService } from '@core/services/notification/notification.service';
@@ -48,17 +54,19 @@ import type { BudgetType } from '../../../../../dtos/budget';
 
       <os-form-template
         [config]="formConfig()"
-        [form]="form()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
         [loading]="loading()"
         [disabled]="loading()"
         (save)="onSave()"
         (cancelClick)="onCancel()"
       >
         @if (form()) {
-        <div [formGroup]="form()!">
+        <form [formGroup]="form()!">
           <os-form-field
             label="Nome do Orçamento"
             [required]="true"
+            formControlName="name"
             [control]="nameControl()"
             [errorMessage]="getNameErrorMessage()"
           />
@@ -71,7 +79,7 @@ import type { BudgetType } from '../../../../../dtos/budget';
             [errorMessage]="getTypeErrorMessage()"
             placeholder="Selecione o tipo"
           />
-        </div>
+        </form>
         }
       </os-form-template>
     </os-page>
@@ -89,7 +97,14 @@ export class BudgetCreatePage implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formStatus = signal<FormControlStatus | null>(null);
+  readonly formStatus = this._formStatus.asReadonly();
+
+  readonly isFormInvalid = computed(() => this._formStatus() !== 'VALID');
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly pageTitle = computed(() => 'Criar Orçamento');
 
@@ -103,12 +118,10 @@ export class BudgetCreatePage implements OnInit {
   });
 
   readonly nameControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
 
   readonly typeControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('type') as FormControl | null;
   });
 
@@ -120,7 +133,6 @@ export class BudgetCreatePage implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
@@ -129,7 +141,6 @@ export class BudgetCreatePage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do orçamento é obrigatório';
@@ -139,7 +150,6 @@ export class BudgetCreatePage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo do orçamento é obrigatório';
@@ -147,6 +157,19 @@ export class BudgetCreatePage implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+
+      if (!form) {
+        this._formStatus.set(null);
+        return;
+      }
+
+      this._formStatus.set(form.status);
+      const sub = form.statusChanges.subscribe((status) => this._formStatus.set(status));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const form = this._form();
       const isLoading = this.loading();
@@ -177,7 +200,6 @@ export class BudgetCreatePage implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

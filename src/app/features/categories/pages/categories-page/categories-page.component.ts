@@ -17,6 +17,7 @@ import {
   type PageHeaderAction,
 } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsAlertComponent } from '../../../../shared/ui-components/molecules/os-alert/os-alert.component';
+import { OsButtonComponent } from '../../../../shared/ui-components/atoms/os-button/os-button.component';
 import { OsCategoryManagerComponent } from '../../../../shared/ui-components/organisms/os-category-manager/os-category-manager.component';
 import type { CategoryDto } from '../../../../../dtos/category';
 import type {
@@ -27,7 +28,13 @@ import type {
 @Component({
   selector: 'os-categories-page',
   standalone: true,
-  imports: [OsPageComponent, OsPageHeaderComponent, OsAlertComponent, OsCategoryManagerComponent],
+  imports: [
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsAlertComponent,
+    OsButtonComponent,
+    OsCategoryManagerComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de categorias">
@@ -38,39 +45,54 @@ import type {
         (actionClick)="onPageHeaderActionClick($event)"
       />
 
-      @if (currentState() === 'error') {
-      <os-alert
-        type="error"
-        [title]="'Erro ao carregar categorias'"
-        [role]="'alert'"
-        [ariaLive]="'assertive'"
-        [showIcon]="true"
-        [dismissible]="false"
-      >
-        {{ errorMessage() }}
-      </os-alert>
-      } @if (!selectedBudgetId()) {
-      <os-alert
-        type="info"
-        [title]="'Nenhum orçamento selecionado'"
-        [role]="'status'"
-        [ariaLive]="'polite'"
-        [showIcon]="true"
-        [dismissible]="false"
-      >
-        Selecione um orçamento para gerenciar categorias.
-      </os-alert>
-      } @else {
-      <os-category-manager
-        [categories]="uiCategories()"
-        [loading]="isLoading()"
-        (categoryAdded)="onCategoryAdded($event)"
-        (categoryUpdated)="onCategoryUpdated($event)"
-        (categoryDeleted)="onCategoryDeleted($event)"
-      />
-      }
+      <main class="categories-page__content">
+        @if (currentState() === 'error') {
+        <os-alert
+          type="error"
+          [title]="'Erro ao carregar categorias'"
+          [role]="'alert'"
+          [ariaLive]="'assertive'"
+          [showIcon]="true"
+          [dismissible]="false"
+        >
+          {{ errorMessage() }}
+          <div class="categories-page__error-action">
+            <os-button
+              variant="primary"
+              size="medium"
+              icon="refresh"
+              (buttonClick)="retry()"
+              [attr.aria-label]="'Tentar carregar categorias novamente'"
+            >
+              Tentar Novamente
+            </os-button>
+          </div>
+        </os-alert>
+        } @else if (!selectedBudgetId()) {
+        <os-alert
+          type="info"
+          [title]="'Nenhum orçamento selecionado'"
+          [role]="'status'"
+          [ariaLive]="'polite'"
+          [showIcon]="true"
+          [dismissible]="false"
+        >
+          Selecione um orçamento para gerenciar categorias.
+        </os-alert>
+        } @else {
+        <os-category-manager
+          [categories]="uiCategories()"
+          [loading]="isLoading()"
+          [showHeader]="false"
+          (categoryAdded)="onCategoryAdded($event)"
+          (categoryUpdated)="onCategoryUpdated($event)"
+          (categoryDeleted)="onCategoryDeleted($event)"
+        />
+        }
+      </main>
     </os-page>
   `,
+  styleUrl: './categories-page.component.scss',
 })
 export class CategoriesPage {
   private readonly state = inject(CategoryState);
@@ -129,6 +151,14 @@ export class CategoriesPage {
   onPageHeaderActionClick(action: PageHeaderAction): void {
     if (action.label === 'Nova Categoria') {
       this.router.navigate(['new'], { relativeTo: this.route });
+    }
+  }
+
+  retry(): void {
+    this.state.clearError();
+    const budgetId = this.selectedBudgetId();
+    if (budgetId) {
+      this.state.loadCategories();
     }
   }
 

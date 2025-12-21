@@ -51,7 +51,8 @@ import { MatInputModule } from '@angular/material/input';
 
       <os-form-template
         [config]="formConfig()"
-        [form]="form()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
         [loading]="loading()"
         [disabled]="loading()"
         (save)="onSave()"
@@ -133,7 +134,17 @@ export class CreditCardsCreatePage implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly pageTitle = computed(() => 'Criar Cartão de Crédito');
 
@@ -147,29 +158,24 @@ export class CreditCardsCreatePage implements OnInit {
   });
 
   readonly nameControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
 
   readonly limitControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('limit') as FormControl | null;
   });
 
   readonly closingDayControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('closingDay') as FormControl | null;
   });
 
   readonly dueDayControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('dueDay') as FormControl | null;
   });
 
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
@@ -178,7 +184,6 @@ export class CreditCardsCreatePage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do cartão é obrigatório';
@@ -188,7 +193,6 @@ export class CreditCardsCreatePage implements OnInit {
   });
 
   readonly getLimitErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.limitControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Limite é obrigatório';
@@ -197,7 +201,6 @@ export class CreditCardsCreatePage implements OnInit {
   });
 
   readonly getClosingDayErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.closingDayControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Dia de fechamento é obrigatório';
@@ -207,7 +210,6 @@ export class CreditCardsCreatePage implements OnInit {
   });
 
   readonly getDueDayErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.dueDayControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Dia de vencimento é obrigatório';
@@ -217,6 +219,15 @@ export class CreditCardsCreatePage implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const form = this._form();
       const isLoading = this.loading();
@@ -257,7 +268,6 @@ export class CreditCardsCreatePage implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

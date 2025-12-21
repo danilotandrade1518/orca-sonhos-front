@@ -31,9 +31,10 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
   template: `
     <os-form-template
       [config]="formConfig()"
-      [disabled]="loading() || form.invalid"
+      [disabled]="loading()"
+      [isInvalid]="form.invalid"
+      [saveButtonDisabled]="loading() || form.invalid"
       [loading]="loading()"
-      [form]="form"
       (save)="onSubmit()"
       (cancelClick)="cancelled.emit()"
     >
@@ -150,7 +151,6 @@ export class GoalFormComponent {
     showCancelButton: true,
     saveButtonText: 'Salvar',
     cancelButtonText: 'Cancelar',
-    showProgress: false,
     showActions: true,
   }));
 

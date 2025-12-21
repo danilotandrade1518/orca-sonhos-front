@@ -49,7 +49,12 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
       (cancelled)="onCancel()"
       (closed)="onCancel()"
     >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+      <os-form-template
+        [config]="formConfig()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
+        [showHeader]="false"
+      >
         @if (form()) {
         <div [formGroup]="form()!">
           <os-select
@@ -110,7 +115,17 @@ export class CreditCardBillFormComponent implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly creditCardOptions = computed<OsSelectOption[]>(() => {
     const creditCards = this.creditCardState.creditCardsByBudgetId();
@@ -121,19 +136,15 @@ export class CreditCardBillFormComponent implements OnInit {
   });
 
   readonly creditCardIdControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('creditCardId') as FormControl | null;
   });
   readonly closingDateControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('closingDate') as FormControl | null;
   });
   readonly dueDateControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('dueDate') as FormControl | null;
   });
   readonly amountControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('amount') as FormControl | null;
   });
 
@@ -153,12 +164,10 @@ export class CreditCardBillFormComponent implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: false,
   }));
 
   readonly getCreditCardErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.creditCardIdControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Cartão de crédito é obrigatório';
@@ -166,7 +175,6 @@ export class CreditCardBillFormComponent implements OnInit {
   });
 
   readonly getClosingDateErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.closingDateControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Data de fechamento é obrigatória';
@@ -174,7 +182,6 @@ export class CreditCardBillFormComponent implements OnInit {
   });
 
   readonly getDueDateErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.dueDateControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Data de vencimento é obrigatória';
@@ -182,7 +189,6 @@ export class CreditCardBillFormComponent implements OnInit {
   });
 
   readonly getAmountErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.amountControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Valor é obrigatório';
@@ -191,6 +197,15 @@ export class CreditCardBillFormComponent implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const creditCardBill = this.creditCardBill();
       const form = this._form();
@@ -201,8 +216,6 @@ export class CreditCardBillFormComponent implements OnInit {
           dueDate: creditCardBill.dueDate ? new Date(creditCardBill.dueDate) : null,
           amount: creditCardBill.amount / 100,
         });
-
-        this._validationTrigger.update((v) => v + 1);
       }
     });
 

@@ -4,6 +4,7 @@ import {
   output,
   computed,
   model,
+  effect,
   ChangeDetectionStrategy,
   forwardRef,
   signal,
@@ -150,6 +151,34 @@ export class OsFormFieldComponent implements ControlValueAccessor {
   private _onChange = (value: string) => {};
   private _onTouched = () => {};
 
+  constructor() {
+    // Quando usado com `formControlName` / `formControl`, o Angular já conecta o CVA via `NG_VALUE_ACCESSOR`.
+    // Quando usado apenas com `[control]`, fazemos um "bridge" para manter o FormControl em sincronia.
+    effect((onCleanup: (cleanupFn: () => void) => void) => {
+      const control = this.control();
+
+      if (!control) return;
+
+      // Estado inicial
+      const initial = control.value;
+      this.writeValue(initial === null || initial === undefined ? '' : String(initial));
+      this.updateValidationState();
+
+      const subValue = control.valueChanges.subscribe((value) => {
+        this.writeValue(value === null || value === undefined ? '' : String(value));
+      });
+
+      const subStatus = control.statusChanges.subscribe(() => {
+        this.updateValidationState();
+      });
+
+      onCleanup(() => {
+        subValue.unsubscribe();
+        subStatus.unsubscribe();
+      });
+    });
+  }
+
   protected labelVariant = computed(() => {
     if (this.hasError()) return 'error';
     return 'default';
@@ -269,6 +298,12 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     this.valueChange.emit(value);
     this._onChange(value);
 
+    const control = this.control();
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+
     this._dirty.set(true);
     this.updateValidationState();
   }
@@ -277,6 +312,12 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     this.blurEvent.emit(event);
     this._onTouched();
     this._touched.set(true);
+
+    const control = this.control();
+    if (control) {
+      control.markAsTouched();
+    }
+
     this.updateValidationState();
   }
 
