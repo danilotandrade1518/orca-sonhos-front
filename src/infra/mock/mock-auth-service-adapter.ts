@@ -10,7 +10,7 @@ import {
 })
 export class MockAuthServiceAdapter implements ExternalAuthServiceAdapter {
   private readonly mockUser: AuthUser = {
-    id: 'mock-user-id',
+    id: '123e4567-e89b-12d3-a456-426614174000',
     email: 'dev@orca-sonhos.com',
     name: 'Developer User',
     avatar: null,

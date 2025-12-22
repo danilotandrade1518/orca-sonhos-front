@@ -13,7 +13,6 @@ import { AccountState } from '@core/services/account/account-state/account.state
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AccountCardComponent } from '@shared/ui-components/molecules/account-card';
-import { AccountFormComponent } from '../../components/account-form/account-form.component';
 import { ConfirmDialogService } from '@core/services/confirm-dialog';
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -30,13 +29,12 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
   standalone: true,
   imports: [
     AccountCardComponent,
-    AccountFormComponent,
     OsPageComponent,
     OsPageHeaderComponent,
     OsButtonComponent,
     OsEntityListComponent,
-    OsAlertComponent
-],
+    OsAlertComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de contas">
@@ -95,10 +93,6 @@ import type { AccountDto } from '../../../../../dtos/account/account-types';
         />
         }
       </os-entity-list>
-
-      @if (showCreateModal()) {
-      <os-account-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      }
     </os-page>
   `,
   styleUrl: './accounts.page.scss',
@@ -116,10 +110,6 @@ export class AccountsPage implements OnInit {
   readonly selectedBudgetId = this.budgetSelection.selectedBudgetId;
   readonly accounts = computed(() => this.state.accountsByBudgetId());
   readonly hasAccounts = computed(() => this.accounts().length > 0);
-
-  readonly showCreateModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'create';
-  });
 
   readonly currentState = computed(() => {
     if (this.state.loading()) return 'loading';
@@ -190,7 +180,7 @@ export class AccountsPage implements OnInit {
   }
 
   openCreateModal(): void {
-    this.router.navigate(['new'], { relativeTo: this.route });
+    this.router.navigate(['/accounts/new']);
   }
 
   openTransferModal(): void {
@@ -222,13 +212,5 @@ export class AccountsPage implements OnInit {
         });
       }
     }
-  }
-
-  onFormSaved(): void {
-    this.router.navigate(['/accounts'], { replaceUrl: true });
-  }
-
-  onFormCancelled(): void {
-    this.router.navigate(['/accounts'], { replaceUrl: true });
   }
 }

@@ -1,5 +1,11 @@
 .categories-page {
-  display: block;
+  &__content {
+    min-height: 400px;
+  }
+
+  &__error-action {
+    margin-top: var(--os-spacing-md, 16px);
+    display: flex;
+    justify-content: flex-start;
+  }
 }
-
-

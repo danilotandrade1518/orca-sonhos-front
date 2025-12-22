@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BudgetOverviewDto, BudgetParticipantDto } from '../../../../dtos/budget';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
-import { PresetCategoriesService } from '../category/preset-categories.service';
 import { BudgetService } from '../budget/budget.service';
 import { BudgetState } from '../budget/budget.state';
 import { SharingService } from './sharing.service';
@@ -28,9 +27,6 @@ describe('SharingState', () => {
     setAvailableBudgets: ReturnType<typeof vi.fn>;
     selectedBudget: ReturnType<typeof vi.fn>;
     selectedBudgetId: ReturnType<typeof vi.fn>;
-  };
-  let presetCategoriesService: {
-    seedPresetCategories: ReturnType<typeof vi.fn>;
   };
 
   const mockParticipants: BudgetParticipantDto[] = [
@@ -81,10 +77,6 @@ describe('SharingState', () => {
       selectedBudgetId: vi.fn(() => null),
     };
 
-    presetCategoriesService = {
-      seedPresetCategories: vi.fn().mockResolvedValue({ success: true, created: 14, errors: [] }),
-    };
-
     TestBed.configureTestingModule({
       providers: [
         SharingState,
@@ -92,7 +84,6 @@ describe('SharingState', () => {
         { provide: BudgetService, useValue: budgetService },
         { provide: BudgetState, useValue: budgetState },
         { provide: BudgetSelectionService, useValue: budgetSelectionService },
-        { provide: PresetCategoriesService, useValue: presetCategoriesService },
         provideZonelessChangeDetection(),
       ],
     });

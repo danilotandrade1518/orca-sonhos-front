@@ -11,7 +11,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetState } from '@core/services/budget/budget.state';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BudgetCardComponent } from '../../components/budget-card/budget-card.component';
-import { BudgetFormComponent } from '../../components/budget-form/budget-form.component';
 import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import { OsButtonComponent } from '@shared/ui-components/atoms/os-button/os-button.component';
 import { OsFilterBarComponent } from '@shared/ui-components/molecules/os-filter-bar/os-filter-bar.component';
@@ -31,7 +30,6 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
   standalone: true,
   imports: [
     BudgetCardComponent,
-    BudgetFormComponent,
     OsModalTemplateComponent,
     OsButtonComponent,
     OsFilterBarComponent,
@@ -40,8 +38,8 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
     OsEntityListComponent,
     OsAlertComponent,
     OsPageComponent,
-    OsPageHeaderComponent
-],
+    OsPageHeaderComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de orçamentos">
@@ -135,9 +133,7 @@ import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-mod
         }
       </main>
 
-      @if (showCreateModal()) {
-      <os-budget-form [mode]="'create'" (saved)="onFormSaved()" (cancelled)="onFormCancelled()" />
-      } @if (showDeleteConfirmModal()) {
+      @if (showDeleteConfirmModal()) {
       <os-modal-template
         [config]="deleteModalConfig()"
         [variant]="'compact'"
@@ -172,10 +168,6 @@ export class BudgetListPage implements OnInit {
   readonly loading = this.budgetState.loading;
   readonly error = this.budgetState.error;
   readonly selectedBudgetId = this.budgetState.selectedBudgetId;
-
-  readonly showCreateModal = computed(() => {
-    return this.route.snapshot.data['modalMode'] === 'create';
-  });
 
   readonly showDeleteConfirmModal = computed(() => {
     return this.deleteBudgetId() !== null;
@@ -321,14 +313,6 @@ export class BudgetListPage implements OnInit {
 
   retry(): void {
     this.budgetState.loadBudgets();
-  }
-
-  onFormSaved(): void {
-    this.router.navigate(['/budgets'], { replaceUrl: true });
-  }
-
-  onFormCancelled(): void {
-    this.router.navigate(['/budgets'], { replaceUrl: true });
   }
 
   onPageHeaderActionClick(action: PageHeaderAction): void {

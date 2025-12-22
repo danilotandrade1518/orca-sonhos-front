@@ -19,11 +19,11 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
   }
 
   async signIn(credentials: AuthCredentials): Promise<AuthResult> {
-    
+
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     const user: AuthUser = {
-      id: 'mock-user-id',
+      id: '123e4567-e89b-12d3-a456-426614174000',
       email: credentials.email,
       name: 'Mock User',
       avatar: null,
@@ -45,7 +45,7 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
   }
 
   async signOut(): Promise<void> {
-    
+
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     this._currentUser = null;
@@ -101,14 +101,14 @@ export class MockExternalAuthServiceAdapter implements ExternalAuthServiceAdapte
 
     const mockUser: AuthUser = this._simulateFirstAccess
       ? {
-          id: 'mock-user-first-access-id',
+          id: '00000000-0000-0000-0000-000000000002',
           email: 'newuser@orca-sonhos.com',
           name: null,
           avatar: null,
           metadata: { provider: 'google', isFirstAccess: true },
         }
       : {
-          id: 'mock-user-id',
+          id: '123e4567-e89b-12d3-a456-426614174000',
           email: 'user@orca-sonhos.com',
           name: 'Mock User',
           avatar: null,

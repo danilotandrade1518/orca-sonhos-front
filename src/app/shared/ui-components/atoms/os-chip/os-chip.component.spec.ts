@@ -11,7 +11,14 @@ describe('OsChipComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OsChipComponent],
       providers: [provideZonelessChangeDetection()],
-    }).compileComponents();
+    })
+      .overrideComponent(OsChipComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(OsChipComponent);
     component = fixture.componentInstance;
@@ -99,7 +106,7 @@ describe('OsChipComponent', () => {
       fixture.detectChanges();
 
       vi.spyOn(component.removed, 'emit');
-      
+
       component.onRemove();
 
       expect(component.removed.emit).toHaveBeenCalled();
@@ -111,7 +118,7 @@ describe('OsChipComponent', () => {
       fixture.detectChanges();
 
       vi.spyOn(component.removed, 'emit');
-      
+
       component.onRemove();
 
       expect(component.removed.emit).not.toHaveBeenCalled();
@@ -123,7 +130,7 @@ describe('OsChipComponent', () => {
 
       vi.spyOn(component.clicked, 'emit');
       vi.spyOn(component.removed, 'emit');
-      
+
       component.onRemove();
 
       expect(component.removed.emit).toHaveBeenCalled();
@@ -135,7 +142,7 @@ describe('OsChipComponent', () => {
     it('should show remove button when removable is true', () => {
       fixture.componentRef.setInput('removable', true);
       fixture.detectChanges();
-      
+
       expect(component.removable()).toBe(true);
     });
 
@@ -151,7 +158,7 @@ describe('OsChipComponent', () => {
       fixture.componentRef.setInput('removable', true);
       fixture.componentRef.setInput('removeLabel', 'Remove tag');
       fixture.detectChanges();
-      
+
       expect(component.removeLabel()).toBe('Remove tag');
     });
   });
@@ -236,7 +243,7 @@ describe('OsChipComponent', () => {
       const chipElement = fixture.nativeElement.querySelector('mat-chip');
       expect(chipElement.getAttribute('aria-label')).toBe('Custom label');
       expect(chipElement.getAttribute('aria-describedby')).toBe('description');
-      
+
       expect(component.role()).toBe('button');
       expect(chipElement.getAttribute('tabindex')).toBe('0');
     });
@@ -269,7 +276,6 @@ describe('OsChipComponent', () => {
 
   describe('haptic feedback', () => {
     it('should trigger haptic feedback on click', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,
@@ -287,7 +293,6 @@ describe('OsChipComponent', () => {
     });
 
     it('should not trigger haptic feedback when disabled', () => {
-      
       const vibrateSpy = vi.fn();
       Object.defineProperty(navigator, 'vibrate', {
         value: vibrateSpy,

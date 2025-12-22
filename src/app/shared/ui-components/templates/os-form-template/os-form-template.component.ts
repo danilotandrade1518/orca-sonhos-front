@@ -1,11 +1,9 @@
-import { Component, input, output, computed, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 
 import { OsButtonComponent } from '../../atoms/os-button/os-button.component';
 import { OsCardComponent } from '../../molecules/os-card/os-card.component';
-import { OsProgressBarComponent } from '../../atoms/os-progress-bar/os-progress-bar.component';
 import { OsPageHeaderComponent } from '../../organisms/os-page-header/os-page-header.component';
 
 export interface FormTemplateConfig {
@@ -17,8 +15,6 @@ export interface FormTemplateConfig {
   showCancelButton?: boolean;
   saveButtonText?: string;
   cancelButtonText?: string;
-  showProgress?: boolean;
-  progressValue?: number;
   showActions?: boolean;
   actions?: {
     label: string;
@@ -52,24 +48,6 @@ export interface FormTemplateConfig {
 
       <div class="os-form-template__content">
         <os-card [variant]="cardVariant()" [size]="size()" [class]="cardClass()">
-          @if (showProgress() && progressValue() !== undefined) {
-          <div
-            class="os-form-template__progress"
-            role="progressbar"
-            [attr.aria-valuenow]="progressValue()"
-            [attr.aria-valuemin]="0"
-            [attr.aria-valuemax]="100"
-            [attr.aria-label]="progressAriaLabel()"
-          >
-            <os-progress-bar
-              [variant]="'primary'"
-              [size]="size()"
-              [value]="progressValue()"
-              [label]="progressLabel()"
-            />
-          </div>
-          }
-
           <div
             class="os-form-template__form"
             [attr.aria-label]="formAriaLabel()"
@@ -98,7 +76,7 @@ export interface FormTemplateConfig {
             <os-button
               [variant]="'primary'"
               [size]="size()"
-              [disabled]="disabled() || !isFormValid()"
+              [disabled]="disabled() || saveButtonDisabled() || isInvalid()"
               [loading]="loading()"
               [ariaLabel]="saveAriaLabel()"
               (click)="save.emit()"
@@ -126,14 +104,7 @@ export interface FormTemplateConfig {
   `,
   styleUrls: ['./os-form-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterModule,
-    ReactiveFormsModule,
-    OsButtonComponent,
-    OsCardComponent,
-    OsProgressBarComponent,
-    OsPageHeaderComponent
-],
+  imports: [RouterModule, OsButtonComponent, OsCardComponent, OsPageHeaderComponent],
 })
 export class OsFormTemplateComponent {
   config = input.required<FormTemplateConfig>();
@@ -142,9 +113,9 @@ export class OsFormTemplateComponent {
   theme = input<'light' | 'dark'>('light');
   disabled = input(false);
   loading = input(false);
-  form = input<FormGroup | null>(null);
+  isInvalid = input(false);
+  saveButtonDisabled = input(false);
   showHeader = input(true);
-  showProgress = input(true);
   showActions = input(true);
   ariaLabel = input<string>();
   ariaDescribedBy = input<string>();
@@ -161,7 +132,7 @@ export class OsFormTemplateComponent {
     ariaLabel?: string;
   }>();
 
-  private uniqueId = signal(Math.random().toString(36).substr(2, 9));
+  private uniqueId = Math.random().toString(36).substr(2, 9);
 
   protected templateClass = computed(() => {
     return [
@@ -209,25 +180,6 @@ export class OsFormTemplateComponent {
     return actions;
   });
 
-  protected progressValue = computed(() => {
-    return this.config().progressValue || 0;
-  });
-
-  protected isFormValid = computed(() => {
-    const form = this.form();
-    return form ? form.valid : true;
-  });
-
-  protected progressLabel = computed(() => {
-    const value = this.progressValue();
-    return `Progresso: ${value}%`;
-  });
-
-  protected progressAriaLabel = computed(() => {
-    const value = this.progressValue();
-    return `Progresso do formulário: ${value}%`;
-  });
-
   protected formAriaLabel = computed(() => {
     return this.ariaLabel() || `Formulário: ${this.config().title}`;
   });
@@ -237,7 +189,7 @@ export class OsFormTemplateComponent {
     const subtitle = this.config().subtitle;
 
     if (describedBy) return describedBy;
-    if (subtitle) return `${this.uniqueId()}-subtitle`;
+    if (subtitle) return `${this.uniqueId}-subtitle`;
     return undefined;
   });
 
@@ -251,14 +203,14 @@ export class OsFormTemplateComponent {
 
   protected saveAriaLabel = computed(() => {
     const baseLabel = this.config().saveButtonText || 'Salvar';
-    const isValid = this.isFormValid();
     const loading = this.loading();
+    const invalid = this.isInvalid();
 
     if (loading) {
       return `${baseLabel} - Salvando...`;
     }
 
-    if (!isValid) {
+    if (invalid) {
       return `${baseLabel} - Preencha todos os campos obrigatórios`;
     }
 

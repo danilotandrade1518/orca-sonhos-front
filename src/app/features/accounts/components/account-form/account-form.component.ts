@@ -49,7 +49,12 @@ import type { AccountDto, AccountType } from '../../../../../dtos/account/accoun
       (cancelled)="onCancel()"
       (closed)="onCancel()"
     >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+      <os-form-template
+        [config]="formConfig()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
+        [showHeader]="false"
+      >
         @if (form()) {
         <div [formGroup]="form()!">
           <os-form-field
@@ -99,18 +104,25 @@ export class AccountFormComponent implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly nameControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
   readonly typeControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('type') as FormControl | null;
   });
   readonly initialBalanceControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('initialBalance') as FormControl | null;
   });
 
@@ -139,12 +151,11 @@ export class AccountFormComponent implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: false,
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger();
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da conta é obrigatório';
@@ -154,7 +165,6 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo de conta é obrigatório';
@@ -162,7 +172,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getInitialBalanceErrorMessage = computed(() => {
-    this._validationTrigger();
+    this._formValidityTick();
     const control = this.initialBalanceControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('min')) return 'Saldo inicial deve ser maior ou igual a zero';
@@ -170,6 +180,15 @@ export class AccountFormComponent implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const account = this.account();
       const form = this._form();
@@ -179,8 +198,6 @@ export class AccountFormComponent implements OnInit {
           type: account.type,
           initialBalance: (account.balance || 0) / 100,
         });
-
-        this._validationTrigger.update((v) => v + 1);
       }
     });
 

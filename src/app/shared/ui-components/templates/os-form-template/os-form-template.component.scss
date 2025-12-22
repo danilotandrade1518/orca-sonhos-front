@@ -88,19 +88,6 @@
     }
   }
 
-  &__progress {
-    margin-bottom: var(--os-spacing-md);
-    padding: var(--os-spacing-sm);
-    background-color: var(--os-color-background-secondary);
-    border-radius: var(--os-border-radius-md);
-
-    /* Mobile-first responsive spacing */
-    @media (min-width: 576px) {
-      margin-bottom: var(--os-spacing-lg);
-      padding: var(--os-spacing-md);
-    }
-  }
-
   &__form {
     flex: 1;
     display: flex;

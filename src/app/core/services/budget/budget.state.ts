@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BudgetDto } from '../../../../dtos/budget';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
-import { PresetCategoriesService } from '../category/preset-categories.service';
 import { NotificationService } from '../notification/notification.service';
 import { BudgetService } from './budget.service';
 
@@ -13,8 +12,9 @@ import { BudgetService } from './budget.service';
 export class BudgetState {
   private readonly budgetService = inject(BudgetService);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
-  private readonly presetCategoriesService = inject(PresetCategoriesService);
+
   private readonly notificationService = inject(NotificationService);
+
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _budgets = signal<BudgetDto[]>([]);
@@ -78,13 +78,8 @@ export class BudgetState {
       .createBudget({ name, type, ownerId })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: async (budgetId) => {
+        next: (budgetId) => {
           if (budgetId) {
-            try {
-              await this.presetCategoriesService.seedPresetCategories(ownerId, budgetId);
-            } catch (error) {
-              console.warn('Failed to seed preset categories:', error);
-            }
             this.notificationService.showSuccess('Orçamento criado com sucesso!');
             this.loadBudgets();
           } else {
@@ -165,9 +160,7 @@ export class BudgetState {
 
   updateBudgetParticipantsCount(budgetId: string, participantsCount: number): void {
     this._budgets.update((budgets) =>
-      budgets.map((budget) =>
-        budget.id === budgetId ? { ...budget, participantsCount } : budget
-      )
+      budgets.map((budget) => (budget.id === budgetId ? { ...budget, participantsCount } : budget))
     );
 
     const selectedBudget = this.selectedBudget();

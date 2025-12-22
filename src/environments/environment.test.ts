@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'http://localhost:3001',
+  apiUrl: 'http://localhost:3000',
   version: '1.0.0-test',
   debug: true,
   enableLogging: true,
