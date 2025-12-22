@@ -1,0 +1,15 @@
+node_modules
+dist
+.angular
+coverage
+.vscode
+.idea
+*.log
+.DS_Store
+.git
+.gitignore
+README.md
+*.md
+.env
+.env.local
+.firebase

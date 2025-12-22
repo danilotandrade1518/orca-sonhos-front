@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BudgetDto } from '../../../../dtos/budget';
 import { BudgetSelectionService } from '../budget-selection/budget-selection.service';
+import { NotificationService } from '../notification/notification.service';
 import { BudgetService } from './budget.service';
 
 @Injectable({
@@ -11,6 +12,9 @@ import { BudgetService } from './budget.service';
 export class BudgetState {
   private readonly budgetService = inject(BudgetService);
   private readonly budgetSelectionService = inject(BudgetSelectionService);
+
+  private readonly notificationService = inject(NotificationService);
+
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _budgets = signal<BudgetDto[]>([]);
@@ -76,6 +80,7 @@ export class BudgetState {
       .subscribe({
         next: (budgetId) => {
           if (budgetId) {
+            this.notificationService.showSuccess('Orçamento criado com sucesso!');
             this.loadBudgets();
           } else {
             this._error.set('Failed to create budget');
@@ -99,6 +104,7 @@ export class BudgetState {
       .subscribe({
         next: (success) => {
           if (success) {
+            this.notificationService.showSuccess('Orçamento atualizado com sucesso!');
             this.loadBudgets();
           } else {
             this._error.set('Failed to update budget');
@@ -124,6 +130,7 @@ export class BudgetState {
           if (success) {
             const wasSelected = this.selectedBudgetId() === budgetId;
 
+            this.notificationService.showSuccess('Orçamento excluído com sucesso!');
             this.loadBudgets();
 
             if (wasSelected) {
@@ -153,9 +160,7 @@ export class BudgetState {
 
   updateBudgetParticipantsCount(budgetId: string, participantsCount: number): void {
     this._budgets.update((budgets) =>
-      budgets.map((budget) =>
-        budget.id === budgetId ? { ...budget, participantsCount } : budget
-      )
+      budgets.map((budget) => (budget.id === budgetId ? { ...budget, participantsCount } : budget))
     );
 
     const selectedBudget = this.selectedBudget();

@@ -10,6 +10,7 @@ import {
 } from '../../../../dtos/budget';
 import { ApiError, ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';
+import { getBudgetErrorMessage } from '../../utils/error-messages';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +29,14 @@ export class SharingService {
     const user = this.auth.user();
 
     if (!user) {
-      this._error.set({
+      const error: ApiError = {
         message: 'User not authenticated',
         status: 401,
         code: 'UNAUTHORIZED',
+      };
+      this._error.set({
+        ...error,
+        message: getBudgetErrorMessage(error, 'addParticipant'),
       });
       return of(false);
     }
@@ -51,7 +56,10 @@ export class SharingService {
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
-        this._error.set(error);
+        this._error.set({
+          ...error,
+          message: getBudgetErrorMessage(error, 'addParticipant'),
+        });
         return of(false);
       })
     );
@@ -61,10 +69,14 @@ export class SharingService {
     const user = this.auth.user();
 
     if (!user) {
-      this._error.set({
+      const error: ApiError = {
         message: 'User not authenticated',
         status: 401,
         code: 'UNAUTHORIZED',
+      };
+      this._error.set({
+        ...error,
+        message: getBudgetErrorMessage(error, 'removeParticipant'),
       });
       return of(false);
     }
@@ -84,7 +96,10 @@ export class SharingService {
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
-        this._error.set(error);
+        this._error.set({
+          ...error,
+          message: getBudgetErrorMessage(error, 'removeParticipant'),
+        });
         return of(false);
       })
     );

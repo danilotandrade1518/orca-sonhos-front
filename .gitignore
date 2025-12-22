@@ -52,6 +52,7 @@ storybook-static
 
 .cursor/mcp.json
 
-playwright-report/
-test-results/
-playwright/.cache/
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
