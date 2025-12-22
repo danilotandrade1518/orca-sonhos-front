@@ -154,6 +154,7 @@ export class BudgetEditPage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do orçamento é obrigatório';
@@ -163,6 +164,7 @@ export class BudgetEditPage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo do orçamento é obrigatório';
@@ -174,7 +176,6 @@ export class BudgetEditPage implements OnInit {
       const form = this._form();
       if (!form) return;
 
-      // Força uma primeira reavaliação ao trocar a instância do form
       this._formValidityTick.update((v) => v + 1);
 
       const sub = form.statusChanges.subscribe(() => {

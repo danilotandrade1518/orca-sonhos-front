@@ -147,19 +147,15 @@ export class OsFormFieldComponent implements ControlValueAccessor {
 
   protected fieldId = computed(() => `field-${Math.random().toString(36).substr(2, 9)}`);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _onChange = (value: string) => {};
+  private _onChange = (_value: string) => {};
   private _onTouched = () => {};
 
   constructor() {
-    // Quando usado com `formControlName` / `formControl`, o Angular já conecta o CVA via `NG_VALUE_ACCESSOR`.
-    // Quando usado apenas com `[control]`, fazemos um "bridge" para manter o FormControl em sincronia.
     effect((onCleanup: (cleanupFn: () => void) => void) => {
       const control = this.control();
 
       if (!control) return;
 
-      // Estado inicial
       const initial = control.value;
       this.writeValue(initial === null || initial === undefined ? '' : String(initial));
       this.updateValidationState();

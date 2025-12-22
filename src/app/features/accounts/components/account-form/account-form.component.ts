@@ -155,6 +155,7 @@ export class AccountFormComponent implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da conta é obrigatório';
@@ -171,6 +172,7 @@ export class AccountFormComponent implements OnInit {
   });
 
   readonly getInitialBalanceErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.initialBalanceControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('min')) return 'Saldo inicial deve ser maior ou igual a zero';

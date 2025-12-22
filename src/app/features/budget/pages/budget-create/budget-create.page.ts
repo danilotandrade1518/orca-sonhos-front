@@ -140,7 +140,11 @@ export class BudgetCreatePage implements OnInit {
     cancelButtonText: 'Cancelar',
   }));
 
+  private readonly _formValidityTick = signal(0);
+
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
+    this._formStatus();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do orçamento é obrigatório';
@@ -150,6 +154,8 @@ export class BudgetCreatePage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
+    this._formStatus();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo do orçamento é obrigatório';
@@ -166,7 +172,11 @@ export class BudgetCreatePage implements OnInit {
       }
 
       this._formStatus.set(form.status);
-      const sub = form.statusChanges.subscribe((status) => this._formStatus.set(status));
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe((status) => {
+        this._formStatus.set(status);
+        this._formValidityTick.update((v) => v + 1);
+      });
       onCleanup(() => sub.unsubscribe());
     });
 

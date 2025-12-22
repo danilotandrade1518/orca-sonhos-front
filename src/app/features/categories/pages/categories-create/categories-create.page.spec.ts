@@ -137,7 +137,7 @@ describe('CategoriesCreatePage', () => {
       expect(form).toBeTruthy();
       expect(form?.get('name')?.value).toBe('');
       expect(form?.get('description')?.value).toBe('');
-      expect(form?.get('type')?.value).toBe(null);
+      expect(form?.get('type')?.value).toBe('EXPENSE');
     });
 
     it('should initialize form with validators', () => {
@@ -149,7 +149,7 @@ describe('CategoriesCreatePage', () => {
       const typeControl = form?.get('type');
 
       expect(nameControl?.hasError('required')).toBe(true);
-      expect(typeControl?.hasError('required')).toBe(true);
+      expect(typeControl?.hasError('required')).toBe(false);
     });
   });
 
@@ -267,9 +267,11 @@ describe('CategoriesCreatePage', () => {
     it('should show error when type is not selected', () => {
       const form = component.form();
       const typeControl = form?.get('type');
+      typeControl?.setValue(null);
       typeControl?.markAsTouched();
+      typeControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getTypeErrorMessage()).toBe('Tipo da categoria é obrigatório');

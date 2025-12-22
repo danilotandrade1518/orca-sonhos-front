@@ -293,10 +293,12 @@ describe('TransactionsCreatePage', () => {
     it('should show error when amount is zero', () => {
       const form = component.form();
       const amountControl = form?.get('amount');
-      amountControl?.markAsTouched();
       amountControl?.setValue(0);
+      amountControl?.markAsTouched();
+      amountControl?.markAsDirty();
+      amountControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getAmountErrorMessage()).toBe('Valor deve ser maior que zero');
@@ -306,8 +308,9 @@ describe('TransactionsCreatePage', () => {
       const form = component.form();
       const accountIdControl = form?.get('accountId');
       accountIdControl?.markAsTouched();
+      accountIdControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getAccountIdErrorMessage()).toBe('Conta é obrigatória');
@@ -317,8 +320,9 @@ describe('TransactionsCreatePage', () => {
       const form = component.form();
       const categoryIdControl = form?.get('categoryId');
       categoryIdControl?.markAsTouched();
+      categoryIdControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getCategoryIdErrorMessage()).toBe('Categoria é obrigatória');

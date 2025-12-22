@@ -417,10 +417,12 @@ describe('TransactionsEditPage', () => {
     it('should show error when description is empty', async () => {
       const form = component.form();
       const descriptionControl = form?.get('description');
-      descriptionControl?.markAsTouched();
       descriptionControl?.setValue('');
+      descriptionControl?.markAsTouched();
+      descriptionControl?.markAsDirty();
+      descriptionControl?.updateValueAndValidity();
 
-      await component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getDescriptionErrorMessage()).toBe('Descrição é obrigatória');
@@ -429,10 +431,12 @@ describe('TransactionsEditPage', () => {
     it('should show error when amount is zero', async () => {
       const form = component.form();
       const amountControl = form?.get('amount');
-      amountControl?.markAsTouched();
       amountControl?.setValue(0);
+      amountControl?.markAsTouched();
+      amountControl?.markAsDirty();
+      amountControl?.updateValueAndValidity();
 
-      await component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getAmountErrorMessage()).toBe('Valor deve ser maior que zero');

@@ -154,6 +154,7 @@ export class CategoriesCreatePage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da categoria é obrigatório';
@@ -163,6 +164,7 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   readonly getDescriptionErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.descriptionControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('maxlength')) return 'Descrição deve ter no máximo 500 caracteres';
@@ -170,6 +172,7 @@ export class CategoriesCreatePage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo da categoria é obrigatório';

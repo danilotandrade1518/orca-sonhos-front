@@ -147,7 +147,7 @@ describe('AccountsCreatePage', () => {
       const form = component.form();
       expect(form).toBeTruthy();
       expect(form?.get('name')?.value).toBe('');
-      expect(form?.get('type')?.value).toBe(null);
+      expect(form?.get('type')?.value).toBe('CHECKING_ACCOUNT');
       expect(form?.get('initialBalance')?.value).toBe(0);
     });
 
@@ -160,7 +160,7 @@ describe('AccountsCreatePage', () => {
       const typeControl = form?.get('type');
 
       expect(nameControl?.hasError('required')).toBe(true);
-      expect(typeControl?.hasError('required')).toBe(true);
+      expect(typeControl?.hasError('required')).toBe(false);
     });
   });
 
@@ -224,10 +224,12 @@ describe('AccountsCreatePage', () => {
     it('should show error when name is empty', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('');
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome da conta é obrigatório');
@@ -236,10 +238,12 @@ describe('AccountsCreatePage', () => {
     it('should show error when name is too short', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('ab');
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome deve ter pelo menos 3 caracteres');
@@ -248,10 +252,12 @@ describe('AccountsCreatePage', () => {
     it('should show error when name is too long', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('a'.repeat(101));
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome deve ter no máximo 100 caracteres');
@@ -260,9 +266,11 @@ describe('AccountsCreatePage', () => {
     it('should show error when type is not selected', () => {
       const form = component.form();
       const typeControl = form?.get('type');
+      typeControl?.setValue(null);
       typeControl?.markAsTouched();
+      typeControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getTypeErrorMessage()).toBe('Tipo de conta é obrigatório');

@@ -201,6 +201,7 @@ export class CreditCardsEditPage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do cartão é obrigatório';
@@ -210,6 +211,7 @@ export class CreditCardsEditPage implements OnInit {
   });
 
   readonly getLimitErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.limitControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Limite é obrigatório';
@@ -218,6 +220,7 @@ export class CreditCardsEditPage implements OnInit {
   });
 
   readonly getClosingDayErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.closingDayControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Dia de fechamento é obrigatório';
@@ -227,6 +230,7 @@ export class CreditCardsEditPage implements OnInit {
   });
 
   readonly getDueDayErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.dueDayControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Dia de vencimento é obrigatório';

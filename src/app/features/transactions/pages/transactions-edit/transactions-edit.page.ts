@@ -361,6 +361,7 @@ export class TransactionsEditPage implements OnInit {
   }));
 
   readonly getDescriptionErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.descriptionControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Descrição é obrigatória';
@@ -370,6 +371,7 @@ export class TransactionsEditPage implements OnInit {
   });
 
   readonly getAmountErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.amountControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Valor é obrigatório';
@@ -378,6 +380,7 @@ export class TransactionsEditPage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo é obrigatório';
@@ -385,6 +388,7 @@ export class TransactionsEditPage implements OnInit {
   });
 
   readonly getAccountIdErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.accountIdControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Conta é obrigatória';
@@ -392,6 +396,7 @@ export class TransactionsEditPage implements OnInit {
   });
 
   readonly getCategoryIdErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.categoryIdControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Categoria é obrigatória';
@@ -399,6 +404,7 @@ export class TransactionsEditPage implements OnInit {
   });
 
   readonly getCreditCardIdErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.creditCardIdControl();
     if (!control || !control.touched) return '';
     return '';

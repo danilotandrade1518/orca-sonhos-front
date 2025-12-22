@@ -218,7 +218,7 @@ describe('AccountFormComponent', () => {
       nameControl?.markAsDirty();
       nameControl?.markAsTouched();
 
-      component['_validationTrigger'].update((v) => v + 1);
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(nameControl?.hasError('minlength')).toBe(true);
@@ -233,7 +233,7 @@ describe('AccountFormComponent', () => {
       nameControl?.markAsDirty();
       nameControl?.markAsTouched();
 
-      component['_validationTrigger'].update((v) => v + 1);
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(nameControl?.hasError('maxlength')).toBe(true);
@@ -252,7 +252,7 @@ describe('AccountFormComponent', () => {
       initialBalanceControl?.markAsDirty();
       initialBalanceControl?.markAsTouched();
 
-      component['_validationTrigger'].update((v) => v + 1);
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(initialBalanceControl?.hasError('min')).toBe(true);

@@ -160,6 +160,7 @@ export class AccountsEditPage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome da conta é obrigatório';
@@ -169,6 +170,7 @@ export class AccountsEditPage implements OnInit {
   });
 
   readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
     const control = this.typeControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Tipo de conta é obrigatório';

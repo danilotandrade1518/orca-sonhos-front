@@ -200,10 +200,12 @@ describe('BudgetCreatePage', () => {
     it('should show error when name is empty', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('');
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome do orçamento é obrigatório');
@@ -212,10 +214,12 @@ describe('BudgetCreatePage', () => {
     it('should show error when name is too short', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('ab');
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome deve ter pelo menos 3 caracteres');
@@ -224,10 +228,12 @@ describe('BudgetCreatePage', () => {
     it('should show error when name is too long', () => {
       const form = component.form();
       const nameControl = form?.get('name');
-      nameControl?.markAsTouched();
       nameControl?.setValue('a'.repeat(101));
+      nameControl?.markAsTouched();
+      nameControl?.markAsDirty();
+      nameControl?.updateValueAndValidity();
 
-      component.onSave();
+      component['_formValidityTick'].update((v: number) => v + 1);
       fixture.detectChanges();
 
       expect(component.getNameErrorMessage()).toBe('Nome deve ter no máximo 100 caracteres');
