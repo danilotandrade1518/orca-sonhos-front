@@ -63,14 +63,15 @@ export interface CategoryFormData {
     OsBadgeComponent,
     OsLabelComponent,
     OsFormGroupComponent,
-    OsFormFieldComponent
-],
+    OsFormFieldComponent,
+  ],
   template: `
     <div
       class="os-category-manager"
       [class]="categoryManagerClasses()"
       [attr.aria-label]="ariaLabel()"
     >
+      @if (showHeader()) {
       <div class="os-category-manager__header">
         <h2 class="os-category-manager__title">{{ title() }}</h2>
         <div class="os-category-manager__actions">
@@ -87,6 +88,7 @@ export interface CategoryFormData {
           </os-button>
         </div>
       </div>
+      }
 
       <div class="os-category-manager__content">
         @if (showForm()) {
@@ -96,12 +98,13 @@ export interface CategoryFormData {
               <os-label variant="default" size="medium" [required]="true">
                 Nome da Categoria
               </os-label>
-              <os-input formControlName="name"
+              <os-input
+                formControlName="name"
                 variant="default"
                 size="medium"
                 placeholder="Digite o nome da categoria"
                 [required]="true"
-               />
+              />
               @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
               <div class="os-category-manager__error">
                 @if (categoryForm.get('name')?.errors?.['required']) {
@@ -117,21 +120,23 @@ export interface CategoryFormData {
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium"> Descrição </os-label>
-              <os-input formControlName="description"
+              <os-input
+                formControlName="description"
                 variant="default"
                 size="medium"
                 placeholder="Descrição opcional da categoria"
-               />
+              />
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
               <os-label variant="default" size="medium" [required]="true"> Tipo </os-label>
-              <os-select formControlName="type"
+              <os-select
+                formControlName="type"
                 variant="default"
                 size="medium"
                 [options]="categoryTypeOptions"
                 [required]="true"
-               />
+              />
             </os-form-field>
 
             <os-form-field variant="default" size="medium">
@@ -147,12 +152,13 @@ export interface CategoryFormData {
                   role="button"
                   tabindex="0"
                 ></div>
-                <os-input formControlName="color"
+                <os-input
+                  formControlName="color"
                   variant="default"
                   size="medium"
                   type="text"
                   placeholder="#3B82F6"
-                 />
+                />
                 <os-button
                   variant="tertiary"
                   size="small"
@@ -194,11 +200,12 @@ export interface CategoryFormData {
                 <div class="os-category-manager__icon-preview">
                   <os-icon [name]="selectedIcon()" size="md" />
                 </div>
-                <os-input formControlName="icon"
+                <os-input
+                  formControlName="icon"
                   variant="default"
                   size="medium"
                   placeholder="Nome do ícone"
-                 />
+                />
                 <os-button
                   variant="tertiary"
                   size="small"
@@ -270,7 +277,9 @@ export interface CategoryFormData {
                 size="small"
                 (click)="onToggleFilter()"
                 [disabled]="loading()"
-                [attr.aria-label]="showFilter() ? 'Ocultar filtros de categorias' : 'Mostrar filtros de categorias'"
+                [attr.aria-label]="
+                  showFilter() ? 'Ocultar filtros de categorias' : 'Mostrar filtros de categorias'
+                "
                 [attr.aria-expanded]="showFilter()"
               >
                 <os-icon name="filter" size="sm" [attr.aria-hidden]="'true'" />
@@ -280,36 +289,43 @@ export interface CategoryFormData {
           </div>
 
           @if (showFilter()) {
-          <div class="os-category-manager__filters" role="search" aria-label="Filtros de categorias">
+          <div
+            class="os-category-manager__filters"
+            role="search"
+            aria-label="Filtros de categorias"
+          >
             <os-form-group variant="default" size="small">
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Buscar </os-label>
-                <os-input [(ngModel)]="searchTerm"
+                <os-input
+                  [(ngModel)]="searchTerm"
                   variant="default"
                   size="small"
                   placeholder="Buscar por nome ou descrição"
                   [disabled]="loading()"
-                 />
+                />
               </os-form-field>
 
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Tipo </os-label>
-                <os-select [(ngModel)]="filterType"
+                <os-select
+                  [(ngModel)]="filterType"
                   variant="default"
                   size="small"
                   [options]="filterTypeOptions"
                   [disabled]="loading()"
-                 />
+                />
               </os-form-field>
 
               <os-form-field variant="default" size="small">
                 <os-label variant="default" size="small"> Status </os-label>
-                <os-select [(ngModel)]="filterStatus"
+                <os-select
+                  [(ngModel)]="filterStatus"
                   variant="default"
                   size="small"
                   [options]="filterStatusOptions"
                   [disabled]="loading()"
-                 />
+                />
               </os-form-field>
             </os-form-group>
           </div>
@@ -402,6 +418,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
   private readonly confirmDialogService = inject(ConfirmDialogService);
 
   title = input<string>('Gerenciador de Categorias');
+  showHeader = input<boolean>(true);
   variant = input<'default' | 'compact' | 'detailed'>('default');
   size = input<'small' | 'medium' | 'large'>('medium');
   theme = input<'light' | 'dark'>('light');
@@ -493,11 +510,7 @@ export class OsCategoryManagerComponent implements AfterViewInit {
     this.categoryForm = this.fb.group({
       name: [
         '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          this.uniqueNameValidator.bind(this),
-        ],
+        [Validators.required, Validators.minLength(2), this.uniqueNameValidator.bind(this)],
       ],
       description: [''],
       type: ['expense', [Validators.required]],

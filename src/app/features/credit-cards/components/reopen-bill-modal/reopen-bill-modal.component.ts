@@ -44,7 +44,12 @@ import type { CreditCardBillDto } from '../../../../../dtos/credit-card';
       (cancelled)="onCancel()"
       (closed)="onCancel()"
     >
-      <os-form-template [config]="formConfig()" [form]="form()" [showHeader]="false">
+      <os-form-template
+        [config]="formConfig()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
+        [showHeader]="false"
+      >
         @if (form()) {
         <div [formGroup]="form()!">
           <mat-form-field appearance="outline">
@@ -83,10 +88,19 @@ export class ReopenBillModalComponent implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
-  private readonly _validationTrigger = signal(0);
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
 
   readonly justificationControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('justification') as FormControl | null;
   });
 
@@ -103,12 +117,10 @@ export class ReopenBillModalComponent implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: false,
   }));
 
   readonly getJustificationErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.justificationControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Justificativa é obrigatória';
@@ -117,6 +129,15 @@ export class ReopenBillModalComponent implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const form = this._form();
       const isLoading = this.loading();
@@ -146,7 +167,6 @@ export class ReopenBillModalComponent implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

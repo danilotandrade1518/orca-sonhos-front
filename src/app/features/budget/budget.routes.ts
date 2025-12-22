@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { BudgetListPage } from './pages/budget-list/budget-list.page';
 import { BudgetDetailPage } from './pages/budget-detail/budget-detail.page';
+import { BudgetCreatePage } from './pages/budget-create/budget-create.page';
+import { BudgetEditPage } from './pages/budget-edit/budget-edit.page';
 
 export const BUDGET_ROUTES: Routes = [
   {
@@ -10,9 +12,8 @@ export const BUDGET_ROUTES: Routes = [
   },
   {
     path: 'new',
-    component: BudgetListPage,
+    component: BudgetCreatePage,
     title: 'Novo Orçamento',
-    data: { modalMode: 'create' },
   },
   {
     path: ':id',
@@ -21,8 +22,7 @@ export const BUDGET_ROUTES: Routes = [
   },
   {
     path: ':id/edit',
-    component: BudgetDetailPage,
+    component: BudgetEditPage,
     title: 'Editar Orçamento',
-    data: { modalMode: 'edit' },
   },
 ];

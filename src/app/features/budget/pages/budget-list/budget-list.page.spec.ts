@@ -62,6 +62,8 @@ describe('BudgetListPage', () => {
 
     router = {
       navigate: vi.fn(),
+      createUrlTree: vi.fn().mockReturnValue({}),
+      serializeUrl: vi.fn().mockReturnValue('/test'),
     } as unknown as Router;
 
     TestBed.configureTestingModule({
@@ -247,22 +249,6 @@ describe('BudgetListPage', () => {
       budgetState.selectedBudgetId.set('budget-2');
       fixture.detectChanges();
       expect(component.isSelected('budget-1')).toBe(false);
-    });
-  });
-
-  describe('form handlers', () => {
-    it('should navigate to budgets list on form saved', () => {
-      component.onFormSaved();
-      expect(router.navigate).toHaveBeenCalledWith(['/budgets'], {
-        replaceUrl: true,
-      });
-    });
-
-    it('should navigate to budgets list on form cancelled', () => {
-      component.onFormCancelled();
-      expect(router.navigate).toHaveBeenCalledWith(['/budgets'], {
-        replaceUrl: true,
-      });
     });
   });
 

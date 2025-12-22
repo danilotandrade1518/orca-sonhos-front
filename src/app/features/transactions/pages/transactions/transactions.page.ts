@@ -11,7 +11,7 @@ import {
   OnInit,
   untracked,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsPageComponent } from '../../../../shared/ui-components/organisms/os-page/os-page.component';
 import {
@@ -28,7 +28,6 @@ import {
   TransactionsFiltersComponent,
   type TransactionsFilters,
 } from '../../components/transactions-filters/transactions-filters.component';
-import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
 import type { PageHeaderAction } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { NotificationService } from '../../../../core/services/notification/notification.service';
 import { OsModalTemplateComponent } from '../../../../shared/ui-components/templates/os-modal-template/os-modal-template.component';
@@ -43,7 +42,6 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
     OsPageHeaderComponent,
     OsTransactionListComponent,
     TransactionsFiltersComponent,
-    TransactionFormComponent,
     OsModalTemplateComponent,
   ],
   template: `
@@ -80,20 +78,7 @@ import { AccountState } from '../../../../core/services/account/account-state/ac
         [attr.aria-label]="'Lista de transações'"
       />
 
-      @if (showCreateModal()) {
-      <os-transaction-form
-        [accountOptions]="accountOptions()"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
-      } @if (showEditModal() && editingTransaction()) {
-      <os-transaction-form
-        [transaction]="editingTransaction()"
-        [accountOptions]="accountOptions()"
-        (saved)="onFormSaved()"
-        (cancelled)="onFormCancelled()"
-      />
-      } @if (showConfirmModal()) {
+      @if (showConfirmModal()) {
       <os-modal-template
         [config]="confirmModalConfig()"
         [variant]="'compact'"
@@ -119,6 +104,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly accountState = inject(AccountState);
   private readonly elementRef = inject(ElementRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   readonly isLoading = signal<boolean>(false);
   readonly lastUpdated = signal<Date>(new Date());
@@ -137,14 +123,6 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
       label: account.name,
     }));
   });
-
-  private readonly _showCreateModal = signal<boolean>(false);
-  readonly showCreateModal = this._showCreateModal.asReadonly();
-
-  private readonly _editingTransaction = signal<TransactionDto | null>(null);
-  readonly editingTransaction = this._editingTransaction.asReadonly();
-
-  readonly showEditModal = computed(() => this._editingTransaction() !== null);
 
   private readonly _confirmModalType = signal<'delete' | 'markLate' | 'cancelScheduled' | null>(
     null
@@ -339,11 +317,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly handleKeyboardEvent = (event: KeyboardEvent): void => {
     if (event.key === 'Escape') {
-      if (this.showCreateModal()) {
-        this.onFormCancelled();
-      } else if (this.showEditModal()) {
-        this.onFormCancelled();
-      } else if (this.showConfirmModal()) {
+      if (this.showConfirmModal()) {
         this.onConfirmCancelled();
       }
     }
@@ -396,21 +370,7 @@ export class TransactionsPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onNewTransaction(): void {
-    this._showCreateModal.set(true);
-  }
-
-  onFormSaved(): void {
-    this._showCreateModal.set(false);
-    this._editingTransaction.set(null);
-    const budgetId = this.budgetSelection.selectedBudgetId();
-    if (budgetId) {
-      this.resetAndLoad(budgetId);
-    }
-  }
-
-  onFormCancelled(): void {
-    this._showCreateModal.set(false);
-    this._editingTransaction.set(null);
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 
   onRefresh(): void {

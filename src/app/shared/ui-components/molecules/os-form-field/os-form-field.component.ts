@@ -4,6 +4,7 @@ import {
   output,
   computed,
   model,
+  effect,
   ChangeDetectionStrategy,
   forwardRef,
   signal,
@@ -146,9 +147,33 @@ export class OsFormFieldComponent implements ControlValueAccessor {
 
   protected fieldId = computed(() => `field-${Math.random().toString(36).substr(2, 9)}`);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _onChange = (value: string) => {};
+  private _onChange = (_value: string) => {};
   private _onTouched = () => {};
+
+  constructor() {
+    effect((onCleanup: (cleanupFn: () => void) => void) => {
+      const control = this.control();
+
+      if (!control) return;
+
+      const initial = control.value;
+      this.writeValue(initial === null || initial === undefined ? '' : String(initial));
+      this.updateValidationState();
+
+      const subValue = control.valueChanges.subscribe((value) => {
+        this.writeValue(value === null || value === undefined ? '' : String(value));
+      });
+
+      const subStatus = control.statusChanges.subscribe(() => {
+        this.updateValidationState();
+      });
+
+      onCleanup(() => {
+        subValue.unsubscribe();
+        subStatus.unsubscribe();
+      });
+    });
+  }
 
   protected labelVariant = computed(() => {
     if (this.hasError()) return 'error';
@@ -269,6 +294,12 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     this.valueChange.emit(value);
     this._onChange(value);
 
+    const control = this.control();
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+
     this._dirty.set(true);
     this.updateValidationState();
   }
@@ -277,6 +308,12 @@ export class OsFormFieldComponent implements ControlValueAccessor {
     this.blurEvent.emit(event);
     this._onTouched();
     this._touched.set(true);
+
+    const control = this.control();
+    if (control) {
+      control.markAsTouched();
+    }
+
     this.updateValidationState();
   }
 

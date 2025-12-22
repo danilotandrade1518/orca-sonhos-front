@@ -54,7 +54,8 @@ import type { CategoryDto } from '../../../../../dtos/category';
 
       <os-form-template
         [config]="formConfig()"
-        [form]="form()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
         [loading]="loading()"
         [disabled]="loading()"
         (save)="onSave()"
@@ -111,13 +112,23 @@ export class PayBillPage implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
+
   private readonly _creditCardBill = signal<CreditCardBillDto | null>(null);
   readonly creditCardBill = this._creditCardBill.asReadonly();
 
   private readonly _categories = signal<CategoryDto[]>([]);
   readonly categories = this._categories.asReadonly();
-
-  private readonly _validationTrigger = signal(0);
 
   readonly breadcrumbs = computed((): BreadcrumbItem[] => {
     const base: BreadcrumbItem[] = [{ label: 'Cartões de Crédito', route: '/credit-cards' }];
@@ -145,24 +156,20 @@ export class PayBillPage implements OnInit {
   });
 
   readonly accountIdControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('accountId') as FormControl | null;
   });
 
   readonly paymentCategoryIdControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('paymentCategoryId') as FormControl | null;
   });
 
   readonly amountControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('amount') as FormControl | null;
   });
 
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
@@ -171,7 +178,6 @@ export class PayBillPage implements OnInit {
   }));
 
   readonly getAccountErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.accountIdControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Conta de pagamento é obrigatória';
@@ -179,7 +185,6 @@ export class PayBillPage implements OnInit {
   });
 
   readonly getCategoryErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.paymentCategoryIdControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Categoria de pagamento é obrigatória';
@@ -187,13 +192,21 @@ export class PayBillPage implements OnInit {
   });
 
   readonly getAmountErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.amountControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     return '';
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const form = this._form();
       const isLoading = this.loading();
@@ -213,7 +226,6 @@ export class PayBillPage implements OnInit {
         form.patchValue({
           amount: bill.amount / 100,
         });
-        this._validationTrigger.update((v) => v + 1);
       }
     });
   }
@@ -292,7 +304,6 @@ export class PayBillPage implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

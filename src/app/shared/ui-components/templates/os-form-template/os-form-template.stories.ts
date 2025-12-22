@@ -8,7 +8,7 @@ const meta: Meta<OsFormTemplateComponent> = {
     docs: {
       description: {
         component:
-          'Template de formulário do Design System Orca Sonhos com header, progresso e ações.',
+          'Template de formulário do Design System Orca Sonhos com header e ações.',
       },
     },
   },
@@ -40,17 +40,17 @@ const meta: Meta<OsFormTemplateComponent> = {
       control: { type: 'boolean' },
       description: 'Estado de carregamento',
     },
-    form: {
-      control: { type: 'object' },
-      description: 'Formulário reativo',
+    isInvalid: {
+      control: { type: 'boolean' },
+      description: 'Indica se o formulário está inválido',
+    },
+    saveButtonDisabled: {
+      control: { type: 'boolean' },
+      description: 'Desabilita o botão de salvar',
     },
     showHeader: {
       control: { type: 'boolean' },
       description: 'Mostrar header',
-    },
-    showProgress: {
-      control: { type: 'boolean' },
-      description: 'Mostrar barra de progresso',
     },
     showActions: {
       control: { type: 'boolean' },
@@ -72,8 +72,6 @@ const sampleConfig = {
   showCancelButton: true,
   saveButtonText: 'Criar Usuário',
   cancelButtonText: 'Cancelar',
-  showProgress: true,
-  progressValue: 60,
   showActions: true,
   actions: [
     {
@@ -101,8 +99,6 @@ const wizardConfig = {
   showSaveButton: false,
   showCancelButton: true,
   cancelButtonText: 'Sair do Assistente',
-  showProgress: true,
-  progressValue: 50,
   showActions: true,
   actions: [
     {
@@ -128,9 +124,9 @@ export const Default: Story = {
     theme: 'light',
     disabled: false,
     loading: false,
-    form: null,
+    isInvalid: false,
+    saveButtonDisabled: false,
     showHeader: true,
-    showProgress: true,
     showActions: true,
   },
   render: (args) => ({
@@ -143,9 +139,9 @@ export const Default: Story = {
         [theme]="theme"
         [disabled]="disabled"
         [loading]="loading"
-        [form]="form"
+        [isInvalid]="isInvalid"
+        [saveButtonDisabled]="saveButtonDisabled"
         [showHeader]="showHeader"
-        [showProgress]="showProgress"
         [showActions]="showActions"
         (save)="save()"
         (cancelClick)="cancelClick()"
@@ -220,8 +216,6 @@ export const Variants: Story = {
         title: 'Formulário Default',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 30,
         showActions: true,
         actions: [],
       },
@@ -229,7 +223,6 @@ export const Variants: Story = {
         title: 'Formulário Compact',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: false,
         showActions: true,
         actions: [],
       },
@@ -238,8 +231,6 @@ export const Variants: Story = {
         subtitle: 'Formulário com mais detalhes',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 70,
         showActions: true,
         actions: [
           {
@@ -307,8 +298,6 @@ export const Sizes: Story = {
         title: 'Formulário',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 50,
         showActions: true,
         actions: [],
       },
@@ -357,8 +346,6 @@ export const Themes: Story = {
         title: 'Formulário',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 40,
         showActions: true,
         actions: [],
       },
@@ -373,70 +360,11 @@ export const Themes: Story = {
   },
 };
 
-export const WithProgress: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h4>Com Progresso</h4>
-          <os-form-template
-            [config]="withProgressConfig"
-            [showProgress]="true"
-          >
-            <div style="padding: 20px;">
-              <p>Formulário com barra de progresso</p>
-            </div>
-          </os-form-template>
-        </div>
-
-        <div>
-          <h4>Sem Progresso</h4>
-          <os-form-template
-            [config]="withoutProgressConfig"
-            [showProgress]="false"
-          >
-            <div style="padding: 20px;">
-              <p>Formulário sem barra de progresso</p>
-            </div>
-          </os-form-template>
-        </div>
-      </div>
-    `,
-    props: {
-      withProgressConfig: {
-        title: 'Formulário com Progresso',
-        showSaveButton: true,
-        showCancelButton: true,
-        showProgress: true,
-        progressValue: 75,
-        showActions: true,
-        actions: [],
-      },
-      withoutProgressConfig: {
-        title: 'Formulário sem Progresso',
-        showSaveButton: true,
-        showCancelButton: true,
-        showProgress: false,
-        showActions: true,
-        actions: [],
-      },
-    },
-  }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Formulário com e sem barra de progresso.',
-      },
-    },
-  },
-};
-
 export const WizardForm: Story = {
   render: () => ({
     template: `
       <os-form-template
         [config]="wizardConfig"
-        [showProgress]="true"
       >
         <div style="padding: 20px;">
           <h3>Passo 2: Informações Pessoais</h3>
@@ -504,8 +432,6 @@ export const LoadingState: Story = {
         title: 'Formulário',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 60,
         showActions: true,
         actions: [],
       },
@@ -554,8 +480,6 @@ export const DisabledState: Story = {
         title: 'Formulário',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: true,
-        progressValue: 30,
         showActions: true,
         actions: [],
       },
@@ -588,7 +512,6 @@ export const WithoutHeader: Story = {
         title: 'Formulário sem Header',
         showSaveButton: true,
         showCancelButton: true,
-        showProgress: false,
         showActions: true,
         actions: [],
       },
@@ -611,9 +534,9 @@ export const Interactive: Story = {
     theme: 'light',
     disabled: false,
     loading: false,
-    form: null,
+    isInvalid: false,
+    saveButtonDisabled: false,
     showHeader: true,
-    showProgress: true,
     showActions: true,
   },
   render: (args) => ({
@@ -626,9 +549,9 @@ export const Interactive: Story = {
         [theme]="theme"
         [disabled]="disabled"
         [loading]="loading"
-        [form]="form"
+        [isInvalid]="isInvalid"
+        [saveButtonDisabled]="saveButtonDisabled"
         [showHeader]="showHeader"
-        [showProgress]="showProgress"
         [showActions]="showActions"
         (save)="save()"
         (cancelClick)="cancelClick()"

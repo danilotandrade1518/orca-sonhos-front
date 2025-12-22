@@ -170,8 +170,14 @@ describe('OsPageHeaderComponent', () => {
       const actionClickSpy = vi.fn();
       component.actionClick.subscribe(actionClickSpy);
 
-      const button = fixture.nativeElement.querySelector('os-button');
+      const button = fixture.nativeElement.querySelector('os-button button');
       expect(button).toBeTruthy();
+
+      button.click();
+      fixture.detectChanges();
+
+      expect(actionClickSpy).toHaveBeenCalledTimes(1);
+      expect(actionClickSpy).toHaveBeenCalledWith(actions[0]);
     });
 
     it('should not emit actionClick for disabled actions', () => {

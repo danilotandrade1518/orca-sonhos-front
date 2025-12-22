@@ -51,7 +51,8 @@ import type { CategoryDto } from '../../../../../dtos/category';
 
       <os-form-template
         [config]="formConfig()"
-        [form]="form()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
         [loading]="loading()"
         [disabled]="loading()"
         (save)="onSave()"
@@ -105,13 +106,23 @@ export class EnvelopeFormPage implements OnInit {
   private readonly _form = signal<FormGroup | null>(null);
   readonly form = this._form.asReadonly();
 
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
+
   private readonly _categories = signal<CategoryDto[]>([]);
   readonly categories = this._categories.asReadonly();
 
   private readonly _envelope = signal<EnvelopeDto | null>(null);
   readonly envelope = this._envelope.asReadonly();
-
-  private readonly _validationTrigger = signal(0);
 
   readonly mode = computed<'create' | 'edit'>(() => {
     const id = this.route.snapshot.paramMap.get('id');
@@ -138,17 +149,14 @@ export class EnvelopeFormPage implements OnInit {
   });
 
   readonly nameControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('name') as FormControl | null;
   });
 
   readonly categoryControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('categoryId') as FormControl | null;
   });
 
   readonly limitControl = computed(() => {
-    this._validationTrigger();
     return this._form()?.get('limit') as FormControl | null;
   });
 
@@ -163,7 +171,6 @@ export class EnvelopeFormPage implements OnInit {
   readonly formConfig = computed(() => ({
     title: '',
     showHeader: false,
-    showProgress: false,
     showActions: true,
     showSaveButton: true,
     showCancelButton: true,
@@ -172,7 +179,6 @@ export class EnvelopeFormPage implements OnInit {
   }));
 
   readonly getNameErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.nameControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Nome do envelope é obrigatório';
@@ -182,7 +188,6 @@ export class EnvelopeFormPage implements OnInit {
   });
 
   readonly getCategoryErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.categoryControl();
     if (!control || !control.touched) return '';
     if (control.hasError('required')) return 'Categoria é obrigatória';
@@ -190,7 +195,6 @@ export class EnvelopeFormPage implements OnInit {
   });
 
   readonly getLimitErrorMessage = computed(() => {
-    this._validationTrigger();
     const control = this.limitControl();
     if (!control || (!control.touched && !control.dirty)) return '';
     if (control.hasError('required')) return 'Limite é obrigatório';
@@ -199,6 +203,15 @@ export class EnvelopeFormPage implements OnInit {
   });
 
   constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+      const sub = form.statusChanges.subscribe(() => this._formValidityTick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+
     effect(() => {
       const envelope = this.envelope();
       const form = this._form();
@@ -208,8 +221,6 @@ export class EnvelopeFormPage implements OnInit {
           categoryId: envelope.categoryId,
           limit: envelope.limit / 100,
         });
-
-        this._validationTrigger.update((v) => v + 1);
       }
     });
 
@@ -291,7 +302,6 @@ export class EnvelopeFormPage implements OnInit {
     const form = this._form();
     if (!form || form.invalid) {
       form?.markAllAsTouched();
-      this._validationTrigger.update((v) => v + 1);
       return;
     }
 

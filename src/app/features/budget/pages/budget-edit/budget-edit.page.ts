@@ -1,0 +1,279 @@
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  effect,
+} from '@angular/core';
+
+import { Router, ActivatedRoute } from '@angular/router';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { BudgetState } from '@core/services/budget/budget.state';
+import { AuthService } from '@core/services/auth/auth.service';
+import { NotificationService } from '@core/services/notification/notification.service';
+import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
+import {
+  OsPageHeaderComponent,
+  type BreadcrumbItem,
+} from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
+import { OsFormTemplateComponent } from '@shared/ui-components/templates/os-form-template/os-form-template.component';
+import { OsFormFieldComponent } from '@shared/ui-components/molecules/os-form-field/os-form-field.component';
+import {
+  OsSelectComponent,
+  type OsSelectOption,
+} from '@shared/ui-components/atoms/os-select/os-select.component';
+import type { BudgetType } from '../../../../../dtos/budget';
+
+@Component({
+  selector: 'os-budget-edit-page',
+  imports: [
+    ReactiveFormsModule,
+    OsPageComponent,
+    OsPageHeaderComponent,
+    OsFormTemplateComponent,
+    OsFormFieldComponent,
+    OsSelectComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <os-page variant="default" size="medium" ariaLabel="Editar orçamento">
+      <os-page-header
+        [title]="pageTitle()"
+        [subtitle]="pageSubtitle()"
+        [breadcrumbs]="breadcrumbs()"
+        (breadcrumbClick)="onBreadcrumbClick($event)"
+      />
+
+      <os-form-template
+        [config]="formConfig()"
+        [isInvalid]="isFormInvalid()"
+        [saveButtonDisabled]="isSaveDisabled()"
+        [loading]="loading()"
+        [disabled]="loading()"
+        (save)="onSave()"
+        (cancelClick)="onCancel()"
+      >
+        @if (form()) {
+        <div [formGroup]="form()!">
+          <os-form-field
+            label="Nome do Orçamento"
+            [required]="true"
+            [control]="nameControl()"
+            [errorMessage]="getNameErrorMessage()"
+          />
+
+          <os-select
+            label="Tipo"
+            [options]="typeOptions()"
+            formControlName="type"
+            [required]="true"
+            [errorMessage]="getTypeErrorMessage()"
+            placeholder="Selecione o tipo"
+          />
+        </div>
+        }
+      </os-form-template>
+    </os-page>
+  `,
+  styleUrl: './budget-edit.page.scss',
+})
+export class BudgetEditPage implements OnInit {
+  private readonly budgetState = inject(BudgetState);
+  private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly loading = computed(() => this.budgetState.loading());
+
+  private readonly _form = signal<FormGroup | null>(null);
+  readonly form = this._form.asReadonly();
+
+  private readonly _formValidityTick = signal(0);
+
+  readonly isFormInvalid = computed(() => {
+    this._formValidityTick();
+    const form = this._form();
+    return form ? form.invalid : true;
+  });
+
+  readonly isSaveDisabled = computed(() => {
+    return this.loading() || this.isFormInvalid();
+  });
+
+  private readonly _budgetId = signal<string | null>(null);
+
+  readonly budget = computed(() => {
+    const id = this._budgetId();
+    if (!id) return null;
+
+    const budgets = this.budgetState.budgets();
+    return budgets.find((b) => b.id === id) || null;
+  });
+
+  readonly pageTitle = computed(() => {
+    const budget = this.budget();
+    return budget ? `Editar ${budget.name}` : 'Editar Orçamento';
+  });
+
+  readonly pageSubtitle = computed(() => 'Atualize as informações do orçamento');
+
+  readonly breadcrumbs = computed((): BreadcrumbItem[] => {
+    const budget = this.budget();
+    const base: BreadcrumbItem[] = [{ label: 'Orçamentos', route: '/budgets' }];
+    if (budget) {
+      base.push({ label: budget.name, route: `/budgets/${budget.id}` });
+    }
+    base.push({ label: 'Editar', route: undefined });
+    return base;
+  });
+
+  readonly nameControl = computed(() => {
+    return this._form()?.get('name') as FormControl | null;
+  });
+
+  readonly typeControl = computed(() => {
+    return this._form()?.get('type') as FormControl | null;
+  });
+
+  readonly typeOptions = computed<OsSelectOption[]>(() => [
+    { value: 'PERSONAL', label: 'Pessoal' },
+    { value: 'SHARED', label: 'Compartilhado' },
+  ]);
+
+  readonly formConfig = computed(() => ({
+    title: '',
+    showHeader: false,
+    showActions: true,
+    showSaveButton: true,
+    showCancelButton: true,
+    saveButtonText: 'Salvar',
+    cancelButtonText: 'Cancelar',
+  }));
+
+  readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
+    const control = this.nameControl();
+    if (!control || (!control.touched && !control.dirty)) return '';
+    if (control.hasError('required')) return 'Nome do orçamento é obrigatório';
+    if (control.hasError('minlength')) return 'Nome deve ter pelo menos 3 caracteres';
+    if (control.hasError('maxlength')) return 'Nome deve ter no máximo 100 caracteres';
+    return '';
+  });
+
+  readonly getTypeErrorMessage = computed(() => {
+    this._formValidityTick();
+    const control = this.typeControl();
+    if (!control || !control.touched) return '';
+    if (control.hasError('required')) return 'Tipo do orçamento é obrigatório';
+    return '';
+  });
+
+  constructor() {
+    effect((onCleanup) => {
+      const form = this._form();
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+
+      const sub = form.statusChanges.subscribe(() => {
+        this._formValidityTick.update((v) => v + 1);
+      });
+
+      onCleanup(() => sub.unsubscribe());
+    });
+
+    effect(() => {
+      const form = this._form();
+      const isLoading = this.loading();
+      if (form) {
+        if (isLoading) {
+          form.disable();
+        } else {
+          form.enable();
+          const typeControl = form.get('type');
+          if (typeControl) {
+            typeControl.disable();
+          }
+        }
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    const budgetId = this.route.snapshot.paramMap.get('id');
+    if (!budgetId) {
+      this.notificationService.showError('ID do orçamento não encontrado');
+      this.navigateBack();
+      return;
+    }
+
+    this._budgetId.set(budgetId);
+
+    if (this.budgetState.budgets().length === 0) {
+      this.budgetState.loadBudgets();
+    }
+
+    const budget = this.budget();
+    if (!budget) {
+      this.notificationService.showError('Orçamento não encontrado');
+      this.navigateBack();
+      return;
+    }
+
+    const form = new FormGroup({
+      name: new FormControl(budget.name, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+      ]),
+      type: new FormControl<BudgetType>(budget.type as BudgetType, [Validators.required]),
+    });
+
+    form.get('type')?.disable();
+
+    this._form.set(form);
+  }
+
+  onSave(): void {
+    const form = this._form();
+    if (!form || form.invalid) {
+      form?.markAllAsTouched();
+      return;
+    }
+
+    const budgetId = this._budgetId();
+    const user = this.authService.currentUser();
+    if (!budgetId || !user) {
+      this.notificationService.showError('Dados insuficientes para atualizar o orçamento');
+      return;
+    }
+
+    const formValue = form.value;
+    this.budgetState.updateBudget(user.id, budgetId, formValue.name);
+
+    this.notificationService.showSuccess('Orçamento atualizado com sucesso!');
+    this.navigateBack();
+  }
+
+  onCancel(): void {
+    this.navigateBack();
+  }
+
+  onBreadcrumbClick(breadcrumb: BreadcrumbItem): void {
+    if (breadcrumb.route) {
+      this.router.navigate([breadcrumb.route]);
+    }
+  }
+
+  private navigateBack(): void {
+    const budgetId = this._budgetId();
+    if (budgetId) {
+      this.router.navigate(['/budgets', budgetId], { replaceUrl: true });
+    } else {
+      this.router.navigate(['/budgets'], { replaceUrl: true });
+    }
+  }
+}
