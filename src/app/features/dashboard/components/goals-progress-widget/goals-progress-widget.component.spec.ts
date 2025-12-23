@@ -59,7 +59,14 @@ describe('GoalsProgressWidgetComponent', () => {
         { provide: Router, useValue: router },
         { provide: LocaleService, useValue: localeService },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(GoalsProgressWidgetComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(GoalsProgressWidgetComponent);
     component = fixture.componentInstance;

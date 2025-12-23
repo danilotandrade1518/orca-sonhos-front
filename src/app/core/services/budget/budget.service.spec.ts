@@ -122,7 +122,7 @@ describe('BudgetService', () => {
       service.getBudgets().subscribe((budgets) => {
         expect(budgets).toEqual([]);
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -140,7 +140,10 @@ describe('BudgetService', () => {
 
       service.getBudgets().subscribe((budgets) => {
         expect(budgets).toEqual([]);
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Erro interno do servidor. Tente novamente mais tarde.',
+        });
       });
     });
   });
@@ -165,7 +168,7 @@ describe('BudgetService', () => {
       service.getBudgetOverview('budget-1').subscribe((overview) => {
         expect(overview).toBeNull();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -183,7 +186,10 @@ describe('BudgetService', () => {
 
       service.getBudgetOverview('budget-999').subscribe((overview) => {
         expect(overview).toBeNull();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Orçamento não encontrado.',
+        });
       });
     });
   });
@@ -212,7 +218,7 @@ describe('BudgetService', () => {
       service.createBudget(createDto).subscribe((budgetId) => {
         expect(budgetId).toBeNull();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -230,7 +236,10 @@ describe('BudgetService', () => {
 
       service.createBudget(createDto).subscribe((budgetId) => {
         expect(budgetId).toBeNull();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Dados inválidos. Verifique o nome do orçamento (mínimo 3 caracteres, máximo 100).',
+        });
       });
     });
   });
@@ -259,7 +268,7 @@ describe('BudgetService', () => {
       service.updateBudget(updateDto).subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -277,7 +286,10 @@ describe('BudgetService', () => {
 
       service.updateBudget(updateDto).subscribe((success) => {
         expect(success).toBeFalsy();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Orçamento não encontrado.',
+        });
       });
     });
   });
@@ -305,7 +317,7 @@ describe('BudgetService', () => {
       service.deleteBudget(deleteDto).subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -323,7 +335,10 @@ describe('BudgetService', () => {
 
       service.deleteBudget(deleteDto).subscribe((success) => {
         expect(success).toBeFalsy();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Orçamento não encontrado.',
+        });
       });
     });
   });
@@ -339,7 +354,10 @@ describe('BudgetService', () => {
       apiService.getRaw.mockReturnValue(throwError(() => mockError));
 
       service.getBudgets().subscribe(() => {
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Erro interno do servidor. Tente novamente mais tarde.',
+        });
 
         service.clearError();
 

@@ -21,6 +21,7 @@ describe('SharingState', () => {
   };
   let budgetState: {
     updateBudgetParticipantsCount: ReturnType<typeof vi.fn>;
+    loadBudgets: ReturnType<typeof vi.fn>;
   };
   let budgetSelectionService: {
     setSelectedBudget: ReturnType<typeof vi.fn>;
@@ -68,6 +69,7 @@ describe('SharingState', () => {
 
     budgetState = {
       updateBudgetParticipantsCount: vi.fn(),
+      loadBudgets: vi.fn(),
     };
 
     budgetSelectionService = {

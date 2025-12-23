@@ -7,12 +7,15 @@ import { signal } from '@angular/core';
 
 import { DashboardPage } from './dashboard.page';
 import { EXTERNAL_AUTH_SERVICE_ADAPTER } from '../../../../core/adapters/external-auth-service.adapter';
+import { DashboardWidgetsComponent } from '../../components/dashboard-widgets/dashboard-widgets.component';
+import { OsPageComponent } from '../../../../shared/ui-components/organisms/os-page/os-page.component';
+import { OsPageHeaderComponent } from '../../../../shared/ui-components/organisms/os-page-header/os-page-header.component';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const mockAuthAdapter = {
       user: signal(null),
       isAuthenticated: signal(false),
@@ -26,7 +29,7 @@ describe('DashboardPage', () => {
       },
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [DashboardPage],
       providers: [
         provideZonelessChangeDetection(),
@@ -46,7 +49,31 @@ describe('DashboardPage', () => {
           useValue: mockAuthAdapter,
         },
       ],
-    });
+    })
+      .overrideComponent(DashboardPage, {
+        set: {
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(DashboardWidgetsComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .overrideComponent(OsPageHeaderComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {

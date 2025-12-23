@@ -95,7 +95,7 @@ describe('SharingService', () => {
       service.addParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -113,7 +113,10 @@ describe('SharingService', () => {
 
       service.addParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Erro interno do servidor. Tente novamente mais tarde.',
+        });
       });
     });
   });
@@ -141,7 +144,7 @@ describe('SharingService', () => {
       service.removeParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
         expect(service.error()).toEqual({
-          message: 'User not authenticated',
+          message: 'Você precisa estar autenticado para realizar esta ação. Faça login novamente.',
           status: 401,
           code: 'UNAUTHORIZED',
         });
@@ -159,7 +162,10 @@ describe('SharingService', () => {
 
       service.removeParticipant('budget-1', 'user-1').subscribe((success) => {
         expect(success).toBeFalsy();
-        expect(service.error()).toEqual(mockError);
+        expect(service.error()).toEqual({
+          ...mockError,
+          message: 'Erro interno do servidor. Tente novamente mais tarde.',
+        });
       });
     });
   });
