@@ -41,12 +41,16 @@ export class GoalsState {
     const progressMap = new Map<string, number>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; 
-      if (goal.totalAmount <= 0) {
+      if (!goal.id) return;
+      
+      const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+      const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
+      
+      if (totalAmount <= 0) {
         progressMap.set(goal.id, 0);
         return;
       }
-      const progress = (goal.accumulatedAmount / goal.totalAmount) * 100;
+      const progress = (accumulatedAmount / totalAmount) * 100;
       progressMap.set(goal.id, Math.min(Math.max(progress, 0), 100));
     });
 
@@ -58,8 +62,12 @@ export class GoalsState {
     const remainingMap = new Map<string, number>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; 
-      const remaining = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
+      if (!goal.id) return;
+      
+      const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+      const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
+      
+      const remaining = Math.max(totalAmount - accumulatedAmount, 0);
       remainingMap.set(goal.id, remaining);
     });
 
@@ -92,7 +100,10 @@ export class GoalsState {
         return;
       }
 
-      const remaining = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
+      const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+      const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
+      
+      const remaining = Math.max(totalAmount - accumulatedAmount, 0);
       const suggested = remaining / monthsRemaining;
       suggestedMap.set(goal.id, Math.round(suggested * 100) / 100);
     });
@@ -125,13 +136,19 @@ export class GoalsState {
       .subscribe({
         next: (goals) => {
           
-          const validGoals = goals.filter((goal) => {
-            if (!goal.id) {
-              console.warn('Goal sem ID encontrado:', goal);
-              return false;
-            }
-            return true;
-          });
+          const validGoals = goals
+            .filter((goal) => {
+              if (!goal.id) {
+                console.warn('Goal sem ID encontrado:', goal);
+                return false;
+              }
+              return true;
+            })
+            .map((goal) => ({
+              ...goal,
+              totalAmount: this.safeNumber(goal.totalAmount, 0),
+              accumulatedAmount: this.safeNumber(goal.accumulatedAmount, 0),
+            }));
           
           this._items.set(validGoals);
           this._lastUpdated.set(new Date());
@@ -359,5 +376,18 @@ export class GoalsState {
     }
 
     return Math.max(months, 0);
+  }
+
+  private safeNumber(value: unknown, defaultValue: number = 0): number {
+    if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      const parsed = Number(value);
+      if (!isNaN(parsed) && isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return defaultValue;
   }
 }

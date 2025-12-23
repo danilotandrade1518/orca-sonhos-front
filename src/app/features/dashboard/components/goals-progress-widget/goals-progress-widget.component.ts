@@ -207,11 +207,16 @@ export class GoalsProgressWidgetComponent {
     const now = new Date();
 
     return goals
-      .filter((goal) => goal.totalAmount > 0)
+      .filter((goal) => {
+        const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+        return totalAmount > 0;
+      })
       .map((goal) => {
+        const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+        const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
         
-        const progress = (goal.accumulatedAmount / goal.totalAmount) * 100;
-        const remainingCents = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
+        const progress = (accumulatedAmount / totalAmount) * 100;
+        const remainingCents = Math.max(totalAmount - accumulatedAmount, 0);
 
         let status: 'on-track' | 'atrasada' | 'adiantada' = 'on-track';
         let suggestedMonthly: number | null = null;
@@ -219,7 +224,7 @@ export class GoalsProgressWidgetComponent {
         if (goal.deadline) {
           const deadline = new Date(goal.deadline);
           if (deadline <= now) {
-            status = goal.accumulatedAmount >= goal.totalAmount ? 'on-track' : 'atrasada';
+            status = accumulatedAmount >= totalAmount ? 'on-track' : 'atrasada';
           } else {
             const monthsRemaining = this.calculateMonthsRemaining(now, deadline);
             const expectedProgress = monthsRemaining > 0 ? Math.max(0, 100 - (monthsRemaining / 12) * 100) : 100;
@@ -239,13 +244,18 @@ export class GoalsProgressWidgetComponent {
           }
         }
 
+        const safeCurrentValue = isFinite(accumulatedAmount / 100) ? accumulatedAmount / 100 : 0;
+        const safeTargetValue = isFinite(totalAmount / 100) ? totalAmount / 100 : 0;
+        const safeRemaining = isFinite(remainingCents / 100) ? remainingCents / 100 : 0;
+        const safeProgress = isFinite(progress) ? Math.min(Math.max(progress, 0), 100) : 0;
+        
         return {
           id: goal.id,
           name: goal.name,
-          currentValue: goal.accumulatedAmount / 100,
-          targetValue: goal.totalAmount / 100,
-          progress: Math.min(Math.max(progress, 0), 100),
-          remaining: remainingCents / 100,
+          currentValue: safeCurrentValue,
+          targetValue: safeTargetValue,
+          progress: safeProgress,
+          remaining: safeRemaining,
           status,
           suggestedMonthly,
         };
