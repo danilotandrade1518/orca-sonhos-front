@@ -6,4 +6,5 @@ export interface GoalDto {
   deadline: string | null;
   budgetId: string;
   sourceAccountId?: string;
+  status: 'on-track' | 'overdue' | 'ahead' | 'completed';
 }

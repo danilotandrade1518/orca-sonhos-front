@@ -65,43 +65,11 @@ export class GoalCardComponent {
   });
 
   readonly goalState = computed(() => {
-    const p = this.progress();
-    if (p >= 100) return 'completed' as const;
-
-    const deadline = this.goal().deadline;
-    if (deadline) {
-      const dueDate = new Date(deadline);
-      const now = new Date();
-
-      if (dueDate <= now) {
-        return p < 100 ? 'overdue' as const : 'completed' as const;
-      }
-
-      const monthsRemaining = this.calculateMonthsRemaining(now, dueDate);
-      const expectedProgress = monthsRemaining > 0
-        ? Math.max(0, 100 - (monthsRemaining / 12) * 100)
-        : 100;
-
-      if (p < expectedProgress - 10) {
-        return 'overdue' as const;
-      }
-    }
+    const status = this.goal().status;
+    if (status === 'completed') return 'completed' as const;
+    if (status === 'overdue') return 'overdue' as const;
     return 'default' as const;
   });
-
-  private calculateMonthsRemaining(start: Date, end: Date): number {
-    const yearDiff = end.getFullYear() - start.getFullYear();
-    const monthDiff = end.getMonth() - start.getMonth();
-    const dayDiff = end.getDate() - start.getDate();
-
-    let months = yearDiff * 12 + monthDiff;
-
-    if (dayDiff < 0) {
-      months -= 1;
-    }
-
-    return Math.max(months, 0);
-  }
 
   private getPriorityFromProgress(): 'low' | 'medium' | 'high' {
     const p = this.progress();

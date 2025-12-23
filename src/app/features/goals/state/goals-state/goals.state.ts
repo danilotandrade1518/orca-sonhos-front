@@ -378,7 +378,7 @@ export class GoalsState {
     return Math.max(months, 0);
   }
 
-  private safeNumber(value: unknown, defaultValue: number = 0): number {
+  private safeNumber(value: unknown, defaultValue = 0): number {
     if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
       return value;
     }
