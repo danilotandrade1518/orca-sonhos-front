@@ -23,6 +23,7 @@ describe('GoalListComponent', () => {
       deadline: '2025-12-31',
       budgetId: 'budget-1',
       sourceAccountId: 'account-1',
+      status: 'on-track',
     },
     {
       id: 'goal-2',
@@ -32,6 +33,7 @@ describe('GoalListComponent', () => {
       deadline: null,
       budgetId: 'budget-1',
       sourceAccountId: 'account-2',
+      status: 'on-track',
     },
   ];
 
@@ -121,7 +123,7 @@ describe('GoalListComponent', () => {
 
       const entityList = fixture.debugElement.query(By.css('os-entity-list'));
       expect(entityList).toBeTruthy();
-      
+
       const entityListComponent = entityList.componentInstance;
       entityListComponent.emptyActionClick.emit();
 

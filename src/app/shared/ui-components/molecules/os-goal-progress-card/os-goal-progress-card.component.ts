@@ -88,7 +88,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         <div class="os-goal-progress-card__current">
           <span class="os-goal-progress-card__value-label">Acumulado</span>
           <os-money-display
-            [value]="goalData()?.currentValue || 0"
+            [value]="safeCurrentValue()"
             [currency]="getCurrencyFromUnit()"
             [size]="'xs'"
             [ariaLabel]="getCurrentValueAriaLabel()"
@@ -98,7 +98,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         <div class="os-goal-progress-card__target">
           <span class="os-goal-progress-card__value-label">Meta</span>
           <os-money-display
-            [value]="goalData()?.targetValue || 0"
+            [value]="safeTargetValue()"
             [currency]="getCurrencyFromUnit()"
             [size]="'xs'"
             [ariaLabel]="getTargetValueAriaLabel()"
@@ -187,14 +187,37 @@ export class OsGoalProgressCardComponent {
 
   readonly progressPercentage = computed(() => {
     const data = this.goalData();
-    if (!data || data.targetValue === 0) return 0;
-    return Math.min((data.currentValue / data.targetValue) * 100, 100);
+    if (!data) return 0;
+    
+    const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
+    const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
+    
+    if (targetValue === 0) return 0;
+    return Math.min((currentValue / targetValue) * 100, 100);
   });
 
   readonly remainingValue = computed(() => {
     const data = this.goalData();
     if (!data) return 0;
-    return Math.max(data.targetValue - data.currentValue, 0);
+    
+    const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
+    const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
+    
+    return Math.max(targetValue - currentValue, 0);
+  });
+
+  readonly safeCurrentValue = computed(() => {
+    const data = this.goalData();
+    if (!data) return 0;
+    const value = data.currentValue;
+    return typeof value === 'number' && !isNaN(value) && isFinite(value) ? value : 0;
+  });
+
+  readonly safeTargetValue = computed(() => {
+    const data = this.goalData();
+    if (!data) return 0;
+    const value = data.targetValue;
+    return typeof value === 'number' && !isNaN(value) && isFinite(value) ? value : 0;
   });
 
   readonly containerClass = computed(() => {

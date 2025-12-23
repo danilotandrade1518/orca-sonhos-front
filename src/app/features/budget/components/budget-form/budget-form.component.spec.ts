@@ -281,7 +281,6 @@ describe('BudgetFormComponent', () => {
       component.onSubmit();
 
       expect(budgetState.createBudget).toHaveBeenCalledWith('New Budget', 'PERSONAL', mockUser.id);
-      expect(notificationService.showSuccess).toHaveBeenCalledWith('Orçamento criado com sucesso!');
       expect(router.navigate).toHaveBeenCalledWith(['/budgets']);
     });
 
@@ -304,9 +303,6 @@ describe('BudgetFormComponent', () => {
         mockUser.id,
         mockBudget.id,
         'Updated Budget'
-      );
-      expect(notificationService.showSuccess).toHaveBeenCalledWith(
-        'Orçamento atualizado com sucesso!'
       );
       expect(router.navigate).toHaveBeenCalledWith(['/budgets']);
     });

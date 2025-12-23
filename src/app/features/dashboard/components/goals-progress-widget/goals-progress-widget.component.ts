@@ -15,7 +15,7 @@ interface GoalProgressItem {
   targetValue: number;
   progress: number;
   remaining: number;
-  status: 'on-track' | 'atrasada' | 'adiantada';
+  status: 'on-track' | 'overdue' | 'ahead' | 'completed';
   suggestedMonthly: number | null;
 }
 
@@ -88,9 +88,9 @@ interface GoalProgressItem {
                 [class]="'goals-progress-widget__item-badge--' + goal.status"
                 [attr.aria-label]="getStatusLabel(goal.status)"
               >
-                @if (goal.status === 'on-track') {
+                @if (goal.status === 'on-track' || goal.status === 'completed') {
                 <os-icon name="check_circle" size="xs" variant="success" aria-hidden="true" />
-                } @else if (goal.status === 'atrasada') {
+                } @else if (goal.status === 'overdue') {
                 <os-icon name="warning" size="xs" variant="error" aria-hidden="true" />
                 } @else {
                 <os-icon name="trending_up" size="xs" variant="info" aria-hidden="true" />
@@ -188,7 +188,7 @@ export class GoalsProgressWidgetComponent {
   });
   readonly hasMoreGoals = computed(() => this.goals().length > this.maxDisplayed());
   readonly onTrackCount = computed(() => {
-    return this.processGoals(this.goals()).filter((g) => g.status === 'on-track').length;
+    return this.goals().filter((g) => g.status === 'on-track' || g.status === 'completed' || g.status === 'ahead').length;
   });
 
   readonly summaryText = computed(() => {
@@ -207,31 +207,23 @@ export class GoalsProgressWidgetComponent {
     const now = new Date();
 
     return goals
-      .filter((goal) => goal.totalAmount > 0)
+      .filter((goal) => {
+        const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+        return totalAmount > 0;
+      })
       .map((goal) => {
-        
-        const progress = (goal.accumulatedAmount / goal.totalAmount) * 100;
-        const remainingCents = Math.max(goal.totalAmount - goal.accumulatedAmount, 0);
+        const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
+        const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
 
-        let status: 'on-track' | 'atrasada' | 'adiantada' = 'on-track';
+        const progress = (accumulatedAmount / totalAmount) * 100;
+        const remainingCents = Math.max(totalAmount - accumulatedAmount, 0);
+
         let suggestedMonthly: number | null = null;
 
-        if (goal.deadline) {
+        if (goal.deadline && goal.status !== 'completed') {
           const deadline = new Date(goal.deadline);
-          if (deadline <= now) {
-            status = goal.accumulatedAmount >= goal.totalAmount ? 'on-track' : 'atrasada';
-          } else {
+          if (deadline > now) {
             const monthsRemaining = this.calculateMonthsRemaining(now, deadline);
-            const expectedProgress = monthsRemaining > 0 ? Math.max(0, 100 - (monthsRemaining / 12) * 100) : 100;
-
-            if (progress >= expectedProgress) {
-              status = 'on-track';
-            } else if (progress < expectedProgress - 10) {
-              status = 'atrasada';
-            } else {
-              status = 'adiantada';
-            }
-
             if (monthsRemaining > 0 && remainingCents > 0) {
               const remainingReais = remainingCents / 100;
               suggestedMonthly = Math.round((remainingReais / monthsRemaining) * 100) / 100;
@@ -239,20 +231,27 @@ export class GoalsProgressWidgetComponent {
           }
         }
 
+        const safeCurrentValue = isFinite(accumulatedAmount / 100) ? accumulatedAmount / 100 : 0;
+        const safeTargetValue = isFinite(totalAmount / 100) ? totalAmount / 100 : 0;
+        const safeRemaining = isFinite(remainingCents / 100) ? remainingCents / 100 : 0;
+        const safeProgress = isFinite(progress) ? Math.min(Math.max(progress, 0), 100) : 0;
+
+        const status = goal.status === 'completed' ? 'completed' as const : goal.status;
+
         return {
           id: goal.id,
           name: goal.name,
-          currentValue: goal.accumulatedAmount / 100,
-          targetValue: goal.totalAmount / 100,
-          progress: Math.min(Math.max(progress, 0), 100),
-          remaining: remainingCents / 100,
+          currentValue: safeCurrentValue,
+          targetValue: safeTargetValue,
+          progress: safeProgress,
+          remaining: safeRemaining,
           status,
           suggestedMonthly,
         };
       })
       .sort((a, b) => {
-        if (a.status === 'atrasada' && b.status !== 'atrasada') return -1;
-        if (a.status !== 'atrasada' && b.status === 'atrasada') return 1;
+        if (a.status === 'overdue' && b.status !== 'overdue') return -1;
+        if (a.status !== 'overdue' && b.status === 'overdue') return 1;
         return b.progress - a.progress;
       });
   }
@@ -269,24 +268,27 @@ export class GoalsProgressWidgetComponent {
     return Math.max(0, totalMonths);
   }
 
-  getStatusLabel(status: 'on-track' | 'atrasada' | 'adiantada'): string {
+  getStatusLabel(status: 'on-track' | 'overdue' | 'ahead' | 'completed'): string {
     switch (status) {
       case 'on-track':
         return 'No prazo';
-      case 'atrasada':
+      case 'overdue':
         return 'Atrasada';
-      case 'adiantada':
+      case 'ahead':
         return 'Adiantada';
+      case 'completed':
+        return 'Concluída';
     }
   }
 
-  getProgressVariant(status: 'on-track' | 'atrasada' | 'adiantada'): 'primary' | 'success' | 'warning' | 'danger' {
+  getProgressVariant(status: 'on-track' | 'overdue' | 'ahead' | 'completed'): 'primary' | 'success' | 'warning' | 'danger' {
     switch (status) {
       case 'on-track':
+      case 'completed':
         return 'success';
-      case 'atrasada':
+      case 'overdue':
         return 'danger';
-      case 'adiantada':
+      case 'ahead':
         return 'primary';
     }
   }

@@ -91,7 +91,7 @@ export class DashboardWidgetsComponent {
       const hasCategorySpendingWidget = untracked(() => this.hasCategorySpendingWidget());
       const isAccountLoading = untracked(() => this.accountState.loading());
       const isEnvelopeLoading = untracked(() => this.envelopeState.loading());
-      
+
       if (budgetId === this._lastBudgetId || isAccountLoading || isEnvelopeLoading) {
         return;
       }
@@ -171,6 +171,23 @@ export class DashboardWidgetsComponent {
         dashboardWidget.data = this.dashboardInsightsService.recentAchievements();
       }
 
+      if (widget.type === 'budget-summary') {
+        const overview = this.budgetOverview();
+        if (overview) {
+          dashboardWidget.data = {
+            totalBalance: overview.totals.accountsBalance / 100,
+            monthlyIncome: overview.totals.monthIncome / 100,
+            monthlyExpense: overview.totals.monthExpense / 100,
+            savingsRate: overview.totals.monthIncome > 0
+              ? ((overview.totals.monthIncome - overview.totals.monthExpense) / overview.totals.monthIncome) * 100
+              : 0,
+            budgetUtilization: overview.totals.monthIncome > 0
+              ? (overview.totals.monthExpense / overview.totals.monthIncome) * 100
+              : 0,
+          };
+        }
+      }
+
       return dashboardWidget;
     });
   });
@@ -202,7 +219,7 @@ export class DashboardWidgetsComponent {
     return {
       id: goal.id,
       title: goal.name,
-      
+
       currentValue: goal.accumulatedAmount / 100,
       targetValue: goal.totalAmount / 100,
       unit: 'BRL',
@@ -222,7 +239,7 @@ export class DashboardWidgetsComponent {
 
       return {
         accountName: account.name,
-        
+
         balance: account.balance / 100,
         type,
         lastUpdated: new Date(),

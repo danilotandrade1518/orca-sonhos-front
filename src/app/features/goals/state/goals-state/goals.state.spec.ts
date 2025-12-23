@@ -31,6 +31,7 @@ describe('GoalsState', () => {
       deadline: '2025-12-31T23:59:59Z',
       budgetId: 'budget-1',
       sourceAccountId: 'account-1',
+      status: 'on-track',
     },
     {
       id: 'goal-2',
@@ -40,6 +41,7 @@ describe('GoalsState', () => {
       deadline: null,
       budgetId: 'budget-1',
       sourceAccountId: 'account-1',
+      status: 'on-track',
     },
     {
       id: 'goal-3',
@@ -49,6 +51,7 @@ describe('GoalsState', () => {
       deadline: '2025-03-31T23:59:59Z',
       budgetId: 'budget-1',
       sourceAccountId: 'account-1',
+      status: 'completed',
     },
   ];
 
@@ -199,6 +202,7 @@ describe('GoalsState', () => {
           deadline: null,
           budgetId: 'budget-1',
           sourceAccountId: 'account-1',
+          status: 'on-track',
         },
       ];
 
@@ -245,6 +249,7 @@ describe('GoalsState', () => {
           deadline: null,
           budgetId: 'budget-1',
           sourceAccountId: 'account-1',
+          status: 'completed',
         },
       ];
 
@@ -278,6 +283,7 @@ describe('GoalsState', () => {
           deadline: futureDate.toISOString(),
           budgetId: 'budget-1',
           sourceAccountId: 'account-1',
+          status: 'overdue',
         },
       ];
 
@@ -325,6 +331,7 @@ describe('GoalsState', () => {
           deadline: '2020-01-01T00:00:00Z',
           budgetId: 'budget-1',
           sourceAccountId: 'account-1',
+          status: 'overdue',
         },
       ];
 

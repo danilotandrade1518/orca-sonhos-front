@@ -100,7 +100,14 @@ describe('DashboardWidgetsComponent', () => {
         provideZonelessChangeDetection(),
         provideHttpClient(),
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(DashboardWidgetsComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DashboardWidgetsComponent);
     component = fixture.componentInstance;

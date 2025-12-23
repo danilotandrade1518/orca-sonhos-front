@@ -21,6 +21,7 @@ describe('GoalsProgressWidgetComponent', () => {
       accumulatedAmount: 5000,
       deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
       budgetId: 'budget-1',
+      status: 'on-track',
     },
     {
       id: 'goal-2',
@@ -29,6 +30,7 @@ describe('GoalsProgressWidgetComponent', () => {
       accumulatedAmount: 2500,
       deadline: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(),
       budgetId: 'budget-1',
+      status: 'on-track',
     },
     {
       id: 'goal-3',
@@ -37,6 +39,7 @@ describe('GoalsProgressWidgetComponent', () => {
       accumulatedAmount: 1000,
       deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
       budgetId: 'budget-1',
+      status: 'overdue',
     },
   ];
 
@@ -56,7 +59,14 @@ describe('GoalsProgressWidgetComponent', () => {
         { provide: Router, useValue: router },
         { provide: LocaleService, useValue: localeService },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(GoalsProgressWidgetComponent, {
+        set: {
+          styleUrls: [],
+          styles: [''],
+        } as never,
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(GoalsProgressWidgetComponent);
     component = fixture.componentInstance;
@@ -129,6 +139,7 @@ describe('GoalsProgressWidgetComponent', () => {
         accumulatedAmount: 500,
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
         budgetId: 'budget-1',
+        status: 'on-track' as const,
       }));
 
       fixture.componentRef.setInput('goals', manyGoals);
@@ -147,6 +158,7 @@ describe('GoalsProgressWidgetComponent', () => {
         accumulatedAmount: 500,
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
         budgetId: 'budget-1',
+        status: 'on-track' as const,
       }));
 
       fixture.componentRef.setInput('goals', manyGoals);
@@ -165,6 +177,7 @@ describe('GoalsProgressWidgetComponent', () => {
         accumulatedAmount: 500,
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
         budgetId: 'budget-1',
+        status: 'on-track' as const,
       }));
 
       fixture.componentRef.setInput('goals', manyGoals);
@@ -210,6 +223,7 @@ describe('GoalsProgressWidgetComponent', () => {
         accumulatedAmount: 5000,
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
         budgetId: 'budget-1',
+        status: 'on-track',
       };
 
       fixture.componentRef.setInput('goals', [onTrackGoal]);
@@ -227,12 +241,13 @@ describe('GoalsProgressWidgetComponent', () => {
         accumulatedAmount: 1000,
         deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
         budgetId: 'budget-1',
+        status: 'overdue',
       };
 
       fixture.componentRef.setInput('goals', [overdueGoal]);
       fixture.detectChanges();
 
-      const badge = fixture.nativeElement.querySelector('.goals-progress-widget__item-badge--atrasada');
+      const badge = fixture.nativeElement.querySelector('.goals-progress-widget__item-badge--overdue');
       expect(badge).toBeTruthy();
     });
   });
@@ -286,7 +301,7 @@ describe('GoalsProgressWidgetComponent', () => {
       expect(progressBar).toBeTruthy();
     });
 
-    it('should sort goals by status (atrasada first) and progress', () => {
+    it('should sort goals by status (overdue first) and progress', () => {
       fixture.componentRef.setInput('goals', mockGoals);
       fixture.detectChanges();
 

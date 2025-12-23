@@ -69,7 +69,7 @@ function getMessageByErrorCode(
 
   if (codeUpper.includes('VALIDATION') || codeUpper.includes('INVALID')) {
     if (operation === 'create' || operation === 'update') {
-      return 'Dados inválidos. Verifique o nome do orçamento e tente novamente.';
+      return 'Dados inválidos. Verifique o nome do orçamento (mínimo 3 caracteres, máximo 100).';
     }
     return 'Dados inválidos. Verifique as informações e tente novamente.';
   }

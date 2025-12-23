@@ -532,13 +532,7 @@ export class OsDashboardWidgetsComponent {
         return data;
       }
     }
-    return {
-      totalBalance: 25000.5,
-      monthlyIncome: 8000.0,
-      monthlyExpense: 5500.0,
-      savingsRate: 31.25,
-      budgetUtilization: 68.75,
-    };
+    return null;
   }
 
   getBudgetProgressVariant(
@@ -551,52 +545,14 @@ export class OsDashboardWidgetsComponent {
   }
 
   getRecentTransactions(): TransactionData[] {
-    return [
-      {
-        id: '1',
-        description: 'Supermercado',
-        amount: -150.0,
-        category: 'Alimentação',
-        date: new Date('2024-12-19'),
-        type: 'expense',
-      },
-      {
-        id: '2',
-        description: 'Salário',
-        amount: 8000.0,
-        category: 'Rendimento',
-        date: new Date('2024-12-15'),
-        type: 'income',
-      },
-      {
-        id: '3',
-        description: 'Conta de Luz',
-        amount: -120.5,
-        category: 'Utilidades',
-        date: new Date('2024-12-18'),
-        type: 'expense',
-      },
-    ];
+    return [];
   }
 
   getAccountBalances(widget: DashboardWidget): AccountBalanceData[] {
     if (widget.data && Array.isArray(widget.data)) {
       return widget.data as AccountBalanceData[];
     }
-    return [
-      {
-        accountName: 'Conta Corrente',
-        balance: 15000.5,
-        type: 'checking',
-        lastUpdated: new Date('2024-12-19'),
-      },
-      {
-        accountName: 'Poupança',
-        balance: 10000.0,
-        type: 'savings',
-        lastUpdated: new Date('2024-12-19'),
-      },
-    ];
+    return [];
   }
 
   getTransactionAmountClass(transaction: TransactionData): string {

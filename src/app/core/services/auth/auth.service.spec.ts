@@ -13,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
 describe('AuthService', () => {
   let service: AuthService;
   let mockAdapter: MockExternalAuthServiceAdapter;
+  const MOCK_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
 
   beforeEach(async () => {
     mockAdapter = new MockExternalAuthServiceAdapter();
@@ -80,7 +81,7 @@ describe('AuthService', () => {
       const result = await service.signInWithEmail(email, password);
 
       expect(result).toEqual({
-        id: 'mock-user-id',
+        id: MOCK_USER_ID,
         email: 'test@example.com',
         name: 'Mock User',
         avatar: null,
@@ -245,7 +246,7 @@ describe('AuthService', () => {
       );
 
       expect(user).toEqual({
-        id: 'mock-user-id',
+        id: MOCK_USER_ID,
         email: 'test@example.com',
         name: 'Mock User',
         avatar: null,

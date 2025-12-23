@@ -20,6 +20,7 @@ describe('GoalCardComponent', () => {
     deadline: '2025-12-31',
     budgetId: 'budget-1',
     sourceAccountId: 'account-1',
+    status: 'on-track',
   };
 
   beforeEach(async () => {
