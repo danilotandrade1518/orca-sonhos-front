@@ -94,7 +94,7 @@ export class GoalEditPage implements OnInit {
     return {
       name: goal.name,
       totalAmount: goal.totalAmount,
-      deadline: goal.deadline,
+      deadline: goal.deadline ?? undefined,
       sourceAccountId: goal.sourceAccountId,
     };
   });
