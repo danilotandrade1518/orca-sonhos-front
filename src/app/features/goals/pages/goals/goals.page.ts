@@ -18,6 +18,8 @@ import { OsSelectComponent } from '@shared/ui-components/atoms/os-select/os-sele
 import { OsPageComponent } from '@shared/ui-components/organisms/os-page/os-page.component';
 import { OsPageHeaderComponent, type PageHeaderAction } from '@shared/ui-components/organisms/os-page-header/os-page-header.component';
 import { OsAlertComponent } from '@shared/ui-components/molecules/os-alert/os-alert.component';
+import { OsModalTemplateComponent } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
+import type { ModalTemplateConfig } from '@shared/ui-components/templates/os-modal-template/os-modal-template.component';
 import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
 
 @Component({
@@ -29,8 +31,9 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
     OsSelectComponent,
     OsPageComponent,
     OsPageHeaderComponent,
-    OsAlertComponent
-],
+    OsAlertComponent,
+    OsModalTemplateComponent,
+  ],
   template: `
     <os-page variant="default" size="medium" ariaLabel="Página de metas">
       <os-page-header
@@ -95,8 +98,22 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
         (cardClick)="navigateToDetail($event)"
         (aportar)="onAportar($event)"
         (editar)="onEditar($event)"
-        (excluir)="onExcluir($event)"
+        (excluir)="confirmDelete($event)"
       />
+
+      @if (showDeleteConfirmModal()) {
+      <os-modal-template
+        [config]="deleteModalConfig()"
+        [variant]="'compact'"
+        [size]="'small'"
+        [disabled]="state.isLoading()"
+        [loading]="state.isLoading()"
+        [valid]="true"
+        (actionClick)="onDeleteActionClick($event)"
+        (cancelled)="onDeleteCancelled()"
+        (closed)="onDeleteCancelled()"
+      />
+      }
     </os-page>
   `,
   styleUrl: './goals.page.scss',
@@ -112,11 +129,41 @@ export class GoalsPage implements OnInit {
   private readonly _selectedDeadlineFilter = signal<'all' | 'with-deadline' | 'without-deadline'>('all');
   private _lastBudgetId: string | null = null;
 
+  readonly deleteGoalId = signal<string | null>(null);
+  readonly deleteGoalName = signal<string | null>(null);
+
   readonly searchTerm = this._searchTerm.asReadonly();
   readonly selectedDeadlineFilter = this._selectedDeadlineFilter.asReadonly();
 
   readonly hasActiveFilters = computed(() => {
     return this._searchTerm().length > 0 || this._selectedDeadlineFilter() !== 'all';
+  });
+
+  readonly showDeleteConfirmModal = computed(() => {
+    return this.deleteGoalId() !== null;
+  });
+
+  readonly deleteModalConfig = computed<ModalTemplateConfig>(() => {
+    const goalName = this.deleteGoalName();
+    return {
+      title: 'Excluir Meta',
+      subtitle: goalName
+        ? `Tem certeza que deseja excluir a meta "${goalName}"? Esta ação não pode ser desfeita.`
+        : 'Tem certeza que deseja excluir esta meta? Esta ação não pode ser desfeita.',
+      showActions: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      cancelButtonText: 'Cancelar',
+      actions: [
+        {
+          label: 'Excluir',
+          variant: 'danger',
+          size: 'medium',
+          disabled: this.state.isLoading(),
+          loading: this.state.isLoading(),
+        },
+      ],
+    };
   });
 
   readonly deadlineOptions = computed(() => [
@@ -160,11 +207,11 @@ export class GoalsPage implements OnInit {
   constructor() {
     effect(() => {
       const budgetId = this.budgetSelection.selectedBudgetId();
-      
+
       if (budgetId === this._lastBudgetId || this.state.isLoading()) {
         return;
       }
-      
+
       untracked(() => {
         if (budgetId) {
           this._lastBudgetId = budgetId;
@@ -199,8 +246,42 @@ export class GoalsPage implements OnInit {
     this.router.navigate([goalId, 'edit'], { relativeTo: this.route });
   }
 
-  onExcluir(goalId: string): void {
+  confirmDelete(goalId: string): void {
+    const goals = this.state.items();
+    const goal = goals.find((g) => g.id === goalId);
+    if (!goal) return;
+
+    this.deleteGoalId.set(goalId);
+    this.deleteGoalName.set(goal.name);
+  }
+
+  onDeleteActionClick(action: {
+    label: string;
+    variant: 'primary' | 'secondary' | 'tertiary' | 'danger';
+    size: 'small' | 'medium' | 'large';
+    disabled?: boolean;
+    loading?: boolean;
+    icon?: string;
+  }): void {
+    if (action.variant === 'danger' || action.label === 'Excluir') {
+      this.onDeleteConfirmed();
+    }
+  }
+
+  onDeleteConfirmed(): void {
+    const goalId = this.deleteGoalId();
+    if (!goalId) {
+      this.onDeleteCancelled();
+      return;
+    }
+
     this.state.delete({ id: goalId });
+    this.onDeleteCancelled();
+  }
+
+  onDeleteCancelled(): void {
+    this.deleteGoalId.set(null);
+    this.deleteGoalName.set(null);
   }
 
   onSearchChange(value: string): void {
@@ -217,6 +298,6 @@ export class GoalsPage implements OnInit {
   }
 
   onApplyFilters(): void {
-    
+
   }
 }

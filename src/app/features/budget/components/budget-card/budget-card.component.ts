@@ -42,7 +42,7 @@ import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-butto
         />
         <os-delete-button
           [ariaLabel]="'Excluir orçamento ' + budget().name"
-          (deleteClick)="onDelete()"
+          (deleteClick)="onDelete($event)"
         />
       </div>
       }
@@ -82,7 +82,8 @@ export class BudgetCardComponent {
     this.editClick.emit(this.budget().id);
   }
 
-  onDelete(): void {
+  onDelete(event?: MouseEvent): void {
+    event?.stopPropagation();
     this.deleteClick.emit(this.budget().id);
   }
 

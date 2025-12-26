@@ -151,7 +151,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           variant="primary"
           size="small"
           icon="add"
-          (buttonClick)="onAportar()"
+          (buttonClick)="onAportar($event)"
           [attr.aria-label]="'Aportar na meta ' + goalData()?.title"
         >
           Aportar
@@ -162,7 +162,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         />
         <os-delete-button
           [ariaLabel]="'Excluir meta ' + goalData()?.title"
-          (deleteClick)="onExcluir()"
+          (deleteClick)="onExcluir($event)"
         />
       </footer>
       } }
@@ -195,10 +195,10 @@ export class OsGoalProgressCardComponent {
   readonly progressPercentage = computed(() => {
     const data = this.goalData();
     if (!data) return 0;
-    
+
     const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
     const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
-    
+
     if (targetValue === 0) return 0;
     return Math.min((currentValue / targetValue) * 100, 100);
   });
@@ -206,10 +206,10 @@ export class OsGoalProgressCardComponent {
   readonly remainingValue = computed(() => {
     const data = this.goalData();
     if (!data) return 0;
-    
+
     const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
     const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
-    
+
     return Math.max(targetValue - currentValue, 0);
   });
 
@@ -314,7 +314,8 @@ export class OsGoalProgressCardComponent {
     return this.localeService.formatDateShort(date);
   }
 
-  onAportar(): void {
+  onAportar(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.aportar.emit(data.id);
@@ -329,7 +330,8 @@ export class OsGoalProgressCardComponent {
     }
   }
 
-  onExcluir(): void {
+  onExcluir(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.excluir.emit(data.id);
