@@ -305,6 +305,12 @@ export class GoalDetailPage implements OnInit {
 
     return [
       {
+        label: 'Editar',
+        variant: 'primary',
+        size: 'medium',
+        icon: 'edit',
+      },
+      {
         label: 'Excluir',
         variant: 'danger',
         size: 'medium',
@@ -396,7 +402,12 @@ export class GoalDetailPage implements OnInit {
   }
 
   onPageHeaderActionClick(action: PageHeaderAction): void {
-    if (action.label === 'Excluir') {
+    if (action.label === 'Editar') {
+      const id = this.goalId();
+      if (id) {
+        this.router.navigate(['/goals', id, 'edit']);
+      }
+    } else if (action.label === 'Excluir') {
       this.confirmDelete();
     }
   }

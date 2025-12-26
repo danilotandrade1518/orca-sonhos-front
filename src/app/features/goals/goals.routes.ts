@@ -24,6 +24,12 @@ export const GOALS_ROUTES: Routes = [
     title: 'Remover Aporte',
   },
   {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./pages/goal-edit/goal-edit.page').then((m) => m.GoalEditPage),
+    title: 'Editar Meta',
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/goal-detail/goal-detail.page').then((m) => m.GoalDetailPage),
