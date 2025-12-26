@@ -58,8 +58,10 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
               <span id="name-error" class="os-goal-form__error" role="alert">
                 @if (form.get('name')?.hasError('required')) {
                   Nome é obrigatório
+                } @else if (form.get('name')?.hasError('minlength')) {
+                  Nome deve ter pelo menos 2 caracteres
                 } @else if (form.get('name')?.hasError('maxlength')) {
-                  Nome deve ter no máximo 120 caracteres
+                  Nome deve ter no máximo 50 caracteres
                 }
               </span>
             }
@@ -157,7 +159,7 @@ export class GoalFormComponent {
   readonly form: FormGroup = this.fb.group({
     name: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(120)],
+      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     }),
     totalAmount: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01)],
