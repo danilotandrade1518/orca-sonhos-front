@@ -441,7 +441,6 @@ export class BudgetDetailPage implements OnInit {
     try {
       this.accountState.loadAccounts();
       this.sharingState.loadParticipants(id);
-      this.cdr.markForCheck();
     } catch (error) {
       console.error('Error loading resources', error);
     }

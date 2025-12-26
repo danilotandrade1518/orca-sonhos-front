@@ -16,9 +16,15 @@ export class AuthHelper {
 
   async logout(): Promise<void> {
     await this.page.evaluate(() => {
-      localStorage.removeItem('auth_user');
-      localStorage.removeItem('auth_token');
-      window.dispatchEvent(new CustomEvent('auth-state-changed', { detail: { user: null } }));
+      const ls = (globalThis as Window & typeof globalThis).localStorage;
+      ls?.removeItem?.('auth_user');
+      ls?.removeItem?.('auth_token');
+
+      const w = globalThis as Window & typeof globalThis;
+      const CE = globalThis.CustomEvent;
+      if (w?.dispatchEvent && CE) {
+        w.dispatchEvent(new CE('auth-state-changed', { detail: { user: null } }));
+      }
     });
 
     await this.page.waitForTimeout(300);
@@ -26,7 +32,8 @@ export class AuthHelper {
 
   async isAuthenticated(): Promise<boolean> {
     return await this.page.evaluate(() => {
-      return localStorage.getItem('auth_user') !== null;
+      const ls = (globalThis as Window & typeof globalThis).localStorage;
+      return !!ls?.getItem?.('auth_user');
     });
   }
 }

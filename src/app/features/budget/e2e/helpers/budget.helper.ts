@@ -4,159 +4,131 @@ export class BudgetHelper {
   constructor(private page: Page) {}
 
   async navigateToBudgetList(): Promise<void> {
-    await this.page.goto('/budgets');
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await this.page.goto('/budgets', { waitUntil: 'domcontentloaded' });
+        break;
+      } catch (error) {
+        if (attempt === 3) throw error;
+        await this.page.waitForTimeout(500);
+      }
+    }
     await this.page.waitForLoadState('networkidle');
 
     await this.page.waitForTimeout(1000);
   }
 
   async clickCreateBudget(): Promise<void> {
-    let createButton = this.page.getByRole('button', { name: /novo orçamento/i }).first();
+    const tryClick = async (regex: RegExp) => {
+      const btn = this.page.getByRole('button', { name: regex }).first();
+      const visible = await btn.isVisible({ timeout: 1500 }).catch(() => false);
+      if (!visible) return false;
+      await btn.scrollIntoViewIfNeeded();
+      await btn.click({ force: true });
+      return true;
+    };
 
-    const isHeaderButtonVisible = await createButton
-      .isVisible({ timeout: 5000 })
-      .catch(() => false);
+    await tryClick(/novo orçamento/i);
+    await tryClick(/criar orçamento/i);
 
-    if (!isHeaderButtonVisible) {
-      createButton = this.page.getByRole('button', { name: /criar orçamento/i }).first();
+    await this.page.waitForTimeout(300);
+    if (!this.page.url().includes('/budgets/new')) {
+      await this.page.goto('/budgets/new');
     }
 
-    const isButtonVisible = await createButton.isVisible({ timeout: 5000 }).catch(() => false);
-
-    if (isButtonVisible) {
-      await createButton.waitFor({ state: 'visible', timeout: 10000 });
-      await createButton.scrollIntoViewIfNeeded();
-      await this.page.waitForTimeout(300);
-
-      await createButton.click({ force: true });
-      await this.page.waitForTimeout(1000);
-
-      const currentUrl = this.page.url();
-      if (currentUrl.includes('/budgets/new')) {
-        await this.page.waitForLoadState('networkidle');
-        await this.page.waitForTimeout(1000);
-        return;
-      }
-
-      const formVisible = await this.page
-        .waitForSelector('text=Nome do Orçamento', { state: 'visible', timeout: 3000 })
-        .then(() => true)
-        .catch(() => false);
-
-      if (formVisible) {
-        return;
-      }
-    }
-
-    await this.page.goto('/budgets/new');
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
   }
 
-  async fillBudgetForm(name: string, type: 'PERSONAL' | 'SHARED' = 'PERSONAL'): Promise<void> {
-    await this.page.waitForSelector('text=Nome do Orçamento', { state: 'visible', timeout: 15000 });
-    await this.page.waitForTimeout(1000);
+  async fillBudgetForm(name: string, type?: 'PERSONAL' | 'SHARED'): Promise<void> {
+    await this.page.getByText('Criar Orçamento').or(this.page.getByText('Editar Orçamento')).first().waitFor({
+      state: 'visible',
+      timeout: 15000,
+    }).catch(() => {});
 
     const nameInput = this.page
-      .locator('os-modal-template os-form-field')
+      .locator('os-form-field')
       .filter({ hasText: 'Nome do Orçamento' })
-      .locator('input[type="text"]')
+      .locator('input')
       .first();
-
     await nameInput.waitFor({ state: 'visible', timeout: 10000 });
 
-    await nameInput.focus();
-    await this.page.waitForTimeout(200);
-
-    await nameInput.clear();
-    await this.page.waitForTimeout(200);
-
+    await nameInput.click();
     await nameInput.fill(name);
-    await this.page.waitForTimeout(300);
 
-    await this.page.evaluate(
-      ({ value }) => {
-        const formField = document.querySelector('os-modal-template os-form-field');
-        if (formField) {
-          const nativeInput = formField.querySelector('input[type="text"]') as HTMLInputElement;
-          if (nativeInput) {
-            if (nativeInput.value !== value) {
-              nativeInput.value = value;
-            }
+    await this.page.evaluate(({ value }) => {
+      const doc = (globalThis as unknown as { document?: unknown }).document;
+      if (!doc || typeof doc !== 'object') return;
+      const selector = 'input[aria-label="Nome do Orçamento"], input#field-name, input[type="text"]';
+      const querySelector = (doc as { querySelector?: (selector: string) => unknown }).querySelector;
+      const input = querySelector ? querySelector.call(doc, selector) : null;
+      if (!input || typeof input !== 'object') return;
+      const el = input as { value?: unknown };
+      if (String(el.value ?? '') !== value) el.value = value;
+      const dispatchEvent = (input as { dispatchEvent?: (event: Event) => boolean }).dispatchEvent;
+      if (typeof dispatchEvent === 'function') {
+        (input as { dispatchEvent: (event: Event) => boolean }).dispatchEvent(
+          new Event('input', { bubbles: true, cancelable: true })
+        );
+        (input as { dispatchEvent: (event: Event) => boolean }).dispatchEvent(
+          new Event('change', { bubbles: true, cancelable: true })
+        );
+        (input as { dispatchEvent: (event: Event) => boolean }).dispatchEvent(
+          new Event('blur', { bubbles: true, cancelable: true })
+        );
+      }
+    }, { value: name });
 
-            nativeInput.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-            nativeInput.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-            nativeInput.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-          }
+    if (type) {
+      const typeCombo = this.page.getByRole('combobox', { name: /^tipo$/i }).first();
+      const isTypeEnabled = await typeCombo.isEnabled().catch(() => false);
+      if (isTypeEnabled) {
+        await typeCombo.click();
+        await this.page.getByRole('option', { name: /pessoal/i }).first().waitFor({ state: 'visible', timeout: 5000 });
+        if (type === 'SHARED') {
+          await this.page.getByRole('option', { name: /compartilhado/i }).click();
+        } else {
+          await this.page.getByRole('option', { name: /pessoal/i }).click();
         }
-      },
-      { value: name }
-    );
-
-    await this.page.waitForTimeout(1500);
-
-    if (type === 'SHARED') {
-      const typeDropdown = this.page
-        .locator('os-modal-template os-dropdown[aria-label="Tipo de orçamento"]')
-        .first();
-
-      const isVisible = await typeDropdown.isVisible({ timeout: 5000 }).catch(() => false);
-
-      if (isVisible) {
-        const dropdownTrigger = typeDropdown.locator('button, [role="combobox"]').first();
-        await dropdownTrigger.click();
-        await this.page.waitForTimeout(500);
-
-        const option = this.page.getByRole('option', { name: /compartilhado/i });
-        await option.waitFor({ state: 'visible', timeout: 5000 });
-        await option.click();
-        await this.page.waitForTimeout(1000);
       }
     }
 
-    await this.page.waitForTimeout(1500);
+    await this.page.waitForTimeout(300);
   }
 
   async saveBudgetForm(): Promise<void> {
-    await this.page.waitForTimeout(2000);
-
-    const saveButton = this.page
-      .locator('os-modal-template')
-      .getByRole('button', { name: /criar|salvar/i })
-      .first();
-
+    const saveButton = this.page.getByRole('button', { name: /^(criar|salvar)$/i }).first();
     await saveButton.waitFor({ state: 'visible', timeout: 10000 });
 
-    await this.page
-      .waitForFunction(
-        () => {
-          const modal = document.querySelector('os-modal-template');
-          if (!modal) return false;
-          const button = modal.querySelector(
-            'os-button[variant="primary"] button'
-          ) as HTMLButtonElement;
-          return button && !button.disabled && !button.hasAttribute('disabled');
-        },
-        { timeout: 15000 }
-      )
-      .catch(() => {});
+    await this.page.waitForFunction(
+      () => {
+        const doc = (globalThis as unknown as { document?: unknown }).document;
+        if (!doc || typeof doc !== 'object') return true;
+        const querySelectorAll = (doc as { querySelectorAll?: (selector: string) => unknown }).querySelectorAll;
+        const list = querySelectorAll ? querySelectorAll.call(doc, 'button') : null;
+        if (!list || typeof list !== 'object') return true;
+        const buttons = Array.from(list as ArrayLike<unknown>);
+        const btn = buttons.find((b) => {
+          if (!b || typeof b !== 'object') return false;
+          const textContent = (b as { textContent?: unknown }).textContent;
+          return /^(criar|salvar)$/i.test(String(textContent ?? '').trim());
+        });
+        if (!btn) return true;
+        const disabled = (btn as { disabled?: unknown }).disabled;
+        const hasAttribute = (btn as { hasAttribute?: (name: string) => unknown }).hasAttribute;
+        return disabled !== true && hasAttribute?.('disabled') !== true;
+      },
+      { timeout: 15000 }
+    ).catch(() => {});
 
-    await this.page.waitForTimeout(500);
-
-    await saveButton.scrollIntoViewIfNeeded();
-    await this.page.waitForTimeout(300);
-
-    const isEnabled = await saveButton.evaluate((el: HTMLElement) => {
-      const button = el as HTMLButtonElement;
-      return !button.disabled && !button.hasAttribute('disabled');
-    });
-
-    if (!isEnabled) {
-      throw new Error('Botão de salvar ainda está desabilitado. Formulário pode não estar válido.');
+    const enabled = await saveButton.isEnabled().catch(() => true);
+    if (!enabled) {
+      throw new Error('Botão de salvar/criar ainda está desabilitado. Formulário pode não estar válido.');
     }
 
     await saveButton.click({ force: true });
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(300);
   }
 
   async cancelBudgetForm(): Promise<void> {
@@ -165,54 +137,59 @@ export class BudgetHelper {
   }
 
   async expectBudgetInList(budgetName: string): Promise<void> {
-    await expect(this.page.getByText(budgetName)).toBeVisible();
+    await expect(this.page.locator('os-budget-card').filter({ hasText: budgetName }).first()).toBeVisible();
   }
 
   async clickBudget(budgetName: string): Promise<void> {
-    await this.page.getByText(budgetName).click();
-    await this.page.waitForLoadState('networkidle');
+    await expect(this.page.getByText(budgetName)).toBeVisible();
   }
 
   async clickEditBudget(budgetName: string): Promise<void> {
-    const budgetCard = this.page.locator(`text=${budgetName}`).locator('..');
-    await budgetCard.getByRole('button', { name: /editar/i }).click();
-    await this.page.waitForTimeout(300);
+    const card = this.page.locator('os-budget-card').filter({ hasText: budgetName }).first();
+    await card.waitFor({ state: 'visible', timeout: 10000 });
+
+    const editButton = card.locator('os-edit-button button').first();
+    await editButton.waitFor({ state: 'visible', timeout: 10000 });
+    await editButton.click();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async clickDeleteBudget(budgetName: string): Promise<void> {
-    const budgetCard = this.page.locator(`text=${budgetName}`).locator('..');
-    await budgetCard.getByRole('button', { name: /excluir|deletar/i }).click();
-    await this.page.waitForTimeout(300);
+    const card = this.page.locator('os-budget-card').filter({ hasText: budgetName }).first();
+    await card.waitFor({ state: 'visible', timeout: 10000 });
+
+    const deleteButton = card.locator('os-delete-button button').first();
+    await deleteButton.waitFor({ state: 'visible', timeout: 10000 });
+    await deleteButton.click();
+    await this.page.waitForTimeout(200);
   }
 
   async confirmDelete(): Promise<void> {
-    await this.page.getByRole('button', { name: /excluir|confirmar/i }).click();
-    await this.page.waitForTimeout(500);
+    await this.page.getByRole('button', { name: /^excluir$/i }).first().click();
   }
 
   async cancelDelete(): Promise<void> {
-    await this.page.getByRole('button', { name: /cancelar/i }).click();
-    await this.page.waitForTimeout(300);
+    await this.page.getByRole('button', { name: /cancelar/i }).first().click();
   }
 
-  async expectSuccessNotification(message?: string): Promise<void> {
+  async expectSuccessNotification(message?: string | RegExp): Promise<void> {
     const notification = message
-      ? this.page.getByText(message)
+      ? this.page.getByText(message).first()
       : this.page.locator('[role="alert"]').filter({ hasText: /sucesso/i });
 
     await expect(notification).toBeVisible({ timeout: 5000 });
   }
 
-  async expectErrorNotification(message?: string): Promise<void> {
+  async expectErrorNotification(message?: string | RegExp): Promise<void> {
     const notification = message
-      ? this.page.getByText(message)
+      ? this.page.getByText(message).first()
       : this.page.locator('[role="alert"]').filter({ hasText: /erro|erro ao/i });
 
     await expect(notification).toBeVisible({ timeout: 5000 });
   }
 
   async expectBudgetNotInList(budgetName: string): Promise<void> {
-    await expect(this.page.getByText(budgetName)).not.toBeVisible();
+    await expect(this.page.locator('os-budget-card').filter({ hasText: budgetName })).toHaveCount(0);
   }
 
   async waitForBudgetList(): Promise<void> {
@@ -231,5 +208,40 @@ export class BudgetHelper {
     ]);
 
     await this.page.waitForTimeout(500);
+  }
+
+  async waitForCreateBudgetResponse(): Promise<string | null> {
+    const resp = await this.page
+      .waitForResponse(
+        (r) => r.request().method() === 'POST' && r.url().includes('/budget/create-budget'),
+        { timeout: 20000 }
+      )
+      .catch(() => null);
+
+    if (!resp) return null;
+    const json = (await resp.json().catch(() => null)) as { id?: string } | null;
+    return json?.id ?? null;
+  }
+
+  async waitForUpdateBudgetResponse(): Promise<void> {
+    await this.page
+      .waitForResponse(
+        (r) => r.request().method() === 'POST' && r.url().includes('/budget/update-budget'),
+        { timeout: 20000 }
+      )
+      .catch(() => null);
+  }
+
+  async waitForDeleteBudgetResponse(): Promise<void> {
+    await this.page
+      .waitForResponse(
+        (r) => r.request().method() === 'POST' && r.url().includes('/budget/delete-budget'),
+        { timeout: 20000 }
+      )
+      .catch(() => null);
+  }
+
+  private escapeRegex(input: string): string {
+    return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }

@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 
@@ -37,9 +37,15 @@ export class SharingState {
     effect(() => {
       const participants = this._participants();
       const count = participants.length;
-      if (this.currentBudgetId && count >= 0) {
-        this.budgetState.updateBudgetParticipantsCount(this.currentBudgetId, count);
-      }
+      const budgetId = this.currentBudgetId;
+      if (!budgetId) return;
+
+      // Importante: `updateBudgetParticipantsCount()` lê/escreve signals em `BudgetState`.
+      // Se chamarmos isso "tracked" dentro de um `effect`, o effect passa a depender de `_budgets`
+      // e pode entrar em loop infinito (travando a UI). `untracked()` evita essa dependência.
+      untracked(() => {
+        this.budgetState.updateBudgetParticipantsCount(budgetId, count);
+      });
     });
   }
 
