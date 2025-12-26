@@ -16,7 +16,9 @@ import {
       [state]="goalState()"
       [showActions]="true"
       [showSuggestedAmount]="true"
+      [clickable]="true"
       [ariaLabel]="'Meta: ' + goal().name"
+      (cardClick)="cardClick.emit()"
       (aportar)="aportar.emit($event)"
       (editar)="editar.emit($event)"
       (excluir)="excluir.emit($event)"
@@ -31,6 +33,7 @@ export class GoalCardComponent {
   readonly remaining = input.required<number>();
   readonly suggested = input.required<number | null>();
 
+  readonly cardClick = output<void>();
   readonly aportar = output<string>();
   readonly editar = output<string>();
   readonly excluir = output<string>();

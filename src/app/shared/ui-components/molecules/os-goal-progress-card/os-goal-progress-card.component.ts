@@ -40,7 +40,12 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       [class]="containerClass()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="descriptionId()"
-      role="region"
+      [attr.role]="clickable() ? 'button' : 'region'"
+      [attr.tabindex]="clickable() ? '0' : null"
+      [attr.aria-disabled]="isLoading() ? 'true' : null"
+      (click)="onCardClick()"
+      (keydown.enter)="onCardClick()"
+      (keydown.space)="onCardClick()"
     >
       @if (isLoading()) {
       <div class="os-goal-progress-card__skeleton" aria-hidden="true">
@@ -176,7 +181,9 @@ export class OsGoalProgressCardComponent {
   readonly ariaLabel = input<string>('Card de progresso da meta');
   readonly showActions = input<boolean>(false);
   readonly showSuggestedAmount = input<boolean>(false);
+  readonly clickable = input<boolean>(false);
 
+  readonly cardClick = output<void>();
   readonly aportar = output<string>();
   readonly editar = output<string>();
   readonly excluir = output<string>();
@@ -241,6 +248,10 @@ export class OsGoalProgressCardComponent {
 
     if (this.isOverdue()) {
       classes.push('os-goal-progress-card--overdue');
+    }
+
+    if (this.clickable()) {
+      classes.push('os-goal-progress-card--clickable');
     }
 
     return classes.join(' ');
@@ -322,6 +333,12 @@ export class OsGoalProgressCardComponent {
     const data = this.goalData();
     if (data?.id) {
       this.excluir.emit(data.id);
+    }
+  }
+
+  onCardClick(): void {
+    if (this.clickable() && !this.isLoading()) {
+      this.cardClick.emit();
     }
   }
 }

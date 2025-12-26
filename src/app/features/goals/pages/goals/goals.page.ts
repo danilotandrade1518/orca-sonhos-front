@@ -92,6 +92,7 @@ import type { GoalDto } from '../../../../../dtos/goal/goal-types/goal-types';
         [remainingById]="state.remainingById()"
         [suggestedById]="state.suggestedMonthlyById()"
         (create)="navigateToNew()"
+        (cardClick)="navigateToDetail($event)"
         (aportar)="onAportar($event)"
         (editar)="onEditar($event)"
         (excluir)="onExcluir($event)"
@@ -190,8 +191,12 @@ export class GoalsPage implements OnInit {
     this.router.navigate([goalId, 'add-amount'], { relativeTo: this.route });
   }
 
-  onEditar(goalId: string): void {
+  navigateToDetail(goalId: string): void {
     this.router.navigate([goalId], { relativeTo: this.route });
+  }
+
+  onEditar(goalId: string): void {
+    this.router.navigate([goalId, 'edit'], { relativeTo: this.route });
   }
 
   onExcluir(goalId: string): void {
