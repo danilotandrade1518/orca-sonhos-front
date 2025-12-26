@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -22,12 +23,20 @@ import type { CreateGoalDto } from '../../../../../dtos/goal/create-goal-request
 import { BudgetSelectionService } from '../../../../core/services/budget-selection/budget-selection.service';
 import { AccountsHelperService } from '../../services/accounts-helper/accounts-helper.service';
 import { OsSelectComponent } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
+import { OsFormFieldComponent } from '../../../../shared/ui-components/molecules/os-form-field/os-form-field.component';
+import { OsDatePickerComponent } from '../../../../shared/ui-components/molecules/os-date-picker/os-date-picker.component';
 import { LocaleService } from '@shared/formatting';
 import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-select/os-select.component';
 
 @Component({
   selector: 'os-goal-form',
-  imports: [ReactiveFormsModule, OsFormTemplateComponent, OsSelectComponent],
+  imports: [
+    ReactiveFormsModule,
+    OsFormTemplateComponent,
+    OsSelectComponent,
+    OsFormFieldComponent,
+    OsDatePickerComponent,
+  ],
   template: `
     <os-form-template
       [config]="formConfig()"
@@ -40,89 +49,49 @@ import type { OsSelectOption } from '../../../../shared/ui-components/atoms/os-s
     >
       <form [formGroup]="form" class="os-goal-form" aria-label="Formulário de meta">
         <div class="os-goal-form__grid">
-          <div class="os-goal-form__field">
-            <label for="name">
-              Nome
-              <span aria-label="obrigatório">*</span>
-            </label>
-            <input
-              id="name"
-              type="text"
-              formControlName="name"
-              required
-              [attr.aria-required]="true"
-              [attr.aria-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
-              [attr.aria-describedby]="form.get('name')?.invalid && form.get('name')?.touched ? 'name-error' : null"
-            />
-            @if (form.get('name')?.invalid && form.get('name')?.touched) {
-              <span id="name-error" class="os-goal-form__error" role="alert">
-                @if (form.get('name')?.hasError('required')) {
-                  Nome é obrigatório
-                } @else if (form.get('name')?.hasError('minlength')) {
-                  Nome deve ter pelo menos 2 caracteres
-                } @else if (form.get('name')?.hasError('maxlength')) {
-                  Nome deve ter no máximo 50 caracteres
-                }
-              </span>
-            }
-          </div>
+          <os-form-field
+            label="Nome"
+            type="text"
+            [required]="true"
+            [control]="nameControl()"
+            [errorMessage]="getNameErrorMessage()"
+            [maxLength]="50"
+          />
 
-          <div class="os-goal-form__field">
-            <label for="totalAmount">
-              Valor alvo
-              <span aria-label="obrigatório">*</span>
-            </label>
-            <input
-              id="totalAmount"
-              type="number"
-              step="0.01"
-              min="0.01"
-              formControlName="totalAmount"
-              required
-              [attr.aria-required]="true"
-              [attr.aria-invalid]="form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched"
-              [attr.aria-describedby]="form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched ? 'totalAmount-error' : null"
-            />
-            @if (form.get('totalAmount')?.invalid && form.get('totalAmount')?.touched) {
-              <span id="totalAmount-error" class="os-goal-form__error" role="alert">
-                @if (form.get('totalAmount')?.hasError('required')) {
-                  Valor alvo é obrigatório
-                } @else if (form.get('totalAmount')?.hasError('min')) {
-                  Valor deve ser maior que zero
-                }
-              </span>
-            }
-          </div>
+          <os-form-field
+            label="Valor alvo"
+            type="number"
+            [required]="true"
+            [control]="totalAmountControl()"
+            [errorMessage]="getTotalAmountErrorMessage()"
+            placeholder="0.00"
+          />
 
-          <div class="os-goal-form__field">
-            <label for="deadline">Data-alvo (opcional)</label>
-            <input
-              id="deadline"
-              type="date"
+          <div class="os-goal-form__date-field">
+            <os-date-picker
+              label="Data-alvo (opcional)"
               formControlName="deadline"
-              [attr.aria-invalid]="form.get('deadline')?.invalid && form.get('deadline')?.touched"
-              [attr.aria-describedby]="form.get('deadline')?.invalid && form.get('deadline')?.touched ? 'deadline-error' : null"
+              [minDate]="minDateValue()"
+              placeholder="Selecionar data"
             />
-            @if (form.get('deadline')?.invalid && form.get('deadline')?.touched) {
-              <span id="deadline-error" class="os-goal-form__error" role="alert">
-                Data não pode ser no passado
+            @if (getDeadlineErrorMessage()) {
+              <span class="os-goal-form__error" role="alert">
+                {{ getDeadlineErrorMessage() }}
               </span>
             }
           </div>
 
-          <div class="os-goal-form__field">
-            <os-select
-              label="Conta de origem"
-              [options]="accountOptions()"
-              [value]="form.get('sourceAccountId')?.value || ''"
-              [helperText]="accountsHelper.error() || ''"
-              [placeholder]="
-                accountsHelper.isLoading() ? 'Carregando contas...' : 'Selecione uma conta'
-              "
-              formControlName="sourceAccountId"
-              [attr.aria-required]="true"
-            />
-          </div>
+          <os-select
+            label="Conta de origem"
+            [options]="accountOptions()"
+            [value]="form.get('sourceAccountId')?.value || ''"
+            [helperText]="accountsHelper.error() || ''"
+            [placeholder]="
+              accountsHelper.isLoading() ? 'Carregando contas...' : 'Selecione uma conta'
+            "
+            formControlName="sourceAccountId"
+            [required]="true"
+          />
         </div>
 
         <p class="os-goal-form__hint" aria-live="polite" role="note">
@@ -164,17 +133,19 @@ export class GoalFormComponent {
     totalAmount: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01)],
     }),
-    deadline: new FormControl<string | null>(null, {
+    deadline: new FormControl<Date | null>(null, {
       validators: [GoalFormComponent.deadlineNotPastValidator],
     }),
     sourceAccountId: new FormControl<string>('', { nonNullable: true }),
   });
 
+  private readonly _formValidityTick = signal(0);
+
   readonly suggestedMonthlyHint = computed(() => {
     const total = this.form.get('totalAmount')?.value ?? 0;
-    const deadline = this.form.get('deadline')?.value as string | null;
+    const deadline = this.form.get('deadline')?.value as Date | null;
     if (!deadline || !total || total <= 0) return '—';
-    const months = this.calculateMonthsRemaining(new Date(), new Date(deadline));
+    const months = this.calculateMonthsRemaining(new Date(), deadline);
     if (months <= 0) return '—';
     const current = 0;
     const remaining = Math.max(total - current, 0);
@@ -188,6 +159,51 @@ export class GoalFormComponent {
       label: account.name,
       disabled: false,
     }));
+  });
+
+  readonly nameControl = computed(() => {
+    return this.form.get('name') as FormControl | null;
+  });
+
+  readonly totalAmountControl = computed(() => {
+    return this.form.get('totalAmount') as FormControl | null;
+  });
+
+  readonly deadlineControl = computed(() => {
+    return this.form.get('deadline') as FormControl | null;
+  });
+
+  readonly getNameErrorMessage = computed(() => {
+    this._formValidityTick();
+    const control = this.nameControl();
+    if (!control || (!control.touched && !control.dirty)) return '';
+    if (control.hasError('required')) return 'Nome é obrigatório';
+    if (control.hasError('minlength')) return 'Nome deve ter pelo menos 2 caracteres';
+    if (control.hasError('maxlength')) return 'Nome deve ter no máximo 50 caracteres';
+    return '';
+  });
+
+  readonly getTotalAmountErrorMessage = computed(() => {
+    this._formValidityTick();
+    const control = this.totalAmountControl();
+    if (!control || (!control.touched && !control.dirty)) return '';
+    if (control.hasError('required')) return 'Valor alvo é obrigatório';
+    if (control.hasError('min')) return 'Valor deve ser maior que zero';
+    return '';
+  });
+
+  readonly minDateValue = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  });
+
+  readonly getDeadlineErrorMessage = computed(() => {
+    this._formValidityTick();
+    const control = this.deadlineControl();
+    if (!control || (!control.touched && !control.dirty)) return '';
+    if (control.hasError('minDate')) return 'Data não pode ser no passado';
+    return '';
   });
 
   constructor() {
@@ -209,20 +225,66 @@ export class GoalFormComponent {
         }
       }
     });
+
+    effect((onCleanup) => {
+      const form = this.form;
+      if (!form) return;
+
+      this._formValidityTick.update((v) => v + 1);
+
+      const sub = form.statusChanges.subscribe(() => {
+        this._formValidityTick.update((v) => v + 1);
+      });
+
+      onCleanup(() => sub.unsubscribe());
+    });
+
+    effect(() => {
+      const initialData = this.initialData();
+      if (initialData) {
+        const nameControl = this.form.get('name');
+        const totalAmountControl = this.form.get('totalAmount');
+        const deadlineControl = this.form.get('deadline');
+        const sourceAccountControl = this.form.get('sourceAccountId');
+
+        if (nameControl && initialData.name) {
+          nameControl.setValue(initialData.name);
+        }
+        if (totalAmountControl && initialData.totalAmount !== undefined) {
+          totalAmountControl.setValue(initialData.totalAmount / 100);
+        }
+        if (deadlineControl && initialData.deadline) {
+          const deadlineDate = new Date(initialData.deadline);
+          if (!isNaN(deadlineDate.getTime())) {
+            deadlineControl.setValue(deadlineDate);
+          }
+        }
+        if (sourceAccountControl && initialData.sourceAccountId) {
+          sourceAccountControl.setValue(initialData.sourceAccountId);
+        }
+      }
+    });
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this._formValidityTick.update((v) => v + 1);
+      return;
+    }
     const budgetId = this.budgetSelection.selectedBudgetId();
     if (!budgetId) return;
 
     const totalAmountReais = Number(this.form.get('totalAmount')!.value);
     const totalAmountCents = Math.round(totalAmountReais * 100);
 
+    const deadlineValue = this.form.get('deadline')!.value as Date | null;
+    const deadlineString = deadlineValue ? deadlineValue.toISOString().split('T')[0] : undefined;
+
     const dto: CreateGoalDto = {
       name: this.form.get('name')!.value,
       totalAmount: totalAmountCents,
-      deadline: this.form.get('deadline')!.value || undefined,
+      deadline: deadlineString,
       accumulatedAmount: 0,
       budgetId,
       sourceAccountId: this.form.get('sourceAccountId')!.value,
@@ -241,11 +303,11 @@ export class GoalFormComponent {
   }
 
   static deadlineNotPastValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value as string | null;
+    const value = control.value as Date | string | null;
     if (!value) return null;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const date = new Date(value);
+    const date = value instanceof Date ? value : new Date(value);
     if (isNaN(date.getTime())) return { invalidDate: true };
     date.setHours(0, 0, 0, 0);
     return date < today ? { minDate: true } : null;
