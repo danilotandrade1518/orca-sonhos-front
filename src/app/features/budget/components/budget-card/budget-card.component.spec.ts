@@ -134,6 +134,17 @@ describe('BudgetCardComponent', () => {
   });
 
   describe('Outputs', () => {
+    it('should emit cardClick with budget id when card is clicked', () => {
+      let emittedValue = '';
+      component.cardClick.subscribe((value) => {
+        emittedValue = value;
+      });
+
+      component.onCardClick();
+
+      expect(emittedValue).toBe(mockBudget.id);
+    });
+
     it('should emit editClick with budget id when edit button is clicked', () => {
       let emittedValue = '';
       component.editClick.subscribe((value) => {
