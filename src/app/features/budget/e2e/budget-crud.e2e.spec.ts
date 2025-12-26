@@ -225,9 +225,7 @@ test.describe('Budget CRUD E2E (UI atual)', () => {
 
     await budgetHelper.expectBudgetInList(personalBudget);
     await budgetHelper.expectBudgetNotInList(sharedBudget);
-
-    // Resetar filtro para "todos" de forma resiliente.
-    // O texto/option do dropdown pode variar, mas a UI expõe botões explícitos de ação.
+    
     await page.getByRole('button', { name: /^limpar$/i }).first().click();
     await budgetHelper.waitForBudgetList();
     const waitDelete1 = budgetHelper.waitForDeleteBudgetResponse();

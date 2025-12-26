@@ -214,5 +214,3 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     await waitDelete;
   });
 });
-
-

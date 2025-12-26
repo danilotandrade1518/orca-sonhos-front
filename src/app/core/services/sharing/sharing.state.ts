@@ -39,10 +39,7 @@ export class SharingState {
       const count = participants.length;
       const budgetId = this.currentBudgetId;
       if (!budgetId) return;
-
-      // Importante: `updateBudgetParticipantsCount()` lê/escreve signals em `BudgetState`.
-      // Se chamarmos isso "tracked" dentro de um `effect`, o effect passa a depender de `_budgets`
-      // e pode entrar em loop infinito (travando a UI). `untracked()` evita essa dependência.
+      
       untracked(() => {
         this.budgetState.updateBudgetParticipantsCount(budgetId, count);
       });
