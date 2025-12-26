@@ -226,12 +226,10 @@ test.describe('Budget CRUD E2E (UI atual)', () => {
     await budgetHelper.expectBudgetInList(personalBudget);
     await budgetHelper.expectBudgetNotInList(sharedBudget);
 
-    await typeSelect.click();
-    await page.waitForTimeout(300); // Aguardar o menu abrir
-    const allTypesOption = page.getByRole('option', { name: /todos os tipos/i });
-    await allTypesOption.waitFor({ state: 'visible', timeout: 10000 });
-    await allTypesOption.click({ force: true });
-    await page.waitForTimeout(300); // Aguardar o filtro aplicar
+    // Resetar filtro para "todos" de forma resiliente.
+    // O texto/option do dropdown pode variar, mas a UI expõe botões explícitos de ação.
+    await page.getByRole('button', { name: /^limpar$/i }).first().click();
+    await budgetHelper.waitForBudgetList();
     const waitDelete1 = budgetHelper.waitForDeleteBudgetResponse();
     await budgetHelper.clickDeleteBudget(personalBudget);
     await budgetHelper.confirmDelete();

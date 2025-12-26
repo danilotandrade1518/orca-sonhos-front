@@ -74,8 +74,8 @@ describe('SharingService', () => {
   describe('addParticipant', () => {
     it('should add participant and return true when user is authenticated', () => {
       const mockResponse: AddParticipantResponseDto = {
-        success: true,
-        participantId: 'user-1',
+        id: 'user-1',
+        traceId: 'test-trace-id',
       };
 
       apiService.postRaw.mockReturnValue(of(mockResponse));
@@ -124,7 +124,8 @@ describe('SharingService', () => {
   describe('removeParticipant', () => {
     it('should remove participant and return true when user is authenticated', () => {
       const mockResponse: RemoveParticipantResponseDto = {
-        success: true,
+        id: 'user-1',
+        traceId: 'test-trace-id',
       };
 
       apiService.postRaw.mockReturnValue(of(mockResponse));
@@ -255,7 +256,7 @@ describe('SharingService', () => {
 
   describe('loading state', () => {
     it('should set loading to true during request', () => {
-      apiService.postRaw.mockReturnValue(of({ success: true }));
+      apiService.postRaw.mockReturnValue(of({ id: 'ok', traceId: 'test-trace-id' }));
 
       service.addParticipant('budget-1', 'user-1').subscribe();
 

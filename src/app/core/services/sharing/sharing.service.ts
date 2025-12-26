@@ -52,7 +52,9 @@ export class SharingService {
     return this.api.postRaw<AddParticipantResponseDto>('/budget/add-participant', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        // Back-end real retorna `{ id, traceId }` (sem `success`).
+        // Mocks legados podem retornar `{ success: true }`.
+        return Boolean(response?.success ?? response?.id);
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
@@ -92,7 +94,9 @@ export class SharingService {
     return this.api.postRaw<RemoveParticipantResponseDto>('/budget/remove-participant', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        // Back-end real retorna `{ id, traceId }` (sem `success`).
+        // Mocks legados podem retornar `{ success: true }`.
+        return Boolean(response?.success ?? response?.id);
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);

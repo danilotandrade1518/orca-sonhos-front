@@ -144,7 +144,8 @@ export const budgetHandlers = [
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    return HttpResponse.json({ success: true, participantId: body.participantId }, { status: 200 });
+    // Back-end real retorna `{ id, traceId }` via DefaultResponseBuilder
+    return HttpResponse.json({ id: body.participantId, traceId: 'msw-trace-id' }, { status: 200 });
   }),
 
   http.post('/budget/remove-participant', async ({ request }) => {
@@ -160,7 +161,8 @@ export const budgetHandlers = [
       return HttpResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    return HttpResponse.json({ success: true }, { status: 200 });
+    // Back-end real retorna `{ id, traceId }` via DefaultResponseBuilder
+    return HttpResponse.json({ id: body.participantId, traceId: 'msw-trace-id' }, { status: 200 });
   }),
 
   http.get('/budget/:budgetId/dashboard/insights', ({ request, params }) => {
