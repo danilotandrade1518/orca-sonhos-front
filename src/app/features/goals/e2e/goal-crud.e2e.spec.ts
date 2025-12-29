@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { AuthHelper } from './helpers/auth.helper';
 import { GoalHelper } from './helpers/goal.helper';
 
-test.describe('Goal CRUD E2E (UI atual)', () => {
+test.describe('Goal CRUD E2E', () => {
   let authHelper: AuthHelper;
   let goalHelper: GoalHelper;
   const MOCK_TOKEN = 'mock-bearer-token';

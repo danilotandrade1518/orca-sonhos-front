@@ -8,9 +8,9 @@ export class ParticipantsHelper {
     const dialogVisible = await dialog.isVisible().catch(() => false);
     return dialogVisible ? dialog : this.page.locator('body');
   }
-  
+
   async navigateToBudgetDetail(budgetName: string): Promise<void> {
-    
+
     const budgetsLink = this.page.getByRole('link', { name: /^orçamentos$/i }).or(
       this.page.getByRole('navigation').getByText(/^orçamentos$/i)
     ).first();
@@ -19,7 +19,7 @@ export class ParticipantsHelper {
     await budgetsLink.click();
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
-    
+
     const card = this.page.locator('os-budget-card').filter({ hasText: budgetName }).first();
     await card.waitFor({ state: 'visible', timeout: 10000 });
     await card.click();

@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 export class GoalHelper {
   constructor(private page: Page) {}
-  
+
   private async ensureBudgetSelected(): Promise<void> {
     const budgetCombobox = this.page.getByRole('combobox', { name: /seletor de orçamento/i }).first();
     const trigger = budgetCombobox.locator('button').first();
@@ -22,7 +22,7 @@ export class GoalHelper {
       const firstOption = this.page.getByRole('option').first();
       const visible = await firstOption.isVisible({ timeout: 2000 }).catch(() => false);
       if (!visible) {
-        
+
         await this.page.keyboard.press('Escape').catch(() => {});
         return false;
       }
@@ -30,12 +30,12 @@ export class GoalHelper {
       await this.page.waitForTimeout(500);
       return await hasSelection();
     };
-    
+
     if (await tryOpenAndSelectFirst()) return;
-    
+
     const returnUrl = this.page.url();
     const budgetName = `E2E Orçamento Metas ${Date.now()}`;
-    
+
     const budgetsLink = this.page.getByRole('link', { name: /^orçamentos$/i }).or(
       this.page.getByRole('navigation').getByText(/^orçamentos$/i)
     ).first();
@@ -43,7 +43,7 @@ export class GoalHelper {
     await budgetsLink.click();
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(500);
-    
+
     const createBtn = this.page.getByRole('button', { name: /(novo|criar) orçamento/i }).first();
     await createBtn.waitFor({ state: 'visible', timeout: 10000 });
     await createBtn.click();
@@ -58,7 +58,7 @@ export class GoalHelper {
     await nameInput.waitFor({ state: 'visible', timeout: 10000 });
     await nameInput.click();
     await nameInput.fill(budgetName);
-    
+
     const typeCombo = this.page.getByRole('combobox', { name: /^tipo$/i }).first();
     const typeEnabled = await typeCombo.isVisible({ timeout: 1000 }).catch(() => false);
     if (typeEnabled) {
@@ -75,7 +75,7 @@ export class GoalHelper {
     await saveBtn.click({ force: true });
     await this.page.waitForLoadState('networkidle').catch(() => {});
     await this.page.waitForTimeout(800);
-    
+
     if (returnUrl.includes('/goals')) {
       const metasLink = this.page.getByRole('link', { name: /^metas$/i }).or(
         this.page.getByRole('navigation').getByText(/^metas$/i)
@@ -87,7 +87,7 @@ export class GoalHelper {
     }
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(500);
-    
+
     const budgetComboboxAfter = this.page.getByRole('combobox', { name: /seletor de orçamento/i }).first();
     const triggerAfter = budgetComboboxAfter.locator('button').first();
     await triggerAfter.waitFor({ state: 'visible', timeout: 10000 });
@@ -100,19 +100,19 @@ export class GoalHelper {
     }
     await this.page.waitForTimeout(500);
   }
-  
+
   async navigateToGoalList(): Promise<void> {
-    
+
     const metasLink = this.page.getByRole('link', { name: /^metas$/i }).or(
       this.page.getByRole('navigation').getByText(/^metas$/i)
     ).first();
-    
+
     await metasLink.waitFor({ state: 'visible', timeout: 10000 });
     await metasLink.click();
-    
+
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
-    
+
     await this.waitForGoalList();
   }
 
@@ -130,13 +130,13 @@ export class GoalHelper {
     await tryClick(/criar meta/i);
 
     await this.page.waitForTimeout(300);
-    
+
     if (!this.page.url().includes('/goals/new')) {
-      
+
       if (!this.page.url().includes('/goals')) {
         await this.navigateToGoalList();
       }
-      
+
       await tryClick(/nova meta/i);
       await tryClick(/criar meta/i);
     }
@@ -151,7 +151,7 @@ export class GoalHelper {
     deadline?: string,
     sourceAccountId?: string
   ): Promise<void> {
-    
+
     await this.ensureBudgetSelected();
 
     await this.page
@@ -163,7 +163,7 @@ export class GoalHelper {
         timeout: 15000,
       })
       .catch(() => {});
-    
+
     const nameInput = this.page
       .locator('os-form-field')
       .filter({ hasText: 'Nome' })
@@ -196,7 +196,7 @@ export class GoalHelper {
         );
       }
     }, { value: name });
-    
+
     const totalAmountInput = this.page
       .locator('os-form-field')
       .filter({ hasText: 'Valor alvo' })
@@ -228,7 +228,7 @@ export class GoalHelper {
         );
       }
     }, { value: totalAmount });
-    
+
     if (deadline) {
       const datePicker = this.page.locator('os-date-picker').first();
       await datePicker.waitFor({ state: 'visible', timeout: 10000 });
@@ -236,11 +236,11 @@ export class GoalHelper {
       await dateInput.fill(deadline);
       await this.page.waitForTimeout(300);
     }
-    
+
     const accountCombo = this.page.getByRole('combobox', { name: /conta de origem/i }).first();
     await accountCombo.waitFor({ state: 'visible', timeout: 15000 });
     await accountCombo.click({ force: true });
-    
+
     const options = this.page.getByRole('option');
     await options.first().waitFor({ state: 'visible', timeout: 15000 });
 
@@ -254,7 +254,7 @@ export class GoalHelper {
     } else {
       await options.first().click();
     }
-    
+
     await this.page
       .waitForFunction(() => {
         const combo = document.querySelector('[role="combobox"][aria-label*="Conta de origem"]');
@@ -263,14 +263,14 @@ export class GoalHelper {
         return !txt.includes('selecione uma conta');
       })
       .catch(() => {});
-    
+
     await this.page.waitForTimeout(1500);
   }
 
   async saveGoalForm(): Promise<void> {
     const saveButton = this.page.getByRole('button', { name: /^(criar|salvar)$/i }).first();
     await saveButton.waitFor({ state: 'visible', timeout: 10000 });
-    
+
     await expect(saveButton).toBeEnabled({ timeout: 20000 });
     await saveButton.click({ force: true });
     await this.page.waitForLoadState('networkidle').catch(() => {});
@@ -392,44 +392,44 @@ export class GoalHelper {
       )
       .catch(() => null);
   }
-  
+
   async navigateToGoalDetail(goalName: string): Promise<void> {
     await this.navigateToGoalList();
     await this.clickGoal(goalName);
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
   }
-  
+
   async navigateToGoalEdit(goalName: string): Promise<void> {
     await this.navigateToGoalList();
     await this.clickEditGoal(goalName);
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
   }
-  
+
   async navigateToAddAmount(goalName: string): Promise<void> {
-    
+
     if (this.page.url().includes('/goals/') && !this.page.url().includes('/goals/new') && !this.page.url().includes('/goals/edit')) {
       const addButton = this.page.getByRole('button', { name: /aportar/i }).first();
       await addButton.waitFor({ state: 'visible', timeout: 10000 });
       await addButton.click();
     } else {
-      
+
       await this.navigateToGoalList();
       await this.clickAddAmountButton(goalName);
     }
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
   }
-  
+
   async navigateToRemoveAmount(goalName: string): Promise<void> {
-    
+
     if (this.page.url().includes('/goals/') && !this.page.url().includes('/goals/new') && !this.page.url().includes('/goals/edit')) {
       const removeButton = this.page.getByRole('button', { name: /remover/i }).first();
       await removeButton.waitFor({ state: 'visible', timeout: 10000 });
       await removeButton.click();
     } else {
-      
+
       await this.navigateToGoalList();
       await this.clickRemoveAmountButton(goalName);
     }
@@ -488,7 +488,7 @@ export class GoalHelper {
   }
 
   async saveAmountForm(): Promise<void> {
-    
+
     await this.page.waitForFunction(
       () => {
         const doc = (globalThis as unknown as { document?: unknown }).document;
@@ -512,10 +512,10 @@ export class GoalHelper {
 
     const saveButton = this.page.getByRole('button', { name: /^(adicionar|remover)$/i }).first();
     await saveButton.waitFor({ state: 'visible', timeout: 10000 });
-    
+
     const enabled = await saveButton.isEnabled().catch(() => false);
     if (!enabled) {
-      
+
       await this.page.waitForTimeout(1000);
       const enabledAgain = await saveButton.isEnabled().catch(() => false);
       if (!enabledAgain) {

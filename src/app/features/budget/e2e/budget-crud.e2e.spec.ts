@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { AuthHelper } from './helpers/auth.helper';
 import { BudgetHelper } from './helpers/budget.helper';
 
-test.describe('Budget CRUD E2E (UI atual)', () => {
+test.describe('Budget CRUD E2E', () => {
   let authHelper: AuthHelper;
   let budgetHelper: BudgetHelper;
   const MOCK_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
@@ -225,7 +225,7 @@ test.describe('Budget CRUD E2E (UI atual)', () => {
 
     await budgetHelper.expectBudgetInList(personalBudget);
     await budgetHelper.expectBudgetNotInList(sharedBudget);
-    
+
     await page.getByRole('button', { name: /^limpar$/i }).first().click();
     await budgetHelper.waitForBudgetList();
     const waitDelete1 = budgetHelper.waitForDeleteBudgetResponse();

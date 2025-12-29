@@ -39,6 +39,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.expectParticipantInList(participantEmail);
     await participantsHelper.expectParticipantCount(2);
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -73,6 +74,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.expectParticipantNotInList(participantEmail);
     await participantsHelper.expectParticipantCount(1);
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -101,6 +103,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.addParticipant(participantEmail);
     await participantsHelper.expectPersonalBudgetError();
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -138,6 +141,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.expectParticipantInList(participant1);
     await participantsHelper.expectParticipantInList(participant2);
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -169,6 +173,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.addParticipant(participantEmail);
     await participantsHelper.expectErrorNotification(/j[aá]\s+é\s+participante/i);
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -206,6 +211,7 @@ test.describe('Budget Participants E2E', () => {
     await participantsHelper.expectParticipantNotInList(participant1);
     await participantsHelper.expectParticipantInList(participant2);
 
+    await participantsHelper.closeManageParticipants();
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
