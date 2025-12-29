@@ -5,10 +5,12 @@ import {
   OnInit,
   signal,
   ChangeDetectionStrategy,
+  effect,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { BudgetSelectionService } from '@core/services/budget-selection/budget-selection.service';
+import { BudgetState } from '@core/services/budget/budget.state';
 import { DashboardWidgetsComponent } from '@features/dashboard/components/dashboard-widgets/dashboard-widgets.component';
 import { DashboardDataService } from '@features/dashboard/services/dashboard-data.service';
 import { DashboardInsightsService } from '@features/dashboard/services/dashboard-insights.service';
@@ -48,11 +50,13 @@ import {
 })
 export class DashboardPage implements OnInit {
   private readonly budgetSelectionService = inject(BudgetSelectionService);
+  private readonly budgetState = inject(BudgetState);
   private readonly dashboardDataService = inject(DashboardDataService);
   private readonly dashboardInsightsService = inject(DashboardInsightsService);
   private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
+  private readonly dashboardDataLoaded = signal(false);
 
   readonly pageHeaderActions = computed((): PageHeaderAction[] => {
     return [];
@@ -125,34 +129,55 @@ export class DashboardPage implements OnInit {
     },
   ]);
 
-  ngOnInit(): void {
-    this.loadDashboardData();
+  constructor() {
+    // Aguardar o budget selecionado estar disponível antes de carregar os dados do dashboard
+    effect(() => {
+      const selectedBudget = this.budgetSelectionService.selectedBudget();
+      const hasBudgets = this.budgetState.hasBudgets();
+      const isLoadingBudgets = this.budgetState.loading();
+      
+      // Só carregar os dados do dashboard se:
+      // 1. Há um budget selecionado
+      // 2. Os budgets já foram carregados (ou não há budgets para carregar)
+      // 3. Os dados do dashboard ainda não foram carregados
+      if (selectedBudget && !isLoadingBudgets && hasBudgets && !this.dashboardDataLoaded()) {
+        this.loadDashboardDataForBudget(selectedBudget.id);
+      }
+    });
   }
 
-  private async loadDashboardData(): Promise<void> {
+  ngOnInit(): void {
+    // Se os budgets já foram carregados e há um budget selecionado, carregar os dados imediatamente
+    const selectedBudget = this.budgetSelectionService.selectedBudget();
+    const hasBudgets = this.budgetState.hasBudgets();
+    const isLoadingBudgets = this.budgetState.loading();
+    
+    if (selectedBudget && !isLoadingBudgets && hasBudgets) {
+      this.loadDashboardDataForBudget(selectedBudget.id);
+    }
+  }
+
+  private async loadDashboardDataForBudget(budgetId: string): Promise<void> {
+    if (this.dashboardDataLoaded()) {
+      return; // Já carregado
+    }
+
     this.isLoading.set(true);
+    this.dashboardDataLoaded.set(true);
 
     try {
-      await firstValueFrom(this.dashboardDataService.loadBudgets());
+      const [, , insights] = await Promise.all([
+        firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
+        firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
+        firstValueFrom(this.dashboardDataService.loadDashboardInsights(budgetId)),
+      ]);
 
-      const budgets = this.dashboardDataService.budgets();
-      if (budgets.length > 0) {
-        this.budgetSelectionService.setAvailableBudgets(budgets);
-        this.budgetSelectionService.setSelectedBudget(budgets[0]);
-
-        const budgetId = budgets[0].id;
-        const [, , insights] = await Promise.all([
-          firstValueFrom(this.dashboardDataService.loadBudgetOverview(budgetId)),
-          firstValueFrom(this.dashboardDataService.loadGoals(budgetId)),
-          firstValueFrom(this.dashboardDataService.loadDashboardInsights(budgetId)),
-        ]);
-
-        if (insights) {
-          this.dashboardInsightsService.setInsights(insights);
-        }
+      if (insights) {
+        this.dashboardInsightsService.setInsights(insights);
       }
     } catch (error) {
       console.error('Error loading dashboard data', error);
+      this.dashboardDataLoaded.set(false); // Permitir tentar novamente
     } finally {
       this.isLoading.set(false);
     }
@@ -179,6 +204,10 @@ export class DashboardPage implements OnInit {
   }
 
   onRetryRequested(): void {
-    this.loadDashboardData();
+    this.dashboardDataLoaded.set(false);
+    const selectedBudget = this.budgetSelectionService.selectedBudget();
+    if (selectedBudget) {
+      this.loadDashboardDataForBudget(selectedBudget.id);
+    }
   }
 }

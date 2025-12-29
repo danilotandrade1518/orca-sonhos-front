@@ -13,6 +13,7 @@ import { SidebarItem } from '@shared/ui-components/organisms/os-sidebar/os-sideb
 import { HeaderUserMenu } from '@shared/ui-components/organisms/os-header/os-header.component';
 import { BudgetSelectorComponent } from '@features/dashboard/components/budget-selector/budget-selector.component';
 import { AuthService } from '@core/services/auth/auth.service';
+import { BudgetState } from '@core/services/budget/budget.state';
 
 @Component({
   selector: 'app-layout',
@@ -52,6 +53,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 export class AppLayoutComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly budgetState = inject(BudgetState);
 
   private readonly sidebarCollapsed = signal(false);
   private readonly currentRoute = signal<string>('/');
@@ -162,6 +164,11 @@ export class AppLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Carregar budgets globalmente para toda a aplicação
+    // Isso garante que o budget selecionado seja restaurado do localStorage
+    // antes de qualquer página precisar dele
+    this.budgetState.loadBudgets();
+
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe({
       next: (event) => {
         if (event instanceof NavigationEnd) {
