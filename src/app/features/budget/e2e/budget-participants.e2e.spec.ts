@@ -3,7 +3,7 @@ import { AuthHelper } from './helpers/auth.helper';
 import { BudgetHelper } from './helpers/budget.helper';
 import { ParticipantsHelper } from './helpers/participants.helper';
 
-test.describe('Budget Participants E2E (UI atual)', () => {
+test.describe('Budget Participants E2E', () => {
   let authHelper: AuthHelper;
   let budgetHelper: BudgetHelper;
   let participantsHelper: ParticipantsHelper;
@@ -30,7 +30,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
 
     await participantsHelper.openManageParticipants();
     await participantsHelper.addParticipant(participantEmail);
@@ -38,7 +38,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     await participantsHelper.expectSuccessNotification(/participante adicionado com sucesso/i);
     await participantsHelper.expectParticipantInList(participantEmail);
     await participantsHelper.expectParticipantCount(2);
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -61,18 +61,18 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
 
     await participantsHelper.openManageParticipants();
     await participantsHelper.addParticipant(participantEmail);
     await participantsHelper.expectParticipantInList(participantEmail);
     await participantsHelper.expectParticipantCount(2);
 
-    await participantsHelper.removeParticipant(participantEmail);
+    await participantsHelper.removeParticipant();
     await participantsHelper.expectSuccessNotification(/participante removido com sucesso/i);
     await participantsHelper.expectParticipantNotInList(participantEmail);
     await participantsHelper.expectParticipantCount(1);
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -95,12 +95,12 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
 
     await participantsHelper.openManageParticipants();
     await participantsHelper.addParticipant(participantEmail);
     await participantsHelper.expectPersonalBudgetError();
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -124,7 +124,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
     await participantsHelper.openManageParticipants();
 
     await participantsHelper.addParticipant(participant1);
@@ -137,7 +137,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
 
     await participantsHelper.expectParticipantInList(participant1);
     await participantsHelper.expectParticipantInList(participant2);
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -160,7 +160,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
     await participantsHelper.openManageParticipants();
 
     await participantsHelper.addParticipant(participantEmail);
@@ -168,7 +168,7 @@ test.describe('Budget Participants E2E (UI atual)', () => {
 
     await participantsHelper.addParticipant(participantEmail);
     await participantsHelper.expectErrorNotification(/j[aá]\s+é\s+participante/i);
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();
@@ -192,20 +192,20 @@ test.describe('Budget Participants E2E (UI atual)', () => {
     const budgetId = await waitCreate;
     expect(budgetId).toBeTruthy();
 
-    await participantsHelper.navigateToBudgetDetail(budgetId!);
+    await participantsHelper.navigateToBudgetDetail(budgetName);
     await participantsHelper.openManageParticipants();
 
     await participantsHelper.addParticipant(participant1);
     await participantsHelper.addParticipant(participant2);
     await participantsHelper.expectParticipantCount(3);
 
-    await participantsHelper.removeParticipant(participant1);
+    await participantsHelper.removeParticipant();
     await participantsHelper.expectSuccessNotification(/participante removido com sucesso/i);
 
     await participantsHelper.expectParticipantCount(2);
     await participantsHelper.expectParticipantNotInList(participant1);
     await participantsHelper.expectParticipantInList(participant2);
-    
+
     await budgetHelper.navigateToBudgetList();
     await budgetHelper.waitForBudgetList();
     const waitDelete = budgetHelper.waitForDeleteBudgetResponse();

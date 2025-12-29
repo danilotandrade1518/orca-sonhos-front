@@ -156,8 +156,8 @@ test.describe('Budget CRUD E2E (UI atual)', () => {
   });
 
   test('deve validar campos obrigatórios no formulário', async ({ page }) => {
-    await page.goto('/budgets/new');
-    await page.waitForLoadState('networkidle');
+    await budgetHelper.navigateToBudgetList();
+    await budgetHelper.clickCreateBudget();
 
     const nameInput = page
       .locator('os-form-field')
@@ -171,8 +171,8 @@ test.describe('Budget CRUD E2E (UI atual)', () => {
   });
 
   test('deve exibir mensagem de erro ao tentar criar orçamento com nome muito curto', async ({ page }) => {
-    await page.goto('/budgets/new');
-    await page.waitForLoadState('networkidle');
+    await budgetHelper.navigateToBudgetList();
+    await budgetHelper.clickCreateBudget();
 
     await page
       .locator('os-form-field')

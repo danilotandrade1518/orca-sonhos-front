@@ -157,7 +157,7 @@ export class BudgetService {
     return this.api.postRaw<UpdateBudgetResponseDto & { id?: string }>('/budget/update-budget', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        // Back-end retorna { id: "...", traceId: "..." } diretamente ou { success: boolean }
+        
         return response.success ?? !!response.id;
       }),
       catchError((error: ApiError) => {
@@ -193,7 +193,7 @@ export class BudgetService {
     return this.api.postRaw<DeleteBudgetResponseDto & { id?: string }>('/budget/delete-budget', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        // Back-end retorna { id: "...", traceId: "..." } diretamente ou { success: boolean }
+        
         return response.success ?? !!response.id;
       }),
       catchError((error: ApiError) => {
