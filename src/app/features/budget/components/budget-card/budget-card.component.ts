@@ -12,7 +12,7 @@ import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-butto
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <os-entity-card
-      [clickable]="false"
+      [clickable]="true"
       [selected]="selected()"
       [disabled]="disabled()"
       [loading]="loading()"
@@ -23,6 +23,7 @@ import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-butto
       [meta]="metaText()"
       [customActions]="showActions()"
       [showActionsMenu]="false"
+      (cardClick)="onCardClick()"
     >
       <span
         slot="title"
@@ -41,7 +42,7 @@ import { OsEditButtonComponent } from '@shared/ui-components/atoms/os-edit-butto
         />
         <os-delete-button
           [ariaLabel]="'Excluir orçamento ' + budget().name"
-          (deleteClick)="onDelete()"
+          (deleteClick)="onDelete($event)"
         />
       </div>
       }
@@ -61,6 +62,7 @@ export class BudgetCardComponent {
   readonly variant = input<'default' | 'outlined' | 'elevated' | 'flat'>('default');
   readonly size = input<'small' | 'medium' | 'large'>('medium');
 
+  readonly cardClick = output<string>();
   readonly editClick = output<string>();
   readonly deleteClick = output<string>();
 
@@ -80,7 +82,12 @@ export class BudgetCardComponent {
     this.editClick.emit(this.budget().id);
   }
 
-  onDelete(): void {
+  onDelete(event?: MouseEvent): void {
+    event?.stopPropagation();
     this.deleteClick.emit(this.budget().id);
+  }
+
+  onCardClick(): void {
+    this.cardClick.emit(this.budget().id);
   }
 }

@@ -383,6 +383,33 @@
   &--loading {
     pointer-events: none;
   }
+
+  // Clickable state
+  &--clickable {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      border-color: var(--os-color-primary-300);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--os-color-primary-500);
+      outline-offset: 2px;
+    }
+
+    // Previne que ações dentro do card acionem o click do card
+    .os-goal-progress-card__actions {
+      pointer-events: auto;
+    }
+  }
 }
 
 // Animations

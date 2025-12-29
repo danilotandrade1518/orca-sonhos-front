@@ -38,6 +38,7 @@ import { OsEntityListComponent } from '../../../../shared/ui-components/organism
           [progress]="progressById()(g.id)"
           [remaining]="remainingById()(g.id)"
           [suggested]="suggestedById()(g.id)"
+          (cardClick)="cardClick.emit(g.id)"
           (aportar)="aportar.emit($event)"
           (editar)="editar.emit($event)"
           (excluir)="excluir.emit($event)"
@@ -62,6 +63,7 @@ export class GoalListComponent {
 
   readonly refresh = output<void>();
   readonly create = output<void>();
+  readonly cardClick = output<string>();
   readonly aportar = output<string>();
   readonly editar = output<string>();
   readonly excluir = output<string>();

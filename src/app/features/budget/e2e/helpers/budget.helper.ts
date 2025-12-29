@@ -4,18 +4,18 @@ export class BudgetHelper {
   constructor(private page: Page) {}
 
   async navigateToBudgetList(): Promise<void> {
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        await this.page.goto('/budgets', { waitUntil: 'domcontentloaded' });
-        break;
-      } catch (error) {
-        if (attempt === 3) throw error;
-        await this.page.waitForTimeout(500);
-      }
-    }
-    await this.page.waitForLoadState('networkidle');
 
+    const budgetsLink = this.page.getByRole('link', { name: /^orçamentos$/i }).or(
+      this.page.getByRole('navigation').getByText(/^orçamentos$/i)
+    ).first();
+
+    await budgetsLink.waitFor({ state: 'visible', timeout: 10000 });
+    await budgetsLink.click();
+
+    await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
+
+    await this.waitForBudgetList();
   }
 
   async clickCreateBudget(): Promise<void> {
@@ -32,8 +32,15 @@ export class BudgetHelper {
     await tryClick(/criar orçamento/i);
 
     await this.page.waitForTimeout(300);
+
     if (!this.page.url().includes('/budgets/new')) {
-      await this.page.goto('/budgets/new');
+
+      if (!this.page.url().includes('/budgets')) {
+        await this.navigateToBudgetList();
+      }
+
+      await tryClick(/novo orçamento/i);
+      await tryClick(/criar orçamento/i);
     }
 
     await this.page.waitForLoadState('networkidle');
@@ -169,7 +176,11 @@ export class BudgetHelper {
   }
 
   async cancelDelete(): Promise<void> {
-    await this.page.getByRole('button', { name: /cancelar/i }).first().click();
+
+    const modal = this.page.locator('os-modal-template').first();
+    const cancelBtn = modal.getByRole('button', { name: /cancelar/i }).first();
+    await cancelBtn.waitFor({ state: 'visible', timeout: 10000 });
+    await cancelBtn.click();
   }
 
   async expectSuccessNotification(message?: string | RegExp): Promise<void> {
@@ -239,9 +250,5 @@ export class BudgetHelper {
         { timeout: 20000 }
       )
       .catch(() => null);
-  }
-
-  private escapeRegex(input: string): string {
-    return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }

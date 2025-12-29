@@ -4,5 +4,5 @@ export interface AddAmountToGoalDto {
 }
 
 export interface AddAmountToGoalResponseDto {
-  success: boolean;
+  id: string;
 }

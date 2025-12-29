@@ -141,6 +141,28 @@ describe('GoalListComponent', () => {
       expect(spy).toHaveBeenCalledWith('goal-1');
     });
 
+    it('should emit cardClick event', () => {
+      const spy = vi.fn();
+      component.cardClick.subscribe(spy);
+
+      const cardDebugElement = fixture.debugElement.query(By.directive(GoalCardComponent));
+      const cardComponent = cardDebugElement.componentInstance as GoalCardComponent;
+      cardComponent.cardClick.emit();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should emit cardClick event with goal id', () => {
+      const spy = vi.fn();
+      component.cardClick.subscribe(spy);
+
+      const cardDebugElement = fixture.debugElement.query(By.directive(GoalCardComponent));
+      const cardComponent = cardDebugElement.componentInstance as GoalCardComponent;
+      cardComponent.cardClick.emit();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
     it('should emit editar event', () => {
       const spy = vi.fn();
       component.editar.subscribe(spy);

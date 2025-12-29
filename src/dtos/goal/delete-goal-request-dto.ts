@@ -3,5 +3,5 @@ export interface DeleteGoalDto {
 }
 
 export interface DeleteGoalResponseDto {
-  success: boolean;
+  id: string;
 }

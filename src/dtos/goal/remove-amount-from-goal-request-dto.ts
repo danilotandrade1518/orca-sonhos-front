@@ -4,5 +4,5 @@ export interface RemoveAmountFromGoalDto {
 }
 
 export interface RemoveAmountFromGoalResponseDto {
-  success: boolean;
+  id: string;
 }

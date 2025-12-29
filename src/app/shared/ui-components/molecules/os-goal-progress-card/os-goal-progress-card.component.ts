@@ -40,7 +40,12 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
       [class]="containerClass()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-describedby]="descriptionId()"
-      role="region"
+      [attr.role]="clickable() ? 'button' : 'region'"
+      [attr.tabindex]="clickable() ? '0' : null"
+      [attr.aria-disabled]="isLoading() ? 'true' : null"
+      (click)="onCardClick()"
+      (keydown.enter)="onCardClick()"
+      (keydown.space)="onCardClick()"
     >
       @if (isLoading()) {
       <div class="os-goal-progress-card__skeleton" aria-hidden="true">
@@ -146,7 +151,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
           variant="primary"
           size="small"
           icon="add"
-          (buttonClick)="onAportar()"
+          (buttonClick)="onAportar($event)"
           [attr.aria-label]="'Aportar na meta ' + goalData()?.title"
         >
           Aportar
@@ -157,7 +162,7 @@ export type GoalProgressState = 'default' | 'completed' | 'overdue' | 'loading';
         />
         <os-delete-button
           [ariaLabel]="'Excluir meta ' + goalData()?.title"
-          (deleteClick)="onExcluir()"
+          (deleteClick)="onExcluir($event)"
         />
       </footer>
       } }
@@ -176,7 +181,9 @@ export class OsGoalProgressCardComponent {
   readonly ariaLabel = input<string>('Card de progresso da meta');
   readonly showActions = input<boolean>(false);
   readonly showSuggestedAmount = input<boolean>(false);
+  readonly clickable = input<boolean>(false);
 
+  readonly cardClick = output<void>();
   readonly aportar = output<string>();
   readonly editar = output<string>();
   readonly excluir = output<string>();
@@ -188,10 +195,10 @@ export class OsGoalProgressCardComponent {
   readonly progressPercentage = computed(() => {
     const data = this.goalData();
     if (!data) return 0;
-    
+
     const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
     const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
-    
+
     if (targetValue === 0) return 0;
     return Math.min((currentValue / targetValue) * 100, 100);
   });
@@ -199,10 +206,10 @@ export class OsGoalProgressCardComponent {
   readonly remainingValue = computed(() => {
     const data = this.goalData();
     if (!data) return 0;
-    
+
     const targetValue = typeof data.targetValue === 'number' && !isNaN(data.targetValue) && isFinite(data.targetValue) ? data.targetValue : 0;
     const currentValue = typeof data.currentValue === 'number' && !isNaN(data.currentValue) && isFinite(data.currentValue) ? data.currentValue : 0;
-    
+
     return Math.max(targetValue - currentValue, 0);
   });
 
@@ -241,6 +248,10 @@ export class OsGoalProgressCardComponent {
 
     if (this.isOverdue()) {
       classes.push('os-goal-progress-card--overdue');
+    }
+
+    if (this.clickable()) {
+      classes.push('os-goal-progress-card--clickable');
     }
 
     return classes.join(' ');
@@ -303,7 +314,8 @@ export class OsGoalProgressCardComponent {
     return this.localeService.formatDateShort(date);
   }
 
-  onAportar(): void {
+  onAportar(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.aportar.emit(data.id);
@@ -318,10 +330,17 @@ export class OsGoalProgressCardComponent {
     }
   }
 
-  onExcluir(): void {
+  onExcluir(event?: MouseEvent): void {
+    event?.stopPropagation();
     const data = this.goalData();
     if (data?.id) {
       this.excluir.emit(data.id);
+    }
+  }
+
+  onCardClick(): void {
+    if (this.clickable() && !this.isLoading()) {
+      this.cardClick.emit();
     }
   }
 }

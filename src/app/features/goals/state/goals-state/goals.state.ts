@@ -42,10 +42,10 @@ export class GoalsState {
 
     goals.forEach((goal) => {
       if (!goal.id) return;
-      
+
       const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
       const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
-      
+
       if (totalAmount <= 0) {
         progressMap.set(goal.id, 0);
         return;
@@ -63,10 +63,10 @@ export class GoalsState {
 
     goals.forEach((goal) => {
       if (!goal.id) return;
-      
+
       const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
       const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
-      
+
       const remaining = Math.max(totalAmount - accumulatedAmount, 0);
       remainingMap.set(goal.id, remaining);
     });
@@ -79,7 +79,7 @@ export class GoalsState {
     const suggestedMap = new Map<string, number | null>();
 
     goals.forEach((goal) => {
-      if (!goal.id) return; 
+      if (!goal.id) return;
       if (!goal.deadline) {
         suggestedMap.set(goal.id, null);
         return;
@@ -102,7 +102,7 @@ export class GoalsState {
 
       const totalAmount = typeof goal.totalAmount === 'number' && !isNaN(goal.totalAmount) ? goal.totalAmount : 0;
       const accumulatedAmount = typeof goal.accumulatedAmount === 'number' && !isNaN(goal.accumulatedAmount) ? goal.accumulatedAmount : 0;
-      
+
       const remaining = Math.max(totalAmount - accumulatedAmount, 0);
       const suggested = remaining / monthsRemaining;
       suggestedMap.set(goal.id, Math.round(suggested * 100) / 100);
@@ -112,7 +112,7 @@ export class GoalsState {
   });
 
   load(budgetId?: string): void {
-    
+
     if (this._isLoading()) {
       return;
     }
@@ -135,7 +135,7 @@ export class GoalsState {
       )
       .subscribe({
         next: (goals) => {
-          
+
           const validGoals = goals
             .filter((goal) => {
               if (!goal.id) {
@@ -149,7 +149,7 @@ export class GoalsState {
               totalAmount: this.safeNumber(goal.totalAmount, 0),
               accumulatedAmount: this.safeNumber(goal.accumulatedAmount, 0),
             }));
-          
+
           this._items.set(validGoals);
           this._lastUpdated.set(new Date());
           this._isLoading.set(false);
@@ -170,7 +170,8 @@ export class GoalsState {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          if (response.data?.id) {
+          const goalId = response.id;
+          if (goalId) {
             this.notificationService.showSuccess('Meta criada com sucesso');
             const budgetId = dto.budgetId ?? this.budgetSelection.selectedBudgetId();
             if (budgetId) {
@@ -198,7 +199,8 @@ export class GoalsState {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          if (response.data?.success) {
+          const goalId = response.id;
+          if (goalId) {
             this.notificationService.showSuccess('Meta atualizada com sucesso');
             const budgetId = this.budgetSelection.selectedBudgetId();
             if (budgetId) {
@@ -227,7 +229,8 @@ export class GoalsState {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          if (response.data?.success) {
+          const goalId = response.id;
+          if (goalId) {
             this.notificationService.showSuccess('Meta excluída com sucesso');
             this._items.update((items) => items.filter((item) => item.id !== dto.id));
             this._lastUpdated.set(new Date());
@@ -264,7 +267,8 @@ export class GoalsState {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          if (response.data?.success) {
+          const goalId = response.id;
+          if (goalId) {
             this.notificationService.showSuccess('Aporte adicionado com sucesso');
             this._items.update((items) => {
               return items.map((item) => {
@@ -325,7 +329,8 @@ export class GoalsState {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          if (response.data?.success) {
+          const goalId = response.id;
+          if (goalId) {
             this.notificationService.showSuccess('Aporte removido com sucesso');
             this._items.update((items) => {
               return items.map((item) => {

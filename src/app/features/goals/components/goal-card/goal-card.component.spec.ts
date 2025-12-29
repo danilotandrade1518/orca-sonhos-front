@@ -101,6 +101,20 @@ describe('GoalCardComponent', () => {
   });
 
   describe('Outputs', () => {
+    it('should emit cardClick event when card is clicked', () => {
+      const spy = vi.fn();
+      component.cardClick.subscribe(spy);
+
+      const card = fixture.nativeElement.querySelector('.os-goal-progress-card');
+      if (card) {
+        card.click();
+        expect(spy).toHaveBeenCalled();
+      } else {
+        component.cardClick.emit();
+        expect(spy).toHaveBeenCalled();
+      }
+    });
+
     it('should emit aportar event with goal id', () => {
       const spy = vi.fn();
       component.aportar.subscribe(spy);

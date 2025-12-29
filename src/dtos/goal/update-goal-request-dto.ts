@@ -6,5 +6,5 @@ export interface UpdateGoalDto {
 }
 
 export interface UpdateGoalResponseDto {
-  success: boolean;
+  id: string;
 }

@@ -154,10 +154,11 @@ export class BudgetService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<UpdateBudgetResponseDto>('/budget/update-budget', dto).pipe(
+    return this.api.postRaw<UpdateBudgetResponseDto & { id?: string }>('/budget/update-budget', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        
+        return response.success ?? !!response.id;
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);
@@ -189,10 +190,11 @@ export class BudgetService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this.api.postRaw<DeleteBudgetResponseDto>('/budget/delete-budget', dto).pipe(
+    return this.api.postRaw<DeleteBudgetResponseDto & { id?: string }>('/budget/delete-budget', dto).pipe(
       map((response) => {
         this._loading.set(false);
-        return response.success;
+        
+        return response.success ?? !!response.id;
       }),
       catchError((error: ApiError) => {
         this._loading.set(false);

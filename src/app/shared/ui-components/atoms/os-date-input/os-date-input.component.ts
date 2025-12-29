@@ -12,7 +12,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { OsIconComponent } from '../os-icon/os-icon.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -58,6 +58,8 @@ export type OsDateInputSize = 'small' | 'medium' | 'large';
           [attr.aria-disabled]="disabled() ? 'true' : 'false'"
           [attr.tabindex]="disabled() ? -1 : 0"
           (input)="handleInput($event)"
+          (dateChange)="handleDateChange($event)"
+          (dateInput)="handleDateInput($event)"
           (blur)="handleBlur($event)"
           (focus)="handleFocus($event)"
           (mouseenter)="onMouseEnter()"
@@ -115,7 +117,7 @@ export class OsDateInputComponent implements ControlValueAccessor {
   focusEvent = output<FocusEvent>();
 
   private _onChange = (_value: Date | null) => {
-    
+
   };
   private _onTouched = () => {};
 
@@ -230,6 +232,21 @@ export class OsDateInputComponent implements ControlValueAccessor {
     const dateValue = this.parseDateFromInput(target.value);
 
     this.triggerHapticFeedback();
+    this.updateValue(dateValue);
+  }
+
+  handleDateChange(event: MatDatepickerInputEvent<Date>): void {
+    const dateValue = event.value as Date | null;
+    this.updateValue(dateValue);
+  }
+
+  handleDateInput(event: MatDatepickerInputEvent<Date>): void {
+    const dateValue = event.value as Date | null;
+    this.updateValue(dateValue);
+  }
+
+  private updateValue(dateValue: Date | null): void {
+    this.value.set(dateValue);
     this._onChange(dateValue);
     this.valueChange.emit(dateValue);
   }
