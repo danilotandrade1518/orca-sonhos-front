@@ -8,5 +8,6 @@ export interface PayCreditCardBillRequestDto {
 }
 
 export interface PayCreditCardBillResponseDto {
-  success: boolean;
+  id?: string;
+  success?: boolean;
 }

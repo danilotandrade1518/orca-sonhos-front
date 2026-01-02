@@ -6,5 +6,6 @@ export interface ReopenCreditCardBillRequestDto {
 }
 
 export interface ReopenCreditCardBillResponseDto {
-  success: boolean;
+  id?: string;
+  success?: boolean;
 }
