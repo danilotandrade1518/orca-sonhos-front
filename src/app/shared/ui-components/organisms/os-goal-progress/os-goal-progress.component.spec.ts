@@ -206,8 +206,17 @@ describe('OsGoalProgressComponent', () => {
     });
 
     it('should return default icon name for normal goal', () => {
-      const normalGoal = { ...mockGoalData, priority: 'low' };
+      const futureDeadline = new Date();
+      futureDeadline.setDate(futureDeadline.getDate() + 30);
+      const normalGoal = {
+        ...mockGoalData,
+        priority: 'low',
+        deadline: futureDeadline,
+        currentAmount: 5000,
+        targetAmount: 20000,
+      };
       fixture.componentRef.setInput('goalData', normalGoal);
+      fixture.detectChanges();
       expect(component.iconName()).toBe('target');
     });
 

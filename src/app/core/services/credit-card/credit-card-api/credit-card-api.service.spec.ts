@@ -4,16 +4,11 @@ import { of, throwError, firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type {
-  CreateCreditCardRequestDto,
-  CreateCreditCardResponseDto,
   UpdateCreditCardRequestDto,
   UpdateCreditCardResponseDto,
   DeleteCreditCardRequestDto,
   DeleteCreditCardResponseDto,
   ListCreditCardsResponseDto,
-  ListCreditCardBillsResponseDto,
-  CreateCreditCardBillRequestDto,
-  CreateCreditCardBillResponseDto,
   UpdateCreditCardBillRequestDto,
   UpdateCreditCardBillResponseDto,
   DeleteCreditCardBillRequestDto,
@@ -49,8 +44,6 @@ describe('CreditCardApiService', () => {
         budgetId: 'budget-1',
       },
     ],
-    meta: { count: 1 },
-    traceId: 'trace-1',
   };
 
   beforeEach(() => {
@@ -126,7 +119,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: UpdateCreditCardResponseDto = {
         id: 'cc-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -150,7 +142,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as UpdateCreditCardResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -168,9 +159,7 @@ describe('CreditCardApiService', () => {
     });
 
     it('should return false when response has neither id nor success', async () => {
-      const response = {
-        traceId: 'trace-1',
-      } as UpdateCreditCardResponseDto;
+      const response = {} as UpdateCreditCardResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
       const dto: UpdateCreditCardRequestDto = {
@@ -208,7 +197,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: DeleteCreditCardResponseDto = {
         id: 'cc-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -224,7 +212,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as DeleteCreditCardResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -242,7 +229,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: UpdateCreditCardBillResponseDto = {
         id: 'bill-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -261,7 +247,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as UpdateCreditCardBillResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -282,7 +267,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: DeleteCreditCardBillResponseDto = {
         id: 'bill-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -298,7 +282,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as DeleteCreditCardBillResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -316,7 +299,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: PayCreditCardBillResponseDto = {
         id: 'bill-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -337,7 +319,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as PayCreditCardBillResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -360,7 +341,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has id', async () => {
       const response: ReopenCreditCardBillResponseDto = {
         id: 'bill-1',
-        traceId: 'trace-1',
       };
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -379,7 +359,6 @@ describe('CreditCardApiService', () => {
     it('should return true when response has success', async () => {
       const response = {
         success: true,
-        traceId: 'trace-1',
       } as ReopenCreditCardBillResponseDto;
       apiService.postRaw.mockReturnValue(of(response));
 
@@ -396,4 +375,3 @@ describe('CreditCardApiService', () => {
     });
   });
 });
-

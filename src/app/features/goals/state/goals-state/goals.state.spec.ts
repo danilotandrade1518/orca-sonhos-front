@@ -364,8 +364,7 @@ describe('GoalsState', () => {
 
       goalsApiService.addAmount.mockReturnValue(
         of({
-          data: { success: true },
-          meta: {},
+          id: 'goal-1',
         })
       );
 
@@ -407,8 +406,7 @@ describe('GoalsState', () => {
 
       goalsApiService.removeAmount.mockReturnValue(
         of({
-          data: { success: true },
-          meta: {},
+          id: 'goal-1',
         })
       );
 
@@ -457,8 +455,7 @@ describe('GoalsState', () => {
     it('should create goal successfully', async () => {
       goalsApiService.create.mockReturnValue(
         of({
-          data: { id: 'goal-new' },
-          meta: {},
+          id: 'goal-new',
         })
       );
 
@@ -487,8 +484,7 @@ describe('GoalsState', () => {
     it('should update goal successfully', async () => {
       goalsApiService.update.mockReturnValue(
         of({
-          data: { success: true },
-          meta: {},
+          id: 'goal-1',
         })
       );
 
@@ -526,8 +522,7 @@ describe('GoalsState', () => {
 
       goalsApiService.delete.mockReturnValue(
         of({
-          data: { success: true },
-          meta: {},
+          id: 'goal-1',
         })
       );
 
