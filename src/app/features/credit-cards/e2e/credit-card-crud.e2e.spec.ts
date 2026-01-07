@@ -39,7 +39,7 @@ test.describe('Credit Card CRUD E2E', () => {
     await waitDelete;
   });
 
-  test('deve editar um cartão de crédito existente', async ({ request }) => {
+  test('deve editar um cartão de crédito existente', async () => {
     const originalName = `E2E Cartão Original ${Date.now()}`;
     const updatedName = `E2E Cartão Atualizado ${Date.now()}`;
     const limit = '5000.00';
@@ -137,4 +137,3 @@ test.describe('Credit Card CRUD E2E', () => {
     await waitDelete;
   });
 });
-

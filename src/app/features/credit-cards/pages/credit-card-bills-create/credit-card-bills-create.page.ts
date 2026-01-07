@@ -230,8 +230,7 @@ export class CreditCardBillsCreatePage implements OnInit {
         }
       }
     });
-
-    // Validação reativa de datas: data de fechamento deve ser anterior à data de vencimento
+    
     effect(() => {
       const form = this._form();
       if (!form) return;
@@ -312,4 +311,3 @@ export class CreditCardBillsCreatePage implements OnInit {
     this.router.navigate(['/credit-cards'], { replaceUrl: true });
   }
 }
-

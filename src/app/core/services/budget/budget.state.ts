@@ -42,13 +42,9 @@ export class BudgetState {
         next: (budgets) => {
           this._budgets.set(budgets);
           this._loading.set(false);
-
-          // setAvailableBudgets já tenta restaurar o budget do localStorage
-          // e seleciona o primeiro se não houver nenhum salvo
+          
           this.budgetSelectionService.setAvailableBudgets(budgets);
-
-          // Não precisamos mais chamar selectFirstBudget aqui porque
-          // setAvailableBudgets já faz isso automaticamente se necessário
+          
         },
         error: (error) => {
           this._error.set(error?.message || 'Failed to load budgets');

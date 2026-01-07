@@ -102,13 +102,12 @@ describe('BudgetState', () => {
     it('should automatically select first budget when none is selected', async () => {
       budgetService.getBudgets.mockReturnValue(of(mockBudgets));
       budgetSelectionService.selectedBudget = vi.fn(() => null);
-      // O setAvailableBudgets do serviço real chama setSelectedBudget internamente
-      // quando não há budget selecionado. Vamos simular isso usando uma função helper
+      
       const callSetSelectedBudget = (budget: BudgetDto) => {
         (budgetSelectionService.setSelectedBudget as unknown as (budget: BudgetDto) => void)(budget);
       };
       budgetSelectionService.setAvailableBudgets.mockImplementation((budgets) => {
-        // Simular a lógica: se não há budget selecionado, selecionar o primeiro
+        
         if (budgets.length > 0) {
           callSetSelectedBudget(budgets[0]);
         }

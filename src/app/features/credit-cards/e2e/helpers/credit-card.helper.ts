@@ -303,6 +303,3 @@ export class CreditCardHelper {
       .then(() => {});
   }
 }
-
-
-

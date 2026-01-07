@@ -36,11 +36,3 @@ export class AuthHelper {
     });
   }
 }
-
-
-
-
-
-
-
-
