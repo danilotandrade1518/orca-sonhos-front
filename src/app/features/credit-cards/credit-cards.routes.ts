@@ -16,6 +16,14 @@ export const CREDIT_CARDS_ROUTES: Routes = [
     title: 'Novo Cartão',
   },
   {
+    path: 'bills/new',
+    loadComponent: () =>
+      import('./pages/credit-card-bills-create/credit-card-bills-create.page').then(
+        (m) => m.CreditCardBillsCreatePage
+      ),
+    title: 'Nova Fatura',
+  },
+  {
     path: 'bills/:id/pay',
     loadComponent: () => import('./pages/pay-bill/pay-bill.page').then((m) => m.PayBillPage),
     title: 'Pagar Fatura',

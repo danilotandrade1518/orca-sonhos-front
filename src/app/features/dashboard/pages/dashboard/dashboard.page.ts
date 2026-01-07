@@ -130,16 +130,12 @@ export class DashboardPage implements OnInit {
   ]);
 
   constructor() {
-    // Aguardar o budget selecionado estar disponível antes de carregar os dados do dashboard
+    
     effect(() => {
       const selectedBudget = this.budgetSelectionService.selectedBudget();
       const hasBudgets = this.budgetState.hasBudgets();
       const isLoadingBudgets = this.budgetState.loading();
       
-      // Só carregar os dados do dashboard se:
-      // 1. Há um budget selecionado
-      // 2. Os budgets já foram carregados (ou não há budgets para carregar)
-      // 3. Os dados do dashboard ainda não foram carregados
       if (selectedBudget && !isLoadingBudgets && hasBudgets && !this.dashboardDataLoaded()) {
         this.loadDashboardDataForBudget(selectedBudget.id);
       }
@@ -147,7 +143,7 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit(): void {
-    // Se os budgets já foram carregados e há um budget selecionado, carregar os dados imediatamente
+    
     const selectedBudget = this.budgetSelectionService.selectedBudget();
     const hasBudgets = this.budgetState.hasBudgets();
     const isLoadingBudgets = this.budgetState.loading();
@@ -159,7 +155,7 @@ export class DashboardPage implements OnInit {
 
   private async loadDashboardDataForBudget(budgetId: string): Promise<void> {
     if (this.dashboardDataLoaded()) {
-      return; // Já carregado
+      return; 
     }
 
     this.isLoading.set(true);
@@ -177,7 +173,7 @@ export class DashboardPage implements OnInit {
       }
     } catch (error) {
       console.error('Error loading dashboard data', error);
-      this.dashboardDataLoaded.set(false); // Permitir tentar novamente
+      this.dashboardDataLoaded.set(false); 
     } finally {
       this.isLoading.set(false);
     }

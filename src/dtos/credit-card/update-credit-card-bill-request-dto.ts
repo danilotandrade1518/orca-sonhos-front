@@ -6,5 +6,6 @@ export interface UpdateCreditCardBillRequestDto {
 }
 
 export interface UpdateCreditCardBillResponseDto {
-  success: boolean;
+  id?: string;
+  success?: boolean;
 }

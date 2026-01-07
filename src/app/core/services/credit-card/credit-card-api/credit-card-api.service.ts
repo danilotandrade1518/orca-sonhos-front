@@ -126,7 +126,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);
@@ -156,7 +156,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);
@@ -255,7 +255,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);
@@ -285,7 +285,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);
@@ -315,7 +315,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);
@@ -348,7 +348,7 @@ export class CreditCardApiService {
       .pipe(
         map((response) => {
           this._loading.set(false);
-          return response.success;
+          return !!(response.id ?? response.success);
         }),
         catchError((error: ApiError) => {
           this._loading.set(false);

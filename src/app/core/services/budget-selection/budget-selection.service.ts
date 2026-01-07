@@ -39,7 +39,6 @@ export class BudgetSelectionService {
     this._selectedBudget.set(budget);
     this._error.set(null);
     
-    // Salvar no localStorage
     if (budget) {
       this.saveSelectedBudgetId(budget.id);
     } else {
@@ -51,7 +50,6 @@ export class BudgetSelectionService {
     this._availableBudgets.set(budgets);
     this._error.set(null);
     
-    // Tentar restaurar o budget salvo do localStorage
     if (budgets.length > 0 && !this._selectedBudget()) {
       this.restoreSelectedBudgetFromStorage(budgets);
     }
@@ -91,10 +89,7 @@ export class BudgetSelectionService {
     this._error.set(null);
     this.clearSelectedBudgetId();
   }
-
-  /**
-   * Salva o ID do budget selecionado no localStorage
-   */
+  
   private saveSelectedBudgetId(budgetId: string): void {
     try {
       localStorage.setItem(SELECTED_BUDGET_ID_KEY, budgetId);
@@ -102,10 +97,7 @@ export class BudgetSelectionService {
       console.warn('Erro ao salvar budget selecionado no localStorage:', error);
     }
   }
-
-  /**
-   * Remove o ID do budget selecionado do localStorage
-   */
+  
   private clearSelectedBudgetId(): void {
     try {
       localStorage.removeItem(SELECTED_BUDGET_ID_KEY);
@@ -113,10 +105,7 @@ export class BudgetSelectionService {
       console.warn('Erro ao remover budget selecionado do localStorage:', error);
     }
   }
-
-  /**
-   * Recupera o ID do budget selecionado do localStorage
-   */
+  
   private getSelectedBudgetIdFromStorage(): string | null {
     try {
       return localStorage.getItem(SELECTED_BUDGET_ID_KEY);
@@ -125,28 +114,24 @@ export class BudgetSelectionService {
       return null;
     }
   }
-
-  /**
-   * Restaura o budget selecionado do localStorage quando os budgets são carregados
-   */
+  
   private restoreSelectedBudgetFromStorage(budgets: BudgetDto[]): void {
     const savedBudgetId = this.getSelectedBudgetIdFromStorage();
     
     if (savedBudgetId) {
       const savedBudget = budgets.find((b) => b.id === savedBudgetId);
       if (savedBudget) {
-        // Usar setSelectedBudget para manter consistência (já salva no localStorage)
+        
         this.setSelectedBudget(savedBudget);
         return;
       } else {
-        // Budget salvo não existe mais, limpar do localStorage
+        
         this.clearSelectedBudgetId();
       }
     }
     
-    // Se não há budget salvo ou o budget salvo não existe mais, selecionar o primeiro
     if (budgets.length > 0) {
-      // Usar setSelectedBudget para manter consistência (já salva no localStorage)
+      
       this.setSelectedBudget(budgets[0]);
     }
   }

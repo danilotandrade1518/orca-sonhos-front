@@ -164,9 +164,7 @@ export class AppLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Carregar budgets globalmente para toda a aplicação
-    // Isso garante que o budget selecionado seja restaurado do localStorage
-    // antes de qualquer página precisar dele
+    
     this.budgetState.loadBudgets();
 
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe({

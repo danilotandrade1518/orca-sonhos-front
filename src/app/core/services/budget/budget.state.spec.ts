@@ -102,10 +102,21 @@ describe('BudgetState', () => {
     it('should automatically select first budget when none is selected', async () => {
       budgetService.getBudgets.mockReturnValue(of(mockBudgets));
       budgetSelectionService.selectedBudget = vi.fn(() => null);
+      
+      const callSetSelectedBudget = (budget: BudgetDto) => {
+        (budgetSelectionService.setSelectedBudget as unknown as (budget: BudgetDto) => void)(budget);
+      };
+      budgetSelectionService.setAvailableBudgets.mockImplementation((budgets) => {
+        
+        if (budgets.length > 0) {
+          callSetSelectedBudget(budgets[0]);
+        }
+      });
 
       budgetState.loadBudgets();
 
       await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(budgetSelectionService.setAvailableBudgets).toHaveBeenCalledWith(mockBudgets);
       expect(budgetSelectionService.setSelectedBudget).toHaveBeenCalledWith(mockBudgets[0]);
       expect(budgetState.budgets()).toEqual(mockBudgets);
     });

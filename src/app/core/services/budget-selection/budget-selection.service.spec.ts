@@ -127,9 +127,13 @@ describe('BudgetSelectionService', () => {
 
     it('should return false when selecting budget by id that does not exist', () => {
       service.setAvailableBudgets(mockBudgets);
+      
+      service.selectBudgetById('budget-1');
+      const initialBudget = service.selectedBudget();
       const result = service.selectBudgetById('non-existent');
       expect(result).toBe(false);
-      expect(service.selectedBudget()).toBeNull();
+      
+      expect(service.selectedBudget()).toEqual(initialBudget);
     });
 
     it('should clear selection', () => {

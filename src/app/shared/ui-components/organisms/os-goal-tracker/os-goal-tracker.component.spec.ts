@@ -16,7 +16,11 @@ describe('OsGoalTrackerComponent', () => {
     targetAmount: 50000,
     currentAmount: 15000,
     currency: 'BRL',
-    deadline: new Date('2025-12-31'), 
+    deadline: (() => {
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 1);
+      return futureDate;
+    })(),
     startDate: new Date('2024-01-01'),
     lastUpdated: new Date('2024-06-15'),
     status: 'active',
@@ -120,6 +124,17 @@ describe('OsGoalTrackerComponent', () => {
     });
 
     it('should provide correct status info for active goals', () => {
+      const activeData = {
+        ...mockGoalData,
+        status: 'active' as const,
+        deadline: (() => {
+          const futureDate = new Date();
+          futureDate.setFullYear(futureDate.getFullYear() + 1);
+          return futureDate;
+        })(),
+      };
+      fixture.componentRef.setInput('goalData', activeData);
+      fixture.detectChanges();
       const statusInfo = component.statusInfo();
       expect(statusInfo.type).toBe('success');
       expect(statusInfo.label).toBe('Ativo');
@@ -247,12 +262,32 @@ describe('OsGoalTrackerComponent', () => {
     });
 
     it('should return warning variant for high priority goals', () => {
-      
+      const highPriorityData = {
+        ...mockGoalData,
+        priority: 'high' as const,
+        deadline: (() => {
+          const futureDate = new Date();
+          futureDate.setFullYear(futureDate.getFullYear() + 1);
+          return futureDate;
+        })(),
+        status: 'active' as const,
+      };
+      fixture.componentRef.setInput('goalData', highPriorityData);
+      fixture.detectChanges();
       expect(component.progressVariant()).toBe('warning');
     });
 
     it('should return primary variant for normal goals', () => {
-      const normalData = { ...mockGoalData, priority: 'low' as const };
+      const normalData = {
+        ...mockGoalData,
+        priority: 'low' as const,
+        deadline: (() => {
+          const futureDate = new Date();
+          futureDate.setFullYear(futureDate.getFullYear() + 1);
+          return futureDate;
+        })(),
+        status: 'active' as const,
+      };
       fixture.componentRef.setInput('goalData', normalData);
       fixture.detectChanges();
       expect(component.progressVariant()).toBe('primary');
@@ -261,6 +296,16 @@ describe('OsGoalTrackerComponent', () => {
 
   describe('Methods', () => {
     it('should calculate days remaining correctly', () => {
+      const futureData = {
+        ...mockGoalData,
+        deadline: (() => {
+          const futureDate = new Date();
+          futureDate.setFullYear(futureDate.getFullYear() + 1);
+          return futureDate;
+        })(),
+      };
+      fixture.componentRef.setInput('goalData', futureData);
+      fixture.detectChanges();
       const daysRemaining = component.getDaysRemaining();
       expect(daysRemaining).toBeGreaterThan(0); 
     });
@@ -272,6 +317,17 @@ describe('OsGoalTrackerComponent', () => {
     });
 
     it('should return correct status color', () => {
+      const activeData = {
+        ...mockGoalData,
+        status: 'active' as const,
+        deadline: (() => {
+          const futureDate = new Date();
+          futureDate.setFullYear(futureDate.getFullYear() + 1);
+          return futureDate;
+        })(),
+      };
+      fixture.componentRef.setInput('goalData', activeData);
+      fixture.detectChanges();
       const statusColor = component.getStatusColor();
       expect(statusColor).toBe('var(--os-color-success)');
     });

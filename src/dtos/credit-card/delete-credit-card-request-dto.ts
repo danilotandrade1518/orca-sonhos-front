@@ -3,5 +3,6 @@ export interface DeleteCreditCardRequestDto {
 }
 
 export interface DeleteCreditCardResponseDto {
-  success: boolean;
+  id?: string;
+  success?: boolean;
 }
